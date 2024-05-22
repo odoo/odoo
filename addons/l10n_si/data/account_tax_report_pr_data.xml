@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <!-- PR -->
+    <record id="tax_report_pr" model="account.report">
+        <field name="name">Receivable VAT (PR) </field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.si"/>
+        <field name="column_ids">
+            <record id="tax_report_pr_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_pr_value_taxes_purchases_base" model="account.report.line">
+                <field name="name">Value of taxed purchases - base</field>
+                <field name="expression_ids">
+                    <record id="tax_report_pr_value_taxes_purchases_base_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">
+                            pr_8a.balance +
+                            pr_8b.balance +
+                            pr_9.balance +
+                            pr_10.balance +
+                            pr_11.balance +
+                            pr_12.balance +
+                            pr_13.balance
+                        </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_pr_8a" model="account.report.line">
+                        <field name="name">8a. Goods and services SLO (except for self employed)</field>
+                        <field name="code">pr_8a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_8a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_8a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_8b" model="account.report.line">
+                        <field name="name">8b. Goods and services 3rd world</field>
+                        <field name="code">pr_8b</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_8b_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_8b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_9" model="account.report.line">
+                        <field name="name">9. SLO acquisitions (Art. 76a only)</field>
+                        <field name="code">pr_9</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_9_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_9</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_10" model="account.report.line">
+                        <field name="name">10. Acquisitions of goods from the EU</field>
+                        <field name="code">pr_10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_11" model="account.report.line">
+                        <field name="name">11. Services received from the EU</field>
+                        <field name="code">pr_11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_11</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_12" model="account.report.line">
+                        <field name="name">12. Real estate (Part 8 or 9)</field>
+                        <field name="code">pr_12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_12_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_12</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_13" model="account.report.line">
+                        <field name="name">13. Other OS (Part 8 or 10)</field>
+                        <field name="code">pr_13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_13_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_13</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_pr_value_exempt_purchases_base" model="account.report.line">
+                <field name="name">Value of exempt purchases - base</field>
+                <field name="expression_ids">
+                    <record id="tax_report_pr_value_exempt_purchases_base_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pr_14.balance + pr_15.balance + pr_16.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_pr_14" model="account.report.line">
+                        <field name="name">14. Purchases and acquisitions</field>
+                        <field name="code">pr_14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_14_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_15" model="account.report.line">
+                        <field name="name">15. Real estate (Part 14)</field>
+                        <field name="code">pr_15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_15</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_16" model="account.report.line">
+                        <field name="name">16. Other OS (Part 14)</field>
+                        <field name="code">pr_16</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_16_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_16</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_pr_non_deductible_vat" model="account.report.line">
+                <field name="name">Non-deductible VAT</field>
+                <field name="expression_ids">
+                    <record id="tax_report_pr_non_deductible_vat_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pr_17a.balance + pr_17b.balance + pr_17c.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_pr_17a" model="account.report.line">
+                        <field name="name">17a. 22%</field>
+                        <field name="code">pr_17a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_17a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_17a</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_17b" model="account.report.line">
+                        <field name="name">17b. 9,5%</field>
+                        <field name="code">pr_17b</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_17b_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_17b</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_17c" model="account.report.line">
+                        <field name="name">17c. 8% and 5%</field>
+                        <field name="code">pr_17c</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_17c_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_17c</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_pr_deductible_vat" model="account.report.line">
+                <field name="name">Deductible VAT</field>
+                <field name="expression_ids">
+                    <record id="tax_report_pr_deductible_vat_formula" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">pr_18.balance + pr_19.balance + pr_19a.balance</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_pr_18" model="account.report.line">
+                        <field name="name">18. 22%</field>
+                        <field name="code">pr_18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_19" model="account.report.line">
+                        <field name="name">19. 9,5%</field>
+                        <field name="code">pr_19</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_19_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_19</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_pr_19a" model="account.report.line">
+                        <field name="name">19a. 5%</field>
+                        <field name="code">pr_19a</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_pr_19a_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">pr_19a</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_pr_20" model="account.report.line">
+                <field name="name">20. Flat-rate compensation 8%</field>
+                <field name="expression_ids">
+                    <record id="tax_report_pr_20_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">pr_20</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
