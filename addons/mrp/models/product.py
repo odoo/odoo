@@ -8,6 +8,7 @@ import operator as py_operator
 from odoo import api, fields, models, _
 from odoo.tools import groupby
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.exceptions import UserError
 
 
 OPERATORS = {
@@ -124,6 +125,73 @@ class ProductProduct(models.Model):
     mrp_product_qty = fields.Float('Manufactured', digits='Product Unit of Measure',
         compute='_compute_mrp_product_qty', compute_sudo=False)
     is_kits = fields.Boolean(compute="_compute_is_kits", search='_search_is_kits')
+
+    # Catalog related fields
+    product_catalog_product_is_in_bom = fields.Boolean(
+        compute='_compute_product_is_in_bom',
+        search='_search_product_is_in_bom',
+    )
+
+    product_catalog_product_is_in_mo = fields.Boolean(
+        compute='_compute_product_is_in_mo',
+        search='_search_product_is_in_mo',
+    )
+
+    @api.depends_context('order_id')
+    def _compute_product_is_in_bom(self):
+        bom_id = self.env.context.get('order_id')
+        if not bom_id:
+            self.product_catalog_product_is_in_bom = False
+            return
+
+        read_group_data = self.env['mrp.bom.line']._read_group(
+            domain=[('order_id', '=', bom_id)],
+            groupby=['product_id'],
+            aggregates=['__count'],
+        )
+        data = {product.id: count for product, count in read_group_data}
+        for product in self:
+            product.product_catalog_product_is_in_bom = bool(data.get(product.id, 0))
+
+    @api.depends_context('order_id')
+    def _compute_product_is_in_mo(self):
+        mo_id = self.env.context.get('order_id')
+        if not mo_id:
+            self.product_catalog_product_is_in_mo = False
+            return
+
+        read_group_data = self.env['stock.move']._read_group(
+            domain=[('order_id', '=', mo_id)],
+            groupby=['product_id'],
+            aggregates=['__count'],
+        )
+        data = {product.id: count for product, count in read_group_data}
+        for product in self:
+            product.product_catalog_product_is_in_mo = bool(data.get(product.id, 0))
+
+    def _search_product_is_in_bom(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_("Operation not supported"))
+        product_ids = self.env['mrp.bom.line'].search([
+            ('bom_id', 'in', [self.env.context.get('order_id', '')]),
+        ]).product_id.ids
+        if (operator == '!=' and value is True) or (operator == '=' and value is False):
+            domain_operator = 'not in'
+        else:
+            domain_operator = 'in'
+        return [('id', domain_operator, product_ids)]
+
+    def _search_product_is_in_mo(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_("Operation not supported"))
+        product_ids = self.env['mrp.production'].search([
+            ('id', 'in', [self.env.context.get('order_id', '')]),
+        ]).move_raw_ids.product_id.ids
+        if (operator == '!=' and value is True) or (operator == '=' and value is False):
+            domain_operator = 'not in'
+        else:
+            domain_operator = 'in'
+        return [('id', domain_operator, product_ids)]
 
     def _compute_bom_count(self):
         for product in self:
