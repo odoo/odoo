@@ -16,11 +16,14 @@ export function useAutoresize(ref, options = {}) {
     useEffect(
         (el) => {
             if (el) {
-                resize = (el instanceof HTMLInputElement ? resizeInput : resizeTextArea).bind(
-                    null,
-                    el,
-                    options
-                );
+                resize = () => {
+                    if (el instanceof HTMLInputElement) {
+                        resizeInput(el, options);
+                    } else {
+                        resizeTextArea(el, options);
+                    }
+                    options.onResize?.(el, options);
+                };
                 el.addEventListener("input", resize);
                 return () => {
                     el.removeEventListener("input", resize);
@@ -32,7 +35,7 @@ export function useAutoresize(ref, options = {}) {
     );
     useEffect(() => {
         if (resize) {
-            resize(ref.el, options);
+            resize();
         }
     });
 }
