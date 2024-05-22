@@ -52,6 +52,7 @@ import odoo
 from . import SUPERUSER_ID
 from . import api
 from . import tools
+from .api import NewId
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
     clean_context, config, date_utils, discardattr,
@@ -63,6 +64,13 @@ from .tools import (
 from .tools.lru import LRU
 from .tools.misc import CountingStream, LastOrderedSet, ReversedIterable, unquote
 from .tools.translate import _, _lt
+
+import typing
+if typing.TYPE_CHECKING:
+    from collections.abc import Reversible
+    from .modules.registry import Registry
+    from odoo.api import Self, ValuesType, IdType
+
 
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
@@ -279,43 +287,6 @@ class MetaModel(api.Meta):
                     string='Last Updated on', automatic=True, readonly=True))
 
 
-class NewId(object):
-    """ Pseudo-ids for new records, encapsulating an optional origin id (actual
-        record id) and an optional reference (any value).
-    """
-    __slots__ = ['origin', 'ref']
-
-    def __init__(self, origin=None, ref=None):
-        self.origin = origin
-        self.ref = ref
-
-    def __bool__(self):
-        return False
-
-    def __eq__(self, other):
-        return isinstance(other, NewId) and (
-            (self.origin and other.origin and self.origin == other.origin)
-            or (self.ref and other.ref and self.ref == other.ref)
-        )
-
-    def __hash__(self):
-        return hash(self.origin or self.ref or id(self))
-
-    def __repr__(self):
-        return (
-            "<NewId origin=%r>" % self.origin if self.origin else
-            "<NewId ref=%r>" % self.ref if self.ref else
-            "<NewId 0x%x>" % id(self)
-        )
-
-    def __str__(self):
-        if self.origin or self.ref:
-            id_part = repr(self.origin or self.ref)
-        else:
-            id_part = hex(id(self))
-        return "NewId_%s" % id_part
-
-
 def origin_ids(ids):
     """ Return an iterator over the origin ids corresponding to ``ids``.
         Actual ids are returned as is, and ids without origin are not returned.
@@ -348,9 +319,6 @@ def expand_ids(id0, ids):
         if id_ not in seen and bool(id_) == kind:
             yield id_
             seen.add(id_)
-
-
-IdType = (int, NewId)
 
 
 # maximum number of prefetched records
@@ -567,6 +535,11 @@ class BaseModel(metaclass=MetaModel):
     """
     __slots__ = ['env', '_ids', '_prefetch_ids']
 
+    env: api.Environment
+    id: IdType | typing.Literal[False]
+    display_name: str | typing.Literal[False]
+    pool: Registry
+
     _fields: dict[str, Field]
     _auto = False
     """Whether a database table should be created.
@@ -591,15 +564,15 @@ class BaseModel(metaclass=MetaModel):
     .. seealso:: :class:`TransientModel`
     """
 
-    _name = None                #: the model name (in dot-notation, module namespace)
-    _description = None         #: the model's informal name
-    _module = None              #: the model's module (in the Odoo sense)
-    _custom = False             #: should be True for custom models only
+    _name: str | None = None            #: the model name (in dot-notation, module namespace)
+    _description: str | None = None     #: the model's informal name
+    _module = None                      #: the model's module (in the Odoo sense)
+    _custom = False                     #: should be True for custom models only
 
-    _inherit = ()
+    _inherit: str | list[str] | tuple[str, ...] = ()
     """Python-inherited models:
 
-    :type: str or list(str)
+    :type: str or list(str) or tuple(str)
 
     .. note::
 
@@ -625,14 +598,14 @@ class BaseModel(metaclass=MetaModel):
       :attr:`~odoo.models.Model._inherits`-ed models, the inherited field will
       correspond to the last one (in the inherits list order).
     """
-    _table = None               #: SQL table name used by model if :attr:`_auto`
-    _table_query = None         #: SQL expression of the table's content (optional)
-    _sql_constraints = []       #: SQL constraints [(name, sql_def, message)]
+    _table = None                   #: SQL table name used by model if :attr:`_auto`
+    _table_query = None             #: SQL expression of the table's content (optional)
+    _sql_constraints: list[tuple[str, str, str]] = []   #: SQL constraints [(name, sql_def, message)]
 
-    _rec_name = None            #: field to use for labeling records, default: ``name``
-    _rec_names_search = None    #: fields to consider in ``name_search``
-    _order = 'id'               #: default order field for searching results
-    _parent_name = 'parent_id'  #: the many2one field used as parent field
+    _rec_name = None                #: field to use for labeling records, default: ``name``
+    _rec_names_search: list[str] | None = None    #: fields to consider in ``name_search``
+    _order = 'id'                   #: default order field for searching results
+    _parent_name = 'parent_id'      #: the many2one field used as parent field
     _parent_store = False
     """set to True to compute parent_path field.
 
@@ -1625,7 +1598,7 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     @api.readonly
     @api.returns('self')
-    def search(self, domain, offset=0, limit=None, order=None):
+    def search(self, domain, offset=0, limit=None, order=None) -> Self:
         """ search(domain[, offset=0][, limit=None][, order=None])
 
         Search for the records that satisfy the given ``domain``
@@ -1698,7 +1671,7 @@ class BaseModel(metaclass=MetaModel):
                 record.display_name = f"{record._name},{record.id}"
 
     @api.model
-    def name_create(self, name):
+    def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
         """ name_create(name) -> record
 
         Create a new record by calling :meth:`~.create` with only one value
@@ -1721,7 +1694,7 @@ class BaseModel(metaclass=MetaModel):
 
     @api.model
     @api.readonly
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def name_search(self, name='', args=None, operator='ilike', limit=100) -> list[tuple[int, str]]:
         """ name_search(name='', args=None, operator='ilike', limit=100) -> records
 
         Search for records that have a display name matching the given
@@ -3693,7 +3666,7 @@ class BaseModel(metaclass=MetaModel):
         return field_names
 
     @api.readonly
-    def read(self, fields=None, load='_classic_read'):
+    def read(self, fields=None, load='_classic_read') -> list[ValuesType]:
         """ read([fields])
 
         Read the requested fields for the records in ``self``, and return their
@@ -4472,7 +4445,7 @@ class BaseModel(metaclass=MetaModel):
 
         return True
 
-    def write(self, vals):
+    def write(self, vals: ValuesType) -> typing.Literal[True]:
         """ write(vals)
 
         Updates all records in ``self`` with the provided values.
@@ -4739,7 +4712,7 @@ class BaseModel(metaclass=MetaModel):
             parent_records._parent_store_update()
 
     @api.model_create_multi
-    def create(self, vals_list):
+    def create(self, vals_list: list[ValuesType]) -> Self:
         """ create(vals_list) -> records
 
         Creates new records for the model.
@@ -5714,7 +5687,7 @@ class BaseModel(metaclass=MetaModel):
                     new.update_field_translations(name, translations)
 
     @api.returns('self')
-    def copy(self, default=None):
+    def copy(self, default: ValuesType | None = None) -> Self:
         """ copy(default=None)
 
         Duplicate record ``self`` updating it with default values
@@ -5731,7 +5704,7 @@ class BaseModel(metaclass=MetaModel):
         return new_records
 
     @api.returns('self')
-    def exists(self):
+    def exists(self) -> Self:
         """  exists() -> records
 
         Returns the subset of records in ``self`` that exist.
@@ -5962,7 +5935,7 @@ class BaseModel(metaclass=MetaModel):
     #  - the global cache is only an index to "resolve" a record 'id'.
     #
 
-    def __init__(self, env: api.Environment, ids: tuple[int | NewId], prefetch_ids: Iterable[int | NewId]):
+    def __init__(self, env: api.Environment, ids: tuple[IdType, ...], prefetch_ids: Reversible[IdType]):
         """ Create a recordset instance.
 
         :param env: an environment
@@ -5973,7 +5946,7 @@ class BaseModel(metaclass=MetaModel):
         self._ids = ids
         self._prefetch_ids = prefetch_ids
 
-    def browse(self, ids=None):
+    def browse(self, ids: int | typing.Iterable[IdType] = ()) -> Self:
         """ browse([ids]) -> records
 
         Returns a recordset for the ids provided as parameter in the current
@@ -6001,7 +5974,7 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @property
-    def ids(self):
+    def ids(self) -> list[int]:
         """ Return the list of actual record ids corresponding to ``self``. """
         return list(origin_ids(self._ids))
 
@@ -6014,7 +5987,7 @@ class BaseModel(metaclass=MetaModel):
     # Conversion methods
     #
 
-    def ensure_one(self):
+    def ensure_one(self) -> Self:
         """Verify that the current recordset holds a single record.
 
         :raise odoo.exceptions.ValueError: ``len(self) != 1``
@@ -6027,7 +6000,7 @@ class BaseModel(metaclass=MetaModel):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
 
-    def with_env(self, env):
+    def with_env(self, env: api.Environment) -> Self:
         """Return a new version of this recordset attached to the provided environment.
 
         :param env:
@@ -6038,7 +6011,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
 
-    def sudo(self, flag=True):
+    def sudo(self, flag=True) -> Self:
         """ sudo([flag=True])
 
         Returns a new version of this recordset with superuser mode enabled or
@@ -6066,7 +6039,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(su=flag))
 
-    def with_user(self, user):
+    def with_user(self, user) -> Self:
         """ with_user(user)
 
         Return a new version of this recordset attached to the given user, in
@@ -6077,7 +6050,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(user=user, su=False))
 
-    def with_company(self, company):
+    def with_company(self, company) -> Self:
         """ with_company(company)
 
         Return a new version of this recordset with a modified context, such that::
@@ -6111,7 +6084,7 @@ class BaseModel(metaclass=MetaModel):
 
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
-    def with_context(self, *args, **kwargs):
+    def with_context(self, *args, **kwargs) -> Self:
         """ with_context([context][, **overrides]) -> Model
 
         Returns a new version of this recordset attached to an extended
@@ -6150,7 +6123,7 @@ class BaseModel(metaclass=MetaModel):
             context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
-    def with_prefetch(self, prefetch_ids=None):
+    def with_prefetch(self, prefetch_ids=None) -> Self:
         """ with_prefetch([prefetch_ids]) -> records
 
         Return a new version of this recordset that uses the given prefetch ids,
@@ -6265,7 +6238,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             return self._mapped_func(func)
 
-    def filtered(self, func):
+    def filtered(self, func) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
         :param func: a function or a dot-separated sequence of field names
@@ -6314,7 +6287,7 @@ class BaseModel(metaclass=MetaModel):
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
-    def filtered_domain(self, domain):
+    def filtered_domain(self, domain) -> Self:
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
@@ -6470,7 +6443,7 @@ class BaseModel(metaclass=MetaModel):
         [result_ids] = stack
         return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
-    def sorted(self, key=None, reverse=False):
+    def sorted(self, key=None, reverse=False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
 
         :param key: either a function of one argument that returns a
@@ -6600,7 +6573,7 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @api.model
-    def new(self, values=None, origin=None, ref=None):
+    def new(self, values=None, origin=None, ref=None) -> Self:
         """ new([values], [origin], [ref]) -> record
 
         Return a new record instance attached to the current environment and
@@ -6624,7 +6597,7 @@ class BaseModel(metaclass=MetaModel):
         return record
 
     @property
-    def _origin(self):
+    def _origin(self) -> Self:
         """ Return the actual records corresponding to ``self``. """
         ids = tuple(origin_ids(self._ids))
         prefetch_ids = OriginIds(self._prefetch_ids)
@@ -6642,7 +6615,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the size of ``self``. """
         return len(self._ids)
 
-    def __iter__(self):
+    def __iter__(self) -> typing.Iterator[Self]:
         """ Return an iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(self._ids):
@@ -6652,7 +6625,7 @@ class BaseModel(metaclass=MetaModel):
             for id_ in self._ids:
                 yield self.__class__(self.env, (id_,), self._prefetch_ids)
 
-    def __reversed__(self):
+    def __reversed__(self) -> typing.Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(reversed(self._ids)):
@@ -6678,11 +6651,11 @@ class BaseModel(metaclass=MetaModel):
                 return item in self._fields
             raise TypeError(f"unsupported operand types in: {item!r} in {self}")
 
-    def __add__(self, other):
+    def __add__(self, other) -> Self:
         """ Return the concatenation of two recordsets. """
         return self.concat(other)
 
-    def concat(self, *args):
+    def concat(self, *args) -> Self:
         """ Return the concatenation of ``self`` with all the arguments (in
             linear time complexity).
         """
@@ -6696,7 +6669,7 @@ class BaseModel(metaclass=MetaModel):
                 raise TypeError(f"unsupported operand types in: {self} + {arg!r}")
         return self.browse(ids)
 
-    def __sub__(self, other):
+    def __sub__(self, other) -> Self:
         """ Return the recordset of all the records in ``self`` that are not in
             ``other``. Note that recordset order is preserved.
         """
@@ -6708,7 +6681,7 @@ class BaseModel(metaclass=MetaModel):
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} - {other!r}")
 
-    def __and__(self, other):
+    def __and__(self, other) -> Self:
         """ Return the intersection of two recordsets.
             Note that first occurrence order is preserved.
         """
@@ -6720,13 +6693,13 @@ class BaseModel(metaclass=MetaModel):
         except AttributeError:
             raise TypeError(f"unsupported operand types in: {self} & {other!r}")
 
-    def __or__(self, other):
+    def __or__(self, other) -> Self:
         """ Return the union of two recordsets.
             Note that first occurrence order is preserved.
         """
         return self.union(other)
 
-    def union(self, *args):
+    def union(self, *args) -> Self:
         """ Return the union of ``self`` with all the arguments (in linear time
             complexity, with first occurrence order preserved).
         """
@@ -6796,6 +6769,12 @@ class BaseModel(metaclass=MetaModel):
 
     def __hash__(self):
         return hash((self._name, frozenset(self._ids)))
+
+    @typing.overload
+    def __getitem__(self, key: int | slice) -> Self: ...
+
+    @typing.overload
+    def __getitem__(self, key: str) -> typing.Any: ...
 
     def __getitem__(self, key):
         """ If ``key`` is an integer or a slice, return the corresponding record
@@ -7225,6 +7204,7 @@ collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
 collections.abc.Sequence.register(BaseModel)
 
+
 class RecordCache(MutableMapping):
     """ A mapping from field names to values, to read and update the cache of a record. """
     __slots__ = ['_record']
@@ -7265,6 +7245,7 @@ class RecordCache(MutableMapping):
 
 AbstractModel = BaseModel
 
+
 class Model(AbstractModel):
     """ Main super-class for regular database-persisted Odoo models.
 
@@ -7280,6 +7261,7 @@ class Model(AbstractModel):
     _register = False           # not visible in ORM registry, meant to be python-inherited only
     _abstract = False           # not abstract
     _transient = False          # not transient
+
 
 class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily

@@ -9,6 +9,7 @@ import base64
 import collections
 import csv
 import datetime
+import enum
 import hashlib
 import hmac as hmac_lib
 import itertools
@@ -118,6 +119,14 @@ objectify.set_default_parser(default_parser)
 
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
+
+class Sentinel(enum.Enum):
+    """Class for typing parameters with a sentinel as a default"""
+    SENTINEL = -1
+
+
+SENTINEL = Sentinel.SENTINEL
+
 #----------------------------------------------------------
 # Subprocesses
 #----------------------------------------------------------
@@ -186,7 +195,7 @@ def file_path(file_path, filter_ext=('',), env=None):
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     root_path = os.path.abspath(config['root_path'])
-    addons_paths = odoo.addons.__path__ + [root_path]
+    addons_paths = [*odoo.addons.__path__, root_path]
     if env and hasattr(env.transaction, '__file_open_tmp_paths'):
         addons_paths += env.transaction.__file_open_tmp_paths
     is_abs = os.path.isabs(file_path)

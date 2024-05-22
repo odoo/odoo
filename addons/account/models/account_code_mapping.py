@@ -24,7 +24,7 @@ class AccountCodeMapping(models.Model):
         inverse='_inverse_code',
     )
 
-    def browse(self, ids=None):
+    def browse(self, ids=()):
         if isinstance(ids, str):
             ids = (ids,)
         return super().browse(ids)

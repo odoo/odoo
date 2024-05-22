@@ -22,7 +22,6 @@ from contextlib import contextmanager
 from inspect import signature
 from pprint import pformat
 from weakref import WeakSet
-from typing import TYPE_CHECKING
 
 try:
     from decorator import decoratorx as decorator
@@ -34,25 +33,66 @@ from .tools import clean_context, frozendict, lazy_property, OrderedSet, Query, 
 from .tools.translate import _
 from odoo.tools.misc import StackMap
 
-if TYPE_CHECKING:
-    from odoo.sql_db import Cursor, TestCursor
+import typing
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
+    from odoo.sql_db import BaseCursor
     from odoo.models import BaseModel
+    try:
+        from typing_extensions import Self  # noqa: F401
+    except ImportError:
+        from typing import Self  # noqa: F401
+    M = typing.TypeVar("M", bound=BaseModel)
+else:
+    Self = None
+    M = typing.TypeVar("M")
+
+DomainType = list[str | tuple[str, str, typing.Any]]
+ContextType = Mapping[str, typing.Any]
+ValuesType = dict[str, typing.Any]
+T = typing.TypeVar('T')
 
 _logger = logging.getLogger(__name__)
 
-# The following attributes are used, and reflected on wrapping methods:
-#  - method._constrains: set by @constrains, specifies constraint dependencies
-#  - method._depends: set by @depends, specifies compute dependencies
-#  - method._returns: set by @returns, specifies return model
-#  - method._onchange: set by @onchange, specifies onchange fields
-#  - method.clear_cache: set by @ormcache, used to clear the cache
-#  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
-#
-# On wrapping method only:
-#  - method._api: decorator function, used for re-applying decorator
-#
 
-INHERITED_ATTRS = ('_returns',)
+class NewId:
+    """ Pseudo-ids for new records, encapsulating an optional origin id (actual
+        record id) and an optional reference (any value).
+    """
+    __slots__ = ['origin', 'ref']
+
+    def __init__(self, origin=None, ref=None):
+        self.origin = origin
+        self.ref = ref
+
+    def __bool__(self):
+        return False
+
+    def __eq__(self, other):
+        return isinstance(other, NewId) and (
+            (self.origin and other.origin and self.origin == other.origin)
+            or (self.ref and other.ref and self.ref == other.ref)
+        )
+
+    def __hash__(self):
+        return hash(self.origin or self.ref or id(self))
+
+    def __repr__(self):
+        return (
+            "<NewId origin=%r>" % self.origin if self.origin else
+            "<NewId ref=%r>" % self.ref if self.ref else
+            "<NewId 0x%x>" % id(self)
+        )
+
+    def __str__(self):
+        if self.origin or self.ref:
+            id_part = repr(self.origin or self.ref)
+        else:
+            id_part = hex(id(self))
+        return "NewId_%s" % id_part
+
+
+IdType: typing.TypeAlias = int | NewId
 
 
 class Params(object):
@@ -88,22 +128,35 @@ class Meta(type):
         return type.__new__(meta, name, bases, attrs)
 
 
+# The following attributes are used, and reflected on wrapping methods:
+#  - method._constrains: set by @constrains, specifies constraint dependencies
+#  - method._depends: set by @depends, specifies compute dependencies
+#  - method._returns: set by @returns, specifies return model
+#  - method._onchange: set by @onchange, specifies onchange fields
+#  - method.clear_cache: set by @ormcache, used to clear the cache
+#  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
+#
+# On wrapping method only:
+#  - method._api: decorator function, used for re-applying decorator
+#
+
 def attrsetter(attr, value):
     """ Return a function that sets ``attr`` on its argument and returns it. """
     return lambda method: setattr(method, attr, value) or method
+
 
 def propagate(method1, method2):
     """ Propagate decorators from ``method1`` to ``method2``, and return the
         resulting method.
     """
     if method1:
-        for attr in INHERITED_ATTRS:
+        for attr in ('_returns',):
             if hasattr(method1, attr) and not hasattr(method2, attr):
                 setattr(method2, attr, getattr(method1, attr))
     return method2
 
 
-def constrains(*args):
+def constrains(*args: str) -> Callable[[T], T]:
     """Decorate a constraint checker.
 
     Each argument must be a field name used in the check::
@@ -249,7 +302,7 @@ def onchange(*args):
     return attrsetter('_onchange', args)
 
 
-def depends(*args):
+def depends(*args: str) -> Callable[[T], T]:
     """ Return a decorator that specifies the field dependencies of a "compute"
         method (for new-style function fields). Each argument must be a string
         that consists in a dot-separated sequence of field names::
@@ -362,7 +415,7 @@ def autovacuum(method):
     return method
 
 
-def model(method):
+def model(method: T) -> T:
     """ Decorate a record-style method where ``self`` is a recordset, but its
         contents is not relevant, only the model is. Such a method::
 
@@ -376,7 +429,8 @@ def model(method):
     method._api = 'model'
     return method
 
-def readonly(method):
+
+def readonly(method: T) -> T:
     """ Decorate a record-style method where ``self.env.cr`` can be a
         readonly cursor when called trough a rpc call.
 
@@ -401,7 +455,7 @@ def _model_create_single(create, self, arg):
     return self.browse().concat(*(create(self, vals) for vals in arg))
 
 
-def model_create_single(method):
+def model_create_single(method: T) -> T:
     """ Decorate a method that takes a dictionary and creates a single record.
         The method may be called with either a single dict or a list of dicts::
 
@@ -422,7 +476,7 @@ def _model_create_multi(create, self, arg):
     return create(self, arg)
 
 
-def model_create_multi(method):
+def model_create_multi(method: T) -> T:
     """ Decorate a method that takes a list of dictionaries and creates multiple
         records. The method may be called with either a single dict or a list of
         dicts::
@@ -479,7 +533,7 @@ class Environment(Mapping):
     structure to manage recomputations.
     """
 
-    cr: Cursor | TestCursor
+    cr: BaseCursor
     uid: int
     context: frozendict
     su: bool

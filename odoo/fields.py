@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ High-level objects for fields. """
+from __future__ import annotations
 
 from collections import defaultdict
 from datetime import date, datetime, time
@@ -38,11 +39,15 @@ from .tools import (
 )
 from .tools.sql import pg_varchar
 from .tools.mimetypes import guess_mimetype
-from .tools.misc import unquote, has_list_types
+from .tools.misc import unquote, has_list_types, Sentinel, SENTINEL
 from .tools.translate import html_translate, _
 
 from odoo.exceptions import CacheMiss
 from odoo.osv import expression
+
+import typing
+from odoo.api import ContextType, DomainType, IdType, NewId, M, T
+
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -59,7 +64,6 @@ _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
 
 NoneType = type(None)
-Default = object()                      # default value for __init__() methods
 
 
 def first(records):
@@ -74,8 +78,8 @@ def resolve_mro(model, name, predicate):
     """
     result = []
     for cls in model._model_classes:
-        value = cls.__dict__.get(name, Default)
-        if value is Default:
+        value = cls.__dict__.get(name, SENTINEL)
+        if value is SENTINEL:
             continue
         if not predicate(value):
             break
@@ -131,7 +135,7 @@ class MetaField(type):
 _global_seq = iter(itertools.count())
 
 
-class Field(MetaField('DummyField', (object,), {})):
+class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     """The field descriptor contains the field definition, and manages accesses
     and assignments of the corresponding field on records. The following
     attributes may be provided when instantiating a field:
@@ -269,11 +273,11 @@ class Field(MetaField('DummyField', (object,), {})):
         .. seealso:: :ref:`Advanced fields/Related fields <reference/fields/related>`
     """
 
-    type = None                         # type of the field (string)
+    type: str                           # type of the field (string)
     relational = False                  # whether the field is a relational one
     translate = False                   # whether the field is translated
 
-    column_type = None                  # database column type (ident, spec)
+    column_type: typing.Tuple[str, str] | None = None  # database column type (ident, spec)
     write_sequence = 0                  # field ordering for write()
 
     args = None                         # the parameters given to __init__()
@@ -290,9 +294,9 @@ class Field(MetaField('DummyField', (object,), {})):
     inherited = False                   # whether the field is inherited (_inherits)
     inherited_field = None              # the corresponding inherited field
 
-    name = None                         # name of the field
-    model_name = None                   # name of the model of this field
-    comodel_name = None                 # name of the model of values (if relational)
+    name: str                           # name of the field
+    model_name: str | None = None       # name of the model of this field
+    comodel_name: str | None = None     # name of the model of values (if relational)
 
     store = True                        # whether the field is stored in database
     index = None                        # how the field is indexed in database
@@ -310,12 +314,12 @@ class Field(MetaField('DummyField', (object,), {})):
     company_dependent = False           # whether ``self`` is company-dependent (property field)
     default = None                      # default(recs) returns the default value
 
-    string = None                       # field label
+    string: str | None = None           # field label
     export_string_translation = True    # whether the field label translations are exported
-    help = None                         # field tooltip
+    help: str | None = None             # field tooltip
     readonly = False                    # whether the field is readonly
     required = False                    # whether the field is required
-    groups = None                       # csv list of group xml ids
+    groups: str | None = None           # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
 
     related_field = None                # corresponding related field
@@ -326,10 +330,10 @@ class Field(MetaField('DummyField', (object,), {})):
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
     exportable = True
 
-    def __init__(self, string=Default, **kwargs):
+    def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
-        self.args = {key: val for key, val in kwargs.items() if val is not Default}
+        self.args = {key: val for key, val in kwargs.items() if val is not SENTINEL}
 
     def __str__(self):
         if self.name is None:
@@ -551,7 +555,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Determine the dependencies and inverse field(s) of ``self``. """
         pass
 
-    def get_depends(self, model):
+    def get_depends(self, model: BaseModel):
         """ Return the field's dependencies and cache dependencies. """
         if self._depends is not None:
             # the parameter 'depends' has priority over 'depends' on compute
@@ -1193,7 +1197,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # Descriptor methods
     #
 
-    def __get__(self, record, owner=None):
+    def __get__(self, record: BaseModel, owner=None) -> T:
         """ return the value of field ``self`` on ``record`` """
         if record is None:
             return self         # the field is accessed through the owner class
@@ -1463,7 +1467,7 @@ class Field(MetaField('DummyField', (object,), {})):
         return determine(self.search, records, operator, value)
 
 
-class Boolean(Field):
+class Boolean(Field[bool]):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     column_type = ('bool', 'bool')
@@ -1478,7 +1482,7 @@ class Boolean(Field):
         return value
 
 
-class Integer(Field):
+class Integer(Field[int]):
     """ Encapsulates an :class:`int`. """
     type = 'integer'
     column_type = ('int4', 'int4')
@@ -1522,7 +1526,7 @@ class Integer(Field):
         return ''
 
 
-class Float(Field):
+class Float(Field[float]):
     """ Encapsulates a :class:`float`.
 
     The precision digits are given by the (optional) ``digits`` attribute.
@@ -1566,7 +1570,7 @@ class Float(Field):
     _digits = None                      # digits argument passed to class initializer
     aggregator = 'sum'
 
-    def __init__(self, string=Default, digits=Default, **kwargs):
+    def __init__(self, string: str | Sentinel = SENTINEL, digits: str | tuple[int, int] | None | Sentinel = SENTINEL, **kwargs):
         super(Float, self).__init__(string=string, _digits=digits, **kwargs)
 
     @property
@@ -1618,7 +1622,7 @@ class Float(Field):
     compare = staticmethod(float_compare)
 
 
-class Monetary(Field):
+class Monetary(Field[float]):
     """ Encapsulates a :class:`float` expressed in a given
     :class:`res_currency<odoo.addons.base.models.res_currency.Currency>`.
 
@@ -1635,7 +1639,7 @@ class Monetary(Field):
     currency_field = None
     aggregator = 'sum'
 
-    def __init__(self, string=Default, currency_field=Default, **kwargs):
+    def __init__(self, string: str | Sentinel = SENTINEL, currency_field: str | Sentinel = SENTINEL, **kwargs):
         super(Monetary, self).__init__(string=string, currency_field=currency_field, **kwargs)
 
     def _description_currency_field(self, env):
@@ -1711,12 +1715,12 @@ class Monetary(Field):
         return value
 
 
-class _String(Field):
+class _String(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
     size = None                         # maximum size of values (deprecated)
 
-    def __init__(self, string=Default, **kwargs):
+    def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         # translate is either True, False, or a callable
         if 'translate' in kwargs and not callable(kwargs['translate']):
             kwargs['translate'] = bool(kwargs['translate'])
@@ -2176,7 +2180,7 @@ class Html(_String):
         return list(map(str, super().get_trans_terms(value)))
 
 
-class Date(Field):
+class Date(Field[date | typing.Literal[False]]):
     """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
@@ -2277,7 +2281,7 @@ class Date(Field):
         return Date.to_string(value)
 
 
-class Datetime(Field):
+class Datetime(Field[datetime | typing.Literal[False]]):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
@@ -2694,7 +2698,7 @@ class Image(Binary):
             return False
 
 
-class Selection(Field):
+class Selection(Field[str | typing.Literal[False]]):
     """ Encapsulates an exclusive choice between different values.
 
     :param selection: specifies the possible values for this field.
@@ -2743,7 +2747,7 @@ class Selection(Field):
     validate = True             # whether validating upon write
     ondelete = None             # {value: policy} (what to do when value is deleted)
 
-    def __init__(self, selection=Default, string=Default, **kwargs):
+    def __init__(self, selection=SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
         self._selection = dict(selection) if isinstance(selection, list) else None
 
@@ -2967,11 +2971,11 @@ class Reference(Selection):
         return value.display_name if value else False
 
 
-class _Relational(Field):
+class _Relational(Field[M], typing.Generic[M]):
     """ Abstract class for relational fields. """
     relational = True
-    domain = []                         # domain for searching values
-    context = {}                        # context for searching values
+    domain: DomainType = []         # domain for searching values
+    context: ContextType = {}       # context for searching values
     check_company = False
 
     def __get__(self, records, owner=None):
@@ -3045,7 +3049,7 @@ class _Relational(Field):
         return domain
 
 
-class Many2one(_Relational):
+class Many2one(_Relational[M]):
     """ The value of such a field is a recordset of size 0 (no
     record) or 1 (a single record).
 
@@ -3083,7 +3087,7 @@ class Many2one(_Relational):
     auto_join = False                   # whether joins are generated upon search
     delegate = False                    # whether self implements delegation
 
-    def __init__(self, comodel_name=Default, string=Default, **kwargs):
+    def __init__(self, comodel_name: str | Sentinel = SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
         super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
     def _setup_attrs(self, model_class, name):
@@ -3159,7 +3163,7 @@ class Many2one(_Relational):
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
-        if type(value) in IdType:
+        if type(value) is int or type(value) is NewId:
             id_ = value
         elif isinstance(value, BaseModel):
             if validate and (value._name != self.comodel_name or len(value) > 1):
@@ -3209,7 +3213,7 @@ class Many2one(_Relational):
             return value.id
 
     def convert_to_write(self, value, record):
-        if type(value) in IdType:
+        if type(value) is int or type(value) is NewId:
             return value
         if not value:
             return False
@@ -4256,7 +4260,7 @@ class Command(enum.IntEnum):
         return (cls.SET, 0, ids)
 
 
-class _RelationalMulti(_Relational):
+class _RelationalMulti(_Relational[M], typing.Generic[M]):
     r"Abstract class for relational fields \*2many."
     write_sequence = 20
 
@@ -4454,7 +4458,7 @@ class _RelationalMulti(_Relational):
         return comodel
 
 
-class One2many(_RelationalMulti):
+class One2many(_RelationalMulti[M]):
     """One2many field; the value of such a field is the recordset of all the
     records in ``comodel_name`` such that the field ``inverse_name`` is equal to
     the current record.
@@ -4483,7 +4487,8 @@ class One2many(_RelationalMulti):
     auto_join = False                   # whether joins are generated upon search
     copy = False                        # o2m are not copied by default
 
-    def __init__(self, comodel_name=Default, inverse_name=Default, string=Default, **kwargs):
+    def __init__(self, comodel_name: str | Sentinel = SENTINEL, inverse_name: str | Sentinel = SENTINEL,
+                 string: str | Sentinel = SENTINEL, **kwargs):
         super(One2many, self).__init__(
             comodel_name=comodel_name,
             inverse_name=inverse_name,
@@ -4747,7 +4752,7 @@ class One2many(_RelationalMulti):
                         cache.set(recs[-1], self, lines._ids)
 
 
-class Many2many(_RelationalMulti):
+class Many2many(_RelationalMulti[M]):
     """ Many2many field; the value of such a field is the recordset.
 
     :param comodel_name: name of the target model (string)
@@ -4797,8 +4802,9 @@ class Many2many(_RelationalMulti):
     auto_join = False                   # whether joins are generated upon search
     ondelete = 'cascade'                # optional ondelete for the column2 fkey
 
-    def __init__(self, comodel_name=Default, relation=Default, column1=Default,
-                 column2=Default, string=Default, **kwargs):
+    def __init__(self, comodel_name: str | Sentinel = SENTINEL, relation: str | Sentinel = SENTINEL,
+                 column1: str | Sentinel = SENTINEL, column2: str | Sentinel = SENTINEL,
+                 string: str | Sentinel = SENTINEL, **kwargs):
         super(Many2many, self).__init__(
             comodel_name=comodel_name,
             relation=relation,
@@ -5213,7 +5219,7 @@ class Many2many(_RelationalMulti):
             ])
 
 
-class Id(Field):
+class Id(Field[IdType | typing.Literal[False]]):
     """ Special case for field 'id'. """
     type = 'integer'
     column_type = ('int4', 'int4')
@@ -5296,5 +5302,5 @@ def apply_required(model, field_name):
 from .exceptions import AccessError, MissingError, UserError
 from .models import (
     check_pg_name, expand_ids, is_definition_class,
-    BaseModel, IdType, NewId, PREFETCH_MAX,
+    BaseModel, PREFETCH_MAX,
 )
