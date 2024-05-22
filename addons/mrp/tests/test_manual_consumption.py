@@ -230,3 +230,50 @@ class TestManualConsumption(TestMrpCommon):
         move_auto, move_manual = get_moves(backorder)
         self.assertEqual(move_auto.manual_consumption, False)
         self.assertEqual(move_manual.manual_consumption, True)
+
+    def test_update_manual_consumption_00(self):
+        """
+        Check that the manual consumption is set to true when the quantity is manualy set.
+        """
+        bom = self.bom_1
+        components = bom.bom_line_ids.product_id
+        self.env['stock.quant']._update_available_quantity(components[0], self.stock_location, 10)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 4
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [False, False])
+        self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 2.0)
+        with Form(mo) as fmo:
+            with fmo.move_raw_ids.edit(0) as line_0:
+                line_0.quantity = 3.0
+                line_0.picked = True
+        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [True, False])
+        self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 3.0)
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 4.0, 'picked': True}])
+
+    def test_update_manual_consumption_01(self):
+        """
+        Check that the quantity of a raw line that is manually consumed is not updated
+        when the qty producing is changed and that others are.
+        """
+        bom = self.bom_1
+        components = bom.bom_line_ids.product_id
+        self.env['stock.quant']._update_available_quantity(components[0], self.stock_location, 10)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 4
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [False, False])
+        self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 2.0)
+        with Form(mo) as fmo:
+            with fmo.move_raw_ids.edit(0) as line_0:
+                line_0.quantity = 3.0
+                line_0.picked = True
+            fmo.qty_producing = 2.0
+        self.assertEqual(mo.move_raw_ids.mapped('manual_consumption'), [True, False])
+        self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 3.0)
+        self.assertRecordValues(mo.move_raw_ids, [{'quantity': 3.0, 'picked': True}, {'quantity': 2.0, 'picked': True}])
