@@ -3,15 +3,15 @@
 
     <!-- Success status -->
     <t t-name="website.s_website_form_status_success">
-        <span id="s_website_form_result" class="text-success ml8">
-            <i class="fa fa-check mr4" role="img" aria-label="Success" title="Success"/>The form has been sent successfully.
+        <span id="s_website_form_result" class="me-2 small text-success">
+            <i class="fa fa-paper-plane me-1" role="img" aria-hidden="true" title="Success"/>The form has been sent successfully.
         </span>
     </t>
 
     <!-- Error status -->
     <t t-name="website.s_website_form_status_error">
-        <span id="s_website_form_result" class="text-danger ml8">
-            <i class="fa fa-close mr4" role="img" aria-label="Error" title="Error"/>
+        <span id="s_website_form_result" class="me-2 small text-danger">
+            <i class="fa fa-close me-1" role="img" aria-hidden="true" title="Error"/>
             <t t-esc="message"/>
         </span>
     </t>
