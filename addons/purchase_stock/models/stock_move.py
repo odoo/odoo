@@ -55,22 +55,30 @@ class StockMove(models.Model):
             if invoiced_layer:
                 receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
-            invoiced_value = 0
+            total_invoiced_value = 0
             invoiced_qty = 0
             for invoice_line in line.sudo().invoice_lines:
                 if invoice_line.move_id.state != 'posted':
                     continue
                 if invoice_line.tax_ids:
-                    invoiced_value += invoice_line.tax_ids.with_context(round=False).compute_all(
+                    invoice_line_value = invoice_line.tax_ids.with_context(round=False).compute_all(
                         invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity)['total_void']
                 else:
-                    invoiced_value += invoice_line.price_unit * invoice_line.quantity
+                    invoice_line_value = invoice_line.price_unit * invoice_line.quantity
+                total_invoiced_value += invoice_line.currency_id._convert(
+                        invoice_line_value, order.currency_id, order.company_id, invoice_line.move_id.invoice_date, round=False)
                 invoiced_qty += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_id.uom_id)
             # TODO currency check
-            remaining_value = invoiced_value - receipt_value
+            remaining_value = total_invoiced_value - receipt_value
             # TODO qty_received in product uom
             remaining_qty = invoiced_qty - line.product_uom._compute_quantity(received_qty, line.product_id.uom_id)
-            price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec) if remaining_value and remaining_qty else line._get_gross_price_unit()
+            if order.currency_id != order.company_id.currency_id and remaining_value and remaining_qty:
+                # will be rounded during currency conversion
+                price_unit = remaining_value / remaining_qty
+            elif remaining_value and remaining_qty:
+                price_unit = float_round(remaining_value / remaining_qty, precision_digits=price_unit_prec)
+            else:
+                price_unit = line._get_gross_price_unit()
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
