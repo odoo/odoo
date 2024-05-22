@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { mockDate } from "@odoo/hoot-mock";
+import { Deferred, mockDate } from "@odoo/hoot-mock";
 
 import { rpc } from "@web/core/network/rpc";
 import {
@@ -65,6 +65,7 @@ test("Closing a category sends the updated user setting to the server.", async (
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi"); // wait fully loaded
     await click(
         ":nth-child(1 of .o-mail-DiscussSidebarCategory) .o-mail-DiscussSidebarCategory-icon"
     );
@@ -149,6 +150,7 @@ test("channel - states: open manually by clicking the title", async () => {
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi"); // wait fully loaded
     await contains(".o-mail-DiscussSidebarCategory-channel", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
     await click(".o-mail-DiscussSidebarCategory-channel .btn", { text: "Channels" });
@@ -765,6 +767,7 @@ test("channel - states: close should update the value on the server", async () =
         [serverState.userId]
     );
     expect(initalSettings.is_discuss_sidebar_category_channel_open).toBe(true);
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-down"); // wait fully loaded
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     const newSettings = await getService("orm").call(
         "res.users.settings",
@@ -1229,4 +1232,33 @@ test("Update channel data via bus notification", async () => {
     await insertText(".o-mail-Discuss-threadName", "test", { target: env1 });
     await triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Salestest", target: env2 });
+});
+
+test("sidebar: show loading on initial opening", async () => {
+    // This could load a lot of data (all pinned conversations)
+    const def = new Deferred();
+    onRpcBefore("/mail/action", async (args) => {
+        if (args.channels_as_member) {
+            await def;
+        }
+    });
+    onRpcBefore("/mail/data", async (args) => {
+        if (args.channels_as_member) {
+            await def;
+        }
+    });
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss();
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin"
+    );
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General", count: 0 });
+    def.resolve();
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",
+        { count: 0 }
+    );
+    await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
 });

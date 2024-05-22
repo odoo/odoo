@@ -13,8 +13,9 @@
     <t t-name="mail.DiscussSidebarCategory">
         <t t-set="hover_class" t-value="'btn p-0 text-start opacity-100-hover opacity-75'"/>
         <div class="o-mail-DiscussSidebarCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
-            <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => (category.open = !category.open)">
-                <i class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+            <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => store.channels.status !== 'fetching' and (category.open = !category.open)">
+                <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon small me-1 fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
+                <i t-else="" class="o-mail-DiscussSidebarCategory-icon small me-1" t-att-class="category.open ? 'oi oi-fw oi-chevron-down' : 'oi oi-fw oi-chevron-right'"/>
                 <span class="btn-sm p-0 text-uppercase text-break fw-bolder"><t t-esc="category.name"/></span>
             </div>
             <div class="flex-grow-1"/>

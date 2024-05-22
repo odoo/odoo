@@ -26,7 +26,7 @@
             </t>
         </div>
         <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="d-flex flex-column overflow-auto flex-grow-1 list-group-flush">
-            <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
+            <div t-if="store.channels.status !== 'fetching' and !hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
             <t t-if="installationRequest.isShown">
@@ -101,6 +101,9 @@
                         </t>
                     </t>
                 </NotificationItem>
+            </t>
+            <t t-if="store.channels.status === 'fetching'">
+                <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>
             </t>
         </div>
     </div>

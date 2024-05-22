@@ -1118,7 +1118,7 @@ test("can open messaging menu even if channels are not fetched", async () => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-DiscussSystray", { text: "No conversation yet..." });
+    await contains(".o-mail-DiscussSystray", { text: "Loading…" });
     def.resolve();
     await contains(".o-mail-NotificationItem", { text: "General" });
 });
