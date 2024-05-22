@@ -265,7 +265,7 @@ export const datetimePickerService = {
                     const { type } = pickerProps;
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
                     try {
-                        return [convertFn(value, { format: hookParams.format, tz: pickerProps.tz }), null];
+                        return [convertFn(value, { format: hookParams.format, tz: pickerProps.tz, showSeconds: pickerProps.showSeconds }), null];
                     } catch (error) {
                         if (error?.name === "ConversionError") {
                             return [null, error];
