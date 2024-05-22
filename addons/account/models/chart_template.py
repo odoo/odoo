@@ -141,7 +141,7 @@ class AccountChartTemplate(models.AbstractModel):
         :type install_demo: bool
         """
         if not company:
-            company = self.env.company
+            return
         if isinstance(company, int):
             company = self.env['res.company'].browse([company])
 
@@ -218,14 +218,20 @@ class AccountChartTemplate(models.AbstractModel):
             try:
                 with self.env.cr.savepoint():
                     self = self.with_context(lang=original_context_lang)
-                    company = company.with_env(self.env)
-                    self.sudo()._load_data(self._get_demo_data(company))
-                    self._post_load_demo_data(company)
+                    self._install_demo(company.with_env(self.env))
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
             self._load(template_code, subsidiary, install_demo)
+
+    @api.model
+    def _install_demo(self, companies):
+        if not isinstance(companies, models.BaseModel):
+            companies = self.env['res.company'].browse(companies)
+        for company in companies:
+            self.sudo()._load_data(self._get_demo_data(company))
+            self._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data):
         """Pre-process the data in case of reloading the chart of accounts.
