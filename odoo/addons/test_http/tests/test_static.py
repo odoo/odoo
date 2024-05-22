@@ -513,6 +513,30 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         res_etag.raise_for_status()
         self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")
 
+    @freeze_time(datetime.utcnow())
+    def test_static_cache3_private(self):
+        gizeh_png = self.env.ref('test_http.gizeh_png')
+        gizeh_png.public = False
+        url = '/web/image/test_http.gizeh_png'
+
+        # Visitor must get a placeholder
+        self.authenticate(None, None)
+        res_visitor = self.assertDownloadPlaceholder(url)
+        self.assertEqual(res_visitor.headers.get('Cache-Control', ''), 'no-cache, private')
+        self.assertTrue(res_visitor.headers.get('ETag'))
+        res_visitor_etag = self.db_url_open(url, headers={
+            'If-None-Match': res_visitor.headers['ETag']
+        })
+        self.assertEqual(res_visitor_etag.status_code, 304, "The visitor should use its cache")
+
+        # Admin can get the actual image
+        self.authenticate('admin', 'admin')
+        res = self.assertDownloadGizeh(url)
+        self.assertEqual(res.headers.get('Cache-Control', ''), 'no-cache, private')
+        res_etag = self.db_url_open(url, headers={'If-None-Match': res.headers['ETag']})
+        res_etag.raise_for_status()
+        self.assertEqual(res_etag.status_code, 304, "The admin should use its cache")
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticUpload(TestHttpStaticCommon):
