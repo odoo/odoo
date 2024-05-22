@@ -611,6 +611,9 @@ class account_journal(models.Model):
             ('move_id.payment_state', 'in', ('not_paid', 'partial')),
             ('date_maturity', '!=', False),
             ('amount_residual', '<', 0),
+            ('account_id.reconcile', '=', True),
+            ('account_id.account_type', '=', 'liability_payable'),
+            ('display_type', '=', 'payment_term'),
             ('parent_state', '=', 'posted'),
             ('journal_id.type', '=', 'purchase'),
         ])
@@ -622,6 +625,9 @@ class account_journal(models.Model):
             ('move_id.payment_state', 'in', ('not_paid', 'partial')),
             ('date_maturity', '<', fields.Date.context_today(self)),
             ('amount_residual', '<', 0),
+            ('account_id.reconcile', '=', True),
+            ('account_id.account_type', '=', 'liability_payable'),
+            ('display_type', '=', 'payment_term'),
             ('parent_state', '=', 'posted'),
             ('journal_id.type', '=', 'purchase'),
         ])
@@ -814,6 +820,7 @@ class account_journal(models.Model):
                 action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt', 'entry'))]
 
         action['domain'] = (action['domain'] or []) + [('journal_id', '=', self.id)]
+        action['name'] = _('%(action)s for journal %(journal)s', action=action['name'], journal=self.name)
         return action
 
     def open_payments_action(self, payment_type=False, mode='tree'):
@@ -872,6 +879,7 @@ class account_journal(models.Model):
                 'date_to': fields.Date.context_today(self),
                 'search_default_date_between': True
             }
+        action['name'] = _('%(action)s for journal %(journal)s', action=action['name'], journal=self.name)
         return action
 
     def show_sequence_holes(self):
