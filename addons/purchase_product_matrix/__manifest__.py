@@ -12,6 +12,7 @@ by choosing product variants quantity through a Grid Entry.
     'depends': ['purchase', 'product_matrix'],
     'data': [
         'views/purchase_views.xml',
+        'views/product_template_views.xml',
         'report/purchase_quotation_templates.xml',
         'report/purchase_order_templates.xml',
     ],
