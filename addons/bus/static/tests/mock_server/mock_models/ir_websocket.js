@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { models } from "@web/../tests/web_test_helpers";
+import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class IrWebSocket extends models.ServerModel {
     _name = "ir.websocket";
@@ -46,9 +46,10 @@ export class IrWebSocket extends models.ServerModel {
         channels.push("broadcast");
         const authenticatedUserId = this.env.cookie.get("authenticated_user_sid");
         const [authenticatedPartner] = authenticatedUserId
-            ? ResPartner.search_read([["user_ids", "in", [authenticatedUserId]]], {
-                  context: { active_test: false },
-              })
+            ? ResPartner.search_read(
+                  [["user_ids", "in", [authenticatedUserId]]],
+                  makeKwArgs({ context: { active_test: false } })
+              )
             : [];
         if (authenticatedPartner) {
             channels.push(authenticatedPartner);

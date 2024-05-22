@@ -1,26 +1,58 @@
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 
 /**
- * This is a flag on kwargs, so that they can easily be distinguished from args in methods of models.
- * That way they can be easily be parsed, e.g. by combining args & kwargs @see parseModelParams
- */
-const IS_KWARGS = Symbol("is_kwargs");
-
-/**
  * @template T
- * @param {T} kwargs
+ * @typedef {import("./mock_server").KwArgs<T>} KwArgs
  */
-export function isKwargs(kwargs) {
-    return Boolean(kwargs?.[IS_KWARGS]);
-}
+
+//-----------------------------------------------------------------------------
+// Internal
+//-----------------------------------------------------------------------------
 
 /**
+ * This is a flag on keyword arguments, so that they can easily be distinguished
+ * from args in ORM methods. They can then be easily retrieved with {@link getKwArgs}.
+ */
+const KWARGS_SYMBOL = Symbol("is_kwargs");
+
+//-----------------------------------------------------------------------------
+// Exports
+//-----------------------------------------------------------------------------
+
+/**
+ * Flags keyword arguments, so that they can easily be distinguished from regular
+ * arguments in ORM methods.
+ *
+ * They can then be easily retrieved with {@link getKwArgs}.
+ *
  * @template T
  * @param {T} kwargs
  * @returns {T}
  */
-export function Kwargs(kwargs) {
-    kwargs[IS_KWARGS] = true;
+export function makeKwArgs(kwargs) {
+    kwargs[KWARGS_SYMBOL] = true;
+    return kwargs;
+}
+
+/**
+ * Retrieves keyword arguments flagged by {@link makeKwArgs} from an arguments list.
+ *
+ * @template {string} T
+ * @param {Iterable<any>} allArgs arguments of method
+ * @param  {...T} argNames ordered names of positional arguments
+ * @returns {KwArgs<Record<T, any>>} kwargs normalized params
+ */
+export function getKwArgs(allArgs, ...argNames) {
+    const args = [...allArgs];
+    const kwargs = args.at(-1)?.[KWARGS_SYMBOL] ? args.pop() : makeKwArgs({});
+    if (args.length > argNames.length) {
+        throw new MockServerError("more positional arguments than there are given argument names");
+    }
+    for (let i = 0; i < args.length; i++) {
+        if (args[i] !== null && args[i] !== undefined) {
+            kwargs[argNames[i]] = args[i];
+        }
+    }
     return kwargs;
 }
 
@@ -74,6 +106,18 @@ export function safeSplit(value, separator) {
               .trim()
               .split(separator || ",")
         : [];
+}
+
+/**
+ * Removes the flag for keyword arguments.
+ *
+ * @template T
+ * @param {T} kwargs
+ * @returns {T}
+ */
+export function unmakeKwArgs(kwargs) {
+    delete kwargs[KWARGS_SYMBOL];
+    return kwargs;
 }
 
 export class MockServerError extends Error {

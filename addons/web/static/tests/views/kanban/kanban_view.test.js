@@ -1,4 +1,3 @@
-import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import { after, beforeEach, expect, test } from "@odoo/hoot";
 import {
     click,
@@ -16,8 +15,10 @@ import {
     queryText,
     resize,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
+    MockServer,
     clickKanbanLoadMore,
     clickSave,
     contains,
@@ -42,7 +43,6 @@ import {
     getPagerValue,
     getService,
     makeServerError,
-    MockServer,
     mockService,
     models,
     mountView,
@@ -5306,8 +5306,8 @@ test.tags("desktop")("auto fold group when reach the limit", async () => {
         Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
     }
 
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         result.groups[2].__fold = true;
         result.groups[8].__fold = true;
         return result;
@@ -5369,8 +5369,8 @@ test.tags("desktop")("auto fold group when reach the limit (2)", async () => {
         Partner._records.push({ id: 20 + i, foo: "dumb entry", product_id: 8 + i });
     }
 
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         for (let i = 0; i < result.groups.length; i++) {
             result.groups[i].__fold = i == 2 || i == 8;
         }
@@ -5653,9 +5653,9 @@ test("create a column, delete it and create another one", async () => {
 test("delete an empty column, then a column with records.", async () => {
     let firstLoad = true;
 
-    onRpc("web_read_group", function ({ kwargs }) {
+    onRpc("web_read_group", function ({ parent }) {
         // override read_group to return an extra empty groups
-        const result = this.env.partner.web_read_group(kwargs);
+        const result = parent();
         if (firstLoad) {
             result.groups.unshift({
                 __domain: [["product_id", "=", 7]],
@@ -6422,11 +6422,11 @@ test.tags("desktop")("no content helper when no data", async () => {
 });
 
 test("no nocontent helper for grouped kanban with empty groups", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
+    onRpc("web_read_group", function ({ kwargs, parent }) {
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        const result = this.env.partner.web_read_group(kwargs);
+        const result = parent();
         for (const group of result.groups) {
             group[kwargs.groupby[0] + "_count"] = 0;
         }
@@ -6811,11 +6811,11 @@ test("empty kanban with sample data grouped by date range (fill temporal)", asyn
 });
 
 test("empty grouped kanban with sample data and click quick create", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
+    onRpc("web_read_group", function ({ kwargs, parent }) {
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        const result = this.env.partner.web_read_group(kwargs);
+        const result = parent();
         result.groups.forEach((group) => {
             group[`${kwargs.groupby[0]}_count`] = 0;
         });
@@ -6860,11 +6860,11 @@ test("empty grouped kanban with sample data and click quick create", async () =>
 });
 
 test.tags("desktop")("quick create record in grouped kanban with sample data", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
+    onRpc("web_read_group", function ({ kwargs, parent }) {
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        const result = this.env.partner.web_read_group(kwargs);
+        const result = parent();
         result.groups.forEach((group) => {
             group[`${kwargs.groupby[0]}_count`] = 0;
         });
@@ -6903,11 +6903,11 @@ test.tags("desktop")("quick create record in grouped kanban with sample data", a
 });
 
 test("empty grouped kanban with sample data and cancel quick create", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
+    onRpc("web_read_group", function ({ kwargs, parent }) {
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        const result = this.env.partner.web_read_group(kwargs);
+        const result = parent();
         result.groups.forEach((group) => {
             group[`${kwargs.groupby[0]}_count`] = 0;
         });
@@ -6950,8 +6950,8 @@ test("empty grouped kanban with sample data and cancel quick create", async () =
 });
 
 test.tags("desktop")("empty grouped kanban with sample data: keynav", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         result.groups.forEach((g) => (g.product_id_count = 0));
         return result;
     });
@@ -7018,17 +7018,15 @@ test.tags("desktop")("empty kanban with sample data", async () => {
 });
 
 test("empty grouped kanban with sample data and many2many_tags", async () => {
-    onRpc(function ({ kwargs, method }) {
-        if (method === "web_read_group") {
-            const result = this.env.partner.web_read_group(kwargs);
-            // override read_group to return empty groups, as this is
-            // the case for several models (e.g. project.task grouped
-            // by stage_id)
-            result.groups.forEach((group) => {
-                group[`${kwargs.groupby[0]}_count`] = 0;
-            });
-            return result;
-        }
+    onRpc("web_read_group", function ({ kwargs, parent }) {
+        const result = parent();
+        // override read_group to return empty groups, as this is
+        // the case for several models (e.g. project.task grouped
+        // by stage_id)
+        result.groups.forEach((group) => {
+            group[`${kwargs.groupby[0]}_count`] = 0;
+        });
+        return result;
     });
     stepAllNetworkCalls();
 
@@ -7080,8 +7078,8 @@ test.tags("desktop")("sample data does not change after reload with sample data"
     // list-view so that there is a view switcher, unused
     Partner._views["list,false"] = '<tree><field name="foo"/></tree>';
 
-    onRpc("web_read_group", function ({ kwargs, method }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ kwargs, parent }) {
+        const result = parent();
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
@@ -7148,8 +7146,8 @@ test.tags("desktop")("non empty kanban with sample data", async () => {
 });
 
 test("empty grouped kanban with sample data: add a column", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         result.groups = Product._records.map((r) => {
             return {
                 product_id: [r.id, r.display_name],
@@ -7195,8 +7193,8 @@ test("empty grouped kanban with sample data: add a column", async () => {
 
 test.tags("desktop")("empty grouped kanban with sample data: cannot fold a column", async () => {
     // folding a column in grouped kanban with sample data is disabled, for the sake of simplicity
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ kwargs, parent }) {
+        const result = parent();
         // override read_group to return a single, empty group
         result.groups = result.groups.slice(0, 1);
         result.groups[0][`${kwargs.groupby[0]}_count`] = 0;
@@ -7283,8 +7281,8 @@ test("empty grouped kanban with sample data: delete a column", async () => {
 });
 
 test("empty grouped kanban with sample data: add a column and delete it right away", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         result.groups = Product._records.map((r) => {
             return {
                 product_id: [r.id, r.display_name],
@@ -9958,8 +9956,8 @@ test.tags("desktop")("grouped kanban: clear groupby when reloading", async () =>
     // clearing the groupby does not corrupt the data handled while
     // reloading the kanban view.
     const def = new Deferred();
-    onRpc("web_read_group", async function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", async function ({ kwargs, parent }) {
+        const result = parent();
         if (kwargs.domain.length === 0 && kwargs.groupby && kwargs.groupby[0] === "bar") {
             await def; // delay 1st update
         }
@@ -10134,11 +10132,11 @@ test.tags("desktop")("keynav: grouped kanban", async () => {
 test.tags("desktop")("keynav: grouped kanban with empty columns", async () => {
     Partner._records[1].state = "abc";
 
-    onRpc("web_read_group", function ({ kwargs }) {
+    onRpc("web_read_group", function ({ parent }) {
         // override read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped
         // by stage_id)
-        const result = this.env.partner.web_read_group(kwargs);
+        const result = parent();
         // add 2 empty columns in the middle
         result.groups.splice(1, 0, {
             state_count: 0,
@@ -12310,8 +12308,8 @@ test.tags("desktop")("fold a column and drag record on it should not unfold it",
 });
 
 test.tags("desktop")("drag record on initially folded column should not unfold it", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         result.groups[1].__fold = true;
         return result;
     });
@@ -12468,8 +12466,8 @@ test.tags("desktop")("quick create record in grouped kanban in a form view dialo
 });
 
 test.tags("desktop")("no sample data when all groups are folded then one is unfolded", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         for (const group of result.groups) {
             group.__fold = true;
         }
@@ -12500,8 +12498,8 @@ test.tags("desktop")("no sample data when all groups are folded then one is unfo
 });
 
 test.tags("desktop")("no content helper, all groups folded with (unloaded) records", async () => {
-    onRpc("web_read_group", function ({ kwargs }) {
-        const result = this.env.partner.web_read_group(kwargs);
+    onRpc("web_read_group", function ({ parent }) {
+        const result = parent();
         for (const group of result.groups) {
             group.__fold = true;
         }
@@ -12853,10 +12851,10 @@ test("sample server: _mockWebReadGroup API", async () => {
 });
 
 test.tags("desktop")("scroll on group unfold and progressbar click", async () => {
-    onRpc(function ({ method, kwargs }) {
+    onRpc(function ({ method, parent }) {
         expect.step(method);
         if (method === "web_read_group") {
-            const result = this.env.partner.web_read_group(kwargs);
+            const result = parent();
             if (result.groups.length) {
                 result.groups[0].__fold = false;
                 if (result.groups[1]) {

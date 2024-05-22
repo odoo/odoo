@@ -1,6 +1,5 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { Kwargs } from "@web/../tests/_framework/mock_server/mock_server_utils";
-import { fields } from "@web/../tests/web_test_helpers";
+import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
     livechat_channel_id = fields.Many2one({ relation: "im_livechat.channel", string: "Channel" }); // FIXME: somehow not fetched properly
@@ -54,7 +53,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         }
         this.message_post(
             channel.id,
-            Kwargs({
+            makeKwArgs({
                 body: this._get_visitor_leave_message(),
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
