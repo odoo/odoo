@@ -1,6 +1,5 @@
-import { fields, models } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, models } from "@web/../tests/web_test_helpers";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
-import { parseModelParams } from "../mail_mock_server";
 
 export class DiscussChannelMember extends models.ServerModel {
     _name = "discuss.channel.member";
@@ -16,7 +15,7 @@ export class DiscussChannelMember extends models.ServerModel {
      * @param {boolean} is_typing
      */
     notify_typing(ids, is_typing) {
-        const kwargs = parseModelParams(arguments, "ids", "is_typing");
+        const kwargs = getKwArgs(arguments, "ids", "is_typing");
         ids = kwargs.ids;
         delete kwargs.ids;
         is_typing = kwargs.is_typing;
@@ -54,7 +53,7 @@ export class DiscussChannelMember extends models.ServerModel {
      * @param {number} [state_count]
      */
     _channel_fold(id, state, state_count) {
-        const kwargs = parseModelParams(arguments, "id", "state", "state_count");
+        const kwargs = getKwArgs(arguments, "id", "state", "state_count");
         id = kwargs.id;
         delete kwargs.id;
         state = kwargs.state;
@@ -88,7 +87,7 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /** @param {number[]} ids */
     _discuss_channel_member_format(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
@@ -125,7 +124,7 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /** @param {number[]} ids */
     _get_partner_data(ids) {
-        const kwargs = parseModelParams(arguments, "ids");
+        const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 

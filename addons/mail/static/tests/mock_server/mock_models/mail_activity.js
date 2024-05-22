@@ -1,10 +1,9 @@
+import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
-import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
-import { fields, models, serverState } from "@web/../tests/web_test_helpers";
+import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
 import { MailActivityType } from "./mail_activity_type";
-import { parseModelParams } from "../mail_mock_server";
 
 const { DateTime } = luxon;
 
@@ -109,14 +108,7 @@ export class MailActivity extends models.ServerModel {
      * @param {boolean} fetch_done
      */
     get_activity_data(res_model, domain, limit = 0, offset = 0, fetch_done) {
-        const kwargs = parseModelParams(
-            arguments,
-            "res_model",
-            "domain",
-            "limit",
-            "offset",
-            "fetch_done"
-        );
+        const kwargs = getKwArgs(arguments, "res_model", "domain", "limit", "offset", "fetch_done");
         res_model = kwargs.res_model;
         domain = kwargs.domain;
         limit = kwargs.limit || 0;
