@@ -1144,6 +1144,15 @@ class Evaluacion(models.Model):
         }
     
     def actualizar_estados_eval(self):
+        """
+        Actualiza el estado de las evaluacion segun la fecha actual.
+
+        - Si la fecha actual está dentro del rango de fechas de inicio y finalización,
+          se cambia el estado a 'publicado' (Abierta).
+        - De lo contrario pasa a 'finalizado' (Cerrada).
+        
+        :return: None
+        """
         today = fields.Date.today()
         evaluaciones = self.search([("estado", "!=", "finalizado")])
         for evaluacion in evaluaciones:
