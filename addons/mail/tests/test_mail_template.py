@@ -71,6 +71,7 @@ class TestMailTemplate(MailCommon):
                 'model_id': self.env['ir.model']._get('mail.thread').id,
             })
 
+
     def test_mail_template_acl(self):
         # Sanity check
         self.assertTrue(self.user_admin.has_group('mail.group_mail_template_editor'))
