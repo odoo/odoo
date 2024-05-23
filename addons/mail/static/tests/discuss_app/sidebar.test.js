@@ -207,20 +207,20 @@ test("sidebar quick search at 20 or more pinned channels", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
-    await contains(".o-mail-DiscussSidebar input[placeholder='Quick search...']");
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "1");
+    await contains(".o-mail-DiscussSidebar input[placeholder='Quick search…']");
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "1");
     await contains(".o-mail-DiscussSidebarChannel", { count: 11 });
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "12", {
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "12", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "channel12" });
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "123", {
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "123", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     // search should work in case-insensitive
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "C", {
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "C", {
         replace: true,
     });
     await contains(".o-mail-DiscussSidebarChannel", { count: 20 });
@@ -250,7 +250,7 @@ test("sidebar quick search takes DM custom name into account", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
     // search
-    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search...']", "Marc");
+    await insertText(".o-mail-DiscussSidebar input[placeholder='Quick search…']", "Marc");
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Marc" });
 });

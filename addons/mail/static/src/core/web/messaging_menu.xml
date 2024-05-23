@@ -16,13 +16,24 @@
     <t t-else="" t-call="mail.MessagingMenu.content"/>
 </t>
 
+<t t-name="mail.MessagingMenuQuickSearch">
+    <input class="form-control rounded-3" placeholder="Quick search…" t-model="state.val" t-ref="root"/>
+</t>
+
 <t t-name="mail.MessagingMenu.content">
     <div t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
-        <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'text-uppercase border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+        <div class="o-mail-MessagingMenu-header d-flex align-items-center flex-wrap" t-att-class="{'text-uppercase border-start-0 border-end-0': ui.isSmall, 'bg-view border-bottom': !ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
             <t t-if="!ui.isSmall">
-                <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
-                <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
-                <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                <t t-if="!state.quickSearchOpen">
+                    <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
+                    <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                    <button class="btn btn-link py-2 rounded-0" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                </t>
+                <hr class="opacity-0 flex-shrink-0"/>
+                <t t-if="hasQuickSearch">
+                    <span t-if="state.quickSearchOpen" class="d-flex-inline mx-2"><MessagingMenuQuickSearch onChange.bind="(val) => this.onChangeQuickSearch(val)"/></span>
+                    <button class="btn" t-att-disabled="state.quickSearchOpen" t-on-click="openQuickSearch"><i class="oi oi-fw oi-search"/></button>
+                </t>
             </t>
         </div>
         <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush">
@@ -75,7 +86,7 @@
                     />
                 </t>
             </t>
-            <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
+            <t t-foreach="filteredThreads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     body="message?.inlineBody or message?.subtype_description"
@@ -102,6 +113,7 @@
                     </t>
                 </NotificationItem>
             </t>
+            <div t-if="filteredThreads.length === 0 and state.quickSearchVal.length" class="d-flex p-2 justify-content-center"><span>No conversation matches the search</span></div>
         </div>
     </div>
     <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
