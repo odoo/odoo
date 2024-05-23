@@ -2674,6 +2674,7 @@ class SnippetsMenu extends Component {
                 return false;
             });
             // Insert an invisible snippet in its "parentEl" element.
+<<<<<<< HEAD
             const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant) => {
                 const editor = await this._createSnippetEditor($(invisibleSnippetEl));
                 return {
@@ -2686,6 +2687,45 @@ class SnippetsMenu extends Component {
                     isVisible: editor.isTargetVisible(),
                     children: [],
                 };
+||||||| parent of 1e78dbcce9fe (temp)
+            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant,
+                                                  parentEl) => {
+                const editor = await this._createSnippetEditor($(invisibleSnippetEl));
+                const invisibleEntryEl = document.createElement("div");
+                invisibleEntryEl.className = `${isRootParent ? "o_we_invisible_root_parent" : ""}`;
+                invisibleEntryEl.classList.add("o_we_invisible_entry", "d-flex",
+                    "align-items-center", "justify-content-between");
+                invisibleEntryEl.classList.toggle("o_we_sublevel_1", isDescendant);
+                const titleEl = document.createElement("we-title");
+                titleEl.textContent = editor.getName();
+                invisibleEntryEl.appendChild(titleEl);
+                const iconEl = document.createElement("i");
+                const eyeIconClass = editor.isTargetVisible() ? "fa-eye" : "fa-eye-slash";
+                iconEl.classList.add("fa", "ms-2", eyeIconClass);
+                invisibleEntryEl.appendChild(iconEl);
+                parentEl.appendChild(invisibleEntryEl);
+                this.invisibleDOMMap.set(invisibleEntryEl, invisibleSnippetEl);
+=======
+            const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant,
+                                                  parentEl) => {
+                const $invisibleSnippetEl = $(invisibleSnippetEl);
+                $invisibleSnippetEl.__force_create_editor = true;
+                const editor = await this._createSnippetEditor($invisibleSnippetEl);
+                const invisibleEntryEl = document.createElement("div");
+                invisibleEntryEl.className = `${isRootParent ? "o_we_invisible_root_parent" : ""}`;
+                invisibleEntryEl.classList.add("o_we_invisible_entry", "d-flex",
+                    "align-items-center", "justify-content-between");
+                invisibleEntryEl.classList.toggle("o_we_sublevel_1", isDescendant);
+                const titleEl = document.createElement("we-title");
+                titleEl.textContent = editor.getName();
+                invisibleEntryEl.appendChild(titleEl);
+                const iconEl = document.createElement("i");
+                const eyeIconClass = editor.isTargetVisible() ? "fa-eye" : "fa-eye-slash";
+                iconEl.classList.add("fa", "ms-2", eyeIconClass);
+                invisibleEntryEl.appendChild(iconEl);
+                parentEl.appendChild(invisibleEntryEl);
+                this.invisibleDOMMap.set(invisibleEntryEl, invisibleSnippetEl);
+>>>>>>> 1e78dbcce9fe (temp)
             };
             // Insert all the invisible snippets contained in "snippetEls" as
             // well as their descendants in the "parentEl" element. If
@@ -2752,6 +2792,13 @@ class SnippetsMenu extends Component {
             } else {
                 $snippet = $globalSnippet;
             }
+        }
+        if (this.options.enableTranslation && $snippet && !this._allowInTranslationMode($snippet)) {
+            // In translate mode, only activate allowed snippets (e.g., even if
+            // we create editors for invisible elements when translating them,
+            // we only want to toggle their visibility when the related sidebar
+            // buttons are clicked).
+            return;
         }
         const exec = previewMode
             ? action => this._mutex.exec(action)
@@ -3200,6 +3247,24 @@ class SnippetsMenu extends Component {
             return snippetEditor.__isStarted;
         }
 
+<<<<<<< HEAD
+||||||| parent of 1e78dbcce9fe (temp)
+        // In translate mode, only allow creating the editor if the target is a
+        // text option snippet.
+        if (this.options.enableTranslation && !this._allowInTranslationMode($snippet)) {
+            return Promise.resolve(null);
+        }
+
+=======
+        // In translate mode, only allow creating the editor if the target is a
+        // text option snippet.
+        if (!$snippet.__force_create_editor && this.options.enableTranslation && !this._allowInTranslationMode($snippet)) {
+            return Promise.resolve(null);
+        }
+        // TODO: Adapt in master (property used in stable for compatibility).
+        delete $snippet.__force_create_editor;
+
+>>>>>>> 1e78dbcce9fe (temp)
         var def;
         if (this._allowParentsEditors($snippet)) {
             var $parent = globalSelector.closest($snippet.parent());
@@ -4097,8 +4162,19 @@ class SnippetsMenu extends Component {
      * @private
      * @param {Event} ev
      */
+<<<<<<< HEAD
     async onInvisibleEntryClick(invisibleEntry) {
         const $snippet = $(invisibleEntry.snippetEl);
+||||||| parent of 1e78dbcce9fe (temp)
+    _onInvisibleEntryClick: async function (ev) {
+        ev.preventDefault();
+        const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
+=======
+    _onInvisibleEntryClick: async function (ev) {
+        ev.preventDefault();
+        const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
+        $snippet.__force_create_editor = true;
+>>>>>>> 1e78dbcce9fe (temp)
         const isVisible = await this._execWithLoadingEffect(async () => {
             const editor = await this._createSnippetEditor($snippet);
             const show = editor.toggleTargetVisibility();
