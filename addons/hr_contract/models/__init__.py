@@ -9,3 +9,4 @@ from . import res_config_settings
 from . import resource
 from . import resource_resource
 from . import hr_payroll_structure_type
+from . import ir_ui_menu
