@@ -102,10 +102,12 @@
         <field name="arch" type="xml">
             <form create="false" duplicate="0">
                 <field name="tipo" invisible="1" readonly="1"/>
+                <field name="porcentaje_respuestas" invisible="1" readonly="1"/>
                 <header>
                     <!-- Generación de reporte de una evaluación-->
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
-                    <button class="btn btn-primary" name="reporte_generico_action" string="Reporte" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button class="btn btn-primary" name="reporte_generico_action" string="Reporte Genérico" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button class="btn btn-primary" name="filtros_reporte_action" string="Reporte Personalizado" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
                 <sheet string="Evaluacion de personal">
@@ -331,7 +333,8 @@
                 <field name="tipo" readonly="1"/>
                 <field name="conteo_asignados" readonly="1"/>
                 <field name="porcentaje_respuestas" widget="percentage" readonly="1"/>
-                <button class="btn btn-primary" name="reporte_generico_action" string="Reporte" type="object"/>
+                <button class="btn btn-primary" name="reporte_generico_action" string="Reporte Genérico" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                <button class="btn btn-primary" name="filtros_reporte_action" string="Reporte Personalizado" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
             </tree>
         </field>
     </record>

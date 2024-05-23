@@ -57,45 +57,29 @@ class UsuarioEvaluacionRel(models.Model):
 
         self.evaluacion_id._compute_porcentaje_respuestas()
 
-    def action_get_estado(self, usuario_id, evaluacion_id, token):
+    def action_get_estado(self, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
 
         :param usuario_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         :return: estado de la evaluación
         """
-        if usuario_id:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [
-                    ("usuario_id.id", "=", usuario_id),
-                    ("evaluacion_id.id", "=", evaluacion_id),
-                ]
-            )
-        else:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
-            )
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
+        )
 
         return usuario_evaluacion.contestada
 
-    def action_update_estado(self, usuario_id, evaluacion_id, token):
+    def action_update_estado(self, evaluacion_id, token):
         """Método para actualizar el estado de la evaluación para el usuario.
 
         :param usuario_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         """
 
-        if usuario_id:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [
-                    ("usuario_id.id", "=", usuario_id),
-                    ("evaluacion_id.id", "=", evaluacion_id),
-                ]
-            )
-        else:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
-            )
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
+        )
 
         usuario_evaluacion.write({"contestada": "contestada"})
         usuario_evaluacion._onchange_contestada()

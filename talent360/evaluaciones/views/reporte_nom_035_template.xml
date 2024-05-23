@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <template id="encuestas_reporte_nom_035" name="Reporte: página de reporte genérico">
+            <t t-call="evaluaciones.diseño">
+                <t t-set="limite_registros" t-value="10"/>
+                <div class="movil">
+                    <t t-call="evaluaciones.mensaje"/>
+                </div>
+                <div class="o_survey_result mb-5">
+                    <t t-call="evaluaciones.portada_reporte_template"/>
+                    <t t-call="evaluaciones.encuestas_reporte_nom_035_body" />
+                    <t t-call="evaluaciones.encuestas_reporte_inner" />
+                </div>
+            </t>
+        </template>
+
+        <template id="mensaje" name="Reporte: mensaje en móvil">
+            <div class="d-flex flex-row justify-content-between" style="height: 100vh;">
+                <h1 class="text-center my-auto mx-5" style="font-size: 2rem;">
+                    Los reportes no están disponibles en dispositivos móviles. Por favor, accede desde un dispositivo de escritorio.
+                </h1>
+            </div>
+        </template>
+
+        <!--AQUÍ COMIENZA NOM 035-->
+        <template id="encuestas_reporte_nom_035_body" name="Reporte: NOM-035">
+            <div class="container-fluid row gap-5 justify-content-between g-2">
+                <div class="d-flex flex-row justify-content-between">
+                    <h1>
+                        <span t-field="evaluacion.nombre"/>
+                    </h1>
+                    <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
+                        <i class="fa fa-print"></i> Exportar
+                    </button>
+                </div>
+                <div class="col survey_section">
+                    <h4>Calificación final</h4>
+                    <span t-att-class="'color_nulo' if final &lt; 20 else 'color_bajo' if 20 &lt;= final &lt; 45 else 'color_medio' if 45 &lt;= final &lt; 70 else 'color_alto' if 70 &lt;= final &lt; 90 else 'color_muy-alto'">
+                        <t t-esc="final"/>
+                    </span>
+                    <span class="fs-5 pill">
+                        Riesgo
+                        <t t-if="final &lt; 20"> nulo</t>
+                        <t t-elif="20 &lt;= final &lt; 45"> bajo</t>
+                        <t t-elif="45 &lt;= final &lt; 70"> medio</t>
+                        <t t-elif="70 &lt;= final &lt; 90"> alto</t>
+                        <t t-else="true"> muy alto</t>
+                    </span>
+                </div>
+
+                <div class="col survey_section w-100" style="page-break-inside: avoid;">
+                    <h4>Semáforo de riesgos</h4>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #ff4747;"/>
+                        <span class="col">Riesgo muy alto</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color:  #fc8803;"/>
+                        <span class="col">Riesgo alto</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #fcd703;"/>
+                        <span class="col">Riesgo medio</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #5aaf2b;"/>
+                        <span class="col">Riesgo bajo</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #2894a7;"/>
+                        <span class="col">Riesgo nulo</span>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="evaluacion.incluir_demograficos">
+                <h4>Datos demográficos</h4>
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section">
+                            <h4>
+                            Por generación
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_generacion_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="generaciones">
+                                <canvas t-att-id="'canvas_pastel_generacion_nom_035'"/>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section">
+                            <h4>
+                            Por género
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_genero_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Género'" t-att-data-graph-data="generos">
+                                <canvas t-att-id="'canvas_pastel_genero_nom_035'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section">
+                            <h4>
+                            Por departamento
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_departamento_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="departamentos">
+                                <canvas t-att-id="'canvas_pastel_departamento_nom_035'"/>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section">
+                            <h4>
+                            Por puesto
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_puesto_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="puestos">
+                                <canvas t-att-id="'canvas_pastel_puesto_nom_035'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <div class="survey_page container-fluid d-flex flex-column">
+                <div class="survey_section">
+                    <h4>Resumen general por categorías</h4>
+                    <div class="survey_graph" t-att-id="'grafica_barras_categorias_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias">
+                        <canvas t-att-id="'canvas_barras_categorias_nom_035'"/>
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Categoría con mayor puntaje
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Categoría con menor puntaje
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="survey_section">
+                    <h4>Resumen general por dominios</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_dominios_nom_035'" t-att-data-graph-type="'radar'" t-att-data-label="'Resultados por dominio'" t-att-data-graph-data="dominios">
+                        <canvas t-att-id="'canvas_barras_dominios_nom_035'"/>
+                    </div>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Dominio con mayor puntaje
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="max(dominios, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="max(dominios, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section align-items-start">
+                            <h4>
+                                Dominio con menor puntaje:
+                            </h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1">
+                                    <t t-esc="min(dominios, key=lambda x: x['valor'])['valor']"/>
+                                </span>
+                                <span class="fs-5">
+                                    <t t-esc="min(dominios, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Resumen por categoría</h4>
+            <div t-foreach="categorias" t-as='datos_categoria' class="survey_page container-fluid d-flex flex-column">
+                <t t-set="categoria" t-value="datos_categoria['nombre']" />
+                <t t-set="valor_categoria" t-value="datos_categoria['valor']" />
+                <div class="survey_section">
+                    <h5>
+                        <t t-esc="categoria" />
+                    </h5>
+                    <h3 color="category_number">
+                        <t t-esc="valor_categoria" />
+                    </h3>
+
+                    <t t-if="categoria == 'Ambiente de Trabajo'">
+                        <div class="survey_graph" t-att-id="'grafica_barras_ambiente_trabajo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Ambiente de Trabajo'" t-att-data-graph-data="dominios[:1]">
+                            <canvas t-att-id="'canvas_barras_ambiente_trabajo_nom_035'"/>
+                        </div>
+                    </t>
+
+                    <t t-elif="categoria == 'Factores propios de la actividad'">
+                        <div class="survey_graph" t-att-id="'grafica_barras_factores_actividad_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Factores propios de la actividad'" t-att-data-graph-data="dominios[1:3]">
+                            <canvas t-att-id="'canvas_barras_factores_actividad_nom_035'"/>
+                        </div>
+                    </t>
+
+                    <t t-elif="categoria == 'Organización del tiempo de trabajo'">
+                        <div class="survey_graph" t-att-id="'grafica_barras_organizacion_tiempo_nom_035'" t-att-data-graph-type="'bar'" t-att-data-label="'Organización del tiempo de trabajo'" t-att-data-graph-data="dominios[3:5]">
+                            <canvas t-att-id="'canvas_barras_organizacion_tiempo_nom_035'"/>
+                        </div>
+                    </t>
+
+                    <t t-elif="categoria == 'Liderazgo y relaciones en el trabajo'">
+                        <div class="survey_graph" t-att-id="'liderazgo_relaciones'" t-att-data-graph-type="'bar'" t-att-data-label="'Liderazgo y relaciones en el trabajo'" t-att-data-graph-data="dominios[5:]">
+                            <canvas t-att-id="'canvas_barras_liderazgo_relaciones_nom_035'"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div class="survey_section" style="page-break-inside: avoid;">
+                <h4>Necesidad de acción</h4>
+                <span class="container-fluid">
+                    <t t-if="final &lt; 20">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
+                    <t t-elif="20 &lt;= final &lt; 45">Es necesario una mayor difusión de la política de prevención de riesgos psicosociales y programas para: la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral.</t>
+                    <t t-elif="45 &lt;= final &lt; 70">Se requiere revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión, mediante un Programa de intervención.</t>
+                    <t t-elif="70 &lt;= final &lt; 90">Se requiere realizar un análisis de cada categoría y dominio, de manera que se puedan determinar las acciones de intervención apropiadas a través de un Programa de intervención, que podrá incluir una evaluación específica y deberá incluir una campaña de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
+                    <t t-else="true">Se requiere realizar el análisis de cada categoría y dominio para establecer las acciones de intervención apropiadas, mediante un Programa de intervención que deberá incluir evaluaciones específicas, y contemplar campañas de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
+                </span>
+            </div>
+        </template>
+
+        <template id="encuestas_reporte_pregunta" name="Question: result statistics">
+            <t t-set="default_line_height" t-value="35"/>
+            <t t-set="text_box_line_height" t-value="83"/>
+
+            <div class="o_survey_results_question pb-5 border-bottom">
+                <div class="d-flex mb-3 o_survey_results_question_header">
+                    <div class="d-flex flex-wrap mb-1">
+                        <button class="btn btn-link ps-0 pt-2 d-print-none" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".o_survey_results_question_#{pregunta.id}">
+                            <i class="fa fa-eye" aria-hidden="true"/>
+                        </button>
+                        <h5 t-field="pregunta.pregunta_texto" class="pt-2 mb-0 me-1"/>
+                    </div>
+                    <div t-attf-class="d-flex flex-fill justify-content-end align-items-end mb-1 collapse show o_survey_results_question_#{pregunta.id}">
+                        <h7 class="ms-0 ms-sm-1 me-1 me-sm-0">
+                            <span class="ml-1">Respuestas:</span>
+                            <span t-out="len(datos_pregunta['respuestas'])" class="mb-1 text-info text-start"/>
+                        </h7>
+                    </div>
+                </div>
+                <div t-attf-class="collapse show o_survey_results_question_#{pregunta.id}">
+                    <!-- Respuestas -->
+                    <t t-set="pregunta_contestada" t-value="datos_pregunta['respuestas']"/>
+                    <div t-if="not pregunta_contestada" class="o_survey_no_answers text-center fw-bold">
+                        <p>Aun no hay respuestas</p>
+                    </div>
+                    <t t-elif="pregunta.tipo in ['open_question']" t-call="evaluaciones.pregunta_resultados_texto"/>
+                    <t t-elif="pregunta.tipo in ['escala', 'multiple_choice']" t-call="evaluaciones.pregunta_resultados_seleccion"/>
+                </div>
+            </div>
+        </template>
+
+
+    </data>
+
+</odoo>

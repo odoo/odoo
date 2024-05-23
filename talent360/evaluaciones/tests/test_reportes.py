@@ -1,4 +1,5 @@
 from odoo.tests.common import TransactionCase
+from datetime import datetime
 
 
 class TestReportes(TransactionCase):
@@ -51,8 +52,8 @@ class TestReportes(TransactionCase):
                 "nombre": "Evaluacion de prueba",
                 "estado": "borrador",
                 "tipo": "CLIMA",
-                "fecha_inicio": "2021-01-01",
-                "fecha_final": "2021-01-31",
+                "fecha_inicio": datetime.today(),
+                "fecha_final": datetime.today(),
             }
         )
 
@@ -475,3 +476,73 @@ class TestReportes(TransactionCase):
                 {"nombre": "3", "valor": 4},
             ],
         )
+
+    def test_validar_filtro(self):
+        """
+        Prueba la validación de un filtro.
+
+        Este método verifica que el filtro sea válido.
+        """
+
+        datos_demograficos = {
+            "departamento": "Test Department",
+            "puesto": "Test Employee",
+            "genero": "Masculino",
+            "generacion": "Millennials",
+        }
+
+        filtro = self.evaluacion.validar_filtro(
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                }
+            },
+            datos_demograficos=datos_demograficos,
+        )
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro(
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                },
+                "Puesto": {
+                    "valores": ["Test Employee"],
+                    "categoria_interna": "puesto",
+                },
+            },
+            datos_demograficos=datos_demograficos,
+        )
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro(
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                },
+                "Puesto": {"valores": ["Test Employee"], "categoria_interna": "puesto"},
+            },
+            datos_demograficos=datos_demograficos,
+        )
+        self.assertEqual(filtro, True)
+
+        filtro = self.evaluacion.validar_filtro(
+            {
+                "Departamento": {
+                    "valores": ["Test Department"],
+                    "categoria_interna": "departamento",
+                },
+                "Puesto": {"valores": ["No valido"], "categoria_interna": "puesto"},
+            },
+            datos_demograficos=datos_demograficos,
+        )
+        self.assertEqual(filtro, False)
+
+        filtro = self.evaluacion.validar_filtro(
+            {"Departamento": {"valores": ["Test Department"], "categoria_interna": "departamento"}},
+            datos_demograficos=datos_demograficos,
+        )
+        self.assertEqual(filtro, True)
