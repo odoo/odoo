@@ -2775,7 +2775,8 @@ class Image(Binary):
         # cache with the resized value
         for record in records:
             value = self._process_related(record[self.name], record.env)
-            record.env.cache.set(record, self, value, dirty=(self.store and self.column_type))
+            context_key = record.env.cache_key(self)
+            record.env.cache.set(self, context_key, record._ids[0], value, dirty=(self.store and self.column_type))
 
     def _image_process(self, value, env):
         if self.readonly and not self.max_width and not self.max_height:
