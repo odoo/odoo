@@ -6,13 +6,19 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ChartColors } = spreadsheet.helpers;
+const {
+    getDefaultChartJsRuntime,
+    getChartAxisTitleRuntime,
+    chartFontColor,
+    ColorGenerator
+} = spreadsheet.helpers;
 
 export class OdooBarChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.verticalAxisPosition = definition.verticalAxisPosition;
         this.stacked = definition.stacked;
+        this.axesDesign = definition.axesDesign;
     }
 
     getDefinition() {
@@ -20,6 +26,7 @@ export class OdooBarChart extends OdooChart {
             ...super.getDefinition(),
             verticalAxisPosition: this.verticalAxisPosition,
             stacked: this.stacked,
+            axesDesign: this.axesDesign,
         };
     }
 }
@@ -40,7 +47,7 @@ function createOdooChartRuntime(chart, getters) {
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
     const chartJsConfig = getBarConfiguration(chart, labels, locale);
-    const colors = new ChartColors();
+    const colors = new ColorGenerator();
     for (const { label, data } of datasets) {
         const color = colors.next();
         const dataset = {
@@ -80,14 +87,15 @@ function getBarConfiguration(chart, labels, locale) {
                 labelOffset: 2,
                 color: fontColor,
             },
+            title: getChartAxisTitleRuntime(chart.axesDesign?.x),
         },
         y: {
             position: chart.verticalAxisPosition,
             ticks: {
                 color: fontColor,
-                // y axis configuration
             },
             beginAtZero: true, // the origin of the y axis is always zero
+            title: getChartAxisTitleRuntime(chart.axesDesign?.y),
         },
     };
     if (chart.stacked) {
