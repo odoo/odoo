@@ -77,14 +77,3 @@ class PosOrder(models.Model):
                 'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(self.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
                 'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(order.config_id.id), load=False),
             })
-
-    @api.model
-    def get_standalone_self_order(self):
-        orders = self.env['pos.order'].search_read([
-            *self.env["pos.order"]._check_company_domain(self.env.company),
-            ('state', '=', 'draft'),
-            '|', ('pos_reference', 'ilike', 'Kiosk'),
-            ('pos_reference', 'ilike', 'Self-Order'),
-            ('table_id', '=', False),
-        ], [], load=False)
-        return {'pos.order': orders}
