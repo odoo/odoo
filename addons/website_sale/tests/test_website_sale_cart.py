@@ -82,23 +82,23 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
         })
         product_consu = self.env['product.product'].create({
             'name': 'Cannot be zero price',
-            'detailed_type': 'consu',
+            'type': 'consu',
             'list_price': 0,
             'website_published': True,
         })
         product_service = self.env['product.product'].create({
             'name': 'Can be zero price',
-            'detailed_type': 'service',
+            'type': 'service',
             'list_price': 0,
             'website_published': True,
         })
 
-        with patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['service']):
-            with self.assertRaises(UserError, msg="'consu' product type is not allowed to have a 0 price sale"), \
-                 MockRequest(self.env, website=website_prevent_zero_price):
+        with self.assertRaises(UserError, msg="'consu' product type is not allowed to have a 0 price sale"):
+            with MockRequest(self.env, website=website_prevent_zero_price):
                 self.WebsiteSaleController.cart_update_json(product_id=product_consu.id, add_qty=1)
 
-            # service types should not raise a UserError
+        with patch.object(ProductTemplate, '_get_product_types_allow_zero_price', lambda pt: ['no']):
+            # service_tracking 'no' should not raise error
             with MockRequest(self.env, website=website_prevent_zero_price):
                 self.WebsiteSaleController.cart_update_json(product_id=product_service.id, add_qty=1)
 

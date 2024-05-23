@@ -11,7 +11,7 @@ class WebsiteSaleSlides(WebsiteSlides):
     @route('/slides/get_course_products', type='json', auth='user')
     def get_course_products(self):
         """Return a list of the course products values with formatted price."""
-        products = request.env['product.product'].search([('detailed_type', '=', 'course')])
+        products = request.env['product.product'].search([('service_tracking', '=', 'course')])
 
         return [{
             'id': product.id,

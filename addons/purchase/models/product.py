@@ -22,11 +22,11 @@ class ProductTemplate(models.Model):
     purchase_line_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order Line Warning', help=WARNING_HELP, required=True, default="no-message")
     purchase_line_warn_msg = fields.Text('Message for Purchase Order Line')
 
-    @api.depends('detailed_type')
+    @api.depends('type')
     def _compute_purchase_method(self):
         default_purchase_method = self.env['product.template'].default_get(['purchase_method']).get('purchase_method', 'receive')
         for product in self:
-            if product.detailed_type == 'service':
+            if product.type == 'service':
                 product.purchase_method = 'purchase'
             else:
                 product.purchase_method = default_purchase_method

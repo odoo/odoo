@@ -735,14 +735,14 @@ class PosConfig(models.Model):
             LEFT JOIN pm ON product_product.id=pm.product_id
                 WHERE {where_clause}
              ORDER BY product_product__product_tmpl_id.is_favorite DESC,
-                      product_product__product_tmpl_id.detailed_type DESC,
+                      product_product__product_tmpl_id.type DESC,
                       COALESCE(pm.date, product_product.write_date) DESC
                 LIMIT %s
         """
         self.env.cr.execute(query, params + [self.get_limited_product_count()])
         product_ids = self.env.cr.fetchall()
         products = self.env['product.product'].search([('id', 'in', product_ids)])
-        product_combo = products.filtered(lambda p: p['detailed_type'] == 'combo')
+        product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_line_ids.product_id
         products_available = products | product_in_combo
         return products_available.read(fields)

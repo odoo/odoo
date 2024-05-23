@@ -170,8 +170,13 @@
                             <label for="product_id"/>
                             <div>
                                 <field name="product_id" required="1" readonly="not is_editable"
-                                       context="{'default_detailed_type': 'service', 'default_can_be_expensed': 1, 'tree_view_ref': 'hr_expense.product_product_expense_tree_view', 'form_view_ref': 'hr_expense.product_product_expense_form_view'}"
-                                       class="w-100"/>
+                                    context="{
+                                        'default_type': 'service',
+                                        'default_can_be_expensed': 1,
+                                        'tree_view_ref': 'hr_expense.product_product_expense_tree_view',
+                                        'form_view_ref': 'hr_expense.product_product_expense_form_view',
+                                    }"
+                                    class="w-100"/>
                                 <div class="fst-italic" invisible="not is_editable or not product_description or not product_id">
                                     <field name="product_description"/>
                                 </div>
@@ -562,7 +567,7 @@
                         <field name='product_variant_count' invisible='1'/>
                         <field name="id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
-                        <field name="detailed_type" invisible="1"/>
+                        <field name="type" invisible="1"/>
                         <div class="oe_title px-3">
                             <label for="name" string="Product Name"/>
                             <h1><field name="name" placeholder="e.g. Lunch"/></h1>
@@ -662,7 +667,7 @@
             <field name="res_model">product.product</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
-            <field name="context">{"default_can_be_expensed": 1, 'default_detailed_type': 'service'}</field>
+            <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service'}</field>
             <field name="domain">[('can_be_expensed', '=', True)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

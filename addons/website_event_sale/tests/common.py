@@ -32,7 +32,8 @@ class TestWebsiteEventSaleCommon(TransactionCase):
             'amount': 0,
         })
         cls.product_event = cls.env['product.product'].create({
-            'detailed_type': 'event',
+            'type': 'service',
+            'service_tracking': 'event',
             'list_price': 100,
             'name': 'Event Registration No Company Assigned',
             'taxes_id': [(6, 0, cls.zero_tax.ids)],

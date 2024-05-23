@@ -18,9 +18,6 @@ class ProductTemplate(models.Model):
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
     combo_ids = fields.Many2many('pos.combo', string='Combinations')
-    detailed_type = fields.Selection(selection_add=[
-        ('combo', 'Combo')
-    ], ondelete={'combo': 'set consu'})
     type = fields.Selection(selection_add=[
         ('combo', 'Combo')
     ], ondelete={'combo': 'set consu'})
@@ -43,6 +40,14 @@ class ProductTemplate(models.Model):
     def _onchange_available_in_pos(self):
         if self.available_in_pos and not self.sale_ok:
             self.sale_ok = True
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        res = super()._onchange_type()
+        if self.type == 'combo':
+            self.taxes_id = False
+            self.supplier_taxes_id = False
+        return res
 
     @api.constrains('available_in_pos')
     def _check_combo_inclusions(self):

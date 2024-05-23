@@ -263,7 +263,8 @@ class SaleOrderLine(models.Model):
         store=True)
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
-    product_type = fields.Selection(related='product_id.detailed_type', depends=['product_id'])
+    product_type = fields.Selection(related='product_id.type', depends=['product_id'])
+    service_tracking = fields.Selection(related='product_id.service_tracking', depends=['product_id'])
     product_updatable = fields.Boolean(
         string="Can Edit Product",
         compute='_compute_product_updatable')

@@ -263,19 +263,19 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             {
                 'name': 'product_A',
                 'lst_price': 100.0,
-                'detailed_type': 'service',
+                'type': 'service',
                 'service_tracking': 'task_in_project',
             },
             {
                 'name': 'product_B',
                 'lst_price': 100.0,
-                'detailed_type': 'service',
+                'type': 'service',
                 'service_tracking': 'task_in_project',
             },
             {
                 'name': 'product_C',
                 'lst_price': 100.0,
-                'detailed_type': 'service',
+                'type': 'service',
                 'service_tracking': 'task_in_project',
             },
         ])
@@ -609,7 +609,7 @@ class TestSaleProject(HttpCase, TestSaleProjectCommon):
             product = sol_form.product_id.with_context(product_context).new({
                 'name': 'Test product',
             })
-            self.assertEqual(product.detailed_type, 'service')
+            self.assertEqual(product.type, 'service')
             self.assertEqual(product.type, 'service')
             self.assertEqual(product.service_policy, 'ordered_prepaid')
             sol_form.product_id = product
