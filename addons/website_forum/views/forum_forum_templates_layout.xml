@@ -51,7 +51,7 @@
                         </span>
                         <a t-elif="uid" type="button" aria-label="Favorite"
                             t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
-                            t-attf-class="o_wforum_favourite_toggle btn btn-lg #{ 'opacity-50' if not question.user_favourite else '' } opacity-hover-100 px-1">
+                            t-attf-class="o_wforum_favourite_toggle btn btn-lg #{ 'opacity-50' if not question.user_favourite else '' } opacity-hover-100 p-0">
                             <i t-attf-class="position-relative fa #{'o_wforum_gold fa-star ' if question.user_favourite else 'fa-star-o '}"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement="top"
@@ -60,7 +60,7 @@
                         <t t-if="question.state == 'active'" t-call="website_forum.follow">
                             <t t-set="object" t-value="question"/>
                             <t t-set="icons_design" t-value="True"/>
-                            <t t-set="btn_classes" t-value="'btn-lg opacity-50 opacity-100-hover' "/>
+                            <t t-set="btn_classes" t-value="'opacity-50 opacity-100-hover' "/>
                         </t>
                     </div>
                 </div>
@@ -287,7 +287,7 @@
         <t t-set="location" t-valuef="#{ _forum_path }#{ ('/tag/' + slug(tag) + '/questions') if (tag and not tags) else '' }?"/>
         <!-- All Posts -->
         <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if request.httprequest.path ==  _forum_path and no_filters and not any([my, queue_type, tags]) else 'text-reset' }" t-att-href="location">
-            <i t-attf-class="fa fa-list fa-fw #{ 'opacity-50' if request.httprequest.path != _forum_path or my or queue_type else '' }"/> Posts
+            <i t-attf-class="fa fa-list fa-fw #{ 'opacity-50' if request.httprequest.path != _forum_path or my or queue_type else '' }"/> All Posts
         </a>
         <t t-if="uid">
             <!-- My Posts -->
@@ -327,8 +327,8 @@
     </div>
     <div t-if="forum and forum.tag_most_used_ids" class="o_wforum_sidebar_section pt-3">
         <div class="d-flex align-items-center px-3 pb-1 fw-bold">Tags
-            <a class="ms-auto px-0 fw-normal" t-att-href="_forum_path + '/tag'">
-                <small>View all</small>
+            <a class="ms-2 px-0 fw-normal" t-att-href="_forum_path + '/tag'">
+                <small>(View all)</small>
             </a>
         </div>
         <a t-foreach="forum.tag_most_used_ids" t-as="tag"

@@ -93,7 +93,22 @@
                     <textarea name="content" required="required" id="content" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor">
                         <t t-out="question_content"/>
                     </textarea>
-                    <span class="form-text d-inline small text-muted"><i class="fa fa-lightbulb-o"></i> Tip: consider adding an example. </span>
+                    <div class="d-flex">
+                        <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
+                        <div class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <span class="form-text small text-muted d-block">consider adding an example.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">use '/' to insert images.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">select text to format it.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row mb-2">
@@ -167,7 +182,22 @@
                 <label t-else="" class="form-label col-lg-2">Your Answer</label>
                 <div class="col">
                     <textarea name="content" id="content" required="required" class="form-control o_wysiwyg_loader" t-att-data-karma="forum.karma_editor" t-out="post.content"/>
-                    <span t-if="not is_answer" class="form-text d-inline small text-muted"><i class="fa fa-lightbulb-o"/> Tip: consider adding an example. </span>
+                    <div t-if="not is_answer" class="d-flex mb-2">
+                        <span class="form-text small text-muted me-1"><i class="fa fa-lightbulb-o"></i> Tip:</span>
+                        <div class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <span class="form-text small text-muted d-block">consider adding an example.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">use '/' to insert images.</span>
+                                </div>
+                                <div class="carousel-item">
+                                    <span class="form-text small text-muted d-block">select text to format it.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <input type="hidden" name="karma" t-att-value="user.karma" id="karma"/>
@@ -234,8 +264,9 @@
                         <t t-set="icons_design" t-value="True"/>
                         <t t-set="div_class" t-value="'d-inline'"/>
                         <t t-set="btn_classes" t-value="'px-2'"/>
+                        <t t-set="follow_btn_classes" t-value="'opacity-50'"/>
                     </t>
-                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } btn-link #{ 'text-dark fw-bold' if tag.message_is_follower else '' }"
+                    <a t-attf-class="#{ 'disabled' if len(tag.post_ids) == 0  else '' } o_js_forum_tag_link btn-link #{ '' if tag.message_is_follower else 'text-muted' }"
                        t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?#{ keep_query(filters='tag') }">
                         <t t-out="tag.name"/>&amp;nbsp;
                         <span class="small">(<t t-out="tag.posts_count"/>)</span>

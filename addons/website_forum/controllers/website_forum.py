@@ -320,6 +320,7 @@ class WebsiteForum(WebsiteProfile):
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
+            'related_posts': question._get_related_posts()
         })
 
         # increment view counter

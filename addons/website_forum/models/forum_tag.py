@@ -18,7 +18,7 @@ class Tags(models.Model):
     name = fields.Char('Name', required=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True, index=True)
     post_ids = fields.Many2many(
-        'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id',
+        'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_post_id',
         string='Posts', domain=[('state', '=', 'active')])
     posts_count = fields.Integer('Number of Posts', compute='_compute_posts_count', store=True)
     website_url = fields.Char("Link to questions with the tag", compute='_compute_website_url')
