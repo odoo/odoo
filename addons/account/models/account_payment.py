@@ -809,6 +809,15 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.display_name = payment.move_id.name if payment.move_id.name != '/' else _('Draft Payment')
 
+    def copy(self, default=None):
+        if not self.is_internal_transfer:
+            default = {
+                'journal_id': self.journal_id.id,
+                'payment_method_line_id': self.payment_method_line_id.id,
+                **(default or {}),
+            }
+        return super().copy(default=default)
+
     # -------------------------------------------------------------------------
     # SYNCHRONIZATION account.payment <-> account.move
     # -------------------------------------------------------------------------
