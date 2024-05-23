@@ -15,7 +15,7 @@ class ProductProduct(models.Model):
         config_id = self.env['pos.config'].browse(data['pos.config']['data'][0]['id'])
         rewards = config_id._get_program_ids().reward_ids
         reward_products = rewards.discount_line_product_id | rewards.reward_product_ids | rewards.reward_product_id
-        trigger_products = config_id._get_program_ids().filtered(lambda p: p.program_type == 'ewallet').trigger_product_ids
+        trigger_products = config_id._get_program_ids().filtered(lambda p: p.program_type in ['ewallet', 'gift_card']).trigger_product_ids
 
         loyalty_product_ids = set(reward_products.ids + trigger_products.ids)
         classic_product_ids = {product['id'] for product in res['data']}
