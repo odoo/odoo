@@ -37,10 +37,10 @@ QUnit.test("displays figures in first sheet", async (assert) => {
         data: {
             type: "line",
             dataSetsHaveTitle: false,
-            dataSets: ["A1"],
+            dataSets: [{ dataRange: "A1" }],
             legendPosition: "top",
             verticalAxisPosition: "left",
-            title: "",
+            title: { text: "" },
         },
     };
     const spreadsheetData = {
@@ -87,10 +87,10 @@ QUnit.test("double clicking on a figure doesn't open the side panel", async (ass
         data: {
             type: "line",
             dataSetsHaveTitle: false,
-            dataSets: ["A1"],
+            dataSets: [ {dataRange: "A1" }],
             legendPosition: "top",
             verticalAxisPosition: "left",
-            title: "",
+            title: { text: "" },
         },
     };
     const spreadsheetData = {
