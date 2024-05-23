@@ -40,7 +40,7 @@
                             class="oe_stat_button"
                             icon="fa-book"
                             type="object"
-                            groups="hr_contract.group_hr_contract_employee_manager"
+                            groups="hr_contract.group_hr_contract_manager"
                             context="{'default_employee_id': id}"
                             invisible="employee_type not in ['employee', 'student', 'trainee']">
                             <div invisible="not first_contract_date" class="o_stat_info">
@@ -386,7 +386,14 @@
             parent="hr.menu_hr_employee_payroll"
             sequence="6"
             groups="hr_contract.group_hr_contract_manager"/>
-        
+
+        <menuitem
+            id="menu_hr_employee_contracts"
+            name="Contracts"
+            action="hr_contract.action_hr_contract"
+            parent="hr.menu_hr_root"
+            sequence="5"/>
+
         <record id="hr.menu_resource_calendar_view" model="ir.ui.menu">
             <field name="parent_id" ref="menu_human_resources_configuration_contract"/>
         </record>
