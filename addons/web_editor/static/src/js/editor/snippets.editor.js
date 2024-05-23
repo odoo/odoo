@@ -2622,7 +2622,9 @@ var SnippetsMenu = Widget.extend({
             // Insert an invisible snippet in its "parentEl" element.
             const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant,
                                                   parentEl) => {
-                const editor = await this._createSnippetEditor($(invisibleSnippetEl));
+                const $invisibleSnippetEl = $(invisibleSnippetEl);
+                $invisibleSnippetEl.__force_create_editor = true;
+                const editor = await this._createSnippetEditor($invisibleSnippetEl);
                 const invisibleEntryEl = document.createElement("div");
                 invisibleEntryEl.className = `${isRootParent ? "o_we_invisible_root_parent" : ""}`;
                 invisibleEntryEl.classList.add("o_we_invisible_entry", "d-flex",
@@ -2699,6 +2701,13 @@ var SnippetsMenu = Widget.extend({
             } else {
                 $snippet = $globalSnippet;
             }
+        }
+        if (this.options.enableTranslation && $snippet && !this._allowInTranslationMode($snippet)) {
+            // In translate mode, only activate allowed snippets (e.g., even if
+            // we create editors for invisible elements when translating them,
+            // we only want to toggle their visibility when the related sidebar
+            // buttons are clicked).
+            return;
         }
         const exec = previewMode
             ? action => this._mutex.exec(action)
@@ -3187,9 +3196,11 @@ var SnippetsMenu = Widget.extend({
 
         // In translate mode, only allow creating the editor if the target is a
         // text option snippet.
-        if (this.options.enableTranslation && !this._allowInTranslationMode($snippet)) {
+        if (!$snippet.__force_create_editor && this.options.enableTranslation && !this._allowInTranslationMode($snippet)) {
             return Promise.resolve(null);
         }
+        // TODO: Adapt in master (property used in stable for compatibility).
+        delete $snippet.__force_create_editor;
 
         var def;
         if (this._allowParentsEditors($snippet)) {
@@ -4099,6 +4110,7 @@ var SnippetsMenu = Widget.extend({
     _onInvisibleEntryClick: async function (ev) {
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
+        $snippet.__force_create_editor = true;
         const isVisible = await this._execWithLoadingEffect(async () => {
             const editor = await this._createSnippetEditor($snippet);
             const show = editor.toggleTargetVisibility();
