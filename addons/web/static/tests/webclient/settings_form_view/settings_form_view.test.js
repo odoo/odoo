@@ -1,4 +1,4 @@
-import { after, describe, expect, getFixture, test } from "@odoo/hoot";
+import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, edit, queryAllProperties, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 import {
@@ -24,6 +24,9 @@ import { router } from "@web/core/browser/router";
 import { pick } from "@web/core/utils/objects";
 import { WebClient } from "@web/webclient/webclient";
 import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
+
+const MOCK_IMAGE =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
 
 describe.current.tags("desktop");
 
@@ -64,6 +67,15 @@ class Task extends models.Model {
 }
 
 defineModels([ResConfigSettings, Task]);
+
+beforeEach(() => {
+    patchWithCleanup(SettingsFormCompiler.prototype, {
+        compileApp(el, params) {
+            el.setAttribute("logo", MOCK_IMAGE);
+            return super.compileApp(el, params);
+        },
+    });
+});
 
 test("change setting on nav bar click in base settings", async () => {
     await mountView({
@@ -1051,6 +1063,8 @@ test("click on save button which throws an error", async () => {
     await animationFrame();
     click(".o_form_button_save");
     await animationFrame();
+    // error are caught asynchronously, so we have to wait for an extra animationFrame, for the error dialog to be mounted
+    await animationFrame();
     expect(".o_error_dialog").toHaveCount(1);
 
     click(".o_error_dialog .btn-close");
@@ -1582,8 +1596,8 @@ test("standalone field labels with string inside a settings page", async () => {
 
     expect("label.highhopes").toHaveText(`My" little ' Label`);
     const expectedCompiled = /* xml */ `
-            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
-                <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
+            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]">
+                <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab">
                     <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
