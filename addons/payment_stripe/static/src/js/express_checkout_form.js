@@ -193,11 +193,8 @@ paymentExpressCheckoutForm.include({
 
             // When the customer selects a different shipping option, update the displayed total.
             paymentRequest.on('shippingoptionchange', async (ev) => {
-                const result = await this._rpc({
-                    route: '/shop/set_delivery_method',
-                    params: {
-                        dm_id: parseInt(ev.shippingOption.id),
-                    },
+                const result = await rpc('/shop/set_delivery_method', {
+                    dm_id: parseInt(ev.shippingOption.id),
                 });
                 ev.updateWith({
                     status: 'success',
