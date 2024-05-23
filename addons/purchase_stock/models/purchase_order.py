@@ -38,10 +38,10 @@ class PurchaseOrder(models.Model):
             Orange: To process today\n\
             Green: On time")
 
-    @api.depends('order_line.move_ids.picking_id','group_id.stock_move_ids.picking_id')
+    @api.depends('order_line.move_ids.picking_id')
     def _compute_picking_ids(self):
         for order in self:
-            order.picking_ids = order.order_line.move_ids.picking_id  # | order.group_id.stock_move_ids.picking_id
+            order.picking_ids = order.order_line.move_ids.picking_id
 
     @api.depends('picking_ids')
     def _compute_incoming_picking_count(self):

@@ -73,7 +73,7 @@ class StockRule(models.Model):
         help="Take From Stock: the products will be taken from the available stock of the source location.\n"
              "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
              "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
-             "If there is no stock available, the system will try to find a rule to bring the missing products in the source location.")
+             "If there is not enough stock available, the system will try to find a rule to bring the missing products in the source location.")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, compute_sudo=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
@@ -324,7 +324,6 @@ class StockRule(models.Model):
         procure_method = self.procure_method if self.procure_method != 'mts_else_mto' else 'make_to_stock'
         move_dest_ids = []
 
-        # TODO : Check Me for V3
         mts_move_dest_ids = self.env['stock.move']
         if values.get('move_dest_ids', False) and not self.location_dest_id.should_bypass_reservation():
             # make_to_stock moves MAY have dest moves but SHOULD NOT have orig moves, in other words, a make_to_stock move CAN NOT be a destination move
@@ -450,11 +449,9 @@ class ProcurementGroup(models.Model):
         ('one', 'All at once')], string='Delivery Type', default='direct',
         required=True)
     stock_move_ids = fields.One2many('stock.move', 'group_id', string="Related Stock Moves")
-    # fulfilled_by_group_ids
     group_orig_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_dest_ids', 'group_orig_ids', 'Origin Procurement Groups',
                                       copy=False,
                                       help="The procurement groups on which the current procurement group relies.")
-    # required_by_group_ids
     group_dest_ids = fields.Many2many('procurement.group', 'procurement_group_group_rel', 'group_orig_ids', 'group_dest_ids', 'Destination Procurement Groups',
                                       copy=False,
                                       help="The procurement groups that relies on the fulfillment of the current procurement group.")
@@ -542,7 +539,7 @@ class ProcurementGroup(models.Model):
             if product_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', product_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:
-            warehouse_routes = warehouse_id.route_ids  # _get_all_routes()  # route_ids
+            warehouse_routes = warehouse_id.route_ids
             if warehouse_routes:
                 res = Rule.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
         return res

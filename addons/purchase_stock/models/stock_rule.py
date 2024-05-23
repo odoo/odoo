@@ -98,7 +98,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
-                """ EXTRACT : create_po """
+                """ TODO EXTRACT : create_po """
                 positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
@@ -114,7 +114,7 @@ class StockRule(models.Model):
                     # Then we have no PO to process
                     continue
             else:
-                """EXTRACT : update_po """
+                """ TODO EXTRACT : update_po """
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
                     missing_origins = origins - set(po.origin.split(', '))
@@ -126,7 +126,7 @@ class StockRule(models.Model):
             procurements_to_merge = self._get_procurements_to_merge(procurements)
             procurements = self._merge_procurements(procurements_to_merge)
 
-            """ EXTRACT : create_or_update_purchase_order_procurement_group"""
+            """ TODO EXTRACT : create_or_update_purchase_order_procurement_group"""
             # Here, in all case there's a purchase order
             group_dest_ids = self.env['procurement.group']
             for procurement in procurements:
@@ -138,7 +138,7 @@ class StockRule(models.Model):
                 if po.group_id:
                     po.group_id.group_dest_ids |= group_dest_ids
                 else:
-                    # TODO : Extract in purchase_order
+                    # TODO : Extract in purchase_order ???
                     po.group_id = self.group_id.create({
                         'name': po.name,
                         'partner_id': po.partner_id.id,

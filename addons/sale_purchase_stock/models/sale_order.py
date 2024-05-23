@@ -17,4 +17,3 @@ class SaleOrder(models.Model):
 
     def _get_mtso_purchase_orders(self):
         return self.procurement_group_id.group_orig_ids.purchase_order_id
-

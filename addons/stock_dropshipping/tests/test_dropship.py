@@ -40,7 +40,6 @@ class TestDropship(common.TransactionCase):
 
     def test_change_qty(self):
         # enable the dropship route on the product
-        # mto_route = self.env.ref('stock.route_warehouse0_mto')
         self.dropship_product.write({'route_ids': [(6, 0, [self.dropshipping_route.id])]})
 
         # sell one unit of dropship product

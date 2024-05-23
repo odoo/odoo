@@ -1040,9 +1040,6 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         return new_moves
 
-    # def _is_push_move_to_propagate(self):
-        # return self.
-
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
         merge_extra = self.env.context.get('merge_extra')
@@ -1431,7 +1428,6 @@ Please change the quantity done or the rounding precision of your unit of measur
                 continue
             # if the move is preceded, then it's waiting (if preceding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
-            # ._get_previous_moves() and (not move._is_mtso() or not float_compare(max(move.product_id.virtual_available, move.product_id.free_qty), (move.product_qty - move.quantity), precision_rounding=move.product_uom.rounding) <= 0):
                 move_waiting.add(move.id)
             else:
                 if move.procure_method == 'make_to_order' or move._is_mtso():
@@ -1542,7 +1538,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             forecasted_qties_by_loc[location] = {product.id: max(product.virtual_available, product.free_qty) for product in products}
 
         for move in self:
-            if move not in mtso_moves or (float_compare(move.product_qty, 0, precision_rounding=move.product_id.uom_id.rounding) <= 0):  # and float_compare(move.product_id.free_qty, move.product_uom_qty, precision_rounding=move.product_uom.rounding) < 0):
+            if move not in mtso_moves or (float_compare(move.product_qty, 0, precision_rounding=move.product_id.uom_id.rounding) <= 0):
                 quantities.append(move.product_uom_qty)
                 continue
             available_qty = forecasted_qties_by_loc[move.location_id][move.product_id.id]

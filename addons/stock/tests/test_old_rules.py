@@ -168,7 +168,7 @@ class TestOldRules(TestStockCommon):
         self.assertEqual(len(picking_ids), 3)
         for picking in picking_ids:
             # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == self.warehouse_3_steps.lot_stock_id or picking.location_dest_id == final_location: # First rule and MTSO rule are make_to_stock
+            if picking.location_id == self.warehouse_3_steps.lot_stock_id or picking.location_dest_id == final_location:
                 self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
             else:
                 self.assertEqual(picking.move_ids.procure_method, 'make_to_order')

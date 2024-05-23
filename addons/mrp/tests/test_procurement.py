@@ -6,7 +6,6 @@ from odoo import fields
 from odoo.tests import Form
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_compare
 
 
 class TestProcurement(TestMrpCommon):
