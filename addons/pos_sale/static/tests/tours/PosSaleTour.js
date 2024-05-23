@@ -202,3 +202,21 @@ registry
             return getSteps();
         }
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PosQuotationSaving', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => {
+            startSteps();
+
+            ProductScreen.do.confirmOpeningPopup();
+            ProductScreen.do.clickQuotationButton();
+            ProductScreen.do.selectFirstOrder();
+            ProductScreen.check.selectedOrderlineHas('Product', '4.00', '40.00');
+            ProductScreen.do.clickSave();
+
+            return getSteps();
+        }
+    });

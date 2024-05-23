@@ -58,6 +58,15 @@ class DoExt extends Do {
             }
         ];
     }
+
+    clickSave() {
+        return [
+            {
+                content: 'Click on Save button',
+                trigger: '.control-button:contains("Save")',
+            },
+        ];
+    }
 }
 class CheckExt extends Check {
     checkCustomerNotes(note) {
