@@ -869,7 +869,7 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         # Return a warning when trying to change the product type
-        res = super(ProductTemplate, self)._onchange_type()
+        res = super()._onchange_type()
         if self.ids and self.product_variant_ids.ids and self.env['stock.move.line'].sudo().search_count([
             ('product_id', 'in', self.product_variant_ids.ids), ('state', '!=', 'cancel')
         ]):
@@ -884,7 +884,6 @@ class ProductTemplate(models.Model):
         return res
 
     def write(self, vals):
-        self._sanitize_vals(vals)
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
             if products_changing_company:

@@ -987,7 +987,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             'property_stock_journal': self.stock_journal.id,
         })
 
-        # Try to change the product category with a `default_detailed_type` key in the context and
+        # Try to change the product category with a `default_type` key in the context and
         # check it doesn't break the account move generation.
         self.product1.with_context(default_is_storable=True).categ_id = cat2
         self.assertEqual(self.product1.categ_id, cat2)

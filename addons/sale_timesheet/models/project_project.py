@@ -39,7 +39,7 @@ class ProjectProject(models.Model):
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product',
         domain="""[
-            ('detailed_type', '=', 'service'),
+            ('type', '=', 'service'),
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
         ]""",

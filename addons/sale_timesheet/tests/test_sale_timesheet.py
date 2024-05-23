@@ -952,20 +952,20 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         for product in products:
             # 1. product.template form: [uom: unit] --> change to service --> [uom: hour]
             with Form(product, view="sale_timesheet.view_product_timesheet_form") as product_form:
-                product_form.detailed_type = 'service'
+                product_form.type = 'service'
                 product_form.service_policy = 'delivered_timesheet'
                 self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
 
             # 2. product.template form: [uom: kgm] --> change to service --> [uom: hour] --> change to consumable --> [uom: kgm]
             product.write({
-                'detailed_type': 'consu',
+                'type': 'consu',
                 'uom_id': uom_kg.id,
             })
             with Form(product, view="sale_timesheet.view_product_timesheet_form") as product_form:
-                product_form.detailed_type = 'service'
+                product_form.type = 'service'
                 product_form.service_policy = 'delivered_timesheet'
                 self.assertEqual(product_form.uom_id.id, self.uom_hour.id)
-                product_form.detailed_type = 'consu'
+                product_form.type = 'consu'
                 self.assertEqual(product_form.uom_id.id, uom_kg.id)
 
     def test_allocated_hours_copy(self):

@@ -108,7 +108,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         expensed_product = self.env['product.product'].create({
             'name': 'test product',
             'can_be_expensed': True,
-            'detailed_type': 'service',
+            'type': 'service',
             'invoice_policy': 'order',
             'standard_price': 100,
             'expense_policy': 'cost',

@@ -69,7 +69,7 @@ class TestUi(AccountTestInvoicingCommon, odoo.tests.HttpCase):
             'name': 'Account Tax Group Product',
             'standard_price': 600.0,
             'list_price': 147.0,
-            'detailed_type': 'consu',
+            'type': 'consu',
         })
         new_tax = self.env['account.tax'].create({
             'name': '10% Tour Tax',

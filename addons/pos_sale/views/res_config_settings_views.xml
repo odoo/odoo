@@ -15,7 +15,10 @@
                         <field
                             name="pos_down_payment_product_id"
                             domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
-                            context="{'default_detailed_type': 'service', 'default_taxes_id': False }"
+                            context="{
+                                'default_type': 'service',
+                                'default_taxes_id': False,
+                            }"
                         />
                     </setting>
                 </block>

@@ -169,7 +169,7 @@ class TestLoyalty(TransactionCase):
         self.program.flush_recordset()
         product = self.env['product.product'].with_context(default_taxes_id=False).create({
             'name': 'Test Product',
-            'detailed_type': 'consu',
+            'type': 'consu',
             'list_price': 20.0,
         })
         reward = self.env['loyalty.reward'].create({

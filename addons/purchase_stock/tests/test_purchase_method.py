@@ -10,10 +10,10 @@ class TestPurchaseMethod(TransactionCase):
         product = self.env['product.product'].create({'name': 'product_test'})
         self.assertEqual(product.purchase_method, 'receive')
 
-        product.write({'detailed_type': 'service'})
+        product.write({'type': 'service'})
         self.assertEqual(product.purchase_method, 'purchase')
 
-        product.write({'detailed_type': 'consu'})
+        product.write({'type': 'consu'})
         self.assertEqual(product.purchase_method, 'receive')
 
     def test_product_purchase_method_with_purchase_as_default_purchase_method(self):
@@ -22,8 +22,8 @@ class TestPurchaseMethod(TransactionCase):
         product = self.env['product.product'].create({'name': 'product_test'})
         self.assertEqual(product.purchase_method, 'purchase')
 
-        product.write({'detailed_type': 'service'})
+        product.write({'type': 'service'})
         self.assertEqual(product.purchase_method, 'purchase')
 
-        product.write({'detailed_type': 'consu'})
+        product.write({'type': 'consu'})
         self.assertEqual(product.purchase_method, 'purchase')

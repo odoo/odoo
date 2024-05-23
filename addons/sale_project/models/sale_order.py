@@ -46,12 +46,16 @@ class SaleOrder(models.Model):
         show_button_ids = self.env['sale.order.line']._read_group([
             ('order_id', 'in', self.ids),
             ('order_id.state', 'not in', ['draft', 'sent']),
-            ('product_id.detailed_type', '=', 'service'),
+            ('product_id.type', '=', 'service'),
         ], aggregates=['order_id:array_agg'])[0][0]
         for order in self:
             order.show_project_button = order.id in show_button_ids and order.project_count
             order.show_task_button = order.show_project_button or order.tasks_count
-            order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count and 'service' in order.order_line.product_template_id.mapped('detailed_type')
+            order.show_create_project_button = (
+                is_project_manager
+                and order.id in show_button_ids
+                and not order.project_count
+            )
 
     def _search_tasks_ids(self, operator, value):
         is_name_search = operator in ['=', '!=', 'like', '=like', 'ilike', '=ilike'] and isinstance(value, str)
@@ -199,7 +203,7 @@ class SaleOrder(models.Model):
             action['views'] = [(form_view_id, 'form')]
             action['res_id'] = self.tasks_ids.id
         # set default project
-        default_line = next((sol for sol in self.order_line if sol.product_id.detailed_type == 'service'), self.env['sale.order.line'])
+        default_line = next((sol for sol in self.order_line if sol.product_id.type == 'service'), self.env['sale.order.line'])
         default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
 
         action['context'] = {
@@ -225,7 +229,10 @@ class SaleOrder(models.Model):
             }
 
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next((sol for sol in sorted_line if sol.product_id.detailed_type == 'service' and not sol.is_downpayment), self.env['sale.order.line'])
+        default_sale_line = next((
+            sol for sol in sorted_line
+            if sol.product_id.type == 'service' and not sol.is_downpayment
+        ), self.env['sale.order.line'])
         return {
             **self.env["ir.actions.actions"]._for_xml_id("project.open_create_project"),
             'context': {
@@ -246,7 +253,9 @@ class SaleOrder(models.Model):
             return {'type': 'ir.actions.act_window_close'}
 
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
+        default_sale_line = next((
+            sol for sol in sorted_line if sol.product_id.type == 'service'
+        ), self.env['sale.order.line'])
         action = {
             'type': 'ir.actions.act_window',
             'name': _('Projects'),
@@ -269,7 +278,10 @@ class SaleOrder(models.Model):
         self.ensure_one()
         default_project = self.project_ids and self.project_ids[0]
         sorted_line = self.order_line.sorted('sequence')
-        default_sale_line = next(sol for sol in sorted_line if sol.is_service and sol.product_id.service_policy == 'delivered_milestones')
+        default_sale_line = next((
+            sol for sol in sorted_line
+                if sol.is_service and sol.product_id.service_policy == 'delivered_milestones'
+        ), self.env['sale.order.line'])
         return {
             'type': 'ir.actions.act_window',
             'name': _('Milestones'),

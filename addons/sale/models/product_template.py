@@ -19,6 +19,16 @@ class ProductTemplate(models.Model):
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
+    service_tracking = fields.Selection(selection=[
+            ('no', 'Nothing'),
+        ],
+        string="Create on Order",
+        default="no",
+        compute="_compute_service_tracking",
+        required=True,
+        store=True,
+        readonly=False,
+    )
     sale_line_warn = fields.Selection(
         WARNING_MESSAGE, string="Sales Order Line",
         help=WARNING_HELP, required=True, default="no-message")
@@ -60,6 +70,12 @@ class ProductTemplate(models.Model):
              "e.g. for computers: warranty, software, etc.).",
         check_company=True)
 
+    @api.depends('type', 'sale_ok')
+    def _compute_service_tracking(self):
+        non_service_products = self.filtered(
+            lambda pt: not pt.sale_ok or pt.type != 'service'
+        )
+        non_service_products.service_tracking = 'no'
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
@@ -129,7 +145,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
-        res = super(ProductTemplate, self)._onchange_type()
+        res = super()._onchange_type()
         if self._origin and self.sales_count > 0:
             res['warning'] = {
                 'title': _("Warning"),

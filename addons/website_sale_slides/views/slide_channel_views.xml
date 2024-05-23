@@ -9,7 +9,15 @@
                 <field name="product_id"
                     invisible="enroll != 'payment'"
                     required="enroll == 'payment'"
-                    context="{'default_detailed_type': 'course', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
+                    context="{
+                        'default_type': 'service',
+                        'default_service_tracking': 'course',
+                        'default_invoice_policy': 'order',
+                        'default_purchase_ok': False,
+                        'default_sale_ok': True,
+                        'default_website_published': True,
+                    }"
+                />
             </xpath>
             <xpath expr="//button[@name='action_redirect_to_members']" position="after">
                 <button name="action_view_sales"
@@ -59,7 +67,15 @@
             <xpath expr="//field[@name='allow_comment']" position="after">
                 <field name="enroll" widget="radio" options="{'horizontal': true}" string="Enroll Policy"/>
                 <field name="product_id" invisible="enroll != 'payment'" required="enroll == 'payment'"
-                context="{'default_detailed_type': 'course', 'default_invoice_policy': 'order', 'default_purchase_ok': False, 'default_sale_ok': True, 'default_website_published': True}"/>
+                    context="{
+                        'default_type': 'service',
+                        'default_service_tracking': 'course',
+                        'default_invoice_policy': 'order',
+                        'default_purchase_ok': False,
+                        'default_sale_ok': True,
+                        'default_website_published': True,
+                    }"
+                />
     		</xpath>
         </field>
     </record>

@@ -23,6 +23,7 @@ this event.
         'views/event_ticket_views.xml',
         'views/event_registration_views.xml',
         'views/event_views.xml',
+        'views/product_template_views.xml',
         'views/sale_order_views.xml',
         'data/event_sale_data.xml',
         'data/mail_templates.xml',

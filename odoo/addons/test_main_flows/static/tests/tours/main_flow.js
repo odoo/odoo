@@ -407,10 +407,9 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     position: 'left',
     run: "edit the_flow.service",
 }, {
-    trigger: '.o_field_widget[name=detailed_type] select',
+    trigger: '.o_field_widget[name="type"] input[data-value="service"]',
     content: _t('Set to service'),
     position: 'left',
-    run: `select "service"`,
 }, {
     mobile: false,
     trigger: ".o_field_widget[name=taxes_id] input",

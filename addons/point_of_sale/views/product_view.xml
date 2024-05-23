@@ -95,37 +95,37 @@
                     <label for="available_in_pos" string="Point of Sale"/>
                 </span>
             </div>
-            <field name="detailed_type" position="after">
+            <field name="type" position="after">
                 <field name="combo_ids"
                     string="Combo Choices"
                     widget="many2many_tags"
-                    invisible="detailed_type != 'combo'"
+                    invisible="type != 'combo'"
                     options="{'edit_tags': true}"
                     groups="point_of_sale.group_pos_user"/>
             </field>
             <span name="uom_span" position="attributes">
-                <attribute name="invisible">detailed_type == 'combo'</attribute>
+                <attribute name="invisible">type == 'combo'</attribute>
             </span>
             <label for="standard_price" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </label>
             <div name="standard_price_uom" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </div>
             <page name="purchase" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </page>
             <xpath expr="//page[@name='inventory']" position="attributes">
                 <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </xpath>
             <label for="taxes_id" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </label>
             <div name="taxes_div" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </div>
             <field name="supplier_taxes_id" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </field>
         </field>
     </record>
@@ -137,10 +137,10 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='variants']" position="attributes">
-                <attribute name="invisible">detailed_type == "combo"</attribute>
+                <attribute name="invisible">type == "combo"</attribute>
             </xpath>
             <field name="barcode" position="attributes">
-                <attribute name="invisible" separator="or" add="detailed_type == 'combo'"/>
+                <attribute name="invisible" separator="or" add="type == 'combo'"/>
             </field>
         </field>
     </record>

@@ -113,7 +113,12 @@
             <field name="name">Membership Products</field>
             <field name="res_model">product.template</field>
             <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
-            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_detailed_type': 'service'}</field>
+            <field name="context">{
+                'membership':True,
+                'type':'service',
+                'default_membership': True,
+                'default_type': 'service',
+            }</field>
             <field name="search_view_id" ref="membership_product_search_form_view"/>
         </record>
 

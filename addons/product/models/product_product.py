@@ -359,15 +359,12 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            self.product_tmpl_id._sanitize_vals(vals)
         products = super(ProductProduct, self.with_context(create_product_product=False)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.env.registry.clear_cache()
         return products
 
     def write(self, values):
-        self.product_tmpl_id._sanitize_vals(values)
         res = super(ProductProduct, self).write(values)
         if 'product_template_attribute_value_ids' in values:
             # `_get_variant_id_for_combination` depends on `product_template_attribute_value_ids`

@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         """Forbid quantity updates on event booth lines."""
         product = self.env['product.product'].browse(product_id)
-        if product.detailed_type == 'event_booth' and new_qty > 1:
+        if product.service_tracking == 'event_booth' and new_qty > 1:
             return 1, _('You cannot manually change the quantity of an Event Booth product.')
         return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 

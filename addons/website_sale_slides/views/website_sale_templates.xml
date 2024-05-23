@@ -3,7 +3,9 @@
 
 <template id="website_sale_confirmation_slide" inherit_id="website_sale.confirmation">
     <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
-        <t t-if="any(product.detailed_type == 'course' for product in order.order_line.product_id)" t-call="website_sale_slides.course_purchased_confirmation_message"/>
+        <t t-if="any(
+            product.service_tracking == 'course' for product in order.order_line.product_id
+        )" t-call="website_sale_slides.course_purchased_confirmation_message"/>
     </xpath>
 </template>
 
