@@ -1213,3 +1213,11 @@ class Evaluacion(models.Model):
                 evaluacion.estado = "publicado"
             elif evaluacion.fecha_final < today:
                 evaluacion.estado = "finalizado"
+
+    def get_escalar_format(self):
+        """
+        Devuelve el formato escalar seleccionado para la evaluación actual.
+        
+        :return: El formato escalar seleccionado para la evaluación.
+        """
+        return self.escalar_format
