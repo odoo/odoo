@@ -1252,7 +1252,6 @@ class Field(MetaField('DummyField', (object,), {})):
                 value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
                 self.convert_to_record(value, record)  # use convert_to_record to check the value
             except CacheMiss:
-                recs = record._in_cache_without(self)
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
                     _("(Record: %s, User: %s)", record, env.uid),
