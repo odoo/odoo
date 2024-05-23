@@ -22,7 +22,7 @@ import {
 
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 
-export class Partner extends models.Model {
+class Partner extends models.Model {
     foo = fields.Char();
     bar = fields.Boolean();
     product_id = fields.Many2one({ relation: "product", searchable: true });
@@ -34,7 +34,7 @@ export class Partner extends models.Model {
     ];
 }
 
-export class Product extends models.Model {
+class Product extends models.Model {
     name = fields.Char({ string: "Product Name", searchable: true });
 
     _records = [
