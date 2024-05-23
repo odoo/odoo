@@ -2799,13 +2799,12 @@ export class Model extends Array {
             if (!currentField) {
                 return FIELD_NOT_FOUND;
             }
+            value = currentRecord?.[fieldName];
             const relation = getRelation(currentField, currentRecord);
             if (relation) {
                 const ids = ensureArray(currentRecord?.[fieldName]);
                 currentModel = relation;
                 currentRecord = currentModel.find((r) => ids.includes(r.id));
-            } else {
-                value = currentRecord?.[fieldName];
             }
         }
         return value ?? DEFAULT_FIELD_VALUES[currentField.type]();
