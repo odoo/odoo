@@ -46,4 +46,9 @@ patch(SelfOrder.prototype, {
         const exit = encodeURIComponent(exitRouteUrl);
         return `${baseUrl}/pos/pay/${order_id}?access_token=${order_access_token}&exit_route=${exit}`;
     },
+    filterPaymentMethods(pms) {
+        const pm = super.filterPaymentMethods(...arguments);
+        const online_pms = pms.filter((rec) => rec.is_online_payment);
+        return [...new Set([...pm, ...online_pms])];
+    },
 });

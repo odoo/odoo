@@ -1020,10 +1020,20 @@ export class PosStore extends Reactive {
         }
     }
     async getServerOrders() {
-        return await this.data.searchRead("pos.order", [
+        return await this.loadServerOrders([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
         ]);
+    }
+    async loadServerOrders(domain) {
+        const orders = await this.data.searchRead("pos.order", domain);
+        for (const order of orders) {
+            order.update({
+                config_id: this.config,
+                session_id: this.session,
+            });
+        }
+        return orders;
     }
     async getProductInfo(product, quantity, priceExtra = 0) {
         const order = this.get_order();
