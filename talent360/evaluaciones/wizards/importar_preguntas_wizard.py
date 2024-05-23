@@ -172,12 +172,6 @@ class ImportQuestionsWizard(models.TransientModel):
                     raise exceptions.ValidationError(
                         "Las opciones para preguntas de tipo 'multiple_choice' no pueden estar vacías o contener solo espacios en blanco."
                     )
-            # Validar que todas las opciones estén entre comillas dobles
-            for opcion in opciones:
-                if not opcion.startswith('"') or not opcion.endswith('"'):
-                    raise exceptions.ValidationError(
-                        "Las opciones para preguntas de opción múltiple deben estar entre comillas dobles."
-                    )
         else:
             # No permitir opciones para otros tipos de preguntas
             if row.get("Opciones"):
