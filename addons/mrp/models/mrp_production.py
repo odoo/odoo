@@ -1695,6 +1695,10 @@ class MrpProduction(models.Model):
             for key, values in tools_groupby(moves_to_do, key=lambda m: m.raw_material_production_id.id)
         ])
         for order in self:
+            # match the qty to consume with the qty producing
+            if order.qty_producing != order.product_uom_qty:
+                for move in moves_to_do_by_order[order.id]:
+                    move.product_uom_qty = move.should_consume_qty
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:

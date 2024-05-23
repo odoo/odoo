@@ -271,3 +271,19 @@ class TestManualConsumption(TestMrpCommon):
         action = consumption_warning.save().action_confirm()
         self.assertEqual(len(mo.move_raw_ids), 1)
         self.assertEqual(mo.move_raw_ids.quantity, 2)
+
+    def test_update_should_consume_for_done_mo(self):
+        """
+        Check that the qty to consume is updated with respect to the qty_producing
+        when the MO is marked as donetest_under_consumption
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom_1.product_id
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        with Form(mo) as fmo:
+            fmo.qty_producing = 4.0
+        mo.button_mark_done()
+        self.assertRecordValues(mo.move_raw_ids, [{'product_uom_qty': 2.0, 'quantity': 2.0, 'picked': True}, {'product_uom_qty': 4.0, 'quantity': 4.0, 'picked': True}])
