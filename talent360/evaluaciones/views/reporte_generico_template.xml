@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- diseño copiado de los reportes de encuestas de odoo -->
+        <template id="evaluaciones.diseño" name="Diseño de reporte de evaluación genérico" inherit_id="web.frontend_layout" primary="True">
+            <xpath expr="//div[@id='wrapwrap']" position="before">
+                <t t-set="no_livechat" t-value="True"/>
+            </xpath>
+            <xpath expr="//div[@id='wrapwrap']" position="attributes">
+                <attribute name="t-attf-class" add="o_survey_background" separator=" "/>
+            </xpath>
+            <xpath expr="//head/t[@t-call-assets][last()]" position="after">
+                <t t-call-assets="evaluaciones.evaluaciones_assets" lazy_load="True"/>
+            </xpath>
+            <xpath expr="//header" position="before">
+                <t t-set="no_header" t-value="True"/>
+                <t t-set="no_footer" t-value="True"/>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div id="wrap" class="oe_structure oe_empty"/>
+            </xpath>
+        </template>
+
+        <!-- Definición de reporte genérico -->
+        <template id="encuestas_reporte_generico" name="Reporte: página de reporte genérico">
+            <t t-call="evaluaciones.diseño">
+                <t t-set="limite_registros" t-value="10"/>
+
+                <div class="movil">
+                    <t t-call="evaluaciones.mensaje"/>
+                </div>
+                <div class="o_survey_result">
+                    <t t-call="evaluaciones.portada_reporte_template"/>
+                    <t t-call="evaluaciones.encuestas_reporte_generico_inner" />
+                </div>
+            </t>
+        </template>
+
+        <template id="mensaje" name="Reporte: mensaje en móvil">
+            <div class="d-flex flex-row justify-content-between" style="height: 100vh;">
+                <h1 class="text-center my-auto mx-5" style="font-size: 2rem;">
+                    Los reportes no están disponibles en dispositivos móviles. Por favor, accede desde un dispositivo de escritorio.
+                </h1>
+            </div>
+        </template>
+
+        <!-- Componente wrapper de preguntas reporte -->
+        <template id="encuestas_reporte_inner" name="Reporte: contenido de reporte genérico">
+            <h4 class="detalles-wrapper">
+                <button class="btn btn-link ps-0 pt-2 d-print-none btn-detalles collapsed" type="button" data-bs-toggle="collapse" t-attf-data-bs-target=".question_detail">
+                    <i class="fa fa-eye" aria-hidden="true"/>
+                </button>Ver detalles de preguntas
+            </h4>
+            <div class="question_detail survey_section container-fluid collapse">
+                <t t-foreach="preguntas" t-as='datos_pregunta'>
+                    <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
+                    <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-inside: avoid; margin-bottom: 20px;" t-call="evaluaciones.encuestas_reporte_pregunta" />
+                </t>
+            </div>
+        </template>
+
+        <!-- Componente de respuesta de pregunta en texto -->
+        <template id="pregunta_resultados_texto" name="Question: text result (text_box, char_box)">
+            <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
+            <t t-set="first_page_records_count" t-value="len(respuestas) if len(respuestas) &lt; limite_registros else limite_registros"/>
+            <t t-set="cell_height" t-value="default_line_height"/>
+
+            <div class="overflow_auto o_survey_user_responses_table_wrapper" style="height: auto; page-break-inside: avoid; margin-bottom: 20px;">
+                <h4 t-esc="pregunta.titulo" style="page-break-inside: avoid; text-align: center;"/>
+                <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % pregunta.id" style="page-break-inside: avoid;">
+                    <thead>
+                        <tr style="page-break-inside: avoid;">
+                            <th>#</th>
+                            <th>Respuestas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="respuestas" t-as="respuesta">
+                            <tr t-att-class="'d-none' if not respuesta in respuestas[:limite_registros] else ''" style="page-break-inside: avoid;">
+                                <td>
+                                    <t t-esc="respuesta_index + 1"></t>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-between">
+                                        <t t-esc="respuesta"/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+            <t t-call="evaluaciones.question_table_pagination"/>
+        </template>
+
+        <!-- Componente de respuesta de pregunta en selección -->
+        <template id="pregunta_resultados_seleccion" name="Question: choice result (simple_choice, multiple_choice)">
+            <t t-set="respuestas" t-value="datos_pregunta['respuestas']"/>
+            <t t-set="respuestas_tabuladas" t-value="datos_pregunta['respuestas_tabuladas']"/>
+            <ul class="nav nav-tabs d-print-none" role="tablist">
+                <li t-if="pregunta_contestada" class="nav-item">
+                    <a t-att-href="'#grafica_barras_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_barras_pregunta__%d' % pregunta.id" class="nav-link active default" data-bs-toggle="tab" role="tab" data-chart="1">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Gráfico de barras</span>
+                    </a>
+                </li>
+                <li t-if="pregunta_contestada" class="nav-item">
+                    <a t-att-href="'#grafica_columnas_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_columnas_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab" data-chart="1">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Gráfico de columnas</span>
+                    </a>
+                </li>
+                <li t-if="pregunta_contestada" class="nav-item">
+                    <a t-att-href="'#grafica_pastel_pregunta__%d' % pregunta.id" t-att-aria-controls="'grafica_pastel_pregunta__%d' % pregunta.id" class="nav-link" data-bs-toggle="tab" role="tab" data-chart="1">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Gráfico de pastel</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a t-att-href="'#datos_pregunta__%d' % pregunta.id" t-att-aria-controls="'datos_pregunta__%d' % pregunta.id" t-attf-class="nav-link #{'active' if not pregunta_contestada else ''}" data-bs-toggle="tab" role="tab">
+                        <i class="fa fa-list-alt me-1"/>
+                        <span>Tabla de datos</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane active survey_graph" t-att-id="'grafica_barras_pregunta__%d' % pregunta.id" t-att-data-graph-type="'bar'" t-att-data-graph-data="respuestas_tabuladas">
+                    <canvas class="mx-auto" t-att-id="'canvas_barras_pregunta__%d' % pregunta.id"/>
+                </div>
+                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane survey_graph" t-att-id="'grafica_columnas_pregunta__%d' % pregunta.id" t-att-data-graph-type="'col'" t-att-data-graph-data="respuestas_tabuladas">
+                    <canvas class="mx-auto" t-att-id="'canvas_columnas_pregunta__%d' % pregunta.id"/>
+                </div>
+                <div t-if="pregunta_contestada" role="tabpanel" class="tab-pane survey_graph" t-att-id="'grafica_pastel_pregunta__%d' % pregunta.id" t-att-data-graph-type="'pie'" t-att-data-graph-data="respuestas_tabuladas">
+                    <canvas class="mx-auto" t-att-id="'canvas_pastel_pregunta__%d' % pregunta.id"/>
+                </div>
+                <div role="tabpanel" t-att-id="'datos_pregunta__%d' % pregunta.id" t-attf-class="tab-pane always-print #{'active' if not pregunta_contestada else ''}">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Respuesta</th>
+                                <th>Porcentaje</th>
+                                <th>Frecuencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="respuestas_tabuladas" t-as="respuesta">
+                                <td>
+                                    <p>
+                                        <span t-esc="respuesta['nombre']"/>
+                                    </p>
+                                </td>
+                                <td class="o_survey_answer">
+                                    <span t-esc="round(respuesta['valor'] * 100.0/ (len(respuestas) or 1), 2)"></span> % 
+                                </td>
+                                <td class="o_survey_answer">
+                                    <span t-esc="'%s Votos' % respuesta['valor']" class="badge text-bg-primary"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+
+        <!-- Componente de respuesta de pregunta en selección múltiple -->
+        <template id="question_table_pagination" name="Survey: statistics table pagination">
+            <t t-set="respuestas_conteo" t-value="len(datos_pregunta['respuestas'])"/>
+            <t t-if="respuestas_conteo > limite_registros">
+                <div class="d-flex justify-content-between d-print-none pagination_wrapper" t-att-id="'pagination_%d' % pregunta.id" t-att-data-question_id="pregunta.id" t-att-data-record_limit="limite_registros">
+                    <ul class="pagination mt-2">
+                        <t t-set="total" t-value="ceil(respuestas_conteo / limite_registros) + 1"/>
+                        <li t-foreach="range(1, total)" t-as="num" t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
+                            <a href="#" class="page-link" t-esc="num"></a>
+                        </li>
+                    </ul>
+                    <button class="btn btn-sm btn-primary mx-0 my-3 o_survey_question_answers_show_btn">Show All</button>
+                </div>
+            </t>
+        </template>
+
+        <!-- Componente de respuesta de preguntas  -->
+        <template id="encuestas_reporte_generico_inner" name="Reporte: contenido de reporte genérico">
+            <div class="question_detail survey_section container-fluid">
+                <t t-foreach="preguntas" t-as='datos_pregunta'>
+                    <t t-set="pregunta" t-value="datos_pregunta['pregunta']"/>
+                    <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-inside: avoid; margin-bottom: 20px;" t-call="evaluaciones.encuestas_reporte_pregunta" />
+                </t>
+            </div>
+        </template>
+    </data>
+</odoo>

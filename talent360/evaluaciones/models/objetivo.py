@@ -30,7 +30,7 @@ class Objetivo(models.Model):
 
     titulo = fields.Char(required=True, string="Título")
     descripcion = fields.Text(
-        required=True, string="Descripción", help="Descripción del objetivo"
+        required=True, string="Descripción", help="Descripción del objetivo", size="20"
     )
     metrica = fields.Selection(
         [
@@ -191,3 +191,5 @@ class Objetivo(models.Model):
         for registro in self:
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
+            
+    

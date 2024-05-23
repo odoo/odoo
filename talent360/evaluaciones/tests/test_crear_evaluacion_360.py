@@ -1,5 +1,5 @@
 from odoo.tests.common import TransactionCase
-from odoo import fields
+from datetime import datetime
 
 
 class TestCrearEvaluacion360(TransactionCase):
@@ -15,8 +15,8 @@ class TestCrearEvaluacion360(TransactionCase):
                 "tipo": "competencia",
                 "tipo_competencia": "90",
                 "estado": "borrador",
-                "fecha_inicio": fields.Date.today(),
-                "fecha_final": fields.Date.today(),
+                "fecha_inicio": datetime.today(),
+                "fecha_final": datetime.today(),
             }
         )
 
