@@ -127,7 +127,7 @@ class StockWarehouse(models.Model):
             'manufacture_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'make_to_order',  # TODO : Check if ok as default behavior, else rework tests with move chaining to use pg chaining.
+                    'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -144,7 +144,7 @@ class StockWarehouse(models.Model):
             'pbm_mto_pull_id': {
                 'depends': ['manufacture_steps', 'manufacture_to_resupply'],
                 'create_values': {
-                    'procure_method': 'make_to_order',
+                    'procure_method': 'make_to_order', # TODO: Check, what about this one, which behavior do we want by default ?
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',

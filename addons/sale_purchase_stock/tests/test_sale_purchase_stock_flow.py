@@ -30,8 +30,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
     def test_cancel_so_with_draft_po(self):
         """
-        Sell a MTO+Buy product -> a RFQ is generated
-        Cancel the SO -> The RFQ is cancelled
+        Sell a MTO+Buy product -> a PO is generated
+        Cancel the SO -> an activity should be added to the PO
         """
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.env.user.partner_id
@@ -44,7 +44,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         so._action_cancel()
 
-        self.assertEqual(po.state, 'cancel')
+        self.assertTrue(po.activity_ids)
+        self.assertIn(so.name, po.activity_ids.note)
 
     def test_qty_delivered_with_mto_and_done_quantity_change(self):
         """
@@ -84,4 +85,3 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         sm.move_line_ids.quantity = 10
         self.assertEqual(so.order_line.qty_delivered, 10)
-        # TODO : test MTSO with partially available stock

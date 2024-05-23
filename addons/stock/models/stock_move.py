@@ -1026,8 +1026,8 @@ Please change the quantity done or the rounding precision of your unit of measur
 
             move_to_propagate_ids = set()
             move_to_mts_ids = set()
-            for m in move._get_next_moves() - new_move: # TODO : check me
-                if new_move and move.location_final_id and m.location_id == move.location_final_id and move.procure_method != "make_to_stock":
+            for m in move._get_next_moves() - new_move:
+                if new_move and move.location_final_id and m.location_id == move.location_final_id and not move._is_mtso():
                     move_to_propagate_ids.add(m.id)
                 elif not m.location_id._child_of(move.location_dest_id):
                     move_to_mts_ids.add(m.id)
@@ -1039,6 +1039,9 @@ Please change the quantity done or the rounding precision of your unit of measur
         new_moves = new_moves.sudo()._action_confirm()
 
         return new_moves
+
+    # def _is_push_move_to_propagate(self):
+        # return self.
 
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """

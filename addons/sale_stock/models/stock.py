@@ -67,8 +67,8 @@ class StockMove(models.Model):
 
     def _action_done(self, cancel_backorder=False):
         super()._action_done(cancel_backorder)
-        mtso_moves_to_update = self.group_id.sale_id.picking_ids.move_ids.filtered(lambda m: m._is_mtso())
-        mtso_moves_to_update._action_assign()
+        mtso_moves_to_update = self.group_id.sudo().sale_id.picking_ids.move_ids.filtered(lambda m: m._is_mtso())  # sudo for TestSaleStock.test_inventory_admin_no_backorder_not_own_sale_order
+        mtso_moves_to_update.sudo(False)._action_assign()
 
 
 class StockMoveLine(models.Model):

@@ -98,7 +98,7 @@ class ResCompany(models.Model):
                 'action': 'buy',
                 'location_dest_id': customer_location.id,
                 'location_src_id': supplier_location.id,
-                'procure_method': 'make_to_stock',
+                'procure_method': 'make_to_order',
                 'route_id': dropship_route.id,
                 'picking_type_id': dropship_picking_type.id,
                 'company_id': company.id,

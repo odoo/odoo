@@ -627,21 +627,6 @@ class TestReorderingRule(TransactionCase):
             'code': 'TEST'
         })
         customer_loc, _ = warehouse._get_partner_locations()
-        mto_rule = self.env['stock.rule'].search(
-            [('warehouse_id', '=', warehouse.id),
-             ('procure_method', '=', 'mts_else_mto'),
-             ('location_dest_id', '=', customer_loc.id)
-            ]
-        )
-        route_mto = self.env["stock.route"].create({
-            "name": "MTO",
-            "active": True,
-            "sequence": 3,
-            "product_selectable": True,
-            "rule_ids": [(6, 0, [
-                mto_rule.id
-            ])]
-        })
         uom_unit = self.env.ref("uom.product_uom_unit")
         product = self.env["product.product"].create({
             "name": "product TEST",
@@ -650,7 +635,7 @@ class TestReorderingRule(TransactionCase):
             "uom_id": uom_unit.id,
             "default_code": "A",
             "route_ids": [(6, 0, [
-                route_mto.id,
+                self.env.ref('stock.route_warehouse0_mto').id,
                 purchase_route.id,
             ])],
         })
