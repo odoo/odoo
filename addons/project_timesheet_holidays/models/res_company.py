@@ -12,7 +12,8 @@ class Company(models.Model):
         domain="[('project_id', '=', internal_project_id)]")
 
     def init(self):
-        type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]
+        type_ids_ref = self.env.ref('hr_timesheet.internal_project_default_stage', raise_if_not_found=False)
+        type_ids = [(4, type_ids_ref.id)] if type_ids_ref else []
         companies = self.search(['|', ('internal_project_id', '=', False), ('leave_timesheet_task_id', '=', False)])
         internal_projects_by_company_dict = None
         Project = self.env['project.project']
