@@ -18,5 +18,10 @@ for customization purpose.
         'views/base_import_module_view.xml',
         'views/ir_module_views.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'base_import_module/static/src/**/*',
+        ]
+    },
     'license': 'LGPL-3',
 }
