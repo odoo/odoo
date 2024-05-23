@@ -1,12 +1,7 @@
-from odoo import http
+from odoo import http, _
 from odoo.http import request
-from odoo.exceptions import AccessError
-from ..models.evaluacion import Evaluacion
-from ..models.respuesta import Respuesta as respuesta
-from ..models.pregunta import Pregunta as pregunta
+from odoo.exceptions import AccessError, UserError
 import json
-from ..models.usuario_evaluacion_rel import UsuarioEvaluacionRel as usuario_evaluacion
-import time
 import werkzeug
 
 
@@ -16,22 +11,46 @@ class EvaluacionesController(http.Controller):
     @http.route(
         "/evaluacion/reporte/<model('evaluacion'):evaluacion>", type="http", auth="user"
     )
-    def reporte_controller(self, evaluacion: Evaluacion):
+    def reporte_controller(self, evaluacion, filtros=None):
         """Método para generar y mostrar un reporte de evaluación.
         Este método verifica que el usuario tenga los permisos necesario, obtiene los datos
         del modelo de evaluaciones y renderiza el reporte con esos datos.
 
+        :param evaluacion: objeto de la evaluación a generar el reporte
+        :param filtros: filtros a aplicar al reporte
+
         :return: html renderizado del template con los datos del reporte
         """
 
+        # Verificar permisos de usuario
         if not request.env.user.has_group(
             "evaluaciones.evaluaciones_cliente_cr_group_user"
         ):
-            raise AccessError("No tienes permitido acceder a este recurso.")
+            raise AccessError(_("No tienes permitido acceder a este recurso."))
 
-        parametros = evaluacion.generar_datos_reporte_NOM_035_action()
+        # Parsear filtros
+        if filtros:
+            filtros = json.loads(filtros)
+            filtros = {
+                categoria: valores for categoria, valores in filtros.items() if valores
+            }
 
-        return request.render("evaluaciones.encuestas_reporte", parametros)
+        parametros = evaluacion.generar_datos_reporte_generico_action(filtros)
+
+        parametros["filtros"] = filtros
+
+        if evaluacion.incluir_demograficos:
+            parametros.update(evaluacion.generar_datos_demograficos(filtros))
+        if evaluacion.tipo == "NOM_035":
+            parametros.update(evaluacion.generar_datos_reporte_NOM_035_action(filtros))
+            return request.render("evaluaciones.encuestas_reporte_nom_035", parametros)
+        elif evaluacion.tipo == "CLIMA":
+            parametros.update(evaluacion.generar_datos_reporte_clima_action(filtros))
+            return request.render("evaluaciones.encuestas_reporte_clima", parametros)
+        elif evaluacion.tipo == "generico":
+            return request.render("evaluaciones.encuestas_reporte_generico", parametros)
+        else:
+            raise ValueError(_("Tipo de evaluación no soportado para reporte."))
 
     @http.route(
         "/evaluacion/responder/<int:evaluacion_id>/<string:token>",
@@ -50,38 +69,24 @@ class EvaluacionesController(http.Controller):
 
         evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
-        if request.env.user != request.env.ref("base.public_user"):
-            usuario_eval_relacion = usuario_eva_mod.sudo().search(
-                [
-                    ("usuario_id.id", "=", request.env.user.id),
-                    ("evaluacion_id.id", "=", evaluacion.id),
-                    ("token", "=", token),
-                ]
-            )
-
-        else:
-            usuario_eval_relacion = usuario_eva_mod.sudo().search(
-                [
-                    # ("evaluacion_id", "=", evaluacion.id),
-                    ("token", "=", token)
-                ]
-            )
+        usuario_eval_relacion = usuario_eva_mod.sudo().search(
+            [("evaluacion_id", "=", evaluacion.id), ("token", "=", token)]
+        )
 
         if not usuario_eval_relacion:
             return request.render("evaluaciones.evaluacion_responder_form_draft")
 
+        es_link_externo = bool(usuario_eval_relacion.usuario_externo_id)
+
+        if not es_link_externo and usuario_eval_relacion.usuario_id != request.env.user:
+            return request.render("evaluaciones.evaluacion_responder_form_draft")
+
         # Obtén la evaluación basada en el ID
-        parametros = evaluacion.action_get_evaluaciones(evaluacion_id)
+        parametros = evaluacion.get_evaluaciones_action(evaluacion_id)
 
-        if request.env.user != request.env.ref("base.public_user"):
-            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
-                request.env.user.id, evaluacion_id, None
-            )
-
-        else:
-            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
-                None, evaluacion_id, token
-            )
+        parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
+            evaluacion_id, token
+        )
 
         parametros["token"] = token
 
@@ -114,30 +119,38 @@ class EvaluacionesController(http.Controller):
         :return: redirección a la página de inicio
         """
 
-        user = None
-
-        if request.env.user != request.env.ref("base.public_user"):
-            if not request.env.user.has_group(
-                "evaluaciones.evaluaciones_cliente_cr_group_user"
-            ):
-                raise AccessError("No tienes permitido acceder a este recurso.")
-
-            user = request.env.user.id
-
         post_data = json.loads(request.httprequest.data)
 
         valores_radios = post_data.get("radioValues")
         valores_radios_escala = post_data.get("radioValuesScale")
         valores_textarea = post_data.get("textareaValues")
         evaluacion_id = post_data.get("evaluacion_id")
-        usuario_id = user
         respuesta_modelo = request.env["respuesta"]
         token = post_data.get("token")
+
+        usuario_evaluacion_rel = (
+            request.env["usuario.evaluacion.rel"]
+            .sudo()
+            .search([("token", "=", token), ("evaluacion_id.id", "=", evaluacion_id)])
+        )
+
+        if usuario_evaluacion_rel.contestada == "contestada":
+            raise UserError("La evaluación ya fue contestada.")
+
+        es_link_externo = bool(usuario_evaluacion_rel.usuario_externo_id)
+
+        if (
+            not es_link_externo
+            and usuario_evaluacion_rel.usuario_id != request.env.user
+        ):
+            raise AccessError("No tienes permiso para contestar esta evaluación.")
+        else:
+            usuario_id = usuario_evaluacion_rel.usuario_id.id
 
         for pregunta_id, valor_radio in valores_radios.items():
             if pregunta_id in valores_radios:
                 valor_radio = valores_radios[pregunta_id]
-                if request.env.user != request.env.ref("base.public_user"):
+                if not es_link_externo:
                     resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
@@ -163,7 +176,7 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, valor_textarea in valores_textarea.items():
             if pregunta_id in valores_textarea:
                 valor_textarea = valores_textarea[pregunta_id]
-                if request.env.user != request.env.ref("base.public_user"):
+                if not es_link_externo:
                     resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         None,
                         valor_textarea,
@@ -189,7 +202,7 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, valor_radio in valores_radios_escala.items():
             if pregunta_id in valores_radios_escala:
                 valor_radio = valores_radios_escala[pregunta_id]
-                if request.env.user != request.env.ref("base.public_user"):
+                if not es_link_externo:
                     resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
@@ -215,30 +228,6 @@ class EvaluacionesController(http.Controller):
         # Actualiza el estado de la evaluación para el usuario
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
-        if request.env.user != request.env.ref("base.public_user"):
-            usuario_eva_mod.sudo().action_update_estado(usuario_id, evaluacion_id, None)
-        else:
-            usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
+        usuario_eva_mod.sudo().action_update_estado(evaluacion_id, token)
 
         return werkzeug.utils.redirect("/evaluacion/contestada")
-
-    @http.route(
-        "/evaluacion/reporte-clima/<model('evaluacion'):evaluacion>",
-        type="http",
-        auth="user",
-    )
-    def reporte_clima_controller(self, evaluacion: Evaluacion):
-        """Método para generar y mostrar el reporte de clima laboral.
-        :return: HTML renderizado del template con los datos del reporte.
-        """
-
-        # Verificar permisos de usuario
-        if not request.env.user.has_group(
-            "evaluaciones.evaluaciones_cliente_cr_group_user"
-        ):
-            raise AccessError("No tienes permitido acceder a este recurso.")
-
-        # Generar parámetros para el reporte
-        parametros = evaluacion.action_generar_datos_reporte_clima()
-
-        return request.render("evaluaciones.encuestas_reporte_clima", parametros)

@@ -5,16 +5,16 @@ class Template(models.Model):
     """
     Modelo para representar una plantilla de evaluación.
 
-    Atributos:
-        _name (str): Nombre del modelo en Odoo.
-        _description (str): Descripción del modelo en Odoo.
-        nombre (str): Nombre de la plantilla de evaluación.
-        tipo (str): Tipo de la plantilla de evaluación, opciones son 'nom_035' para NOM 035 y 'clima' para Clima.
-        pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la plantilla.
+    :param _name (str): Nombre del modelo en Odoo.
+    :param _description (str): Descripción del modelo en Odoo.
+    :param nombre (str): Nombre de la plantilla de evaluación.
+    :param tipo (str): Tipo de la plantilla de evaluación, opciones son 'nom_035' para NOM 035 y 'clima' para Clima.
+    :param pregunta_ids (fields.Many2many): Relación de muchos a muchos con el modelo 'pregunta' para almacenar las preguntas asociadas a la plantilla.
     """
 
     _name = "template"
     _description = "Plantilla para una evaluación"
+    _rec_name = "nombre"
 
     nombre = fields.Char(required=True)
     tipo = fields.Selection(

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_asignar_usuario_externo_wizard" model="ir.ui.view">
+        <field name="name">asignar.usuario.externo.wizard.form</field>
+        <field name="model">asignar.usuario.externo.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upload File">
+                <div>
+                    <div>Para asignar usuarios externos, llene la siguiente plantilla con los datos de los usuarios y cargue aquí el archivo CSV. </div>
+                    <group class="py-3">
+                        <button name="descargar_template_usuarios" string="Plantilla" type="object" class="btn-primary"/>
+                    </group>
+                    <group>
+                        <field name="nombre_archivo" invisible="1"/>
+                        <field name="archivo" filename="nombre_archivo"/>
+                    </group>
+                </div>
+                <footer>
+                    <button string="Guardar" class="btn-primary" name="procesar_csv" type="object"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_crear_filtros_wizard" model="ir.ui.view">
+        <field name="name">crear.filtros.wizard.form</field>
+        <field name="model">crear.filtros.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Crear Filtros">
+                <field name="filtros_ids">
+                    <tree string="Filtros" editable="bottom" create="false" delete="false" edit="true">
+                        <field name="categoria" readonly="1"/>
+                        <field name="filtro_seleccion_ids" widget="many2many_tags" domain="[('categoria', '=', categoria), ('filtro_original_id', '=', active_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Continuar" class="btn-primary" name="generar_reporte" type="object"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -107,11 +107,16 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
             self.graphData = self.$el.data("graphData");
             self.label = self.$el.data("label") || 'Data';
 
+
+            
             // Asegurarse de que graphData es un array de objetos
             if (typeof self.graphData === 'string') {
                 self.graphData = JSON.parse(self.graphData.replace(/'/g, '"'));
             }
-
+            
+            console.log("Label", self.label)
+            console.log("Graph Data", self.graphData)
+            
             // Verifica que graphData es un array
             if (Array.isArray(self.graphData)) {
                 self.labels = self.graphData.map(function (categoria) {
@@ -316,6 +321,15 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     }
                 }
             },
+            plugins: [
+              {
+                beforeInit: function (chart) {
+                    chart.data.labels.forEach(function (label, index, array) {
+                        array[index] = self._splitLabels(label, 25);
+                    })
+                  }
+              }
+            ]
         };
     },
 
@@ -379,6 +393,30 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         };
     },
     
+    _splitLabels: function (label, maxLength){
+        if (typeof label !== 'string') {
+            return label;
+        }
+
+        if (label.length < maxLength) {
+            return [label];
+        }
+
+        let breakIndex = label.lastIndexOf(" ", maxLength + 1);
+        if (breakIndex === -1) {
+            breakIndex = label.indexOf(" ", maxLength);
+
+            if (breakIndex === -1) {
+                return [label];
+            }
+        }
+        var respuesta = [label.slice(0, breakIndex)]
+        var respuesta2 = this._splitLabels(label.slice(breakIndex + 1), maxLength)
+
+        respuesta = respuesta.concat(respuesta2)
+
+        return respuesta
+    },
     /**
      * Loads the chart using the provided Chart library.
      *
@@ -403,6 +441,7 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     selector: '.o_survey_result',
     events: {
         "click .o_survey_results_print": "_onPrintResultsClick",
+        "click .btn-detalles": "_loadDetalles"
     },
 
     //--------------------------------------------------------------------------
@@ -424,10 +463,17 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
             });
 
             self.charts = [];
+            self.other_charts = [];
             self.$('.survey_graph').each(function () {
                 var chartWidget = new publicWidget.registry.SurveyResultChart(self);
                 allPromises.push(chartWidget.attachTo($(this)));
-                self.charts.push(chartWidget);
+                // atriibuto role is tabpane
+                if ($(this).attr("role") === "tabpanel") {
+                    self.charts.push(chartWidget);
+                }
+                else {
+                    self.other_charts.push(chartWidget);
+                }
             }); 
 
             if (allPromises.length !== 0) {
@@ -442,14 +488,29 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * Call print dialog
      * @private
      */
-    _onPrintResultsClick: function () {  
+    _onPrintResultsClick: function () { 
+        for (let chart of this.charts) {
+            chart.chart.resize();
+        }
+
+        for (let chart of this.other_charts) {
+            chart.chart.resize();
+        }
         window.print();
+    },
+
+    _loadDetalles: function() {
+        this._attach_listener(this);
     },
     
     _attach_listener: function (self){
         console.log("attatching listeners")
 
         for (let chart of self.charts) {
+            chart._reloadChart();
+        }
+
+        for (let chart of self.other_charts) {
             chart._reloadChart();
         }
 

@@ -1,4 +1,5 @@
 from odoo.tests.common import TransactionCase
+from datetime import datetime
 
 
 class test_evaluacion(TransactionCase):
@@ -24,6 +25,8 @@ class test_evaluacion(TransactionCase):
             {
                 "nombre": nombre,
                 "estado": estado,
+                "fecha_inicio": datetime.today(),
+                "fecha_final": datetime.today(),
             }
         )
 
