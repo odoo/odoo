@@ -155,8 +155,8 @@ export function createBasicChart(model, chartId, sheetId = model.getters.getActi
         position: { x: 0, y: 0 },
         sheetId: sheetId,
         definition: {
-            title: "test",
-            dataSets: ["A1"],
+            title: { text: "test" },
+            dataSets: [{ dataRange: "A1" }],
             type: "bar",
             background: "#fff",
             verticalAxisPosition: "left",
@@ -173,7 +173,7 @@ export function createScorecardChart(model, chartId, sheetId = model.getters.get
         position: { x: 0, y: 0 },
         sheetId: sheetId,
         definition: {
-            title: "test",
+            title: { text: "test" },
             keyValue: "A1",
             type: "scorecard",
             background: "#fff",
@@ -191,7 +191,7 @@ export function createGaugeChart(model, chartId, sheetId = model.getters.getActi
         position: { x: 0, y: 0 },
         sheetId: sheetId,
         definition: {
-            title: "test",
+            title: { text: "test" },
             type: "gauge",
             background: "#fff",
             dataRange: "A1",

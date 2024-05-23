@@ -236,7 +236,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
                             tag: "chart",
                             data: {
                                 type: "odoo_line",
-                                title: "Partners",
+                                title: { text: "Partners" },
                                 legendPosition: "top",
                                 searchParams: {
                                     domain: '[("foo", "=", uid)]',
@@ -556,7 +556,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
                     orderBy: [],
                 },
                 cumulative: true,
-                title: "Partners",
+                title: { text: "Partners" },
                 dataSourceId: "42",
                 id: "42",
             },
