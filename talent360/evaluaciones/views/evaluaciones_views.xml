@@ -105,9 +105,8 @@
                 <field name="porcentaje_respuestas" invisible="1" readonly="1"/>
                 <header>
                     <!-- Generación de reporte de una evaluación-->
-                    <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
-                    <button class="btn btn-primary" name="reporte_generico_action" string="Reporte Genérico" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
-                    <button class="btn btn-primary" name="filtros_reporte_action" string="Reporte Personalizado" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button class="btn btn-primary" name="reporte_generico_action" string="Reporte Genérico" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user" invisible="tipo == 'generico'"/>
+                    <button class="btn btn-primary" name="filtros_reporte_action" string="Reporte Personalizado" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user" invisible="tipo == 'generico'"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                 </header>
                 <sheet string="Evaluacion de personal">
@@ -143,7 +142,7 @@
                         <field name="escalar_format" invisible="tipo != 'CLIMA'"/>
                     </group>
                         <notebook>
-                            <page string="Preguntas">
+                            <page string="Preguntas" invisible="tipo == 'generico'">
                                 <field class="lh-lg w-100" colspan="2" name="pregunta_ids" readonly="1" nolabel="1" context="{'actual_evaluacion_id': active_id}">
                                     <tree editable="bottom" create="0">
                                         <field class="lh-m" name="pregunta_texto" readonly="1"/>
@@ -154,10 +153,8 @@
                                 </field>
                             </page>
                             <page string="Preguntas" invisible="tipo != 'generico'">
-                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', 'escala')]">
+                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
                                     <tree create="true" delete="true" editable="bottom">
-                                        <field name="pregunta_texto" readonly="1"/>
-                                        <field name="tipo" readonly="1"/>
                                         <control>
                                             <create name="add_filtro" string="Agregar pregunta "/>
                                         </control>
@@ -543,10 +540,8 @@
                     </group>
                         <notebook>
                             <page string="Preguntas">
-                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', 'escala')]">
+                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
                                     <tree create="true" delete="true" editable="bottom">
-                                        <field name="pregunta_texto" readonly="1"/>
-                                        <field name="tipo" readonly="1"/>
                                         <control>
                                             <create name="add_filtro" string="Agregar pregunta "/>
                                         </control>
