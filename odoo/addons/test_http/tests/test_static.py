@@ -334,6 +334,54 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertDownloadGizeh('/web/content/test_http.gizeh_png?download=0')
         self.assertDownloadGizeh('/web/image/test_http.gizeh_png?download=0')
 
+    def test_static21_web_assets(self):
+        attachment = self.env['ir.attachment'].search([
+            ('url', 'like', '%/web.assets_frontend_minimal.min.js')
+        ], limit=1)
+        x_sendfile = opj(config.filestore(self.env.cr.dbname), attachment.store_fname)
+        x_accel_redirect = f'/web/filestore/{self.env.cr.dbname}/{attachment.store_fname}'
+
+        with self.subTest(x_sendfile=False):
+            self.assertDownload(
+                attachment.url,
+                headers={},
+                assert_status_code=200,
+                assert_headers={
+                    'Content-Length': str(attachment.file_size),
+                    'Content-Type': 'application/javascript; charset=utf-8',
+                    'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
+                },
+                assert_content=attachment.raw
+            )
+
+        with self.subTest(x_sendfile=True), \
+             patch.object(config, 'options', {**config.options, 'x_sendfile': True}):
+            self.assertDownload(
+                attachment.url,
+                headers={},
+                assert_status_code=200,
+                assert_headers={
+                    'X-Sendfile': x_sendfile,
+                    'X-Accel-Redirect': x_accel_redirect,
+                    'Content-Length': '0',
+                    'Content-Type': 'application/javascript; charset=utf-8',
+                    'Content-Disposition': 'inline; filename=web.assets_frontend_minimal.min.js',
+                },
+            )
+
+    def test_static22_image_field_csp(self):
+        test_user = new_test_user(self.env, "test user")
+        env = self.env(user=test_user)
+        self.authenticate('test user', 'test user')
+        earth = env.ref('test_http.earth')
+
+        data = base64.b64encode(b'<html><body><div>Hello World</div></body></html>')
+        for field in ('glyph_attach', 'glyph_inline', 'glyph_related', 'glyph_compute'):
+            earth[field] = data
+            res = self.url_open(f'/web/image/test_http.stargate/{earth.id}/{field}')
+            self.assertEqual(res.headers['Content-Type'], 'application/octet-stream')  # Shouldn't be text/html
+            self.assertEqual(res.headers['Content-Security-Policy'], "default-src 'none'")
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
