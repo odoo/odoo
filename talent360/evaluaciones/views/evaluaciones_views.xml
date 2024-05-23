@@ -510,12 +510,26 @@
                     </group>
                         <notebook>
                             <page string="Preguntas">
-                                <button class="btn btn-primary" name="agregar_pregunta_action" string="Agregar preguntas" type="object" context="{'default_evaluacion_id': active_id}" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
-                                <field class="lh-lg w-100" colspan="2" name="pregunta_ids" nolabel="1" options="{'link':false}">
-                                    <tree editable="bottom" create="0">
-                                        <field class="lh-m" name="pregunta_texto" readonly="1"/>
-                                        <field class="lh-m" name="tipo" readonly="1"/>
+                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', 'escala')]">
+                                    <tree create="true" delete="true" editable="bottom">
+                                        <field name="pregunta_texto" readonly="1"/>
+                                        <field name="tipo" readonly="1"/>
+                                        <control>
+                                            <create name="add_filtro" string="Agregar pregunta "/>
+                                        </control>
                                     </tree>
+                                    <form string="Agregar pregunta">
+                                        <group>
+                                            <field name="pregunta_texto" placeholder="Ingrese la pregunta"/>
+                                            <field name="tipo"/>
+                                            <field name="ponderacion" invisible="tipo != 'escala'" required="True"/>
+                                            <field name="opcion_ids" placeholder="Opciones" context="{'default_pregunta_id': active_id}" invisible="tipo != 'multiple_choice'" required="True">
+                                                <tree create="true" delete="true" editable="bottom">
+                                                    <field name="opcion_texto"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </form>
                                 </field>
                             </page>
                             <page string="Asignados">
@@ -544,72 +558,6 @@
         <field name="res_model">evaluacion</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="evaluacion_general_view_form"/>
-    </record>
-
-    <!-- PREGUNTA -->
-    <record id="pregunta_view_form" model="ir.ui.view">
-        <field name="name">pregunta.form</field>
-        <field name="model">pregunta</field>
-        <field name="arch" type="xml">
-            <form>
-                <div>
-                    <group>
-                        <field name="pregunta_texto"/>
-                        <field name="tipo"/>
-                    </group>
-                    <group invisible="tipo != 'multiple_choice'">
-                        <field name="opcion_ids" options="{'link':false}">
-                            <tree editable="bottom" create="0">
-                                <field name="opcion_texto" readonly="1"/>
-                                <field name="valor" readonly="1"/>
-                            </tree>
-                        </field>
-                        <br/>
-                        <button class="btn btn-primary" name="agregar_opcion_action" string="Agregar opcion" type="object" context="{
-                            'default_pregunta_id': active_id,
-                            'evaluacion_id': context.get('default_evaluacion_id'),
-                        }"  groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
-                    </group>
-                    <group invisible="tipo != 'escala'">
-                        <field name="ponderacion"/>
-                    </group>
-                </div>
-                <footer>
-                    <button string="Guardar" class="btn-primary" name="crear_pregunta_action" type="object" context="{
-                            'evaluacion_id': context.get('default_evaluacion_id'),
-                            'default_pregunta_texto': pregunta_texto,
-                            'default_tipo': tipo,
-                            'default_opcion_ids': opcion_ids.ids,
-                            'default_ponderacion': ponderacion
-                        }"/>
-                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-
-    <!-- OPCION -->
-    <record id="opcion_view_form" model="ir.ui.view">
-        <field name="name">opcion.form</field>
-        <field name="model">opcion</field>
-        <field name="arch" type="xml">
-            <form>
-                <group>
-                    <field name="opcion_texto"/>
-                    <field name="valor"/>
-                </group>
-                <footer>
-                    <button string="Guardar" class="btn-primary" name="crear_opcion_action" type="object"
-                    context="{
-                        'pregunta_id': context.get('default_pregunta_id'),
-                        'default_opcion_texto': opcion_texto, 
-                        'default_valor': valor,
-                        'evaluacion_id': context.get('evaluacion_id'),
-                        }"/>
-                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
-                </footer>
-            </form>
-        </field>
     </record>
 
 </odoo>
