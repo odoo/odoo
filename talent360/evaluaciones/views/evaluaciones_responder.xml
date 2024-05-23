@@ -90,8 +90,8 @@
                 </div>
                 <div class="row">
                     <div  class="col-lg-10">
-                        <t t-if="evaluacion.mensaje">
-                            <div t-field='evaluacion.mensaje' class="oe_no_empty pb-5 text-break"/>
+                        <t t-if="evaluacion.mensaje_bienvenida">
+                            <div t-field='evaluacion.mensaje_bienvenida' class="oe_no_empty pb-5 text-break"/>
                         </t>
                         <t t-else="">
                             <p class="oe_no_empty pb-5 text-break">
@@ -125,9 +125,14 @@
                 <h1>Tus respuestas han sido registradas.</h1>
                 <div class="row">
                     <div class="col">
-                        <div class="o_survey_review">
-                            ¡Gracias por participar!
-                        </div>
+                        <t t-if="evaluacion.mensaje_agradecimiento">
+                            <div t-field='evaluacion.mensaje_agradecimiento' class="oe_no_empty pb-5 text-break"/>
+                        </t>
+                        <t t-else="">
+                            <div class="o_survey_review">
+                                Gracias por tu tiempo y por compartir tus respuestas con nosotros.
+                            </div>
+                        </t>
                     </div>
                 </div>
             </div>
