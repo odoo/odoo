@@ -1252,6 +1252,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 value = env.cache.get(self, record.env.cache_key(self), record._ids[0])
                 self.convert_to_record(value, record)  # use convert_to_record to check the value
             except CacheMiss:
+                recs = record._in_cache_without(self)
                 raise MissingError("\n".join([
                     _("Record does not exist or has been deleted."),
                     _("(Record: %s, User: %s)", record, env.uid),
@@ -2060,7 +2061,8 @@ class _String(Field):
 
     def get_cache_ids_missing(self, records):
         if not self.translate:
-            return super().get_cache_ids_missing(records)
+            yield from super().get_cache_ids_missing(records)
+            return
         context_key = records.env.cache_key(self)
         field_cache = records.env.cache._get_field_cache(self, context_key)
         lang = '__dummy' if records.env.context.get('prefetch_langs') \
