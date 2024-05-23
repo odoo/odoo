@@ -184,3 +184,17 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder", {
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosQuotationSaving", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas("Product", "4.00", "40.00"),
+            ProductScreen.controlButton("More..."),
+            ProductScreen.controlButton("Park Order"),
+        ].flat(),
+});
