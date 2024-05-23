@@ -1011,3 +1011,34 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+    
+    def evaluacion_general_action_form(self):
+        """
+        Ejecuta la acción de redireccionar a la evaluación general y devuelve un diccionario
+
+        Este método utiliza los parámetros necesarios para redireccionar a la evaluación general
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la evaluación general.
+
+        """
+        
+        new_evaluation = self.env["evaluacion"].create(
+            {
+                "nombre": "",
+                "tipo": "generica",
+                "fecha_inicio": fields.Date.today(),
+                "fecha_final": fields.Date.today(),
+            }
+        )
+        self = new_evaluation
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "General",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_general_view_form").id,
+            "target": "current",
+            "res_id": self.id,
+        }

@@ -553,11 +553,11 @@
         </field>
     </record>
 
-    <record id="evaluacion_general_action_form" model="ir.actions.act_window">
-        <field name="name">Evaluación genérica</field>
-        <field name="res_model">evaluacion</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="evaluacion_general_view_form"/>
+    <record id="evaluacion_general_action_forms" model="ir.actions.server">
+        <field name="name">Genérica</field>
+        <field name="model_id" ref="model_evaluacion"/>
+        <field name="state">code</field>
+        <field name="code">action = model.evaluacion_general_action_form()</field>
     </record>
 
 </odoo>
