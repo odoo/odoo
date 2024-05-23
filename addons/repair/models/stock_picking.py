@@ -130,6 +130,22 @@ class PickingType(models.Model):
             action['display_name'] = self.display_name
         return action
 
+    def _get_aggregated_records_by_date(self):
+        repair_picking_types = self.filtered(lambda picking: picking.code == 'repair_operation')
+        other_picking_types = (self - repair_picking_types)
+
+        records = super(PickingType, other_picking_types)._get_aggregated_records_by_date()
+        repair_records = self.env['repair.order']._read_group(
+            [
+                ('picking_type_id', 'in', repair_picking_types.ids),
+                ('state', '=', 'confirmed')
+            ],
+            ['picking_type_id'],
+            ['schedule_date' + ':array_agg'],
+        )
+        repair_records = [(r[0], r[1], _('Confirmed')) for r in repair_records]
+        return records + repair_records
+
 
 class Picking(models.Model):
     _inherit = 'stock.picking'

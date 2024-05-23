@@ -101,6 +101,19 @@
             <field name="code">action = records.action_split()</field>
         </record>
 
+        <record id="action_print_labels" model="ir.actions.server">
+            <field name="name">Labels</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="binding_type">report</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                action = records.action_open_label_type()
+            </field>
+        </record>
+
         <record id="action_production_order_lock_unlock" model="ir.actions.server">
             <field name="name">Lock/Unlock</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
@@ -184,7 +197,6 @@
                             invisible="not id or state in ('done', 'cancel') or not confirm_cancel"
                             confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process?"/>
                     <button name="button_unbuild" type="object" string="Unbuild" invisible="state != 'done'" data-hotkey="shift+v"/>
-                    <button string="Print Labels" type="object" name="action_open_label_type"/>
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>

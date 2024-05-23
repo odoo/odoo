@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class StockPickingType(models.Model):
@@ -86,6 +86,22 @@ class StockPickingType(models.Model):
         if self:
             action['display_name'] = self.display_name
         return action
+
+    def _get_aggregated_records_by_date(self):
+        production_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
+        other_picking_types = (self - production_picking_types)
+
+        records = super(StockPickingType, other_picking_types)._get_aggregated_records_by_date()
+        mrp_records = self.env['mrp.production']._read_group(
+            [
+                ('picking_type_id', 'in', production_picking_types.ids),
+                ('state', '=', 'confirmed')
+            ],
+            ['picking_type_id'],
+            ['date_start' + ':array_agg'],
+        )
+        mrp_records = [(r[0], r[1], _('Confirmed')) for r in mrp_records]
+        return records + mrp_records
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'

@@ -138,7 +138,6 @@
                             invisible="not id or picking_type_code != 'outgoing' or state == 'done'"
                             full_name="partner_id" groups="stock.group_stock_sign_delivery"/>
                     <button name="do_print_picking" string="Print" groups="stock.group_stock_user" type="object" invisible="state != 'assigned'" data-hotkey="o"/>
-                    <button string="Print Labels" type="object" name="action_open_label_type"/>
                     <button name="%(action_report_delivery)d" string="Print" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="o"/>
                     <button name="%(act_stock_return_picking)d" string="Return" invisible="state != 'done'" type="action" groups="base.group_user" data-hotkey="k"/>
                     <field name="state" widget="statusbar" invisible="picking_type_code != 'incoming'" statusbar_visible="draft,assigned,done"/>
@@ -456,6 +455,19 @@
             </field>
         </record>
 
+        <record id="action_print_labels" model="ir.actions.server">
+            <field name="name">Labels</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="binding_type">report</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                action = records.action_open_label_type()
+            </field>
+        </record>
+
         <record id="action_toggle_is_locked" model="ir.actions.server">
             <field name="name">Lock/Unlock</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
@@ -602,7 +614,21 @@
                     </t>
                 </t>
             </p>
+            <p name="footer_help_message" class="text-muted">
+                <br/>
+                Want to speed up operations? <a class="btn-link" name="stock.action_install_barcode" type="action">Install</a> the barcode app
+            </p>
         </template>
+
+        <record id="action_install_barcode" model="ir.actions.server">
+            <field name="name">Install Barcode</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_redirect_to_barcode_installation()
+            </field>
+        </record>
 
         <record id="action_get_picking_type_operations" model="ir.actions.act_window">
             <field name="name">Operations</field>

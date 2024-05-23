@@ -1,20 +1,21 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
 import math
+import pytz
+import random
 import time
 from ast import literal_eval
 from datetime import date, timedelta
 from collections import defaultdict
 
-from odoo import SUPERUSER_ID, _, api, Command, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, format_list, groupby, SQL
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class PickingType(models.Model):
@@ -148,6 +149,7 @@ class PickingType(models.Model):
         compute='_compute_is_favorite', inverse='_inverse_is_favorite', search='_search_is_favorite',
         compute_sudo=True, string='Show Operation in Overview'
     )
+    kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -334,6 +336,61 @@ class PickingType(models.Model):
             else:
                 picking_type.warehouse_id = False
 
+    @api.depends('code')
+    def _compute_show_picking_type(self):
+        for record in self:
+            record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
+
+    def _compute_kanban_dashboard_graph(self):
+        grouped_records = self._get_aggregated_records_by_date()
+
+        start_today = fields.Date.context_today(self)
+
+        start_yesterday = start_today + timedelta(days=-1)
+        start_day_1 = start_today + timedelta(days=1)
+        start_day_2 = start_today + timedelta(days=2)
+
+        summaries = {}
+        for picking_type_id, dates, data_series_name in grouped_records:
+            summaries[picking_type_id.id] = {
+                'data_series_name': data_series_name,
+                'total_before': 0,
+                'total_yesterday': 0,
+                'total_today': 0,
+                'total_day_1': 0,
+                'total_day_2': 0,
+                'total_after': 0,
+            }
+            for p_date in dates:
+                p_date = p_date.astimezone(pytz.UTC).date()
+                if p_date < start_yesterday:
+                    summaries[picking_type_id.id]['total_before'] += 1
+                elif p_date == start_yesterday:
+                    summaries[picking_type_id.id]['total_yesterday'] += 1
+                elif p_date == start_today:
+                    summaries[picking_type_id.id]['total_today'] += 1
+                elif p_date == start_day_1:
+                    summaries[picking_type_id.id]['total_day_1'] += 1
+                elif p_date == start_day_2:
+                    summaries[picking_type_id.id]['total_day_2'] += 1
+                else:
+                    summaries[picking_type_id.id]['total_after'] += 1
+
+        for picking_type in self:
+            picking_type_summary = summaries.get(picking_type.id)
+            graph_data = self._prepare_graph_data(picking_type_summary)
+            picking_type.kanban_dashboard_graph = json.dumps(graph_data)
+
+    def _compute_ready_items_label(self):
+        for pt in self:
+            label = _('To Process')
+            match pt.code:
+                case 'incoming':
+                    label = _('To Receive')
+                case 'outgoing':
+                    label = _('To Deliver')
+            pt.ready_items_label = label
+
     @api.onchange('sequence_code')
     def _onchange_sequence_code(self):
         if not self.sequence_code:
@@ -356,6 +413,12 @@ class PickingType(models.Model):
         for record in self:
             if record.code == 'mrp_operation' and record.default_location_dest_id.scrap_location:
                 raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
+
+    @api.model
+    def action_redirect_to_barcode_installation(self):
+        action = self.env["ir.actions.act_window"]._for_xml_id("base.open_module_tree")
+        action["context"] = dict(literal_eval(action["context"]), search_default_name="Barcode")
+        return action
 
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
@@ -427,10 +490,55 @@ class PickingType(models.Model):
     def get_action_picking_type_ready_moves(self):
         return self._get_action('stock.action_get_picking_type_ready_moves')
 
-    @api.depends('code')
-    def _compute_show_picking_type(self):
-        for record in self:
-            record.show_picking_type = record.code in ['incoming', 'outgoing', 'internal']
+    def _get_aggregated_records_by_date(self):
+        """
+        Returns a list, each element containing 3 values:
+        * picking type ID
+        * list of date fields values of all pickings with that picking type
+        * data series name, used to display it in the graph
+        """
+        records = self.env['stock.picking']._read_group(
+            [
+                ('picking_type_id', 'in', self.ids),
+                ('state', '=', 'assigned')
+            ],
+            ['picking_type_id'],
+            ['scheduled_date' + ':array_agg'],
+        )
+        return [(r[0], r[1], _('Ready')) for r in records]
+
+    def _prepare_graph_data(self, picking_type_summary):
+        """
+        Takes in a summary of a picking type, containing the name of the data series
+        and categories to display with their corresponding stock picking counts.
+        Returns the data in a form suitable for the dashboard graph.
+        """
+        mapping = {
+            'total_before': {'label': _('Before'), 'type': 'past'},
+            'total_yesterday': {'label': _('Yesterday'), 'type': 'past'},
+            'total_today': {'label': _('Today'), 'type': 'present'},
+            'total_day_1': {'label': _('Tomorrow'), 'type': 'future'},
+            'total_day_2': {'label': _('The day after tomorrow'), 'type': 'future'},
+            'total_after': {'label': _('After'), 'type': 'future'},
+        }
+        if picking_type_summary:
+            graph_data = [{
+                'key': picking_type_summary['data_series_name'],
+                'values': [
+                    dict(v, value=picking_type_summary[k])
+                    for k, v in mapping.items()
+                ],
+            }]
+        else:
+            # Provide random sample data
+            graph_data = [{
+                'key': _('Sample data'),
+                'values': [
+                    dict(v, type='sample', value=random.randint(1, 10))
+                    for k, v in mapping.items()
+                ],
+            }]
+        return graph_data
 
 
 class Picking(models.Model):
