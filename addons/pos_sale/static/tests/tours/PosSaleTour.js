@@ -135,3 +135,13 @@ ReceiptScreen.check.checkCustomerNotes("Customer note 2--Customer note 3");
 ReceiptScreen.do.clickNextOrder();
 
 registry.category("web_tour.tours").add('PosSettleOrderWithNote', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.selectFirstOrder();
+ProductScreen.check.selectedOrderlineHas('Product', '4.00', '40.00');
+ProductScreen.do.clickSave();
+
+registry.category("web_tour.tours").add('PosQuotationSaving', { test: true, url: '/pos/ui', steps: getSteps() });
