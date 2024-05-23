@@ -187,3 +187,17 @@ registry
 
         ].flat(),
     });
+
+registry
+    .category("web_tour.tours")
+    .add('PosQuotationSaving', {
+        test: true,
+        url: '/pos/ui',
+        steps: () => [
+            Dialog.confirm("Open session"),
+            ProductScreen.controlButton("Quotation/Order"),
+            ProductScreen.selectFirstOrder(),
+            ProductScreen.selectedOrderlineHas('Product', '4.00', '40.00'),
+            ProductScreen.controlButton("Save"),
+        ].flat(),
+    });
