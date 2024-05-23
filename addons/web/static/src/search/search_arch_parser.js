@@ -1,8 +1,9 @@
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { clamp } from "@web/core/utils/numbers";
 import { visitXML } from "@web/core/utils/xml";
-import { DEFAULT_INTERVAL, DEFAULT_PERIOD } from "@web/search/utils/dates";
+import { DEFAULT_INTERVAL, toGeneratorId } from "@web/search/utils/dates";
 
 const ALL = _t("All");
 const DEFAULT_LIMIT = 200;
@@ -56,6 +57,8 @@ export class SearchArchParser {
         this.currentTag = null;
         this.groupNumber = 0;
         this.pregroupOfGroupBys = [];
+
+        this.optionsParams = null;
     }
 
     parse() {
@@ -76,7 +79,11 @@ export class SearchArchParser {
                     this.visitField(node);
                     break;
                 case "filter":
-                    this.visitFilter(node);
+                    if (this.optionsParams) {
+                        this.visitDateOption(node);
+                    } else {
+                        this.visitFilter(node, visitChildren);
+                    }
                     break;
             }
         });
@@ -179,7 +186,7 @@ export class SearchArchParser {
         this.currentGroup.push(preField);
     }
 
-    visitFilter(node) {
+    visitFilter(node, visitChildren) {
         const preSearchItem = { type: "filter" };
         if (node.hasAttribute("context")) {
             const context = node.getAttribute("context");
@@ -206,19 +213,26 @@ export class SearchArchParser {
                 preSearchItem.type = "dateFilter";
                 preSearchItem.fieldName = fieldName;
                 preSearchItem.fieldType = this.fields[fieldName].type;
-                preSearchItem.defaultGeneratorIds = [DEFAULT_PERIOD];
+                const optionsParams = {
+                    startYear: Number(node.getAttribute("start_year") || -2),
+                    endYear: Number(node.getAttribute("end_year") || 0),
+                    startMonth: Number(node.getAttribute("start_month") || -2),
+                    endMonth: Number(node.getAttribute("end_month") || 0),
+                    customOptions: [],
+                };
+                const defaultOffset = clamp(optionsParams.startMonth, optionsParams.endMonth, 0);
+                preSearchItem.defaultGeneratorIds = [toGeneratorId("month", defaultOffset)];
                 if (node.hasAttribute("default_period")) {
                     preSearchItem.defaultGeneratorIds = node
                         .getAttribute("default_period")
                         .split(",");
                 }
-            } else {
-                let stringRepr = "[]";
-                if (node.hasAttribute("domain")) {
-                    stringRepr = node.getAttribute("domain");
-                }
-                preSearchItem.domain = stringRepr;
+                this.optionsParams = optionsParams;
+                visitChildren();
+                preSearchItem.optionsParams = optionsParams;
+                this.optionsParams = null;
             }
+            preSearchItem.domain = node.getAttribute("domain") || "[]";
         }
         if (node.hasAttribute("invisible")) {
             preSearchItem.invisible = node.getAttribute("invisible");
@@ -236,11 +250,18 @@ export class SearchArchParser {
             preSearchItem.name = name;
             if (name in this.searchDefaults) {
                 preSearchItem.isDefault = true;
+                const value = this.searchDefaults[name];
                 if (["groupBy", "dateGroupBy"].includes(preSearchItem.type)) {
-                    const value = this.searchDefaults[name];
                     preSearchItem.defaultRank = typeof value === "number" ? value : 100;
                 } else {
                     preSearchItem.defaultRank = -5;
+                }
+                if (
+                    preSearchItem.type === "dateFilter" &&
+                    typeof value === "string" &&
+                    !/^(true|1)$/i.test(value)
+                ) {
+                    preSearchItem.defaultGeneratorIds = value.split(",");
                 }
             }
         }
@@ -256,6 +277,19 @@ export class SearchArchParser {
             preSearchItem.description = "Ω";
         }
         this.currentGroup.push(preSearchItem);
+    }
+
+    visitDateOption(node) {
+        const preDateOption = { type: "dateOption" };
+        for (const attribute of ["name", "string", "domain"]) {
+            if (!node.getAttribute(attribute)) {
+                throw new Error(`Attribute "${attribute}" is missing.`);
+            }
+        }
+        preDateOption.id = `custom_${node.getAttribute("name")}`;
+        preDateOption.description = node.getAttribute("string");
+        preDateOption.domain = node.getAttribute("domain");
+        this.optionsParams.customOptions.push(preDateOption);
     }
 
     visitGroup(node, visitChildren) {

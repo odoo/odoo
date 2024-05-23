@@ -10,7 +10,7 @@ import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
-import { constructDateRange, getPeriodOptions, QUARTER_OPTIONS } from "@web/search/utils/dates";
+import { constructDateRange, QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
@@ -265,11 +265,10 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 if (!value || value.yearOffset === undefined) {
                     return [[{ value: "" }]];
                 }
-                const periodOptions = getPeriodOptions(DateTime.local());
                 const year = String(DateTime.local().year + value.yearOffset);
-                const period = periodOptions.find(({ id }) => value.period === id);
+                const period = QUARTER_OPTIONS[value.period];
                 let periodStr = period && period.description;
-                // Named months aren't in getPeriodOptions
+                // Named months aren't in QUARTER_OPTIONS
                 if (!period) {
                     periodStr =
                         MONTHS[value.period] && String(MONTHS[value.period].value).padStart(2, "0");
