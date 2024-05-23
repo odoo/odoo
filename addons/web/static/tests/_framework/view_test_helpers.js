@@ -1,4 +1,4 @@
-import { expect } from "@odoo/hoot";
+import { after, expect, getFixture } from "@odoo/hoot";
 import { click, formatXml, queryAll, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, useSubEnv, xml } from "@odoo/owl";
@@ -218,11 +218,15 @@ export async function mountViewInDialog(params) {
  * @param {HTMLElement} [target]
  */
 export async function mountView(params, target = null) {
+    const actionManagerEl = document.createElement("div");
+    actionManagerEl.classList.add("o_action_manager");
+    (target ?? getFixture()).append(actionManagerEl);
+    after(() => actionManagerEl.remove());
     const config = { ...getDefaultConfig(), ...params.config };
     return mountWithCleanup(View, {
         env: params.env || getMockEnv() || (await makeMockEnv({ config })),
         props: parseViewProps(params),
-        target,
+        target: actionManagerEl,
     });
 }
 
@@ -231,7 +235,12 @@ export async function mountView(params, target = null) {
  * @returns {typeof View.props}
  */
 export function parseViewProps(params) {
-    const viewProps = { ...params };
+    let className = "o_action";
+    if (params.className) {
+        className += " " + params.className;
+    }
+
+    const viewProps = { ...params, className };
 
     // View & search view arch
     if (
