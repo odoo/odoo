@@ -134,7 +134,7 @@
                         <field name="mensaje"/>
                     </group>
                         <notebook>
-                            <page string="Preguntas">
+                            <page string="Preguntas" invisible="tipo == 'generica'">
                                 <field class="lh-lg w-100" colspan="2" name="pregunta_ids" readonly="1" nolabel="1" context="{'current_evaluacion_id': active_id}">
                                     <tree editable="bottom" create="0">
                                         <field class="lh-m" name="pregunta_texto" readonly="1"/>
@@ -142,6 +142,29 @@
                                         <!-- Métricas de una sola pregunta-->
                                         <!-- <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/> -->
                                     </tree>
+                                </field>
+                            </page>
+                            <page string="Preguntas" invisible="tipo != 'generica'">
+                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', 'escala')]">
+                                    <tree create="true" delete="true" editable="bottom">
+                                        <field name="pregunta_texto" readonly="1"/>
+                                        <field name="tipo" readonly="1"/>
+                                        <control>
+                                            <create name="add_filtro" string="Agregar pregunta "/>
+                                        </control>
+                                    </tree>
+                                    <form string="Agregar pregunta">
+                                        <group>
+                                            <field name="pregunta_texto" placeholder="Ingrese la pregunta"/>
+                                            <field name="tipo"/>
+                                            <field name="ponderacion" invisible="tipo != 'escala'" required="True"/>
+                                            <field name="opcion_ids" placeholder="Opciones" context="{'pregunta_id': active_id}" invisible="tipo != 'multiple_choice'" required="True">
+                                                <tree create="true" delete="true" editable="bottom">
+                                                    <field name="opcion_texto"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                    </form>
                                 </field>
                             </page>
                             <page string="Asignados">
