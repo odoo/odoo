@@ -735,3 +735,18 @@ class TestTimesheet(TestCommonTimesheet):
         timesheet = timesheet_form.save()
         self.assertEqual(project_timesheetable_task.child_ids.project_root_id, project_timesheetable)
         self.assertEqual(timesheet.project_id, project_timesheetable)
+
+    def test_timesheet_update_user_on_employee(self):
+        timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my first timesheet',
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(timesheet.user_id, self.empl_employee.user_id)
+        new_user = self.env['res.users'].create({
+            'name': 'Test user',
+            'login': 'test',
+        })
+        self.empl_employee.user_id = new_user
+        self.assertEqual(timesheet.user_id, new_user)
