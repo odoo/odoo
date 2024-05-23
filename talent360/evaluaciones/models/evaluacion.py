@@ -1023,7 +1023,7 @@ class Evaluacion(models.Model):
 
         """
         
-        new_evaluation = self.env["evaluacion"].create(
+        nueva_evaluacion = self.env["evaluacion"].create(
             {
                 "nombre": "",
                 "tipo": "generica",
@@ -1031,7 +1031,7 @@ class Evaluacion(models.Model):
                 "fecha_final": fields.Date.today(),
             }
         )
-        self = new_evaluation
+        self = nueva_evaluacion
 
         return {
             "type": "ir.actions.act_window",
