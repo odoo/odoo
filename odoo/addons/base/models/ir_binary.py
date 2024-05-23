@@ -1,6 +1,6 @@
 import logging
 import werkzeug.http
-from datetime import datetime, timezone
+from datetime import datetime
 from mimetypes import guess_extension
 
 from odoo import models
@@ -223,7 +223,7 @@ class IrBinary(models.AbstractModel):
             stream.etag += f'-{width}x{height}-crop={crop}-quality={quality}'
 
         if isinstance(stream.last_modified, (int, float)):
-            stream.last_modified = datetime.fromtimestamp(stream.last_modified, tz=timezone.utc)
+            stream.last_modified = datetime.fromtimestamp(stream.last_modified, tz=None)
         modified = werkzeug.http.is_resource_modified(
             request.httprequest.environ,
             etag=stream.etag if isinstance(stream.etag, str) else None,
