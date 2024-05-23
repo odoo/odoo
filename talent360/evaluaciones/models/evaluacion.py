@@ -1195,6 +1195,7 @@ class Evaluacion(models.Model):
             "res_model": "asignar.usuario.externo.wizard",
             "view_mode": "form",
             "target": "new",
+        }
     
     def actualizar_estados_eval(self):
         """
@@ -1221,3 +1222,4 @@ class Evaluacion(models.Model):
         :return: El formato escalar seleccionado para la evaluación.
         """
         return self.escalar_format
+
