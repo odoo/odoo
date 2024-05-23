@@ -151,7 +151,7 @@ const getYAxisLabel = (view) => getChart(view).config.options.scales.y.title.tex
  * @param {GraphView} view
  * @param {string | Iterable<string>} expectedLabels
  */
-export function checkLabels(view, expectedLabels) {
+function checkLabels(view, expectedLabels) {
     expect(getChart(view).data.labels.map(String)).toEqual(ensureArray(expectedLabels));
 }
 
@@ -159,7 +159,7 @@ export function checkLabels(view, expectedLabels) {
  * @param {GraphView} view
  * @param {string | Iterable<string>} expectedLabels
  */
-export function checkLegend(view, expectedLabels) {
+function checkLegend(view, expectedLabels) {
     const chart = getChart(view);
     const labels = chart.config.options.plugins.legend.labels
         .generateLabels(chart)
@@ -175,7 +175,7 @@ export function checkLegend(view, expectedLabels) {
 /**
  * @param {GraphView} view
  */
-export async function clickOnDataset(view) {
+async function clickOnDataset(view) {
     const chart = getChart(view);
     const point = chart.getDatasetMeta(0).data[0].getCenterPoint();
     return contains(chart.canvas).click({ position: point, relative: true });
@@ -184,14 +184,14 @@ export async function clickOnDataset(view) {
 /**
  * @param {GraphView} view
  */
-export function getGraphController(view) {
+function getGraphController(view) {
     return findComponent(view, (c) => c instanceof GraphController);
 }
 
 /**
  * @param {GraphView} view
  */
-export function getGraphModel(view) {
+function getGraphModel(view) {
     return getGraphController(view).model;
 }
 
@@ -199,14 +199,14 @@ export function getGraphModel(view) {
  * @param {GraphView} view
  * @returns {GraphRenderer}
  */
-export function getGraphRenderer(view) {
+function getGraphRenderer(view) {
     return findComponent(view, (c) => c instanceof GraphRenderer);
 }
 
 /**
  * @param {GraphMode} mode
  */
-export function selectMode(mode) {
+function selectMode(mode) {
     return contains(getModeButton(mode)).click();
 }
 

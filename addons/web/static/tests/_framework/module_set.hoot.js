@@ -333,8 +333,18 @@ const runTests = async () => {
             const moduleSetLoader = new ModuleSetLoader(moduleSet);
 
             const suite = describe(getSuitePath(moduleName), () => {
+                const fullName = moduleName + TEST_SUFFIX;
                 moduleSetLoader.setup();
-                moduleSetLoader.startModule(moduleName + TEST_SUFFIX);
+                moduleSetLoader.startModule(fullName);
+                const module = moduleSetLoader.modules.get(fullName);
+                const exports = Object.keys(module);
+                if (exports.length) {
+                    throw new Error(
+                        `Test files cannot have exports, found the following exported member(s) in module ${fullName}:${exports
+                            .map((name) => `\n - ${name}`)
+                            .join("")}`
+                    );
+                }
             });
 
             // Run recently added tests
@@ -513,7 +523,7 @@ export async function fetchModelDefinitions(modelNames) {
         if (!response.ok) {
             const [s, some, does] =
                 namesList.length === 1 ? ["", "this", "does"] : ["s", "some or all of these", "do"];
-            const message = `could not fetch definition${s} for server model${s} "${namesList.join(
+            const message = `Could not fetch definition${s} for server model${s} "${namesList.join(
                 `", "`
             )}": ${some} model${s} ${does} not exist`;
             throw new Error(message);
