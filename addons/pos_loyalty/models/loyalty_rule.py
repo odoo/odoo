@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools import ustr
 
 class LoyaltyRule(models.Model):
     _inherit = 'loyalty.rule'
@@ -20,6 +21,7 @@ class LoyaltyRule(models.Model):
 
     @api.depends('product_ids', 'product_category_id', 'product_tag_id') #TODO later: product tags
     def _compute_valid_product_ids(self):
+        domain_products = {}
         for rule in self:
             if rule.product_ids or\
                 rule.product_category_id or\
@@ -27,7 +29,11 @@ class LoyaltyRule(models.Model):
                 rule.product_domain not in ('[]', "[['sale_ok', '=', True]]"):
                 domain = rule._get_valid_product_domain()
                 domain = expression.AND([[('available_in_pos', '=', True)], domain])
-                rule.valid_product_ids = self.env['product.product'].search(domain)
+                product_ids = domain_products.get(ustr(domain))
+                if product_ids is None:
+                    product_ids = self.env['product.product'].search(domain, order="id")
+                    domain_products[ustr(domain)] = product_ids
+                rule.valid_product_ids = product_ids
                 rule.any_product = False
             else:
                 rule.any_product = True
