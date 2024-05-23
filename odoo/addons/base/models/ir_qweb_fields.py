@@ -8,7 +8,7 @@ from io import BytesIO
 
 import babel
 import babel.dates
-from markupsafe import Markup, escape
+from markupsafe import Markup, escape, escape_silent
 from PIL import Image
 from lxml import etree, html
 
@@ -21,23 +21,20 @@ from odoo.tools.mimetypes import guess_mimetype
 _logger = logging.getLogger(__name__)
 
 
-def nl2br(string):
-    """ Converts newlines to HTML linebreaks in ``string``. returns
-    the unicode result
-
-    :param str string:
-    :rtype: unicode
+def nl2br(string: str) -> Markup:
+    """ Converts newlines to HTML linebreaks in ``string`` after HTML-escaping
+    it.
     """
-    return pycompat.to_text(string).replace('\n', Markup('<br>\n'))
+    return escape_silent(string).replace('\n', Markup('<br>\n'))
 
 
-def nl2br_enclose(string, enclosure_tag='div'):
+def nl2br_enclose(string: str, enclosure_tag: str = 'div') -> Markup:
     """ Like nl2br, but returns enclosed Markup allowing to better manipulate
     trusted and untrusted content. New lines added by use are trusted, other
     content is escaped. """
     return Markup('<{enclosure_tag}>{converted}</{enclosure_tag}>').format(
         enclosure_tag=enclosure_tag,
-        converted=nl2br(escape(string)),
+        converted=nl2br(string),
     )
 
 #--------------------------------------------------------------------
@@ -299,7 +296,7 @@ class TextConverter(models.AbstractModel):
         """
         Escapes the value and converts newlines to br. This is bullshit.
         """
-        return nl2br(escape(value)) if value else ''
+        return nl2br(value) if value else ''
 
 
 class SelectionConverter(models.AbstractModel):
@@ -343,7 +340,7 @@ class ManyToOneConverter(models.AbstractModel):
         value = value.sudo().display_name
         if not value:
             return False
-        return nl2br(escape(value))
+        return nl2br(value)
 
 
 class ManyToManyConverter(models.AbstractModel):
@@ -356,7 +353,7 @@ class ManyToManyConverter(models.AbstractModel):
         if not value:
             return False
         text = ', '.join(value.sudo().mapped('display_name'))
-        return nl2br(escape(text))
+        return nl2br(text)
 
 
 class HTMLConverter(models.AbstractModel):
