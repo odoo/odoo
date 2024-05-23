@@ -128,6 +128,11 @@
                         <t t-if="evaluacion.mensaje_agradecimiento">
                             <div t-field='evaluacion.mensaje_agradecimiento' class="oe_no_empty pb-5 text-break"/>
                         </t>
+                        <t t-else="">
+                            <div class="o_survey_review">
+                                Gracias por tu tiempo y por compartir tus respuestas con nosotros.
+                            </div>
+                        </t>
                     </div>
                 </div>
             </div>
