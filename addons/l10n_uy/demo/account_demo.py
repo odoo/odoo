@@ -477,6 +477,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'city': 'Aeroparque',
                 'state_id': 'base.state_uy_02',
                 'country_id': 'base.uy',
+                'email': 'rut@example.com',
             },
             'demo_partner_5': {
                 'name': 'MELI URUGUAY S.R.L.',
@@ -486,6 +487,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'city': 'Zona Franca Aguada Park',
                 'state_id': 'base.state_uy_10',
                 'country_id': 'base.uy',
+                'email': 'meli@example.com',
             },
             'demo_partner_6': {
                 'name': 'CORREO URUGUAYO',
@@ -495,13 +497,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'city': 'Montevideo',
                 'state_id': 'base.state_uy_10',
                 'country_id': 'base.uy',
+                'email': 'correo@example.com',
             },
             # Foreign Company
             'res_partner_foreign': {
                 'name': 'Foreign Inc',
                 'l10n_latam_identification_type_id': 'l10n_latam_base.it_vat',
                 'is_company': True,
-                'vat': 'AYXJA-1203812-053',
+                'vat': '17-2038053',
                 'zip': '95380',
                 'street': '7841 Red Road',
                 'city': 'San Francisco',
