@@ -46,7 +46,7 @@ class TestProcurementException(common.TransactionCase):
         with so_form.order_line.new() as line:
             line.product_id = product_with_no_seller
             line.product_uom_qty = 3
-            line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
+            line.route_ids = self.env.ref('stock_dropshipping.route_drop_shipping')
         sale_order_route_dropship01 = so_form.save()
 
         # I confirm the sales order, but no purchase quotation should be created

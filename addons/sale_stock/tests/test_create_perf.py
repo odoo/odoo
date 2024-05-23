@@ -51,7 +51,7 @@ class TestPERF(TransactionCaseWithUserDemo):
     @warmup
     @prepare
     def test_empty_sale_order_creation_perf(self):
-        with self.assertQueryCount(admin=33):
+        with self.assertQueryCount(admin=34):
             self.env['sale.order'].create({
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -66,7 +66,7 @@ class TestPERF(TransactionCaseWithUserDemo):
         # + 1 warehouse fetch
         # + 1 query to get analytic default account
         # + 1 followers queries ?
-        with self.assertQueryCount(admin=37):
+        with self.assertQueryCount(admin=39):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -78,7 +78,7 @@ class TestPERF(TransactionCaseWithUserDemo):
     def test_dummy_sales_orders_batch_creation_perf(self):
         """ Dummy SOlines (notes/sections) should not add any custom queries other than their insert"""
         # + 2 SOL (batched) insert
-        with self.assertQueryCount(admin=40):
+        with self.assertQueryCount(admin=44):
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -97,7 +97,7 @@ class TestPERF(TransactionCaseWithUserDemo):
         # + 2 SQL insert
         # + 2 queries to get analytic default tags
         # + 9 follower queries ?
-        with self.assertQueryCount(admin=50):  # com 46
+        with self.assertQueryCount(admin=53):  # com 46
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,

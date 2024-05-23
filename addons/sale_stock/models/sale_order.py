@@ -113,8 +113,8 @@ class SaleOrder(models.Model):
         for order_line in orders_without_wh.order_line:
             if order_line.product_id.type != 'consu':
                 continue
-            if order_line.route_id.company_id and order_line.route_id.company_id != order_line.company_id:
-                other_company.add(order_line.route_id.company_id.id)
+            if order_line.route_ids.company_id and order_line.route_ids.company_id != order_line.company_id:
+                other_company.add(order_line.route_ids.company_id.id)
                 continue
             if order_line.order_id.company_id.id in company_ids_with_wh:
                 raise UserError(_('You must set a warehouse on your sale order to proceed.'))

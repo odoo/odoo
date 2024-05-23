@@ -177,7 +177,7 @@ class TestCarrierPropagation(TransactionCase):
                 'product_id': self.super_product.id,
                 'product_uom_qty': 2,
                 'price_unit': 750.00,
-                'route_id' : route1.id,
+                'route_ids': route1.ids,
             })],
         })
 
