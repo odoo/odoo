@@ -45,3 +45,15 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.start_tour(self_route, "self_simple_order")
         orders = self.env['pos.order'].search(['&', ('state', '=', 'draft'), '|', ('config_id', '=', self.pos_config.id), ('config_id', 'in', self.pos_config.trusted_config_ids.ids)])
         self.assertEqual(len(orders), 1)
+
+    def test_order_price_null(self):
+        self.cola.list_price = 0.00
+        self.pos_config.write({
+            'self_ordering_takeaway': False,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
+        })
+
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "self_order_price_null")
