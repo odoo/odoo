@@ -539,6 +539,7 @@ export const stepUtils = {
             extra_trigger: element,
             content: description,
             position: "bottom",
+            run: "click",
             debugHelp: this._getHelpMessage(
                 "goBackBreadcrumbsMobile",
                 description,
@@ -555,12 +556,14 @@ export const stepUtils = {
                 content: description,
                 position: "right",
                 edition: "community",
+                run: "click",
             },
             {
                 trigger: `.o_app[data-menu-xmlid="${dataMenuXmlid}"]`,
                 content: description,
                 position: "bottom",
                 edition: "enterprise",
+                run: "click",
             },
         ].map((step) =>
             this.addDebugHelp(this._getHelpMessage("goToApp", dataMenuXmlid, description), step)
@@ -574,6 +577,7 @@ export const stepUtils = {
             extra_trigger: extraTrigger,
             content: _t("Open bugger menu."),
             position: "bottom",
+            run: "click",
             debugHelp: this._getHelpMessage("openBurgerMenu", extraTrigger),
         };
     },
@@ -598,6 +602,7 @@ export const stepUtils = {
                 trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}'), .dropdown-item button:enabled:contains('${innerTextButton}')`,
                 content: description,
                 position: "bottom",
+                run: "click",
             },
         ].map((step) =>
             this.addDebugHelp(
