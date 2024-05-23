@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
+from datetime import datetime, timedelta
+from urllib.parse import urlparse
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval, time
-from odoo.tools.misc import find_in_path, ustr
+from odoo.tools.misc import find_in_path, format_datetime, ustr
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version
 from odoo.http import request
 from odoo.osv.expression import NEGATIVE_TERM_OPERATORS, FALSE_DOMAIN
@@ -225,6 +227,13 @@ class IrActionsReport(models.Model):
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
 
+    def _get_layout(self):
+        return self.env.ref('web.minimal_layout', raise_if_not_found=False)
+
+    def _get_report_url(self, layout=None):
+        report_url = self.env['ir.config_parameter'].sudo().get_param('report.url')
+        return report_url or (layout or self._get_layout() or self).get_base_url()
+
     @api.model
     def _build_wkhtmltopdf_args(
             self,
@@ -246,10 +255,6 @@ class IrActionsReport(models.Model):
         command_args = ['--disable-local-file-access']
         if set_viewport_size:
             command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
-
-        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-        if request and request.db:
-            command_args.extend(['--cookie', 'session_id', request.session.sid])
 
         # Less verbose error messages
         command_args.extend(['--quiet'])
@@ -325,13 +330,12 @@ class IrActionsReport(models.Model):
         :type specific_paperformat_args: dictionary of prioritized paperformat values.
         :return: bodies, header, footer, specific_paperformat_args
         '''
-        IrConfig = self.env['ir.config_parameter'].sudo()
 
         # Return empty dictionary if 'web.minimal_layout' not found.
-        layout = self.env.ref('web.minimal_layout', raise_if_not_found=False)
+        layout = self._get_layout()
         if not layout:
             return {}
-        base_url = IrConfig.get_param('report.url') or layout.get_base_url()
+        base_url = self._get_report_url(layout=layout)
 
         root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
@@ -430,6 +434,21 @@ class IrActionsReport(models.Model):
 
         files_command_args = []
         temporary_files = []
+
+        # Passing the cookie to wkhtmltopdf in order to resolve internal links.
+        if request and request.db:
+            expiration = datetime.now() + timedelta(hours=1)
+            # Use format_datetime to force locale
+            expiration = format_datetime(self.env, expiration, "UTC", "E, d-M-Y H:m:s z", "en_US")
+            base_url = self._get_report_url()
+            domain = urlparse(base_url).hostname
+            cookie = f'session_id={request.session.sid}; HttpOnly; expires={expiration}; domain={domain}; path=/;'
+            cookie_jar_file_fd, cookie_jar_file_path = tempfile.mkstemp(suffix='.txt', prefix='report.cookie_jar.tmp.')
+            temporary_files.append(cookie_jar_file_path)
+            with closing(os.fdopen(cookie_jar_file_fd, 'wb')) as cookie_jar_file:
+                cookie_jar_file.write(cookie.encode())
+            command_args.extend(['--cookie-jar', cookie_jar_file_path])
+
         if header:
             head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
             with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
