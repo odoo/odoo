@@ -99,7 +99,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         }
         downpayment = cls.env['sale.advance.payment.inv'].with_context(so_context).create(payment_params)
         downpayment.create_invoices()
-        cls.sale_order.action_confirm()
+        if cls.sale_order.state == 'draft':
+            cls.sale_order.action_confirm()
 
     def _assert_invoice_lines_values(self, lines, expected):
         return self.assertRecordValues(lines, [dict(zip(expected[0], x)) for x in expected[1:]])
@@ -124,6 +125,30 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.tax_account.id,        self.env['account.tax'],         -15,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
+        ]
+        self._assert_invoice_lines_values(invoice.line_ids, expected)
+
+    def test_tax_with_diff_tax_on_invoice_breakdown(self):
+        # if a generated invoice has it's taxes changed, this should not affect the next downpayment on an SO
+        self.sale_order.order_line[0].tax_id = self.tax_15
+        (self.sale_order.order_line - self.sale_order.order_line[0]).unlink()
+        self.make_downpayment(amount=25)
+        first_invoice = self.sale_order.invoice_ids
+        first_invoice.invoice_line_ids.tax_ids = None
+        first_invoice.action_post()
+        self.make_downpayment(amount=25)
+        invoice = self.sale_order.invoice_ids - first_invoice
+        down_pay_amt = self.sale_order.amount_total / 4
+        # ruff: noqa: E202
+        expected = [
+            # keys
+            ['account_id',               'tax_ids',               'balance',   'price_total'],
+            # base lines
+            [self.revenue_account.id,    self.tax_15.ids,         -50,          57.5        ],
+            # taxes
+            [self.tax_account.id,        self.env['account.tax'], -7.5,         0           ],
+            # receivable
+            [self.receivable_account.id, self.env['account.tax'], down_pay_amt, 0           ],
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
