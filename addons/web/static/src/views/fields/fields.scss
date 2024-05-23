@@ -53,6 +53,10 @@
     padding: $o-input-padding-y $o-input-padding-x;
     background-color: var(--o-input-background-color, #{$input-bg});
 
+    &:placeholder-shown {
+        text-overflow: ellipsis;
+    }
+
     // -- Nested o_input(s)
     .o_input {
         border: 0;
