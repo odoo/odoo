@@ -86,7 +86,7 @@ export class ControlButtons extends Component {
             item: pricelist,
         }));
 
-        if (!this.pos.default_pricelist) {
+        if (!this.pos.config.pricelist_id) {
             selectionList.push({
                 id: null,
                 label: _t("Default Price"),
