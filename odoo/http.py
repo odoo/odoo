@@ -549,7 +549,13 @@ class Stream:
         with open(self.path, 'rb') as file:
             return file.read()
 
-    def get_response(self, as_attachment=None, immutable=None, **send_file_kwargs):
+    def get_response(
+        self,
+        as_attachment=None,
+        immutable=None,
+        content_security_policy="default-src 'none'",
+        **send_file_kwargs
+    ):
         """
         Create the corresponding :class:`~Response` for the current stream.
 
@@ -559,6 +565,11 @@ class Stream:
             the ``Cache-Control`` response header, allowing intermediary
             proxies to aggressively cache the response. This option also
             set the ``max-age`` directive to 1 year.
+        :param str|None content_security_policy: Optional value for the
+            ``Content-Security-Policy`` (CSP) header. This header is
+            used by browsers to allow/restrict the downloaded resource
+            to itself perform new http requests. By default CSP is set
+            to ``"default-scr 'none'"`` which restrict all requests.
         :param send_file_kwargs: Other keyword arguments to send to
             :func:`odoo.tools._vendor.send_file.send_file` instead of
             the stream sensitive values. Discouraged.
@@ -602,6 +613,10 @@ class Stream:
                     send_file_kwargs['use_x_sendfile'] = True
 
             res = _send_file(self.path, **send_file_kwargs)
+        res.headers['X-Content-Type-Options'] = 'nosniff'
+
+        if content_security_policy:  # see also Application.set_csp()
+            res.headers['Content-Security-Policy'] = content_security_policy
 
             if 'X-Sendfile' in res.headers:
                 res.headers['X-Accel-Redirect'] = x_accel_redirect
@@ -1756,6 +1771,7 @@ class Request:
             filepath = werkzeug.security.safe_join(directory, path)
             res = Stream.from_path(filepath, public=True).get_response(
                 max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
+                content_security_policy=None,
             )
             root.set_csp(res)
             return res
