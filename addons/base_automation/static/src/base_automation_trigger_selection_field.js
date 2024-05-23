@@ -8,7 +8,7 @@ import { selectionField, SelectionField } from "@web/views/fields/selection/sele
 import { TRIGGER_FILTERS } from "./utils";
 import { useService } from "@web/core/utils/hooks";
 
-const OPT_GROUPS = [
+export const OPT_GROUPS = [
     {
         group: { sequence: 10, key: "values", name: _t("Values Updated") },
         triggers: [
@@ -87,7 +87,7 @@ export class TriggerSelectionField extends SelectionField {
                 relatedModelFields = await orm.searchRead(
                     "ir.model.fields",
                     [["model_id", "=", modelId]],
-                    ["field_description", "name", "ttype", "relation"]
+                    ["field_description", "name", "ttype", "relation", "model"]
                 );
             }
 
