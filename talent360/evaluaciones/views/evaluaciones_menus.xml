@@ -1,16 +1,18 @@
-<?xml version="1.0"?>
 <odoo>
     <menuitem id="talent_360_menu_root" name="Talent 360">
         <menuitem id="mis_evaluaciones_menu_action" name="Mis evaluaciones" action="usuario_evaluacion_rel_kanban_action" sequence="0"/>
-        <menuitem id="evaluacion_first_level_menu" name="Evaluaciones" sequence="2">
+        <menuitem id="evaluacion_first_level_menu" name="Evaluaciones" sequence="2" groups="evaluaciones.evaluaciones_cliente_cr_group_user">
             <menuitem id="evaluacion_menu_action" name="Resumen de evaluaciones" action="evaluacion_action" sequence="1"/>
             <menuitem id="nom035_menu_action" name="Crear evaluación Nom 035" action="evaluacion_nom035_action_form" sequence="2"/>
             <menuitem id="clima_menu_action" name="Crear evaluación Clima" action="evaluacion_clima_action_form" sequence="3"/>
         </menuitem>
-        <!--<menuitem id="objetivo_first_level_menu" name="Objetivos" sequence="3">
-            <menuitem id="objetivo_menu_action" name="Crear objetivos" action="objetivo_action"/>
-        </menuitem>-->
-        <menuitem id="reporte_first_level_menu" name="Reportes" sequence="4" groups="evaluaciones.evaluaciones_cliente_cr_group_user">
+        <!-- Menú de primer nivel para Objetivos -->
+        <menuitem id="mis_objetivos_menu_action" name="Mis objetivos" action="mis_objetivos_action" sequence="3"/>
+        <menuitem id="objetivo_first_level_menu" name="Objetivos" sequence="4" groups="evaluaciones.evaluaciones_cliente_cr_group_user">
+            <menuitem id="objetivo_menu_action" name="Resumen de objetivos" action="objetivo_action" sequence="1"/>
+            <menuitem id="usuario_objetivo_rel_menu_action" name="Objetivos de colaboradores" action="usuario_objetivo_rel_action" sequence="2"/>
+        </menuitem>
+        <menuitem id="reporte_first_level_menu" name="Reportes" sequence="6" groups="evaluaciones.evaluaciones_cliente_cr_group_user">
             <menuitem id="reporte_menu_action" name="Resumen de reportes" action="reporte_action"/>
         </menuitem>
     </menuitem>

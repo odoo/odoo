@@ -24,7 +24,7 @@ class Respuesta(models.Model):
     pregunta_id = fields.Many2one("pregunta", string="Preguntas")
     usuario_id = fields.Many2one("res.users", string="Usuario")
     usuario_externo_id = fields.Integer(
-        string="Usuario externo", compute="_compute_usuario_externo_id"
+        string="Usuario externo", compute="_compute_usuario_externo_id", store=True
     )
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_texto = fields.Char(related="pregunta_id.pregunta_texto")
