@@ -71,6 +71,7 @@ class TestResources(common.SlidesCase, HttpCase):
         })
         self.authenticate(self.env.user.login, self.env.user.login)
 
+        filename_star_prefix = """filename*=UTF-8''"""
         for name, file_name, expected_download_name in (
                 # The extension is determined from the file name extension
                 (resource_name, 'test.xlsx', f'{resource_name}.xlsx'),
@@ -86,5 +87,6 @@ class TestResources(common.SlidesCase, HttpCase):
             with self.subTest(name=name, file_name=file_name, expected_download_name=expected_download_name):
                 content_disposition = self.url_open(resource._get_download_url()).headers['Content-Disposition']
                 filename_star = content_disposition.split('; ')[-1]
-                filename_star = filename_star.removeprefix("""filename*=UTF-8''""")
+                if filename_star.startswith(filename_star_prefix):
+                    filename_star = filename_star[len(filename_star_prefix):]
                 self.assertEqual(url_unquote_plus(filename_star), expected_download_name)
