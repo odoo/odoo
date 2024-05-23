@@ -146,7 +146,9 @@ registerModel({
                         return;
                     }
                     const attachment = this._onAttachmentUploaded({ attachmentData, composer, thread });
-                    uploadedAttachments.push(attachment);
+                    if (attachment) {
+                        uploadedAttachments.push(attachment);
+                    }
                 } catch (e) {
                     if (e.name !== 'AbortError') {
                         throw e;
