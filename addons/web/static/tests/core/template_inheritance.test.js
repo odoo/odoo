@@ -5,7 +5,7 @@ import { serverState } from "@web/../tests/web_test_helpers";
 const parser = new DOMParser();
 const serializer = new XMLSerializer();
 
-export function _applyInheritance(arch, inherits) {
+function _applyInheritance(arch, inherits) {
     const archXmlDoc = parser.parseFromString(arch, "text/xml");
     const inheritsDoc = parser.parseFromString(inherits, "text/xml");
     const modifiedTemplate = applyInheritance(

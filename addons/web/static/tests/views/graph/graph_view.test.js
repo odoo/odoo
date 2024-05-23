@@ -2,7 +2,6 @@ import { afterEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 import { onRendered } from "@odoo/owl";
-
 import {
     contains,
     defineModels,
@@ -25,6 +24,25 @@ import {
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
+import {
+    checkDatasets,
+    checkLabels,
+    checkLegend,
+    checkModeIs,
+    checkTooltip,
+    clickOnDataset,
+    clickSort,
+    getChart,
+    getGraphModel,
+    getGraphModelMetaData,
+    getGraphRenderer,
+    getModeButton,
+    getScaleY,
+    getXAxisLabel,
+    getYAxisLabel,
+    selectMode,
+} from "./graph_test_helpers";
+
 import { DEFAULT_BG, getBorderWhite, getColors, hexToRGBA } from "@web/core/colors/colors";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
@@ -33,24 +51,6 @@ import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { GraphRenderer } from "@web/views/graph/graph_renderer";
 import { graphView } from "@web/views/graph/graph_view";
 import { WebClient } from "@web/webclient/webclient";
-import {
-    checkDatasets,
-    checkModeIs,
-    checkTooltip,
-    clickSort,
-    getChart,
-    getGraphModelMetaData,
-    getModeButton,
-    getScaleY,
-    getXAxisLabel,
-    getYAxisLabel,
-    checkLabels,
-    checkLegend,
-    clickOnDataset,
-    getGraphModel,
-    getGraphRenderer,
-    selectMode,
-} from "./graph_test_helpers";
 
 class Color extends models.Model {
     name = fields.Char();
