@@ -5,7 +5,7 @@
     'version': '1.0',
     'summary': "Monitor MRP using project",
     'category': 'Services/Project',
-    'depends': ['mrp_account', 'project'],
+    'depends': ['mrp_account', 'project_mrp'],
     'demo': [
         'data/project_mrp_demo.xml',
     ],

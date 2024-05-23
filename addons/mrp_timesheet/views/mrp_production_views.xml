@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_production_form_mrp_timesheet" model="ir.ui.view">
+        <field name="name">production.form.inherit.mrp.timesheet</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="project_mrp.view_production_form_project_mrp"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_tasks']" position="after">
+                <button name="action_view_linked_project_timesheets" type="object" class="oe_stat_button" icon="fa-clock-o" invisible="not show_timesheets_button" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="timesheet_total_duration" class="mr4"/>
+                            <field name="timesheet_encode_uom_id" options="{'no_open': True}"/>
+                        </span>
+                        <span class="o_stat_text">Recorded</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

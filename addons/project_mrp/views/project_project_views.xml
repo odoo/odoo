@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_form_project_mrp" model="ir.ui.view">
+        <field name="name">project.form.inherit.mrp.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="production_ids" widget="many2many_tags" groups="project_mrp.group_project_mrp"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

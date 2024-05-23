@@ -13,6 +13,7 @@ class ResConfigSettings(models.TransientModel):
         implied_group='mrp.group_mrp_byproducts')
     module_mrp_mps = fields.Boolean("Master Production Schedule")
     module_mrp_plm = fields.Boolean("Product Lifecycle Management (PLM)")
+    module_project_mrp = fields.Boolean("Projects")
     module_quality_control = fields.Boolean("Quality")
     module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     module_mrp_subcontracting = fields.Boolean("Subcontracting")
