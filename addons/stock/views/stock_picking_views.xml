@@ -324,6 +324,11 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
+                                    <field name="move_line_ids" invisible="1">
+                                        <tree>
+                                            <field name="location_dest_id" invisible="1"/>
+                                        </tree>
+                                    </field>
                                 </tree>
                             </field>
                             <field name="id" invisible="1"/>
