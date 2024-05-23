@@ -118,8 +118,8 @@ class ImportQuestionsWizard(models.TransientModel):
 
     def _validar_fila(self, row: dict):
         # Validar campos requeridos
-        if not row.get("Pregunta"):
-            raise exceptions.ValidationError(_("El campo 'Pregunta' es requerido."))
+        if not row.get("Pregunta") or not row["Pregunta"].strip():
+            raise exceptions.ValidationError(_("El campo 'Pregunta' es requerido y no puede estar vacío o solo contener espacios en blanco."))
         if not row.get("Tipo"):
             raise exceptions.ValidationError(_("El campo 'Tipo' es requerido."))
         if not row.get("Categoria"):
@@ -159,6 +159,15 @@ class ImportQuestionsWizard(models.TransientModel):
             if not row.get("Opciones"):
                 raise exceptions.ValidationError(
                     "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
+                )
+            opciones = [opcion.strip() for opcion in row["Opciones"].split(",")]
+            if len(opciones) != len(set(opciones)):
+                raise exceptions.ValidationError(
+                    "Las opciones para preguntas de tipo 'multiple_choice' no deben contener duplicados."
+                )
+            if any(not opcion for opcion in opciones):
+                raise exceptions.ValidationError(
+                    "Las opciones para preguntas de tipo 'multiple_choice' no pueden estar vacías o contener solo espacios en blanco."
                 )
         else:
             # No permitir opciones para otros tipos de preguntas

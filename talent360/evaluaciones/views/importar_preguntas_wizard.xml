@@ -5,10 +5,36 @@
         <field name="arch" type="xml">
             <form string="Import Questions from CSV">
                 <div>
-                    <div>Para importar preguntas de clima, llene la siguiente plantilla con los datos de los usuarios y cargue aquí el archivo CSV.</div>
+                    <div>Para importar preguntas de clima, llene la siguiente plantilla con los datos de las preguntas y cargue aquí el archivo CSV.</div>
                     <group class="py-3">
                         <button name="descargar_template" string="Plantilla" type="object" class="btn-primary"/>
                     </group>
+                    <group string="Instrucciones"></group>
+                    <div>
+                        <p>Se revisara a detalle como poder rellenar la plantilla de csv. Para que pueda crear preguntas conforme a sus necesidades</p>
+                        <p>Las diferentes categorías que puede utilizar son:</p>
+                        <ul>
+                            <li>datos_generales</li>
+                            <li>reclutamiento_y_seleccion_de_personal</li>
+                            <li>formacion_y_capacitacion</li>
+                            <li>permanencia_y_ascenso</li>
+                            <li>corresponsabilidad_en_la_vida_laboral_familiar_y_personal</li>
+                            <li>clima_laboral_libre_de_violencia</li>
+                            <li>acoso_y_hostigamiento</li>
+                            <li>accesibilidad</li>
+                            <li>respeto_a_la_diversidad</li>
+                            <li>condiciones_generales_de_trabajo</li>
+                        </ul>
+                        <p>Existen 3 tipos de pregunta</p>
+                        <ul>
+                            <li>Preguntas abiertas ( <strong>open_question </strong>)</li>
+                            <li>Preguntas de opción multiple ( <strong>multiple_choice </strong>)</li>
+                            <li>Preguntas de escala ( <strong>escala </strong>) = Son las preguntas de "Siempre, Casi Seimpre, A veces, Casi nunca y Nunca"</li>
+                        </ul>
+                        <p><strong>TODAS</strong> las preguntas requieren de una <strong>categoría</strong>.</p>
+                        <p>Para las preguntas de <strong>multiple_choice</strong> serán necesarios que tengan <strong>opciones</strong> las cuales serán delimitadas por <strong>comas</strong> . Ejemplos: A,B,C,D en este existen 4 opciones</p>
+                        <p>Las preguntas de tipo <strong>escala</strong> requieren ponderación. Use <strong>ascendente</strong> cuando el valor de "SIEMPRE" es el más alto y <strong>descendente</strong> cuando el valor "NUNCA" es el más alto.</p>
+                    </div>
                     <group>
                         <field name="nombre_archivo" invisible="1"/>
                         <field name="archivo" filename="nombre_archivo"/>
