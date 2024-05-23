@@ -135,7 +135,7 @@
                         <field name="incluir_demograficos"/>
                     </group>
                     <group>
-                        <field name="escalar_format" invisible="tipo != 'CLIMA'"/>
+                        <field name="escalar_format" invisible="tipo == 'NOM0_35'"/>
                     </group>
                         <notebook>
                             <page string="Preguntas" invisible="tipo == 'generico'">
@@ -539,8 +539,7 @@
                         </field>
                     </group>
                     <group>
-                    <group>
-                        <field name="mensaje_bienvenida" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                        <field name="escalar_format"/>
                     </group>
                         <notebook>
                             <page string="Preguntas">
@@ -578,8 +577,14 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Notificaciones">
+                                <group>
+                                    <field name="mensaje_bienvenida" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                                    <field name="mensaje_agradecimiento" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                                    <field name="contenido_correo" placeholder="Escribe el contenido del correo"/>
+                                </group>
+                            </page>
                         </notebook>
-                    </group>
                 </sheet>
             </form>
         </field>
