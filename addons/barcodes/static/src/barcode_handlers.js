@@ -57,6 +57,7 @@ export const COMMANDS = {
 
 export const barcodeGenericHandlers = {
     dependencies: ["ui", "barcode", "notification"],
+    extraCMD: new Set(),
     start(env, { ui, barcode, notification }) {
 
         barcode.bus.addEventListener("barcode_scanned", (ev) => {
@@ -73,8 +74,7 @@ export const barcodeGenericHandlers = {
                 for (let elem of targets) {
                     elem.click();
                 }
-            }
-            if (barcode.startsWith("O-CMD.")) {
+            } else if (barcode.startsWith("O-CMD.") && !this.extraCMD.has(barcode)) {
                 const fn = COMMANDS[barcode];
                 if (fn) {
                     fn();
