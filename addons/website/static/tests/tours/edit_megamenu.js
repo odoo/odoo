@@ -23,15 +23,18 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Click on a menu item",
         trigger: ":iframe .top_menu .nav-item a",
+        run: "click",
     },
     {
         content: "Click on 'Link' to open Link Dialog",
         trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        run: "click",
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
         extra_trigger: '.o_website_dialog:visible',
         trigger: '.modal-body a:eq(1)',
+        run: "click",
     },
     {
         content: "Write a label for the new menu item",
@@ -41,11 +44,13 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Confirm the mega menu label",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Save the website menu with a new mega menu",
         trigger: '.modal-footer .btn-primary',
         extra_trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
+        run: "click",
     },
     {
         trigger: '#oe_snippets.o_loaded',
@@ -57,10 +62,12 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Select the last menu link of the first column",
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(6)', // 6th is the last one
+        run: "click",
     },
     {
         content: "Hit the delete button to remove the menu link",
         trigger: ':iframe .oe_overlay .oe_snippet_remove',
+        run: "click",
     },
     {
         content: "Check that the last menu link was deleted",
@@ -116,15 +123,18 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Click on a menu item",
         trigger: ':iframe .top_menu .nav-item a',
+        run: "click",
     },
     {
         content: "Click on 'Link' to open Link Dialog",
         trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        run: "click",
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
         extra_trigger: ".o_website_dialog",
         trigger: '.modal-body a:eq(1)',
+        run: "click",
     },
     {
         content: "Write a label for the new menu item",
@@ -134,6 +144,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Confirm the mega menu label",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Save the website menu with a new mega menu",
@@ -155,11 +166,13 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Select the first menu link of the first column",
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :first-child',
+        run: "click",
     },
     wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
     {
         content: "Select Big Icons Subtitles mega menu",
         trigger: '[data-select-label="Big Icons Subtitles"]',
+        run: "click",
     },
     {
         content: "Select the h4 of first menu link of the first column",
@@ -180,6 +193,7 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "Convert it to Bold",
         trigger: '#oe_snippets #toolbar #bold',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnExtraMenuItem({}, true),
