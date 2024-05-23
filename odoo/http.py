@@ -140,6 +140,7 @@ import hmac
 import inspect
 import json
 import logging
+import mimetypes
 import os
 import re
 import threading
@@ -500,6 +501,7 @@ class Stream:
         return cls(
             type='path',
             path=path,
+            mimetype=mimetypes.guess_type(path)[0],
             download_name=os.path.basename(path),
             etag=f'{int(stat.st_mtime)}-{stat.st_size}-{check}',
             last_modified=stat.st_mtime,

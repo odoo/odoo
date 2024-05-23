@@ -217,6 +217,8 @@ class IrBinary(models.AbstractModel):
 
         if stream.type == 'url':
             return stream  # Rezising an external URL is not supported
+        if not stream.mimetype.startswith('image/'):
+            stream.mimetype = 'application/octet-stream'
 
         if (width, height) == (0, 0):
             width, height = image_guess_size_from_field_name(field_name)
