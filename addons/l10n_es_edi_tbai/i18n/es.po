@@ -18,36 +18,30 @@ msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner_recibidas
 msgid "1.0"
-msgstr "1.0"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
 msgid "1.1"
-msgstr "1.1"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner_recibidas
 msgid "240"
-msgstr "240"
-
-#. module: l10n_es_edi_tbai
-#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.res_config_settings_view_form
-msgid ""
-"<span class=\"o_form_label\">Registro de Libros connection SII/TicketBAI</"
-"span>"
 msgstr ""
-"<span class=\"o_form_label\">Conexión Registro de Libros SII/TicketBAI</span>"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "Revertir movimientos de diario"
+msgstr "Reversión de asiento"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_ir_attachment
 msgid "Attachment"
-msgstr "Archivo adjunto"
+msgstr "Adjunto"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_refund_reason
@@ -58,8 +52,6 @@ msgid ""
 "BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
 "Valor Añadido. Artículo 80. Modificación de la base imponible."
 msgstr ""
-"BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
-"Valor Añadido. Artículo 80. Modificación de la base imponible."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_cancel_xml
@@ -76,18 +68,18 @@ msgid ""
 "Cancellation XML sent to TicketBAI. Kept if accepted or no response "
 "(timeout), cleared otherwise."
 msgstr ""
-"El XML de cancelación se envió a TicketBAI. Se mantiene si se acepta o no se "
-"obtiene respuesta (timeout), de lo contrario, se borra."
+"El XML de cancelación se envió a TicketBAI. Se mantiene si se acepta o no se"
+" obtiene respuesta (timeout), de lo contrario, se borra."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_res_company
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Compañías"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustes de configuración"
+msgstr "Opciones de configuración"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_account_edi_format
@@ -107,12 +99,22 @@ msgstr "Hacienda Foral de la Diputación de Álava"
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__res_company__l10n_es_tbai_tax_agency__bizkaia
 msgid "Hacienda Foral de Bizkaia"
-msgstr "Hacienda Foral de Bizkaia"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__res_company__l10n_es_tbai_tax_agency__gipuzkoa
 msgid "Hacienda Foral de Gipuzkoa"
 msgstr "Diputación Foral de Gipuzkoa"
+
+#. module: l10n_es_edi_tbai
+#: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_reversed_ids
+#: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_reversed_ids
+#: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_payment__l10n_es_tbai_reversed_ids
+msgid ""
+"In the case where a vendor refund has multiple original invoices, you can "
+"set them here. "
+msgstr "En el caso de que una factura rectificativa de proveedor tenga varias facturas "
+"reembolsadas, puede establecerlas aquí."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_refund_reason
@@ -127,11 +129,11 @@ msgstr "Código de motivo de reembolso de la factura (TicketBai)"
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_chain_index
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_payment__l10n_es_tbai_chain_index
 msgid ""
-"Invoice index in chain, set if and only if an in-chain XML was submitted and "
-"did not error"
+"Invoice index in chain, set if and only if an in-chain XML was submitted and"
+" did not error"
 msgstr ""
-"Índice de facturas en cadena que se establece si y solo si se envió un XML y "
-"no dio error."
+"Índice de facturas en cadena que se establece si y solo si se envió un XML y"
+" no dio error."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move_reversal__l10n_es_tbai_is_required
@@ -148,7 +150,7 @@ msgstr "¿Se necesita el EDI vasco (TicketBai)?"
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_account_move
 msgid "Journal Entry"
-msgstr "Asiento de diario"
+msgstr "Asiento contable"
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -217,13 +219,13 @@ msgstr "R1: Art. 80.1, 80.2, 80.6 y por error fundado de derecho"
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_refund_reason__r2
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move_reversal__l10n_es_tbai_refund_reason__r2
 msgid "R2: Art. 80.3"
-msgstr "R2: Art. 80.3"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_refund_reason__r3
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move_reversal__l10n_es_tbai_refund_reason__r3
 msgid "R3: Art. 80.4"
-msgstr "R3: Art. 80.4"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_refund_reason__r4
@@ -235,12 +237,12 @@ msgstr "R4: Art. 80 - resto"
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_refund_reason__r5
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move_reversal__l10n_es_tbai_refund_reason__r5
 msgid "R5: Factura rectificativa en facturas simplificadas"
-msgstr "R5: Factura rectificativa en facturas simplificadas"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_invoice_desglose
 msgid "RL"
-msgstr "RL"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -264,9 +266,16 @@ msgid "Refund reason must be specified (TicketBAI)"
 msgstr "Se debe especificar el motivo del reembolso (TicketBai)"
 
 #. module: l10n_es_edi_tbai
-#: model:ir.model,name:l10n_es_edi_tbai.model_ir_actions_report
-msgid "Report Action"
-msgstr "Reportar acción"
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_reversed_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_reversed_ids
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_payment__l10n_es_tbai_reversed_ids
+msgid "Refunded Vendor Bills"
+msgstr "Facturas Proveedor Reembolsadas"
+
+#. module: l10n_es_edi_tbai
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.res_config_settings_view_form
+msgid "Registro de Libros connection SII/TicketBAI"
+msgstr "Conexión Registro de Libros SII/TicketBAI"
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -292,8 +301,8 @@ msgstr "XML de envío"
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_post_xml
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_payment__l10n_es_tbai_post_xml
 msgid ""
-"Submission XML sent to TicketBAI. Kept if accepted or no response (timeout), "
-"cleared otherwise."
+"Submission XML sent to TicketBAI. Kept if accepted or no response (timeout),"
+" cleared otherwise."
 msgstr ""
 "Se envió el XML de envío a TicketBai. Se mantiene si se acepta o no se "
 "obtiene respuesta (timeout), de lo contrario, se borra."
@@ -301,7 +310,7 @@ msgstr ""
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_invoice_bundle
 msgid "TEST-DEVICE-001"
-msgstr "TEST-DEVICE-001"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_res_company__l10n_es_tbai_tax_agency
@@ -335,7 +344,7 @@ msgstr "Licencia de prueba (Gipuzkoa)"
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.view_move_form_inherit_l10n_es_edi_tbai
 msgid "TicketBAI"
-msgstr "TicketBAI"
+msgstr ""
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_chain_index
