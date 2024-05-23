@@ -28,6 +28,13 @@ class Evaluacion(models.Model):
     _description = "Evaluacion de personal"
     _rec_name = "nombre"
     nombre = fields.Char(string="Título de la evaluación", required=True)
+    
+    escalar_format = fields.Selection([
+        ("numericas", "Numéricas"),
+        ("textuales", "Textuales"),
+        ("caritas", "Caritas"),
+        ("estrellas", "Estrellas")
+    ], string="Formato para las preguntas escalares", required=True, default="numericas")
 
     tipo = fields.Selection(
         [
@@ -1184,3 +1191,11 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+
+    def get_escalar_format(self):
+        """
+        Devuelve el formato escalar seleccionado para la evaluación actual.
+        
+        :return: El formato escalar seleccionado para la evaluación.
+        """
+        return self.escalar_format
