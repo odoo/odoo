@@ -37,7 +37,8 @@
                                     </div>
                                     <div>
                                         <strong>
-                                            <field name="resultado"/>%
+                                            <field name="resultado"/>
+%
                                         </strong>
                                     </div>
                                 </div>
@@ -64,7 +65,7 @@
         </field>
     </record>
 
-    <!-- Vista en formulario para usuario.objetivo.rel -->
+        <!-- Vista en formulario para usuario.objetivo.rel -->
     <record id="usuario_objetivo_rel_view_form" model="ir.ui.view">
         <field name="name">usuario.objetivo.rel.form</field>
         <field name="model">usuario.objetivo.rel</field>
@@ -77,7 +78,7 @@
         </field>
     </record>
 
-    <!-- Formulario para el modelo objetivo -->
+        <!-- Formulario para el modelo objetivo -->
     <record id="objetivo_view_form" model="ir.ui.view">
         <field name="name">objetivo.form</field>
         <field name="model">objetivo</field>
@@ -130,7 +131,11 @@
                         </page>
                         <page string="Asignados">
                             <group>
-                                <field name="usuario_ids" />
+                                <field class="lh-lg w-100" colspan="2" name="usuario_ids" nolabel="1">
+                                    <tree editable="bottom" create="false">
+                                        <field class="lh-m" name="name" readonly="1"/>
+                                    </tree>
+                                </field>
                             </group>
                         </page>
                     </notebook>
@@ -155,7 +160,7 @@
     </record>
 
     <!-- Acción para abrir la vista en kanban y formulario para usuario.objetivo.rel -->
-    <record id="usuario_objetivo_rel_action" model="ir.actions.act_window"> 
+    <record id="usuario_objetivo_rel_action" model="ir.actions.act_window">
         <field name="name">Objetivos de Colaboradores</field>
         <field name="res_model">usuario.objetivo.rel</field>
         <field name="view_mode">kanban,form</field>

@@ -1142,6 +1142,40 @@ class Evaluacion(models.Model):
         resultado = super(Evaluacion, self).write(vals)
         self.enviar_evaluacion_action()
 
+        # Si se está eliminando un usuario o usuario externo, eliminar sus respuestas
+
+        if "usuario_ids" in vals:
+            usuarios_eliminados = list(map(
+                lambda val: val[1], filter(lambda val: val[0] == 3, vals["usuario_ids"])
+            ))
+            
+            if usuarios_eliminados:
+                respuestas = self.env["respuesta"].search(
+                    [
+                        ("usuario_id.id", "in", usuarios_eliminados),
+                        ("evaluacion_id.id", "=", self.id),
+                    ]
+                )
+
+                print(f"Respuestas: {respuestas}")
+                respuestas.unlink()
+
+        if "usuario_externo_ids" in vals:
+            usuarios_eliminados = list(map(
+                lambda val: val[1],
+                filter(lambda val: val[0] == 3, vals["usuario_externo_ids"]),
+            ))
+
+            if usuarios_eliminados:
+                respuestas = self.env["respuesta"].search(
+                    [
+                        ("usuario_externo_id", "in", usuarios_eliminados),
+                        ("evaluacion_id.id", "=", self.id),
+                    ]
+                )
+                print(f"Respuestas: {respuestas}")
+                respuestas.unlink()
+
         return resultado
 
     def action_asignar_usuarios_externos(self):

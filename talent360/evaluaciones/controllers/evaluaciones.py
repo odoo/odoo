@@ -1,6 +1,6 @@
 from odoo import http, _
 from odoo.http import request
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 import json
 import werkzeug
 
@@ -69,38 +69,24 @@ class EvaluacionesController(http.Controller):
 
         evaluacion = request.env["evaluacion"].sudo().browse(evaluacion_id)
 
-        if request.env.user != request.env.ref("base.public_user"):
-            usuario_eval_relacion = usuario_eva_mod.sudo().search(
-                [
-                    ("usuario_id.id", "=", request.env.user.id),
-                    ("evaluacion_id.id", "=", evaluacion.id),
-                    ("token", "=", token),
-                ]
-            )
-
-        else:
-            usuario_eval_relacion = usuario_eva_mod.sudo().search(
-                [
-                    # ("evaluacion_id", "=", evaluacion.id),
-                    ("token", "=", token)
-                ]
-            )
+        usuario_eval_relacion = usuario_eva_mod.sudo().search(
+            [("evaluacion_id", "=", evaluacion.id), ("token", "=", token)]
+        )
 
         if not usuario_eval_relacion:
+            return request.render("evaluaciones.evaluacion_responder_form_draft")
+
+        es_link_externo = bool(usuario_eval_relacion.usuario_externo_id)
+
+        if not es_link_externo and usuario_eval_relacion.usuario_id != request.env.user:
             return request.render("evaluaciones.evaluacion_responder_form_draft")
 
         # Obtén la evaluación basada en el ID
         parametros = evaluacion.get_evaluaciones_action(evaluacion_id)
 
-        if request.env.user != request.env.ref("base.public_user"):
-            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
-                request.env.user.id, evaluacion_id, None
-            )
-
-        else:
-            parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
-                None, evaluacion_id, token
-            )
+        parametros["contestada"] = usuario_eva_mod.sudo().action_get_estado(
+            evaluacion_id, token
+        )
 
         parametros["token"] = token
 
@@ -133,30 +119,38 @@ class EvaluacionesController(http.Controller):
         :return: redirección a la página de inicio
         """
 
-        user = None
-
-        if request.env.user != request.env.ref("base.public_user"):
-            if not request.env.user.has_group(
-                "evaluaciones.evaluaciones_cliente_cr_group_user"
-            ):
-                raise AccessError(_("No tienes permitido acceder a este recurso."))
-
-            user = request.env.user.id
-
         post_data = json.loads(request.httprequest.data)
 
         valores_radios = post_data.get("radioValues")
         valores_radios_escala = post_data.get("radioValuesScale")
         valores_textarea = post_data.get("textareaValues")
         evaluacion_id = post_data.get("evaluacion_id")
-        usuario_id = user
         respuesta_modelo = request.env["respuesta"]
         token = post_data.get("token")
+
+        usuario_evaluacion_rel = (
+            request.env["usuario.evaluacion.rel"]
+            .sudo()
+            .search([("token", "=", token), ("evaluacion_id.id", "=", evaluacion_id)])
+        )
+
+        if usuario_evaluacion_rel.contestada == "contestada":
+            raise UserError("La evaluación ya fue contestada.")
+
+        es_link_externo = bool(usuario_evaluacion_rel.usuario_externo_id)
+
+        if (
+            not es_link_externo
+            and usuario_evaluacion_rel.usuario_id != request.env.user
+        ):
+            raise AccessError("No tienes permiso para contestar esta evaluación.")
+        else:
+            usuario_id = usuario_evaluacion_rel.usuario_id.id
 
         for pregunta_id, valor_radio in valores_radios.items():
             if pregunta_id in valores_radios:
                 valor_radio = valores_radios[pregunta_id]
-                if request.env.user != request.env.ref("base.public_user"):
+                if not es_link_externo:
                     resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
@@ -182,7 +176,7 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, valor_textarea in valores_textarea.items():
             if pregunta_id in valores_textarea:
                 valor_textarea = valores_textarea[pregunta_id]
-                if request.env.user != request.env.ref("base.public_user"):
+                if not es_link_externo:
                     resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         None,
                         valor_textarea,
@@ -208,7 +202,7 @@ class EvaluacionesController(http.Controller):
         for pregunta_id, valor_radio in valores_radios_escala.items():
             if pregunta_id in valores_radios_escala:
                 valor_radio = valores_radios_escala[pregunta_id]
-                if request.env.user != request.env.ref("base.public_user"):
+                if not es_link_externo:
                     resp = respuesta_modelo.sudo().guardar_respuesta_action(
                         valor_radio,
                         None,
@@ -234,9 +228,6 @@ class EvaluacionesController(http.Controller):
         # Actualiza el estado de la evaluación para el usuario
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
-        if request.env.user != request.env.ref("base.public_user"):
-            usuario_eva_mod.sudo().action_update_estado(usuario_id, evaluacion_id, None)
-        else:
-            usuario_eva_mod.sudo().action_update_estado(None, evaluacion_id, token)
+        usuario_eva_mod.sudo().action_update_estado(evaluacion_id, token)
 
         return werkzeug.utils.redirect("/evaluacion/contestada")
