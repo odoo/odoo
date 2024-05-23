@@ -187,8 +187,8 @@
                     <separator/>
                     <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]" groups="project.group_project_milestone"/>
                     <separator/>
-                    <filter string="Start Date" name="start_date" date="date_start"/>
-                    <filter string="End Date" name="end_date" date="date"/>
+                    <filter string="Start Date" name="start_date" date="date_start" end_month="1" end_year="1"/>
+                    <filter string="End Date" name="end_date" date="date" end_month="1" end_year="1"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>

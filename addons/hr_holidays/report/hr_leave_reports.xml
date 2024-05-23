@@ -16,7 +16,7 @@
                 <separator/>
                 <filter string="My Department" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department"/>
                 <separator/>
-                <filter name="year" date="date_from" default_period="this_year" string="Current Year"/>
+                <filter name="year" date="date_from" default_period="year" string="Current Year"/>
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <field name="department_id" operator="child_of"/>

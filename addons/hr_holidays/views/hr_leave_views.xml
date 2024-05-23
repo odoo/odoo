@@ -76,7 +76,7 @@
                         domain="[('employee_id.member_of_department', '=', True)]"
                         help="My Department"/>
                 <separator/>
-                <filter name="filter_date_from" date="date_from" default_period="this_year" string="Current Year"/>
+                <filter name="filter_date_from" date="date_from" default_period="year" string="Current Year"/>
                 <separator/>
                 <filter name="cancelled_leaves" string="Cancelled" domain="[('state', '=', 'cancel')]" />
                 <filter name="refused_leaves" string="Refused" domain="[('state', '=', 'refuse')]" />

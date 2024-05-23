@@ -625,7 +625,7 @@
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="user_id"/>
-                <filter string="Creation Date" name="year" date="create_date" default_period="this_year"/>
+                <filter string="Creation Date" name="year" date="create_date" default_period="year"/>
                 <separator/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Reserve" name="reserve" domain="[('job_id', '=', False)]"/>

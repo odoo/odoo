@@ -2,8 +2,8 @@
 
 import { Component, onWillUpdateProps } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
-import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
-import { getPeriodOptions } from "@web/search/utils/dates";
+import { monthsOptions } from "@spreadsheet/assets_backend/constants";
+import { QUARTER_OPTIONS } from "@web/search/utils/dates";
 
 const { DateTime } = luxon;
 
@@ -36,16 +36,11 @@ export class DateFilterValue extends Component {
     /**
      * Returns a list of time options to choose from according to the requested
      * type. Each option contains its (translated) description.
-     * see getPeriodOptions
      *
      * @returns {Array<Object>}
      */
     getDateOptions() {
-        const periodOptions = getPeriodOptions(DateTime.local());
-        const quarters = FILTER_DATE_OPTION["quarter"].map((quarterId) =>
-            periodOptions.find((option) => option.id === quarterId)
-        );
-        return quarters.concat(monthsOptions);
+        return Object.values(QUARTER_OPTIONS).concat(monthsOptions);
     }
 
     isSelected(periodId) {

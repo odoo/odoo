@@ -45,7 +45,7 @@
                 <field name="end_date"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <separator />
-                <filter name="filter_date" date="start_date" default_period="this_year" string="Period"/>
+                <filter name="filter_date" date="start_date" default_period="year" string="Period"/>
                 <group expand="0" string="Group By">
                     <filter name="department" string="Department" context="{'group_by': 'department_ids'}"/>
                     <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>

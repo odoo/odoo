@@ -17,7 +17,7 @@
                 <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                 <separator/>
-                <filter name="filter_date" date="date" string="Date" default_period="this_year,last_year" />
+                <filter name="filter_date" date="date" string="Date" default_period="year,year-1" />
                 <filter name="filter_last_stage_update" date="date_last_stage_update"/>
                 <filter name="filter_date_deadline" date="date_deadline"/>
                 <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
