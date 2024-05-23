@@ -34,6 +34,10 @@
                     <group>
                         <field name="mensaje" placeholder="Escribe aquí tu mensaje de bienvenida"/>
                     </group>
+                    <group>
+                        <!-- Campo para seleccionar el formato de las preguntas escalares -->
+                        <field name="escalar_format"/>
+                    </group>
                     <notebook>
                         <page string="Preguntas">
                             <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
@@ -100,8 +104,8 @@
                                     height: 25px;
                                     border-radius: 10%;
                                     background-color: inherit; 
-                                    margin-top: 20%;
-                                    margin-left: 20%;
+                                    margin-top : 20%;
+                                    margin-left : 20%;
                                 }
 
                                 .rojo { background-color: #E46053; }
@@ -126,13 +130,13 @@
                                             <div class="color-pill rojo"></div>
                                         </td>
                                         <td style="padding-top:4%;">
-                                            <field name="piso_rojo" string="Piso Rojo" class="o_input text-secondary" readonly="1"/>
+                                            <field name="piso_rojo" string="Piso Rojo" class="o_input  text-secondary" readonly="1"/>
                                         </td>
                                         <td style="padding-top:3.5%;">
                                             <field name="techo_rojo" string="Techo Rojo" class="o_input"/>
                                         </td>
                                         <td>
-                                            <field name="descripcion_rojo" string="Descripción Rojo" class="o_input"/>
+                                            <field name="descripcion_rojo" string="Descripción Rojo" class="o_input "/>
                                         </td>
                                     </tr>
 
@@ -149,13 +153,14 @@
                                         <td>
                                             <field name="descripcion_naranja" string="Descripción Naranja" class="o_input"/>
                                         </td>
+
                                     </tr>
 
                                     <tr>
                                         <td>
                                             <div class="color-pill amarillo"></div>
                                         </td>
-                                        <td style="padding-top:4%;">
+                                        <td style="padding-top:4%%;">
                                             <field name="techo_naranja" string="Piso Amarillo" placeholder="Piso Amarillo" class="o_input text-secondary" readonly="1"/>
                                         </td>
                                         <td style="padding-top:3.5%;">
@@ -163,8 +168,8 @@
                                         </td>
                                         <td>
                                             <field name="descripcion_amarillo" string="Descripción Amarillo" class="o_input"/>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
                                     <tr>
                                         <td>
                                             <div class="color-pill verde"></div>
@@ -197,6 +202,7 @@
                             </table>
                         </page>
                     </notebook>
+                    </group>
                 </sheet>
             </form>
         </field>
