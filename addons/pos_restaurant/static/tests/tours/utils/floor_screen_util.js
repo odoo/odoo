@@ -27,7 +27,7 @@ export const ctrlClickTable = (name) =>
         name,
         run: (trigger) => {
             queryOne(trigger).dispatchEvent(
-                new MouseEvent("click", { bubbles: true, ctrlKey: true })
+                new MouseEvent("mousedown", { bubbles: true, ctrlKey: true })
             );
         },
     });

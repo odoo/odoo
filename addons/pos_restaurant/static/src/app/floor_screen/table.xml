@@ -8,6 +8,8 @@
             t-att-class="{'selected': isSelected, 'isLinked': props.table.parent_id}"
             t-attf-class="{{props.class}}"
             t-on-click.stop="(ev) => props.onClick(props.table, ev)"
+            t-on-mousedown.stop="(ev) => props.onClick(props.table, ev)"
+            t-on-touchstart.stop="(ev) => props.onClick(props.table, ev)"
             t-attf-style="border: 3px solid {{props.table.color}};
                         border-radius: {{props.table.shape === 'round' ? 1000 : 3}}px;
                         background: {{isOccupied ? props.table.color || 'rgb(53, 211, 116)' : '#00000020'}};
