@@ -36,13 +36,8 @@
                     </group>
                     <notebook>
                         <page string="Preguntas">
-                            <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', 'escala')]">
+                            <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
                                 <tree create="true" delete="true" editable="bottom">
-                                    <field name="pregunta_texto" readonly="1"/>
-                                    <field name="tipo" readonly="1"/>
-                                    <control>
-                                        <create name="add_filtro" string="Agregar pregunta "/>
-                                    </control>
                                 </tree>
                                 <form string="Agregar pregunta">
                                     <group>
@@ -203,20 +198,6 @@
                         </page>
                     </notebook>
                 </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Vista de formulario para el modelo 'opcion' sin el campo 'pregunta_id' -->
-    <record id="view_form_opcion" model="ir.ui.view">
-        <field name="name">opcion.form</field>
-        <field name="model">opcion</field>
-        <field name="arch" type="xml">
-            <form string="Opción">
-                <group>
-                    <field name="opcion_texto" placeholder="Ingrese el texto de la opción"/>
-                    <field name="valor" placeholder="Ingrese el valor de la opción"/>
-                </group>
             </form>
         </field>
     </record>

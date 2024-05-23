@@ -139,13 +139,8 @@
                         </group>
                         <notebook>
                             <page string="Preguntas" invisible="tipo != 'CLIMA'">
-                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', 'escala')]">
+                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
                                     <tree create="true" delete="true" editable="bottom">
-                                        <field name="pregunta_texto" readonly="1"/>
-                                        <field name="tipo" readonly="1"/>
-                                        <control>
-                                            <create name="add_filtro" string="Agregar pregunta "/>
-                                        </control>
                                     </tree>
                                     <form string="Agregar pregunta">
                                         <group>
