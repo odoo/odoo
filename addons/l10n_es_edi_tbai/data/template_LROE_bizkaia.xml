@@ -100,8 +100,8 @@
                                     <Codigo t-out="credit_note_code"/>
                                     <Tipo>I</Tipo>
                                 </FacturaRectificativa>
-                                <FacturasRectificadasSustituidas t-if="credit_note_invoice">
-                                    <IDFacturaRectificadaSustituida>
+                                <FacturasRectificadasSustituidas t-if="credit_note_invoices">
+                                    <IDFacturaRectificadaSustituida t-foreach="credit_note_invoices" t-as="credit_note_invoice">
                                         <t t-set="seq_and_num" t-value="credit_note_invoice._get_l10n_es_tbai_sequence_and_number()"/>
                                         <SerieFactura t-out="seq_and_num[0]"/>
                                         <NumFactura t-out="seq_and_num[1]"/>
