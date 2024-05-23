@@ -6,6 +6,7 @@ import * as CartPage from "../helpers/cart_page";
 import * as LandingPage from "../helpers/landing_page";
 import * as ProductPage from "../helpers/product_page";
 import * as Numpad from "@point_of_sale/../tests/tours/helpers/NumpadTourMethods";
+import * as ConfirmationPage from "../helpers/confirmation_page";
 
 registry.category("web_tour.tours").add("self_kiosk_each_table_takeaway_in", {
     test: true,
@@ -111,5 +112,19 @@ registry.category("web_tour.tours").add("self_simple_order", {
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Close"),
         Utils.checkIsNoBtn("My Order"),
+    ],
+});
+
+registry.category("web_tour.tours").add("self_order_price_null", {
+    test: true,
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        CartPage.checkProduct("Coca-Cola", "0.00", "1"),
+        Utils.clickBtn("Pay"),
+        ConfirmationPage.orderNumberShown(),
+        Utils.checkBtn("Close"),
     ],
 });

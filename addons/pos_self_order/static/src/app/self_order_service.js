@@ -213,8 +213,8 @@ export class SelfOrder extends Reactive {
         // if the amount is 0, we don't need to go to the payment page
         // this directive works for both mode each and meal
         if (order.amount_total === 0 && order.lines.length > 0) {
-            await this.sendDraftOrderToServer();
-            this.router.navigate("default");
+            const order = await this.sendDraftOrderToServer();
+            this.confirmationPage("order", device, order.access_token);
             return;
         }
 
