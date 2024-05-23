@@ -83,9 +83,7 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        res = stream.get_response(**send_file_kwargs)
-        res.headers['Content-Security-Policy'] = "default-src 'none'"
-        return res
+        return stream.get_response(**send_file_kwargs)
 
     @http.route(['/web/assets/debug/<string:filename>',
         '/web/assets/debug/<path:extra>/<string:filename>',
@@ -111,7 +109,7 @@ class Binary(http.Controller):
             record = request.env['ir.binary']._find_record(res_id=int(id))
             stream = request.env['ir.binary']._get_stream_from(record, 'raw', filename)
 
-        send_file_kwargs = {'as_attachment': False}
+        send_file_kwargs = {'as_attachment': False, 'content_security_policy': None}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
@@ -169,9 +167,7 @@ class Binary(http.Controller):
         if nocache:
             send_file_kwargs['max_age'] = None
 
-        res = stream.get_response(**send_file_kwargs)
-        res.headers['Content-Security-Policy'] = "default-src 'none'"
-        return res
+        return stream.get_response(**send_file_kwargs)
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):
