@@ -17,8 +17,8 @@ class AccountPaymentRegister(models.TransientModel):
         if expense_sheet and batch_result['payment_values']['payment_type'] == 'outbound':
             # We use sudo since we may not have access to the employee_id record. If the env wasn't already in sudo,
             # we should un-sudo the record before returning it.
-            sudo_bank_account_id = expense_sheet.employee_id.sudo().bank_account_id
-            return sudo_bank_account_id.sudo(self.env.su)
+            sudo_bank_account_ids = expense_sheet.employee_id.sudo().bank_account_id | expense_sheet.employee_id.sudo().work_contact_id.bank_ids
+            return sudo_bank_account_ids.sudo(self.env.su)
         else:
             return super()._get_batch_available_partner_banks(batch_result, journal)
 
