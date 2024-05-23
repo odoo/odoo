@@ -187,6 +187,57 @@ class TestMrpStockReports(TestReportsCommon):
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the MO shoud not be matched.")
 
+    def test_kit_packaging_delivery_slip(self):
+        superkit = self.env['product.product'].create({
+            'name': 'Super Kit',
+            'type': 'consu',
+            'packaging_ids': [(0, 0, {
+                'name': '6-pack',
+                'qty': 6,
+            })],
+        })
+
+        compo01, compo02 = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': self.env.ref('uom.product_uom_meter').id,
+        } for n in ['Compo 01', 'Compo 02']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': superkit.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
+            ],
+        })
+
+        for back_order, expected_vals in [('never', [12, 12, 2, 2]), ('always', [24, 12, 4, 2])]:
+            picking_form = Form(self.env['stock.picking'])
+            picking_form.picking_type_id = self.picking_type_in
+            picking_form.partner_id = self.partner
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = superkit
+                move.product_uom = self.env.ref('uom.product_uom_dozen')
+                move.product_uom_qty = 2
+            picking = picking_form.save()
+            picking.move_ids.product_packaging_id = superkit.packaging_ids
+            picking.action_confirm()
+
+            picking.move_ids.write({'quantity': 12, 'picked': True})
+            picking.picking_type_id.create_backorder = back_order
+            picking.button_validate()
+            non_kit_aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
+            self.assertFalse(non_kit_aggregate_values)
+            aggregate_values = picking.move_line_ids._get_aggregated_product_quantities(kit_name=superkit.display_name)
+            for line in aggregate_values.values():
+                self.assertItemsEqual([line[val] for val in ['qty_ordered', 'quantity', 'packaging_qty', 'packaging_quantity']], expected_vals)
+
+            html_report = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', picking.ids)[0]
+            self.assertTrue(html_report, "report generated successfully")
+
     def test_subkit_in_delivery_slip(self):
         """
         Suppose this structure:
