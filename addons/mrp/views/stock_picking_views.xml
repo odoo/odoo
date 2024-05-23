@@ -57,47 +57,48 @@
             </xpath>
             <xpath expr='//div[@name="stock_picking"]' position="after">
                 <div t-if="record.code.raw_value == 'mrp_operation'" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
-                    <div>
-                        <div t-attf-class="o_kanban_card_header">
-                            <div class="o_kanban_card_header_title">
-                                <div class="o_primary" t-if="!selection_mode">
-                                    <a type="object" name="get_mrp_stock_picking_action_picking_type">
-                                        <field name="name"/>
+                    <div t-attf-class="o_kanban_card_header">
+                        <div class="o_kanban_card_header_title">
+                            <div class="o_primary" t-if="!selection_mode">
+                                <a type="object" name="get_mrp_stock_picking_action_picking_type">
+                                    <field name="name"/>
+                                </a>
+                            </div>
+                            <span class="o_primary" t-if="selection_mode"><field name="name"/></span>
+                            <div class="o_secondary"><field class="o_secondary" name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
+                        </div>
+                    </div>
+                    <div class="container o_kanban_card_content" t-if="!selection_mode">
+                        <div class="row">
+                            <div class="col-6 o_kanban_primary_left">
+                                <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_todo': 1, 'default_picking_type_id': id}">
+                                    <span t-if="record.count_mo_todo.raw_value > 0">
+                                        <t t-esc="record.count_mo_todo.value"/> To Manufacture
+                                    </span>
+                                    <span t-else="">Open</span>
+                                </button>
+                            </div>
+                            <div class="col-6 o_kanban_primary_right">
+                                <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
+                                    <a class="col-8 offset-4" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
+                                        <div class="row">
+                                            <span class="col-6">Waiting</span>
+                                            <field class="col-2 text-end" name="count_mo_waiting"/>
+                                        </div>
                                     </a>
                                 </div>
-                                <span class="o_primary" t-if="selection_mode"><field name="name"/></span>
-                                <div class="o_secondary"><field class="o_secondary" name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>
+                                <div t-if="record.count_mo_late.raw_value > 0" class="row">
+                                    <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planning_issues': 1, 'default_picking_type_id': id}">
+                                        <div class="row">
+                                            <span class="col-6">Late</span>
+                                            <field class="col-2 text-end" name="count_mo_late"/>
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                        <div class="container o_kanban_card_content" t-if="!selection_mode">
-                            <div class="row">
-                                <div class="col-6 o_kanban_primary_left">
-                                    <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_todo': 1, 'default_picking_type_id': id}">
-                                        <span t-if="record.count_mo_todo.raw_value > 0">
-                                            <t t-esc="record.count_mo_todo.value"/> To Process
-                                        </span>
-                                        <span t-else="">Open</span>
-                                    </button>
-                                </div>
-                                <div class="col-6 o_kanban_primary_right">
-                                    <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
-                                            <div class="row">
-                                                <span class="col-6">Waiting</span>
-                                                <field class="col-2 text-end" name="count_mo_waiting"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div t-if="record.count_mo_late.raw_value > 0" class="row">
-                                        <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planning_issues': 1, 'default_picking_type_id': id}">
-                                            <div class="row">
-                                                <span class="col-6">Late</span>
-                                                <field class="col-2 text-end" name="count_mo_late"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row">
+                            <field name="kanban_dashboard_graph" graph_type="bar" widget="picking_type_dashboard_graph"/>
                         </div>
                     </div>
                 </div>
