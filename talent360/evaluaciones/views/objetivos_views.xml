@@ -22,7 +22,7 @@
         <field name="name">usuario.objetivo.rel.kanban</field>
         <field name="model">usuario.objetivo.rel</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" default_group_by="usuario_id" quick_create="false" create="false" records_draggable="false" group_create="false">
+            <kanban class="o_kanban_mobile" default_group_by="usuario_id" quick_create="false" create="false" group_edit="false" group_delete="false" records_draggable="false" group_create="false">
                 <field name="objetivo_id"/>
                 <field name="usuario_id"/>
                 <templates>
@@ -51,6 +51,13 @@
                                 </div>
                             </div>
                         </div>
+                    </t>
+                    <t t-name="kanban-box-empty">
+                        <t t-if="records.length > 0">
+                            <div class="o_kanban_view_nocontent">
+                                <p>Actualmente no hay objetivos asignados.</p>
+                            </div>
+                        </t>
                     </t>
                 </templates>
             </kanban>
@@ -137,6 +144,14 @@
         <field name="name">Objetivos</field>
         <field name="res_model">objetivo</field>
         <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Actualmente no hay objetivos creados.
+            </p>
+            <p>
+                Los objetivos creados aparecerán aquí
+            </p>
+        </field>
     </record>
 
     <!-- Acción para abrir la vista en kanban y formulario para usuario.objetivo.rel -->
@@ -146,5 +161,13 @@
         <field name="view_mode">kanban,form</field>
         <field name="view_id" ref="usuario_objetivo_rel_view_kanban"/>
         <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'kanban', 'view_id': ref('usuario_objetivo_rel_view_kanban')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_view_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Actualmente no hay objetivos asignados.
+            </p>
+            <p>
+                Los objetivos asignados aparecerán aquí
+            </p>
+        </field>
     </record>
 </odoo>

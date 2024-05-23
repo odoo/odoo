@@ -18,8 +18,8 @@ class UsuarioObjetivoRel(models.Model):
     _name = "usuario.objetivo.rel"
     _description = "Relación entre objetivos y usuarios"
 
-    objetivo_id = fields.Many2one("objetivo", string="Objetivos")
-    usuario_id = fields.Many2one("res.users", string="Usuario")
+    objetivo_id = fields.Many2one("objetivo", string="Objetivos", ondelete="cascade")
+    usuario_id = fields.Many2one("res.users", string="Usuario", ondelete="cascade")
 
     titulo = fields.Char(related="objetivo_id.titulo", string="Título del Objetivo")
     titulo_corto = fields.Char(compute="_compute_kanban")
@@ -45,5 +45,6 @@ class UsuarioObjetivoRel(models.Model):
         Método para agregar elipsis en títulos y descripciones que son mayores a 30 y 100 caracteres respectivamente
         """
         for record in self:
+            print(record)
             record.descripcion_corta = record.descripcion[:100] + "..." if len(record.descripcion) > 100 else record.descripcion
             record.titulo_corto = record.titulo[:30] + "..." if len(record.titulo) > 30 else record.titulo

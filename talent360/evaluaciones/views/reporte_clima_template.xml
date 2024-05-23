@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+        <template id="encuestas_reporte_clima" name="Reporte: página de reporte genérico">
+            <t t-call="evaluaciones.diseño">
+                <t t-set="limite_registros" t-value="10"/>
+                <div class="movil">
+                    <t t-call="evaluaciones.mensaje"/>
+                </div>
+                <div class="o_survey_result">
+                    <t t-call="evaluaciones.portada_reporte_template"/>
+                    <t t-call="evaluaciones.encuestas_reporte_clima_body" />
+                    <t t-call="evaluaciones.encuestas_reporte_inner" />
+                </div>
+            </t>
+        </template>
+
+        <template id="mensaje" name="Reporte: mensaje en móvil">
+            <div class="d-flex flex-row justify-content-between" style="height: 100vh;">
+                <h1 class="text-center my-auto mx-5" style="font-size: 2rem;">
+                    Los reportes no están disponibles en dispositivos móviles. Por favor, accede desde un dispositivo de escritorio.
+                </h1>
+            </div>
+        </template>
+
+        <!-- AQUÍ COMIENZA CLIMA -->
+        <template id="encuestas_reporte_clima_body" name="Reporte de Clima Laboral">
+            <div class="container-fluid row gap-5 justify-content-between g-2">
+                <div class="d-flex flex-row justify-content-between">
+                    <h1>
+                        <span t-field="evaluacion.nombre"/>
+                    </h1>
+                    <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
+                        <i class="fa fa-print"></i> Exportar
+                    </button>
+                </div>
+                <div class="col survey_section">
+                    <h4>Calificación final</h4>
+                    <span t-att-class="'color_muy-alto' if total_porcentaje &lt; 20 else 'color_alto' if 20 &lt;= total_porcentaje &lt; 45 else 'color_medio' if 45 &lt;= total_porcentaje &lt; 70 else 'color_bajo' if 70 &lt;= total_porcentaje &lt;= 90 else 'color_muy-alto'">
+                        <t t-esc="total_porcentaje"/>
+                    </span>
+                    <span class="fs-5 pill">
+                        <t t-if="total_porcentaje &lt; 20"> Deficiente</t>
+                        <t t-elif="20 &lt;= total_porcentaje &lt; 45"> Regular</t>
+                        <t t-elif="45 &lt;= total_porcentaje &lt; 70"> Marginal</t>
+                        <t t-elif="70 &lt;= total_porcentaje &lt; 90">Suficiente</t>
+                        <t t-else="true">Superior</t>
+                    </span>
+                </div>
+
+                <div class="col survey_section w-100" style="page-break-inside: avoid;">
+                    <h4>Semáforo</h4>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #2894a7;"></div>
+                        <span class="col">Excelente</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #5aaf2b;"></div>
+                        <span class="col">Bueno</span>
+                    </div>
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #fcd703;"></div>
+                        <span class="col">Regular</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #fc8803;"></div>
+                        <span class="col">Malo</span>
+                    </div>
+
+                    <div class="container-fluid row gap-2 align-items-center">
+                        <div class="color_circle" style="background-color: #ff4747;"></div>
+                        <span class="col">Muy malo</span>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="evaluacion.incluir_demograficos">
+                <h4>Datos demográficos</h4>
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section">
+                            <h4>
+                            Por generación
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_generacion_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="generaciones">
+                                <canvas t-att-id="'canvas_pastel_generacion_clima'"/>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section" style="page-break-inside: avoid;">
+                            <h4>
+                            Por género
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_genero_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Género'" t-att-data-graph-data="generos">
+                                <canvas t-att-id="'canvas_pastel_genero_clima'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section">
+                            <h4>
+                            Por departamento
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_departamento_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Departamento'" t-att-data-graph-data="departamentos">
+                                <canvas t-att-id="'canvas_pastel_departamento_clima'"/>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section">
+                            <h4>
+                            Por puesto
+                            </h4>
+                            <div class="survey_graph" t-att-id="'grafica_pastel_puesto_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Puesto'" t-att-data-graph-data="puestos">
+                                <canvas t-att-id="'canvas_pastel_puesto_clima'"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <div class="survey_page container-fluid d-flex flex-column" style="font-size: 0.9em;">
+                <div class="survey_section" style="page-break-inside: avoid;">
+                    <h4 style="font-size: 2em;">Resumen del Clima Laboral</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias" style="height: 745px;">
+                        <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
+                    </div>d
+                </div>
+
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
+                            <h4 style="font-size: 1em;">Categoría con mayor puntaje</h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1" style="font-size: 1.5em;">
+                                    <t t-esc="'{:.2f}'.format(max(categorias, key=lambda x: x['valor'])['valor'])"/>
+                                </span>
+                                <span class="fs-5" style="font-size: 1em;">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
+                            <h4 style="font-size: 1em;">Categoría con menor puntaje:</h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1" style="font-size: 1.5em;">
+                                    <t t-esc="'{:.2f}'.format(min(categorias, key=lambda x: x['valor'])['valor'])"/>
+                                </span>
+                                <span class="fs-5" style="font-size: 1em;">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <t t-foreach="categorias" t-as="categoria">
+                <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
+                    <t t-if="'puntuacion' in categoria">
+                        <div class="survey_page container-fluid d-flex flex-column align-items-center" style="font-size: 0.9em;">
+                            <div class="survey_section container-fluid text-center" style="page-break-inside: avoid;">
+                                <h4 style="font-size: 2em; text-align: center;">
+                                    <t t-esc="categoria['nombre']"/>
+                                </h4>
+                                <div class="survey_graph container-fluid d-flex justify-content-center" t-att-id="'grafica_pie_' + categoria['nombre']" t-att-data-graph-type="'doughnut'" t-att-data-graph-data="[categoria,{'valor': 100 - categoria['valor'],'color':'#9c9c9c'}]" style="max-height: 200px; max-width: 200px;">
+                                    <canvas t-att-id="'canvas_pie_' + categoria['nombre']"></canvas>
+                                </div>
+                            </div>
+                            <div class="survey_section container-fluid text-center" style="page-break-inside: avoid;">
+                                <h4 style="font-size: 2em; text-align: center;">Resumen por departamentos</h4>
+                                <div class="survey_graph container-fluid d-flex justify-content-center" t-att-id="'grafica_radar_departamentos_' + categoria['nombre']" t-att-data-graph-type="'col'" t-att-data-label="'Resultados por departamento'" t-att-data-graph-data="categoria['departamentos']" style="max-height: 200px; max-width: 400px;">
+                                    <canvas t-att-id="'canvas_radar_departamentos_' + categoria['nombre']"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+
+            <div class="survey_section mb-5" style="page-break-inside: avoid;  margin-top: 50px;">
+                <h4>Necesidad de acción</h4>
+                <span class="container-fluid">
+                    <t t-if="total_porcentaje &lt; 20">Se requiere realizar el análisis de cada categoría y dominio para establecer las acciones de intervención apropiadas, mediante un Programa de intervención que deberá incluir evaluaciones específicas, y contemplar campañas de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
+                    <t t-elif="20 &lt;= total_porcentaje &lt; 45">Se requiere realizar un análisis de cada categoría y dominio, de manera que se puedan determinar las acciones de intervención apropiadas a través de un Programa de intervención, que podrá incluir una evaluación específica y deberá incluir una campaña de sensibilización, revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión.</t>
+                    <t t-elif="45 &lt;= total_porcentaje &lt; 70">Se requiere revisar la política de prevención de riesgos psicosociales y programas para la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral, así como reforzar su aplicación y difusión, mediante un Programa de intervención.</t>
+                    <t t-elif="70 &lt;= total_porcentaje &lt; 90">Es necesario una mayor difusión de la política de prevención de riesgos psicosociales y programas para: la prevención de los factores de riesgo psicosocial, la promoción de un entorno organizacional favorable y la prevención de la violencia laboral.</t>
+                    <t t-else="true">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
+                </span>
+            </div>
+        </template>
+
+    </data>
+
+
+</odoo>
