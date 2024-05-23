@@ -32,9 +32,6 @@
                         <field name="incluir_demograficos" placeholder="Incluir datos demográficos"/>
                     </group>
                     <group>
-                        <field name="mensaje" placeholder="Escribe aquí tu mensaje de bienvenida"/>
-                    </group>
-                    <group>
                         <!-- Campo para seleccionar el formato de las preguntas escalares -->
                         <field name="escalar_format"/>
                     </group>
@@ -168,8 +165,8 @@
                                         </td>
                                         <td>
                                             <field name="descripcion_amarillo" string="Descripción Amarillo" class="o_input"/>
-                                            </td>
-                                        </tr>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td>
                                             <div class="color-pill verde"></div>
@@ -200,6 +197,13 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </page>
+                        <page string="Notificaciones">
+                            <group>
+                                <field name="mensaje_bienvenida" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                                <field name="mensaje_agradecimiento" placeholder="Escribe aquí tu mensaje de bienvenida"/>
+                                <field name="contenido_correo" placeholder="Escribe el contenido del correo"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
