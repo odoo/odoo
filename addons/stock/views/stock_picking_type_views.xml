@@ -250,7 +250,10 @@
                                     <div class="col-6 o_kanban_primary_left">
                                         <button class="btn btn-primary" name="get_action_picking_tree_ready" type="object">
                                             <span t-if="record.count_picking_ready.raw_value > 0">
-                                                <t t-esc="record.count_picking_ready.value"/> To Process
+                                                <t t-esc="record.count_picking_ready.value"/>
+                                                <t t-if="record.code.raw_value === 'incoming'"> To Receive</t>
+                                                <t t-elif="record.code.raw_value === 'outgoing'" name="outgoing_label"> To Deliver</t>
+                                                <t t-else=""> To Process</t>
                                             </span>
                                             <span t-else="">Open</span>
                                         </button>
@@ -292,6 +295,9 @@
                                             </a>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row mt-auto">
+                                    <field name="kanban_dashboard_graph" graph_type="bar" widget="picking_type_dashboard_graph"/>
                                 </div>
                             </div>
                         </div>

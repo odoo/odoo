@@ -23,4 +23,16 @@
     <menuitem id="dropship_picking" name="Dropships" parent="stock.menu_stock_transfers"
         action="action_picking_tree_dropship" sequence="30"
         groups="stock.group_stock_manager,stock.group_stock_user"/>
+
+    <!-- Picking Type Views -->
+    <record id="stock_picking_type_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban.inherit.dropshipping</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='outgoing_label']" position="after">
+                <t t-elif="record.code.raw_value === 'dropship'" name="dropship_label"> To Validate</t>
+            </xpath>
+        </field>
+    </record>
 </odoo>
