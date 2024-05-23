@@ -116,3 +116,45 @@ class TestMrpCancelMO(TestMrpCommon):
 
         self.assertEqual(mo.move_finished_ids.state, 'cancel')
         self.assertEqual(mo.state, 'cancel')
+
+    def test_cancel_mo_with_propagate_cancel(self):
+        """ Test for cancellation behavior of a MO's pickings based on
+        'Cancel Next Move' of stock.rule when MO canceled.
+
+        If 'Cancel Next Move' is set to False, only the first picking should be
+        canceled. If 'Cancel Next Move' is set to True, all(2 pickings in case of 3 step mrp) pickings should be
+        canceled.
+
+        1. When the stock rule 'WH: Stock → Pre-Production' has 'Cancel Next Move' set to False:
+            - Only the first picking of the MO is canceled.
+            - Subsequent pickings remain unaffected.
+
+        2. When the stock rule 'WH: Stock → Pre-Production' has 'Cancel Next Move' set to True:
+            - Both the first and second pickings of the MO are canceled.
+        """
+
+        # Enable multi-locations feature
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+
+        # Set the manufacturing steps to a 3-step process in the warehouse
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm_sam'
+
+        # Test Case 1: 'propagate_cancel' = False (By default)
+        mo = self.generate_mo()[0]
+
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'cancel', "MO should be in cancel state.")
+        self.assertEqual(mo.picking_ids[0].state, 'cancel', "The first picking should be canceled.")
+        self.assertNotEqual(mo.picking_ids[1].state, 'cancel', "The second picking should not be canceled.")
+
+        # Test Case 2: propagate_cancel = True (for 'WH: Stock → Pre-Production' rule)
+        rule = self.env['stock.rule'].search([('location_dest_id', '=', warehouse.pbm_loc_id.id)])[1]
+        rule.propagate_cancel = True
+
+        mo1 = self.generate_mo()[0]
+
+        mo1.action_cancel()
+        self.assertEqual(mo1.state, 'cancel', "MO should be in cancel state.")
+        self.assertEqual(mo1.picking_ids[0].state, 'cancel', "The first picking should be canceled.")
+        self.assertEqual(mo1.picking_ids[1].state, 'cancel', "The second picking should be canceled.")
