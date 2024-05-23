@@ -47,7 +47,7 @@ patch(ControlButtons.prototype, {
         const takeawayFp = this.pos.config.takeaway_fp_id;
 
         this.currentOrder.takeaway = isTakeAway;
-        this.currentOrder.set_fiscal_position(isTakeAway ? takeawayFp : defaultFp);
+        this.currentOrder.update({ fiscal_position_id: isTakeAway ? takeawayFp : defaultFp });
     },
     async clickFiscalPosition() {
         await super.clickFiscalPosition(...arguments);
