@@ -51,17 +51,17 @@ class ImportQuestionsWizard(models.TransientModel):
             raise exceptions.ValidationError(
                 f"Error al procesar el archivo: {str(e)}. Verifica que el archivo sea un CSV válido."
             )
-        
+
         preguntas = []
 
         self._validate_columns(csv_lector.fieldnames)
 
         for i, fila in enumerate(csv_lector):
-            if i >= 500:
+            if i >= 200:
                 raise exceptions.ValidationError(
-                    _("Error: No se pueden cargar más de 500 preguntas.")
+                    _("Error: No se pueden cargar más de 200 preguntas.")
                 )
-            
+
             self._validar_fila(fila)
 
             pregunta_data = {
@@ -87,7 +87,7 @@ class ImportQuestionsWizard(models.TransientModel):
             preguntas.append(pregunta)
 
         evaluacion = self.env["evaluacion"].browse(self._context.get("active_id"))
-        
+
         if evaluacion:
             evaluacion.write({'pregunta_ids': [(4, pregunta.id) for pregunta in preguntas]})
         else:
@@ -161,19 +161,23 @@ class ImportQuestionsWizard(models.TransientModel):
                     "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
                 )
             opciones = [opcion.strip() for opcion in row["Opciones"].split(",")]
-            for opcion in opciones:
-                if not opcion.startswith('"') or not opcion.endswith('"'):
-                    raise exceptions.ValidationError(
-                        f"La opciónes para preguntas de opción multiple debe estar entre comillas dobles."
-                    )
+
             if len(opciones) != len(set(opciones)):
                 raise exceptions.ValidationError(
                     "Las opciones para preguntas de tipo 'multiple_choice' no deben contener duplicados."
                 )
-            if any(not opcion.strip('"') for opcion in opciones):
-                raise exceptions.ValidationError(
-                    "Las opciones para preguntas de tipo 'multiple_choice' no pueden estar vacías o contener solo espacios en blanco."
-                )
+            # Validar que ninguna opción esté vacía o contenga solo espacios en blanco
+            for opcion in opciones:
+                if not opcion.strip():
+                    raise exceptions.ValidationError(
+                        "Las opciones para preguntas de tipo 'multiple_choice' no pueden estar vacías o contener solo espacios en blanco."
+                    )
+            # Validar que todas las opciones estén entre comillas dobles
+            for opcion in opciones:
+                if not opcion.startswith('"') or not opcion.endswith('"'):
+                    raise exceptions.ValidationError(
+                        "Las opciones para preguntas de opción múltiple deben estar entre comillas dobles."
+                    )
         else:
             # No permitir opciones para otros tipos de preguntas
             if row.get("Opciones"):
