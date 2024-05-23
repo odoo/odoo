@@ -351,13 +351,15 @@ export class FloorScreen extends Component {
         this.unselectTables();
     }
     async onClickTable(table, ev) {
-        if (this.pos.isEditMode) {
+        if (this.pos.isEditMode && ["mousedown", "touchstart"].includes(ev.type)) {
             if (ev.ctrlKey || ev.metaKey) {
                 this.state.selectedTableIds.push(table.id);
             } else {
                 this.unselectTables();
                 this.state.selectedTableIds.push(table.id);
             }
+            return;
+        } else if (this.pos.isEditMode || ev.type !== "click") {
             return;
         }
         if (table.parent_id) {
