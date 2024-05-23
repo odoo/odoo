@@ -3,6 +3,8 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests import Form
+from odoo.exceptions import ValidationError
+
 
 class TestLotSerial(TestStockCommon):
     @classmethod
@@ -87,3 +89,48 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(vals[1]['quantity'], 4)
         self.assertEqual(vals[2]['lot_name'], 'wxc')
         self.assertEqual(vals[2]['quantity'], 1, "default lot qty")
+
+    def test_lot_uniqueness(self):
+        """ Checks that the same lot name cannot be inserted twice for the same company or 'no-company'.
+        """
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'unique',
+            'product_id': self.productB.id,
+            'company_id': False,
+        })
+        self.assertTrue(lot_1)
+        # Now try to insert the same one without company
+        with self.assertRaises(ValidationError):
+            self.env['stock.lot'].create({
+                'name': 'unique',
+                'product_id': self.productB.id,
+                'company_id': False,
+            })
+        # Same thing should happen when creating it from a company now
+        with self.assertRaises(ValidationError):
+            self.env['stock.lot'].create({
+                'name': 'unique',
+                'product_id': self.productB.id,
+                'company_id': self.env.company.id,
+            })
+
+        lot_2 = self.env['stock.lot'].create({
+            'name': 'also_unique',
+            'product_id': self.productB.id,
+            'company_id': self.env.company.id,
+        })
+        self.assertTrue(lot_2)
+        # Now try to insert the same one without company
+        with self.assertRaises(ValidationError):
+            self.env['stock.lot'].create({
+                'name': 'also_unique',
+                'product_id': self.productB.id,
+                'company_id': False,
+            })
+        # Same thing should happen when creating it from a company now
+        with self.assertRaises(ValidationError):
+            self.env['stock.lot'].create({
+                'name': 'also_unique',
+                'product_id': self.productB.id,
+                'company_id': self.env.company.id,
+            })
