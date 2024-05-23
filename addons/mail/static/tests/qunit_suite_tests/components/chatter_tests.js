@@ -260,6 +260,34 @@ QUnit.test("chatter: drop attachments", async () => {
     await contains(".o_AttachmentCard", { count: 3 });
 });
 
+QUnit.test("error on uploading file in chatter shows error", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const { openFormView } = await start({
+        async mockRPC(route) {
+            if (route === '/mail/attachment/upload') {
+                throw new Error("cannot upload this file");
+            }
+        }
+    });
+    await openFormView({
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const files = [
+        await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        }),
+    ];
+    await dragenterFiles(".o_Chatter", files);
+    await contains(".o_Chatter_dropZone");
+    await contains(".o_AttachmentCard", { count: 0 });
+    await dropFiles(".o_Chatter_dropZone", files);
+    await contains(".o_notification", { text: "cannot upload this file" });
+});
+
 QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async function (assert) {
     assert.expect(10);
 

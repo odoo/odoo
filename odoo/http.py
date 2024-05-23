@@ -2038,10 +2038,11 @@ class Application:
         with HTTPRequest(environ) as httprequest:
             request = Request(httprequest)
             _request_stack.push(request)
-            request._post_init()
-            current_thread.url = httprequest.url
 
             try:
+                request._post_init()
+                current_thread.url = httprequest.url
+
                 if self.get_static_file(httprequest.path):
                     response = request._serve_static()
                 elif request.db:

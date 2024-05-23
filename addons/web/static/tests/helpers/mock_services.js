@@ -152,6 +152,7 @@ export function makeMockFetch(mockRPC) {
             res = await _rpc(route, params);
             status = 200;
         } catch (_e) {
+            res = { error: _e.message };
             status = 500;
         }
         const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });

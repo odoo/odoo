@@ -707,24 +707,6 @@ class AccountReportExpression(models.Model):
 
         return auto_chosen_target
 
-    def action_view_carryover_lines(self, options, column_group_key=None):
-        if column_group_key:
-            options = self.report_line_id.report_id._get_column_group_options(options, column_group_key)
-
-        date_from, date_to, dummy = self.report_line_id.report_id._get_date_bounds_info(options, self.date_scope)
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Carryover lines for: %s', self.report_line_name),
-            'res_model': 'account.report.external.value',
-            'views': [(self.env.ref('account_reports.account_report_external_value_tree').id, 'list')],
-            'domain': [
-                ('target_report_expression_id', '=', self.id),
-                ('date', '>=', date_from),
-                ('date', '<=', date_to),
-            ],
-        }
-
 
 class AccountReportColumn(models.Model):
     _name = "account.report.column"
