@@ -100,6 +100,23 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             box-shadow: inset 0 0 0 1px rgba(var(--border-rgb), .5);
         }
 
+        .o_custom_gradient_editor {
+            .o_custom_gradient_btn {
+                float: none;
+                box-sizing: border-box;
+            }
+
+            .o_color_picker_inputs we-button {
+                border: 1px solid black;
+                padding: 0 6px;
+                color: white;
+            }
+
+            .o_color_picker_inputs we-button.active {
+                background-color: #2b2b33;
+            }
+        }
+
         .o_we_color_btn {
             position: relative;
             float: left;
