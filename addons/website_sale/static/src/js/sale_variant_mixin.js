@@ -209,8 +209,7 @@ var VariantMixin = {
 
         if (newQty !== previousQty) {
             inputEl.value = newQty;
-            // TODO-VISP: take alook here
-            $(inputEl).trigger("change");
+            inputEl?.dispatchEvent(new Event("change", { bubbles: true }));
         }
         return false;
     },
@@ -240,7 +239,9 @@ var VariantMixin = {
      * @param {Element} container
      */
     triggerVariantChange: function (container) {
-        $(container.querySelector("ul[data-attribute_exclusions]")).trigger("change");
+        container
+            .querySelector("ul[data-attribute_exclusions]")
+            ?.dispatchEvent(new Event("change", { bubbles: true }));
         container
             .querySelectorAll("input.js_variant_change:checked, select.js_variant_change")
             .forEach((el) => {
@@ -689,8 +690,7 @@ var VariantMixin = {
         const productIdElement = parent.querySelector(".product_id");
         if (productIdElement) {
             productIdElement.value = combination.product_id || 0;
-            // TODO-visp: Check this also
-            $(productIdElement).trigger("change");
+            productIdElement.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
         const productDisplayNameElement = parent.querySelector(".product_display_name");
@@ -701,8 +701,7 @@ var VariantMixin = {
         const rawPriceElement = parent.querySelector(".js_raw_price");
         if (rawPriceElement) {
             rawPriceElement.textContent = combination.price;
-            // TODO-visp: Check this also
-            $(rawPriceElement).trigger("change");
+            rawPriceElement.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
         const productTagsElement = parent.querySelector(".o_product_tags");

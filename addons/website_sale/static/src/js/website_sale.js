@@ -214,8 +214,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 check_value = 1;
             }
             if (value !== check_value) {
-                // TODO-VISP: remove this
-                $(input).trigger('change');
+                input?.dispatchEvent(new Event("change", { bubbles: true }));
                 return;
             }
             if (!data.cart_quantity) {
@@ -516,8 +515,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         const inputElement = ev.currentTarget.previousElementSibling;
         if (inputElement && inputElement.tagName === "INPUT") {
             inputElement.value = 1;
-            // TODO-visp: Check this also
-            $(inputElement).trigger("change");
+            inputElement.dispatchEvent(new Event("change", { bubbles: true }));
         }
     },
     /**

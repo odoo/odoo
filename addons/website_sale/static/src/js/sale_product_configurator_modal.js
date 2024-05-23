@@ -440,9 +440,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                         elemReferences.push(rowEl);
                     });
 
-                    const inputElement = self.el.querySelector('input[name="add_qty"]');
-                    // TODO-Visp: remove this
-                    $(inputElement).trigger("change");
+                    const inputElementEl = self.el.querySelector('input[name="add_qty"]');
+                    inputElementEl.dispatchEvent(new Event("change", { bubbles: true }));
                     if (
                         addedItemEls !== "" &&
                         addedItemEls !== null &&

@@ -58,8 +58,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         });
         // We trigger a resize to launch the event that checks if this element hides
         // a button when the page is loaded.
-        // TODO-VISP: remove when eventdispatcher is converted
-        $(window).trigger('resize');
+        window.dispatchEvent(new Event("resize"));
 
         document.body
             .querySelector(".o_product_feature_panel")

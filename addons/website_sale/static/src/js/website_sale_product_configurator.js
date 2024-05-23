@@ -61,8 +61,7 @@ publicWidget.registry.WebsiteSale.include({
 
         if (qtyInputEl) {
             qtyInputEl.value = quantity;
-            // TODO-visp: Check this also
-            $(qtyInputEl).trigger("change");
+            qtyInputEl.dispatchEvent(new Event("change", { bubbles: true }));
         } else {
             // This handles the case when the "Select Quantity" customize show
             // is disabled, and therefore the above selector does not find an
