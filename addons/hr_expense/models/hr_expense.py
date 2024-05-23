@@ -485,12 +485,14 @@ class HrExpense(models.Model):
                 expenses_duplicates.duplicate_expense_ids = [Command.set(duplicates_ids)]
                 expenses = expenses - expenses_duplicates
 
-    @api.depends('product_id', 'account_id')
+    @api.depends('product_id', 'account_id', 'employee_id')
     def _compute_analytic_distribution(self):
         for expense in self:
             distribution = self.env['account.analytic.distribution.model']._get_distribution({
                 'product_id': expense.product_id.id,
                 'product_categ_id': expense.product_id.categ_id.id,
+                'partner_id': expense.employee_id.work_contact_id.id,
+                'partner_category_id': expense.employee_id.work_contact_id.category_id.ids,
                 'account_prefix': expense.account_id.code,
                 'company_id': expense.company_id.id,
             })
