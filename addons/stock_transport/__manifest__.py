@@ -11,12 +11,13 @@
         'data/stock_picking_batch_demo.xml',
     ],
     'data': [
-        'security/ir.model.access.csv',
         'views/fleet_vehicle_model.xml',
         'views/stock_picking_batch.xml',
-        'views/stock_batch_dock.xml',
         'views/stock_picking_type.xml',
         'views/stock_picking_view.xml',
+        'report/report_picking_batch.xml',
+        'views/stock_location.xml',
+        'wizard/stock_picking_to_batch_views.xml',
     ],
     'license': 'LGPL-3',
 }

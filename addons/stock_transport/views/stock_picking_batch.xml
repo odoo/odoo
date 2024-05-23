@@ -49,30 +49,27 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//header/button[@name='action_cancel']" position="before">
-                    <button name="action_map_delivery_batch" string="Map" type="object" class="btn btn-secondary" invisible="state != 'in_progress'"/>
-                </xpath>
                 <xpath expr="//header" position="before">
-                    <!-- Used in scheduled_date (Invisible fields end_date)-->
-                    <field name="end_date" invisible="1"/><!-- Invisible fields end_date-->
+                    <!-- Invisible field -->
+                    <field name="end_date" invisible="1"/><!-- Needed in widget below -->
                 </xpath>
                 <xpath expr="//sheet/group" position="replace">
                     <group>
                         <group>
                             <field name="user_id" readonly="state not in ['draft', 'in_progress']"/>
                             <field name="picking_type_id" readonly="state != 'draft'"/>
-                            <field name="scheduled_date" widget="daterange" options="{'end_date_field': 'end_date'}" /><!-- Invisible fields end_date used here-->
+                            <field name="scheduled_date" widget="daterange" options="{'end_date_field': 'end_date'}" /><!-- Invisible field end_date used here for widget-->
                             <field name="batch_properties"/>
                         </group>
                         <group>
-                            <field name="dock_id"/>
+                            <field name="dock_id" groups="stock.group_stock_multi_locations"/>
                             <field name="vehicle_id" placeholder="Third Party Provider"/>
                             <field name="vehicle_category_id" placeholder="semi-truck"/>
                             <label for='used_weight_percentage' invisible="not vehicle_category_id"/>
                                 <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id">
                                     <div class='d-flex flex-row gap-1'>
                                         <field name='max_picking_weight'/>
-                                        <span>kg</span>
+                                        <span><field name='weight_uom_name'/></span>
                                     </div>
                                     <field name='used_weight_percentage' widget='progressbar' />
                                 </div>
@@ -81,7 +78,7 @@
                                 <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id">
                                     <div class='d-flex flex-row gap-1'>
                                         <field name='max_picking_volume'/>
-                                        <span>m³</span>
+                                        <span><field name='volume_uom_name'/></span>
                                     </div>
                                     <field name='used_volume_percentage' widget='progressbar'/>
                                 </div>
@@ -106,6 +103,8 @@
                 </xpath>
                 <xpath expr="field[@name='user_id']" position="after">
                     <field name="vehicle_category_id" optional="hide"/>
+                    <field name="vehicle_id" optional="hide"/>
+                    <field name="dock_id" optional="hide" groups="stock.group_stock_multi_locations"/>
                     <field name="max_weight" string="Weight" optional="hide"/>
                     <field name="max_volume" string="Volume" optional="hide"/>
                     <field name="used_volume_percentage" string="Volume %" optional="hide"/>
@@ -130,6 +129,7 @@
                     <filter name="vehicle_category_id" string="Vehicle Category" domain="[]" context="{'group_by':'vehicle_category_id'}"/>
                     <filter name="scheduled_date" string="Scheduled Date" domain="[]" context="{'group_by':'scheduled_date'}"/>
                     <filter name="picking_type_id" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
+                    <filter name="group_by_dock_id" string="Dock Location" domain="[]" context="{'group_by':'dock_id'}" groups="stock.group_stock_multi_locations"/>
                 </xpath>
                 <xpath expr="//filter[@name='done']" position="after">
                     <filter name="vehicle_id" string="Own Fleet" domain="[('vehicle_id', '!=', False)]"/>
@@ -173,9 +173,13 @@
 
     <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
         <field name="view_mode">tree,kanban,form,graph,gantt,pivot,calendar</field>
-        <field name="context">{
+         <field name="context">{
+            'search_default_draft': True,
+            'search_default_in_progress': True,
+            'search_default_group_by_dock_id': 1,
             'pivot_measures': ['__count__', 'max_picking_weight', 'max_picking_volume'],
-         }</field>
+            }
+        </field>
     </record>
 
     <record id="vpicktree_inherit_stock_picking_batch_stock_transport" model="ir.ui.view">
