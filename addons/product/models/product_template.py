@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -49,16 +48,12 @@ class ProductTemplate(models.Model):
         'Sales Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
-    detailed_type = fields.Selection([
+    type = fields.Selection([
         ('consu', 'Goods'),
         ('service', 'Service')], string='Product Type', default='consu', required=True,
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
-    type = fields.Selection(
-        [('consu', 'Goods'),
-         ('service', 'Service')],
-        compute='_compute_type', store=True, readonly=False, precompute=True)
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
@@ -405,22 +400,6 @@ class ProductTemplate(models.Model):
             else:
                 record.product_tooltip = ""
 
-    def _detailed_type_mapping(self):
-        return {}
-
-    @api.depends('detailed_type')
-    def _compute_type(self):
-        type_mapping = self._detailed_type_mapping()
-        for record in self:
-            record.type = type_mapping.get(record.detailed_type, record.detailed_type)
-
-    @api.constrains('type', 'detailed_type')
-    def _constrains_detailed_type(self):
-        type_mapping = self._detailed_type_mapping()
-        for record in self:
-            if record.type != type_mapping.get(record.detailed_type, record.detailed_type):
-                raise ValidationError(_("The Type of this product doesn't match the Detailed Type"))
-
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
         if any(template.uom_id and template.uom_po_id and template.uom_id.category_id != template.uom_po_id.category_id for template in self):
@@ -441,20 +420,6 @@ class ProductTemplate(models.Model):
         # Do nothing but needed for inheritance
         return {}
 
-    def _sanitize_vals(self, vals):
-        """Sanitize vales for writing/creating product templates and variants.
-
-        Values need to be sanitized to keep values synchronized, and to be able to preprocess the
-        vals in extensions of create/write.
-        :param vals: create/write values dictionary
-        """
-        if 'type' in vals and 'detailed_type' not in vals:
-            if vals['type'] not in self.mapped('type'):
-                vals['detailed_type'] = vals['type']
-        if 'detailed_type' in vals and 'type' not in vals:
-            type_mapping = self._detailed_type_mapping()
-            vals['type'] = type_mapping.get(vals['detailed_type'], vals['detailed_type'])
-
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
         return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids', 'product_properties']
@@ -462,8 +427,6 @@ class ProductTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         ''' Store the initial standard price in order to be able to retrieve the cost of a product template for a given date'''
-        for vals in vals_list:
-            self._sanitize_vals(vals)
         templates = super(ProductTemplate, self).create(vals_list)
         if self._context.get("create_product_product", True):
             templates._create_variant_ids()
@@ -480,7 +443,6 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
-        self._sanitize_vals(vals)
         if 'uom_id' in vals or 'uom_po_id' in vals:
             uom_id = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
             uom_po_id = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id

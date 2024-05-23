@@ -17,7 +17,8 @@ class TestEventSale(TestEventSaleCommon):
 
         product = cls.env['product.product'].create({
             'name': 'Event',
-            'detailed_type': 'event',
+            'type': 'service',
+            'service_tracking': 'event',
         })
 
         cls.user_salesperson = mail_new_test_user(cls.env, login='user_salesman', groups='sales_team.group_sale_salesman')

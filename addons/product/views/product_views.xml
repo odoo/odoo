@@ -9,13 +9,16 @@
         <field name="arch" type="xml">
             <form string="Product">
                 <header>
-                    <button string="Print Labels" type="object" name="action_open_label_layout" invisible="detailed_type not in ['consu', 'combo']"/>
+                    <button string="Print Labels"
+                        type="object"
+                        name="action_open_label_layout"
+                        invisible="type == 'service'"
+                    />
                 </header>
                 <sheet name="product_form">
                     <field name='product_variant_count' invisible='1'/>
                     <field name='is_product_variant' invisible='1'/>
                     <field name='attribute_line_ids' invisible='1'/>
-                    <field name="type" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
@@ -71,8 +74,12 @@
                             <group>
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
-                                    <field name="detailed_type" string="Type"/>
-                                    <field name="product_tooltip" string="" class="fst-italic text-muted" invisible="type == 'service' and not sale_ok"/>
+                                    <field name="type" widget="radio" options="{'horizontal': True}"/>
+                                    <field name="product_tooltip"
+                                        class="fst-italic text-muted"
+                                        string=""
+                                        invisible="type == 'service' and not sale_ok"
+                                    />
                                 </group>
                                 <group name="group_standard_price">
                                     <label for="list_price"/>
@@ -253,8 +260,12 @@
             <field name="arch" type="xml">
                 <form string="Variant Information" duplicate="false">
                     <header>
-                        <field name="detailed_type" invisible="1"/>
-                        <button string="Print Labels" type="object" name="action_open_label_layout" invisible="detailed_type not in ['consu', 'combo']"/>
+                        <field name="type" invisible="1"/>
+                        <button string="Print Labels"
+                            type="object"
+                            name="action_open_label_layout"
+                            invisible="type == 'service'"
+                        />
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>

@@ -10,13 +10,13 @@ class Channel(models.Model):
 
     def _get_default_product_id(self):
         product_courses = self.env['product.product'].search(
-            [('detailed_type', '=', 'course')], limit=2)
+            [('service_tracking', '=', 'course')], limit=2)
         return product_courses.id if len(product_courses) == 1 else False
 
     enroll = fields.Selection(selection_add=[
         ('payment', 'On payment')
     ], ondelete={'payment': lambda recs: recs.write({'enroll': 'invite'})})
-    product_id = fields.Many2one('product.product', 'Product', domain=[('detailed_type', '=', 'course')],
+    product_id = fields.Many2one('product.product', 'Product', domain=[('service_tracking', '=', 'course')],
                                  default=_get_default_product_id)
     product_sale_revenues = fields.Monetary(
         string='Total revenues', compute='_compute_product_sale_revenues',

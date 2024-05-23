@@ -19,17 +19,16 @@ class ProductTemplate(models.Model):
         return service_policies
 
     service_tracking = fields.Selection(
-        selection=[
-            ('no', 'Nothing'),
+        selection_add=[
             ('task_global_project', 'Task'),
             ('task_in_project', 'Project & Task'),
             ('project_only', 'Project'),
-        ],
-        string="Create on Order", default="no",
-        help="On Sales order confirmation, this product can generate a project and/or task. \
-        From those, you can track the service you are selling.\n \
-        'In sale order\'s project': Will use the sale order\'s configured project if defined or fallback to \
-        creating a new project based on the selected template.")
+        ], ondelete={
+            'task_global_project': 'set default',
+            'task_in_project': 'set default',
+            'project_only': 'set default',
+        },
+    )
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True, copy=True,
     )

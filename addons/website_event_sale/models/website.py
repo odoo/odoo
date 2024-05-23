@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models
+from odoo.osv import expression
 
 
 class Website(models.Model):
@@ -8,4 +7,7 @@ class Website(models.Model):
 
     def sale_product_domain(self):
         # remove product event from the website content grid and list view (not removed in detail view)
-        return ['&'] + super(Website, self).sale_product_domain() + [('detailed_type', '!=', 'event')]
+        return expression.AND([
+            super().sale_product_domain(),
+            [('service_tracking', '!=', 'event')],
+        ])

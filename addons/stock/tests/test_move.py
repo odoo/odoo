@@ -5512,7 +5512,7 @@ class StockMove(TransactionCase):
         # cache corruption
         self.product.qty_available = 10
 
-        # Check raise UserError(_("Available quantity should be set to zero before changing detailed_type"))
+        # Check raise UserError(_("Available quantity should be set to zero before changing type"))
         with self.assertRaises(UserError):
             self.product.is_storable = False
 

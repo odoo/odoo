@@ -692,7 +692,7 @@ class ProductTemplate(models.Model):
     @api.model
     def _get_product_types_allow_zero_price(self):
         """
-        Returns a list of detailed types (`product.template.detailed_type`) that can ignore the
+        Returns a list of service_tracking (`product.template.service_tracking`) that can ignore the
         `prevent_zero_price_sale` rule when buying products on a website.
         """
         return []

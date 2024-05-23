@@ -328,7 +328,7 @@ class TestVirtualAvailable(TestStockCommon):
             'tracking': 'serial',
         })
         product_form = Form(product)
-        product_form.detailed_type = 'service'
+        product_form.type = 'service'
         product = product_form.save()
         self.assertEqual(product.tracking, 'none')
 
@@ -337,7 +337,7 @@ class TestVirtualAvailable(TestStockCommon):
         self.assertEqual(product.tracking, 'serial')
         # change the type from "product.product" form
         product_form = Form(product.product_variant_id)
-        product_form.detailed_type = 'service'
+        product_form.type = 'service'
         product = product_form.save()
         self.assertEqual(product.tracking, 'none')
 

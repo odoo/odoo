@@ -562,7 +562,15 @@ Please change the quantity done or the rounding precision of your unit of measur
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
 
-    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state', 'origin_returned_move_id', 'product_id.detailed_type', 'picking_code')
+    @api.depends(
+        'has_tracking',
+        'picking_type_id.use_create_lots',
+        'picking_type_id.use_existing_lots',
+        'state',
+        'origin_returned_move_id',
+        'product_id.type',
+        'picking_code',
+    )
     def _compute_show_info(self):
         for move in self:
             move.show_quant = move.picking_code != 'incoming'\

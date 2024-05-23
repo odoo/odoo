@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
             <group name="group_general" position="inside">
-                <field name="create_repair" invisible="detailed_type not in ('consu', 'service')"/>
+                <field name="create_repair" invisible="type not in ('consu', 'service')"/>
             </group>
         </field>
     </record>

@@ -20,12 +20,12 @@ class ProductCommon(
         })
         cls.product, cls.service_product = cls.env['product.product'].create([{
             'name': 'Test Product',
-            'detailed_type': 'consu',
+            'type': 'consu',
             'list_price': 20.0,
             'categ_id': cls.product_category.id,
         }, {
             'name': 'Test Service Product',
-            'detailed_type': 'service',
+            'type': 'service',
             'list_price': 50.0,
             'categ_id': cls.product_category.id,
         }])

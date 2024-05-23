@@ -264,7 +264,7 @@ class TestNestedTaskUpdate(TransactionCase):
         child = self.env['project.task'].create({'name': 'child task', 'parent_id': parent.id, 'project_id': project_tempalte.id})
         super_product = self.env['product.product'].create({
             'name': 'Super product',
-            'detailed_type': 'service',
+            'type': 'service',
             'service_tracking': 'project_only',
             'project_template_id': project_tempalte.id,
         })

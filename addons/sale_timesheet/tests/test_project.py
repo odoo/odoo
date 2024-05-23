@@ -180,5 +180,8 @@ class TestProject(TestCommonSaleTimesheet):
         self.assertEqual(self.project_global.analytic_account_balance, expected_analytic_account_balance)
 
     def test_open_product_form_with_default_service_policy(self):
-        form = Form(self.env['product.product'].with_context(default_detailed_type='service', default_service_policy='delivered_timesheet'))
+        form = Form(self.env['product.product'].with_context(
+            default_type='service',
+            default_service_policy='delivered_timesheet',
+        ))
         self.assertEqual('delivered_timesheet', form.service_policy)

@@ -9,9 +9,11 @@
             <field name="invoice_policy" position="attributes">
                 <attribute name="invisible" separator="or" add="(type == 'service' and sale_ok == True)"/>
             </field>
+            <field name="service_tracking" position="attributes">
+                <attribute name="invisible" remove="1" separator="or"/>
+            </field>
             <field name="invoice_policy" position="after">
                 <field name="service_policy" string="Invoicing Policy" invisible="type != 'service' or sale_ok == False" required="type == 'service' and sale_ok == True"/>
-                <field name="service_tracking" required="1" invisible="type != 'service' or not sale_ok"/>
                 <div class="o_td_label d-inline-flex" invisible="service_tracking != 'task_global_project'">
                     <label for='project_id'/>
                     <span class='fa fa-lg fa-building-o fa-fw' title="Values set here are company-specific." groups="base.group_multi_company"/>

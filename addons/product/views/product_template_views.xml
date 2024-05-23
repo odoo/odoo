@@ -22,8 +22,7 @@
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
-                <field name="detailed_type" optional="hide" readonly="1"/>
-                <field name="type" column_invisible="True"/>
+                <field name="type" optional="hide" readonly="1"/>
                 <field name="uom_id" string="Unit" readonly="1" optional="show" groups="uom.group_uom"/>
                 <field name="active" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
@@ -48,7 +47,7 @@
                     invisible="product_variant_count &gt; 1
                         or (product_variant_count == 0
                         and valid_product_template_attribute_line_ids)
-                        or detailed_type == 'service'"/>
+                        or type == 'service'"/>
             </field>
 
             <button name="action_open_documents" position="before">

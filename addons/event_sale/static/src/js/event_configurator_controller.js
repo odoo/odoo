@@ -6,7 +6,7 @@ import { formView } from "@web/views/form/form_view";
 
 /**
  * This controller is overridden to allow configuring sale_order_lines through a popup
- * window when a product with 'detailed_type' == 'event' is selected.
+ * window when a service product linked to events is selected.
  *
  * This allows keeping an editable list view for sales order and remove the noise of
  * those 2 fields ('event_id' + 'event_ticket_id')
