@@ -26,7 +26,7 @@ import {
 import { Component, xml } from "@odoo/owl";
 import { queryOne, queryAll, queryAllTexts, click } from "@odoo/hoot-dom";
 
-export class DebugMenuParent extends Component {
+class DebugMenuParent extends Component {
     static template = xml`<DebugMenu/>`;
     static components = { DebugMenu };
     static props = ["*"];
