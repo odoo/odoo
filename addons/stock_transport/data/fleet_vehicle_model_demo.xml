@@ -5,10 +5,6 @@
         <field name="name">Ashok Leyland</field>
         <field name="image_128" type="base64" file="stock_transport/static/img/Trailer.png"/>
     </record>
-    <record id="brand_eicher" model="fleet.vehicle.model.brand">
-      	<field name="name">Eicher</field>
-      	<field name="image_128" type="base64" file="stock_transport/static/img/20_FEET.png"/>
-    </record>
     <record id="brand_tata" model="fleet.vehicle.model.brand">
         <field name="name">TATA</field>
       	<field name="image_128" type="base64" file="stock_transport/static/img/ACE.png"/>
@@ -21,23 +17,11 @@
         <field name="max_weight">750</field>
         <field name="max_volume">80</field>
     </record>
-    <record id="model_category_6" model="fleet.vehicle.model.category">
-        <field name="name">Single Axel 20' Truck</field>
-        <field name="sequence">2</field>
-        <field name="max_weight">2000</field>
-        <field name="max_volume">90</field>
-    </record>
     <record id="model_category_7" model="fleet.vehicle.model.category">
         <field name="name">Multi Axel 32' Trailer</field>
         <field name="sequence">3</field>
         <field name="max_weight">1000</field>
         <field name="max_volume">80</field>
-    </record>
-    <record id="model_category_8" model="fleet.vehicle.model.category">
-        <field name="name">3PL Carrier</field>
-        <field name="sequence">4</field>
-        <field name="max_weight">1500</field>
-        <field name="max_volume">180</field>
     </record>
 
     <!-- vehicle models -->
@@ -52,24 +36,6 @@
           <field name="default_co2">195</field>
           <field name="power">600</field>
           <field name="horsepower">6000</field>
-    </record>
-    <record id="model_20_feet" model="fleet.vehicle.model">
-          <field name="name">20 FEET</field>
-          <field name="brand_id" ref="brand_eicher"/>
-          <field name="vehicle_type">car</field>
-          <field name="category_id" ref="model_category_6"/>
-          <field name="model_year">2016</field>
-          <field name="default_fuel_type">diesel</field>
-          <field name="transmission">manual</field>
-          <field name="default_co2">195</field>
-          <field name="power">500</field>
-          <field name="horsepower">5000</field>
-    </record>
-    <record id="model_3pl_truck" model="fleet.vehicle.model">
-          <field name="name">3PL Truck</field>
-          <field name="brand_id" ref="fleet.brand_bmw"/>
-          <field name="vehicle_type">car</field>
-          <field name="category_id" ref="model_category_8"/>
     </record>
     <record id="model_ace" model="fleet.vehicle.model">
           <field name="name">ACE</field>
@@ -104,25 +70,6 @@
         <field name="fuel_type">diesel</field>
         <field name="manager_id" ref="base.user_admin"/>
     </record>
-    <record id="vehicle_8" model="fleet.vehicle">
-        <field name="license_plate">EI-18-4680</field>
-        <field name="vin_sn">7845557</field>
-        <field name="model_id" ref="model_20_feet"/>
-        <field name="category_id" ref="model_category_6"/>
-        <field name="color">White</field>
-        <field name="location">Gandhinagar-India</field>
-        <field name="doors">2</field>
-        <field name="driver_id" ref="base.res_partner_address_15" />
-        <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
-        <field name="state_id" ref="fleet.fleet_vehicle_state_registered"/>
-        <field name="odometer">17000</field>
-        <field name="odometer_unit">kilometers</field>
-        <field name="car_value">25000</field>
-        <field name="model_year">2016</field>
-        <field name="horsepower">5000</field>
-        <field name="fuel_type">diesel</field>
-        <field name="manager_id" ref="base.user_admin"/>
-    </record>
     <record id="vehicle_9" model="fleet.vehicle">
         <field name="license_plate">TA-18-2468</field>
         <field name="vin_sn">12312323</field>
@@ -140,22 +87,6 @@
         <field name="model_year">2015</field>
         <field name="horsepower">2000</field>
         <field name="fuel_type">cng</field>
-        <field name="manager_id" ref="base.user_admin"/>
-    </record>
-    <record id="vehicle_10" model="fleet.vehicle">
-        <field name="license_plate">3PL-18-2323</field>
-        <field name="vin_sn">452452345</field>
-        <field name="model_id" ref="model_3pl_truck"/>
-        <field name="category_id" ref="model_category_8"/>
-        <field name="color">Black</field>
-        <field name="location">Gandhinagar-India</field>
-        <field name="doors">2</field>
-        <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
-        <field name="state_id" ref="fleet.fleet_vehicle_state_ordered"/>
-        <field name="odometer">12000</field>
-        <field name="odometer_unit">kilometers</field>
-        <field name="car_value">30000</field>
-        <field name="fuel_type">electric</field>
         <field name="manager_id" ref="base.user_admin"/>
     </record>
 </odoo>

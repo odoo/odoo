@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Docks -->
-        <record id="dock_type_delivery" model="stock.batch.dock">
-            <field name="name">Dock-A</field>
-            <field name="operation_type_ids" eval="[(6, 0, [ref('stock.picking_type_out')])]"/>
+        <!-- Docks Locations-->
+        <record id="dock_type_delivery" model="stock.location">
+            <field name="name">Dock Shelf 1</field>
+            <field name="posx">0</field>
+            <field name="barcode">DOCKSHELF1</field>
+            <field name="is_a_dock">True</field>
+            <field name="location_id" ref="stock.stock_location_output"/>
         </record>
-        <record id="dock_type_reciept" model="stock.batch.dock">
-            <field name="name">Dock-B</field>
-            <field name="operation_type_ids" eval="[(6, 0, [ref('stock.picking_type_in')])]"/>
+        <record id="dock_type_reciept" model="stock.location">
+            <field name="name">Dock Shelf 2</field>
+            <field name="posx">0</field>
+            <field name="barcode">DOCKSHELF2</field>
+            <field name="is_a_dock">True</field>
+            <field name="location_id" ref="stock.stock_location_company"/>
         </record>
 
         <!-- products -->
@@ -26,7 +32,6 @@
         <record id="stock.product_cable_management_box" model="product.product">
             <field name="default_code">FURN_5555</field>
             <field name="name">Cable Management Box</field>
-            <field name="detailed_type">product</field>
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="lst_price">100.0</field>
             <field name="standard_price">70.0</field>
@@ -88,8 +93,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">0.15</field>
-            <field name="max_volume">0</field>
+            <field name="weight">0.15</field>
+            <field name="volume">0</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -101,8 +106,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">12</field>
-            <field name="max_volume">1.20</field>
+            <field name="weight">12</field>
+            <field name="volume">1.20</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -114,8 +119,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">12</field>
-            <field name="max_volume">1.20</field>
+            <field name="weight">12</field>
+            <field name="volume">1.20</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -127,8 +132,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">12</field>
-            <field name="max_volume">1.20</field>
+            <field name="weight">12</field>
+            <field name="volume">1.20</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -139,22 +144,9 @@
             <field name="user_id" eval="False"/>
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="zip_code">94535</field>
-            <field name="max_weight">12</field>
-            <field name="max_volume">1.20</field>
-            <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="location_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-        <record id="Picking_6" model="stock.picking">
-            <field name="move_type">one</field>
-            <field name="user_id" eval="False"/>
-            <field name="state">assigned</field>
-            <field name="partner_id" ref="base.res_partner_3"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">720</field>
-            <field name="max_volume">60</field>
+            <field name="weight">720</field>
+            <field name="volume">60</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
@@ -166,11 +158,11 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">0.16</field>
-            <field name="max_volume">0</field>
-            <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="location_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="weight">0.16</field>
+            <field name="volume">0</field>
+            <field name="picking_type_id" ref="stock.picking_type_in"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="Picking_8" model="stock.picking">
@@ -179,8 +171,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">0.40</field>
-            <field name="max_volume">0</field>
+            <field name="weight">0.40</field>
+            <field name="volume">0</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -192,8 +184,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">600</field>
-            <field name="max_volume">60</field>
+            <field name="weight">600</field>
+            <field name="volume">60</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -205,8 +197,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">0.35</field>
-            <field name="max_volume">0</field>
+            <field name="weight">0.35</field>
+            <field name="volume">0</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -218,8 +210,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">750</field>
-            <field name="max_volume">25</field>
+            <field name="weight">750</field>
+            <field name="volume">25</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -231,8 +223,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">0</field>
-            <field name="max_volume">0</field>
+            <field name="weight">0</field>
+            <field name="volume">0</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -244,8 +236,8 @@
             <field name="state">assigned</field>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="zip_code">95380</field>
-            <field name="max_weight">0.5</field>
-            <field name="max_volume">0</field>
+            <field name="weight">0.5</field>
+            <field name="volume">0</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="location_dest_id" ref="stock.stock_location_customers"/>
@@ -257,48 +249,20 @@
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="picking_ids" eval="[(6, 0, [ref('stock_transport.Picking_1'), ref('stock_transport.Picking_2'),
-                ref('stock_transport.Picking_3'), ref('stock_transport.Picking_4'), ref('stock_transport.Picking_5')])]"/>
+                ref('stock_transport.Picking_3'), ref('stock_transport.Picking_4')])]"/>
             <field name="vehicle_id" ref="vehicle_7"/>
             <field name="dock_id" ref="dock_type_delivery"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="end_date" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M:00')"/>
         </record>
         <record id="stock_picking_batch_4" model="stock.picking.batch">
-            <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="picking_ids" eval="[(6, 0, [ref('stock_transport.Picking_1'), ref('stock_transport.Picking_2')])]"/>
-            <field name="vehicle_id" ref="vehicle_8"/>
-            <field name="dock_id" ref="dock_type_delivery"/>
-            <field name="user_id" ref="base.partner_demo"/>
-            <field name="end_date" eval="(DateTime.today() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
-        </record>
-        <record id="stock_picking_batch_5" model="stock.picking.batch">
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="picking_ids" eval="[(6, 0, [ref('stock_transport.Picking_6')])]"/>
+            <field name="picking_ids" eval="[(6, 0, [ref('stock_transport.Picking_5'), ref('stock_transport.Picking_7')])]"/>
             <field name="vehicle_id" ref="vehicle_9"/>
             <field name="dock_id" ref="dock_type_reciept"/>
             <field name="user_id" ref="base.partner_demo"/>
             <field name="end_date" eval="(DateTime.today() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
-        </record>
-        <record id="stock_picking_batch_6" model="stock.picking.batch">
-            <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="picking_ids" eval="[(6, 0, [ref('stock_transport.Picking_7'), ref('stock_transport.Picking_8'), ref('stock_transport.Picking_9')])]"/>
-            <field name="vehicle_category_id" ref="model_category_8"/>
-            <field name="dock_id" ref="dock_type_delivery"/>
-            <field name="user_id" ref="base.partner_demo"/>
-            <field name="end_date" eval="(DateTime.today() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
-        </record>
-        <record id="stock_picking_batch_7" model="stock.picking.batch">
-            <field name="picking_type_id" ref="stock.picking_type_in"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="picking_ids" eval="[(6, 0, [ref('stock_transport.Picking_10'), ref('stock_transport.Picking_11'),
-                ref('stock_transport.Picking_12'), ref('stock_transport.Picking_13')])]"/>
-            <field name="vehicle_id" ref="vehicle_8"/>
-            <field name="dock_id" ref="dock_type_reciept"/>
-            <field name="user_id" ref="base.user_admin"/>
-            <field name="end_date" eval="(DateTime.today()).strftime('%Y-%m-%d %H:%M:00')"/>
         </record>
 
         <!-- Add stock move -->
@@ -355,22 +319,9 @@
             <field name="product_id" ref="product.product_product_6"/>
         </record>
         <record id="stock_move11" model="stock.move">
-            <field name="name">A fourth stock move</field>
-            <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="picking_id" ref="Picking_5"/>
-            <field name="state">assigned</field>
-            <field name="location_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_customers"/>
-            <field name="product_uom_qty">1</field>
-            <field name="quantity">1</field>
-            <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M:00')"/>
-            <field name="product_uom" ref="uom.product_uom_unit" />
-            <field name="product_id" ref="product.product_product_6"/>
-        </record>
-        <record id="stock_move12" model="stock.move">
             <field name="name">A first stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
-            <field name="picking_id" ref="Picking_6"/>
+            <field name="picking_id" ref="Picking_5"/>
             <field name="state">done</field>
             <field name="location_id" ref="stock.stock_location_suppliers"/>
             <field name="location_dest_id" ref="stock.stock_location_stock"/>
@@ -380,20 +331,20 @@
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_product_10"/>
         </record>
-        <record id="stock_move13" model="stock.move">
+        <record id="stock_move12" model="stock.move">
             <field name="name">A first stock move</field>
-            <field name="picking_type_id" ref="stock.picking_type_out"/>
+            <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="picking_id" ref="Picking_7"/>
             <field name="state">done</field>
-            <field name="location_id" ref="stock.stock_location_stock"/>
-            <field name="location_dest_id" ref="stock.stock_location_customers"/>
+            <field name="location_id" ref="stock.stock_location_suppliers"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
             <field name="product_uom_qty">16</field>
             <field name="quantity">16</field>
             <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M:00')"/>
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_product_3"/>
         </record>
-        <record id="stock_move14" model="stock.move">
+        <record id="stock_move13" model="stock.move">
             <field name="name">A second stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="picking_id" ref="Picking_8"/>
@@ -406,7 +357,7 @@
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_product_3"/>
         </record>
-        <record id="stock_move15" model="stock.move">
+        <record id="stock_move14" model="stock.move">
             <field name="name">A third stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="picking_id" ref="Picking_9"/>
@@ -419,7 +370,7 @@
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_product_6"/>
         </record>
-        <record id="stock_move16" model="stock.move">
+        <record id="stock_move15" model="stock.move">
             <field name="name">A first stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="picking_id" ref="Picking_10"/>
@@ -432,7 +383,7 @@
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_delivery_01"/>
         </record>
-        <record id="stock_move17" model="stock.move">
+        <record id="stock_move16" model="stock.move">
             <field name="name">A second stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="picking_id" ref="Picking_11"/>
@@ -445,7 +396,7 @@
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_product_22"/>
         </record>
-        <record id="stock_move18" model="stock.move">
+        <record id="stock_move17" model="stock.move">
             <field name="name">A third stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="picking_id" ref="Picking_12"/>
@@ -458,7 +409,7 @@
             <field name="product_uom" ref="uom.product_uom_unit" />
             <field name="product_id" ref="product.product_template_acoustic_bloc_screens"/>
         </record>
-        <record id="stock_move19" model="stock.move">
+        <record id="stock_move18" model="stock.move">
             <field name="name">A fourth stock move</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="picking_id" ref="Picking_13"/>
@@ -479,14 +430,6 @@
 
         <!-- Done -->
         <function model="stock.picking.batch" name="action_done">
-            <value eval="ref('stock_picking_batch_5')"/>
-        </function>
-        <function model="stock.picking.batch" name="action_done">
-            <value eval="ref('stock_picking_batch_6')"/>
-        </function>
-
-        <!-- Cancel Batch Pickings -->
-        <function model="stock.picking.batch" name="action_cancel">
             <value eval="ref('stock_picking_batch_4')"/>
         </function>
     </data>

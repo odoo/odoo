@@ -27,19 +27,25 @@ class StockPickingType(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    sequence = fields.Integer(string='Sequence')
+    sequence = fields.Integer(string='Sequence', compute='_compute_sequence', store=True, readonly=False)
     zip_code = fields.Char(string="Zip", related='partner_id.zip')
-    max_weight = fields.Float(string="Max Weight", compute='_compute_total_weight', store=True)
-    max_volume = fields.Float(string="Max Volume", compute='_compute_total_volume', store=True)
+    weight = fields.Float(string="Max Weight", compute='_compute_total_weight')
+    volume = fields.Float(string="Max Volume", compute='_compute_total_volume')
 
     @api.depends('move_ids.product_id.weight')
     def _compute_total_weight(self):
         for picking in self:
             max_weight = sum((move.product_qty * move.product_id.weight) or 0.0 for move in picking.move_ids)
-            picking.max_weight = max_weight
+            picking.weight = max_weight
 
     @api.depends('move_ids.product_id.volume')
     def _compute_total_volume(self):
         for picking in self:
             max_volume = sum((move.product_qty * move.product_id.volume) or 0.0 for move in picking.move_ids)
-            picking.max_volume = max_volume
+            picking.volume = max_volume
+
+    @api.depends('batch_id.picking_ids.zip_code')
+    def _compute_sequence(self):
+        sorted_pickings = self.batch_id.picking_ids.sorted(key=lambda r: r.zip_code or '0')
+        for idx, record in enumerate(sorted_pickings):
+            record.sequence = idx
