@@ -1,4 +1,5 @@
 from odoo.tests.common import TransactionCase
+from odoo import fields
 
 
 class TestReportes(TransactionCase):
@@ -51,8 +52,8 @@ class TestReportes(TransactionCase):
                 "nombre": "Evaluacion de prueba",
                 "estado": "borrador",
                 "tipo": "CLIMA",
-                "fecha_inicio": "2021-01-01",
-                "fecha_final": "2021-01-31",
+                "fecha_inicio": fields.Date.today(),
+                "fecha_final": fields.Date.today(),
             }
         )
 
