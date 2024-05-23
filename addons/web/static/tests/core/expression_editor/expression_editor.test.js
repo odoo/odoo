@@ -35,7 +35,7 @@ import { ExpressionEditor } from "@web/core/expression_editor/expression_editor"
 import { Component, xml } from "@odoo/owl";
 import { pick } from "@web/core/utils/objects";
 
-export const SELECTORS = {
+const SELECTORS = {
     ...treeEditorSELECTORS,
     debugArea: ".o_expression_editor_debug_container textarea",
 };
