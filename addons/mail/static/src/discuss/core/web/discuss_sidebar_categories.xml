@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
-        <hr class="w-100 opacity-0"/>
+        <hr class="w-100 opacity-0 flex-shrink-0"/>
         <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
         <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat_index">
             <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategory">
