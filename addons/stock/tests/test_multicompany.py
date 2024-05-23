@@ -216,6 +216,36 @@ class TestMultiCompany(TransactionCase):
         ])
         self.assertEqual(created_serial.company_id, self.company_a)
 
+    def test_lot_3(self):
+        """ Checks that with a lot created in company A, it's not possible to create the same lot without
+            a company from company B, while it's possible to create it with company B set as its company.
+        """
+        product = self.env['product.product'].create({
+            'type': 'product',
+            'tracking': 'serial',
+            'name': 'Cross-Company Product',
+        })
+        lot = self.env['stock.lot'].create({
+            'name': 'unique',
+            'product_id': product.id,
+            'company_id': self.company_a.id,
+        })
+        self.assertTrue(lot)
+        # Even without having access to it, it shouldn't be possible to duplicate the lot between a company & no-company.
+        with self.assertRaises(ValidationError):
+            self.env['stock.lot'].with_user(self.user_b).with_context(allowed_company_ids=self.company_b.ids).create({
+                'name': 'unique',
+                'product_id': product.id,
+                'company_id': False,
+            })
+        # But it should be possible to create it in another company.
+        lot_b = self.env['stock.lot'].with_user(self.user_b).create({
+            'name': 'unique',
+            'product_id': product.id,
+            'company_id': self.company_b.id,
+        })
+        self.assertTrue(lot_b)
+
     def test_orderpoint_1(self):
         """As a user of company A, create an orderpoint for company B. Check itsn't possible to
         use a warehouse of companny A"""
