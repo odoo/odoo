@@ -13,7 +13,7 @@ import { animationFrame } from "@odoo/hoot-mock";
  * the same x position to prevent triggering horizontal moves.
  * @param {string} from
  */
-export const sortableDrag = (from) => {
+const sortableDrag = (from) => {
     const fromEl = queryFirst(from);
     const fromRect = fromEl.getBoundingClientRect();
     const { drop, moveTo } = drag(from);

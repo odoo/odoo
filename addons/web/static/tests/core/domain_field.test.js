@@ -32,7 +32,7 @@ import {
 
 import { WebClient } from "@web/webclient/webclient";
 
-export class PartnerType extends models.Model {
+class PartnerType extends models.Model {
     name = fields.Char({ string: "Partner Type" });
     color = fields.Integer({ string: "Color index" });
 
