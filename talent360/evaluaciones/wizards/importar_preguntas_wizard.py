@@ -161,11 +161,16 @@ class ImportQuestionsWizard(models.TransientModel):
                     "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
                 )
             opciones = [opcion.strip() for opcion in row["Opciones"].split(",")]
+            for opcion in opciones:
+                if not opcion.startswith('"') or not opcion.endswith('"'):
+                    raise exceptions.ValidationError(
+                        f"La opciónes para preguntas de opción multiple debe estar entre comillas dobles."
+                    )
             if len(opciones) != len(set(opciones)):
                 raise exceptions.ValidationError(
                     "Las opciones para preguntas de tipo 'multiple_choice' no deben contener duplicados."
                 )
-            if any(not opcion for opcion in opciones):
+            if any(not opcion.strip('"') for opcion in opciones):
                 raise exceptions.ValidationError(
                     "Las opciones para preguntas de tipo 'multiple_choice' no pueden estar vacías o contener solo espacios en blanco."
                 )
