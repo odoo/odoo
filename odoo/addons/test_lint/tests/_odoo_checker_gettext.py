@@ -19,6 +19,7 @@ PLACEHOLDER_REGEXP = re.compile(r"""
     [hlL]?             # length modifier
     [bcdeEfFgGnorsxX]  # conversion type
 """, re.VERBOSE)
+REPR_REGEXP = re.compile(r"%(?:\(\w+\))?r")
 
 
 def parse_version(s):
@@ -43,9 +44,14 @@ class OdooBaseChecker(BaseChecker):
             'gettext-placeholders',
             'Use keyword arguments when you have multiple placeholders',
         ),
+        'E8506': (
+            'Usage of %r in _, _lt function',
+            'gettext-repr',
+            'Don\'t use %r to automatically insert quotes in translation strings. Quotes can be different depending on the language: they must be part of the translated string.',
+        ),
     }
 
-    @only_required_for_messages('gettext-variable', 'gettext-placeholders')
+    @only_required_for_messages('gettext-variable', 'gettext-placeholders', 'gettext-repr')
     def visit_call(self, node):
         if isinstance(node.func, astroid.Name) and node.func.name in ('_', '_lt'):
             first_arg = node.args[0]
@@ -54,6 +60,8 @@ class OdooBaseChecker(BaseChecker):
                     self.add_message('gettext-variable', node=node)
                 elif len(PLACEHOLDER_REGEXP.findall(str(first_arg.value))) >= 2:
                     self.add_message('gettext-placeholders', node=node)
+                elif re.search(REPR_REGEXP, first_arg.value):
+                    self.add_message('gettext-repr', node=node)
 
 
 def register(linter):

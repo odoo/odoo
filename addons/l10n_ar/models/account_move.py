@@ -139,12 +139,12 @@ class AccountMove(models.Model):
             for line in inv.mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
                 vat_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)
                 if len(vat_taxes) != 1:
-                    raise UserError(_('There should be a single tax from the "VAT" tax group per line, add it to %r. If you already have it, please check the tax configuration, in advanced options, in the corresponding field "Tax Group".', line.name))
+                    raise UserError(_("There should be a single tax from the “VAT“ tax group per line, but this is not the case for line “%s”. Please add a tax to this line or check the tax configuration's advanced options for the corresponding field “Tax Group”.", line.name))
 
                 elif purchase_aliquots == 'zero' and vat_taxes.tax_group_id.l10n_ar_vat_afip_code != '0':
-                    raise UserError(_('On invoice id %r you must use VAT Not Applicable on every line.', inv.id))
+                    raise UserError(_('On invoice id “%s” you must use VAT Not Applicable on every line.', inv.id))
                 elif purchase_aliquots == 'not_zero' and vat_taxes.tax_group_id.l10n_ar_vat_afip_code == '0':
-                    raise UserError(_('On invoice id %r you must use VAT taxes different than VAT Not Applicable.', inv.id))
+                    raise UserError(_('On invoice id “%s” you must use a VAT tax that is not VAT Not Applicable', inv.id))
 
     def _set_afip_service_dates(self):
         for rec in self.filtered(lambda m: m.invoice_date and m.l10n_ar_afip_concept in ['2', '3', '4']):

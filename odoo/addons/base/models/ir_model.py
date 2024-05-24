@@ -310,7 +310,7 @@ class IrModel(models.Model):
         # Prevent manual deletion of module tables
         for model in self:
             if model.state != 'manual':
-                raise UserError(_("Model %r contains module data and cannot be removed.", model.name))
+                raise UserError(_("Model “%s” contains module data and cannot be removed.", model.name))
 
     def unlink(self):
         # prevent screwing up fields that depend on these models' fields
@@ -709,7 +709,7 @@ class IrModelFields(models.Model):
                 continue
             for seq in record.depends.split(","):
                 if not seq.strip():
-                    raise UserError(_("Empty dependency in %r", record.depends))
+                    raise UserError(_("Empty dependency in “%s”", record.depends))
                 model = self.env[record.model]
                 names = seq.strip().split(".")
                 last = len(names) - 1
@@ -719,13 +719,13 @@ class IrModelFields(models.Model):
                     field = model._fields.get(name)
                     if field is None:
                         raise UserError(_(
-                            'Unknown field "%(field)s" in dependency "%(dependency)s"',
+                            'Unknown field “%(field)s” in dependency “%(dependency)s”',
                             field=name,
                             dependency=seq.strip(),
                         ))
                     if index < last and not field.relational:
                         raise UserError(_(
-                            'Non-relational field "%(field)s" in dependency "%(dependency)s"',
+                            'Non-relational field “%(field)s” in dependency “%(dependency)s”',
                             field=name,
                             dependency=seq.strip(),
                         ))
@@ -753,7 +753,7 @@ class IrModelFields(models.Model):
                 else:
                     currency_field = self._get(rec.model, rec.currency_field)
                     if not currency_field:
-                        raise ValidationError(_("Unknown field name %r in currency_field", rec.currency_field))
+                        raise ValidationError(_("Unknown field specified “%s” in currency_field", rec.currency_field))
 
                 if currency_field.ttype != 'many2one':
                     raise ValidationError(_("Currency field does not have type many2one"))
@@ -799,7 +799,7 @@ class IrModelFields(models.Model):
                         return
                 return {'warning': {
                     'title': _("Warning"),
-                    'message': _("The table %r if used for other, possibly incompatible fields.", self.relation_table),
+                    'message': _("The table “%s” is used by another, possibly incompatible field(s).", self.relation_table),
                 }}
 
     @api.constrains('required', 'ttype', 'on_delete')

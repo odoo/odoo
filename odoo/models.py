@@ -4154,9 +4154,9 @@ class BaseModel(metaclass=MetaModel):
 
         if inconsistencies:
             lines = [_("Incompatible companies on records:")]
-            company_msg = _lt("- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
-            record_msg = _lt("- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
-            root_company_msg = _lt("- Only a root company can be set on %(record)r. Currently set to %(company)r")
+            company_msg = _lt("- Record is company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            record_msg = _lt("- “%(record)s” belongs to company “%(company)s” and “%(field)s” (%(fname)s: %(values)s) belongs to another company.")
+            root_company_msg = _lt("- Only a root company can be set on “%(record)s”. Currently set to “%(company)s”")
             for record, name, corecords in inconsistencies[:5]:
                 if record._name == 'res.company':
                     msg, company = company_msg, record

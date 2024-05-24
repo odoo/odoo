@@ -691,7 +691,7 @@ class Module(models.Model):
             module = todo[i]
             i += 1
             if module.state not in ('installed', 'to upgrade'):
-                raise UserError(_("Can not upgrade module %r. It is not installed.", module.name))
+                raise UserError(_("Cannot upgrade module “%s”. It is not installed.", module.name))
             if self.get_module_info(module.name).get("installable", True):
                 self.check_external_dependencies(module.name, 'to upgrade')
             for dep in Dependency.search([('name', '=', module.name)]):

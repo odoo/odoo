@@ -477,7 +477,7 @@ class IrFieldsConverter(models.AbstractModel):
         else:
             raise self._format_import_error(
                 Exception,
-                _("Unknown sub-field %r", subfield)
+                _("Unknown sub-field “%s”", subfield),
             )
 
         set_empty = False

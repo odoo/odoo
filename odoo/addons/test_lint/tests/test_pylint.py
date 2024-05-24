@@ -33,6 +33,7 @@ class TestPyLint(TransactionCase):
         'sql-injection',
         'gettext-variable',
         'gettext-placeholders',
+        'gettext-repr',
         'raise-unlink-override',
     ]
 

@@ -737,9 +737,9 @@ class IrActionsReport(models.Model):
 
             if not has_duplicated_ids and report_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):
                 raise UserError(_(
-                    "The report's template %r is wrong, please contact your administrator. \n\n"
-                    "Can not separate file to save as attachment because the report's template does not contains the"
-                    " attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.",
+                    "Report template “%s” has an issue, please contact your administrator. \n\n"
+                    "Cannot separate file to save as attachment because the report's template does not contain the"
+                    " attributes 'data-oe-model' and 'data-oe-id' as part of the div with 'article' classname.",
                     report_sudo.name,
                 ))
 
