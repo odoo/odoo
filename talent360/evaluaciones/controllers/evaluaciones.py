@@ -229,5 +229,3 @@ class EvaluacionesController(http.Controller):
         usuario_eva_mod = request.env["usuario.evaluacion.rel"]
 
         usuario_eva_mod.sudo().action_update_estado(evaluacion_id, token)
-
-        # return werkzeug.utils.redirect("/evaluacion/contestada")
