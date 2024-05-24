@@ -6779,15 +6779,15 @@ class BaseModel(metaclass=MetaModel):
             # currently depends on self, and it should not be recomputed before
             # the modification.  So we only collect what should be marked for
             # recomputation.
-            marked = self.env.all.tocompute     # {field: ids}
-            tomark = defaultdict(OrderedSet)    # {field: ids}
+            marked = self.env.transaction.tocompute     # {field: ids}
+            tomark = defaultdict(OrderedSet)            # {field: ids}
         else:
             # When called after modification, one should traverse backwards
             # dependencies by taking into account all fields already known to
             # be recomputed.  In that case, we mark fieds to compute as soon as
             # possible.
             marked = {}
-            tomark = self.env.all.tocompute
+            tomark = self.env.transaction.tocompute
 
         # determine what to trigger (with iterators)
         todo = [self._modified([self._fields[fname] for fname in fnames], create)]
@@ -6933,7 +6933,7 @@ class BaseModel(metaclass=MetaModel):
                 self._recompute_field(field, self._ids)
 
     def _recompute_field(self, field, ids=None):
-        ids_to_compute = self.env.all.tocompute.get(field, ())
+        ids_to_compute = self.env.transaction.tocompute.get(field, ())
         if ids is None:
             ids = ids_to_compute
         else:
