@@ -23,6 +23,7 @@
                     Select
                 </button>
                 <FileInput
+                    autoOpen="!attachments.length"
                     acceptedFileExtensions="'image/*'"
                     onUpload.bind="onUpload"
                     resModel="props.record.resModel"

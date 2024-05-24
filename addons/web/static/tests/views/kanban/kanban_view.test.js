@@ -14,7 +14,9 @@ import {
     queryOne,
     queryText,
     resize,
+    setInputFiles,
 } from "@odoo/hoot-dom";
+import { FileInput } from "@web/core/file_input/file_input";
 import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
@@ -85,6 +87,16 @@ const { IrAttachment } = webModels;
 const fieldRegistry = registry.category("fields");
 const viewRegistry = registry.category("views");
 const viewWidgetRegistry = registry.category("view_widgets");
+
+async function createFileInput({ mockPost, mockAdd, props }) {
+    mockService("notification", {
+        add: mockAdd || (() => {}),
+    });
+    mockService("http", {
+        post: mockPost || (() => {}),
+    });
+    await mountWithCleanup(FileInput, { props });
+}
 
 class Partner extends models.Model {
     _name = "partner";
@@ -10654,6 +10666,64 @@ test.tags("desktop")("set cover image", async () => {
 
     // should writes on both kanban records
     expect.verifySteps(["1", "2"]);
+});
+
+test.tags("desktop")("open file explorer if no cover image", async () => {
+    expect.assertions(2);
+
+    Partner._fields.displayed_image_id = fields.Many2one({
+        string: "Cover",
+        relation: "ir.attachment",
+    });
+
+    const uploadedPromise = new Deferred();
+    await createFileInput({
+        mockPost: async (route) => {
+            if (route === "/web/binary/upload_attachment") {
+                await uploadedPromise;
+            }
+            return "[]";
+        },
+        props: {},
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="foo"/>
+                            <div>
+                                <field name="displayed_image_id" widget="attachment_image"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    await toggleKanbanRecordDropdown(0);
+    await contains(".oe_kanban_action", {
+        root: getDropdownMenu(getKanbanRecord({ index: 0 })),
+    }).click();
+    setInputFiles([]);
+    await animationFrame();
+
+    expect(`.o_file_input input`).not.toBeEnabled({
+        message: "the upload button should be disabled on upload",
+    });
+    uploadedPromise.resolve();
+    await animationFrame();
+
+    expect(`.o_file_input input`).toBeEnabled({
+        message: "the upload button should be enabled for upload",
+    });
 });
 
 test.tags("desktop")("unset cover image", async () => {
