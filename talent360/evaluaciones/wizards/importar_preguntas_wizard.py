@@ -4,14 +4,14 @@ from io import StringIO
 import os
 from odoo import models, fields, api, exceptions, _
 
-class ImportQuestionsWizard(models.TransientModel):
+class ImportarPreguntasWizard(models.TransientModel):
     _name = 'importar.preguntas.wizard'
-    _description = 'Wizard to import questions from CSV'
+    _description = 'Asistente para importar preguntas desde CSV'
 
     archivo = fields.Binary()
     nombre_archivo = fields.Char()
 
-    required_fields = [
+    campos_requeridos = [
         "Pregunta",
         "Tipo",
         "Ponderacion",
@@ -19,9 +19,9 @@ class ImportQuestionsWizard(models.TransientModel):
         "Opciones"
     ]
 
-    tipo_valido = ["multiple_choice", "open_question", "escala"]
-    ponderacion_valida = ["ascendente", "descendente"]
-    categoria_valida = [
+    tipos_validos = ["multiple_choice", "open_question", "escala"]
+    ponderaciones_validas = ["ascendente", "descendente"]
+    categorias_validas = [
         "datos_generales",
         "reclutamiento_y_seleccion_de_personal",
         "formacion_y_capacitacion",
@@ -35,11 +35,11 @@ class ImportQuestionsWizard(models.TransientModel):
     ]
 
     @api.constrains("nombre_archivo")
-    def _validate_filename(self):
+    def _validar_nombre_archivo(self):
         if self.nombre_archivo and not self.nombre_archivo.lower().endswith(".csv"):
             raise exceptions.ValidationError(_("Solo se aceptan archivos CSV."))
 
-    def import_questions(self):
+    def importar_preguntas(self):
         if not self.archivo:
             raise exceptions.ValidationError(_("Por favor, suba un archivo CSV."))
 
@@ -55,7 +55,7 @@ class ImportQuestionsWizard(models.TransientModel):
 
         preguntas = []
 
-        self._validate_columns(csv_lector.fieldnames)
+        self._validar_columnas(csv_lector.fieldnames)
 
         for i, fila in enumerate(csv_lector):
             if i >= 200:
@@ -94,12 +94,12 @@ class ImportQuestionsWizard(models.TransientModel):
         else:
             raise exceptions.ValidationError(_("No se encontró la evaluación en el contexto."))
 
-    def _validate_columns(self, columnas: list[str]):
+    def _validar_columnas(self, columnas: list[str]):
         # Valida que las columnas del archivo CSV sean las correctas
         columnas_faltantes = []
         columnas_duplicadas = []
 
-        for columna in self.required_fields:
+        for columna in self.campos_requeridos:
             if columna not in columnas:
                 columnas_faltantes.append(columna)
 
@@ -117,51 +117,51 @@ class ImportQuestionsWizard(models.TransientModel):
         if mensaje:
             raise exceptions.ValidationError(mensaje)
 
-    def _validar_fila(self, row: dict):
+    def _validar_fila(self, fila: dict):
         # Validar campos requeridos
-        if not row.get("Pregunta") or not row["Pregunta"].strip():
+        if not fila.get("Pregunta") or not fila["Pregunta"].strip():
             raise exceptions.ValidationError(_("El campo 'Pregunta' es requerido y no puede estar vacío o solo contener espacios en blanco."))
-        if not row.get("Tipo"):
+        if not fila.get("Tipo"):
             raise exceptions.ValidationError(_("El campo 'Tipo' es requerido."))
-        if not row.get("Categoria"):
+        if not fila.get("Categoria"):
             raise exceptions.ValidationError(_("El campo 'Categoria' es requerido."))
 
         # Validar que el tipo de pregunta sea válido
-        if row["Tipo"] not in self.tipo_valido:
+        if fila["Tipo"] not in self.tipos_validos:
             raise exceptions.ValidationError(
-                f"El tipo de pregunta '{row['Tipo']}' no es válido. Los tipos permitidos son: {', '.join(self.tipo_valido)}."
+                f"El tipo de pregunta '{fila['Tipo']}' no es válido. Los tipos permitidos son: {', '.join(self.tipos_validos)}."
             )
 
         # Validar que la categoría sea válida
-        if row["Categoria"] not in self.categoria_valida:
+        if fila["Categoria"] not in self.categorias_validas:
             raise exceptions.ValidationError(
-                f"La categoría '{row['Categoria']}' no es válida. Las categorías permitidas son: {', '.join(self.categoria_valida)}."
+                f"La categoría '{fila['Categoria']}' no es válida. Las categorías permitidas son: {', '.join(self.categorias_validas)}."
             )
 
         # Validar que la ponderación sea válida si el tipo es 'escala'
-        if row["Tipo"] == "escala":
-            if not row.get("Ponderacion"):
+        if fila["Tipo"] == "escala":
+            if not fila.get("Ponderacion"):
                 raise exceptions.ValidationError(
                     "La ponderación es requerida para preguntas de tipo 'escala'."
                 )
-            if row["Ponderacion"] not in self.ponderacion_valida:
+            if fila["Ponderacion"] not in self.ponderaciones_validas:
                 raise exceptions.ValidationError(
-                    f"La ponderación '{row['Ponderacion']}' no es válida. Las ponderaciones permitidas son: {', '.join(self.ponderacion_valida)}."
+                    f"La ponderación '{fila['Ponderacion']}' no es válida. Las ponderaciones permitidas son: {', '.join(self.ponderaciones_validas)}."
                 )
         else:
             # No permitir ponderación para otros tipos de preguntas
-            if row.get("Ponderacion"):
+            if fila.get("Ponderacion"):
                 raise exceptions.ValidationError(
-                    f"No se permite la ponderación para preguntas de tipo '{row['Tipo']}'."
+                    f"No se permite la ponderación para preguntas de tipo '{fila['Tipo']}'."
                 )
 
         # Validar que las opciones sean válidas solo para preguntas de tipo 'multiple_choice'
-        if row["Tipo"] == "multiple_choice":
-            if not row.get("Opciones"):
+        if fila["Tipo"] == "multiple_choice":
+            if not fila.get("Opciones"):
                 raise exceptions.ValidationError(
                     "Las opciones son requeridas para preguntas de tipo 'multiple_choice'."
                 )
-            opciones = [opcion.strip() for opcion in row["Opciones"].split(",")]
+            opciones = [opcion.strip() for opcion in fila["Opciones"].split(",")]
 
             if len(opciones) != len(set(opciones)):
                 raise exceptions.ValidationError(
@@ -175,18 +175,15 @@ class ImportQuestionsWizard(models.TransientModel):
                     )
         else:
             # No permitir opciones para otros tipos de preguntas
-            if row.get("Opciones"):
+            if fila.get("Opciones"):
                 raise exceptions.ValidationError(
-                    f"No se permiten opciones para preguntas de tipo '{row['Tipo']}'."
+                    f"No se permiten opciones para preguntas de tipo '{fila['Tipo']}'."
                 )
+
     def descargar_template(self):
         # Define el contenido del archivo CSV de la plantilla
-            #"talent360/evaluaciones/static/csv/plantilla_preguntas_clima.csv"
+        ruta_archivo = os.path.join(os.path.dirname(__file__), "../static/csv/plantilla_preguntas_clima.csv")
 
-        current_path = os.path.dirname(os.path.abspath(__file__))
-        ruta_archivo = os.path.join(
-            current_path, "../static/csv/plantilla_preguntas_clima.csv"
-        )
         with open(ruta_archivo, "r") as archivo:
             datos = archivo.read()
             nombre_archivo = "plantilla_preguntas_clima.csv"
