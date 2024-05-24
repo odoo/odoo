@@ -19,7 +19,7 @@ export const displayNotificationAction = (env, action) => {
     let links = (params.links || []).map((link) => {
         return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
     });
-    const message = sprintf(escape(params.message), links);
+    const message = sprintf(escape(params.message), ...links);
     env.services.notification.add(message, options);
     return params.next;
 };
