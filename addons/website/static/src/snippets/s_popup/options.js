@@ -75,25 +75,45 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     onTargetShow: async function () {
-        this.$bsTarget.modal('show');
-        $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
+        // Tag body as o_modal_busy while "show" is in progress.
+        const bodyEl = this.$bsTarget[0].closest("body");
+        return new Promise(resolve => {
+            const timeoutID = setTimeout(() => {
+                this.$bsTarget.off('shown.bs.modal.popup_on_target_show');
+                resolve();
+                bodyEl.classList.remove("o_modal_busy");
+            }, 500);
+            this.$bsTarget.one('shown.bs.modal.popup_on_target_show', () => {
+                clearTimeout(timeoutID);
+                resolve();
+                bodyEl.classList.remove("o_modal_busy");
+            });
+            bodyEl.classList.add("o_modal_busy");
+            this.$bsTarget.modal('show');
+            $(this.$target[0].ownerDocument.body).children('.modal-backdrop:last').addClass('d-none');
+        });
     },
     /**
      * @override
      */
     onTargetHide: async function () {
+        // Tag body as o_modal_busy while "hide" is in progress.
+        const bodyEl = this.$bsTarget[0].closest("body");
         return new Promise(resolve => {
             const timeoutID = setTimeout(() => {
                 this.$bsTarget.off('hidden.bs.modal.popup_on_target_hide');
                 resolve();
+                bodyEl.classList.remove("o_modal_busy");
             }, 500);
             this.$bsTarget.one('hidden.bs.modal.popup_on_target_hide', () => {
                 clearTimeout(timeoutID);
                 resolve();
+                bodyEl.classList.remove("o_modal_busy");
             });
             // The following line is in charge of hiding .s_popup at the same
             // time the modal is closed when the page is saved in edit mode.
             this.$target[0].closest('.s_popup').classList.add('d-none');
+            bodyEl.classList.add("o_modal_busy");
             this.$bsTarget.modal('hide');
         });
     },

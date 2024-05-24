@@ -6201,11 +6201,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'd-none');
         weightEl.title = _t("Size");
         this.$weight = $(weightEl);
-        // Perform the loading of the image info synchronously in order to
-        // avoid an intermediate rendering of the Blocks tab during the
-        // loadImageInfo RPC that obtains the file size.
-        // This does not update the target.
-        await this._applyOptions(false);
     },
 
     //--------------------------------------------------------------------------
@@ -6218,15 +6213,19 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async updateUI() {
         await this._super(...arguments);
 
+        let before = Promise.resolve();
         if (this._filesize === undefined) {
             this.$weight.addClass('d-none');
-            await this._applyOptions(false);
+            // This does not update the target.
+            before = this._applyOptions(false);
         }
-        if (this._filesize !== undefined) {
-            this.$weight.text(`${this._filesize.toFixed(1)} kb`);
-            this.$weight.removeClass('d-none');
-            this._relocateWeightEl();
-        }
+        before.then(() => {
+           if (this._filesize !== undefined) {
+                this.$weight.text(`${this._filesize.toFixed(1)} kb`);
+                this.$weight.removeClass('d-none');
+                this._relocateWeightEl();
+            } 
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -7212,7 +7211,11 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     _relocateWeightEl() {
-        const leftPanelEl = this.$overlay.data('$optionsSection')[0];
+        const leftPanelEl = this.$overlay.data('$optionsSection')?.[0];
+        // Might be missing because this is is called asynchronously.
+        if (!leftPanelEl) {
+            return;
+        }
         const titleTextEl = leftPanelEl.querySelector('we-title > span');
         this.$weight.appendTo(titleTextEl);
     },

@@ -69,14 +69,14 @@ for (const snippet of snippetsNames) {
         });
     } else if (isModal) {
         snippetSteps[2]['in_modal'] = false;
-        snippetSteps.splice(3, 2, {
+        snippetSteps.splice(3, 2, ...websiteTourUtils.noBusyModal([{
             content: `Hide the ${snippet} popup`,
             trigger: `:iframe [data-snippet='${snippet}'] .s_popup_close`,
         }, {
             content: `Make sure ${snippet} is hidden`,
             trigger: ":iframe body:not(.modal-open)",
             isCheck: true,
-        });
+        }]));
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute
         // removed once they are dropped, so we need to use a different selector.

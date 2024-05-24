@@ -37,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     test: true,
     url: "/",
     edition: true,
-}, () => [
+}, () => wTourUtils.noBusyModal([
     wTourUtils.dragNDrop(snippets[1]), // Media List
     wTourUtils.dragNDrop(snippets[0]), // Popup
     checkScrollbar(false),
@@ -136,4 +136,4 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
     },
     checkScrollbar(true),
-]);
+]));
