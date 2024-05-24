@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
-
+import csv
 import io
-from odoo.tools import float_is_zero, pycompat, SQL
+from odoo.tools import float_is_zero, SQL
 from odoo import fields, models, api
 from odoo.tools.misc import get_lang
 from stdnum.fr import siren
@@ -247,7 +247,7 @@ class FecExportWizard(models.TransientModel):
 
         for row in self._cr.fetchall():
             listrow = list(row)
-            account_id = listrow.pop()
+            listrow.pop()
             rows_to_write.append(listrow)
 
         # LINES
@@ -311,13 +311,11 @@ class FecExportWizard(models.TransientModel):
             aj_name=aj_name,
             aa_name=aa_name,
         )
-        with io.BytesIO() as fecfile:
-            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='\r\n')
+        with io.StringIO() as fecfile:
+            csv_writer = csv.writer(fecfile, delimiter='|', lineterminator='\r\n')
 
             # Write header and initial balances
-            for initial_row in rows_to_write:
-                initial_row = list(initial_row)
-                csv_writer.writerow(initial_row)
+            csv_writer.writerows(rows_to_write)
 
             # Write current period's data
             has_more_results = True
@@ -326,9 +324,8 @@ class FecExportWizard(models.TransientModel):
                 query.offset += query_limit
                 has_more_results = self._cr.rowcount > query_limit # we load one more result than the limit to check if there is more
                 query_results = self._cr.fetchall()
-                for i, row in enumerate(query_results[:query_limit]):
-                    csv_writer.writerow(row)
-            content = fecfile.getvalue()[:-2]
+                csv_writer.writerows(query_results[:query_limit])
+            content = fecfile.getvalue()[:-2].encode()
 
         end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
