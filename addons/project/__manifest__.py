@@ -54,6 +54,7 @@
         'data/project_data.xml',
         'wizard/project_task_type_delete_views.xml',
         'wizard/project_project_stage_delete_views.xml',
+        'wizard/project_task_convert_subtask.xml',
         'views/project_menus.xml',
     ],
     'demo': [

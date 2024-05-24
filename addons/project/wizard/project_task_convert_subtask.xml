@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_task_convert_to_subtask_view_wizard" model="ir.ui.view">
+        <field name="name">project.task.convert.to.subtask.form</field>
+        <field name="model">project.task.convert.subtask.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="text-muted o_row mb-3">
+                    To transform a task into a sub-task, select a parent task. Alternatively, leave the parent task field blank to convert a sub-task into a standalone task.
+                </div>
+                <group>
+                    <field name="task_ids" invisible="1"/>
+                    <field name="project_id" required="1"/>
+                    <field name="parent_id" context="{'default_project_id': project_id}" required="1"/>
+                </group>
+                <footer>
+                    <button string="Convert Task" class="btn-primary" type="object" name="action_update_parent" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
