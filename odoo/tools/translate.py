@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import codecs
 import fnmatch
@@ -30,7 +29,7 @@ from psycopg2.extras import Json
 import odoo
 from odoo.exceptions import UserError
 from . import config, pycompat
-from .misc import file_open, file_path, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, get_iso_codes, OrderedSet, SKIPPED_ELEMENT_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -842,18 +841,20 @@ class PoFileWriter:
         entry.comment = "module%s: %s" % (plural, ', '.join(modules))
         if comments:
             entry.comment += "\n" + "\n".join(comments)
-
-        code = False
-        for typy, name, res_id in tnrs:
-            if typy == 'code':
-                code = True
-                res_id = 0
-            if isinstance(res_id, int) or res_id.isdigit():
-                # second term of occurrence must be a digit
-                # occurrence line at 0 are discarded when rendered to string
-                entry.occurrences.append((u"%s:%s" % (typy, name), str(res_id)))
+        occurrences = OrderedSet()
+        for type_, *ref in tnrs:
+            if type_ == "code":
+                fpath, lineno = ref
+                name = f"code:{fpath}"
+                # lineno is set to 0 to avoid creating diff in PO files every
+                # time the code is moved around
+                lineno = "0"
             else:
-                entry.occurrences.append((u"%s:%s:%s" % (typy, name, res_id), ''))
+                field_name, xmlid = ref
+                name = f"{type_}:{field_name}:{xmlid}"
+                lineno = None   # no lineno for model/model_terms sources
+            occurrences.add((name, lineno))
+        entry.occurrences = list(occurrences)
         self.po.append(entry)
 
 
