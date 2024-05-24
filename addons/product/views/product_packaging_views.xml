@@ -10,8 +10,8 @@
                 <field name="product_id"/>
                 <field name="name" string="Packaging"/>
                 <field name="qty"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                <field name="barcode" optional="hide"/>
+                <field name="product_uom_id" string="Unit" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
+                <field name="barcode" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
             </tree>
