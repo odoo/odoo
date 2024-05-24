@@ -5,7 +5,10 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { createModelWithDataSource } from "./model";
 const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
 
-/** @typedef {import("@odoo/o-spreadsheet").Model} Model */
+/**
+ * @typedef {import("@odoo/o-spreadsheet").Model} Model
+ * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
+ */
 
 /**
  *
@@ -36,7 +39,7 @@ export function insertChartInSpreadsheet(
  * @param {string} [params.type]
  * @param {import("./data").ServerData} [params.serverData]
  *
- * @returns { Promise<{ model: Model, env: Object }>}
+ * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
 export async function createSpreadsheetWithChart(params = {}) {
     const model = await createModelWithDataSource(params);

@@ -20,13 +20,10 @@ declare module "@spreadsheet" {
         actionXmlId: string;
     }
 
-    export type ExtendedPivotCoreDefinition =
-        | PivotCoreDefinition
-        | OdooPivotCoreDefinition;
-
+    export type ExtendedPivotCoreDefinition = PivotCoreDefinition | OdooPivotCoreDefinition;
 
     interface OdooPivot<T> extends Pivot<T> {
-      type: ExtendedPivotCoreDefinition["type"];
+        type: ExtendedPivotCoreDefinition["type"];
     }
     export interface GFLocalPivot {
         id: string;
@@ -62,7 +59,6 @@ declare module "@spreadsheet" {
         domain: Array;
         context: Object;
     }
-
 
     /* Params used for the odoo pivot model */
     export interface WebPivotModelParams {

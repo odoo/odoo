@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @ts-check */
 
 import { nextTick, patchDate, patchTimeZone } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
@@ -51,7 +51,7 @@ const { DateTime } = luxon;
 const { toZone } = helpers;
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
+ * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
  *
  */
 

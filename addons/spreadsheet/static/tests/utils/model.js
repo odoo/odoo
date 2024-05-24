@@ -13,7 +13,7 @@ import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
- * @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model
+ * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  */
 
 export function setupDataSourceEvaluation(model) {
@@ -31,6 +31,8 @@ export function setupDataSourceEvaluation(model) {
  * @param {object} [params.modelConfig]
  * @param {ServerData} [params.serverData] Data to be injected in the mock server
  * @param {function} [params.mockRPC] Mock rpc function
+ *
+ * @returns {Promise<OdooSpreadsheetModel>}
  */
 export async function createModelWithDataSource(params = {}) {
     registry.category("services").add("orm", ormService, { force: true });
@@ -43,6 +45,7 @@ export async function createModelWithDataSource(params = {}) {
         mockRPC: params.mockRPC,
     });
     const config = params.modelConfig;
+    /** @type any*/
     const model = new Model(params.spreadsheetData, {
         ...config,
         custom: {

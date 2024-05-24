@@ -10,15 +10,19 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { helpers } from "@odoo/o-spreadsheet";
 const { parseDimension } = helpers;
 
-/** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
+/**
+ * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
+ * @typedef {import("@spreadsheet").Zone} Zone
+ */
 
 /**
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @param {string} pivotId
  * @param {object} params
- * @param {string} params.arch
- * @param {string} params.resModel
- * @param {object} params.serverData
+ * @param {string} [params.arch]
+ * @param {string} [params.resModel]
+ * @param {object} [params.serverData]
+ * @param {string} [params.sheetId]
  * @param {[number, number]} [params.anchor]
  */
 export async function insertPivotInSpreadsheet(model, pivotId, params) {
@@ -71,7 +75,7 @@ export async function insertPivotInSpreadsheet(model, pivotId, params) {
  * @param {string} [params.arch]
  * @param {object} [params.serverData]
  * @param {function} [params.mockRPC]
- * @returns {Promise<{ model: Model, env: object}>}
+ * @returns {Promise<{ model: OdooSpreadsheetModel, env: object, pivotId: string}>}
  */
 export async function createSpreadsheetWithPivot(params = {}) {
     const serverData = params.serverData || getBasicServerData();
