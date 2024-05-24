@@ -14,7 +14,6 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
     )
     send_by_post_cost = fields.Integer(string='Stamps', compute='_compute_send_by_post_extra_fields')
-    send_by_post_warning_message = fields.Text(compute='_compute_send_by_post_extra_fields')
     send_by_post_readonly = fields.Boolean(compute='_compute_send_by_post_extra_fields')
 
     def _get_wizard_values(self):
@@ -54,17 +53,28 @@ class AccountMoveSend(models.TransientModel):
                 .filtered(self.env['snailmail.letter']._is_valid_address)
             wizard.send_by_post_cost = len(partner_with_valid_address)
             wizard.send_by_post_readonly = not partner_with_valid_address
-            wizard.send_by_post_warning_message = False
 
+    @api.depends('checkbox_send_by_post')
+    def _compute_warnings(self):
+        # EXTENDS 'account'
+        super()._compute_warnings()
+        for wizard in self:
             if wizard.enable_send_by_post and wizard.checkbox_send_by_post:
                 invoice_without_valid_address = wizard.move_ids.filtered(
                     lambda move: not self.env['snailmail.letter']._is_valid_address(move.partner_id))
                 if invoice_without_valid_address:
-                    wizard.send_by_post_warning_message = _(
-                        "The partners on the following invoices have no valid address, "
-                        "so those invoices will not be sent: %s",
-                        ", ".join(invoice_without_valid_address.mapped('name'))
-                    )
+                    wizard.warnings = {
+                        **(wizard.warnings or {}),
+                        'snailmail_account_partner_invalid_address': {
+                            'message': _(
+                                "The partners on the following invoices have no valid address, "
+                                "so those invoices will not be sent: %s",
+                                ", ".join(invoice_without_valid_address.mapped('name'))
+                            ),
+                            'action_text': _("View Invoice(s)"),
+                            'action': invoice_without_valid_address._get_records_action(name=_("Check Invoice(s)")),
+                        }
+                    }
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

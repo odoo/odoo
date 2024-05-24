@@ -489,7 +489,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             'mail_lang': 'en_US',
             'mail_partner_ids': wizard.move_ids.partner_id.ids,
         }])
-        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertFalse(wizard.warnings)
         self.assertTrue(wizard.mail_subject)
         self.assertTrue(wizard.mail_body)
         self._assert_mail_attachments_widget(wizard, [{
@@ -705,7 +705,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.partner_a.email = None
         self.partner_b.email = None
         wizard = self.create_send_and_print(invoice1 + invoice2)
-        self.assertTrue(wizard.send_mail_warning_message)
+        self.assertTrue('account_missing_email' in wizard.warnings)
         self.assertRecordValues(wizard, [{
             'send_mail_readonly': True,
             'checkbox_send_mail': False,
@@ -713,7 +713,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.partner_a.email = "turlututu@tsointsoin"
         wizard = self.create_send_and_print(invoice1 + invoice2)
-        self.assertTrue(wizard.send_mail_warning_message)
+        self.assertTrue('account_missing_email' in wizard.warnings)
         self.assertRecordValues(wizard, [{
             'send_mail_readonly': False,
             'checkbox_send_mail': True,
@@ -721,7 +721,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         self.partner_b.email = "turlututu@tsointsoin"
         wizard = self.create_send_and_print(invoice1 + invoice2)
-        self.assertFalse(wizard.send_mail_warning_message)
+        self.assertFalse(wizard.warnings)
         self.assertRecordValues(wizard, [{
             'send_mail_readonly': False,
             'checkbox_send_mail': True,

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.4alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-16 11:45+0000\n"
-"PO-Revision-Date: 2024-01-16 11:45+0000\n"
+"POT-Creation-Date: 2024-06-17 13:40+0000\n"
+"PO-Revision-Date: 2024-06-17 13:40+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -96,9 +96,9 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"An error occurred while downloading updates from the Proxy Server: (%s) %s"
+"An error occurred while downloading updates from the Proxy Server: "
+"(%(code)s) %(message)s"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -120,7 +120,6 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Bank account not found, useful informations from XML file:"
 msgstr ""
@@ -208,34 +207,22 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
-msgid "Company/ies should have a Country when used for simplified invoices."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "Company/ies should have a Tax System"
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
+#: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "Company/ies should have a VAT number or Codice Fiscale."
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
-msgid "Company/ies should have a VAT number."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
+#: code:addons/l10n_it_edi/models/res_company.py:0
 msgid ""
-"Company/ies should have a complete address, verify their Street, City, Zipcode"
-" and Country."
+"Company/ies should have a complete address, verify their Street, City, "
+"Zipcode and Country."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -329,10 +316,9 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"Error uploading the e-invoice file %s.\n"
-"%s"
+"Error uploading the e-invoice file %(file)s.\n"
+"%(error)s"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -358,14 +344,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_codice_fiscale
 msgid "Fiscal code of your company"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/wizard/account_move_send.py:0
-msgid ""
-"Go to Applications page and update the 'Italia - Fatturazione Elettronica' "
-"module."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -437,15 +415,15 @@ msgid "Italian EDI"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_actionable_errors
-msgid "L10N It Edi Actionable Errors"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid "Italian Electronic Invoicing"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -507,11 +485,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_register
 msgid "L10N It Edi Register"
-msgstr ""
-
-#. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_warning_message
-msgid "L10N It Edi Warning Message"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -614,7 +587,6 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
 msgid "Partner not found, useful informations from XML file:"
 msgstr ""
 
@@ -666,12 +638,6 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_tax_system
 msgid "Please select the Tax system to which you are subjected."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/wizard/account_move_send.py:0
-msgid "Please upgrade the Italian EDI module to update this widget."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -778,6 +744,12 @@ msgid "Service momentarily unavailable"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+msgid "Settings"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_share_capital
 msgid "Share capital actually paid up"
 msgstr ""
@@ -791,7 +763,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__su
 msgid "Socio unico"
 msgstr ""
-
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_tax_system
@@ -854,7 +825,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s can't be forward to %s (Public Administration) by the SdI at the moment.\n"
+"The e-invoice file %(file)s can't be forward to %(partner)s (Public Administration) by the SdI at the moment.\n"
 "It will try again for 10 days, after which it will be considered accepted, but you will still have to send it by post or e-mail."
 msgstr ""
 
@@ -862,7 +833,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s couldn't be forwarded to %s.\n"
+"The e-invoice file %(file)s couldn't be forwarded to %(partner)s.\n"
 "Please remember to send it via post or e-mail."
 msgstr ""
 
@@ -870,16 +841,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s has been accepted by %s (Public Administration), a "
-"payment will be issued soon"
+"The e-invoice file %(file)s has been accepted by %(partner)s (Public "
+"Administration), a payment will be issued soon"
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s has been accepted by the SdI.\n"
-"The SdI is trying to forward it to %s.\n"
+"The e-invoice file %(file)s has been accepted by the SdI.\n"
+"The SdI is trying to forward it to %(partner)s.\n"
 "It will try for up to 2 days, after which you'll eventually need to send it the invoice to the partner by post or e-mail."
 msgstr ""
 
@@ -887,8 +858,40 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s has been refused by %s (Public Administration).\n"
+"The e-invoice file %(file)s has been refused by %(partner)s (Public Administration).\n"
 "You have 5 days from now to issue a full refund for this invoice, then contact the PA partner to create a new one according to their requests and submit it."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s is duplicated.\n"
+"Original message from the SdI: %(message)s"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
+"The %(partner)s (Public Administration) had 15 days to either accept or refused this document,but since they did not reply, it's now considered accepted."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s was accepted and succesfully forwarded it to "
+"%(partner)s by the SdI."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s was succesfully sent to the SdI.\n"
+"%(partner)s has 15 days to accept or reject it."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -901,30 +904,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The e-invoice file %s has not been found on the EDI Proxy server."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice file %s is duplicated.\n"
-"Original message from the SdI: %s"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice file %s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
-"The %s (Public Administration) had 15 days to either accept or refused this document,but since they did not reply, it's now considered accepted."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice file %s was accepted and succesfully forwarded it to %s by the"
-" SdI."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -945,30 +924,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s was succesfully sent to the SdI.\n"
-"%s has 15 days to accept or reject it."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice filename %s is duplicated. Please check the FatturaPA Filename sequence.\n"
-"Original message from the SdI: %s"
+"The e-invoice filename %(file)s is duplicated. Please check the FatturaPA Filename sequence.\n"
+"Original message from the SdI: %(message)s"
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The e-invoice has been refused by the SdI."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The invoices you're trying to send have incomplete or incorrect data, please"
-" verify before sending."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1091,7 +1054,6 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "View invoice(s)"
 msgstr ""
 
@@ -1112,14 +1074,6 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_config_settings.py:0
-msgid ""
-"You must explicitly allow Odoo to process invoices for this company before "
-"using Test or Official modes."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "You must select a tax representative."
 msgstr ""
@@ -1135,7 +1089,6 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Your company's VAT number and Fiscal Code haven't been found in the buyer "
 "and/or seller sections inside the document."

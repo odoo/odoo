@@ -8,9 +8,6 @@ from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import L10nHuEdiConne
 class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
-    l10n_hu_edi_actionable_errors = fields.Json(
-        compute='_compute_l10n_hu_edi_enable_nav_30'
-    )
     l10n_hu_edi_enable_nav_30 = fields.Boolean(
         compute='_compute_l10n_hu_edi_enable_nav_30'
     )
@@ -38,16 +35,20 @@ class AccountMoveSend(models.TransientModel):
             enabled_moves = wizard.move_ids.filtered(lambda m: 'upload' in m._l10n_hu_edi_get_valid_actions())._origin
             if wizard.mode in ('invoice_single', 'invoice_multi') and enabled_moves:
                 wizard.l10n_hu_edi_enable_nav_30 = True
-                wizard.l10n_hu_edi_actionable_errors = enabled_moves._l10n_hu_edi_check_invoices()
-
             else:
                 wizard.l10n_hu_edi_enable_nav_30 = False
-                wizard.l10n_hu_edi_actionable_errors = False
 
-    @api.depends('l10n_hu_edi_enable_nav_30', 'l10n_hu_edi_actionable_errors')
+    @api.depends('l10n_hu_edi_enable_nav_30')
     def _compute_l10n_hu_edi_checkbox_nav_30(self):
         for wizard in self:
             wizard.l10n_hu_edi_checkbox_nav_30 = wizard.l10n_hu_edi_enable_nav_30
+
+    def _compute_warnings(self):
+        # EXTENDS 'account'
+        super()._compute_warnings()
+        for wizard in self:
+            if enabled_moves := wizard.move_ids.filtered(lambda m: 'upload' in m._l10n_hu_edi_get_valid_actions())._origin:
+                wizard.warnings = {**(wizard.warnings or {}), **enabled_moves._l10n_hu_edi_check_invoices()}
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

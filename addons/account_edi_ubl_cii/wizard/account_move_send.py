@@ -19,14 +19,6 @@ class AccountMoveSend(models.TransientModel):
     enable_ubl_cii_xml = fields.Boolean(compute='_compute_enable_ubl_cii_xml')
     checkbox_ubl_cii_label = fields.Char(compute='_compute_checkbox_ubl_cii_label')
     checkbox_ubl_cii_xml = fields.Boolean(compute='_compute_checkbox_ubl_cii_xml', store=True, readonly=False)
-    ubl_partner_warning = fields.Json(
-        string="Partner warning",
-        compute="_compute_ubl_warnings",
-    )
-    show_ubl_company_warning = fields.Boolean(
-        string="Company warning",
-        compute="_compute_ubl_warnings",
-    )
 
     def _get_wizard_values(self):
         # EXTENDS 'account'
@@ -72,21 +64,30 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml and (wizard.checkbox_ubl_cii_xml or wizard.company_id.invoice_is_ubl_cii)
 
-    @api.depends('move_ids')
-    def _compute_ubl_warnings(self):
+    @api.depends('checkbox_ubl_cii_xml')
+    def _compute_warnings(self):
+        # EXTENDS 'account'
+        super()._compute_warnings()
         for wizard in self:
-            wizard.show_ubl_company_warning = False
-            wizard.ubl_partner_warning = False
             if not set(wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')) - {False, 'facturx', 'oioubl_201'}:
-                return
+                continue
 
-            wizard.show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
-            not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
-                lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
-            )
-            if not_configured_partners:
-                wizard.ubl_partner_warning = {
-                    'ubl_partner_warning': {
+            warnings = {}
+            if wizard.checkbox_ubl_cii_xml:
+                show_ubl_company_warning = not (wizard.company_id.partner_id.peppol_eas and wizard.company_id.partner_id.peppol_endpoint)
+                if show_ubl_company_warning:
+                    warnings['account_edi_ubl_cii_configure_company'] = {
+                        'message': _("Please fill in Peppol EAS and Peppol Endpoint in your company form to generate a complete file."),
+                        'level': 'info',
+                        'action_text': _("View Company"),
+                        'action': wizard.company_id.partner_id._get_records_action(),
+                    }
+
+                not_configured_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
+                    lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
+                )
+                if not_configured_partners:
+                    warnings['account_edi_ubl_cii_configure_partner'] = {
                         'message': _("These partners are missing Peppol EAS or Peppol Endpoint field. "
                                      "Please check those in their Accounting tab. "
                                      "Otherwise, the generated files will be incomplete."),
@@ -94,7 +95,9 @@ class AccountMoveSend(models.TransientModel):
                         'action_text': _("View Partner(s)"),
                         'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
                     }
-                }
+
+            if warnings:
+                wizard.warnings = {**(wizard.warnings or {}), **warnings}
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
