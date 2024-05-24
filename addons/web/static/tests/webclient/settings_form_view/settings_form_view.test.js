@@ -1753,8 +1753,6 @@ test("server actions are called with the correct context", async () => {
             name: "Action partner",
             type: "ir.actions.server",
             usage: "ir_actions_server",
-            state: "code",
-            code: () => false,
         },
     ]);
 
@@ -1767,26 +1765,25 @@ test("server actions are called with the correct context", async () => {
     `;
     ResConfigSettings._views.search = /* xml */ `<search/>`;
 
-    onRpc("/web/action/load", (request) => {
+    onRpc("/web/action/run", (request) => {
         const {
-            params: { action_id, context },
+            params: { context },
         } = request.json();
-        if (action_id === "2") {
-            expect.step("/web/action/load");
-            const filterContext = pick(context, "active_id", "active_ids", "active_model");
-            expect(filterContext).toEqual({
-                active_id: 1,
-                active_ids: [1],
-                active_model: "res.config.settings",
-            });
-        }
+        expect.step("/web/action/run");
+        const filterContext = pick(context, "active_id", "active_ids", "active_model");
+        expect(filterContext).toEqual({
+            active_id: 1,
+            active_ids: [1],
+            active_model: "res.config.settings",
+        });
+        return new Promise(() => {});
     });
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     click("button[name='2']");
     await animationFrame();
-    expect(["/web/action/load"]).toVerifySteps();
+    expect(["/web/action/run"]).toVerifySteps();
 });
 
 test("BinaryField is correctly rendered in Settings form view", async () => {

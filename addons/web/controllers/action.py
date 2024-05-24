@@ -19,7 +19,7 @@ class MissingActionError(UserError):
 
 class Action(Controller):
 
-    @route('/web/action/load', type='json', auth='user')
+    @route('/web/action/load', type='json', auth='user', readonly=True)
     def load(self, action_id, context=None):
         if context:
             request.update_context(**context)
@@ -44,18 +44,19 @@ class Action(Controller):
         action_type = base_action[0]['type']
         if action_type == 'ir.actions.report':
             request.update_context(bin_size=True)
-        if action_type == 'ir.actions.server':
-            action = request.env["ir.actions.server"].browse([action_id])
-            result = action.run()
-            parent_path = action.sudo().path
-            if parent_path:
-                result['path'] = parent_path
-            return clean_action(result, env=action.env) if result else {'type': 'ir.actions.act_window_close'}
         if action_type == 'ir.actions.act_window':
             result = request.env[action_type].sudo().browse([action_id])._get_action_dict()
             return clean_action(result, env=request.env) if result else False
         result = request.env[action_type].sudo().browse([action_id]).read()
         return clean_action(result[0], env=request.env) if result else False
+
+    @route('/web/action/run', type='json', auth="user")
+    def run(self, action_id, context=None):
+        if context:
+            request.update_context(**context)
+        action = request.env['ir.actions.server'].browse([action_id])
+        result = action.run()
+        return clean_action(result, env=action.env) if result else False
 
     @route('/web/action/load_breadcrumbs', type='json', auth='user', readonly=True)
     def load_breadcrumbs(self, actions):
