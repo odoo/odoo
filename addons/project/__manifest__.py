@@ -101,6 +101,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            ('include', 'web._assets_bootstrap_backend'),
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -152,7 +153,6 @@
             'web/static/lib/select2/select2.js',
             'web/static/src/legacy/js/libs/bootstrap.js',
             'web/static/src/legacy/js/libs/jquery.js',
-            ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
 
