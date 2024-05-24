@@ -5,6 +5,7 @@ import { Setting } from "../../../views/form/setting/setting";
 
 import { Component, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { router } from "@web/core/browser/router";
 
 /**
  * Widget in the settings that handles the "Developer Tools" section.
@@ -32,6 +33,10 @@ export class ResConfigDevTool extends Component {
         onWillStart(async () => {
             this.isDemoDataActive = await this.demo.isDemoDataActive();
         });
+    }
+
+    activateDebug(value) {
+        router.pushState({ debug: value }, { reload: true });
     }
 
     /**
