@@ -118,11 +118,23 @@ export class OrderSummary extends Component {
                         val,
                         Boolean(selectedLine.combo_line_ids?.length)
                     );
+<<<<<<< saas-17.4
                     for (const line of selectedLine.combo_line_ids) {
                         line.set_quantity(val, true);
                     }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
+||||||| 997e1a6b8791b5636cefd07fe52e50302f6029e3
+                    const result = selectedLine.set_quantity(val);
+                    if (!result) {
+=======
+                    if (selectedLine.combo_line_ids) {
+                        for (const line of selectedLine.combo_line_ids) {
+                            line.set_quantity(val, true);
+                        }
+                    }
+                    if (!result) {
+>>>>>>> fecae811e93ee023bada4e56f7453b4bf43ba324
                         this.numberBuffer.reset();
                     }
                 }

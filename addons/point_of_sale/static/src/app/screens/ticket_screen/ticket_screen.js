@@ -224,7 +224,20 @@ export class TicketScreen extends Component {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
                     this.numberBuffer.reset();
+<<<<<<< saas-17.4
                     if (!toRefundDetail.line.combo_parent_id) {
+||||||| 997e1a6b8791b5636cefd07fe52e50302f6029e3
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Maximum Exceeded"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                            quantity,
+                            refundableQty
+                        ),
+                    });
+=======
+                    if (!toRefundDetail.orderline.combo_parent_id) {
+>>>>>>> fecae811e93ee023bada4e56f7453b4bf43ba324
                         this.dialog.add(AlertDialog, {
                             title: _t("Maximum Exceeded"),
                             body: _t(
@@ -271,6 +284,7 @@ export class TicketScreen extends Component {
 
         destinationOrder.takeaway = order.takeaway;
         // Add orderline for each toRefundDetail to the destinationOrder.
+<<<<<<< saas-17.4
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {
             const refundLine = refundDetail.line;
@@ -299,8 +313,49 @@ export class TicketScreen extends Component {
             refundComboParent.update({
                 combo_line_ids: [["link", ...children]],
             });
-        }
+||||||| 997e1a6b8791b5636cefd07fe52e50302f6029e3
+        for (const refundDetail of this._getRefundableDetails(partner, order)) {
+            const product = this.pos.models["product.product"].get(
+                refundDetail.orderline.productId
+            );
+            const options = this._prepareRefundOrderlineOptions(refundDetail);
+            await destinationOrder.add_product(product, options);
+            refundDetail.destinationOrderUid = destinationOrder.uid;
+=======
+        const allToRefundableDetails = this._getRefundableDetails(partner, order);
+        const originalToDestinationLineMap = new Map();
 
+        // First pass: add all products to the destination order
+        for (const refundDetail of allToRefundableDetails) {
+            const product = this.pos.models["product.product"].get(
+                refundDetail.orderline.productId
+            );
+            const options = this._prepareRefundOrderlineOptions(refundDetail);
+            const newOrderline = await destinationOrder.add_product(product, options);
+            originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
+            refundDetail.destinationOrderUid = destinationOrder.uid;
+>>>>>>> fecae811e93ee023bada4e56f7453b4bf43ba324
+        }
+        // Second pass: update combo relationships in the destination order
+        for (const refundDetail of allToRefundableDetails) {
+            const originalOrderline = refundDetail.orderline;
+            const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
+            if (originalOrderline.combo_parent_id) {
+                const comboParentLine = originalToDestinationLineMap.get(
+                    originalOrderline.combo_parent_id.id
+                );
+                if (comboParentLine) {
+                    destinationOrderline.combo_parent_id = comboParentLine;
+                }
+            }
+            if (originalOrderline.combo_line_ids && originalOrderline.combo_line_ids.length > 0) {
+                destinationOrderline.combo_line_ids = originalOrderline.combo_line_ids.map(
+                    (comboLine) => {
+                        return originalToDestinationLineMap.get(comboLine.id);
+                    }
+                );
+            }
+        }
         //Add a check too see if the fiscal position exist in the pos
         if (order.fiscal_position_not_found) {
             this.dialog.add(AlertDialog, {
@@ -567,11 +622,57 @@ export class TicketScreen extends Component {
         if (orderline.uuid in lineToRefund) {
             return lineToRefund[orderline.uuid];
         }
+<<<<<<< saas-17.4
 
         const newToRefundDetail = new PosOrderLineRefund(
             {
                 line_uuid: orderline.uuid,
                 qty: 0,
+||||||| 997e1a6b8791b5636cefd07fe52e50302f6029e3
+        const partner = orderline.order.get_partner();
+        const orderPartnerId = partner ? partner.id : false;
+        const newToRefundDetail = {
+            qty: 0,
+            orderline: {
+                id: orderline.id,
+                productId: orderline.product.id,
+                price: orderline.price,
+                qty: orderline.quantity,
+                refundedQty: orderline.refunded_qty,
+                orderUid: orderline.order.uid,
+                orderBackendId: orderline.order.backendId,
+                orderPartnerId,
+                tax_ids: orderline.getTaxIds(),
+                discount: orderline.discount,
+                pack_lot_lines: orderline.pack_lot_lines
+                    ? orderline.pack_lot_lines.map((lot) => {
+                          return { lot_name: lot.lot_name };
+                      })
+                    : false,
+=======
+        const partner = orderline.order.get_partner();
+        const orderPartnerId = partner ? partner.id : false;
+        const newToRefundDetail = {
+            qty: 0,
+            orderline: {
+                id: orderline.id,
+                productId: orderline.product.id,
+                price: orderline.price,
+                qty: orderline.quantity,
+                refundedQty: orderline.refunded_qty,
+                orderUid: orderline.order.uid,
+                orderBackendId: orderline.order.backendId,
+                orderPartnerId,
+                tax_ids: orderline.getTaxIds(),
+                discount: orderline.discount,
+                pack_lot_lines: orderline.pack_lot_lines
+                    ? orderline.pack_lot_lines.map((lot) => {
+                          return { lot_name: lot.lot_name };
+                      })
+                    : false,
+                combo_parent_id: orderline.combo_parent_id,
+                combo_line_ids: orderline.combo_line_ids,
+>>>>>>> fecae811e93ee023bada4e56f7453b4bf43ba324
             },
             this.pos.models
         );

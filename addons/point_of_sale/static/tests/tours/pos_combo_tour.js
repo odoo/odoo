@@ -43,7 +43,15 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             ...ProductScreen.clickCustomer("Partner Test 1"),
 
             // check that you can change the quantity of a combo product
+<<<<<<< saas-17.4:addons/point_of_sale/static/tests/tours/pos_combo_tour.js
             ...ProductScreen.clickNumpad("2"),
+||||||| 997e1a6b8791b5636cefd07fe52e50302f6029e3:addons/point_of_sale/static/tests/tours/PosComboTour.js
+            // check that you cannot change the quantity of a combo product
+            ...ProductScreen.pressNumpad("2"),
+            Dialog.confirm(),
+=======
+            ...ProductScreen.pressNumpad("2"),
+>>>>>>> fecae811e93ee023bada4e56f7453b4bf43ba324:addons/point_of_sale/static/tests/tours/PosComboTour.js
             ...ProductScreen.clickOrderline("Combo Product 3", "2.0"),
             ...ProductScreen.selectedOrderlineHas("Combo Product 3", "2.0", "26.86"),
             ...ProductScreen.clickOrderline("Combo Product 5", "2.0"),
@@ -52,8 +60,15 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             ...ProductScreen.selectedOrderlineHas("Combo Product 8", "2.0", "60.00"),
 
             // check that removing a combo product removes all the combo products
+<<<<<<< saas-17.4:addons/point_of_sale/static/tests/tours/pos_combo_tour.js
             ...ProductScreen.clickNumpad("⌫"),
             ...ProductScreen.clickNumpad("⌫"),
+||||||| 997e1a6b8791b5636cefd07fe52e50302f6029e3:addons/point_of_sale/static/tests/tours/PosComboTour.js
+            ...ProductScreen.pressNumpad("⌫"),
+=======
+            ...ProductScreen.pressNumpad("⌫"),
+            ...ProductScreen.pressNumpad("⌫"),
+>>>>>>> fecae811e93ee023bada4e56f7453b4bf43ba324:addons/point_of_sale/static/tests/tours/PosComboTour.js
             ...ProductScreen.orderIsEmpty(),
 
             ...ProductScreen.clickDisplayedProduct("Office Combo"),
