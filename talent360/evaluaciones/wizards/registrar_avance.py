@@ -6,6 +6,9 @@ class RegistrarAvance(models.TransientModel):
 
     name = fields.Char(string='Name')
     progress = fields.Integer(string='Progress')
+    attachment = fields.Binary(string='Attachment')
+    attachment_filename = fields.Char(string='Attachment Filename')
+    comments = fields.Text(string='Comments')
 
     def action_confirm(self):
         # Lógica del wizard aquí

@@ -5,11 +5,24 @@
         <field name="model">registrar.avance.wizard</field>
         <field name="arch" type="xml">
             <form string="Registrar Avance">
-            <h1>Registrar Avance</h1>
-                <footer>
-                    <button string="Confirmar" type="object" class="btn-primary" name="action_confirm"/>
-                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
-                </footer>
+                <group>
+                    <group>
+                        <label for="progress" string="Avance: " />
+                        <field name="progress" nolabel="1" />
+                    </group>
+                    <group>
+                        <label for="attachment" string="Adjuntar Archivo: " />
+                        <field name="attachment" nolabel="1" />
+                    </group>
+                    <group>
+                        <label for="comments" string="Comentarios: " />
+                        <field name="comments" nolabel="1" />
+                    </group>
+                    <footer>
+                        <button string="Confirmar" type="object" class="btn-primary" name="action_confirm"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </group>
             </form>
         </field>
     </record>
