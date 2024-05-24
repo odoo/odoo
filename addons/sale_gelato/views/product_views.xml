@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.product.gelato.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"></field>
+            <field name="arch" type="xml">
+                <group name="upsell" position="after">
+                    <group string="Gelato" invisible="type not in ['product', 'consu']">
+                        <field
+                            name="gelato_template_ref"
+                            invisible="is_product_variant"
+                            readonly="gelato_product_ref"
+                        />
+                        <field
+                            name="gelato_product_ref"
+                            groups="base.group_no_one"
+                            invisible="(product_variant_count &gt; 1) and not is_product_variant"
+                        />
+                        <!--In order to properly show image name, it is needed to load gelato_image_label-->
+                        <field name="gelato_image_label" invisible="1"/>
+                        <field
+                            name="gelato_image"
+                            filename="gelato_image_label"
+                            invisible="not (gelato_template_ref or gelato_product_ref)"
+                        />
+                        <button
+                            string="Generate variants"
+                            type="object"
+                            name="action_create_product_variants_from_gelato_template"
+                            invisible="is_product_variant or not gelato_template_ref"
+                            colspan="2"
+                            class="btn btn-primary"
+                        />
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_gelato" model="ir.ui.view">
+                <field name="name">product.variant.gelato.easy.edit.view</field>
+                <field name="model">product.product</field>
+                <field name="inherit_id" ref="product.product_variant_easy_edit_view"></field>
+                <field name="arch" type="xml">
+                <group name="packaging" position="after">
+                        <group string="Gelato" name="gelato_product_ref" groups="base.group_no_one">
+                                <field name="gelato_product_ref"/>
+                        </group>
+                </group>
+                </field>
+        </record>
+
+</odoo>
