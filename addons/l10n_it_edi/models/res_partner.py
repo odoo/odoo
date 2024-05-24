@@ -181,7 +181,7 @@ class ResPartner(models.Model):
             for fields_tuple in check['fields']:
                 if invalid_records := self.filtered(lambda record: not any(record[field] for field in fields_tuple)):
                     views = single_views if len(invalid_records) == 1 else multi_views
-                    errors[key] = {
+                    errors[f"l10n_it_edi_{key}"] = {
                         'message': check['message'],
                         'action_text': _("View Partner(s)"),
                         'action': invalid_records._get_records_action(name=_("Check Partner(s)"), views=views),

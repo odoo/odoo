@@ -315,7 +315,6 @@ class AccountMove(models.Model):
     # === EDI: Flow === #
 
     def _l10n_hu_edi_check_invoices(self):
-        errors = []
         hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
 
         checks = {
@@ -417,7 +416,7 @@ class AccountMove(models.Model):
         }
 
         errors = {
-            check: {
+            f"l10n_hu_edi_{check}": {
                 'message': values['message'],
                 'action_text': values['action_text'],
                 'action': values['records']._get_records_action(name=values['action_text']),
@@ -427,7 +426,7 @@ class AccountMove(models.Model):
         }
 
         if companies_missing_credentials := self.company_id.filtered(lambda c: not c.l10n_hu_edi_server_mode):
-            errors['company_credentials_missing'] = {
+            errors['l10n_hu_edi_company_credentials_missing'] = {
                 'message': _('Please set NAV credentials in the Accounting Settings!'),
                 'action_text': _('Open Accounting Settings'),
                 'action': self.env.ref('account.action_account_config').with_company(companies_missing_credentials[0])._get_action_dict(),

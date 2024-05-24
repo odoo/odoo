@@ -5,14 +5,11 @@
             <field name="model">account.move.send</field>
             <field name="inherit_id" ref="account.account_move_send_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='warnings']" position="inside">
+                <xpath expr="//div[@name='option_send_mail']" position='after'>
                     <field name="l10n_it_edi_readonly_xml_export" invisible="1"/>
                     <field name="l10n_it_edi_enable_xml_export" invisible="1"/>
                     <field name="l10n_it_edi_readonly_send" invisible="1"/>
                     <field name="l10n_it_edi_enable_send" invisible="1"/>
-                    <field name="l10n_it_edi_actionable_errors" class="o_field_html" widget="actionable_errors"/>
-                </xpath>
-                <xpath expr="//div[@name='option_send_mail']" position='after'>
                     <div name="option_l10n_it_edi">
                         <div name="option_l10n_it_edi_xml_export" invisible="not l10n_it_edi_enable_xml_export">
                             <field name="l10n_it_edi_checkbox_xml_export" readonly="l10n_it_edi_readonly_xml_export"/>

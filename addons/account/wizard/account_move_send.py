@@ -46,7 +46,7 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
     )
     display_mail_composer = fields.Boolean(compute='_compute_send_mail_extra_fields')
-    send_mail_warning_message = fields.Json(compute='_compute_send_mail_extra_fields')
+    warnings = fields.Json(compute='_compute_warnings')
     send_mail_readonly = fields.Boolean(compute='_compute_send_mail_extra_fields')
     mail_template_id = fields.Many2one(
         comodel_name='mail.template',
@@ -89,7 +89,6 @@ class AccountMoveSend(models.TransientModel):
         store=True,
         readonly=False,
     )
-    sequence_gap_warning = fields.Boolean(compute='_compute_sequence_gap_warning')
 
     @api.model
     def default_get(self, fields_list):
@@ -285,17 +284,27 @@ class AccountMoveSend(models.TransientModel):
             wizard.display_mail_composer = wizard.mode == 'invoice_single'
             invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
             wizard.send_mail_readonly = invoices_without_mail_data == wizard.move_ids
-            if not (invoices_without_mail_data and wizard.checkbox_send_mail or wizard.send_mail_readonly):
-                wizard.send_mail_warning_message = False
-            else:
-                partners = invoices_without_mail_data.partner_id
-                wizard.send_mail_warning_message = {
-                    **(wizard.send_mail_warning_message or {}),
-                    'partner_missing_email': {
-                        'message': _("Partner(s) should have an email address."),
-                        'action_text': _("View Partner(s)"),
-                        'action': partners._get_records_action(name=_("Check Partner(s)"))
-                    }}
+
+    @api.depends('move_ids', 'checkbox_send_mail', 'send_mail_readonly')
+    def _compute_warnings(self):
+        for wizard in self:
+            warnings = {}
+
+            partners_without_mail = wizard.move_ids.filtered(lambda x: not x.partner_id.email).partner_id
+            if wizard.send_mail_readonly or (wizard.checkbox_send_mail and partners_without_mail):
+                warnings['account_missing_email'] = {
+                    'message': _("Partner(s) should have an email address."),
+                    'action_text': _("View Partner(s)"),
+                    'action': partners_without_mail._get_records_action(name=_("Check Partner(s) Email(s)"))
+                }
+
+            restricted_journals = wizard.move_ids.journal_id.filtered(lambda j: j.restrict_mode_hash_table)
+            if restricted_journals and not wizard.move_ids.check_move_sequence_chain():
+                warnings['account_sequence_gap'] = {
+                    'message': _("Sending these invoices will create a gap in the sequence."),
+                }
+
+            wizard.warnings = warnings
 
     @api.depends('mail_template_id')
     def _compute_mail_lang(self):
@@ -333,16 +342,6 @@ class AccountMoveSend(models.TransientModel):
                 )
             else:
                 wizard.mail_attachments_widget = []
-
-    @api.depends('move_ids')
-    def _compute_sequence_gap_warning(self):
-        for wizard in self:
-            moves = wizard.move_ids
-            restricted_journals = moves.mapped('journal_id').filtered(lambda j: j.restrict_mode_hash_table)
-            if restricted_journals:
-                wizard.sequence_gap_warning = not moves.check_move_sequence_chain()
-            else:
-                wizard.sequence_gap_warning = False
 
     @api.model
     def _format_error_text(self, error):

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.4alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-03 08:13+0000\n"
-"PO-Revision-Date: 2024-05-03 08:13+0000\n"
+"POT-Creation-Date: 2024-06-07 13:56+0000\n"
+"PO-Revision-Date: 2024-06-07 13:56+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,8 +43,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.account_move_send_form
 msgid ""
 "<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
-"title=\"Some data is incorrect\" invisible=\"not "
-"l10n_hu_edi_actionable_errors\"/>"
+"title=\"Some data is incorrect\" invisible=\"1\"/>"
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -85,7 +84,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "AAM Tax exempt"
 msgstr ""
 
@@ -112,7 +110,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "ATK Outside the scope of VAT - VAT tv.2-3.§"
 msgstr ""
 
@@ -164,7 +161,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Cancellation request failed."
 msgstr ""
 
@@ -181,14 +177,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Cancellation request submitted, waiting for response."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Cancellation request timed out. Please wait at least 6 minutes, then update "
 "the status."
@@ -202,7 +196,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Cannot reset to draft or cancel invoice %s because an electronic document "
 "was already sent to NAV!"
@@ -257,7 +250,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Connection to NAV servers timed out."
 msgstr ""
 
@@ -269,7 +261,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Could not acquire lock on invoices - is another user performing operations "
 "on them?"
@@ -278,24 +269,29 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Could not authenticate with NAV. Check your credentials and try again."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
-"Could not match NAV transaction_code %s, index %s to an invoice in Odoo"
+"Could not match NAV transaction_code %(code)s, index %(index)s to an invoice"
+" in Odoo"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Could not parse time of previous transaction"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/__init__.py:0
+msgid ""
+"Could not set NAV tax types on taxes because some taxes from l10n_hu are missing.\n"
+"You should set the type manually or reload the CoA before sending invoices to NAV."
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -361,7 +357,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "EAM Product export to 3rd country - VAT tv.98-109.§"
 msgstr ""
 
@@ -398,7 +393,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "EUE Sales made in a 2nd EU country"
 msgstr ""
 
@@ -412,7 +406,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "EUFAD37 § 37 (1) Reverse VAT in another EU country"
 msgstr ""
 
@@ -426,7 +419,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid ""
 "EUFADE Reverse charge of VAT in another EU country not VAT tv. § 37 (1)"
 msgstr ""
@@ -439,21 +431,18 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Error during decryption of ExchangeToken."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid "Error listing transactions while attempting transaction recovery."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid "Error querying transaction while attempting transaction recovery."
 msgstr ""
 
@@ -493,7 +482,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "HO Service to 3rd country"
 msgstr ""
 
@@ -553,7 +541,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid ""
 "Incorrect NAV Credentials! Check that your company VAT number is set correctly. \n"
 "Error details: %s"
@@ -574,7 +561,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Invalid NAV response!"
 msgstr ""
 
@@ -588,8 +574,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Invoice Upload failed: NAV did not return a Transaction ID."
 msgstr ""
 
@@ -610,14 +594,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Invoice submission failed."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Invoice submission timed out. Please wait at least 6 minutes, then update "
 "the status."
@@ -626,7 +608,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Invoice submitted, waiting for response."
 msgstr ""
 
@@ -660,7 +641,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "KBAET sale to EU - VAT tv.§ 89."
 msgstr ""
 
@@ -672,7 +652,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "KBAUK New means of transport within the EU - VAT tv.§ 89.§(2)"
 msgstr ""
 
@@ -699,11 +678,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__kwh
 msgid "Kilowatt hour"
-msgstr ""
-
-#. module: l10n_hu_edi
-#: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__l10n_hu_edi_actionable_errors
-msgid "L10N Hu Edi Actionable Errors"
 msgstr ""
 
 #. module: l10n_hu_edi
@@ -762,14 +736,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid "Missing NAV credentials for company %s"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Missing token in response from NAV."
 msgstr ""
 
@@ -781,7 +753,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "Mode should be Production or Test!"
 msgstr ""
 
@@ -799,7 +770,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "NAM other export transaction VAT law § 110-118"
 msgstr ""
 
@@ -829,7 +799,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/res_company.py:0
-#, python-format
 msgid ""
 "NAV Credentials: Please set the hungarian vat number on the company first!"
 msgstr ""
@@ -889,7 +858,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/l10n_hu_edi_connection.py:0
-#, python-format
 msgid "NAV replied with non-OK funcCode: %s"
 msgstr ""
 
@@ -913,7 +881,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_tax_audit_export.py:0
-#, python-format
 msgid "No invoice to export!"
 msgstr ""
 
@@ -925,7 +892,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Open Accounting Settings"
 msgstr ""
 
@@ -965,15 +931,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please create an ATK (outside the scope of the VAT Act) type of tax!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 "
 "format!"
@@ -982,21 +945,18 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set NAV credentials in the Accounting Settings!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set any VAT taxes to be 'Affected by previous taxes'!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Please set any non-VAT (excise) taxes to be 'Included in Price' and 'Affects"
 " subsequent taxes'!"
@@ -1005,49 +965,42 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set company Country, Zip, City and Street!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set company VAT number!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set exactly one VAT tax on each invoice line!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set invoice date to today!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set partner Country, Zip, City and Street!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please set partner Tax ID on company partners!"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Please use HUF as company currency!"
 msgstr ""
 
@@ -1156,7 +1109,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_tax.py:0
-#, python-format
 msgid "TAM Exempt property"
 msgstr ""
 
@@ -1185,7 +1137,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "Technical Annulment"
 msgstr ""
 
@@ -1209,7 +1160,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request has been approved by the user on the OnlineSzámla "
 "portal."
@@ -1218,7 +1168,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request is pending, please confirm it on the OnlineSzámla "
 "portal."
@@ -1227,7 +1176,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request was received by the NAV, but has not been confirmed "
 "yet."
@@ -1236,14 +1184,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The annulment request was rejected by NAV."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment request was rejected by the user on the OnlineSzámla portal."
 msgstr ""
@@ -1251,7 +1197,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The annulment was sent to the NAV, but there was an error querying its "
 "status."
@@ -1260,14 +1205,12 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The cancellation request could not be performed."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The following invoices appear to be earlier in the chain, but have not yet "
 "been sent. Please send them first."
@@ -1276,7 +1219,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The invoice was accepted by the NAV, but warnings were reported. To reverse,"
 " create a credit note / debit note."
@@ -1285,21 +1227,18 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The invoice was received by the NAV, but has not been confirmed yet."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The invoice was rejected by the NAV."
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "The invoice was sent to the NAV, but there was an error querying its status."
 msgstr ""
@@ -1307,7 +1246,6 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "The invoice was successfully accepted by the NAV."
 msgstr ""
 
@@ -1390,36 +1328,24 @@ msgstr ""
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View Company/ies"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View invoice(s)"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View partner(s)"
 msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
-#: code:addons/l10n_hu_edi/models/account_move.py:0
-#, python-format
 msgid "View tax(es)"
 msgstr ""
 

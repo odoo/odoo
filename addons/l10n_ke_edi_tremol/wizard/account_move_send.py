@@ -1,23 +1,33 @@
-from odoo import _, models, fields, api
+from odoo import _, models, api
 from odoo.exceptions import UserError
 
 
 class AccountMoveSend(models.TransientModel):
     _inherit = 'account.move.send'
 
-    l10n_ke_edi_warning_message = fields.Text(compute='_compute_l10n_ke_edi_warning_message')
+    def _get_l10n_ke_edi_tremol_warning_moves(self):
+        return self.move_ids.filtered(lambda m: m.country_code == 'KE' and not m._l10n_ke_fiscal_device_details_filled())
 
-    @api.depends('move_ids')
-    def _compute_l10n_ke_edi_warning_message(self):
+    @api.model
+    def _get_l10n_ke_edi_tremol_warning_message(self, warning_moves):
+        return '\n'.join([
+            _("The following documents have no details related to the fiscal device."),
+            *(warning_moves.mapped('name'))
+        ])
+
+    def _compute_warnings(self):
+        # EXTENDS 'account'
+        super()._compute_warnings()
         for wizard in self:
-            warning_moves = wizard.move_ids.filtered(lambda m: m.country_code == 'KE' and not m._l10n_ke_fiscal_device_details_filled())
-            if warning_moves:
-                wizard.l10n_ke_edi_warning_message = '\n'.join([
-                    _("The following documents have no details related to the fiscal device."),
-                    *(warning_moves.mapped('name'))
-                ])
-            else:
-                wizard.l10n_ke_edi_warning_message = False
+            if warning_moves := wizard._get_l10n_ke_edi_tremol_warning_moves():
+                wizard.warnings = {
+                    **(wizard.warnings or {}),
+                    'l10n_ke_edi_tremol_warning_moves': {
+                        'message': wizard._get_l10n_ke_edi_tremol_warning_message(warning_moves),
+                        'action_text': _("View Invoice(s)"),
+                        'action': warning_moves._get_records_action(name=_("Check Invoice(s)")),
+                    }
+                }
 
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS account
@@ -30,7 +40,7 @@ class AccountMoveSend(models.TransientModel):
     def action_send_and_print(self, force_synchronous=False, allow_fallback_pdf=False, **kwargs):
         # EXTENDS account - prevent Send & Print if KE invoices aren't validated and no fallback is allowed.
         self.ensure_one()
-        if not allow_fallback_pdf \
-            and any(move.country_code == 'KE' and not move._l10n_ke_fiscal_device_details_filled() for move in self.move_ids):
-            raise UserError(self.l10n_ke_edi_warning_message)
+        if not allow_fallback_pdf:
+            if warning_moves := self._get_l10n_ke_edi_tremol_warning_moves():
+                raise UserError(self._get_l10n_ke_edi_tremol_warning_message(warning_moves))
         return super().action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, **kwargs)

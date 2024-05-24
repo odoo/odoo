@@ -135,7 +135,7 @@ class ResCompany(models.Model):
         for key, check in checks.items():
             for fields_tuple in check.pop('fields'):
                 if invalid_records := self.filtered(lambda record: not any(record[field] for field in fields_tuple)):
-                    errors[key] = {
+                    errors[f"l10n_it_edi_{key}"] = {
                         'message': check['message'],
                         'action_text': _("View Company/ies"),
                         'action': invalid_records._get_records_action(name=_("Check Company Data")),
@@ -147,7 +147,7 @@ class ResCompany(models.Model):
                 'default_search_setting': _("Italian Electronic Invoicing"),
                 'bin_size': False,
             }
-            errors['settings_l10n_it_edi_proxy_user_id'] = {
+            errors['l10n_it_edi_settings_l10n_it_edi_proxy_user_id'] = {
                 'message': _("You must accept the terms and conditions in the Settings to use the IT EDI."),
                 'action_text': _("View Settings"),
                 'action': self.env['res.config.settings']._get_records_action(name=_("Settings"), context=new_context),

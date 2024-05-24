@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1\n"
+"Project-Id-Version: Odoo Server 17.4alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 23:34+0000\n"
-"PO-Revision-Date: 2023-01-08 23:34+0000\n"
+"POT-Creation-Date: 2024-06-07 13:57+0000\n"
+"PO-Revision-Date: 2024-06-07 13:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,11 @@ msgid "<strong class=\"text-center\">TIMS URL</strong><br/><br/>"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#: model:ir.model,name:l10n_ke_edi_tremol.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_invoice_number
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_invoice_number
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_invoice_number
@@ -66,6 +71,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_datetime
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_datetime
 msgid "CU Signing Date and Time"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-python
+#: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
+msgid "Check Invoice(s)"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -121,8 +132,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
 msgid ""
-"Invalid invoice configuration on %s:\n"
-"%s\n"
+"Invalid invoice configuration on %(invoice)s:\n"
+"%(error_list)s\n"
 "\n"
 msgstr ""
 
@@ -163,7 +174,7 @@ msgstr ""
 #. module: l10n_ke_edi_tremol
 #. odoo-python
 #: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
-msgid "On line %s, you must select one and only one tax."
+msgid "On line %s, you must select one and only one VAT tax."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -199,14 +210,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/l10n_ke_edi_tremol/static/src/components/ke_proxy_dialog.xml:0
 msgid "Sending Invoices to Fiscal Device"
-msgstr ""
-
-#. module: l10n_ke_edi_tremol
-#. odoo-python
-#: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
-msgid ""
-"Tax '%s' is used, but only taxes of 16%%, 8%%, 0%% or Exempt can be sent. "
-"Please reconfigure or change the tax."
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -310,4 +313,10 @@ msgstr ""
 msgid ""
 "Unexpected Error:\n"
 " %s"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-python
+#: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
+msgid "View Invoice(s)"
 msgstr ""
