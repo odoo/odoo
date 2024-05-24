@@ -134,7 +134,7 @@ class AccountEdiProxyClientUser(models.Model):
         if 'error' in response:
             message = _('The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s', url=url, error_message=response['error']['message'])
             if response['error']['code'] == 404:
-                message = _('The url that this service tried to contact does not exist. The url was %r', url)
+                message = _('The url that this service tried to contact does not exist. The url was “%s”', url)
             raise AccountEdiProxyError('connection_error', message)
 
         proxy_error = response['result'].pop('proxy_error', False)

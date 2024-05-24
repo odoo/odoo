@@ -1134,8 +1134,8 @@ actual arch.
                 field_groups = name_manager._get_field_groups(name)
                 error_msg = [_(
                     "There is no combination of groups that can guarantee the "
-                    "visibility of the field %(name)r on model %(model)r.\n"
-                    "The field %(name)r (%(field_groups)s) is used by these "
+                    "visibility of the field “%(name)s” on model “%(model)s”.\n"
+                    "The field “%(name)s” (%(field_groups)s) is used by the "
                     "following elements (and their groups):",
                     name=name, model=name_manager.model._name,
                     field_groups=_('Only superuser has access') if field_groups.is_empty() else field_groups,
@@ -1777,7 +1777,7 @@ actual arch.
                 try:
                     vnames = get_expression_field_names(expr)
                 except SyntaxError as e:
-                    message = _('Invalid context: %(expr)r is not a valid Python expression \n\n %(e)s', expr=expr, e=e)
+                    message = _('Invalid context: “%(expr)s” is not a valid Python expression \n\n %(error)s', expr=expr, error=e)
                     self._raise_view_error(message)
                 if vnames:
                     name_manager.must_have_fields(node, vnames, node_info, f"context ({expr})")
@@ -1785,7 +1785,7 @@ actual arch.
                     if key == 'group_by':  # only in context
                         if not isinstance(val_ast, ast.Constant) or not isinstance(val_ast.value, str):
                             msg = _(
-                                '"group_by" value must be a string %(attribute)s=%(value)r',
+                                '"group_by" value must be a string %(attribute)s=“%(value)s”',
                                 attribute=attr, value=expr,
                             )
                             self._raise_view_error(msg, node)
@@ -1793,7 +1793,7 @@ actual arch.
                         fname = group_by.split(':')[0]
                         if fname not in name_manager.model._fields:
                             msg = _(
-                                'Unknown field "%(field)s" in "group_by" value in %(attribute)s=%(value)r',
+                                'Unknown field “%(field)s” in "group_by" value in %(attribute)s=“%(value)s”',
                                 field=fname, attribute=attr, value=expr,
                             )
                             self._raise_view_error(msg, node)
@@ -1803,7 +1803,7 @@ actual arch.
                 # check was generic in view form
                 if not expr.isdigit():
                     self._raise_view_error(
-                        _('%(attribute)r value must be an integer (%(value)s)',
+                        _('“%(attribute)s” value must be an integer (%(value)s)',
                           attribute=attr, value=expr),
                         node,
                     )
@@ -1987,7 +1987,7 @@ actual arch.
                 return
             fnames = get_expression_field_names(py_expression)
         except (SyntaxError, ValueError, AttributeError) as e:
-            msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=py_expression, error=e)
+            msg = _("Invalid %(use)s: “%(expr)s”\n%(error)s", use=use, expr=py_expression, error=e)
             self._raise_view_error(msg, node, from_exception=e)
         name_manager.must_have_fields(node, fnames, node_info, f"{use} ({py_expression})")
 
@@ -1995,7 +1995,7 @@ actual arch.
         try:
             fnames, vnames = get_domain_value_names(domain)
         except (SyntaxError, ValueError, AttributeError) as e:
-            msg = _("Invalid %(use)s: %(expr)r\n%(error)s", use=use, expr=domain, error=e)
+            msg = _("Invalid %(use)s: “%(expr)s”\n%(error)s", use=use, expr=domain, error=e)
             self._raise_view_error(msg, node, from_exception=e)
 
         self._check_field_paths(node, fnames, target_model, f"{use} ({domain})")
@@ -2013,7 +2013,7 @@ actual arch.
             for index, name in enumerate(names):
                 if Model is None:
                     msg = _(
-                        'Non-relational field %(field)r in path %(field_path)r in %(use)s)',
+                        'Non-relational field “%(field)s” in path “%(field_path)s” in %(use)s)',
                         field=names[index - 1], field_path=field_path, use=use,
                     )
                     self._raise_view_error(msg, node)
@@ -2027,7 +2027,7 @@ actual arch.
                     self._raise_view_error(msg, node)
                 if not field._description_searchable:
                     msg = _(
-                        'Unsearchable field %(field)r in path %(field_path)r in %(use)s)',
+                        'Unsearchable field “%(field)s” in path “%(field_path)s” in %(use)s)',
                         field=name, field_path=field_path, use=use,
                     )
                     self._raise_view_error(msg, node)
@@ -2993,13 +2993,13 @@ class NameManager:
                 and name not in self.field_info
             ):
                 msg = _(
-                    "Name or id %(name_or_id)r in %(use)s does not exist.",
+                    "Name or id “%(name_or_id)s” in %(use)s does not exist.",
                     name_or_id=name, use=use,
                 )
                 view._raise_view_error(msg)
             if name not in self.available_actions and name not in self.available_names:
                 msg = _(
-                    "Name or id %(name_or_id)r in %(use)s must be present in view but is missing.",
+                    "Name or id “%(name_or_id)s” in %(use)s must be present in view but is missing.",
                     name_or_id=name, use=use,
                 )
                 view._raise_view_error(msg)
@@ -3035,7 +3035,7 @@ class NameManager:
 
         for name, node in self.must_exist_groups.items():
             if self.group_definitions.get_id(name) is None:
-                msg = _("The group %(name)r defined in view does not exist!", name=name)
+                msg = _("The group “%(name)s” defined in view does not exist!", name=name)
                 view._log_view_warning(msg, node)
 
         for name, groups_uses in self.used_fields.items():
@@ -3056,7 +3056,7 @@ class NameManager:
                     continue
             elif info.get('select') == 'multi':  # mainly for searchpanel, but can be a generic behaviour.
                 msg = _(
-                    "Field %(name)r used in %(use)s is present in view but is in select multi.",
+                    "Field “%(name)s” used in %(use)s is present in view but is in select multi.",
                     name=name, use=use,
                 )
                 view._raise_view_error(msg)
@@ -3065,20 +3065,20 @@ class NameManager:
             error_msg = None
             if name not in self.model._fields and name not in self.available_names:
                 error_msg = [_(
-                    "Field %(name)r does not exist in model %(model)r.\n"
-                    "The name is used by this following elements (and their groups):",
+                    "Field “%(name)s” does not exist in model “%(model)s”.\n"
+                    "It is referenced by the following elements (and their groups):",
                     name=name, model=self.model._name,
                 )]
             elif missing_groups is False:
                 field_groups = self._get_field_groups(name)
                 error_msg = [_(
-                    "Field %(name)r is restricted by groups without matching "
+                    "Field “%(name)s” is restricted by groups without matching "
                     "with the common mandatory groups.\n"
                     "There are therefore cases where a user does not have access to the "
                     "mandatory field value even though it is used somewhere in the view. "
                     "The mandatory groups take care of the groups in view, the "
                     "description field groups and model read access.\n"
-                    "The field %(name)r (%(field_groups)s) is used by these "
+                    "The field “%(name)s” (%(field_groups)s) is used by the "
                     "following elements (and their groups):",
                     name=name,
                     field_groups=_('Only super user has access') if field_groups.is_empty() else field_groups,

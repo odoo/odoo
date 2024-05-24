@@ -36,11 +36,11 @@ class Action(Controller):
                     assert action
                 action_id = action.id
             except Exception as exc:
-                raise MissingActionError(_("The action %r does not exist.", action_id)) from exc
+                raise MissingActionError(_("The action “%s” does not exist.", action_id)) from exc
 
         base_action = Actions.browse([action_id]).sudo().read(['type'])
         if not base_action:
-            raise MissingActionError(_("The action %r does not exist.", action_id))
+            raise MissingActionError(_("The action “%s” does not exist", action_id))
         action_type = base_action[0]['type']
         if action_type == 'ir.actions.report':
             request.update_context(bin_size=True)

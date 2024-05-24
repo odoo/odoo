@@ -1,4 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+# When using quotation marks in translation strings, please use curly quotes (“”)
+# instead of straight quotes (""). On Linux, the keyboard shortcuts are:
+# AltGr + V for the opening curly quotes “
+# AltGr + B for the closing curly quotes ”
+
 import codecs
 import fnmatch
 import functools

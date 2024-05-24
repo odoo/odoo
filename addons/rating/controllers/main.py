@@ -36,7 +36,7 @@ class Rating(http.Controller):
         record_sudo.rating_apply(
             rate,
             rating=rating,
-            feedback=_('Customer rated %r.', record_sudo.display_name),
+            feedback=_('Customer rated “%s”.', record_sudo.display_name),
             subtype_xmlid=None,
             notify_delay_send=True,
         )
