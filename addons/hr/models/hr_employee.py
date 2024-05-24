@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+from copy import copy
 from pytz import timezone, UTC
 from datetime import datetime, time
 from random import choice
@@ -315,10 +315,12 @@ class HrEmployeePrivate(models.Model):
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
         for fname in field_names:
-            values = self.env.cache.get_values(public, public._fields[fname])
-            if self._fields[fname].translate:
-                values = [(value.copy() if value else None) for value in values]
-            self.env.cache.update_raw(self, self._fields[fname], values)
+            field = self._fields[fname]
+            public_field = public._fields[fname]
+            values = public_field._get_cache_values(public)
+            if field.translate:
+                values = [copy(value) for value in values]
+            field.update_cache(self, values)
 
     @api.model
     def _cron_check_work_permit_validity(self):

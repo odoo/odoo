@@ -38,7 +38,7 @@ import re
 import uuid
 import warnings
 from collections import defaultdict, deque
-from collections.abc import MutableMapping, Iterable
+from collections.abc import Mapping, Iterable
 from contextlib import closing
 from inspect import getmembers
 from operator import attrgetter, itemgetter
@@ -3698,6 +3698,7 @@ class BaseModel(metaclass=MetaModel):
                 raise UserError(_("Translations for model translated fields only accept falsy values and str"))
             value_en = translations.get('en_US', True)
             if not value_en and value_en != '':
+                # en_US is not allowed to fallback
                 translations.pop('en_US')
             translations = {
                 lang: translation if isinstance(translation, str) else None
@@ -3706,24 +3707,19 @@ class BaseModel(metaclass=MetaModel):
             if not translations:
                 return False
 
-            translation_fallback = translations['en_US'] if translations.get('en_US') is not None \
-                else translations[self.env.lang] if translations.get(self.env.lang) is not None \
-                else next((v for v in translations.values() if v is not None), None)
-            self.invalidate_recordset([field_name])
-            self._cr.execute(SQL(
-                """ UPDATE %(table)s
-                    SET %(field)s = NULLIF(
-                        jsonb_strip_nulls(%(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s),
-                        '{}'::jsonb)
-                    WHERE id = %(id)s
-                """,
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(field_name),
-                fallback=Json({'en_US': translation_fallback}),
-                value=Json(translations),
-                id=self.id,
-            ))
-            self.modified([field_name])
+            new_translations = field._get_stored_translations(self) or {}
+            new_translations.update(translations)
+            new_translations = {k: v for k, v in new_translations.items() if v is not None}
+            if not new_translations:
+                new_cache_value = None
+            else:
+                if 'en_US' not in new_translations:
+                    lang = self.env.lang
+                    new_translations['en_US'] = new_translations[lang] if lang in new_translations else next(iter(new_translations.values()))
+                new_cache_value = odoo.fields.TranslatedCacheValue(new_translations)
+            context_key = self.env.cache_key(field)
+            # directly set cache to replace the cache value instead of update it using field.set_cache
+            self.env.cache.set(field, context_key, self._ids[0], new_cache_value, dirty=True)
         else:
             # Note:
             # update terms in 'en_US' will not change its value other translated values
@@ -3754,7 +3750,7 @@ class BaseModel(metaclass=MetaModel):
                     }
                 stored_translations[lang] = field.translate(translation.get, old_value)
                 stored_translations.pop(f'_{lang}', None)
-            self.env.cache.update_raw(self, field, [stored_translations], dirty=True)
+            field.set_cache(self, stored_translations, dirty=True)
 
         # the following write is incharge of
         # 1. mark field as modified
@@ -3941,8 +3937,6 @@ class BaseModel(metaclass=MetaModel):
         if not field_names:
             return []
 
-        cache = self.env.cache
-
         fields_to_fetch = []
         field_names_todo = deque(self.check_field_access_rights('read', field_names))
         field_names_done = {'id'}  # trick: ignore 'id'
@@ -3955,7 +3949,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            if ignore_when_in_cache and not any(cache.get_missing_ids(self, field)):
+            if ignore_when_in_cache and not any(field.get_cache_ids_missing(self)):
                 # field is already in cache: don't fetch it
                 continue
             if field.store:
@@ -4022,7 +4016,7 @@ class BaseModel(metaclass=MetaModel):
             for field in column_fields:
                 values = next(column_values)
                 # store values in cache, but without overwriting
-                self.env.cache.insert_missing(fetched, field, values)
+                field.impute_cache(fetched, values)
         else:
             fetched = self.browse(query)
 
@@ -4515,7 +4509,7 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and any(self.env.cache.get_missing_ids(real_recs, field)):
+                    if not field.store and any(field.get_cache_ids_missing(real_recs)):
                         field.write(real_recs, vals[field.name])
 
                 # inverse records that are not being computed
@@ -4583,21 +4577,6 @@ class BaseModel(metaclass=MetaModel):
                 column = SQL.identifier(fname)
                 # the type cast is necessary for some values, like NULLs
                 expr = SQL('"__tmp".%s::%s', column, SQL(field.column_type[1]))
-                if field.translate is True:
-                    # this is the SQL equivalent of:
-                    # None if expr is None else (
-                    #     (column or {'en_US': next(iter(expr.values()))}) | expr
-                    # )
-                    expr = SQL(
-                        """CASE WHEN %(expr)s IS NULL THEN NULL ELSE
-                            COALESCE(%(table)s.%(column)s, jsonb_build_object(
-                                'en_US', jsonb_path_query_first(%(expr)s, '$.*')
-                            )) || %(expr)s
-                        END""",
-                        table=SQL.identifier(self._table),
-                        column=column,
-                        expr=expr,
-                    )
                 columns.append(column)
                 assignments.append(SQL("%s = %s", column, expr))
 
@@ -4923,23 +4902,23 @@ class BaseModel(metaclass=MetaModel):
             set_vals = common_set_vals.union(vals)
             for field in self._fields.values():
                 if field.type in ('one2many', 'many2many'):
-                    self.env.cache.set(record, field, ())
+                    field.set_cache(record, ())
                 elif field.related and not field.column_type:
-                    self.env.cache.set(record, field, field.convert_to_cache(None, record))
+                    field.set_cache(record, field.convert_to_cache(None, record))
                 # DLE P123: `test_adv_activity`, `test_message_assignation_inbox`, `test_message_log`, `test_create_mail_simple`, ...
                 # Set `mail.message.parent_id` to False in cache so it doesn't do the useless SELECT when computing the modified of `child_ids`
                 # in other words, if `parent_id` is not set, no other message `child_ids` are impacted.
                 # + avoid the fetch of fields which are False. e.g. if a boolean field is not passed in vals and as no default set in the field attributes,
                 # then we know it can be set to False in the cache in the case of a create.
                 elif field.store and field.name not in set_vals and not field.compute:
-                    self.env.cache.set(record, field, field.convert_to_cache(None, record))
+                    field.set_cache(record, field.convert_to_cache(None, record))
             for fname, value in vals.items():
                 field = self._fields[fname]
                 if field.type in ('one2many', 'many2many'):
                     cachetoclear.append((record, field))
                 else:
                     cache_value = field.convert_to_cache(value, record)
-                    self.env.cache.set(record, field, cache_value)
+                    field.set_cache(record, cache_value)
                     if field.type in ('many2one', 'many2one_reference') and self.pool.field_inverses[field]:
                         inverses_update[(field, cache_value)].append(record.id)
 
@@ -4970,8 +4949,9 @@ class BaseModel(metaclass=MetaModel):
 
             # if value in cache has not been updated by other_fields, remove it
             for record, field in cachetoclear:
-                if self.env.cache.contains(record, field) and not self.env.cache.get(record, field):
-                    self.env.cache.remove(record, field)
+                context_key = record.env.cache_key(field)
+                if not self.env.cache.get(field, context_key, record._ids[0], True):
+                    self.env.cache.remove(field, context_key, record._ids[0])
 
         # check Python constraints for stored fields
         records._validate_fields(name for data in data_list for name in data['stored'])
@@ -5008,7 +4988,7 @@ class BaseModel(metaclass=MetaModel):
         # update the cache of updated nodes, and determine what to recompute
         updated = dict(self._cr.fetchall())
         records = self.browse(updated)
-        self.env.cache.update(records, self._fields['parent_path'], updated.values())
+        self._fields['parent_path'].update_cache(records, updated.values())
 
     def _parent_store_update_prepare(self, vals_list):
         """ Return the records in ``self`` that must update their parent_path
@@ -5075,7 +5055,7 @@ class BaseModel(metaclass=MetaModel):
             # update the cache of updated nodes, and determine what to recompute
             updated = dict(rows)
             records = self.browse(updated)
-            self.env.cache.update(records, self._fields['parent_path'], updated.values())
+            self._fields['parent_path'].update_cache(records, updated.values())
             records.modified(['parent_path'])
 
     def _load_records_write(self, values):
@@ -6064,7 +6044,7 @@ class BaseModel(metaclass=MetaModel):
         # convert monetary fields after other columns for correct value rounding
         for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
             value = field.convert_to_cache(value, self, validate)
-            cache.set(self, field, value, check_dirty=False)
+            field.set_cache(self, value, check_dirty=False)
 
             # set inverse fields on new records in the comodel
             if field.relational:
@@ -6373,7 +6353,7 @@ class BaseModel(metaclass=MetaModel):
         """
         self._recompute_recordset(fnames)
         fields_ = None if fnames is None else (self._fields[fname] for fname in fnames)
-        if self.env.cache.has_dirty_fields(self, fields_):
+        if self._has_dirty_fields(fields_):
             self._flush(fnames)
 
     def _flush(self, fnames=None):
@@ -6386,20 +6366,22 @@ class BaseModel(metaclass=MetaModel):
         if not any(field in dirty_fields for field in fields):
             return
 
-        # if any field is context-dependent, the values to flush should
-        # be found with a context where the context keys are all None
-        model = self.with_context({})
         id_vals = defaultdict(dict)
         for field in self._fields.values():
             ids = self.env.cache.clear_dirty_field(field)
             if not ids:
                 continue
-            records = model.browse(ids)
-            values = list(self.env.cache.get_values(records, field))
-            assert len(values) == len(records), \
+            values = [
+                value
+                # if any field is context-dependent, the values to flush should
+                # be found with a context where the context keys are all None
+                for value in self.env.cache.get_values(field, None, ids)
+                if value is not api.NOTHING
+            ]
+            assert len(values) == len(ids), \
                 f"Could not find all values of {field} to flush them\n" \
                 f"    Cache: {self.env.cache!r}"
-            for record, value in zip(records, values):
+            for record, value in zip(self.browse(ids), values):
                 if not field.translate:
                     value = field.convert_to_write(value, record)
                     value = field.convert_to_column(value, record)
@@ -6408,7 +6390,7 @@ class BaseModel(metaclass=MetaModel):
                 id_vals[record.id][field.name] = value
 
         # update all records
-        model.browse(id_vals)._write_multi(id_vals.values())
+        self.browse(id_vals)._write_multi(id_vals.values())
 
     #
     # New records - represent records that do not exist in the database yet;
@@ -6655,7 +6637,7 @@ class BaseModel(metaclass=MetaModel):
             Return at most ``limit`` records.
         """
         ids = expand_ids(self.id, self._prefetch_ids)
-        ids = self.env.cache.get_missing_ids(self.browse(ids), field)
+        ids = field.get_cache_ids_missing(self.browse(ids))
         if limit:
             ids = itertools.islice(ids, limit)
         # Those records are aimed at being either fetched, or computed.  But the
@@ -6664,6 +6646,25 @@ class BaseModel(metaclass=MetaModel):
         # compute methods are not invoked with a mix of real and new records for
         # the sake of code simplicity.
         return self.browse(ids)
+
+    def _has_dirty_fields(self, fields=None):
+        """ Return whether any of the given records has dirty fields.
+
+        :param fields: a collection of fields or ``None``; the value ``None`` is
+            interpreted as any field on ``records``
+        """
+        cache = self.env.cache
+        if fields is None:
+            return any(
+                not ids.isdisjoint(self._ids)
+                for field, ids in cache._dirty.items()
+                if field.model_name == self._name
+            )
+        else:
+            return any(
+                field in cache._dirty and not cache._dirty[field].isdisjoint(self._ids)
+                for field in fields
+            )
 
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
@@ -6769,7 +6770,8 @@ class BaseModel(metaclass=MetaModel):
                     ids = (marked.get(field) or set()) | (tomark.get(field) or set())
                     records = records.browse(id_ for id_ in records._ids if id_ not in ids)
                 else:
-                    records = records & self.env.cache.get_records(records, field, all_contexts=True)
+                    records = records.browse(
+                        id_ for id_ in records._ids if id_ in self.env.cache.get_cached_ids(field))
                 if not records:
                     continue
                 # recursively trigger recomputation of field's dependents
@@ -6863,7 +6865,7 @@ class BaseModel(metaclass=MetaModel):
                 if real_records:
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')
                 if new_records:
-                    cache_records = self.env.cache.get_records(model, field)
+                    cache_records = model.browse(field.get_cache_mapping(self.env))
                     new_ids = set(self._ids)
                     records |= cache_records.filtered(lambda r: not set(r[field.name]._ids).isdisjoint(new_ids))
 
@@ -7043,7 +7045,7 @@ collections.abc.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have index or count
 collections.abc.Sequence.register(BaseModel)
 
-class RecordCache(MutableMapping):
+class RecordCache(Mapping):
     """ A mapping from field names to values, to read and update the cache of a record. """
     __slots__ = ['_record']
 
@@ -7054,27 +7056,20 @@ class RecordCache(MutableMapping):
     def __contains__(self, name):
         """ Return whether `record` has a cached value for field ``name``. """
         field = self._record._fields[name]
-        return self._record.env.cache.contains(self._record, field)
+        env = self._record.env
+        return env.cache.contains(field, env.cache_key(field), self._record._ids[0])
 
     def __getitem__(self, name):
         """ Return the cached value of field ``name`` for `record`. """
         field = self._record._fields[name]
-        return self._record.env.cache.get(self._record, field)
-
-    def __setitem__(self, name, value):
-        """ Assign the cached value of field ``name`` for ``record``. """
-        field = self._record._fields[name]
-        self._record.env.cache.set(self._record, field, value)
-
-    def __delitem__(self, name):
-        """ Remove the cached value of field ``name`` for ``record``. """
-        field = self._record._fields[name]
-        self._record.env.cache.remove(self._record, field)
+        env = self._record.env
+        return env.cache.get(field, env.cache_key(field), self._record._ids[0])
 
     def __iter__(self):
         """ Iterate over the field names with a cached value. """
-        for field in self._record.env.cache.get_fields(self._record):
-            yield field.name
+        for name, field in self._record._fields.items():
+            if name != 'id' and self._record._ids[0] in field.get_cache_mapping(self._record.env):
+                yield name
 
     def __len__(self):
         """ Return the number of fields with a cached value. """

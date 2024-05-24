@@ -401,6 +401,7 @@ class Foo(models.Model):
     _description = 'Test New API Foo'
 
     name = fields.Char()
+    title = fields.Char(translate=True)
     value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
     text = fields.Char(trim=False)
@@ -411,7 +412,13 @@ class Bar(models.Model):
     _description = 'Test New API Bar'
 
     name = fields.Char()
+    title = fields.Char(translate=True)
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
+    foo2 = fields.Many2one('test_new_api.foo')
+    foo2_name_related = fields.Char(related='foo2.name', readonly=False)
+    foo2_name_computed = fields.Char(compute='_compute_foo2_name_computed')
+    foo2_title_related = fields.Char(related='foo2.title', readonly=False)
+    foo2_title_computed = fields.Char(compute='_compute_foo2_title_computed')
     value1 = fields.Integer(related='foo.value1', readonly=False)
     value2 = fields.Integer(related='foo.value2', readonly=False)
     text1 = fields.Char('Text1', related='foo.text', readonly=False)
@@ -426,6 +433,17 @@ class Bar(models.Model):
         assert operator == 'in'
         records = self.env['test_new_api.foo'].browse(value)
         return [('name', 'in', records.mapped('name'))]
+
+    @api.depends('foo.name')
+    def _compute_foo2_name_computed(self):
+        for bar in self:
+            bar.foo2_name_computed = bar.foo2.name
+
+    @api.depends('foo.title')
+    @api.depends_context('lang')
+    def _compute_foo2_title_computed(self):
+        for bar in self:
+            bar.foo2_title_computed = bar.foo2.title
 
 
 class Related(models.Model):

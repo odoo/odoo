@@ -3916,7 +3916,7 @@ class TestMany2oneReference(TransactionCase):
         reference.res_model = record._name
 
         # the model field 'res_model' is not in database yet
-        self.assertTrue(self.env.cache.has_dirty_fields(reference, [type(reference).res_model]))
+        self.assertTrue(reference._has_dirty_fields([type(reference).res_model]))
 
         # searching on the one2many should flush the field 'res_model'
         records = record.search([('model_ids.create_date', '!=', False)])
@@ -4822,3 +4822,40 @@ class TestModifiedPerformance(TransactionCase):
         self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
         self.assertEqual(self.modified_line_a.total_price_quantity, 35)
         self.assertEqual(self.modified_line_a.total_price, 7)
+
+
+import itertools
+import timeit
+class TestNewCacheApiPerformance(TransactionCase):
+    def setUp(self):
+        self.bars = self.env['test_new_api.bar'].create(({
+            'name': f'bar_name_{i}',
+            'title': f'bar_title_{i}',
+        } for i in range(1, 1000)))
+        self.foos = self.env['test_new_api.foo'].create(({
+            'name': f'foo_name_{i}',
+            'title': f'foo_title_{i}',
+        } for i in range(1, 1000)))
+        for bar, foo2 in zip(self.bars, self.foos):
+            bar.foo2 = foo2
+
+    def test_01_read(self):
+        self.bars.fetch(['name', 'title', 'foo2'])
+        record = self.bars[500]
+        record = type(self.bars)(self.env, self.bars[500]._ids, self.bars._ids)
+        record.env.lang
+        record.env._lang
+
+        # cache miss read for computed
+        computed_fields = ['foo2_name_related', 'foo2_name_computed', 'foo2_title_related', 'foo2_title_computed']
+        self.bars.invalidate_recordset()
+        for field in computed_fields:
+            t = timeit.timeit(f"record.{field}", number=1000, globals=locals())
+            print(f'cache miss read for {field}: {t}')
+
+        # cache hit read
+        for field in ['name', 'foo2_name_related', 'foo2_name_computed', 'title', 'foo2_title_related', 'foo2_title_computed']:
+            t = timeit.timeit(f"record.{field}", number=1000, globals=locals())
+            print(f'cache hit read for {field}: {t}')
+
+
