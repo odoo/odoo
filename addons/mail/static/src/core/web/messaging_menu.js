@@ -1,8 +1,10 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/web/notification_item";
+import { cleanTerm } from "@mail/utils/common/format";
 import { onExternalClick, useDiscussSystray } from "@mail/utils/common/hooks";
+import { onChange } from "@mail/utils/common/misc";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -11,8 +13,26 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
+class MessagingMenuQuickSearch extends Component {
+    static props = ["onChange?"];
+    static template = "mail.MessagingMenuQuickSearch";
+
+    setup() {
+        super.setup();
+        const ref = useRef("root");
+        this.state = useState({ val: "" });
+        onMounted(() => {
+            ref.el.focus();
+        });
+        onChange(this.state, "val", () => {
+            void this.state.val;
+            this.props.onChange?.(this.state.val);
+        });
+    }
+}
+
 export class MessagingMenu extends Component {
-    static components = { Dropdown, NotificationItem, ImStatus };
+    static components = { Dropdown, MessagingMenuQuickSearch, NotificationItem, ImStatus };
     static props = [];
     static template = "mail.MessagingMenu";
 
@@ -28,11 +48,29 @@ export class MessagingMenu extends Component {
         this.state = useState({
             addingChat: false,
             addingChannel: false,
+            quickSearchOpen: false,
+            quickSearchVal: "",
         });
         this.dropdown = useDropdownState();
-
+        const quickSearchRef = useRef("quick-search-input");
+        onExternalClick("quick-search-input", () => this.clearQuickSearch());
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
+        });
+        useEffect(
+            () => {
+                if (!this.state.isOpen) {
+                    this.clearQuickSearch();
+                }
+            },
+            () => [this.dropdown.isOpen]
+        );
+        this.wasQuickSearchRefFocused = false;
+        useEffect(() => {
+            if (quickSearchRef.el && !this.wasQuickSearchRefFocused) {
+                quickSearchRef.el.focus();
+                this.wasQuickSearchRefFocused = true;
+            }
         });
     }
 
@@ -107,6 +145,34 @@ export class MessagingMenu extends Component {
                 this.store.discuss.activeTab === "main" &&
                 this.notification.permission === "prompt",
         };
+    }
+
+    openQuickSearch() {
+        this.state.quickSearchAutofocus++;
+        this.state.quickSearchOpen = true;
+        this.store.discuss.activeTab = "main";
+    }
+
+    clearQuickSearch() {
+        this.wasQuickSearchRefFocused = false;
+        Object.assign(this.state, { quickSearchOpen: false, quickSearchVal: "" });
+    }
+
+    get hasQuickSearch() {
+        return this.threads.length > 9;
+    }
+
+    onChangeQuickSearch(val) {
+        this.state.quickSearchVal = val;
+    }
+
+    get filteredThreads() {
+        return this.threads.filter((thread) => {
+            return (
+                !this.state.quickSearchVal ||
+                cleanTerm(thread.displayName).includes(cleanTerm(this.state.quickSearchVal))
+            );
+        });
     }
 
     get threads() {

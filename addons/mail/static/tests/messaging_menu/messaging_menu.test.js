@@ -727,7 +727,7 @@ test("channel preview: basic rendering", async () => {
     await contains(".o-mail-NotificationItem-text", { text: "Demo: test" });
 });
 
-test("filtered previews", async () => {
+test("filtered previews (filter)", async () => {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { channel_type: "chat" },
@@ -757,6 +757,24 @@ test("filtered previews", async () => {
     await contains(".o-mail-NotificationItem", { text: "Mitchell Admin" });
     await click(".o-mail-MessagingMenu button", { text: "Channels" });
     await contains(".o-mail-NotificationItem", { text: "channel1" });
+});
+
+test("filtered previews (quick search)", async () => {
+    // requires at least 10 threads to be visible
+    const pyEnv = await startServer();
+    for (let id = 1; id <= 10; id++) {
+        pyEnv["discuss.channel"].create({ name: `channel${id}` });
+    }
+    await start();
+    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(".o-mail-NotificationItem", { count: 10 });
+    await click(".o-mail-MessagingMenu .oi.oi-search");
+    await insertText(".o-mail-MessagingMenu input[placeholder='Quick search…']", "1");
+    await contains(".o-mail-NotificationItem", { count: 2 }); // 1 and 10
+    await insertText(".o-mail-MessagingMenu input[placeholder='Quick search…']", "0");
+    await contains(".o-mail-NotificationItem", { count: 1 }); // 10
+    await insertText(".o-mail-MessagingMenu input[placeholder='Quick search…']", "0");
+    await contains(".o-mail-NotificationItem", { count: 0 });
 });
 
 test("no code injection in message body preview", async () => {
