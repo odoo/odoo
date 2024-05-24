@@ -189,6 +189,7 @@ For more specific needs, you may also assign custom-defined actions
             # 'mail/static/src/core/public/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public/**/*',
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
