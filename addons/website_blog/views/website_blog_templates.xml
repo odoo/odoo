@@ -175,7 +175,7 @@ list of filtered posts (by date or tag).
 <!-- (Option) Blog: Sidebar : Show -->
 <template id="opt_blog_sidebar_show" name="Show Sidebar" inherit_id="website_blog.blog_post_short" active="False">
     <xpath expr="//div[@id='o_wblog_posts_loop_container']" position="after">
-        <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or 'ms-lg-5'}">
+        <div t-attf-class="col-12 col-md-3 d-flex #{opt_blog_list_view and 'col-lg-4' or ''}">
             <t t-call="website_blog.sidebar_blog_index"/>
         </div>
     </xpath>
@@ -241,10 +241,10 @@ list of filtered posts (by date or tag).
             <!-- Sidebar-enabled Layout -->
             <div t-if="opt_blog_post_sidebar" t-attf-class="mx-auto #{opt_blog_post_readable and 'o_wblog_read_with_sidebar'}">
                 <div t-attf-class="d-flex flex-column flex-lg-row #{opt_blog_post_readable and 'justify-content-between'}">
-                    <div id="o_wblog_post_content" t-attf-class="#{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
+                    <div id="o_wblog_post_content" t-attf-class="pe-lg-5 #{opt_blog_post_readable and 'o_container_small mx-0 w-100 flex-shrink-0' or 'w-lg-75'}">
                         <t t-call="website_blog.blog_post_content"/>
                     </div>
-                    <div id="o_wblog_post_sidebar_col" t-attf-class="ps-lg-5 #{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
+                    <div id="o_wblog_post_sidebar_col" t-attf-class="#{not opt_blog_post_readable and 'flex-grow-1 w-lg-25'}">
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </div>

@@ -213,7 +213,7 @@
                 <t t-set="_forum_path" t-value="url_for('/forum') + '/' + _forum_slug"/>
                 <t t-call="website_forum.user_sidebar"/>
                 <t t-call="website_forum.user_sidebar_mobile"/>
-                <div class="o_wforum_content_wrapper col-lg-9">
+                <div class="o_wforum_content_wrapper col-lg-9 ps-lg-4">
                     <div class="o_wprofile_email_validation_container d-flex flex-column justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
                         <t t-call="website_profile.email_validation_banner">
                             <t t-set="redirect_url" t-value="'/forum/%s' % forum.id if forum else '/forum/all/'"/>
@@ -232,7 +232,7 @@
 <!-- User sidebar -->
 <template id="user_sidebar">
     <aside class="o_wforum_sidebar col-3 d-none d-lg-flex flex-column z-index-1">
-        <div class="flex-grow-1 px-2">
+        <div class="flex-grow-1">
             <t t-call="website_forum.user_sidebar_header"/>
             <t t-call="website_forum.user_sidebar_body"/>
         </div>
