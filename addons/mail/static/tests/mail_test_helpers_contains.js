@@ -958,6 +958,7 @@ export async function contains(selector, options) {
 
 const stepState = {
     expectedSteps: null,
+    /** @type {import("@odoo/hoot-mock").Deferred} */
     deferred: null,
     timeout: null,
     currentSteps: [],
