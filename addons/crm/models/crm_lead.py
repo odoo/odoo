@@ -23,7 +23,6 @@ from odoo.tools.misc import get_lang
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
-_schema = logging.getLogger('odoo.schema')
 
 
 CRM_LEAD_FIELDS_TO_MERGE = [
@@ -741,17 +740,6 @@ class Lead(models.Model):
                            self._table, ['user_id', 'team_id', 'type'])
         tools.create_index(self._cr, 'crm_lead_create_date_team_id_idx',
                            self._table, ['create_date', 'team_id'])
-        phone_pattern = r'[\s\\./\(\)\-]'
-        for field_name in ('phone', 'mobile'):
-            index_name = f'crm_lead_{field_name}_partial_tgm'
-            if tools.index_exists(self._cr, index_name):
-                continue
-            regex_expression = f"regexp_replace(({field_name}::text), %s::text, ''::text, 'g'::text)"
-            self._cr.execute(
-                f'CREATE INDEX "{index_name}" ON "{self._table}" ({regex_expression}) WHERE {field_name} IS NOT NULL',
-                (phone_pattern,)
-            )
-            _schema.debug("Table %r: created index %r (%s)", self._table, index_name, regex_expression)
 
     @api.model_create_multi
     def create(self, vals_list):
