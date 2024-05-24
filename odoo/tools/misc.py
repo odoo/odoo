@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-
 """
 Miscellaneous tools used by OpenERP.
 """
+
+from __future__ import annotations
+
 import base64
 import cProfile
 import collections

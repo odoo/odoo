@@ -34,7 +34,7 @@ from psycopg2.extras import Json
 
 import odoo
 from odoo.exceptions import UserError
-from . import config, pycompat
+from . import config
 from .misc import file_open, file_path, get_iso_codes, OrderedSet, SKIPPED_ELEMENT_TYPES
 
 _logger = logging.getLogger(__name__)
@@ -775,9 +775,10 @@ def TranslationFileWriter(target, fileformat='po', lang=None):
                       '.csv, .po, or .tgz (received .%s).') % fileformat)
 
 
+_writer = codecs.getwriter('utf-8')
 class CSVFileWriter:
     def __init__(self, target):
-        self.writer = pycompat.csv_writer(target, dialect='UNIX')
+        self.writer = csv.writer(_writer(target), dialect='UNIX')
         # write header first
         self.writer.writerow(("module","type","name","res_id","src","value","comments"))
 
