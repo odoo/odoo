@@ -47,7 +47,11 @@ patch(ActionpadWidget.prototype, {
         }
     },
     get highlightPay() {
-        return super.highlightPay && !this.hasChangesToPrint && this.hasQuantity(this.currentOrder);
+        return (
+            this.currentOrder?.lines?.length &&
+            !this.hasChangesToPrint &&
+            this.hasQuantity(this.currentOrder)
+        );
     },
     get displayCategoryCount() {
         return this.pos.categoryCount.slice(0, 3);
