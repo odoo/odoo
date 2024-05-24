@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @ts-check */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
@@ -7,7 +7,10 @@ import { nextTick } from "@web/../tests/helpers/utils";
 const { toCartesian, toZone, lettersToNumber } = spreadsheet.helpers;
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
+ * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
+ * @typedef {import("@spreadsheet").CmdGlobalFilter} CmdGlobalFilter
+ * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
+ * @typedef {import("@odoo/o-spreadsheet").UID} UID
  */
 
 /**
@@ -23,8 +26,8 @@ export function selectCell(model, xc, sheetId = model.getters.getActiveSheetId()
 
 /**
  * Add a global filter and ensure the data sources are completely reloaded
- * @param {Model} model
- * @param {{filter: GlobalFilter}} filter
+ * @param {import("@spreadsheet").OdooSpreadsheetModel} model
+ * @param {CmdGlobalFilter} filter
  */
 export async function addGlobalFilter(model, filter, fieldMatchings = {}) {
     const result = model.dispatch("ADD_GLOBAL_FILTER", { filter, ...fieldMatchings });
@@ -112,7 +115,7 @@ export function setCellStyle(model, xc, style, sheetId = model.getters.getActive
 
 /**
  * Add columns
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @param {"before"|"after"} position
  * @param {string} column
  * @param {number} quantity
@@ -136,7 +139,7 @@ export function addColumns(
 
 /**
  * Delete columns
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @param {string[]} columns
  * @param {UID} sheetId
  */

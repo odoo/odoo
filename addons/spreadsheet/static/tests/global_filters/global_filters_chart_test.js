@@ -1,12 +1,17 @@
-/** @odoo-module */
+/** @ts-check */
 
 import { globalFiltersFieldMatchers } from "../../src/global_filters/plugins/global_filters_core_plugin";
 import { createSpreadsheetWithChart } from "../utils/chart";
 import { addGlobalFilter, setGlobalFilterValue } from "../utils/commands";
 import { patchDate } from "@web/../tests/helpers/utils";
 
+/**
+ * @typedef {import("@spreadsheet").DateGlobalFilter} DateGlobalFilter
+ */
+
 async function addChartGlobalFilter(model) {
     const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+    /** @type {DateGlobalFilter}*/
     const filter = {
         id: "42",
         type: "date",
@@ -46,6 +51,8 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
         const { model } = await createSpreadsheetWithChart();
         assert.equal(model.getters.getGlobalFilters().length, 0);
         const chartId = model.getters.getChartIds(model.getters.getActiveSheetId())[0];
+
+        /** @type {DateGlobalFilter}*/
         const filter = {
             id: "42",
             type: "date",

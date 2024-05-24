@@ -1,39 +1,4 @@
-/** @odoo-module */
-
-/**
- * @typedef {"fixedPeriod"|"relative"|"from_to"} RangeType
- *
- * @typedef {"last_month" | "last_week" | "last_year" | "last_three_years" | "this_month" | "this_quarter" | "this_year"} RelativePeriod
- *
- * @typedef {Object} FieldMatching
- * @property {string} chain name of the field
- * @property {string} type type of the field
- * @property {number} [offset] offset to apply to the field (for date filters)
- *
- * @typedef TextGlobalFilter
- * @property {"text"} type
- * @property {string} id
- * @property {string} label
- * @property {object} [rangeOfAllowedValues]
- * @property {string} [defaultValue]
- *
- * @typedef DateGlobalFilter
- * @property {"date"} type
- * @property {string} id
- * @property {string} label
- * @property {RangeType} rangeType
- * @property {RelativePeriod} [defaultValue]
- *
- * @typedef RelationalGlobalFilter
- * @property {"relation"} type
- * @property {string} id
- * @property {string} label
- * @property {string} modelName
- * @property {boolean} includeChildren
- * @property {"current_user" | number[]} [defaultValue]
- *
- * @typedef {TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter} GlobalFilter
- */
+/** @ts-check */
 
 export const globalFiltersFieldMatchers = {};
 
@@ -42,6 +7,12 @@ import { checkFiltersTypeValueCombination } from "@spreadsheet/global_filters/he
 import { _t } from "@web/core/l10n/translation";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+
+/**
+ * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
+ * @typedef {import("@spreadsheet").CmdGlobalFilter} CmdGlobalFilter
+ * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
+ */
 
 export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     static getters = /** @type {const} */ ([
@@ -207,7 +178,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
      * Returns the field matching for a given model by copying the matchings of another DataSource that
      * share the same model, including only the chain and type.
      *
-     * @returns {Record<string, FieldMatching}
+     * @returns {Record<string, FieldMatching> | {}}
      */
     getFieldMatchingForModel(newModel) {
         const globalFilters = this.getGlobalFilters();
@@ -243,15 +214,16 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
     /**
      * Edit a global filter
      *
-     * @param {GlobalFilter} newFilter
+     * @param {CmdGlobalFilter} cmdFilter
      */
-    _editGlobalFilter(newFilter) {
-        newFilter = { ...newFilter };
-        if (newFilter.type === "text" && newFilter.rangeOfAllowedValues) {
-            newFilter.rangeOfAllowedValues = this.getters.getRangeFromRangeData(
-                newFilter.rangeOfAllowedValues
-            );
-        }
+    _editGlobalFilter(cmdFilter) {
+        const rangeOfAllowedValues =
+            cmdFilter.type === "text" && cmdFilter.rangeOfAllowedValues
+                ? this.getters.getRangeFromRangeData(cmdFilter.rangeOfAllowedValues)
+                : undefined;
+        /** @type {GlobalFilter} */
+        const newFilter =
+            cmdFilter.type === "text" ? { ...cmdFilter, rangeOfAllowedValues } : { ...cmdFilter };
         const id = newFilter.id;
         const currentLabel = this.getGlobalFilter(id).label;
         const index = this.globalFilters.findIndex((filter) => filter.id === id);
@@ -292,13 +264,15 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
      */
     export(data) {
         data.globalFilters = this.globalFilters.map((filter) => {
-            filter = { ...filter };
+            /** @type {Object} */
+            const filterData = { ...filter };
             if (filter.type === "text" && filter.rangeOfAllowedValues) {
-                filter.rangeOfAllowedValues = this.getters.getRangeString(
-                    filter.rangeOfAllowedValues
+                filterData.rangeOfAllowedValues = this.getters.getRangeString(
+                    filter.rangeOfAllowedValues,
+                    ""
                 );
             }
-            return filter;
+            return filterData;
         });
     }
 

@@ -30,7 +30,7 @@ const { getMaxObjectId } = helpers;
  * @property {ListDefinition} definition
  * @property {Object} fieldMatching
  *
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  */
 
 export class ListCorePlugin extends OdooCorePlugin {
