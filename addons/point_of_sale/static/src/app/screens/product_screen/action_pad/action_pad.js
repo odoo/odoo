@@ -27,9 +27,6 @@ export class ActionpadWidget extends Component {
     get isLongName() {
         return this.props.partner && this.props.partner.name.length > 10;
     }
-    get highlightPay() {
-        return this.pos.get_order()?.orderlines?.length;
-    }
     getMainButtonClasses() {
         return "button btn d-flex flex-column flex-fill align-items-center justify-content-center fw-bolder btn-lg rounded-0";
     }
