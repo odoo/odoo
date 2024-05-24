@@ -161,8 +161,6 @@ export function getActionManagerServerData() {
             id: 2,
             xml_id: "action_2",
             type: "ir.actions.server",
-            state: "code",
-            code: () => false,
         },
         {
             id: 3,
