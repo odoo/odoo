@@ -1,4 +1,5 @@
 from odoo import api, fields, _
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons.base.models.res_users import CheckIdentity
 
@@ -14,19 +15,19 @@ class CheckIdentityPasskeys(CheckIdentity):
             return 'passkey'
         else:
             return super()._get_default_auth_method()
-
-    def _check_identity(self, *args):
-        self.ensure_one()
-        if self.auth_method == 'passkey':
-            assert self.env['auth.passkey.key']._get_passkey_by_credential_id(args[0]['id']).create_uid == self.env.user
-            challenge = request.session.pop('webauthn_challenge')
-            self.env['auth.passkey.key']._verify_auth(args[0], challenge)
-        else:
-            super()._check_identity(self, *args)
+    
+    def _check_identity(self):
+        try:
+            super()._check_identity()
+        except UserError:
+            if self.auth_method == 'passkey':
+                raise UserError(_("Incorrect Passkey. Please provide a valid passkey or use a different authentication method."))
+            raise
 
     def action_use_password(self):
         self.ensure_one()
         self.auth_method = 'password'
+        self.password = ''
         return {
             'type': 'ir.actions.act_window',
             'res_model': 'res.users.identitycheck',

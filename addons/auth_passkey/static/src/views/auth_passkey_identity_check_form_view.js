@@ -24,7 +24,7 @@ export class PassKeyIdentityCheckFormController extends FormController {
             const auth = await startAuthentication(serverOptions).catch(e => console.log(e));
             // In case the user cancelled the passkey browser check, just interrupt.
             if(!auth) return false;
-            clickParams.args = JSON.stringify([auth]);
+            this.model.root.update({password: JSON.stringify(auth)});
         }
         return super.beforeExecuteActionButton(...arguments);
     }

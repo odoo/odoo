@@ -12,9 +12,8 @@ publicWidget.registry.passkeyLogin = publicWidget.Widget.extend({
         const serverOptions = await jsonrpc("/auth/passkey/start-auth");
         const auth = await startAuthentication(serverOptions).catch(e => console.error(e));
         if(!auth) return false;
-        const verification = await jsonrpc("/auth/passkey/verify-auth", { auth });
-        if(verification.status == "ok") {
-            window.location.href = verification.redirect_url;
-        }
+        const form = document.querySelector('form[class="oe_login_form"]');
+        form.querySelector('input[name="webauthn"]').value = JSON.stringify(auth);
+        form.submit();
     }
 })

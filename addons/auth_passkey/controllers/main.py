@@ -3,7 +3,7 @@ from base64 import urlsafe_b64encode
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.utils import _get_login_redirect_url
+from odoo.addons.web.controllers.home import Home
 
 from ..lib.duo_labs.webauthn import options_to_json
 
@@ -30,13 +30,11 @@ class WebauthnController(http.Controller):
         request.session.webauthn_challenge = auth_options.challenge
         return json.loads(options_to_json(auth_options))
 
-    @http.route(['/auth/passkey/verify-auth'], type='json', auth='public')
-    def json_verify_authentication(self, auth):
-        auth_key = request.env['auth.passkey.key']._verify_auth(auth, request.session.pop('webauthn_challenge'))
-        request.session.pre_login = auth_key.create_uid.login
-        request.session.pre_uid = auth_key.create_uid.id
-        request.session.finalize(request.env)
-        return {
-            'status': 'ok',
-            'redirect_url': _get_login_redirect_url(auth_key.create_uid.id)
-        }
+
+class HomeController(Home):
+    @http.route()
+    def web_login(self, redirect=None, **kw):
+        webauthn = request.params.get('webauthn')
+        if webauthn:
+            request.params['password'] = webauthn
+        return super().web_login(redirect, **kw)

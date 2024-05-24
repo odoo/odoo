@@ -999,6 +999,9 @@ class Session(collections.abc.MutableMapping):
             user = env['res.users'].browse(pre_uid)
             if not user._mfa_url():
                 self.finalize(env)
+            if request.session.get('skip_totp'):
+                request.session.pop('skip_totp')
+                self.finalize(env)
 
         if request and request.session is self and request.db == dbname:
             # Like update_env(user=request.session.uid) but works when uid is None

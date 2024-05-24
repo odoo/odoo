@@ -40,12 +40,6 @@ class PassKey(models.Model):
         pass
 
     @api.model
-    def _get_passkey_by_credential_id(self, identifier):
-        identifier = base64.urlsafe_b64decode(identifier + '===').hex()
-        result = self.sudo().search([('credential_identifier', '=', identifier)], limit=1)
-        return result
-
-    @api.model
     def _start_auth(self):
         return generate_authentication_options(
             rp_id=url_parse(self.get_base_url()).host,
@@ -53,21 +47,17 @@ class PassKey(models.Model):
         )
 
     @api.model
-    def _verify_auth(self, auth, challenge):
+    def _verify_auth(self, auth, challenge, public_key, sign_count):
         parsed_url = url_parse(self.get_base_url())
-        auth_key = self._get_passkey_by_credential_id(auth['id'])
-        if not auth_key:
-            raise AccessDenied(_('This Passkey is not registered in this database.'))
         auth_verification = verify_authentication_response(
             credential=auth,
             expected_challenge=challenge,
             expected_origin=parsed_url.replace(path='').to_url(),
             expected_rp_id=parsed_url.host,
-            credential_public_key=base64url_to_bytes(auth_key.public_key),
-            credential_current_sign_count=auth_key.sign_count,
+            credential_public_key=base64url_to_bytes(public_key),
+            credential_current_sign_count=sign_count,
         )
-        auth_key.sign_count = auth_verification.new_sign_count
-        return auth_key
+        return auth_verification.new_sign_count
 
     @api.model
     def _create_registration_options(self):

@@ -1,9 +1,11 @@
+import json
 import time
 
+from odoo.exceptions import UserError
 from odoo.http import _request_stack
 from odoo.tools import DotDict
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, get_db_name
 from odoo.addons.website.tools import MockRequest
 
 
@@ -14,6 +16,10 @@ class PasskeyTest(TransactionCase):
 
         # needs a fake request in order to call methods protected with check_identity
         fake_req = DotDict({
+            'httprequest': DotDict({
+                'environ': {'REMOTE_ADDR': 'localhost'},
+                'cookies': {},
+            }),
             'session': {'identity-check-last': time.time()},
         })
         _request_stack.push(fake_req)
@@ -33,9 +39,12 @@ class PasskeyTest(TransactionCase):
             public_key='pQECAyYgASFYICjw-NoCHMkYYbRo8Q4SgJ4tZc8BSEmuEI0XmA6hUqR_IlggjtuBgyhwnr7PqABF2o8vCniMVa7_mTG6_l9Pc4eI4mo=',
         )
 
+        _request_stack.pop()
+
     def setUp(self):
         super().setUp()
-        self.addCleanup(_request_stack.pop)
+        self.env.registry.enter_test_mode(self.cr)
+        self.addCleanup(self.registry.leave_test_mode)
 
     def test_authentication(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'http://localhost:8069')
@@ -53,11 +62,12 @@ class PasskeyTest(TransactionCase):
             "clientExtensionResults": {},
             "authenticatorAttachment": "cross-platform"
         }
-        webauthn_challenge = b'\xa2==\xce\xbb\x94\xca\xa5\x0c S\xb4\xa2^T\x96\xd5\x1d\xf7\x9eP\xab\x0fbr\x17\xb9\xc3\xf8=\x93\xa8\xc1\xc9\x1e\xbd\x8a\x85\xad\x9c/\x91X\xb4b{\xff,\xa8s\xbfOf\xc8\x08\x9aei\x03OG\x17\xe9x'
-        self.env['auth.passkey.key']._verify_auth(auth, webauthn_challenge)
-        # Replay attacks will raise an error
-        with self.assertRaises(Exception):
-            self.env['auth.passkey.key']._verify_auth(auth, webauthn_challenge)
+        with MockRequest(self.env) as request:
+            request.session['webauthn_challenge'] = b'\xa2==\xce\xbb\x94\xca\xa5\x0c S\xb4\xa2^T\x96\xd5\x1d\xf7\x9eP\xab\x0fbr\x17\xb9\xc3\xf8=\x93\xa8\xc1\xc9\x1e\xbd\x8a\x85\xad\x9c/\x91X\xb4b{\xff,\xa8s\xbfOf\xc8\x08\x9aei\x03OG\x17\xe9x'
+            self.env['res.users']._login(get_db_name(), 'admin', json.dumps(auth), None)
+            # Replay attacks will raise an error
+            with self.assertRaises(Exception):
+                self.env['res.users']._login(get_db_name(), 'admin', json.dumps(auth), None)
 
     def test_verification(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')
@@ -79,12 +89,14 @@ class PasskeyTest(TransactionCase):
         with MockRequest(self.env) as request:
             request.session['webauthn_challenge'] = webauthn_challenge
             idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'passkey'})
-            idcheck._check_identity(auth)
+            idcheck.password = json.dumps(auth)
+            idcheck._check_identity()
             # Due to lack of support of sign_count, replay attacks are possible
             # This is an accepted risk in order to increase compatbility with passkey implementations
             request.session['webauthn_challenge'] = webauthn_challenge
             idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'passkey'})
-            idcheck._check_identity(auth)
+            idcheck.password = json.dumps(auth)
+            idcheck._check_identity()
 
     def test_verification_only_self(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')
@@ -102,8 +114,9 @@ class PasskeyTest(TransactionCase):
             "authenticatorAttachment": "platform"
         }
         webauthn_challenge = b',\xdaU\xd1\xd3\xc82\xd9\xa9K\x01\x9e\x9c\x81\xff\x87Urq\x0b\x80\x80X\x10D\x9fS<\xa0h5\xac\x92p\xd0\x04\xad/\xab\xb2v\x94\xd7\xd9\xfb\xfc\x06\x97\xcd\xe8\x98F\r\xe7\x18\x8d\xf2\xb8}\x1a\x8b\xa5\x0f\\'
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(UserError):
             with MockRequest(self.env) as request:
                 request.session['webauthn_challenge'] = webauthn_challenge
                 idcheck = self.env['res.users.identitycheck'].with_user(self.admin_user).create({'auth_method': 'passkey'})
-                idcheck._check_identity(auth)
+                idcheck.password = json.dumps(auth)
+                idcheck._check_identity()
