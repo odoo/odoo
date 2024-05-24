@@ -7,13 +7,34 @@ from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 from odoo.exceptions import ValidationError
 from collections import defaultdict
 
+PRODUCT_VALUATION_SELECTIONS = [
+        ('manual_periodic', 'Manual'),
+        ('real_time', 'Automated')
+    ]
+
+PRODUCT_COST_METHOD = [
+        ('standard', 'Standard Price'),
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')
+    ]
+
 
 class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = 'product.template'
 
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
+    cost_method = fields.Selection(string="Cost Method", selection=PRODUCT_COST_METHOD, compute="_compute_cost_method", readonly=True)
+    valuation = fields.Selection(string="Valuation", selection=PRODUCT_VALUATION_SELECTIONS, compute="_compute_valuation", readonly=True)
+
+    @api.depends('categ_id')
+    def _compute_valuation(self):
+        for record in self:
+            record.valuation = record.categ_id.property_valuation if record.categ_id else "real_time"
+
+    @api.depends("categ_id")
+    def _compute_cost_method(self):
+        for record in self:
+            record.cost_method = record.categ_id.property_cost_method if record.categ_id else "standard"
 
     def write(self, vals):
         impacted_templates = {}
@@ -106,8 +127,18 @@ class ProductProduct(models.Model):
         help="Technical field to correctly show the currently selected company's currency that corresponds "
              "to the totaled value of the product's valuation layers")
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'product_id')
-    valuation = fields.Selection(related="categ_id.property_valuation", readonly=True)
-    cost_method = fields.Selection(related="categ_id.property_cost_method", readonly=True)
+    cost_method = fields.Selection(string="Cost Method", selection=PRODUCT_COST_METHOD, compute="_compute_cost_method", readonly=True)
+    valuation = fields.Selection(string="Valuation", selection=PRODUCT_VALUATION_SELECTIONS, compute="_compute_valuation", readonly=True)
+
+    @api.depends('categ_id')
+    def _compute_valuation(self):
+        for record in self:
+            record.valuation = record.categ_id.property_valuation if record.categ_id else "real_time"
+
+    @api.depends("categ_id")
+    def _compute_cost_method(self):
+        for recod in self:
+            recod.cost_method = recod.categ_id.property_cost_method if recod.categ_id else "standard"
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
@@ -739,17 +770,14 @@ class ProductProduct(models.Model):
 class ProductCategory(models.Model):
     _inherit = 'product.category'
 
-    property_valuation = fields.Selection([
-        ('manual_periodic', 'Manual'),
-        ('real_time', 'Automated')], string='Inventory Valuation',
+    property_valuation = fields.Selection(
+        PRODUCT_VALUATION_SELECTIONS, string='Inventory Valuation',
         company_dependent=True, copy=True, required=True,
         help="""Manual: The accounting entries to value the inventory are not posted automatically.
         Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.
         """)
-    property_cost_method = fields.Selection([
-        ('standard', 'Standard Price'),
-        ('fifo', 'First In First Out (FIFO)'),
-        ('average', 'Average Cost (AVCO)')], string="Costing Method",
+    property_cost_method = fields.Selection(
+        PRODUCT_COST_METHOD, string="Costing Method",
         company_dependent=True, copy=True, required=True,
         help="""Standard Price: The products are valued at their standard cost defined on the product.
         Average Cost (AVCO): The products are valued at weighted average cost.
