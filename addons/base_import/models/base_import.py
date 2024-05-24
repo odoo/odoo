@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import binascii
 import codecs
 import collections
+import csv
 import difflib
 import unicodedata
 
@@ -24,7 +24,7 @@ from PIL import Image
 from odoo import api, fields, models
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat, parse_version
+from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, parse_version
 
 FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
@@ -509,8 +509,7 @@ class Import(models.TransientModel):
             if bom and csv_data.startswith(bom):
                 encoding = options['encoding'] = encoding[:-2]
 
-        if encoding != 'utf-8':
-            csv_data = csv_data.decode(encoding).encode('utf-8')
+        csv_text = csv_data.decode(encoding)
 
         separator = options.get('separator')
         if not separator:
@@ -520,7 +519,7 @@ class Import(models.TransientModel):
             for candidate in (',', ';', '\t', ' ', '|', unicodedata.lookup('unit separator')):
                 # pass through the CSV and check if all rows are the same
                 # length & at least 2-wide assume it's the correct one
-                it = pycompat.csv_reader(io.BytesIO(csv_data), quotechar=options['quoting'], delimiter=candidate)
+                it = csv.reader(io.StringIO(csv_text), quotechar=options['quoting'], delimiter=candidate)
                 w = None
                 for row in it:
                     width = len(row)
@@ -535,8 +534,8 @@ class Import(models.TransientModel):
         if not len(options['quoting']) == 1:
             raise ImportValidationError(_("Error while importing records: Text Delimiter should be a single character."))
 
-        csv_iterator = pycompat.csv_reader(
-            io.BytesIO(csv_data),
+        csv_iterator = csv.reader(
+            io.StringIO(csv_text),
             quotechar=options['quoting'],
             delimiter=separator)
 
