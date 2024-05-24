@@ -167,6 +167,13 @@ class ImportarPreguntasWizard(models.TransientModel):
                 raise exceptions.ValidationError(
                     "Las opciones para preguntas de tipo 'multiple_choice' no deben contener duplicados."
                 )
+            
+            # Validar que el número de opciones no exceda el máximo permitido
+            if len(opciones) > 10:
+                raise exceptions.ValidationError(
+                    "Las opciones para preguntas de tipo 'multiple_choice' no pueden ser más de 10."
+                )
+
             # Validar que ninguna opción esté vacía o contenga solo espacios en blanco
             for opcion in opciones:
                 if not opcion.strip():
