@@ -204,7 +204,8 @@ class StockMove(models.Model):
                 location_dest = move.picking_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
-            if location_dest and move.location_final_id and move.location_final_id._child_of(location_dest):
+            if location_dest and move.location_final_id and \
+               (move.location_final_id._child_of(location_dest) or move.picking_type_id.code == 'outgoing'):
                 location_dest = move.location_final_id
             move.location_dest_id = location_dest
 
