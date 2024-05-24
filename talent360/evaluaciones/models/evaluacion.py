@@ -1183,7 +1183,7 @@ class Evaluacion(models.Model):
             if len(record.pregunta_ids) < 1:
                 raise exceptions.ValidationError(_("La evaluación debe tener al menos una pregunta."))
             if len(record.usuario_ids) < 1:
-                raise exceptions.ValidationError(_("La evaluación debe tener al menos un usuario."))
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una personas asignada."))
 
         return resultado
 
