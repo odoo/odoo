@@ -70,7 +70,7 @@ class PosSession(models.Model):
             product_params = self._load_data_params(self.config_id)['product.product']
             rewards = self.config_id._get_program_ids().reward_ids
             reward_products = rewards.discount_line_product_id | rewards.reward_product_ids
-            trigger_products = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'ewallet').trigger_product_ids
+            trigger_products = self.config_id._get_program_ids().filtered(lambda p: p.program_type in ['ewallet', 'gift_card']).trigger_product_ids
 
             products = list(set(reward_products.ids + trigger_products.ids) - set(product['id'] for product in result['data']['product.product']))
             products = self.env['product.product'].search_read([('id', 'in', products)], fields=product_params['fields'], load=False)
