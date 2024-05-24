@@ -10,6 +10,7 @@ import base64
 import cProfile
 import collections
 import contextlib
+import csv
 import datetime
 import hmac as hmac_lib
 import hashlib
@@ -49,7 +50,6 @@ import odoo.addons
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
 from odoo.tools.float_utils import float_round
-from . import pycompat
 from .cache import *
 from .config import config
 from .which import which
@@ -398,8 +398,8 @@ def scan_languages():
     """
     try:
         # read (code, name) from languages in base/data/res.lang.csv
-        with file_open('base/data/res.lang.csv', 'rb') as csvfile:
-            reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
+        with file_open('base/data/res.lang.csv') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
             code_index = fields.index("code")
             name_index = fields.index("name")
