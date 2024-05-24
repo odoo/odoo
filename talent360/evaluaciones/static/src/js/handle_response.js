@@ -2,20 +2,33 @@
 function confirmacion() {
     // Obtén todos los campos requeridos del formulario
     var requiredFields = document.querySelectorAll('input[required], textarea[required], select[required], input[type="radio"][required]');
+    var firstUnfilledField = null;
 
     // Verifica si todos los campos requeridos están llenos
     var allFieldsFilled = Array.from(requiredFields).every(function(field) {
         if (field.type === "radio") {
             // Para radio buttons, debemos verificar si alguno del grupo está seleccionado
             var radioGroup = document.getElementsByName(field.name);
-            return Array.from(radioGroup).some(radio => radio.checked);
+            var groupChecked = Array.from(radioGroup).some(radio => radio.checked);
+            if (!groupChecked && !firstUnfilledField) {
+                firstUnfilledField = field;
+            }
+            return groupChecked;
         } else {
-            return field.value.trim() !== '';
+            var isFilled = field.value.trim() !== '';
+            if (!isFilled && !firstUnfilledField) {
+                firstUnfilledField = field;
+            }
+            return isFilled;
         }
     });
 
     if (!allFieldsFilled) {
         alert('Por favor, llena todos los campos requeridos antes de enviar el formulario.');
+        if (firstUnfilledField) {
+            firstUnfilledField.scrollIntoView({ behavior: 'smooth' });
+            firstUnfilledField.focus();
+        }
         return false;
     }
     return true;
