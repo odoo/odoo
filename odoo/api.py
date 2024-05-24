@@ -499,8 +499,6 @@ class Environment(Mapping):
         if uid_origin == SUPERUSER_ID:
             uid_origin = None
 
-        assert context is not None
-
         # determine transaction object
         transaction = cr.transaction
         if transaction is None:
@@ -508,20 +506,21 @@ class Environment(Mapping):
 
         # if env already exists, return it
         for env in transaction.envs:
-            if (env.cr, env.uid, env.context, env.su, env.uid_origin) == (cr, uid, context, su, uid_origin):
+            if (env.cr, env.uid, env.su, env.uid_origin, env.context) == (cr, uid, su, uid_origin, context):
                 return env
 
         # otherwise create environment, and add it in the set
         assert isinstance(cr, BaseCursor)
         self = object.__new__(cls)
-        self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
-        self.uid_origin = uid_origin
-
-        self.transaction = self.all = transaction
+        self.cr, self.uid, self.su, self.uid_origin = cr, uid, su, uid_origin
+        self.context = frozendict(context)
+        self.transaction = transaction
         self.registry = transaction.registry
         self.cache = transaction.cache
+
         self._cache_key = {}                    # memo {field: cache_key}
         self._protected = transaction.protected
+
         transaction.envs.add(self)
         return self
 
@@ -776,20 +775,20 @@ class Environment(Mapping):
 
     def fields_to_compute(self):
         """ Return a view on the field to compute. """
-        return self.all.tocompute.keys()
+        return self.transaction.tocompute.keys()
 
     def records_to_compute(self, field):
         """ Return the records to compute for ``field``. """
-        ids = self.all.tocompute.get(field, ())
+        ids = self.transaction.tocompute.get(field, ())
         return self[field.model_name].browse(ids)
 
     def is_to_compute(self, field, record):
         """ Return whether ``field`` must be computed on ``record``. """
-        return record.id in self.all.tocompute.get(field, ())
+        return record.id in self.transaction.tocompute.get(field, ())
 
     def not_to_compute(self, field, records):
         """ Return the subset of ``records`` for which ``field`` must not be computed. """
-        ids = self.all.tocompute.get(field, ())
+        ids = self.transaction.tocompute.get(field, ())
         return records.browse(id_ for id_ in records._ids if id_ not in ids)
 
     def add_to_compute(self, field, records):
@@ -797,18 +796,18 @@ class Environment(Mapping):
         if not records:
             return records
         assert field.store and field.compute, "Cannot add to recompute no-store or no-computed field"
-        self.all.tocompute[field].update(records._ids)
+        self.transaction.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):
         """ Mark ``field`` as computed on ``records``. """
         if not records:
             return
-        ids = self.all.tocompute.get(field, None)
+        ids = self.transaction.tocompute.get(field, None)
         if ids is None:
             return
         ids.difference_update(records._ids)
         if not ids:
-            del self.all.tocompute[field]
+            del self.transaction.tocompute[field]
 
     def cache_key(self, field):
         """ Return the cache key of the given ``field``. """
