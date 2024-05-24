@@ -221,6 +221,32 @@ class Base(models.AbstractModel):
 
         return values_list
 
+
+    def web_resequence(self, field: str = 'sequence', offset: int = 0, specification: dict[str, dict] = {}) -> list[dict]:
+        """ Re-sequences a number of records in the model, by their ids.
+
+        The re-sequencing starts at the first record of ``ids``, the sequence
+        number starts at ``offset`` and is incremented by one after each record.
+
+        The returning value is a read of the resequenced records with the specification given
+        in the parameter.
+
+        :param ids: identifiers of the records to resequence, in the new sequence order
+        :type ids: list(id)
+        :param str field: field used for sequence specification, defaults to
+                          "sequence"
+        :param int offset: sequence number for first record in ``ids``, allows
+                           starting the resequencing from an arbitrary number,
+                           defaults to ``0``
+        :param dict[str, dict] specification: specification for the read of the resequenced records
+        """
+        if not self.fields_get([field]):
+            return False
+
+        for i, record in enumerate(self, start=offset):
+            record.write({field: i})
+        return self.web_read(specification)
+
     @api.model
     @api.readonly
     def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False, lazy=True):

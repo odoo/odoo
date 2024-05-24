@@ -1,6 +1,5 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
 
@@ -367,26 +366,20 @@ export class DynamicList extends DataPoint {
 
         const resIds = toReorder.map((d) => this._getDPresId(d)).filter((id) => id && !isNaN(id));
         const sequences = toReorder.map(getSequence);
-        const offset = sequences.length && Math.min(...sequences);
+        const offset = (sequences.length && Math.min(...sequences)) || 0;
 
         // Try to write new sequences on the affected records/groups
-        const params = {
-            model: resModel,
-            ids: resIds,
+        const result = await this.model.orm.resequence(resModel, resIds, handleField, offset, {
+            specification: {
+                [handleField]: {},
+            },
             context: this.context,
-            field: handleField,
-        };
-        if (offset) {
-            params.offset = offset;
-        }
-        const wasResequenced = await rpc("/web/dataset/resequence", params);
-        if (!wasResequenced) {
+        });
+        if (result === false) {
             return;
         }
 
         // Read the actual values set by the server and update the records/groups
-        const kwargs = { context: this.context };
-        const result = await this.model.orm.read(resModel, resIds, [handleField], kwargs);
         for (const dpData of result) {
             const dp = originalList.find((d) => this._getDPresId(d) === dpData.id);
             if (dp instanceof Record) {
