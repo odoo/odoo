@@ -67,7 +67,7 @@
             <t t-set="cell_height" t-value="default_line_height"/>
 
             <div class="overflow_auto o_survey_user_responses_table_wrapper" style="height: auto; page-break-inside: avoid; margin-bottom: 20px;">
-                <h4 t-esc="pregunta.titulo" style="page-break-inside: avoid; text-align: center;"/>
+                <h4 t-esc="pregunta.pregunta_texto" style="page-break-inside: avoid; text-align: center;"/>
                 <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % pregunta.id" style="page-break-inside: avoid;">
                     <thead>
                         <tr style="page-break-inside: avoid;">
@@ -187,6 +187,47 @@
                     <div class="o_survey_results_question_wrapper container-fluid p-5" style="page-break-inside: avoid; margin-bottom: 20px;" t-call="evaluaciones.encuestas_reporte_pregunta" />
                 </t>
             </div>
+        </template>
+
+
+        <template id="encuestas_reporte_demografico" name="Reporte: contenido de datos demograficos">
+            <h4>Datos demográficos</h4>
+            <div class="demo-wrapper">
+                <div class="survey_section">
+                    <h4>
+                            Por generación
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_generacion_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="generaciones">
+                        <canvas t-att-id="'canvas_pastel_generacion_nom_035'"/>
+                    </div>
+                </div>
+                <div class="survey_section">
+                    <h4>
+                            Por género
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_genero_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Género'" t-att-data-graph-data="generos">
+                        <canvas t-att-id="'canvas_pastel_genero_nom_035'"/>
+                    </div>
+                </div>
+                <div class=" survey_section">
+                    <h4>
+                            Por departamento
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_departamento_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="departamentos">
+                        <canvas t-att-id="'canvas_pastel_departamento_nom_035'"/>
+                    </div>
+                </div>
+
+                <div class="col survey_section">
+                    <h4>
+                            Por puesto
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_puesto_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="puestos">
+                        <canvas t-att-id="'canvas_pastel_puesto_nom_035'"/>
+                    </div>
+                </div>
+            </div>
+
         </template>
     </data>
 </odoo>
