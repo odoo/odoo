@@ -339,6 +339,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 # of the tax amount. Therefore fixed taxes are removed and are replace by a new line
                 # with appropriate amount, and non fixed taxes if the fixed tax affected the base of
                 # any other non fixed tax.
+                if fixed_tax.price_include:
+                    continue
+
                 if fixed_tax.include_base_amount:
                     pct_tax = taxes[list(taxes).index(fixed_tax) + 1:]\
                         .filtered(lambda t: t.is_base_affected and t.amount_type != 'fixed')

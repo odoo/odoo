@@ -343,6 +343,42 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         ]
         self._assert_invoice_lines_values(invoice.line_ids, expected)
 
+    def test_tax_fixed_amount_price_include(self):
+        tax_fix = self.create_tax(5, {'amount_type': 'fixed', 'include_base_amount': True, 'price_include': True})
+        tax_percentage = self.create_tax(21, {'amount_type': 'percent', 'price_include': True})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': 'line1',
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 1,
+                    'price_unit': 1210,
+                    'tax_id': [Command.set((tax_fix + tax_percentage).ids)],
+                }),
+            ],
+        })
+
+        downpayment = self.env['sale.advance.payment.inv']\
+            .with_context(active_ids=sale_order.ids, active_model=sale_order._name)\
+            .create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 200.0,
+                'deposit_account_id': self.revenue_account.id,
+            })
+        downpayment.create_invoices()
+        sale_order.action_confirm()
+        invoice = sale_order.invoice_ids
+
+        self.assertRecordValues(invoice.invoice_line_ids, [{'price_unit': 200.0, 'tax_ids': tax_percentage.ids}])
+        self.assertRecordValues(invoice.line_ids, [
+            {'balance': -165.29},
+            {'balance': -34.71},
+            {'balance': 200},
+        ])
+
     def test_analytic_distribution(self):
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Plan Test'})
         an_acc_01 = str(self.env['account.analytic.account'].create({'name': 'Account 01', 'plan_id': analytic_plan.id}).id)
