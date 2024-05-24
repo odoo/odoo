@@ -7,6 +7,7 @@ class MailMessage(models.Model):
     _inherit = "mail.message"
 
     def _validate_access_for_current_persona(self, operation):
+        # TDE: checkme
         if not self:
             return False
         self.ensure_one()
