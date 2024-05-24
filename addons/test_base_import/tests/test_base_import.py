@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import csv
 import difflib
 import io
 import pprint
 import unittest
 
 from odoo.tests.common import TransactionCase, can_import, RecordCapturer
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 from odoo.tools.misc import file_open
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.addons.test_base_import.models.test_base_import import model as base_import_model
@@ -652,8 +653,8 @@ class test_convert_import_data(TransactionCase):
         """
         Ensure importing keep newlines
         """
-        output = io.BytesIO()
-        writer = pycompat.csv_writer(output, quoting=1)
+        output = io.StringIO()
+        writer = csv.writer(output, quoting=1)
 
         data_row = [u"\tfoo\n\tbar", u" \"hello\" \n\n 'world' "]
 
@@ -662,7 +663,7 @@ class test_convert_import_data(TransactionCase):
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': base_import_model('preview'),
-            'file': output.getvalue(),
+            'file': output.getvalue().encode(),
             'file_type': 'text/csv',
         })
         data, _ = import_wizard._convert_import_data(
@@ -783,12 +784,12 @@ foo3,US,0,persons\n""",
 
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
-        f = io.BytesIO()
-        writer = pycompat.csv_writer(f, quoting=1)
+        f = io.StringIO()
+        writer = csv.writer(f, quoting=1)
         writer.writerow(['name', 'counter'])
         for i in range(rows):
             writer.writerow(['n_%d' % i, str(i)])
-        return f.getvalue()
+        return f.getvalue().encode()
 
     def test_recognize_batched(self):
         import_wizard = self.env['base_import.import'].create({
@@ -830,8 +831,8 @@ class TestBatching(TransactionCase):
           records not <limit-1>, but if we stop in the middle of the "current
           record" we'd always ignore the last record (I think)
         """
-        f = io.BytesIO()
-        writer = pycompat.csv_writer(f, quoting=1)
+        f = io.StringIO()
+        writer = csv.writer(f, quoting=1)
         writer.writerow(['name', 'value/value'])
         for record in range(10):
             writer.writerow(['record_%d' % record, '0'])
@@ -842,7 +843,7 @@ class TestBatching(TransactionCase):
             'res_model': base_import_model('o2m'),
             'file_type': 'text/csv',
             'file_name': 'things.csv',
-            'file': f.getvalue(),
+            'file': f.getvalue().encode(),
         })
         opts = {'quoting': '"', 'separator': ',', 'has_headers': True}
         preview = import_wizard.parse_preview({**opts, 'limit': 15})
@@ -918,9 +919,9 @@ class test_failures(TransactionCase):
         from PIL import Image
 
         im = Image.new('RGB', (1920, 1080))
-        fout = io.BytesIO()
+        fout = io.StringIO()
 
-        writer = pycompat.csv_writer(fout, dialect=None)
+        writer = csv.writer(fout, dialect=None)
         writer.writerows([
             [u'name', u'db_datas'],
             [u'foo', base64.b64encode(im.tobytes()).decode('ascii')]
@@ -928,7 +929,7 @@ class test_failures(TransactionCase):
 
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'ir.attachment',
-            'file': fout.getvalue(),
+            'file': fout.getvalue().encode(),
             'file_type': 'text/csv'
         })
         results = import_wizard.execute_import(

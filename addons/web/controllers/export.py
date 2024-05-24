@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import csv
 import datetime
 import functools
 import io
@@ -534,8 +534,8 @@ class CSVExport(ExportFormat, http.Controller):
         raise UserError(_("Exporting grouped data to csv is not supported."))
 
     def from_data(self, fields, rows):
-        fp = io.BytesIO()
-        writer = pycompat.csv_writer(fp, quoting=1)
+        fp = io.StringIO()
+        writer = csv.writer(fp, quoting=1)
 
         writer.writerow(fields)
 

@@ -3,7 +3,6 @@
 
 import ast
 import base64
-import contextlib
 import io
 
 from odoo import api, fields, models, tools, _
@@ -40,7 +39,7 @@ class BaseLanguageExport(models.TransientModel):
         this = self[0]
         lang = this.lang if this.lang != NEW_LANG_KEY else False
 
-        with contextlib.closing(io.BytesIO()) as buf:
+        with io.BytesIO() as buf:
             if this.export_type == 'model':
                 ids = self.env[this.model_name].search(ast.literal_eval(this.domain)).ids
                 trans_export_records(lang, this.model_name, ids, buf, this.format, self._cr)
