@@ -480,7 +480,7 @@ export const accountTaxHelpers = {
             }
         }
 
-        if (skipped.length > 0) {
+        if (skipped.size > 0) {
             eval_taxes_data = eval_taxes_data.filter((tax_data) => !skipped.has(tax_data.id));
         }
 
