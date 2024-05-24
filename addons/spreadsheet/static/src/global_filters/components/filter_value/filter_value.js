@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @ts-check */
 
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";

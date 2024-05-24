@@ -1,7 +1,7 @@
-/** @odoo-module */
+/** @ts-check */
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").GlobalFilter} GlobalFilter
+ * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
  *
  */
 

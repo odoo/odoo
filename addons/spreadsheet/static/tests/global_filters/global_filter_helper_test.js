@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @ts-check */
 import { getRelativeDateDomain } from "@spreadsheet/global_filters/helpers";
 import {
     getDateDomainDurationInDays,

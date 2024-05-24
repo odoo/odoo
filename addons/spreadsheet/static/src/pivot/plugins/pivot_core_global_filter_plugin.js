@@ -6,7 +6,7 @@
  * @typedef {import("@spreadsheet").AllCoreCommand} AllCoreCommand
  * @typedef {import("@spreadsheet").GFLocalPivot} GFLocalPivot
  *
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  */
 
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";

@@ -1,4 +1,4 @@
-/** @odoo-module */
+/** @ts-check */
 
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Domain } from "@web/core/domain";
@@ -7,7 +7,7 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  */
 
 export function checkFiltersTypeValueCombination(type, value) {
@@ -67,7 +67,7 @@ export function checkFilterFieldMatching(fieldMatchings) {
  *
  * @param {Object} now current time, as luxon time
  * @param {number} offset offset to add to the date
- * @param {"last_month" | "last_week" | "last_year" | "last_three_years"} rangeType
+ * @param {import("@spreadsheet").RelativePeriod} rangeType
  * @param {string} fieldName
  * @param {"date" | "datetime"} fieldType
  *

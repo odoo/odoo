@@ -11,14 +11,14 @@ const { DateTime } = luxon;
 const { pivotTimeAdapter } = helpers;
 
 /**
- * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  * @typedef {import("@odoo/o-spreadsheet").Token} Token
  */
 
 /**
  * Convert pivot period to the related filter value
  *
- * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
+ * @param {import("@spreadsheet").RangeType} timeRange
  * @param {string} value
  * @returns {object}
  */

@@ -1,9 +1,10 @@
-/** @odoo-module */
+/** @ts-check */
 
 /**
- * @typedef {import("./global_filters_core_plugin").GlobalFilter} GlobalFilter
- * @typedef {import("./global_filters_core_plugin").FieldMatching} FieldMatching
-
+ * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
+ * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
+ * @typedef {import("@spreadsheet").DateGlobalFilter} DateGlobalFilter
+ * @typedef {import("@spreadsheet").RelationalGlobalFilter} RelationalGlobalFilter
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -302,8 +303,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      */
     getTextFilterOptions(filterId) {
         const filter = this.getters.getGlobalFilter(filterId);
-        const range = filter.rangeOfAllowedValues;
-        if (!range) {
+        if (filter.type !== "text" || !filter.rangeOfAllowedValues) {
             return [];
         }
         const additionOptions = [
@@ -312,7 +312,10 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             this.getGlobalFilterValue(filterId),
             filter.defaultValue,
         ];
-        const options = this.getTextFilterOptionsFromRange(range, additionOptions);
+        const options = this.getTextFilterOptionsFromRange(
+            filter.rangeOfAllowedValues,
+            additionOptions
+        );
         return options;
     }
 
@@ -363,7 +366,11 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      * @param {string|Array<string>|Object} value Current value to set
      */
     _setGlobalFilterValue(id, value) {
-        this.values[id] = { value: value, rangeType: this.getters.getGlobalFilter(id).rangeType };
+        const filter = this.getters.getGlobalFilter(id);
+        this.values[id] = {
+            value: value,
+            rangeType: filter.type === "date" ? filter.rangeType : undefined,
+        };
     }
 
     /**
@@ -398,9 +405,9 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      * @param {string} id Id of the filter
      */
     _clearGlobalFilterValue(id) {
-        const { type, rangeType } = this.getters.getGlobalFilter(id);
+        const filter = this.getters.getGlobalFilter(id);
         let value;
-        switch (type) {
+        switch (filter.type) {
             case "text":
                 value = { preventAutomaticValue: true };
                 break;
@@ -411,7 +418,10 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
                 value = { preventAutomaticValue: true };
                 break;
         }
-        this.values[id] = { value, rangeType };
+        this.values[id] = {
+            value,
+            rangeType: filter.type === "date" ? filter.rangeType : undefined,
+        };
     }
 
     // -------------------------------------------------------------------------
@@ -423,7 +433,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      *
      * @private
      *
-     * @param {GlobalFilter} filter
+     * @param {DateGlobalFilter} filter
      * @param {FieldMatching} fieldMatching
      *
      * @returns {Domain}
@@ -435,7 +445,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
             return new Domain();
         }
         const field = fieldMatching.chain;
-        const type = fieldMatching.type;
+        const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
         const offset = fieldMatching.offset || 0;
         const now = DateTime.local();
 
@@ -518,7 +528,7 @@ export class GlobalFiltersUIPlugin extends OdooUIPlugin {
      *
      * @private
      *
-     * @param {GlobalFilter} filter
+     * @param {RelationalGlobalFilter} filter
      * @param {FieldMatching} fieldMatching
      *
      * @returns {Domain}
