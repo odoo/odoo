@@ -186,9 +186,8 @@ class StockForecasted(models.AbstractModel):
 
     def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids, wh_stock_location, read=True):
 
-        def _get_out_move_reserved_data(out, ins, used_reserved_moves, currents):
+        def _get_out_move_reserved_data(out, linked_moves, used_reserved_moves, currents):
             reserved_out = 0
-            linked_moves = self.env['stock.move'].browse(out._rollup_move_origs()).filtered(lambda m: m.id not in ins.ids)
             # the move to show when qty is reserved
             reserved_move = self.env['stock.move']
             for move in linked_moves:
@@ -277,11 +276,38 @@ class StockForecasted(models.AbstractModel):
 
         outs = past_outs | future_outs
 
+        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        # Prewarm cache with rollups
+        outs._rollup_move_origs_fetch()
+        ins._rollup_move_dests_fetch()
+
+        linked_moves_per_out = {}
+        ins_ids = set(ins._ids)
+        for out in outs:
+            linked_move_ids = out._rollup_move_origs() - ins_ids
+            linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
+
+        # Gather all linked moves
+        all_linked_move_ids = {
+            _id for _ids in linked_moves_per_out.values() for _id in _ids._ids
+        }
+        all_linked_moves = self.env['stock.move'].browse(all_linked_move_ids)
+
+        # Prewarm cache with sibling move's state/quantity
+        all_linked_moves.fetch(['move_orig_ids'])
+        all_linked_moves.move_orig_ids.fetch(['move_dest_ids'])
+        all_linked_moves.move_orig_ids.move_dest_ids.fetch(['state', 'quantity'])
+
+        # Share prefetch ids among all linked moves for performance
+        for out, linked_moves in linked_moves_per_out.items():
+            linked_moves_per_out[out] = linked_moves.with_prefetch(
+                all_linked_moves._prefetch_ids
+            )
+
         outs_per_product = defaultdict(list)
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
 
-        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({
@@ -292,7 +318,9 @@ class StockForecasted(models.AbstractModel):
 
         qties = self.env['stock.quant']._read_group([('location_id', 'in', wh_location_ids), ('quantity', '>', 0), ('product_id', 'in', outs.product_id.ids)],
                                                     ['product_id', 'location_id'], ['quantity:sum'])
-        wh_stock_sub_location_ids = wh_stock_location.search([('id', 'child_of', wh_stock_location.id)]).ids
+        wh_stock_sub_location_ids = set(
+            wh_stock_location.search([('id', 'child_of', wh_stock_location.id)])._ids
+        )
         currents = defaultdict(float)
         for product, location, quantity in qties:
             location_id = location.id
@@ -306,7 +334,9 @@ class StockForecasted(models.AbstractModel):
             used_reserved_moves = defaultdict(float)
             # for all out moves, check for linked moves and count reserved quantity
             for out in out_moves:
-                moves_data[out] = _get_out_move_reserved_data(out, ins, used_reserved_moves, currents)
+                moves_data[out] = _get_out_move_reserved_data(
+                    out, linked_moves_per_out[out], used_reserved_moves, currents
+                )
             # another loop to remove qty from current stock after reserved is counted for
             for out in out_moves:
                 data = _get_out_move_taken_from_stock_data(out, currents, moves_data[out])
