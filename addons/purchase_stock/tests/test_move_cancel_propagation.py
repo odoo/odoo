@@ -111,8 +111,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_ship', 'reception_steps': 'two_steps'})
         self.move.write({
             'picking_id': False,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.warehouse.pick_type_id.default_location_dest_id.id,
+            'picking_type_id': self.warehouse.pick_type_id.id,
             'location_final_id': self.cust_location,
         })
         self.move._action_confirm()
@@ -141,8 +140,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_ship', 'reception_steps': 'two_steps'})
         self.move.write({
             'picking_id': False,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.warehouse.pick_type_id.default_location_dest_id.id,
+            'picking_type_id': self.warehouse.pick_type_id.id,
             'location_final_id': self.cust_location,
         })
         self.move._action_confirm()
@@ -176,8 +174,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_pack_ship', 'reception_steps': 'three_steps'})
         self.move.write({
             'picking_id': False,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.warehouse.pick_type_id.default_location_dest_id.id,
+            'picking_type_id': self.warehouse.pick_type_id.id,
             'location_final_id': self.cust_location,
         })
         self.move._action_confirm()
@@ -206,8 +203,7 @@ class TestMoveCancelPropagation(PurchaseTestCommon):
         self.warehouse.write({'delivery_steps': 'pick_pack_ship', 'reception_steps': 'three_steps'})
         self.move.write({
             'picking_id': False,
-            'location_id': self.warehouse.lot_stock_id.id,
-            'location_dest_id': self.warehouse.pick_type_id.default_location_dest_id.id,
+            'picking_type_id': self.warehouse.pick_type_id.id,
             'location_final_id': self.cust_location,
         })
         self.move._action_confirm()
