@@ -22,7 +22,9 @@ function confirmacion() {
 }
 
 // Función que se ejecuta al hacer click en el botón de enviar
-function handleResponse() {
+function handleResponse(event) {
+    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
     // Recoge todos los inputs de tipo radio
     var radios = document.querySelectorAll('.o_survey_form_choice_item');
     var selectedValues = {};
@@ -39,8 +41,6 @@ function handleResponse() {
         }
     });
 
-
-
     // Recoge todos los elementos textarea
     var textareas = document.querySelectorAll('.o_survey_question_text_box');
     var textareaValues = {};
@@ -51,8 +51,7 @@ function handleResponse() {
 
     var evaluacion_id = document.querySelector('input[name="evaluacion_id"]').value;
     var csrf_token = document.querySelector('input[name="csrf_token"]').value;
-
-    token = document.querySelector('input[name="token"]').value;
+    var token = document.querySelector('input[name="token"]').value;
 
     // Combina los dos objetos en uno
     var data = {
@@ -67,7 +66,7 @@ function handleResponse() {
     var conf = confirmacion();
     
     if (conf) {
-        if (confirm("¿Estas seguro de enviar tus respuestas?")) {
+        if (confirm("¿Estás seguro de enviar tus respuestas?")) {
             // Envía los valores a la base de datos
             var xhr = new XMLHttpRequest();
             xhr.open('POST', '/evaluacion/responder', true);
@@ -77,14 +76,12 @@ function handleResponse() {
             // Muestra un mensaje de confirmación
             alert('¡Sus respuestas han sido enviadas!');
             location.reload();
-            return true;
-        } else {
-            return false;
         }
-    } else {
-        return false;
     }
 }
+
+// Asegúrate de agregar el evento preventDefault en el envío del formulario
+document.querySelector('form').addEventListener('submit', handleResponse);
 
 function iniciar_evaluacion() {
     boton_responder = document.querySelector("#boton_responder");
