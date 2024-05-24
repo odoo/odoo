@@ -396,12 +396,16 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self,users){
             users.forEach(function(user) {
                 user.role = 'cashier';
-                user.groups_id.some(function(group_id) {
-                    if (group_id === self.config.group_pos_manager_id[0]) {
-                        user.role = 'manager';
-                        return true;
-                    }
-                });
+
+                const isPosUser = user.groups_id.some(groupId => groupId === self.config.group_pos_user_id[0])
+                const isPosManager = user.groups_id.some(groupId => groupId === self.config.group_pos_manager_id[0])
+
+                if (isPosManager) {
+                    user.role = 'manager';
+                } else if (isPosUser) {
+                    user.role = 'user';
+                }
+
                 if (user.id === self.session.uid) {
                     self.user = user;
                     self.employee.name = user.name;

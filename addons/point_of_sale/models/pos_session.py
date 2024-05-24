@@ -1570,6 +1570,10 @@ class PosSession(models.Model):
         return True
 
     def try_cash_in_out(self, _type, amount, reason, extras):
+        user_id = self.env.context.get('user_id', False)
+        if user_id:
+            self = self.with_user(self.env['res.users'].browse(user_id))
+
         sign = 1 if _type == 'in' else -1
         self.env['cash.box.out']\
             .with_context({'active_model': 'pos.session', 'active_ids': self.ids})\
