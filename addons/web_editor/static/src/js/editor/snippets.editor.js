@@ -586,14 +586,15 @@ var SnippetEditor = Widget.extend({
             await focusOrBlur(editor, styles);
         }
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
-        await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility()));
-
-        // As the 'd-none' class is added to option sections that have no visible
-        // options with 'updateOptionsUIVisibility', if no option section is
-        // visible, we prevent the activation of the options.
-        const optionsSectionVisible = editorUIsToUpdate.some(
-             editor => !editor.$optionsSection[0].classList.contains('d-none')
-        );
+        // A `d-none` class is added to option sections that have no visible
+        // options with `updateOptionsUIVisibility`. If no option section is
+        // visible (including the options moved to the toolbar), we prevent
+        // the activation of the options.
+        const optionsSectionVisible = await Promise.all(
+            editorUIsToUpdate.map(editor => editor.updateOptionsUIVisibility())
+        ).then(editorVisibilityValues => {
+            return editorVisibilityValues.some(editorVisibilityValue => editorVisibilityValue);
+        });
         if (editorUIsToUpdate.length > 0 && !optionsSectionVisible) {
             return null;
         }
@@ -647,13 +648,30 @@ var SnippetEditor = Widget.extend({
         const proms = Object.values(this.styles).map(opt => {
             return opt.updateUIVisibility();
         });
-        await Promise.all(proms);
+        // Get information about the visibility of options (except the ones
+        // located in the overlay). This is needed to check if the editor has
+        // visible options outside the options section.
+        const someOptionsVisible = await Promise.all(proms).then(optionsVisibilityValues => {
+            return optionsVisibilityValues.some(optionsVisibilityValue => optionsVisibilityValue);
+        });
         // Hide the snippetEditor if none of its options are visible
         // This cannot be done using the visibility of the options' UI
-        // because some options can be located in the overlay.
-        const $visibleOptions = this.$optionsSection.find('we-top-button-group, we-customizeblock-option')
-                .children(':not(.d-none)');
-        this.$optionsSection.toggleClass('d-none', !$visibleOptions.length);
+        // because some options can be located in the overlay / toolbar.
+        const visibleOptionsInSection = this.$optionsSection.find('we-top-button-group, we-customizeblock-option')
+            .children(':not(.d-none)').length;
+        // Some options (e.g., text highlights / animations) may have a special
+        // way to be displayed in the editor: We add the options in the toolbar
+        // `onFocus()` and set them back `onBlur()`. Which means that the
+        // options section will be empty and should be hidden, while editor's
+        // visible options should be displayed in the toolbar DOM. We need to
+        // take this scenario into consideration too.
+        const optionsSectionEmpty = !this.$optionsSection[0].querySelector(":scope > we-customizeblock-option");
+        const optionsSectionVisible = visibleOptionsInSection && !optionsSectionEmpty;
+        // At this level, we can hide the options section.
+        this.$optionsSection.toggleClass("d-none", !optionsSectionVisible);
+        // Even with a hidden options section, the editor is still considered
+        // visible" if it has visible toolbar options.
+        return optionsSectionVisible || someOptionsVisible;
     },
     /**
      * Clones the current snippet.
@@ -2027,30 +2045,6 @@ class SnippetsMenu extends Component {
             },
         });
 
-        if (this.options.enableTranslation) {
-            // Load the sidebar with the style tab only.
-            await this._loadSnippetsTemplates();
-            defs.push(this._updateInvisibleDOM());
-            this.state.currentTab = SnippetsMenu.tabs.OPTIONS;
-            this.$el.find('.o_we_website_top_actions').removeClass('d-none');
-            this.$('#snippets_menu button').removeClass('active').prop('disabled', true);
-            this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
-            this.$('o_we_ui_loading').addClass('d-none');
-            this.state.showToolbar = false;
-            this.$('#o-we-editor-table-container').addClass('d-none');
-            return Promise.all(defs);
-        }
-
-        this.emptyOptionsTabContent = document.createElement('div');
-        this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
-        this.emptyOptionsTabContent.append(_t("Select a block on your page to style it."));
-
-        // Fetch snippet templates and compute it
-        defs.push((async () => {
-            await this._loadSnippetsTemplates();
-            await this._updateInvisibleDOM();
-        })());
-
         // Active snippet editor on click in the page
         this.$document.on('click.snippets_menu', '*', this._onClick);
         // Needed as bootstrap stop the propagation of click events for dropdowns
@@ -2114,6 +2108,30 @@ class SnippetsMenu extends Component {
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
         this.$scrollingTarget[0].addEventListener('scroll', this._onScrollingElementScroll, {capture: true});
+
+        if (this.options.enableTranslation) {
+            // Load the sidebar with the style tab only.
+            await this._loadSnippetsTemplates();
+            defs.push(this._updateInvisibleDOM());
+            this.state.currentTab = SnippetsMenu.tabs.OPTIONS;
+            this.$el.find('.o_we_website_top_actions').removeClass('d-none');
+            this.$('#snippets_menu button').removeClass('active').prop('disabled', true);
+            this.$('.o_we_customize_snippet_btn').addClass('active').prop('disabled', false);
+            this.$('o_we_ui_loading').addClass('d-none');
+            this.state.showToolbar = false;
+            this.$('#o-we-editor-table-container').addClass('d-none');
+            return Promise.all(defs);
+        }
+
+        this.emptyOptionsTabContent = document.createElement('div');
+        this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
+        this.emptyOptionsTabContent.append(_t("Select a block on your page to style it."));
+
+        // Fetch snippet templates and compute it
+        defs.push((async () => {
+            await this._loadSnippetsTemplates();
+            await this._updateInvisibleDOM();
+        })());
 
         // Auto-selects text elements with a specific class and remove this
         // on text changes
@@ -2348,7 +2366,18 @@ class SnippetsMenu extends Component {
         }
         this._mutex.exec(() => {
             if (this.state.currentTab === this.tabs.OPTIONS && !this.snippetEditors.length) {
-                this._activateEmptyOptionsTab();
+                const selection = this.$body[0].ownerDocument.getSelection();
+                const range = selection?.rangeCount && selection.getRangeAt(0);
+                const currentlySelectedNode = range?.commonAncestorContainer;
+                // In some cases (e.g. in translation mode) it's possible to have
+                // all snippet editors destroyed after disabling text options.
+                // We still want to keep the toolbar available in this case.
+                const isEditableTextElementSelected =
+                    currentlySelectedNode?.nodeType === Node.TEXT_NODE &&
+                    !!currentlySelectedNode?.parentNode?.isContentEditable;
+                if (!isEditableTextElementSelected) {
+                    this._activateEmptyOptionsTab();
+                }
             }
         });
     }
@@ -2675,7 +2704,7 @@ class SnippetsMenu extends Component {
             });
             // Insert an invisible snippet in its "parentEl" element.
             const createInvisibleElement = async (invisibleSnippetEl, isRootParent, isDescendant) => {
-                const editor = await this._createSnippetEditor($(invisibleSnippetEl));
+                const editor = await this._createSnippetEditor($(invisibleSnippetEl), true);
                 return {
                     editor,
                     snippetEl: invisibleSnippetEl,
@@ -2729,12 +2758,6 @@ class SnippetsMenu extends Component {
      *          (might be async when an editor must be created)
      */
     async _activateSnippet($snippet, previewMode, ifInactiveOptions) {
-        if (this.options.enableTranslation) {
-            // In translate mode, do not activate the snippet when enabling its
-            // corresponding invisible element. Indeed, in translate mode, we
-            // only want to toggle its visibility.
-            return;
-        }
         if (this._blockPreviewOverlays && previewMode) {
             return;
         }
@@ -2752,6 +2775,13 @@ class SnippetsMenu extends Component {
             } else {
                 $snippet = $globalSnippet;
             }
+        }
+        if (this.options.enableTranslation && $snippet && !this._allowInTranslationMode($snippet)) {
+            // In translate mode, only activate allowed snippets (e.g., even if
+            // we create editors for invisible elements when translating them,
+            // we only want to toggle their visibility when the related sidebar
+            // buttons are clicked).
+            return;
         }
         const exec = previewMode
             ? action => this._mutex.exec(action)
@@ -2946,8 +2976,11 @@ class SnippetsMenu extends Component {
      *        to be considered as potential snippet.
      * @param {boolean} forDrop
      *        true if the selector is used to find a drop zone.
+     * @param {string} textSelector
+     *        a selector that DOM elements must match to be considered as
+     *        "Text Options"-related snippets.
      */
-    _computeSelectorFunctions({selector, exclude, target, noCheck, isChildren, excludeParent, forDrop}) {
+    _computeSelectorFunctions({selector, exclude, target, noCheck, isChildren, excludeParent, forDrop, textSelector}) {
         var self = this;
 
         // The `:not(.o_editable_media)` part is handled outside of the selector
@@ -3007,8 +3040,8 @@ class SnippetsMenu extends Component {
         // are only the text zones and they should not be used inside functions
         // such as "is", "closest" and "all".
         if (noCheck || this.options.enableTranslation) {
-            functions.is = function ($from) {
-                return $from.is(selector) && $from.filter(filterFunc).length !== 0;
+            functions.is = function ($from, options = {}) {
+                return $from.is(options.onlyTextOptions ? textSelector : selector) && $from.filter(filterFunc).length !== 0;
             };
             functions.closest = function ($from, parentNode) {
                 return $from.closest(selector, parentNode).filter(filterFunc);
@@ -3071,12 +3104,13 @@ class SnippetsMenu extends Component {
             // option DOM. This is used in JS tours. The data-js attribute can
             // be used without a corresponding JS class being defined.
             const optionID = $style.data('js');
+            const textSelector = $style.data("text-selector");
             var option = {
                 'option': optionID,
                 'base_selector': selector,
                 'base_exclude': exclude,
                 'base_target': target,
-                'selector': self._computeSelectorFunctions({selector, exclude, target, noCheck}),
+                'selector': self._computeSelectorFunctions({selector, exclude, target, noCheck, textSelector}),
                 '$el': $style,
                 'drop-near': $style.data('drop-near') && self._computeSelectorFunctions({
                     selector: $style.data('drop-near'),
@@ -3117,9 +3151,9 @@ class SnippetsMenu extends Component {
             }
             return $target;
         };
-        globalSelector.is = function ($from) {
+        globalSelector.is = function ($from, options = {}) {
             for (var i = 0, len = selectors.length; i < len; i++) {
-                if (selectors[i].is($from)) {
+                if (selectors[i].is($from, options)) {
                     return true;
                 }
             }
@@ -3191,13 +3225,22 @@ class SnippetsMenu extends Component {
      *
      * @private
      * @param {jQuery} $snippet
+     * @param {Boolean} [forceCreate=false] To force the editor creation (e.g.,
+     * we need to create editors for invisible snippets in translate mode to be
+     * able to handle them correctly).
      * @returns {Promise<SnippetEditor>}
      */
-    _createSnippetEditor($snippet) {
+    _createSnippetEditor($snippet, forceCreate = false) {
         var self = this;
         var snippetEditor = $snippet.data('snippet-editor');
         if (snippetEditor) {
             return snippetEditor.__isStarted;
+        }
+
+        // In translate mode, only allow creating the editor if the target is a
+        // text option snippet.
+        if (!forceCreate && this.options.enableTranslation && !this._allowInTranslationMode($snippet)) {
+            return Promise.resolve(null);
         }
 
         var def;
@@ -3619,6 +3662,11 @@ class SnippetsMenu extends Component {
         this._hideTooltips();
         this._closeWidgets();
 
+        // In translation mode, only the options tab is available.
+        if (this.options.enableTranslation) {
+            tab = SnippetsMenu.tabs.OPTIONS;
+        }
+
         this.state.currentTab = tab || SnippetsMenu.tabs.BLOCKS;
 
         if (this._$toolbarContainer) {
@@ -3825,6 +3873,12 @@ class SnippetsMenu extends Component {
             // No awaiting this as the mutex is currently locked here.
             this._activateSnippet(editors[0].$target);
         }
+    }
+    /**
+     * @private
+     */
+    _allowInTranslationMode($snippet) {
+        return globalSelector.is($snippet, { onlyTextOptions: true });
     }
 
     //--------------------------------------------------------------------------
@@ -4100,7 +4154,7 @@ class SnippetsMenu extends Component {
     async onInvisibleEntryClick(invisibleEntry) {
         const $snippet = $(invisibleEntry.snippetEl);
         const isVisible = await this._execWithLoadingEffect(async () => {
-            const editor = await this._createSnippetEditor($snippet);
+            const editor = await this._createSnippetEditor($snippet, true);
             const show = editor.toggleTargetVisibility();
             this._disableUndroppableSnippets();
             return show;
