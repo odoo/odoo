@@ -15,10 +15,6 @@ class AccountMoveSend(models.TransientModel):
     )
     enable_peppol = fields.Boolean(compute='_compute_enable_peppol')
     # technical field needed for computing a warning text about the peppol configuration
-    peppol_warning = fields.Json(
-        string="Peppol warning",
-        compute="_compute_peppol_warning",
-    )
     account_peppol_edi_mode_info = fields.Char(compute='_compute_account_peppol_edi_mode_info')
 
     def _get_wizard_values(self):
@@ -43,7 +39,7 @@ class AccountMoveSend(models.TransientModel):
     @api.depends('enable_peppol')
     def _compute_checkbox_send_peppol(self):
         for wizard in self:
-            wizard.checkbox_send_peppol = wizard.enable_peppol and not wizard.peppol_warning
+            wizard.checkbox_send_peppol = wizard.enable_peppol and (not wizard.warnings or all('account_peppol' not in key for key in wizard.warnings))
 
     def _compute_checkbox_send_mail(self):
         super()._compute_checkbox_send_mail()
@@ -64,23 +60,36 @@ class AccountMoveSend(models.TransientModel):
         # EXTENDS 'account' - add depends
         super()._compute_mail_attachments_widget()
 
-    @api.depends('move_ids')
-    def _compute_peppol_warning(self):
+    @api.depends('checkbox_send_peppol')
+    def _compute_warnings(self):
+        # EXTENDS 'account_edi_ubl_cii'
+        super()._compute_warnings()
         for wizard in self:
+            if not wizard.checkbox_send_peppol:
+                continue
+
+            warnings = {}
+
             invalid_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
                 lambda partner: not partner.account_peppol_is_endpoint_valid)
-            if not invalid_partners:
-                wizard.peppol_warning = False
-            else:
-                wizard.peppol_warning = {
-                    'partner_peppol_warning': {
-                        'message': _("The following partners are not correctly configured to receive Peppol documents. "
-                                    "Please check their Peppol endpoint and the Electronic Invoicing format"),
-                        'action_text': _("View Partner(s)"),
-                        'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
-                        'level': 'info',
-                    }
+            ubl_warning_already_displayed = wizard.warnings and 'account_edi_ubl_cii_configure_partner' in wizard.warnings
+            if invalid_partners and not ubl_warning_already_displayed:
+                warnings['account_peppol_warning_partner'] = {
+                    'message': _("The following partners are not correctly configured to receive Peppol documents. "
+                                 "Please check and verify their Peppol endpoint and the Electronic Invoicing format"),
+                    'action_text': _("View Partner(s)"),
+                    'action': invalid_partners._get_records_action(name=_("Check Partner(s)")),
                 }
+
+            if wizard.checkbox_send_mail:
+                warnings['account_peppol_multi_send'] = {
+                    'message': _("You have opted to send the invoice(s) via both Peppol and Email. "
+                                 "Please make sure that this is your intended method."),
+                    'level': 'info',
+                }
+
+            if warnings:
+                wizard.warnings = {**(wizard.warnings or {}), **warnings}
 
     @api.depends('enable_ubl_cii_xml')
     def _compute_enable_peppol(self):

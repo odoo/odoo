@@ -203,7 +203,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             [file for file in wizard.mail_attachments_widget if file['name'] == filename]
         ))
 
-    def test_send_peppol_invalid_partner(self):
+    def test_send_peppol_warnings(self):
         # a warning should appear before sending invoices to an invalid partner
         move = self.create_move(self.invalid_partner)
         move.action_post()
@@ -212,9 +212,22 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             move,
             checkbox_ubl_cii_xml=True,
             checkbox_send_peppol=True,
+            checkbox_send_mail=True,
         )
+        self.assertTrue('account_peppol_warning_partner' in wizard.warnings)
+        self.assertTrue('account_peppol_multi_send' in wizard.warnings)
 
-        self.assertTrue(bool(wizard.peppol_warning))
+        # however, if there's already account_edi_ubl_cii_configure_partner, the warning should not appear
+        self.invalid_partner.peppol_endpoint = False
+        wizard = self.create_send_and_print(
+            move,
+            checkbox_ubl_cii_xml=True,
+            checkbox_send_peppol=True,
+            checkbox_send_mail=False,
+        )
+        self.assertTrue('account_edi_ubl_cii_configure_partner' in wizard.warnings)
+        self.assertFalse('account_peppol_warning_partner' in wizard.warnings)
+        self.assertFalse('account_peppol_multi_send' in wizard.warnings)
 
     def test_resend_error_peppol_message(self):
         # should be able to resend error invoices

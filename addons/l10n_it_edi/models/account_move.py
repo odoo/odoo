@@ -199,8 +199,32 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
-        if self._l10n_it_edi_export_data_check():
-            raise UserError(_("The invoices you're trying to send have incomplete or incorrect data, please verify before sending."))
+        if errors := self._l10n_it_edi_export_data_check():
+            messages = []
+            for error_key, error_data in errors.items():
+                message = error_data['message']
+                split = error_key.split("_")
+                if len(split) > 3 and (model_id := {
+                    'partner': 'res.partner',
+                    'move': 'account.move',
+                    'company': 'res.company'
+                }.get(split[3], None)):
+                    if action := error_data.get('action'):
+                        if 'res_id' in action:
+                            record_ids = [action['res_id']]
+                        else:
+                            record_ids = action['domain'][0][2]
+                        records = self.env[model_id].browse(record_ids)
+                        message = f"{message} - {', '.join(records.mapped('display_name'))}"
+                messages.append(nl2br(message))
+
+            # Update the vendor bill's header with the warning messages,
+            # and force reload the view to make sure the header is loaded
+            self.l10n_it_edi_header = Markup('<br/>').join(messages)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
         self.env['ir.attachment'].create(attachment_vals)
@@ -477,7 +501,7 @@ class AccountMove(models.Model):
         return bool(
             template_reference
             and not self.l10n_it_edi_is_self_invoice
-            and list(buyer._l10n_it_edi_export_check(checks).keys()) == ['partner_address_missing']
+            and list(buyer._l10n_it_edi_export_check(checks).keys()) == ['l10n_it_edi_partner_address_missing']
             and (not buyer.country_id or buyer.country_id.code == 'IT')
             and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
             and self.amount_total <= 400
@@ -1164,16 +1188,16 @@ class AccountMove(models.Model):
 
         errors = {}
         if moves := self.filtered(lambda move: move.l10n_it_edi_is_self_invoice and move._l10n_it_edi_services_or_goods() == 'both'):
-            errors['move_reverse_charge_with_mixed_services_and_goods'] = build_error(
+            errors['l10n_it_edi_move_rc_mixed_product_types'] = build_error(
                 message=_("Cannot apply Reverse Charge to bills which contains both services and goods."),
                 records=moves)
         if pa_moves := self.filtered(lambda move: move.company_id.partner_id._l10n_it_edi_is_public_administration()):
             if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_type):
                 message = _("Your company belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
-                errors['move_missing_origin_document'] = build_error(message=message, records=moves)
+                errors['l10n_it_edi_move_missing_origin_document'] = build_error(message=message, records=moves)
             if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > fields.Date.today()):
                 message = _("The Origin Document Date cannot be in the future.")
-                errors['move_future_origin_document_date'] = build_error(message=message, records=moves)
+                errors['l10n_it_edi_move_future_origin_document_date'] = build_error(message=message, records=moves)
         return errors
 
     def _l10n_it_edi_export_taxes_check(self):
@@ -1182,7 +1206,7 @@ class AccountMove(models.Model):
             and len(line.tax_ids.flatten_taxes_hierarchy()._l10n_it_filter_kind('vat')) != 1
         ):
             return {
-                'move_only_one_vat_tax_per_line': {
+                'l10n_it_edi_move_only_one_vat_tax_per_line': {
                     'message': _("Invoices must have exactly one VAT tax set per line."),
                     **({
                         'action_text': _("View invoice(s)"),
