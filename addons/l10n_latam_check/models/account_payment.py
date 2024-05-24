@@ -12,9 +12,32 @@ class AccountPayment(models.Model):
         copy=False,
         string="Checks"
     )
+    # only to ease creation with o2m fields for new_third_party_checks and own_checks
+    l10n_latam_new_check_ids = fields.One2many(
+        'l10n_latam.check',
+        compute='_compute_l10n_latam_new_check_ids',
+        inverse='_inverse_l10n_latam_new_check_ids',
+    )
     # Warning message in case of unlogical third party check operations
     l10n_latam_check_warning_msg = fields.Text(compute='_compute_l10n_latam_check_warning_msg',)
     amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
+
+    def write(self, vals):
+        actual_checks = self.env['l10n_latam.check']
+        if 'l10n_latam_new_check_ids' in vals:
+            actual_checks = self.mapped('l10n_latam_check_ids')
+        res = super().write(vals)
+        if actual_checks:
+            (actual_checks - self.mapped('l10n_latam_check_ids')).unlink()
+        return res
+
+    def _inverse_l10n_latam_new_check_ids(self):
+        self.l10n_latam_check_ids = self.l10n_latam_new_check_ids
+
+    @api.depends('l10n_latam_check_ids')
+    def _compute_l10n_latam_new_check_ids(self):
+        for rec in self:
+            rec.l10n_latam_new_check_ids = rec.l10n_latam_check_ids
 
     @api.depends('l10n_latam_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
@@ -34,10 +57,11 @@ class AccountPayment(models.Model):
         # unlink checks if payment method code is not for checks. We do it on post and not when changing payment
         # method so that the user don't loose checks data in case of changing payment method and coming back again
         # also, changing partner recompute payment method so all checks would be cleaned
-        for payment in self.filtered(lambda x: x.l10n_latam_check_ids and not x._is_latam_check_payment(check_subtype='new_check')):
-            payment.l10n_latam_check_ids.unlink()
-        for payment in self.filtered(lambda x: x.l10n_latam_check_ids and not x._is_latam_check_payment(check_subtype='move_check')):
-            payment.l10n_latam_check_ids = False
+        for payment in self.filtered(lambda x: x.l10n_latam_check_ids and not x._is_latam_check_payment()):
+            if payment._is_latam_check_payment(check_subtype='new_check'):
+                payment.l10n_latam_check_ids.unlink()
+            else:
+                payment.l10n_latam_check_ids = False
         msgs = self._get_blocking_l10n_latam_warning_msg()
         if msgs:
             raise ValidationError('* %s' % '\n* '.join(msgs))
@@ -191,11 +215,6 @@ class AccountPayment(models.Model):
         if self.is_internal_transfer:
             res.append('new_third_party_checks')
         return res
-
-    @api.model
-    def _get_trigger_fields_to_synchronize(self):
-        res = super()._get_trigger_fields_to_synchronize()
-        return res + ('l10n_latam_check_ids',)
 
     def _create_paired_internal_transfer_payment(self):
         """

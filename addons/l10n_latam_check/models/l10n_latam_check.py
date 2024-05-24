@@ -44,6 +44,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     issue_state = fields.Selection([('handed', 'Handed'), ('debited', 'Debited'), ('voided', 'Voided')],
                                    compute='_compute_issue_state', store=True)
     # fields from payment
+    state = fields.Selection(related='payment_id.state')
     payment_method_code = fields.Char(related='payment_id.payment_method_code')
     partner_id = fields.Many2one(related='payment_id.partner_id')
     journal_id = fields.Many2one(related='payment_id.journal_id')
@@ -67,7 +68,7 @@ class l10nLatamAccountPaymentCheck(models.Model):
     @api.depends('operation_ids')
     def _compute_payment(self):
         for rec in self:
-            rec.payment_ids = rec.operation_ids.sorted()[:1]
+            rec.payment_id = rec.operation_ids.sorted()[:1]
 
     @api.onchange('name')
     def _onchange_name(self):
