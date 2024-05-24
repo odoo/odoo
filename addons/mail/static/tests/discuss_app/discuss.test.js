@@ -1929,13 +1929,13 @@ test("Notification settings: basic rendering", async () => {
     await contains("button", { text: "All Messages" });
     await contains("button", { text: "Mentions Only" });
     await contains("button", { text: "Nothing" });
-    await click("[title='Mute Channel']");
-    await contains("[title='For 15 minutes']");
-    await contains("[title='For 1 hour']");
-    await contains("[title='For 3 hours']");
-    await contains("[title='For 8 hours']");
-    await contains("[title='For 24 hours']");
-    await contains("[title='Until I turn it back on']");
+    await click("button", { text: "Mute Channel" });
+    await contains("button", { text: "For 15 minutes" });
+    await contains("button", { text: "For 1 hour" });
+    await contains("button", { text: "For 3 hours" });
+    await contains("button", { text: "For 8 hours" });
+    await contains("button", { text: "For 24 hours" });
+    await contains("button", { text: "Until I turn it back on" });
 });
 
 test("Notification settings: mute channel will change the style of sidebar", async () => {
@@ -1952,8 +1952,8 @@ test("Notification settings: mute channel will change the style of sidebar", asy
         count: 0,
     });
     await click("[title='Notification Settings']");
-    await click("[title='Mute Channel']");
-    await click("[title='For 15 minutes']");
+    await click("button", { text: "Mute Channel" });
+    await click("button", { text: "For 15 minutes" });
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario Party" });
     await contains(".o-mail-DiscussSidebar-item[class*='opacity-50']", { text: "Mario Party" });
 });
@@ -1972,13 +1972,13 @@ test("Notification settings: change the mute duration of the channel", async () 
         count: 0,
     });
     await click("[title='Notification Settings']");
-    await click("[title='Mute Channel']");
-    await click("[title='For 15 minutes']");
+    await click("button", { text: "Mute Channel" });
+    await click("button", { text: "For 15 minutes" });
     await click("[title='Notification Settings']");
     await click(".o-discuss-NotificationSettings span", { text: "Unmute Channel" });
     await click("[title='Notification Settings']");
-    await click("[title='Mute Channel']");
-    await click("[title='For 1 hour']");
+    await click("button", { text: "Mute Channel" });
+    await click("button", { text: "For 1 hour" });
 });
 
 test("Notification settings: mute/unmute channel works correctly", async () => {
@@ -1990,13 +1990,13 @@ test("Notification settings: mute/unmute channel works correctly", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Notification Settings']");
-    await click("[title='Mute Channel']");
-    await click("[title='For 15 minutes']");
+    await click("button", { text: "Mute Channel" });
+    await click("button", { text: "For 15 minutes" });
     await click("[title='Notification Settings']");
-    await contains("span", { text: "Unmute Channel" });
+    await contains("button", { text: "Unmute Channel" });
     await click("button", { text: "Unmute Channel" });
     await click("[title='Notification Settings']");
-    await contains("span", { text: "Unmute Channel" });
+    await contains("button", { text: "Unmute Channel" });
 });
 
 test("Newly created chat should be at the top of the direct message list", async () => {

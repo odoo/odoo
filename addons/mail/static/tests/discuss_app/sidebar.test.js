@@ -786,6 +786,7 @@ test("channel - states: open should update the value on the server", async () =>
     });
     await start();
     await openDiscuss();
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-right"); // wait fully loaded
     const initalSettings = await getService("orm").call(
         "res.users.settings",
         "_find_or_create_for_user",

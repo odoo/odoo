@@ -5,26 +5,24 @@
         <div class="o-discuss-NotificationSettings">
             <t t-if="props.thread.mute_until_dt">
                 <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" t-on-click="selectUnmute">
-                    <div class="d-flex flex-column flex-grow-1 text-start px-2 py-1 rounded">
-                        <span class="fs-6 fw-bold">Unmute Channel</span>
+                    <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
+                        <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Channel</span>
                         <span class="fw-normal o-smaller" t-if="muteUntilText" t-out="muteUntilText"/>
                     </div>
                 </button>
             </t>
-            <div t-else="" class="d-flex text-truncate">
-                <Dropdown position="'right-start'" menuClass="'d-flex flex-column py-0 my-0'">
-                    <button class="d-flex btn w-100 align-items-center text-truncate p-0">
-                        <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" title="Mute Channel">
-                            <div class="d-flex flex-grow-1 align-items-center px-2 py-1 rounded">
-                                <span class="">Mute Channel</span>
-                                <div class="flex-grow-1"/>
-                                <i class="fa fa-arrow-right"/>
-                            </div>
-                        </button>
+            <div t-else="" class="d-flex">
+                <Dropdown position="'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column py-0 my-0'">
+                    <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover">
+                        <div class="d-flex flex-grow-1 align-items-center px-2 py-1 w-100 rounded">
+                            <span class="text-wrap text-start text-break">Mute Channel</span>
+                            <div class="flex-grow-1"/>
+                            <i class="fa fa-arrow-right ms-2"/>
+                        </div>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="props.thread.MUTES" t-as="item" t-key="item.id">
-                            <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ 'title': item.name }" onSelected="()=>this.setMute(item.value)"><span class="mx-2" t-out="item.name"/></DropdownItem>
+                            <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" onSelected="()=>this.setMute(item.value)"><button class="btn p-0 mx-2 text-wrap text-start text-break" t-out="item.name"/></DropdownItem>
                         </t>
                     </t>
                 </Dropdown>
@@ -32,10 +30,10 @@
             <hr class="solid mx-2 my-1"/>
             <t t-foreach="props.thread.SETTINGS" t-as="setting" t-key="setting.id">
                 <button class="btn w-100 d-flex px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => this.setSetting(setting)">
-                    <div class="d-flex flex-grow-1 align-items-center p-2 rounded">
-                        <span class="fs-6 fw-normal" t-esc="setting.name"/>
+                    <div class="d-flex flex-grow-1 align-items-center p-2 w-100 rounded">
+                        <span class="fs-6 fw-normal text-wrap text-start text-break" t-esc="setting.name"/>
                         <div class="flex-grow-1"/>
-                        <input class="form-check-input" type="radio" t-att-checked="props.thread.custom_notifications === setting.id"/>
+                        <input class="form-check-input ms-2" type="radio" t-att-checked="props.thread.custom_notifications === setting.id"/>
                     </div>
                 </button>
             </t>
