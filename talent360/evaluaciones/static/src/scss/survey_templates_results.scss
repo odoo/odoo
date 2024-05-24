@@ -170,7 +170,11 @@
     width: 100%;
 }
 
-.demo-inner {}
+@media (max-width: 768px) {
+    .demo-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
 
 .o_survey_result {
     display: flex;
