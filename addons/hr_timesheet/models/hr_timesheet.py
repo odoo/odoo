@@ -381,6 +381,10 @@ class AccountAnalyticLine(models.Model):
             if not vals.get('product_uom_id'):
                 company = account_per_id[vals['account_id']].company_id or data.company_id
                 vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
+            # Set the top-level analytic plan according to the given analytic account
+            root_plan = self.env['account.analytic.account'].browse(vals.get('account_id')).plan_id.root_id
+            if root_plan and root_plan.id != int(self.env['ir.config_parameter'].sudo().get_param('analytic.project_plan', 0)):
+                vals[f'x_plan{root_plan.id}_id'] = vals.get('account_id')
         return vals_list
 
     def _timesheet_postprocess(self, values):
