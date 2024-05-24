@@ -178,7 +178,6 @@ class ImportQuestionsWizard(models.TransientModel):
                 raise exceptions.ValidationError(
                     f"No se permiten opciones para preguntas de tipo '{row['Tipo']}'."
                 )
-
     def descargar_template(self):
         # Define el contenido del archivo CSV de la plantilla
         ruta_archivo = (
