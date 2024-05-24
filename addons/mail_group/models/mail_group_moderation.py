@@ -28,7 +28,7 @@ class MailGroupModeration(models.Model):
         for values in vals_list:
             email_normalized = email_normalize(values.get('email'))
             if not email_normalized:
-                raise UserError(_('Invalid email address %r', values.get('email')))
+                raise UserError(_('Invalid email address “%s”', values.get('email')))
             values['email'] = email_normalized
         return super(MailGroupModeration, self).create(vals_list)
 
@@ -36,6 +36,6 @@ class MailGroupModeration(models.Model):
         if 'email' in values:
             email_normalized = email_normalize(values['email'])
             if not email_normalized:
-                raise UserError(_('Invalid email address %r', values.get('email')))
+                raise UserError(_('Invalid email address “%s”', values.get('email')))
             values['email'] = email_normalized
         return super(MailGroupModeration, self).write(values)

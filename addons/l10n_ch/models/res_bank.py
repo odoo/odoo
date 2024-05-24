@@ -23,7 +23,7 @@ def validate_qr_iban(qr_iban):
 
     # Now, check if it's valid QR-IBAN (based on its IID).
     if not check_qr_iban_range(sanitized_qr_iban):
-        raise ValidationError(_("QR-IBAN %r is invalid.", qr_iban))
+        raise ValidationError(_("QR-IBAN “%s” is invalid.", qr_iban))
 
     return True
 

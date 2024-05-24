@@ -509,7 +509,7 @@ class MailRenderMixin(models.AbstractModel):
 
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(
-                _('Template rendering should be called only using on a list of IDs; received %(res_ids)r instead.',
+                _('Template rendering should only be called with a list of IDs. Received “%(res_ids)s” instead.',
                   res_ids=res_ids)
             )
         if engine not in ('inline_template', 'qweb', 'qweb_view'):

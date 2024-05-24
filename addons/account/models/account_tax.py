@@ -483,7 +483,7 @@ class AccountTax(models.Model):
     def _check_children_scope(self):
         for tax in self:
             if tax._has_cycle('children_tax_ids'):
-                raise ValidationError(_("Recursion found for tax %r.", tax.name))
+                raise ValidationError(_("Recursion found for tax “%s”.", tax.name))
             if any(
                 child.type_tax_use not in ('none', tax.type_tax_use)
                 or child.tax_scope not in (tax.tax_scope, False)

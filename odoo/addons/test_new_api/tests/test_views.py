@@ -69,8 +69,8 @@ class TestViewGroups(common.TransactionCase):
                 """,
             })
         error_message = str(catcher.exception.args[0])
-        self.assertIn("Field 'j' is restricted by groups without matching with the common mandatory groups.", error_message)
-        self.assertIn("field 'j' (Only super user has access)", error_message)
+        self.assertIn("Field “j” is restricted by groups without matching with the common mandatory groups.", error_message)
+        self.assertIn("field “j” (Only super user has access)", error_message)
         self.assertIn("""<field name="a" readonly="j"/>    ('base.group_system' | 'base.group_public')""", error_message)
 
         with self.assertRaises(ValidationError) as catcher:
@@ -86,8 +86,8 @@ class TestViewGroups(common.TransactionCase):
                 """,
             })
         error_message = str(catcher.exception.args[0])
-        self.assertIn("Field 'd' is restricted by groups without matching with the common mandatory groups.", error_message)
-        self.assertIn("field 'd' ('base.group_system')", error_message)
+        self.assertIn("Field “d” is restricted by groups without matching with the common mandatory groups.", error_message)
+        self.assertIn("field “d” ('base.group_system')", error_message)
         self.assertIn("""<field name="a" readonly="d"/>    ('base.group_system' | 'base.group_public')""", error_message)
 
         with self.assertRaises(ValidationError) as catcher:
@@ -104,8 +104,8 @@ class TestViewGroups(common.TransactionCase):
                 """,
             })
         error_message = str(catcher.exception.args[0])
-        self.assertIn("Field 'd' is restricted by groups without matching with the common mandatory groups.", error_message)
-        self.assertIn("field 'd' ('base.group_system')", error_message)
+        self.assertIn("Field “d” is restricted by groups without matching with the common mandatory groups.", error_message)
+        self.assertIn("field “d” ('base.group_system')", error_message)
         self.assertIn("""<field name="e" readonly="d"/>    ('base.group_system' | ('base.group_multi_company' & 'base.group_public'))""", error_message)
 
         with self.assertRaises(ValidationError):

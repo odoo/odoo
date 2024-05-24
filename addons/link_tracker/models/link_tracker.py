@@ -165,7 +165,7 @@ class LinkTracker(models.Model):
                 raise ValueError(_('Creating a Link Tracker without URL is not possible'))
 
             if vals['url'].startswith(('?', '#')):
-                raise UserError(_("%r is not a valid link, links cannot redirect to the current page.", vals['url']))
+                raise UserError(_("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
             vals['url'] = tools.validate_url(vals['url'])
 
             if not vals.get('title'):
@@ -215,7 +215,7 @@ class LinkTracker(models.Model):
             if 'url' not in vals:
                 raise ValueError(_('Creating a Link Tracker without URL is not possible'))
             if vals['url'].startswith(('?', '#')):
-                errors.add(_("%r is not a valid link, links cannot redirect to the current page.", vals['url']))
+                errors.add(_("“%s” is not a valid link, links cannot redirect to the current page.", vals['url']))
             vals['url'] = tools.validate_url(vals['url'])
             # fill vals to use direct accessor in _format_key
             self._add_missing_default_values(vals)

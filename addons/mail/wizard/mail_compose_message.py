@@ -1352,7 +1352,7 @@ class MailComposer(models.TransientModel):
             )
         except (ValueError, AssertionError) as e:
             raise ValidationError(
-                _("Invalid domain %(domain)r (type %(domain_type)s)",
+                _("Invalid domain “%(domain)s” (type “%(domain_type)s”)",
                     domain=self.res_domain,
                     domain_type=type(self.res_domain))
             ) from e

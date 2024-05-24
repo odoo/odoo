@@ -33,7 +33,7 @@ class FetchmailServer(models.Model):
     def _check_use_microsoft_outlook_service(self):
         for server in self:
             if server.server_type == 'outlook' and not server.is_ssl:
-                raise UserError(_('SSL is required for the server %r.', server.name))
+                raise UserError(_('SSL is required for server “%s”.', server.name))
 
     @api.onchange('server_type')
     def onchange_server_type(self):

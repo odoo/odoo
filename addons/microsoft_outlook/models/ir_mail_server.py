@@ -39,12 +39,12 @@ class IrMailServer(models.Model):
         for server in outlook_servers:
             if server.smtp_pass:
                 raise UserError(_(
-                    'Please leave the password field empty for Outlook mail server %r. '
+                    'Please leave the password field empty for Outlook mail server “%s”. '
                     'The OAuth process does not require it', server.name))
 
             if server.smtp_encryption != 'starttls':
                 raise UserError(_(
-                    'Incorrect Connection Security for Outlook mail server %r. '
+                    'Incorrect Connection Security for Outlook mail server “%s”. '
                     'Please set it to "TLS (STARTTLS)".', server.name))
 
             if not server.smtp_user:

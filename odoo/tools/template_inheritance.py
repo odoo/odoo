@@ -81,7 +81,7 @@ def locate_node(arch, spec):
         try:
             xPath = etree.ETXPath(expr)
         except etree.XPathSyntaxError as e:
-            raise ValidationError(_("Invalid Expression while parsing xpath %r", expr)) from e
+            raise ValidationError(_("Invalid Expression while parsing xpath “%s”", expr)) from e
         nodes = xPath(arch)
         return nodes[0] if nodes else None
     elif spec.tag == 'field':
@@ -126,7 +126,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
         """
         if len(spec):
             raise ValueError(
-                _("Invalid specification for moved nodes: %r", etree.tostring(spec, encoding='unicode'))
+                _("Invalid specification for moved nodes: “%s”", etree.tostring(spec, encoding='unicode'))
             )
         pre_locate(spec)
         to_extract = locate_node(source, spec)
@@ -135,7 +135,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             return to_extract
         else:
             raise ValueError(
-                _("Element %r cannot be located in parent view", etree.tostring(spec, encoding='unicode'))
+                _("Element “%s” cannot be located in parent view", etree.tostring(spec, encoding='unicode'))
             )
 
     while len(specs):

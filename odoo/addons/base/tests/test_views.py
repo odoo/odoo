@@ -2012,7 +2012,7 @@ class TestViews(ViewCase):
         # computed field, not stored, no search
         self.assertInvalid(
             arch % 'xml_id',
-            '''Unsearchable field 'xml_id' in path 'xml_id' in domain of <field name="inherit_id"> ([('xml_id', '=', 'test')])''',
+            '''Unsearchable field “xml_id” in path “xml_id” in domain of <field name="inherit_id"> ([('xml_id', '=', 'test')])''',
         )
 
     def test_domain_field_no_comodel(self):
@@ -2241,7 +2241,7 @@ class TestViews(ViewCase):
         self.assertValid(arch % 'name')
         self.assertInvalid(
             arch % 'invalid_field',
-            """Unknown field "invalid_field" in "group_by" value in context="{'group_by':'invalid_field'}""",
+            """Unknown field “invalid_field” in "group_by" value in context=“{'group_by':'invalid_field'}”""",
         )
 
     def test_domain_invalid_in_filter(self):
@@ -2251,7 +2251,7 @@ class TestViews(ViewCase):
                     <filter string="Dummy" name="draft" domain="['name', '=', 'dummy']"/>
                 </search>
             """,
-            '''Invalid domain of <filter name="draft">: "['name', '=', 'dummy']"''',
+            '''Invalid domain of <filter name="draft">: “['name', '=', 'dummy']”''',
         )
 
     def test_searchpanel(self):
@@ -2279,7 +2279,7 @@ class TestViews(ViewCase):
 
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'view_access', 'view_access'),
-            """Field 'view_access' does not exist in model 'ir.ui.view'.""",
+            """Field “view_access” does not exist in model “ir.ui.view”.""",
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'inherit_id', 'inherit_id'),
@@ -2287,7 +2287,7 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id" select="multi"/>', 'view_access', 'inherit_id'),
-            """Field 'inherit_id' used in domain of <field name="groups_id"> ([('view_access', '=', inherit_id)]) is present in view but is in select multi.""",
+            """Field “inherit_id” used in domain of <field name="groups_id"> ([('view_access', '=', inherit_id)]) is present in view but is in select multi.""",
         )
 
         arch = """
@@ -2980,19 +2980,19 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             '<form><label for="model"/></form>',
-            """Name or id 'model' in <label for="..."> must be present in view but is missing.""",
+            """Name or id “model” in <label for="..."> must be present in view but is missing.""",
         )
 
     def test_col_colspan_numerical(self):
         self.assertValid('<form><group col="5"></group></form>')
         self.assertInvalid(
             '<form><group col="alpha"></group></form>',
-            "'col' value must be an integer (alpha)",
+            "“col” value must be an integer (alpha)",
         )
         self.assertValid('<form><div colspan="5"></div></form>')
         self.assertInvalid(
             '<form><div colspan="alpha"></div></form>',
-            "'colspan' value must be an integer (alpha)",
+            "“colspan” value must be an integer (alpha)",
         )
 
     def test_valid_alerts(self):
