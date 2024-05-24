@@ -1511,7 +1511,8 @@
     <!-- Website Animate -->
     <div data-js="WebsiteAnimate"
          data-selector=".o_animable, section .row > div, img, .fa, .btn, .o_animated_text"
-         data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize">
+         data-exclude="[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize"
+         data-text-selector=".o_animated_text">
         <!-- Animation mode -->
         <we-row string="Animation">
             <we-select data-dependencies="!image_transform_opt"
@@ -1631,7 +1632,8 @@
 
     <!-- Text highlight effects -->
     <div data-js="TextHighlight"
-        data-selector=".o_text_highlight">
+        data-selector=".o_text_highlight"
+        data-text-selector=".o_text_highlight">
         <!-- Text highlight style -->
         <we-select string="Highlight" data-name="text_highlight_opt" class="o_we_select_grid">
             <div class="grid gap-0">

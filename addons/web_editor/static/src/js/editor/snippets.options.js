@@ -3957,6 +3957,8 @@ const SnippetOptionWidget = Widget.extend({
             }
             el.querySelector('.o_we_collapse_toggler').classList.toggle('d-none', hasNoVisibleElInCollapseMenu);
         }
+
+        return !this.displayOverlayOptions && showUI;
     },
 
     //--------------------------------------------------------------------------
