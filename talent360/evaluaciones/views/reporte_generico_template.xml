@@ -188,5 +188,46 @@
                 </t>
             </div>
         </template>
+
+
+        <template id="encuestas_reporte_demografico" name="Reporte: contenido de datos demograficos">
+            <h4>Datos demográficos</h4>
+            <div class="demo-wrapper">
+                <div class="survey_section">
+                    <h4>
+                            Por generación
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_generacion_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="generaciones">
+                        <canvas t-att-id="'canvas_pastel_generacion_nom_035'"/>
+                    </div>
+                </div>
+                <div class="survey_section">
+                    <h4>
+                            Por género
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_genero_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Género'" t-att-data-graph-data="generos">
+                        <canvas t-att-id="'canvas_pastel_genero_nom_035'"/>
+                    </div>
+                </div>
+                <div class=" survey_section">
+                    <h4>
+                            Por departamento
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_departamento_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="departamentos">
+                        <canvas t-att-id="'canvas_pastel_departamento_nom_035'"/>
+                    </div>
+                </div>
+
+                <div class="col survey_section">
+                    <h4>
+                            Por puesto
+                    </h4>
+                    <div class="survey_graph" t-att-id="'grafica_pastel_puesto_nom_035'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="puestos">
+                        <canvas t-att-id="'canvas_pastel_puesto_nom_035'"/>
+                    </div>
+                </div>
+            </div>
+
+        </template>
     </data>
 </odoo>
