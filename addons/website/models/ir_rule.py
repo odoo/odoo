@@ -17,6 +17,8 @@ class IrRule(models.Model):
         is_frontend = ir_http.get_request_website()
         Website = self.env['website']
         res['website'] = is_frontend and Website.get_current_website() or Website
+        if self.env.user._is_portal() and not res['website'].specific_user_account:
+            res['company_ids'] = self.env.user.company_ids.ids
         return res
 
     def _compute_domain_keys(self):
