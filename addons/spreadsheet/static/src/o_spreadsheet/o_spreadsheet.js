@@ -32468,7 +32468,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return 0 /* CommandResult.Success */;
         }
         handle(cmd) {
-            var _a, _b;
+            var _a, _b, _c, _d;
             switch (cmd.type) {
                 case "COPY":
                 case "CUT":
@@ -32509,7 +32509,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "ADD_COLUMNS_ROWS": {
                     this.status = "invisible";
                     // If we add a col/row inside or before the cut area, we invalidate the clipboard
-                    if (((_a = this.state) === null || _a === void 0 ? void 0 : _a.operation) !== "CUT") {
+                    if (((_a = this.state) === null || _a === void 0 ? void 0 : _a.operation) !== "CUT" || cmd.sheetId !== ((_b = this.state) === null || _b === void 0 ? void 0 : _b.sheetId)) {
                         return;
                     }
                     const isClipboardDirty = this.state.isColRowDirtyingClipboard(cmd.position === "before" ? cmd.base : cmd.base + 1, cmd.dimension);
@@ -32521,7 +32521,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "REMOVE_COLUMNS_ROWS": {
                     this.status = "invisible";
                     // If we remove a col/row inside or before the cut area, we invalidate the clipboard
-                    if (((_b = this.state) === null || _b === void 0 ? void 0 : _b.operation) !== "CUT") {
+                    if (((_c = this.state) === null || _c === void 0 ? void 0 : _c.operation) !== "CUT" || cmd.sheetId !== ((_d = this.state) === null || _d === void 0 ? void 0 : _d.sheetId)) {
                         return;
                     }
                     for (let el of cmd.elements) {
@@ -39299,6 +39299,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
+            // For some reason, the wheel event is not properly registered inside templates
+            // in Chromium-based browsers based on chromium 125
+            // This hack ensures the event declared in the template is properly registered/working
+            owl.useExternalListener(document.body, "wheel", () => { });
             this.bindModelEvents();
             owl.onMounted(() => {
                 this.checkViewportSize();
@@ -43322,9 +43326,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.41';
-    __info__.date = '2024-05-15T10:56:33.803Z';
-    __info__.hash = '3b3f648';
+    __info__.version = '16.0.42';
+    __info__.date = '2024-05-24T11:34:45.051Z';
+    __info__.hash = 'fd11d19';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

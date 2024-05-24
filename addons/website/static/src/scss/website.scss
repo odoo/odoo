@@ -1605,6 +1605,13 @@ $ribbon-padding: 100px;
     flex: 1;
 }
 
+.o_cookies_bar_toggle {
+    gap: 0.5rem;
+    inset-inline-end: 1rem;
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
+    z-index: $zindex-modal + 1; // Over the modal backdrop.
+}
+
 .o_website_btn_loading {
     opacity: $btn-disabled-opacity;
 
