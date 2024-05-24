@@ -15,7 +15,7 @@
         "views/reporte_nom_035_template.xml",
         "views/reporte_generico_template.xml",
         "views/evaluaciones_menus.xml",
-        "views/importar_preguntas_wizard.xml",
+        "views/importar_preguntas_wizard_views.xml",
         "views/evaluaciones_responder.xml",
         "views/wizards_views.xml",
         "data/pregunta.csv",
