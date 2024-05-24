@@ -14,7 +14,7 @@ class StockPackageLevel(models.Model):
 
     package_id = fields.Many2one(
         'stock.quant.package', 'Package', required=True, check_company=True,
-        domain="[('location_id', 'child_of', parent.location_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('location_id', 'child_of', parent.location_id)]")
     picking_id = fields.Many2one('stock.picking', 'Picking', check_company=True)
     move_ids = fields.One2many('stock.move', 'package_level_id')
     move_line_ids = fields.One2many('stock.move.line', 'package_level_id')
@@ -22,7 +22,7 @@ class StockPackageLevel(models.Model):
     location_dest_id = fields.Many2one(
         'stock.location', 'To', check_company=True,
         compute="_compute_location_dest_id", store=True, readonly=False, precompute=True,
-        domain="[('id', 'child_of', parent.location_dest_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('id', 'child_of', parent.location_dest_id)]")
     is_done = fields.Boolean('Done', compute='_compute_is_done', inverse='_set_is_done')
     state = fields.Selection([
         ('draft', 'Draft'),
