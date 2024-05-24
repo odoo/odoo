@@ -189,7 +189,7 @@ export class ListController extends Component {
     }
 
     get modelParams() {
-        const { defaultGroupBy, rawExpand } = this.archInfo;
+        const { rawExpand } = this.archInfo;
         const { activeFields, fields } = extractFieldsFromArchInfo(
             this.archInfo,
             this.props.fields
@@ -215,7 +215,6 @@ export class ListController extends Component {
             limit: this.archInfo.limit || this.props.limit,
             countLimit: this.archInfo.countLimit,
             defaultOrderBy: this.archInfo.defaultOrder,
-            defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") ? defaultGroupBy : false,
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.archInfo.multiEdit,
             activeIdsLimit: session.active_ids_limit,
