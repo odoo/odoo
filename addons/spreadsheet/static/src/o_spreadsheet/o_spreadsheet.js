@@ -21085,7 +21085,7 @@
             Enter: this.processEnterKey,
             Escape: this.processEscapeKey,
             F2: () => console.warn("Not implemented"),
-            F4: this.processF4Key,
+            F4: (ev) => this.processF4Key(ev),
             Tab: (ev) => this.processTabKey(ev),
         };
         setup() {
@@ -21202,9 +21202,10 @@
         processEscapeKey() {
             this.env.model.dispatch("STOP_EDITION", { cancel: true });
         }
-        processF4Key() {
+        processF4Key(ev) {
             this.env.model.dispatch("CYCLE_EDITION_REFERENCES");
             this.processContent();
+            ev.stopPropagation();
         }
         onCompositionStart() {
             this.compositionActive = true;
@@ -31895,7 +31896,12 @@
          * if they have at least a common cell
          */
         doesIntersectMerge(sheetId, zone) {
-            return positions(zone).some(({ col, row }) => this.getMerge({ sheetId, col, row }) !== undefined);
+            for (const merge of this.getMerges(sheetId)) {
+                if (overlap(zone, merge)) {
+                    return true;
+                }
+            }
+            return false;
         }
         /**
          * Returns true if two columns have at least one merge in common
@@ -40605,7 +40611,7 @@
                 case "ADD_COLUMNS_ROWS": {
                     this.status = "invisible";
                     // If we add a col/row inside or before the cut area, we invalidate the clipboard
-                    if (this.state?.operation !== "CUT") {
+                    if (this.state?.operation !== "CUT" || cmd.sheetId !== this.state?.sheetId) {
                         return;
                     }
                     const isClipboardDirty = this.state.isColRowDirtyingClipboard(cmd.position === "before" ? cmd.base : cmd.base + 1, cmd.dimension);
@@ -40617,7 +40623,7 @@
                 case "REMOVE_COLUMNS_ROWS": {
                     this.status = "invisible";
                     // If we remove a col/row inside or before the cut area, we invalidate the clipboard
-                    if (this.state?.operation !== "CUT") {
+                    if (this.state?.operation !== "CUT" || cmd.sheetId !== this.state?.sheetId) {
                         return;
                     }
                     for (let el of cmd.elements) {
@@ -44267,6 +44273,10 @@
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
+            // For some reason, the wheel event is not properly registered inside templates
+            // in Chromium-based browsers based on chromium 125
+            // This hack ensures the event declared in the template is properly registered/working
+            owl.useExternalListener(document.body, "wheel", () => { });
             this.bindModelEvents();
             owl.onMounted(() => {
                 this.checkViewportSize();
@@ -48092,9 +48102,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.35';
-    __info__.date = '2024-05-15T10:57:27.651Z';
-    __info__.hash = '255caa0';
+    __info__.version = '16.3.36';
+    __info__.date = '2024-05-24T11:35:30.609Z';
+    __info__.hash = 'b038fad';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
