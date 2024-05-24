@@ -5,6 +5,7 @@ from lxml import etree
 
 from datetime import datetime
 
+import json
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -347,6 +348,16 @@ class AccountEdiXmlCII(models.AbstractModel):
                     invoice_line_form.sequence = i
                     invl_logs = self._import_fill_invoice_line_form(journal, invl_el, invoice_form, invoice_line_form, qty_factor)
                     logs += invl_logs
+
+        # ==== total tax (to avoid rounding mismatch) ====
+
+        xml_tax_amount_per_rate = {}
+        for tax_node in tree.findall('.//{*}ApplicableHeaderTradeSettlement/{*}ApplicableTradeTax'):
+            rate = tax_node.find('.//{*}RateApplicablePercent').text
+            amount = tax_node.find('.//{*}CalculatedAmount').text
+            xml_tax_amount_per_rate[float(rate)] = float(amount)
+
+        self._force_invoice_tax_lines(invoice_form.line_ids._records, xml_tax_amount_per_rate)
 
         return invoice_form, logs
 
