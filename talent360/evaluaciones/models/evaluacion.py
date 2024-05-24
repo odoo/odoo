@@ -169,6 +169,13 @@ class Evaluacion(models.Model):
                     "tipo": "CLIMA",
                     "fecha_inicio": fields.Date.today(),
                     "fecha_final": fields.Date.today(),
+                    "niveles": [
+                        (0, 0, {"descripcion_nivel": "Muy malo", "techo": 20, "color": "#ff4747"}),
+                        (0, 0, {"descripcion_nivel": "Malo", "techo": 40, "color": "#ffa446"}),
+                        (0, 0, {"descripcion_nivel": "Regular", "techo": 60, "color": "#ebae14"}),
+                        (0, 0, {"descripcion_nivel": "Bueno", "techo": 80, "color": "#5aaf2b"}),
+                        (0, 0, {"descripcion_nivel": "Muy bueno", "techo": 100, "color": "#2894a7"}),
+                    ],
                 }
             )
             self = new_evaluation
