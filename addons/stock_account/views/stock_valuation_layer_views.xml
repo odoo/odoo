@@ -179,6 +179,18 @@
         </field>
     </record>
 
+    <record id="product_stock_valuation_layer_tree_inherited" model="ir.ui.view">
+        <field name="name">product.stock.valuation.tree</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_valuation_layer_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="expand">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="stock_valuation_layer_report_action" model="ir.actions.act_window">
         <field name="name">Stock Valuation</field>
         <field name="res_model">stock.valuation.layer</field>
@@ -186,6 +198,19 @@
         <field name="view_id" ref="stock_valuation_layer_report_tree"/>
         <field name="context">{'search_default_has_remaining_qty': 1}</field>
         <field name="domain">[('product_id.is_storable', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face"/>
+            <p>
+                There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_stock_valuation_layer_report_action" model="ir.actions.act_window">
+        <field name="name">Stock Valuation</field>
+        <field name="res_model">stock.valuation.layer</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="view_id" ref="product_stock_valuation_layer_tree_inherited"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
             <p>

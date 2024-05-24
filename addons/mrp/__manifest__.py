@@ -48,6 +48,7 @@
         'report/report_stock_rule.xml',
         'report/mrp_zebra_production_templates.xml',
         'report/mrp_workorder_templates.xml',
+        'report/report_stockpicking_operations.xml',
     ],
     'demo': [
         'data/mrp_demo.xml',
