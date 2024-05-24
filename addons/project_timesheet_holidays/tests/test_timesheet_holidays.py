@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import fields, SUPERUSER_ID
 
@@ -42,6 +43,24 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
     def setUp(self):
         super(TestTimesheetHolidays, self).setUp()
+
+        (self.empl_employee + self.empl_employee2 + self.empl_manager).unlink()
+        with patch.object(type(self.env.cr), 'now', lambda self: datetime.combine(date(1990, 1, 1), datetime.min.time())):
+            self.empl_employee = self.env['hr.employee'].create({
+                'name': 'User Empl Employee',
+                'user_id': self.user_employee.id,
+                'employee_type': 'freelance',  # Avoid searching the contract if hr_contract module is installed before this module.
+            })
+            self.empl_employee2 = self.env['hr.employee'].create({
+                'name': 'User Empl Employee 2',
+                'user_id': self.user_employee2.id,
+                'employee_type': 'freelance',
+            })
+            self.empl_manager = self.env['hr.employee'].create({
+                'name': 'User Empl Officer',
+                'user_id': self.user_manager.id,
+                'employee_type': 'freelance',
+            })
 
         self.employee_working_calendar = self.empl_employee.resource_calendar_id
         # leave dates : from next monday to next wednesday (to avoid crashing tests on weekend, when

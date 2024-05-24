@@ -31,7 +31,7 @@ class Employee(models.Model):
             else:
                 # Delete future holiday timesheets
                 self_company._delete_future_public_holidays_timesheets()
-        elif 'resource_calendar_id' in vals:
+        elif 'resource_calendar_id' in vals or vals.get('user_id'):
             # Update future holiday timesheets
             self_company._delete_future_public_holidays_timesheets()
             self_company._create_future_public_holidays_timesheets(self)
@@ -44,18 +44,18 @@ class Employee(models.Model):
 
     def _create_future_public_holidays_timesheets(self, employees):
         lines_vals = []
-        today = fields.Datetime.today()
         global_leaves_wo_calendar = defaultdict(lambda: self.env["resource.calendar.leaves"])
         global_leaves_wo_calendar.update(dict(self.env['resource.calendar.leaves']._read_group(
-            [('calendar_id', '=', False), ('date_from', '>=', today)],
+            [('calendar_id', '=', False)],
             groupby=['company_id'],
             aggregates=['id:recordset'],
         )))
         for employee in employees:
             if not employee.active:
                 continue
-            # First we look for the global time off that are already planned after today
-            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= today) + global_leaves_wo_calendar[employee.company_id]
+            # First we look for the global time off that are already planned after the employee creation date
+            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= employee.create_date) \
+                            + global_leaves_wo_calendar[employee.company_id].filtered(lambda l: l.date_from >= employee.create_date)
             work_hours_data = global_leaves._work_time_per_day()
             for global_time_off in global_leaves:
                 for index, (day_date, work_hours_count) in enumerate(work_hours_data[employee.resource_calendar_id.id][global_time_off.id]):

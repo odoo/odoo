@@ -153,14 +153,15 @@ class ResourceCalendarLeaves(models.Model):
 
         def get_timesheets_data(employees, work_hours_list, vals_list):
             for employee in employees:
+                work_hours_list_specific_employee = [wh for wh in work_hours_list if wh[0] >= employee.create_date.date()]
                 holidays = holidays_by_employee.get(employee.id)
-                for index, (day_date, work_hours_count) in enumerate(work_hours_list):
+                for index, (day_date, work_hours_count) in enumerate(work_hours_list_specific_employee):
                     if not holidays or all(not (date_from <= day_date and date_to >= day_date) for date_from, date_to in holidays):
                         vals_list.append(
                             leave._timesheet_prepare_line_values(
                                 index,
                                 employee,
-                                work_hours_list,
+                                work_hours_list_specific_employee,
                                 day_date,
                                 work_hours_count
                             )

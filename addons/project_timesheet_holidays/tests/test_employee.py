@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date, datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
 
@@ -33,11 +35,12 @@ class TestEmployee(TransactionCase):
             2) Check the timesheets representing the time off of this new employee
                is correctly generated
         """
-        employee = self.env['hr.employee'].create({
-            'name': 'Test Employee',
-            'company_id': self.company.id,
-            'resource_calendar_id': self.company.resource_calendar_id.id,
-        })
+        with patch.object(type(self.env.cr), 'now', lambda self: datetime.combine(date(2020, 1, 1), datetime.min.time())):
+            employee = self.env['hr.employee'].create({
+                'name': 'Test Employee',
+                'company_id': self.company.id,
+                'resource_calendar_id': self.company.resource_calendar_id.id,
+            })
         timesheet = self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id),
             ('global_leave_id', '=', self.global_leave.id),
@@ -47,11 +50,12 @@ class TestEmployee(TransactionCase):
         self.assertEqual(timesheet.unit_amount, 8, 'The timesheet should be created for the correct duration')
 
         # simulate the company of the employee updated is not in the allowed_company_ids of the current user
-        employee2 = self.env['hr.employee'].with_company(self.env.company).create({
-            'name': 'Test Employee',
-            'company_id': self.company.id,
-            'resource_calendar_id': self.company.resource_calendar_id.id,
-        })
+        with patch.object(type(self.env.cr), 'now', lambda self: datetime.combine(date(2020, 1, 1), datetime.min.time())):
+            employee2 = self.env['hr.employee'].with_company(self.env.company).create({
+                'name': 'Test Employee',
+                'company_id': self.company.id,
+                'resource_calendar_id': self.company.resource_calendar_id.id,
+            })
         timesheet = self.env['account.analytic.line'].search([
             ('employee_id', '=', employee2.id),
             ('global_leave_id', '=', self.global_leave.id),
@@ -74,10 +78,11 @@ class TestEmployee(TransactionCase):
             4) Check the timesheets representing the time off of this employee
                is correctly updated
         """
-        employee = self.env['hr.employee'].create({
-            'name': 'Test Employee',
-            'company_id': self.company.id,
-        })
+        with patch.object(type(self.env.cr), 'now', lambda self: datetime.combine(date(2020, 1, 1), datetime.min.time())):
+            employee = self.env['hr.employee'].create({
+                'name': 'Test Employee',
+                'company_id': self.company.id,
+            })
         employee.write({'resource_calendar_id': self.company.resource_calendar_id.id})
         timesheet = self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id),

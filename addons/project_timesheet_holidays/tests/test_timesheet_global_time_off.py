@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import common
@@ -48,25 +49,26 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
                 'attendance_ids': attendance_ids,
             }
         ])
-        self.full_time_employee, self.full_time_employee_2,\
-        self.part_time_employee, self.part_time_employee2 = self.env['hr.employee'].create([{
-                'name': 'John Doe',
-                'company_id': self.test_company.id,
-                'resource_calendar_id': self.test_company.resource_calendar_id.id,
-            }, {
-                'name': 'John Smith',
-                'company_id': self.test_company.id,
-                'resource_calendar_id': self.test_company.resource_calendar_id.id,
-            }, {
-                'name': 'Jane Doe',
-                'company_id': self.test_company.id,
-                'resource_calendar_id': self.part_time_calendar.id,
-            }, {
-                'name': 'Jon Show',
-                'company_id': self.test_company.id,
-                'resource_calendar_id': self.part_time_calendar2.id,
-            },
-        ])
+        with patch.object(type(self.env.cr), 'now', lambda self: datetime.combine(date(1990, 1, 1), datetime.min.time())):
+            self.full_time_employee, self.full_time_employee_2,\
+            self.part_time_employee, self.part_time_employee2 = self.env['hr.employee'].create([{
+                    'name': 'John Doe',
+                    'company_id': self.test_company.id,
+                    'resource_calendar_id': self.test_company.resource_calendar_id.id,
+                }, {
+                    'name': 'John Smith',
+                    'company_id': self.test_company.id,
+                    'resource_calendar_id': self.test_company.resource_calendar_id.id,
+                }, {
+                    'name': 'Jane Doe',
+                    'company_id': self.test_company.id,
+                    'resource_calendar_id': self.part_time_calendar.id,
+                }, {
+                    'name': 'Jon Show',
+                    'company_id': self.test_company.id,
+                    'resource_calendar_id': self.part_time_calendar2.id,
+                },
+            ])
 
         # Create a 2nd company
         self.test_company_2 = self.env['res.company'].create({
@@ -384,14 +386,13 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         self.assertIn(gto_09_04, global_leaves_ids_40h)
         self.assertIn(gto_11_06, global_leaves_ids_40h)
 
-        with freeze_time('2023-10-10'):
+        with freeze_time('2023-09-03'):
             self.full_time_employee.resource_calendar_id = calendar_35h.id
         timesheets_employee_35h = self.env['account.analytic.line'].search([('employee_id', '=', self.full_time_employee.id)])
         global_leaves_ids_35h = timesheets_employee_35h.global_leave_id
         self.assertEqual(len(global_leaves_ids_35h), 2)
-        self.assertIn(gto_09_04, global_leaves_ids_35h)
+        self.assertIn(gto_09_11, global_leaves_ids_35h)
         self.assertIn(gto_11_13, global_leaves_ids_35h)
-        self.assertNotIn(gto_09_11, global_leaves_ids_35h)
 
     def test_global_time_off_timesheet_creation_after_leave_refusal(self):
         """ When a global time off is created and an employee already has a
@@ -509,3 +510,70 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.assertTrue(global_time_off.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
         self.assertTrue(gto_without_calendar.timesheet_ids.filtered(lambda r: r.employee_id == test_user.employee_id))
+
+    def test_global_time_off_timesheet_according_to_employee_creation_date(self):
+        _, gl_before_employee_before_user_futur = self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Public Holiday (before employee - before user - past)',
+                'calendar_id': self.test_company.resource_calendar_id.id,
+                'date_from': datetime.combine(date(2024, 1, 1), datetime.min.time()),
+                'date_to': datetime.combine(date(2024, 1, 1), datetime.max.time()),
+            },
+            {
+                'name': 'Public Holiday (before employee - before user - futur)',
+                'calendar_id': self.test_company.resource_calendar_id.id,
+                'date_from': datetime.combine(date(2024, 1, 31), datetime.min.time()),
+                'date_to': datetime.combine(date(2024, 1, 31), datetime.max.time()),
+            }
+        ])
+
+        employee = self.env['hr.employee'].create({
+            'name': 'Test Employee',
+            'company_id': self.test_company.id,
+            'resource_calendar_id': self.test_company.resource_calendar_id.id,
+        })
+        employee.create_date = date(2024, 1, 15)
+
+        _, gl_after_employee_before_user_futur = self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Public Holiday (after employee - before user - past)',
+                'calendar_id': self.test_company.resource_calendar_id.id,
+                'date_from': datetime.combine(date(2024, 1, 2), datetime.min.time()),
+                'date_to': datetime.combine(date(2024, 1, 2), datetime.max.time()),
+            },
+            {
+                'name': 'Public Holiday (after employee - before user - futur)',
+                'calendar_id': self.test_company.resource_calendar_id.id,
+                'date_from': datetime.combine(date(2024, 1, 30), datetime.min.time()),
+                'date_to': datetime.combine(date(2024, 1, 30), datetime.max.time()),
+            }
+        ])
+
+        user = self.env['res.users'].with_company(self.test_company).create({
+            'name': 'Test User',
+            'login': 'test_user@example.com',
+        })
+        employee.user_id = user
+
+        _, gl_after_employee_after_user_futur = self.env['resource.calendar.leaves'].create([
+            {
+                'name': 'Public Holiday (after employee - after user - past)',
+                'calendar_id': self.test_company.resource_calendar_id.id,
+                'date_from': datetime.combine(date(2024, 1, 3), datetime.min.time()),
+                'date_to': datetime.combine(date(2024, 1, 3), datetime.max.time()),
+            },
+            {
+                'name': 'Public Holiday (after employee - after user - futur)',
+                'calendar_id': self.test_company.resource_calendar_id.id,
+                'date_from': datetime.combine(date(2024, 1, 29), datetime.min.time()),
+                'date_to': datetime.combine(date(2024, 1, 29), datetime.max.time()),
+            }
+        ])
+
+        user_timesheets = self.env['account.analytic.line'].search([('user_id', '=', user.id)])
+        self.assertEqual(
+            user_timesheets.global_leave_id,
+            gl_before_employee_before_user_futur
+            + gl_after_employee_before_user_futur
+            + gl_after_employee_after_user_futur
+        )
