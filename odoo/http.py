@@ -553,12 +553,12 @@ class Stream:
         """
         Create the corresponding :class:`~Response` for the current stream.
 
-        :param bool as_attachment: Indicate to the browser that it
+        :param bool|None as_attachment: Indicate to the browser that it
             should offer to save the file instead of displaying it.
-        :param bool immutable: Add the ``immutable`` directive to the
-            ``Cache-Control`` response header, allowing intermediary
-            proxies to aggressively cache the response. This option
-            also set the ``max-age`` directive to 1 year.
+        :param bool|None immutable: Add the ``immutable`` directive to
+            the ``Cache-Control`` response header, allowing intermediary
+            proxies to aggressively cache the response. This option also
+            set the ``max-age`` directive to 1 year.
         :param send_file_kwargs: Other keyword arguments to send to
             :func:`odoo.tools._vendor.send_file.send_file` instead of
             the stream sensitive values. Discouraged.
