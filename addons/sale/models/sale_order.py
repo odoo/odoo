@@ -2236,3 +2236,13 @@ class SaleOrder(models.Model):
         :return: None
         """
         self.with_context(send_email=True).action_confirm()
+
+    def _check_product_compatibility(self, product_id):
+        """
+        Check compatibility of products in cart and the currently added product.
+        :param product_id:
+        :return: ``True`` if current product can be added valid, ``False`` when not.
+        """
+        self.ensure_one()
+
+        return True

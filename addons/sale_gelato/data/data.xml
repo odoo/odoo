@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="product_product_delivery_standard_gelato" model="product.product">
+            <field name="name">Gelato Standard Delivery</field>
+            <field name="default_code">normal</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+        </record>
+
+        <record id="delivery_carrier_gelato_standard_delivery" model="delivery.carrier">
+            <field name="name">Standard Delivery</field>
+            <field name="sequence">30</field>
+            <field name="delivery_type">gelato</field>
+            <field name="integration_level">rate</field>
+            <field name="gelato_product_code">normal</field>
+            <field name="product_id" ref="sale_gelato.product_product_delivery_standard_gelato"/>
+            <field name="prod_environment" eval="True"/>
+            <field name="debug_logging" eval="False"/>
+        </record>
+
+        <record id="product_product_delivery_express_gelato" model="product.product">
+            <field name="name">Gelato Express Delivery</field>
+            <field name="default_code">express</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+        </record>
+
+        <record id="delivery_carrier_gelato_express_delivery" model="delivery.carrier">
+            <field name="name">Express Delivery</field>
+            <field name="sequence">30</field>
+            <field name="delivery_type">gelato</field>
+            <field name="integration_level">rate</field>
+            <field name="gelato_product_code">express</field>
+            <field name="product_id" ref="sale_gelato.product_product_delivery_express_gelato"/>
+            <field name="prod_environment" eval="True"/>
+            <field name="debug_logging" eval="False"/>
+        </record>
+    </data>
+</odoo>
