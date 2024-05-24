@@ -153,3 +153,9 @@ class ResCompany(models.Model):
                 'action': self.env['res.config.settings']._get_records_action(name=_("Settings"), context=new_context),
             }
         return errors
+
+    @api.onchange("l10n_it_has_tax_representative")
+    def _onchange_l10n_it_has_tax_represeentative(self):
+        for company in self:
+            if not company.l10n_it_has_tax_representative:
+                company.l10n_it_tax_representative_partner_id = False
