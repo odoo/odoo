@@ -372,7 +372,7 @@ class TestTranslationFlow(common.TransactionCase):
         trans_static = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
         for line in po_reader:
-            module, ttype, name, res_id, source, value, comments = line
+            module, ttype, name, res_id, source, value, comments, context = line
             if name == "addons/test_translation_import/static/src/xml/js_templates.xml":
                 trans_static.append(source)
 
@@ -386,7 +386,7 @@ class TestTranslationFlow(common.TransactionCase):
         terms = []
         po_reader = TranslationModuleReader(self.env.cr, ['test_translation_import'])
         for line in po_reader:
-            _module, _ttype, name, _res_id, source, _value, _comments = line
+            _module, _ttype, name, _res_id, source, _value, _comments, _context = line
             if name == "addons/test_translation_import/data/files/test_spreadsheet_dashboard.json":
                 terms.append(source)
         self.assertEqual(set(terms), {
