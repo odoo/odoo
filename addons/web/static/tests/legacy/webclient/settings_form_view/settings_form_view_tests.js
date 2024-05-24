@@ -1986,8 +1986,6 @@ QUnit.module("SettingsFormView", (hooks) => {
                 name: "Action partner",
                 type: "ir.actions.server",
                 usage: "ir_actions_server",
-                state: "code",
-                code: () => false,
             },
         };
 
@@ -2003,20 +2001,21 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
 
         const mockRPC = (route, args) => {
-            if (route === "/web/action/load" && args.action_id === "2") {
+            if (route === "/web/action/run") {
                 assert.step(route);
                 assert.deepEqual(pick(args.context, "active_id", "active_ids", "active_model"), {
                     active_id: 1,
                     active_ids: [1],
                     active_model: "res.config.settings",
                 });
+                return new Promise(() => {});
             }
         };
 
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
         await click(target.querySelector("button[name='2']"));
-        assert.verifySteps(["/web/action/load"]);
+        assert.verifySteps(["/web/action/run"]);
     });
 
     QUnit.test("BinaryField is correctly rendered in Settings form view", async function (assert) {
