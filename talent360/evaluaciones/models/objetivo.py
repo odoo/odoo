@@ -192,4 +192,14 @@ class Objetivo(models.Model):
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
             
-    
+    def action_registrar_avance(self):
+        """
+        Método para registrar el avance de un objetivo.
+        """
+        return {
+            "name": "Registrar Avance",
+            "type": "ir.actions.act_window",
+            "res_model": "registrar.avance.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }

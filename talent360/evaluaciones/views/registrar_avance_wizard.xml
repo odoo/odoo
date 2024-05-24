@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_registrar_avance_wizard" model="ir.ui.view">
+        <field name="name">registrar.avance.wizard.form</field>
+        <field name="model">registrar.avance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Registrar Avance">
+            <h1>Registrar Avance</h1>
+                <footer>
+                    <button string="Confirmar" type="object" class="btn-primary" name="action_confirm"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
