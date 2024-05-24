@@ -29,7 +29,7 @@ const DEFAULT_LUXON_SETTINGS = {
 };
 const SERVER_STATE_VALUES = {
     companies: [{ id: 1, name: "Hermit" }],
-    debug: false,
+    debug: "",
     groupId: 11,
     lang: "en",
     multiLang: false,
