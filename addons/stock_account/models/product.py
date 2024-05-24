@@ -29,7 +29,12 @@ class ProductTemplate(models.Model):
     @api.depends('categ_id')
     def _compute_valuation(self):
         for record in self:
-            record.valuation = record.categ_id.property_valuation if record.categ_id else "real_time"
+            if record.categ_id:
+                record.valuation = record.categ_id.property_valuation
+            elif self.env.user.has_group('stock_account.group_stock_accounting_automatic'):
+                record.valuation = 'real_time'
+            else:
+                record.valuation = 'manual_periodic'
 
     @api.depends("categ_id")
     def _compute_cost_method(self):
