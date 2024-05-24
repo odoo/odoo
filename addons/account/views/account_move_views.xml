@@ -981,16 +981,19 @@
                                      groups="account.group_account_readonly,base.group_multi_currency">
                                     <field name="journal_id"
                                            groups="account.group_account_readonly"
-                                           class="mr4"
                                            options="{'no_create': True, 'no_open': True}"
                                            readonly="posted_before"/>
+
+                                    <span class="o_form_label mx-3 oe_edit_only"
+                                          groups="account.group_account_readonly"
+                                          invisible="move_type == 'entry'">
+                                        <span groups="base.group_multi_currency">in </span>
+                                    </span>
                                     <div name="currency_div"
                                          groups="base.group_multi_currency"
+                                         class="w-100"
                                          style="white-space: pre;"
                                          invisible="move_type == 'entry'">
-                                        <span class="o_form_label"
-                                              groups="account.group_account_readonly"
-                                              invisible="move_type == 'entry'">in </span>
                                         <field name="currency_id"
                                                readonly="state != 'draft'"
                                                class="oe_inline"
