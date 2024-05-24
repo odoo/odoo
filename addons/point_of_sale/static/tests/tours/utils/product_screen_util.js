@@ -257,7 +257,12 @@ export function enterOpeningAmount(amount) {
 export function clickFiscalPosition(name, checkIsNeeded = false) {
     const step = [
         clickReview(),
-        ...clickControlButtonMore(),
+        {
+            content: "click more button",
+            trigger: ".mobile-more-button",
+            run: "click",
+            mobile: true,
+        },
         {
             content: "click fiscal position button",
             trigger: ".o_fiscal_position_button",
@@ -272,13 +277,20 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
 
     if (checkIsNeeded) {
         step.push(
-            ...clickControlButtonMore(),
+            {
+                content: "click more button",
+                trigger: ".mobile-more-button",
+                run: "click",
+                mobile: true,
+            },
             {
                 content: "the fiscal position " + name + " has been set to the order",
-                trigger: `.modal-body .control-buttons button.o_fiscal_position_button:contains("${name}")`,
+                trigger: `.control-buttons button.o_fiscal_position_button:contains("${name}")`,
             },
             {
                 ...Dialog.cancel(),
+                run: "click",
+                mobile: true,
             }
         );
     }
@@ -453,7 +465,12 @@ export function addOrderline(productName, quantity = 1, unitPrice, expectedTotal
 export function addCustomerNote(note) {
     return inLeftSide(
         [
-            clickControlButtonMore(),
+            {
+                content: "click more button",
+                trigger: ".mobile-more-button",
+                run: "click",
+                mobile: true,
+            },
             clickControlButton("Customer Note"),
             TextInputPopup.inputText(note),
             Dialog.confirm(),

@@ -31,7 +31,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
 
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Internal Note"),
             TextInputPopup.inputText("test note"),
             Dialog.confirm(),
@@ -61,7 +60,6 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Dialog.cancel(),
 
             // Test GuestButton
-            ProductScreen.clickControlButtonMore(),
             ProductScreen.clickControlButton("Guests"),
             NumberPopup.enterValue("15"),
             NumberPopup.isShown("15"),
