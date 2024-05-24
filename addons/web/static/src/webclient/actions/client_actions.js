@@ -17,7 +17,13 @@ export function displayNotificationAction(env, action) {
     const links = (params.links || []).map((link) => {
         return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
     });
+<<<<<<< HEAD
     const message = owl.markup(sprintf(escape(params.message), ...links));
+||||||| parent of c56a75ffeba9 (temp)
+    const message = sprintf(escape(params.message), links);
+=======
+    const message = sprintf(escape(params.message), ...links);
+>>>>>>> c56a75ffeba9 (temp)
     env.services.notification.add(message, options);
     return params.next;
 }
