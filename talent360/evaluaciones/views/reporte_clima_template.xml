@@ -17,17 +17,9 @@
             </t>
         </template>
 
-        <template id="mensaje" name="Reporte: mensaje en móvil">
-            <div class="d-flex flex-row justify-content-between" style="height: 100vh;">
-                <h1 class="text-center my-auto mx-5" style="font-size: 2rem;">
-                    Los reportes no están disponibles en dispositivos móviles. Por favor, accede desde un dispositivo de escritorio.
-                </h1>
-            </div>
-        </template>
-
         <!-- AQUÍ COMIENZA CLIMA -->
         <template id="encuestas_reporte_clima_body" name="Reporte de Clima Laboral">
-            <div class="container-fluid row gap-5 justify-content-between g-2">
+            <div class="page container-fluid row gap-5 justify-content-between g-2">
                 <div class="d-flex flex-row justify-content-between">
                     <h1>
                         <span t-field="evaluacion.nombre"/>
@@ -77,51 +69,9 @@
                 </div>
             </div>
 
-            <t t-if="evaluacion.incluir_demograficos">
-                <h4>Datos demográficos</h4>
-                <div class="container-fluid">
-                    <div class="row gap-5">
-                        <div class="col survey_section">
-                            <h4>
-                            Por generación
-                            </h4>
-                            <div class="survey_graph" t-att-id="'grafica_pastel_generacion_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Generación'" t-att-data-graph-data="generaciones">
-                                <canvas t-att-id="'canvas_pastel_generacion_clima'"/>
-                            </div>
-                        </div>
+            <t t-if="evaluacion.incluir_demograficos" t-call="evaluaciones.encuestas_reporte_demografico"/>
 
-                        <div class="col survey_section" style="page-break-inside: avoid;">
-                            <h4>
-                            Por género
-                            </h4>
-                            <div class="survey_graph" t-att-id="'grafica_pastel_genero_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Género'" t-att-data-graph-data="generos">
-                                <canvas t-att-id="'canvas_pastel_genero_clima'"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container-fluid">
-                    <div class="row gap-5">
-                        <div class="col survey_section">
-                            <h4>
-                            Por departamento
-                            </h4>
-                            <div class="survey_graph" t-att-id="'grafica_pastel_departamento_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Departamento'" t-att-data-graph-data="departamentos">
-                                <canvas t-att-id="'canvas_pastel_departamento_clima'"/>
-                            </div>
-                        </div>
-
-                        <div class="col survey_section">
-                            <h4>
-                            Por puesto
-                            </h4>
-                            <div class="survey_graph" t-att-id="'grafica_pastel_puesto_clima'" t-att-data-graph-type="'pie'" t-att-data-label="'Puesto'" t-att-data-graph-data="puestos">
-                                <canvas t-att-id="'canvas_pastel_puesto_clima'"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
+            <div class="page-break"></div>
 
             <div class="survey_page container-fluid d-flex flex-column" style="font-size: 0.9em;">
                 <div class="survey_section" style="page-break-inside: avoid;">
@@ -160,6 +110,7 @@
                 </div>
             </div>
 
+            <div class="page-break"></div>
 
             <t t-foreach="categorias" t-as="categoria">
                 <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
@@ -181,6 +132,7 @@
                             </div>
                         </div>
                     </t>
+                    <div class="page-break"></div>
                 </div>
             </t>
 

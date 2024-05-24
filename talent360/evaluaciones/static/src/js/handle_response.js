@@ -36,7 +36,10 @@ function confirmacion() {
 
 // Función que se ejecuta al hacer click en el botón de enviar
 function handleResponse(event) {
-    event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+    if (event){
+        event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+    }
 
     // Recoge todos los inputs de tipo radio
     var radios = document.querySelectorAll('.o_survey_form_choice_item');
