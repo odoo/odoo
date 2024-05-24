@@ -179,6 +179,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/utils.js',
 
             'mail/static/src/**/*',
+            'mail/static/lib/selfie_segmentation/selfie_segmentation.js',
             ('remove', 'mail/static/src/js/**/*'),
             ('remove', 'mail/static/src/scss/**/*'),
             ('remove', 'mail/static/src/xml/**/*'),
