@@ -7,10 +7,10 @@ import { session } from "@web/session";
 describe.current.tags("headless");
 
 test("default state", () => {
-    expect(odoo.debug).toBe(false);
+    expect(odoo.debug).toBe("");
     expect(serverState).toEqual({
         companies: [{ id: 1, name: "Hermit" }],
-        debug: false,
+        debug: "",
         groupId: 11,
         lang: "en",
         multiLang: false,
