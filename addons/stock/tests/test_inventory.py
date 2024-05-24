@@ -255,17 +255,11 @@ class TestInventory(TransactionCase):
         inventory_quant.inventory_quantity = 10
         inventory_quant.action_apply_inventory()
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 2)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0)
 
-        # Nothing should have changed for our pack move
-        self.assertEqual(move_pack_cust.state, 'partially_available')
-        self.assertEqual(move_pack_cust.quantity, 8)
-
-        # Running _action_assign will now find the new available quantity. Since the products
-        # are not differentiated (no lot/pack/owner), even if the new available quantity is not directly
-        # brought by the chain, the system will take them into account.
-        move_pack_cust._action_assign()
+        # Our pack move should have been entirely reserved.
         self.assertEqual(move_pack_cust.state, 'assigned')
+        self.assertEqual(move_pack_cust.quantity, 10)
 
         # move all the things
         move_pack_cust.move_line_ids.quantity = 10

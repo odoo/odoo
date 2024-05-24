@@ -64,6 +64,7 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase):
             'inventory_quantity': 1.0,
             'location_id': 8,
         }).action_apply_inventory()
+        order.picking_ids.do_unreserve()
 
     def test_website_sale_stock_reorder_from_portal_stock(self):
         self.start_tour("/", 'website_sale_stock_reorder_from_portal', login='admin')
