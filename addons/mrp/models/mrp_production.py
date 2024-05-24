@@ -1970,7 +1970,7 @@ class MrpProduction(models.Model):
                 workorder.duration_expected = workorder._get_duration_expected()
 
             # Adapt quantities produced
-            for workorder in production.workorder_ids:
+            for workorder in production.workorder_ids.sorted('id'):
                 initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
                 workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
             workorders_len = len(production.workorder_ids)
