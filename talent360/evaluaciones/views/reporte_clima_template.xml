@@ -19,7 +19,7 @@
 
         <!-- AQUÍ COMIENZA CLIMA -->
         <template id="encuestas_reporte_clima_body" name="Reporte de Clima Laboral">
-            <div class="container-fluid row gap-5 justify-content-between g-2">
+            <div class="page container-fluid row gap-5 justify-content-between g-2">
                 <div class="d-flex flex-row justify-content-between">
                     <h1>
                         <span t-field="evaluacion.nombre"/>
@@ -110,6 +110,7 @@
                 </div>
             </div>
 
+            <div class="page-break"></div>
 
             <t t-foreach="categorias" t-as="categoria">
                 <div class="survey_section container-fluid d-flex align-items-center justify-content-center" style="page-break-inside: avoid; height: 90vh;">
@@ -131,6 +132,7 @@
                             </div>
                         </div>
                     </t>
+                    <div class="page-break"></div>
                 </div>
             </t>
 
