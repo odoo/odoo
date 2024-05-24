@@ -1385,7 +1385,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Process the pending computations of ``self`` on ``records``. This
         should be called only if ``self`` is computed and stored.
         """
-        to_compute_ids = records.env.all.tocompute.get(self)
+        to_compute_ids = records.env.transaction.tocompute.get(self)
         if not to_compute_ids:
             return
 

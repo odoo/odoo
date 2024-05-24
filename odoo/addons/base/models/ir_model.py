@@ -964,7 +964,7 @@ class IrModelFields(models.Model):
 
         # discard the removed fields from fields to compute
         for field in fields:
-            self.env.all.tocompute.pop(field, None)
+            self.env.transaction.tocompute.pop(field, None)
 
         model_names = self.mapped('model')
         self._drop_column()
