@@ -94,7 +94,7 @@ class Evaluacion(models.Model):
     mensaje_bienvenida = fields.Text(
         string="Mensaje de bienvenida",
     )
-    contenido_correo = fields.Html(
+    contenido_correo = fields.Text(
         string="Contenido del correo",
     )
     mensaje_agradecimiento = fields.Text(
