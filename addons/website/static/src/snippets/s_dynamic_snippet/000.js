@@ -211,7 +211,9 @@ const DynamicSnippet = publicWidget.Widget.extend({
         if (enable === true) {
             this.removeSizeListener = listenSizeChange(this._onSizeChanged.bind(this));
         } else {
-            this.removeSizeListener();
+            if (typeof this.removeSizeListener === 'function') {
+                this.removeSizeListener();
+            }
             delete this.removeSizeListener;
         }
     },
