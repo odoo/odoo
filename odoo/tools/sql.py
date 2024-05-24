@@ -513,28 +513,30 @@ def create_index(cr, indexname, tablename, expressions, method='btree', where=''
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
         return
+    expressions = SQL(", ").join(SQL(expression) for expression in expressions)
     cr.execute(SQL(
         "CREATE INDEX %s ON %s USING %s (%s)%s",
         SQL.identifier(indexname),
         SQL.identifier(tablename),
         SQL(method),
-        SQL(", ").join(SQL(expression) for expression in expressions),
+        expressions,
         SQL(" WHERE %s", SQL(where)) if where else SQL(),
     ))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, ", ".join(expressions))
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, expressions.code)
 
 
 def create_unique_index(cr, indexname, tablename, expressions):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
         return
+    expressions = SQL(", ").join(SQL(expression) for expression in expressions)
     cr.execute(SQL(
         "CREATE UNIQUE INDEX %s ON %s (%s)",
         SQL.identifier(indexname),
         SQL.identifier(tablename),
-        SQL(", ").join(SQL(expression) for expression in expressions),
+        expressions,
     ))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, ", ".join(expressions))
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, expressions.code)
 
 
 def drop_index(cr, indexname, tablename):
