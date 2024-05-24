@@ -38,7 +38,10 @@
                     <notebook>
                         <page string="Preguntas">
                             <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
-                                <tree create="true" delete="true" editable="bottom">
+                                <tree create="true" delete="true">
+                                    <field name="categoria"/>
+                                    <field name="pregunta_texto"/>
+                                    <field name="tipo"/>
                                 </tree>
                                 <form string="Agregar pregunta">
                                     <group>
