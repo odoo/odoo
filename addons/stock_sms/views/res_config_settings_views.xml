@@ -6,18 +6,17 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='module_stock_sms']" position="replace">
-                <field name="stock_move_sms_validation"/>
+            <xpath expr="//div[@id='module_install_warning_sms']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//setting[@id='stock_sms']" position="attributes">
-                <attribute name="string">SMS Confirmation</attribute>
-            </xpath>
-            <xpath expr="//setting[@id='stock_sms']" position="inside">
-                <div class="row mt16" invisible="not stock_move_sms_validation">
-                    <label for="stock_sms_confirmation_template_id" string="SMS Template" class="col-lg-4 o_light_label"/>
-                    <field name="stock_sms_confirmation_template_id" class="oe_inline" required="stock_move_sms_validation" context="{'default_model': 'stock.picking'}"/>
+            <xpath expr="//setting[@id='stock_text_confirmation']" position="inside">
+                <div class="row mt16" invisible="confirmation_type != 'sms' or not text_confirmation">
+                    <field name="stock_sms_confirmation_template_id"
+                        class="oe_inline"
+                        required="confirmation_type == 'sms'"
+                        context="{'default_model': 'stock.picking'}"/>
                 </div>
-                <widget name="iap_buy_more_credits" service_name="sms" invisible="not stock_move_sms_validation"/>
+                <widget name="iap_buy_more_credits" service_name="sms" invisible="confirmation_type != 'sms' or not text_confirmation"/>
             </xpath>
         </field>
     </record>

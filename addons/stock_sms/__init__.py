@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import models
-from . import wizard
 
 
 def _assign_default_sms_template_picking_id(env):

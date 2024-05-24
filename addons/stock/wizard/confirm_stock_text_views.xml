@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_confirm_stock_text" model="ir.ui.view">
+        <field name="name">confirm.stock.text</field>
+        <field name="model">confirm.stock.text</field>
+        <field name="arch" type="xml">
+            <form string="Text Confirmation">
+                <field name="is_installed_stock_sms" invisible="1"/>
+                <field name="is_installed_whatsapp_stock" invisible="1"/>
+                <div groups="base.group_erp_manager">
+                    <strong>To confirm this Delivery Order via text message, please choose one of the following options:</strong><br/>
+                    <field name="confirmation_type" widget="radio" options="{'horizontal': True}"/>
+                </div>
+                <div groups="!base.group_erp_manager">
+                    You are about to confirm this Delivery Order via <strong><field name="confirmation_type" readonly="True"/></strong> Text Message.
+                </div>
+                <div class="text-warning" id="module_install_warning_sms" invisible="confirmation_type != 'sms' or is_installed_stock_sms">
+                    To enable this feature, install the <strong>Stock - SMS</strong> module.
+                </div>
+                <div class="text-warning" id="module_install_warning_whatsapp" invisible="confirmation_type != 'whatsapp' or is_installed_whatsapp_stock">
+                    To enable this feature, install the <strong>WhatsApp-Stock</strong> module.
+                    <a href="https://www.odoo.com/documentation/master/applications/productivity/whatsapp.html" target="_blank">
+                        <i title="Learn more about whatsapp module" class="fa fa-fw fa-info-circle"></i>
+                    </a>
+                </div>
+                <div class="mt-1">
+                    It can be easily disabled via Inventory Settings or by clicking the following Disable Text button.
+                </div>
+                <footer>
+                    <button name="send_text" type="object" data-hotkey="q"
+                            string="Confirm" class="oe_highlight"
+                            invisible="confirmation_type=='sms' and not is_installed_stock_sms or confirmation_type=='whatsapp' and not is_installed_whatsapp_stock"/>
+                    <button name="install_required_module" type="object" data-hotkey="q"
+                            string="Install Module" class="oe_highlight"
+                            invisible="confirmation_type=='sms' and is_installed_stock_sms or confirmation_type=='whatsapp' and is_installed_whatsapp_stock"
+                            groups="base.group_erp_manager"/>
+                    <button name="dont_send_text" type="object" data-hotkey="w"
+                            string="Disable Text" class="btn btn-primary"/>
+                    <button special="cancel" data-hotkey="x" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -537,7 +537,7 @@ class StockMove(models.Model):
             self.env['stock.move.line'].create(sml_values)
 
             _logger.info("Validate %d of pickings" % len(picking_to_validate))
-            picking_to_validate.with_context(skip_backorder=True, skip_sms=True).button_validate()
+            picking_to_validate.with_context(skip_backorder=True, skip_text=True).button_validate()
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal confirmed moves, e.g. for testing of forecasted report
         # pickings = confirm_pickings(0.8)

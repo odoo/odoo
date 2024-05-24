@@ -43,6 +43,14 @@ class Company(models.Model):
         help="""Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.
         If greater than the last day of a month, then the last day of the month will be selected instead.""")
 
+    # used for sending text confirmation
+    text_confirmation = fields.Boolean("Text Confirmation", default=True)
+    confirmation_type = fields.Selection([
+        ('sms', 'SMS'),
+        ('whatsapp', 'WhatsApp'),
+    ], default='sms')
+    has_received_text_warning = fields.Boolean()
+
     def _create_transit_location(self):
         '''Create a transit location with company_id being the given company_id. This is needed
            in case of resuply routes between warehouses belonging to the same company, because
@@ -227,3 +235,7 @@ class Company(models.Model):
                 'property_stock_customer': inter_company_location.id,
                 'property_stock_supplier': inter_company_location.id,
             })
+
+    def _get_text_validation(self, confirmation_type):
+        self.ensure_one()
+        return bool(self.confirmation_type == confirmation_type and self.text_confirmation)
