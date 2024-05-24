@@ -492,6 +492,9 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             this.options.wysiwyg.odooEditor.historyResetLatestComputedSelection();
             this.options.wysiwyg.odooEditor.historyStep(true);
             restoreCursor();
+            if (this.options.enableTranslation) {
+                $(selectedTextParent).trigger("content_changed");
+            }
             return false;
         } else {
             if (sel.getRangeAt(0).collapsed) {
@@ -735,20 +738,6 @@ weSnippetEditor.SnippetEditor.include({
             return _t("Logo");
         }
         return this._super(...arguments);
-    },
-    /**
-     * @override
-     * @returns {Promise}
-     */
-    async updateOptionsUIVisibility() {
-        await this._super(...arguments);
-        // TODO improve this: some website text options (like text animations,
-        // text highlights...) are moved to the toolbar, which leads to an empty
-        // "options section". The goal of this override is to hide options
-        // sections with no option elements.
-        if (!this.$optionsSection[0].querySelector(":scope > we-customizeblock-option")) {
-            this.$optionsSection[0].classList.add("d-none");
-        }
     },
     /**
      * Changes some behaviors before the drag and drop.
