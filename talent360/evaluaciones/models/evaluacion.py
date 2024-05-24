@@ -1162,7 +1162,6 @@ class Evaluacion(models.Model):
                     ]
                 )
 
-                print(f"Respuestas: {respuestas}")
                 respuestas.unlink()
 
         if "usuario_externo_ids" in vals:
@@ -1178,8 +1177,13 @@ class Evaluacion(models.Model):
                         ("evaluacion_id.id", "=", self.id),
                     ]
                 )
-                print(f"Respuestas: {respuestas}")
                 respuestas.unlink()
+
+        for record in self:
+            if len(record.pregunta_ids) < 1:
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una pregunta."))
+            if len(record.usuario_ids) < 1:
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos un usuario."))
 
         return resultado
 
