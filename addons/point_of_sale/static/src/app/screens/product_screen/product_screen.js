@@ -144,19 +144,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
             return;
         }
-        if (this.pos.numpadMode === "quantity" && selectedLine?.isPartOfCombo()) {
-            if (key === "Backspace") {
-                this._setValue("remove");
-            } else {
-                this.popup.add(ErrorPopup, {
-                    title: _t("Invalid action"),
-                    body: _t(
-                        "The quantity of a combo item cannot be changed. A combo can only be deleted."
-                    ),
-                });
-            }
-            return;
-        }
         if (selectedLine && this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
@@ -188,13 +175,24 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     }
     _setValue(val) {
         const { numpadMode } = this.pos;
-        const selectedLine = this.currentOrder.get_selected_orderline();
+        let selectedLine = this.currentOrder.get_selected_orderline();
         if (selectedLine) {
             if (numpadMode === "quantity") {
+                if (selectedLine.comboParent) {
+                    selectedLine = selectedLine.comboParent;
+                }
                 if (val === "remove") {
                     this.currentOrder.removeOrderline(selectedLine);
                 } else {
-                    const result = selectedLine.set_quantity(val);
+                    const result = selectedLine.set_quantity(
+                        val,
+                        Boolean(selectedLine.comboLines?.length)
+                    );
+                    if(selectedLine.comboLines){
+                        for (const line of selectedLine.comboLines) {
+                            line.set_quantity(val, true);
+                        }
+                    }
                     if (!result) {
                         this.numberBuffer.reset();
                     }

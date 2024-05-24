@@ -595,26 +595,30 @@ export class Orderline extends PosModel {
             const toRefundDetail = this.pos.toRefundLines[this.refunded_orderline_id];
             const maxQtyToRefund =
                 toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
-            if (quant > 0) {
-                this.env.services.popup.add(ErrorPopup, {
-                    title: _t("Positive quantity not allowed"),
-                    body: _t(
-                        "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
-                    ),
-                });
+            if (quant > 0 ) {
+                if (!this.comboParent) {
+                    this.env.services.popup.add(ErrorPopup, {
+                        title: _t("Positive quantity not allowed"),
+                        body: _t(
+                            "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
+                        ),
+                    });
+                }
                 return false;
             } else if (quant == 0) {
                 toRefundDetail.qty = 0;
             } else if (-quant <= maxQtyToRefund) {
                 toRefundDetail.qty = -quant;
             } else {
-                this.env.services.popup.add(ErrorPopup, {
-                    title: _t("Greater than allowed"),
-                    body: _t(
-                        "The requested quantity to be refunded is higher than the refundable quantity of %s.",
-                        this.env.utils.formatProductQty(maxQtyToRefund)
-                    ),
-                });
+                if(!this.comboParent){
+                    this.env.services.popup.add(ErrorPopup, {
+                        title: _t("Greater than allowed"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the refundable quantity of %s.",
+                            this.env.utils.formatProductQty(maxQtyToRefund)
+                        ),
+                    });
+                }
                 return false;
             }
         }
@@ -2147,6 +2151,7 @@ export class Order extends PosModel {
         this.productReminderTimeout = setTimeout(() => {
             this.hasJustAddedProduct = false;
         }, 3000);
+        return line;
     }
 
     compute_child_lines(comboParentProduct, comboLines, pricelist) {
