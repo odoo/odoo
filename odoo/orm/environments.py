@@ -563,11 +563,12 @@ class Cache:
     the values that should be in the database must be in a context where all
     the field's context keys are ``None``.
     """
-    __slots__ = ('_data', '_dirty', '_patches')
+    __slots__ = ('_data', '_data_get', '_dirty', '_patches')
 
     def __init__(self):
         # {field: {record_id: value}, field: {context_key: {record_id: value}}}
         self._data = defaultdict(dict)
+        self._data_get = self._data.get
 
         # {field: set[id]} stores the fields and ids that are changed in the
         # cache, but not yet written in the database; their changed values are
@@ -626,7 +627,7 @@ class Cache:
 
     def contains_field(self, field):
         """ Return whether ``field`` has a value for at least one record. """
-        cache = self._data.get(field)
+        cache = self._data_get(field)
         if not cache:
             return False
         # 'cache' keys are tuples if 'field' is context-dependent, record ids otherwise
@@ -947,7 +948,7 @@ class Cache:
                 if ids is None:
                     self._data.pop(field, None)
                     continue
-                cache = self._data.get(field)
+                cache = self._data_get(field)
                 if not cache:
                     continue
                 caches = cache.values() if isinstance(next(iter(cache)), tuple) else [cache]

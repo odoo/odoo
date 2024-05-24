@@ -1157,28 +1157,40 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
     def __get__(self, record: BaseModel, owner=None) -> T:
         """ return the value of field ``self`` on ``record`` """
-        if record is None:
-            return self         # the field is accessed through the owner class
-
-        if not record._ids:
-            # null record -> return the null value for this field
-            value = self.convert_to_cache(False, record, validate=False)
-            return self.convert_to_record(value, record)
-
-        env = record.env
-
-        # only a single record may be accessed
-        record.ensure_one()
+        # This part is specifically write to be fastest as possible
+        try:
+            id_, = record._ids
+        except ValueError:
+            if not record._ids:
+                # null record -> return the null value for this field
+                value = self.convert_to_cache(False, record, validate=False)
+                return self.convert_to_record(value, record)
+            # only a single record may be accessed
+            raise ValueError(f"Expected singleton: {self}") from None
+        except AttributeError:
+            if record is None:
+                return self         # the field is accessed through the owner class
+            raise
 
         if self.compute and self.store:
             # process pending computations
             self.recompute(record)
 
-        try:
-            value = env.cache.get(record, self)
-            return self.convert_to_record(value, record)
-        except KeyError:
-            pass
+        # it breaks the cache abstraction
+        env = record.env
+        if field_cache := env.cache._data_get(self):
+            try:
+                if self in record.pool.field_depends_context:
+                    field_cache = field_cache[env.cache_key(self)]
+
+                cache_value = field_cache[id_]
+                if self.translate and cache_value is not None:
+                    lang = (env.lang or 'en_US') if self.translate is True else env._lang
+                    cache_value = cache_value[lang]
+            except KeyError:
+                pass
+            else:
+                return self.convert_to_record(cache_value, record)
         # behavior in case of cache miss:
         #
         #   on a real record:
@@ -1198,7 +1210,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         #       not stored and computed -> compute
         #       not stored and not computed -> default
         #
-        if self.store and record.id:
+        if self.store and id_:
             # real record: fetch from database
             recs = self._in_cache_without(record, PREFETCH_MAX)
             try:
@@ -1243,7 +1255,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
                 value = env.cache.get(record, self)
 
-        elif self.type == 'many2one' and self.delegate and not record.id:
+        elif self.type == 'many2one' and self.delegate and not id_:
             # parent record of a new record: new record, with the same
             # values as record for the corresponding inherited fields
             def is_inherited_field(name):
