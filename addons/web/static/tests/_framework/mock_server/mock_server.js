@@ -921,19 +921,6 @@ export class MockServer {
                 message: `The action ${JSON.stringify(params.action_id)} does not exist`,
             });
         }
-        if (action.type === "ir.actions.server") {
-            if (action.state !== "code") {
-                throw new Error("Only server actions with code are supported on the mock server");
-            }
-            const result = action.code();
-            if (!result) {
-                return { type: "ir.actions.act_window_close" };
-            }
-            if (action.path) {
-                result.path = action.path;
-            }
-            return result;
-        }
         if (action.type === "ir.actions.act_window") {
             action["embedded_action_ids"] = this.embedded_actions.filter(
                 (el) => el && el.parent_action_id === params.action_id
