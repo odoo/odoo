@@ -5,8 +5,8 @@ import os
 from odoo import models, fields, api, exceptions, _
 
 class ImportarPreguntasWizard(models.TransientModel):
-    _name = 'importar.preguntas.wizard'
-    _description = 'Asistente para importar preguntas desde CSV'
+    _name = "importar.preguntas.wizard"
+    _description = "Asistente para importar preguntas desde CSV"
 
     archivo = fields.Binary()
     nombre_archivo = fields.Char()
@@ -90,7 +90,7 @@ class ImportarPreguntasWizard(models.TransientModel):
         evaluacion = self.env["evaluacion"].browse(self._context.get("active_id"))
 
         if evaluacion:
-            evaluacion.write({'pregunta_ids': [(4, pregunta.id) for pregunta in preguntas]})
+            evaluacion.write({"pregunta_ids": [(4, pregunta.id) for pregunta in preguntas]})
         else:
             raise exceptions.ValidationError(_("No se encontró la evaluación en el contexto."))
 
@@ -112,7 +112,7 @@ class ImportarPreguntasWizard(models.TransientModel):
             mensaje += f"Las siguientes columnas son requeridas: {', '.join(columnas_faltantes)}\n"
 
         if columnas_duplicadas:
-            mensaje += f"Las siguientes columnas están duplicadas: {', '.join(columnas_duplicadas)}\n"
+            mensaje += f"Las siguientes columnas están duplicadas: {',' .join(columnas_duplicadas)}\n"
 
         if mensaje:
             raise exceptions.ValidationError(mensaje)
