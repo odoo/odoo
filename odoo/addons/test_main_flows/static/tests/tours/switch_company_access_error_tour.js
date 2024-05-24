@@ -63,7 +63,6 @@ registry.category("web_tour.tours").add("test_company_switch_access_error", {
                 );
                 assertEqual("action" in router.current, true);
             },
-            isCheck: true,
         },
     ],
 });

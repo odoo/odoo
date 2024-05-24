@@ -15,10 +15,12 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     test: true,
 }, () => [{
     content: 'eLearning: click on New (top-menu)',
-    trigger: 'div.o_new_content_container a'
+    trigger: 'div.o_new_content_container a',
+    run: "click",
 }, {
     content: 'eLearning: click on New Course',
-    trigger: '#o_new_content_menu_choices a:contains("Course")'
+    trigger: '#o_new_content_menu_choices a:contains("Course")',
+    run: "click",
 }, {
     content: 'eLearning: set name',
     trigger: 'div[name="name"] input',
@@ -31,6 +33,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     content: 'eLearning: select Gardening tag',
     trigger: '.ui-autocomplete a:contains("Gardening")',
     in_modal: false,
+    run: "click",
 }, {
     content: 'eLearning: set description',
     trigger: '.o_field_html[name="description"]',
@@ -38,9 +41,11 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: we want reviews',
     trigger: '.o_field_boolean[name="allow_comment"] input',
+    run: "click",
 }, {
     content: 'eLearning: seems cool, create it',
     trigger: 'button:contains("Save")',
+    run: "click",
 },
 ...wTourUtils.clickOnEditAndWaitEditMode(),
 {
@@ -50,6 +55,7 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: 'eLearning: click "Add URL" to trigger URL box',
     trigger: '.o_upload_media_url_button',
+    run: "click",
 }, {
     content: 'eLearning: add a bioutifoul URL',
     trigger: 'input.o_we_url_input',
@@ -58,12 +64,15 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
     content: 'eLearning: click "Add URL" really adding image',
     trigger: '.o_upload_media_url_button',
     extra_trigger: '.o_we_url_success',
+    run: "click",
 }, {
     content: 'eLearning: is the Corgi set ?',
     trigger: ':iframe img.o_wslides_course_pict[data-original-src$="GoldWinnerPembrookeWelshCorgi.jpg"]',
+    run: "click",
 }, {
     content: 'eLearning: save course edition',
     trigger: 'button[data-action="save"]',
+    run: "click",
 }, {
     content: 'eLearning: course create with current member',
     extra_trigger: ':iframe body:not(.editor_enable)',  // wait for editor to close
@@ -83,9 +92,11 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: "eLearning: save article",
     trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+    run: "click",
 }, {
     content: "eLearning: use breadcrumb to go back to channel",
     trigger: ':iframe .o_wslides_course_nav a:contains("Déboulonnate")',
+    run: "click",
 }],
     slidesTourTools.addImageToSection('Introduction', 'Overview', true),
     slidesTourTools.addPdfToSection('Introduction', 'Exercise', true),

@@ -18,14 +18,17 @@ registry.category("web_tour.tours").add('course_member', {
     steps: () => [
 // eLearning: go on free course and join it
 {
-    trigger: 'a:contains("Basics of Gardening - Test")'
+    trigger: 'a:contains("Basics of Gardening - Test")',
+    run: "click",
 }, {
-    trigger: 'a:contains("Join this Course")'
+    trigger: 'a:contains("Join this Course")',
+    run: "click",
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }, {
     trigger: 'a:contains("Gardening: The Know-How")',
+    run: "click",
 },
 // eLearning: follow course by cliking on first lesson and going to fullscreen player
 {
@@ -34,17 +37,20 @@ registry.category("web_tour.tours").add('course_member', {
 },
 // eLearning: share the first slide
 {
-    trigger: '.o_wslides_fs_share'
+    trigger: '.o_wslides_fs_share',
+    run: "click",
 }, {
     trigger: '.o_wslides_js_share_email input',
     run: "edit friend@example.com",
 }, {
     trigger: '.o_wslides_js_share_email button',
+    run: "click",
 }, {
     trigger: '.o_wslides_js_share_email:contains("Sharing is caring")',
     run: function () {}  // check email has been sent
 }, {
     trigger: '.modal-footer button:contains("Close")',
+    run: "click",
 },
 // eLeaning: course completion
 {
@@ -130,16 +136,21 @@ registry.category("web_tour.tours").add('course_member', {
     trigger: '.o_wslides_fs_slide_name:contains("Test your knowledge")',
     run: 'click',
 }, {
-    trigger: '.o_wslides_js_lesson_quiz_question:first .list-group a:first'
+    trigger: '.o_wslides_js_lesson_quiz_question:first .list-group a:first',
+    run: "click",
 }, {
-    trigger: '.o_wslides_js_lesson_quiz_question:last .list-group a:first'
+    trigger: '.o_wslides_js_lesson_quiz_question:last .list-group a:first',
+    run: "click",
 }, {
-    trigger: '.o_wslides_js_lesson_quiz_submit'
+    trigger: '.o_wslides_js_lesson_quiz_submit',
+    run: "click",
 }, {
     // check that we have a properly motivational message to motivate us!
-    trigger: '.o_wslides_quiz_modal_rank_motivational > div > div:contains("Reach the next rank and gain a very nice mug!")'
+    trigger: '.o_wslides_quiz_modal_rank_motivational > div > div:contains("Reach the next rank and gain a very nice mug!")',
+    run: "click",
 }, {
-    trigger: 'a:contains("End course")'
+    trigger: 'a:contains("End course")',
+    run: "click",
 },
 // eLearning: ending course redirect to /slides, course is completed now
 {
@@ -148,9 +159,11 @@ registry.category("web_tour.tours").add('course_member', {
 },
 // eLearning: go back on course and rate it (new rate or update it, both should work)
 {
-    trigger: 'a:contains("Basics of Gardening")'
+    trigger: 'a:contains("Basics of Gardening")',
+    run: "click",
 }, {
-    trigger: 'button[data-bs-target="#ratingpopupcomposer"]'
+    trigger: 'button[data-bs-target="#ratingpopupcomposer"]',
+    run: "click",
 }, {
     trigger: 'div.o_portal_chatter_composer_input i.fa:eq(2)',
     extra_trigger: 'div.modal_shown',
@@ -163,8 +176,10 @@ registry.category("web_tour.tours").add('course_member', {
 }, {
     trigger: 'button.o_portal_chatter_composer_btn',
     in_modal: false,
+    run: "click",
 }, {
-    trigger: 'a[id="review-tab"]'
+    trigger: 'a[id="review-tab"]',
+    run: "click",
 }, {
     trigger: '.o_portal_chatter_message:contains("This is a great course. Top !")',
     run: function () {}, // check review is correctly added

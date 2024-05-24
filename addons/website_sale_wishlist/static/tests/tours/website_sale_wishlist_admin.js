@@ -10,34 +10,41 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         {
             content: "Go to Rock shop page",
             trigger: ':iframe a:contains("Rock"):first',
+            run: "click",
         },
         {
             content: "check list view of variants is disabled initially (when on /product page)",
             trigger: ':iframe body:not(:has(.js_product_change))',
             extra_trigger: ':iframe #product_details',
+            run: "click",
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
+            run: "click",
         },
         {
             content: "open 'Variants' selector",
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
+            run: "click",
         },
         {
             content: "click on 'List View of Variants'",
             trigger: 'we-button[data-name="variants_products_list_opt"]',
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
         {
             content: "check page loaded after list of variant customization enabled",
             trigger: ':iframe .js_product_change',
+            run: "click",
         },
         {
             content: "Add red product in wishlist",
             trigger: ":iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
+            run: "click",
         },
         {
             content: "Check that wishlist contains 1 items",
@@ -56,14 +63,17 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
         {
             content: "Go to Rock shop page",
             trigger: ':iframe a:contains("Rock"):first',
+            run: "click",
         },
         {
             content: "Switch to black Rock",
             trigger: ':iframe .js_product span:contains("black")',
+            run: "click",
         },
         {
             content: "Add black rock to wishlist",
             trigger: ":iframe #product_detail .o_add_wishlist_dyn:not(.disabled)",
+            run: "click",
         },
         {
             content: "Check that black product was added",

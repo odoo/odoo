@@ -11,6 +11,7 @@
             {
                 content: "Create a new contact",
                 trigger: '.o-kanban-button-new',
+                click: "run",
             },
             {
                 content: "Check that Company is checked by default, and not Individual",
@@ -20,14 +21,17 @@
             {
                 content: "Select the individual radio button",
                 trigger: '.o_field_widget[name="company_type"] input[data-value="person"]',
+                click: "run",
             },
             {
                 content: "Open the debug menu",
                 trigger: '.o_debug_manager button',
+                click: "run",
             },
             {
                 content: "Click the Set Defaults menu",
                 trigger: '.dropdown-item:contains(Set Defaults)',
+                click: "run",
             },
             {
                 content: "Choose Company Type = Individual",
@@ -41,17 +45,21 @@
             {
                 content: "Check that there are conditions",
                 trigger: '#formview_default_conditions',
+                click: "run",
             },
             {
                 content: "Save the new default",
                 trigger: 'footer button:contains(Save default)',
+                click: "run",
             },
             {
                 content: "Discard the contact creation",
                 trigger: 'button.o_form_button_cancel',
+                click: "run",
             },
             {
                 trigger: '.o_action_manager > .o_kanban_view .o-kanban-button-new',
+                click: "run",
             },
             {
                 content: "Check that Individual is checked instead of Company",
@@ -61,6 +69,7 @@
             {
                 content: "Discard the contact creation",
                 trigger: 'button.o_form_button_cancel',
+                click: "run",
             },
             {
                 content: "Wait for discard",

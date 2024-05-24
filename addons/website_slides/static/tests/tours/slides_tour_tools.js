@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/** @odoo-module  */
 
 import { contains } from "@web/../tests/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
@@ -19,16 +19,19 @@ var addSection = function (sectionName, backend = false) {
 {
     content: 'eLearning: click on Add Section',
     trigger: prefix + 'a.o_wslides_js_slide_section_add',
+    run: "click",
 }, {
     content: 'eLearning: set section name',
     trigger: prefix + 'input[name="name"]',
     run: `edit ${sectionName}`,
 }, {
     content: 'eLearning: create section',
-    trigger: prefix + 'footer.modal-footer button:contains("Save")'
+    trigger: prefix + 'footer.modal-footer button:contains("Save")',
+    run: "click",
 }, {
 	content: 'eLearning: section created empty',
 	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '")',
+    run: "click",
 }];
 };
 
@@ -38,9 +41,11 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 {
 	content: 'eLearning: add content to section',
 	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
+    run: "click",
 }, {
 	content: 'eLearning: click on video',
 	trigger: prefix + 'a[data-slide-category=video]',
+    run: "click",
 }, {
 	content: 'eLearning: fill video link',
 	trigger: prefix + 'input[name=video_url]',
@@ -48,12 +53,14 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 }, {
     content: 'eLearning: click outside to trigger onchange',
     trigger: prefix + 'div.o_w_slide_upload_modal_container',
+    run: "click",
 }];
 	if (saveAsDraft) {
 		base_steps = [].concat(base_steps, [{
     content: 'eLearning: save as draft slide',
     extra_trigger: prefix + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
     trigger: prefix + 'footer.modal-footer button:contains("Save as Draft")',
+    run: "click",
 }]);
 	}
 	else {
@@ -61,6 +68,7 @@ var addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     content: 'eLearning: create and publish slide',
     extra_trigger: prefix + 'div.o_slide_preview img:not([src="/website_slides/static/src/img/document.png"])',  // wait for onchange to perform its duty
     trigger: prefix + 'footer.modal-footer button:contains("Publish")',
+    run: "click",
 }]);
 	}
 	return base_steps;
@@ -72,9 +80,11 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 {
 	content: 'eLearning: add content to section',
 	trigger: prefix + 'div.o_wslides_slide_list_category_header:contains("' + sectionName + '") a:contains("Add Content")',
+    run: "click",
 }, {
 	content: 'eLearning: click on article',
 	trigger: prefix + 'a[data-slide-category=article]',
+    run: "click",
 }, {
 	content: 'eLearning: fill article title',
 	trigger: prefix + 'input[name=name]',
@@ -82,10 +92,12 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: click on tags',
     trigger: prefix + 'button.o_select_menu_toggler:last',
+    run: "click",
 }, {
     content: 'eLearning: select Practice tag',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Practice")',
     in_modal: false,
+    run: "click",
 }, {
 	content: 'eLearning: fill article completion time',
 	trigger: prefix + 'input[name=duration]',
@@ -93,6 +105,7 @@ var addArticleToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: create and publish slide',
     trigger: prefix + 'footer.modal-footer button:contains("Publish")',
+    run: "click",
 }];
 };
 
@@ -121,12 +134,15 @@ const addImageToSection = (sectionName, pageName, backend) => {
 {
     content: 'eLearning: add content to section',
     trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
+    run: "click",
 }, {
     content: 'eLearning: click on image',
     trigger: `${prefix}a[data-slide-category=infographic]`,
+    run: "click",
 }, {
     content: 'eLearning: choose upload from device',
     trigger: `${prefix}#source_type_local_file`,
+    run: "click",
 }, {
     content: 'eLearning: load image',
     trigger: 'body',
@@ -139,12 +155,15 @@ const addImageToSection = (sectionName, pageName, backend) => {
 }, {
     content: 'eLearning: ensure that the preview is displayed which means that data is loaded and can be submitted',
     trigger: `${prefix}#slide-image[src*="data:"]`,
+    run: "click",
 }, {
     content: 'eLearning: create and publish slide',
     trigger: `${prefix}footer.modal-footer button:contains("Publish")`,
+    run: "click",
 }, {
     content: 'eLearning: launch content',
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Overview")`,
+    run: "click",
 }, {
     content: 'eLearning: check uploaded image presence and perform comparison',
     trigger: prefix + '.o_wslides_fs_player img',
@@ -158,10 +177,12 @@ const addImageToSection = (sectionName, pageName, backend) => {
 }, {
     content: 'eLearning: check uploaded image content',
     trigger: `${prefix}.o_wslides_fs_player img.o_wslides_tour_img_upload_success`,
+    run: "click",
 },
 {
     content: 'eLearning: back to course',
     trigger: `${prefix}.o_wslides_fs_sidebar_header a:contains("Déboulonnate")`,
+    run: "click",
 },
 {
     content: 'eLearning: check course page',
@@ -179,12 +200,15 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 {
     content: 'eLearning: add content to section',
     trigger: `${prefix}div.o_wslides_slide_list_category_header:contains("${sectionName}") a:contains("Add Content")`,
+    run: "click",
 }, {
     content: 'eLearning: click on document',
     trigger: `${prefix}a[data-slide-category=document]`,
+    run: "click",
 }, {
     content: 'eLearning: choose upload from device',
     trigger: `${prefix}#source_type_local_file`,
+    run: "click",
 }, {
     content: 'eLearning: load pdf',
     trigger: 'body',
@@ -197,12 +221,15 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: ensure that the preview is displayed which means that data is loaded and can be submitted',
     trigger: `${prefix}#slide-image[src*="data:"]`,
+    run: "click",
 }, {
     content: 'eLearning: create and publish slide',
     trigger: `${prefix}footer.modal-footer button:contains("Publish")`,
+    run: "click",
 }, {
     content: 'eLearning: launch content',
     trigger: `${prefix}a.o_wslides_js_slides_list_slide_link:contains("Exercise")`,
+    run: "click",
 }, {
     content: 'eLearning: check uploaded pdf presence and perform comparison',
     trigger: (backend ? '.o_iframe:iframe ' : '') + '.o_wslides_fs_content',
@@ -219,9 +246,11 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: check uploaded pdf content',
     trigger: `${prefix}.o_wslides_fs_content.o_wslides_tour_pdf_upload_success`,
+    run: "click",
 }, {
     content: 'eLearning: back to course',
     trigger: `${prefix}.o_wslides_fs_sidebar_header a:contains("Déboulonnate")`,
+    run: "click",
 }, {
     content: 'eLearning: check course page',
     trigger: `${prefix}.o_wslides_course_main`,
@@ -235,19 +264,24 @@ var addExistingCourseTag = function (backend = false) {
 {
     content: 'eLearning: click on Add Tag',
     trigger: prefix + 'a.o_wslides_js_channel_tag_add',
+    run: "click",
 }, {
     content: 'eLearning: click on tag dropdown',
     trigger: prefix + 'button.o_select_menu_toggler:first',
+    run: "click",
 }, {
     content: 'eLearning: select advanced tag',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Advanced")',
     in_modal: false,
+    run: "click",
 }, {
     content: 'eLearning: add existing course tag',
-    trigger: prefix + 'footer.modal-footer a:contains("Add")'
+    trigger: prefix + 'footer.modal-footer a:contains("Add")',
+    run: "click",
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: prefix + 'body:not(.modal-open)',
+    run: "click",
 }];
 };
 
@@ -257,9 +291,11 @@ var addNewCourseTag = function (courseTagName, backend) {
 {
     content: 'eLearning: click on Add Tag',
     trigger: prefix + 'a.o_wslides_js_channel_tag_add',
+    run: "click",
 }, {
     content: 'eLearning: click on tag dropdown',
 	trigger: prefix + 'button.o_select_menu_toggler:first',
+    run: "click",
 }, {
     content: 'eLearning: add a new course tag',
 	trigger: prefix + 'input.dropdown-item:first',
@@ -267,19 +303,24 @@ var addNewCourseTag = function (courseTagName, backend) {
 }, {
     content: 'eLearning: click on create this tag',
     trigger: prefix + 'i:contains("123")',
+    run: "click",
 },{
     content: 'eLearning: click on tag group dropdown',
 	trigger: prefix + 'button.o_select_menu_toggler:last',
+    run: "click",
 }, {
 	content: 'eLearning: select Tags tag group',
     trigger: prefix + 'div.o_select_menu_item_label:contains("Tags")',
 	in_modal: false,
+    run: "click",
 }, {
     content: 'eLearning: add new course tag',
     trigger: prefix + 'footer.modal-footer a:contains("Add")',
+    run: "click",
 }, {
 	content: 'eLearning: check that modal is closed',
 	trigger: prefix + 'body:not(.modal-open)',
+    run: "click",
 }];
 };
 
