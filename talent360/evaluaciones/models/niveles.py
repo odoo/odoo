@@ -1,6 +1,4 @@
-from os import POSIX_SPAWN_OPEN
 from odoo import models, fields
-from talent360.evaluaciones.models import evaluacion
 
 class Niveles(models.Model):
 
@@ -8,7 +6,6 @@ class Niveles(models.Model):
     _description = "Niveles de semaforización"
 
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
-    piso = fields.Integer(string="Piso")
     techo = fields.Integer(string="Techo")
     color = fields.Selection(
         [
@@ -21,6 +18,7 @@ class Niveles(models.Model):
             ("morado", "Morado"),
             ("cafe", "Café"),
             ("rosa", "Rosa"),
+            ("blanco", "Blanco"),
         ],
         required=True,
         string="Color",

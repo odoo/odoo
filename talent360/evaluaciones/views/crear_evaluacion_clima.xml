@@ -55,7 +55,15 @@
                             </field>
                         </page>
                         <page string="Semaforización">
-                            <style>
+
+                            <field name="niveles" string="niveles">
+                                <tree string="Niveles" editable="bottom">
+                                    <field name="techo" />
+                                    <field name="color" />
+                                </tree>
+                            </field>
+
+                            <!-- <style>
                                 .my_table th {
                                     text-align: left;
                                     padding: 8px;
@@ -181,7 +189,7 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table> -->
                         </page>
                         <page string="Notificaciones">
                             <group>

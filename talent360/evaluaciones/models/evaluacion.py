@@ -89,6 +89,12 @@ class Evaluacion(models.Model):
         string="Asignados Externos",
     )
 
+    niveles = fields.One2many(
+        "niveles",
+        "evaluacion_id",
+        string="Niveles",
+    )
+
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
     mensaje_bienvenida = fields.Text(
