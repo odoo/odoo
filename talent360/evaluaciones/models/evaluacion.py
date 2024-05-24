@@ -1208,7 +1208,7 @@ class Evaluacion(models.Model):
         :return: None
         """
         today = fields.Date.today()
-        evaluaciones = self.search([("estado", "!=", "finalizado")])
+        evaluaciones = self.search([])
         for evaluacion in evaluaciones:
             if evaluacion.fecha_inicio <= today <= evaluacion.fecha_final:
                 evaluacion.estado = "publicado"
