@@ -6,11 +6,11 @@ import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 import { stores } from "@odoo/o-spreadsheet";
-import { useSubEnv, useEffect, useExternalListener, useState } from "@odoo/owl";
+import { useEffect, useExternalListener, useState } from "@odoo/owl";
 
 import { loadBundle } from "@web/core/assets";
 
-const { useStoreProvider, NotificationStore } = stores;
+const { useStore, useStoreProvider, NotificationStore } = stores;
 /**
  * Hook that will capture the 'Ctrl+p' press that corresponds to the user intent to print a spreadsheet.
  * It will prepare the spreadsheet for printing by:
@@ -164,15 +164,11 @@ export function useSpreadsheetNotificationStore() {
     }
     const dialog = useService("dialog");
     const notifications = useService("notification");
-
-    const stores = useStoreProvider();
-    const notificationStore = {
+    useStoreProvider();
+    const notificationStore = useStore(NotificationStore);
+    notificationStore.updateNotificationCallbacks({
         notifyUser: notifyUser,
         raiseError: raiseError,
         askConfirmation: askConfirmation,
-    };
-    stores.inject(NotificationStore, notificationStore);
-    useSubEnv({
-        ...notificationStore,
     });
 }
