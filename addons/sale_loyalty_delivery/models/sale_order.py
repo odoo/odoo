@@ -69,3 +69,6 @@ class SaleOrder(models.Model):
                     filtered_res[coupon] = filtered_rewards
             res = filtered_res
         return res
+
+    def get_reward_ids(self):
+        return self.order_line.filtered(lambda line: line.is_reward_line).mapped('reward_id')
