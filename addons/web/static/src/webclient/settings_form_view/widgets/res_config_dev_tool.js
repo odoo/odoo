@@ -1,3 +1,4 @@
+import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { SettingsBlock } from "../settings/settings_block";
@@ -39,6 +40,10 @@ export class ResConfigDevTool extends Component {
      */
     onClickForceDemo() {
         this.action.doAction("base.demo_force_install_action");
+    }
+
+    onClickDebugMode(mode) {
+        router.pushState({ debug: mode }, { reload: true });
     }
 }
 
