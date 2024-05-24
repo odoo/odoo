@@ -19,17 +19,19 @@
                     <i class="fa fa-barcode me-1"/>Enter Code
                 </button>
             </t>
-            <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
-                <button class="btn btn-light rounded-0 fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
-                    t-on-click="() => this.pos.resetPrograms()" t-if="!props.wrapped">
-                    <i class="fa fa-star me-1"/>Reset Programs
-                </button>
-            </t>
             <t t-if="pos.models['loyalty.program'].length">
                 <button class="control-button btn btn-light rounded-0 fw-bolder"
                     t-attf-class="{{getPotentialRewards().length ? 'highlight text-action' : 'disabled'}}"
                     t-on-click="() => this.clickRewards()">
                     <i class="fa fa-star me-1"/>Reward
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-if='!props.wrapped']/OrderlineNoteButton" position="after">
+            <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type))">
+                <button class="btn btn-light rounded-0 fw-bolder" t-att-class="{'disabled': !pos.get_order().isProgramsResettable()}"
+                    t-on-click="() => this.pos.resetPrograms()">
+                    <i class="fa fa-star me-1"/>Reset Programs
                 </button>
             </t>
         </xpath>
