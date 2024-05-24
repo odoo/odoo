@@ -1,6 +1,7 @@
 import base64
 import csv
 from io import StringIO
+import os
 from odoo import models, fields, api, exceptions, _
 
 class ImportQuestionsWizard(models.TransientModel):
@@ -180,8 +181,11 @@ class ImportQuestionsWizard(models.TransientModel):
                 )
     def descargar_template(self):
         # Define el contenido del archivo CSV de la plantilla
-        ruta_archivo = (
-            "talent360/evaluaciones/static/csv/plantilla_preguntas_clima.csv"
+            #"talent360/evaluaciones/static/csv/plantilla_preguntas_clima.csv"
+
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        ruta_archivo = os.path.join(
+            current_path, "../static/csv/plantilla_preguntas_clima.csv"
         )
         with open(ruta_archivo, "r") as archivo:
             datos = archivo.read()
