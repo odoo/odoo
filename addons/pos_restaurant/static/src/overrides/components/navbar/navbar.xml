@@ -15,5 +15,25 @@
         <xpath expr="//button[hasclass('back-button')]" position="inside">
             <span class="mx-1 fs-4" t-if="!ui.isSmall and pos.config.module_pos_restaurant">TABLES</span>
         </xpath>
+         <xpath expr="//div[hasclass('pos-rightheader')]" position="before">
+            <div t-if="pos.config.module_pos_restaurant and !this.state.arrowPopup" class="ms-1 d-flex overflow-hidden position-relative p-1">
+                <button t-if="!pos.selectedOrderUuid" class="btn btn-primary mx-2" t-on-click="createOrderWithoutTable">
+                    <i class="fa fa-plus-circle" aria-hidden="true"/>
+                </button>
+            </div>
+            <div class="shadow-table-list flex-grow-1 position-relative" t-if="this.pos.config.module_pos_restaurant">
+                <div t-att-class="{'invisible': this.state.arrowPopup}" class="d-flex gap-1 align-items-center py-1">
+                    <div t-foreach="orderWithoutTable" t-as="order" t-key="order.id" class="btn btn-secondary d-flex p-2" t-on-click="() => this.onClickOrder(order)">
+                        <span t-esc="order.shadowTableName" />
+                    </div>
+                </div>
+                <div t-on-click="toggleOrderList" t-if="this.state.arrowPopup" class="gap-1 position-absolute start-0 top-0 bottom-0 bg-white d-flex justify-content-center align-items-center py-1 px-2">
+                    <button t-if="!pos.selectedOrderUuid" class="btn btn-primary p-2 h-100" t-on-click="createOrderWithoutTable">
+                        <i class="fa fa-plus-circle" aria-hidden="true"/>
+                    </button>
+                    <button class="btn btn-secondary p-2 h-100" t-attf-class="fa {{this.state.listPopup ? 'fa-caret-up' : 'fa-caret-down'}}" />
+                </div>
+            </div>
+        </xpath>
     </t>
 </templates>

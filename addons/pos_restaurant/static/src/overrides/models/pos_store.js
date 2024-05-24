@@ -217,10 +217,10 @@ patch(PosStore.prototype, {
         return {
             paidOrdersNotSent,
             orderToCreate: orderToCreate.filter(
-                (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
+                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
             ),
             orderToUpdate: orderToUpdate.filter(
-                (o) => context.table_ids.includes(o.table_id.id) && !this.tableSyncing
+                (o) => context.table_ids.includes(o.table_id?.id) && !this.tableSyncing
             ),
         };
     },

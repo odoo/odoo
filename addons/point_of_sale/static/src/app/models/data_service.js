@@ -124,30 +124,26 @@ export class PosData extends Reactive {
     }
 
     async loadIndexedDBData() {
-        const data = await this.indexedDB.readAll();
+        const rawData = await this.indexedDB.readAll();
 
-        if (!data) {
+        if (!rawData) {
             return;
         }
 
         const newData = {};
         for (const model of this.opts.databaseTable) {
-            const rawRec = data[model.name];
+            const rawRec = rawData[model.name];
 
             if (rawRec) {
                 newData[model.name] = rawRec.filter((r) => !this.models[model.name].get(r.id));
             }
         }
 
-        const results = this.models.loadData(data, [], true);
-        for (const [model, data] of Object.entries(results)) {
+        const results = this.models.loadData(rawData, [], true);
+        for (const data of Object.values(results)) {
             for (const record of data) {
-                if (record.JSONuiState) {
-                    const loadedRecords = this.models[model].find((r) => r.uuid === record.uuid);
-
-                    if (loadedRecords) {
-                        loadedRecords.uiState = JSON.parse(record.JSONuiState);
-                    }
+                if (record.raw.JSONuiState) {
+                    record.uiState = JSON.parse(record.raw.JSONuiState);
                 }
             }
         }
