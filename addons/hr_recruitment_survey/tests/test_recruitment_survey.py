@@ -70,22 +70,29 @@ class TestRecruitmentSurvey(common.TransactionCase):
             {self.job_applicant.email_from})
 
         # Tests ACL
-        # Manager: ok for survey type recruitment
-        invite_recruitment.with_user(self.hr_recruitment_manager).action_invite()
-        with self.assertRaises(AccessError):
-            self.survey_custom.with_user(self.hr_recruitment_manager).read(['title'])
-        # Interviewer and User: need to be set as interviewer for the job or the applicant
-        for user in (self.hr_recruitment_interviewer, self.hr_recruitment_user):
+        # Manager/User: ok for survey type recruitment
+        for user in (self.hr_recruitment_manager, self.hr_recruitment_user):
             with self.subTest(user=user):
-                with self.assertRaises(AccessError):
-                    invite_recruitment.with_user(user).action_invite()
-                self.job.interviewer_ids = user
+                self.survey_sysadmin.with_user(user).read(['title'])
                 invite_recruitment.with_user(user).action_invite()
-                self.job.interviewer_ids = False
                 with self.assertRaises(AccessError):
-                    invite_recruitment.with_user(user).action_invite()
-                self.job_applicant.interviewer_ids = user
-                invite_recruitment.with_user(user).action_invite()
+                    self.survey_custom.with_user(user).read(['title'])
+        # User: also, only access to unrestricted surveys or in restrict_user_ids
+        self.survey_sysadmin.restrict_user_ids = self.hr_recruitment_manager
+        with self.assertRaises(AccessError):
+            self.survey_sysadmin.with_user(self.hr_recruitment_user).read(['title'])
+        self.survey_sysadmin.restrict_user_ids = self.hr_recruitment_user
+        self.survey_sysadmin.with_user(self.hr_recruitment_user).read(['title'])
+        # Interviewer need to be set as interviewer for the job or the applicant
+        with self.assertRaises(AccessError):
+            invite_recruitment.with_user(self.hr_recruitment_interviewer).action_invite()
+        self.job.interviewer_ids = self.hr_recruitment_interviewer
+        invite_recruitment.with_user(self.hr_recruitment_interviewer).action_invite()
+        self.job.interviewer_ids = False
+        with self.assertRaises(AccessError):
+            invite_recruitment.with_user(self.hr_recruitment_interviewer).action_invite()
+        self.job_applicant.interviewer_ids = self.hr_recruitment_interviewer
+        invite_recruitment.with_user(self.hr_recruitment_interviewer).action_invite()
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_print_survey(self):
@@ -103,7 +110,8 @@ class TestRecruitmentSurvey(common.TransactionCase):
         self.job_applicant.with_user(self.hr_recruitment_manager).action_print_survey()
         with self.assertRaises(AccessError):
             self.survey_custom.with_user(self.hr_recruitment_manager).action_print_survey()
-        # User: no access unless set as interviewer
+        # User: no access unless set as interviewer or (unrestricted survey or in restrict_user_ids)
+        self.survey_sysadmin.restrict_user_ids = self.hr_recruitment_manager
         with self.assertRaises(AccessError):
             self.job_applicant.with_user(self.hr_recruitment_user).action_print_survey()
         self.job_applicant.interviewer_ids = self.hr_recruitment_user

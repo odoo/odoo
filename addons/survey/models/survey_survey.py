@@ -111,6 +111,7 @@ class Survey(models.Model):
     users_login_required = fields.Boolean('Require Login', help="If checked, users have to login before answering even with a valid token.")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
     users_can_signup = fields.Boolean('Users can signup', compute='_compute_users_can_signup')
+    can_access_survey = fields.Boolean('Can Access Survey', compute='_compute_can_access_survey', search='_search_can_access_survey')
     # statistics
     answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
     answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
@@ -375,6 +376,41 @@ class Survey(models.Model):
             'assessment',
             'custom',
         ] if self.env.user.has_group('survey.group_survey_user') else False
+
+    @api.depends_context('uid')
+    @api.depends('survey_type', 'restrict_user_ids')
+    def _compute_can_access_survey(self):
+        can_access_surveys = self.filtered_domain(self._get_access_domain())
+        can_access_surveys.can_access_survey = True
+        (self - can_access_surveys).can_access_survey = False
+
+    def _search_can_access_survey(self, operator, value):
+        if (operator, value) != ('=', True):
+            raise NotImplementedError(_('Operation not supported'))
+        return self._get_access_domain()
+
+    @api.model
+    def _get_access_domain(self):
+        if not self.env.user.has_group("survey.group_survey_user"):
+            return expression.FALSE_DOMAIN
+        domain = self._get_access_domain_survey_classic_types()
+        if not self.env.user.has_group("survey.group_survey_manager"):
+            domain = expression.AND([domain, self._get_access_domain_restricted_user_ids()])
+        return expression.OR([
+            domain,
+            [('user_input_ids.can_access_survey_user_input', '=', True)]  # when users have access to a survey user_input, they should also have access to the survey itself
+        ])
+
+    @api.model
+    def _get_access_domain_survey_classic_types(self):
+        return [('survey_type', 'in', ('assessment', 'live_session', 'custom', 'survey'))]
+
+    @api.model
+    def _get_access_domain_restricted_user_ids(self):
+        return expression.OR([
+            [('restrict_user_ids', '=', False)],
+            [('restrict_user_ids', 'in', self.env.uid)]
+        ])
 
     @api.onchange('survey_type')
     def _onchange_survey_type(self):

@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv import expression
 from odoo.tools import float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -56,6 +57,8 @@ class SurveyUserInput(models.Model):
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
+    # ACL
+    can_access_survey_user_input = fields.Boolean('Can Access Survey User Input', compute="_compute_can_access_survey_user_input", search="_search_can_access_survey_user_input")
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (access_token)', 'An access token must be unique!'),
@@ -161,6 +164,38 @@ class SurveyUserInput(models.Model):
                 attempts_number_result = attempts_number_results.get(user_input.id, {})
                 user_input.attempts_number = attempts_number_result.get('attempts_number', 1)
                 user_input.attempts_count = attempts_number_result.get('attempts_count', 1)
+
+    @api.depends_context('uid')
+    @api.depends('survey_id.survey_type', 'survey_id.restrict_user_ids')
+    def _compute_can_access_survey_user_input(self):
+        can_access_user_inputs = self.filtered_domain(self._get_access_domain())
+        can_access_user_inputs.can_access_survey_user_input = True
+        (self - can_access_user_inputs).can_access_survey_user_input = False
+
+    @api.model
+    def _get_access_domain(self):
+        if not self.env.user.has_group("survey.group_survey_user"):
+            return expression.FALSE_DOMAIN
+        domain = self._get_access_domain_survey_classic_types()
+        if not self.env.user.has_group("survey.group_survey_manager"):
+            domain = expression.AND([domain, self._get_access_domain_restricted_user_ids()])
+        return domain
+
+    @api.model
+    def _get_access_domain_survey_classic_types(self):
+        return [('survey_id.survey_type', 'in', ('assessment', 'live_session', 'custom', 'survey'))]
+
+    @api.model
+    def _get_access_domain_restricted_user_ids(self):
+        return expression.OR([
+            [('survey_id.restrict_user_ids', '=', False)],
+            [('survey_id.restrict_user_ids', 'in', self.env.uid)]
+        ])
+
+    def _search_can_access_survey_user_input(self, operator, value):
+        if (operator, value) != ('=', True):
+            raise NotImplementedError(_('Operation not supported'))
+        return self._get_access_domain()
 
     @api.model_create_multi
     def create(self, vals_list):

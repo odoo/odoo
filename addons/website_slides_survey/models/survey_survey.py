@@ -5,7 +5,7 @@ import ast
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-
+from odoo.osv import expression
 
 
 class Survey(models.Model):
@@ -25,6 +25,21 @@ class Survey(models.Model):
         for survey in self:
             survey.slide_channel_ids = survey.slide_ids.mapped('channel_id')
             survey.slide_channel_count = len(survey.slide_channel_ids)
+
+    @api.depends('certification')
+    def _compute_can_access_survey(self):
+        return super()._compute_can_access_survey()
+
+    def _get_access_domain(self):
+        domain = super()._get_access_domain()
+        if not self.env.user.has_group("website_slides.group_website_slides_officer"):
+            return domain
+        return expression.OR([
+            domain,
+            expression.AND([
+                self._get_access_domain_survey_classic_types(),
+                self._get_access_domain_restricted_user_ids(),
+                [('certification', '=', True)]])])
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_to_course(self):
