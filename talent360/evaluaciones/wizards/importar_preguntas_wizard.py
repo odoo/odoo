@@ -169,9 +169,9 @@ class ImportarPreguntasWizard(models.TransientModel):
                 )
             
             # Validar que el número de opciones no exceda el máximo permitido
-            if len(opciones) > 10:
+            if len(opciones) > 10 or len(opciones) < 2:
                 raise exceptions.ValidationError(
-                    "Las opciones para preguntas de tipo 'multiple_choice' no pueden ser más de 10."
+                    "Las opciones para preguntas de tipo 'multiple_choice' tienen que ser más que 2 y menos que 10."
                 )
 
             # Validar que ninguna opción esté vacía o contenga solo espacios en blanco
