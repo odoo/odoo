@@ -134,18 +134,6 @@ class HrAttendance(models.Model):
     def _get_overtime_leave_domain(self):
         return []
 
-    def _get_employee_calendar(self, employee=None, date_from=None, date_to=None):
-        # Returns a list of dictionaries for resource calendars and the time frame they apply to
-        if not employee:
-            self.ensure_one()
-            employee = self.employee_id
-
-        return [{
-            'from': date_from,
-            'to': date_to,
-            'calendar': employee.resource_calendar_id or employee.company_id.resource_calendar_id,
-        }]
-
     def _update_overtime(self, employee_attendance_dates=None):
         if employee_attendance_dates is None:
             employee_attendance_dates = self._get_attendances_dates()
@@ -175,7 +163,7 @@ class HrAttendance(models.Model):
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Gather calendars that apply to the time frame
-            calendars = self._get_employee_calendar(employee=emp, date_from=start, date_to=stop)
+            calendars = emp._get_employee_calendar(date_from=start, date_to=stop)
 
             # Retrieve expected attendance intervals
             expected_attendances = emp.resource_calendar_id._attendance_intervals_batch(

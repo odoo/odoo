@@ -414,6 +414,16 @@ class HrEmployeePrivate(models.Model):
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz() for emp in self}
 
+    def _get_employee_calendar(self, date_from=None, date_to=None):
+        # Returns a list of dictionaries for resource calendars and the time frame they apply to
+        self.ensure_one()
+
+        return [{
+            'from': date_from,
+            'to': date_to,
+            'calendar': self.resource_calendar_id or self.company_id.resource_calendar_id,
+        }]
+
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------
