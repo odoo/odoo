@@ -116,6 +116,7 @@ class Applicant(models.Model):
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
 
     def init(self):
+        super().init()
         self.env.cr.execute("""
             CREATE INDEX IF NOT EXISTS hr_applicant_job_id_stage_id_idx
             ON hr_applicant(job_id, stage_id)
