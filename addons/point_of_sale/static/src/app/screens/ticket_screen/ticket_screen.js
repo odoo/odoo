@@ -234,14 +234,16 @@ export class TicketScreen extends Component {
                 const quantity = Math.abs(parseFloat(buffer));
                 if (quantity > refundableQty) {
                     this.numberBuffer.reset();
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Maximum Exceeded"),
-                        body: _t(
-                            "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
-                            quantity,
-                            refundableQty
-                        ),
-                    });
+                    if(!toRefundDetail.orderline.combo_parent_id){
+                        this.dialog.add(AlertDialog, {
+                            title: _t("Maximum Exceeded"),
+                            body: _t(
+                                "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded.",
+                                quantity,
+                                refundableQty
+                            ),
+                        });
+                    }
                 } else {
                     toRefundDetail.qty = quantity;
                 }
@@ -280,15 +282,35 @@ export class TicketScreen extends Component {
                 : this._getEmptyOrder(partner);
 
         // Add orderline for each toRefundDetail to the destinationOrder.
-        for (const refundDetail of this._getRefundableDetails(partner, order)) {
+        const allToRefundableDetails = this._getRefundableDetails(partner, order);
+        const originalToDestinationLineMap = new Map();
+
+        // First pass: add all products to the destination order
+        for (const refundDetail of allToRefundableDetails) {
             const product = this.pos.models["product.product"].get(
                 refundDetail.orderline.productId
             );
             const options = this._prepareRefundOrderlineOptions(refundDetail);
-            await destinationOrder.add_product(product, options);
+            const newOrderline = await destinationOrder.add_product(product, options);
+            originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
             refundDetail.destinationOrderUid = destinationOrder.uid;
         }
-
+        // Second pass: update combo relationships in the destination order
+        for (const refundDetail of allToRefundableDetails) {
+            const originalOrderline = refundDetail.orderline;
+            const destinationOrderline = originalToDestinationLineMap.get(originalOrderline.id);
+            if (originalOrderline.combo_parent_id) {
+                const comboParentLine = originalToDestinationLineMap.get(originalOrderline.combo_parent_id.id);
+                if (comboParentLine) {
+                    destinationOrderline.combo_parent_id = comboParentLine;
+                }
+            }
+            if (originalOrderline.combo_line_ids && originalOrderline.combo_line_ids.length > 0) {
+                destinationOrderline.combo_line_ids = originalOrderline.combo_line_ids.map(comboLine => {
+                    return originalToDestinationLineMap.get(comboLine.id);
+                });
+            }
+        }
         //Add a check too see if the fiscal position exist in the pos
         if (order.fiscal_position_not_found) {
             this.dialog.add(AlertDialog, {
@@ -563,6 +585,8 @@ export class TicketScreen extends Component {
                           return { lot_name: lot.lot_name };
                       })
                     : false,
+                combo_parent_id: orderline.combo_parent_id,
+                combo_line_ids: orderline.combo_line_ids,
             },
             destinationOrderUid: false,
         };
