@@ -6,6 +6,7 @@ __all__ = [
     'convert_csv_import', 'convert_xml_import'
 ]
 import base64
+import csv
 import io
 import logging
 import os.path
@@ -621,7 +622,7 @@ def convert_csv_import(env, module, fname, csvcontent, idref=None, mode='init',
     env = env(context=dict(env.context, lang=None))
     filename, _ext = os.path.splitext(os.path.basename(fname))
     model = filename.split('-')[0]
-    reader = pycompat.csv_reader(io.BytesIO(csvcontent), quotechar='"', delimiter=',')
+    reader = csv.reader(io.StringIO(csvcontent.decode()), quotechar='"', delimiter=',')
     fields = next(reader)
 
     if not (mode == 'init' or 'id' in fields):
