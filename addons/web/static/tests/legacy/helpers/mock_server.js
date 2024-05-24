@@ -781,19 +781,6 @@ export class MockServer {
                 message: `The action ${JSON.stringify(action_id)} does not exist`,
             });
         }
-        if (action.type === "ir.actions.server") {
-            if (action.state !== "code") {
-                throw new Error("Only server actions with code are supported on the mock server");
-            }
-            const result = action.code();
-            if (!result) {
-                return { type: "ir.actions.act_window_close" };
-            }
-            if (action.path) {
-                result.path = action.path;
-            }
-            return result;
-        }
         return action;
     }
 
