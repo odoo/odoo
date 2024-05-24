@@ -118,11 +118,23 @@ export class OrderSummary extends Component {
                         val,
                         Boolean(selectedLine.combo_line_ids?.length)
                     );
+<<<<<<< HEAD
                     for (const line of selectedLine.combo_line_ids) {
                         line.set_quantity(val, true);
                     }
                     if (result !== true) {
                         this.dialog.add(AlertDialog, result);
+||||||| parent of ba1644a7d5e7 (temp)
+                    const result = selectedLine.set_quantity(val);
+                    if (!result) {
+=======
+                    if (selectedLine.combo_line_ids) {
+                        for (const line of selectedLine.combo_line_ids) {
+                            line.set_quantity(val, true);
+                        }
+                    }
+                    if (!result) {
+>>>>>>> ba1644a7d5e7 (temp)
                         this.numberBuffer.reset();
                     }
                 }
