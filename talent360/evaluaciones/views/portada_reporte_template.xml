@@ -21,51 +21,8 @@
                 <br></br>
                 <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
                 </h2>
-                    <t t-if="filtros != None" t-call="evaluaciones.encuestas_reporte_filtros"/>
+                <t t-if="filtros != None" t-call="evaluaciones.encuestas_reporte_filtros"/>
             </div>
-            <style>
-                @page {
-                    margin: 0; /* Elimina los márgenes predeterminados de la página */
-                }
-                body {
-                    margin: 0; /* Elimina los márgenes del cuerpo del documento */
-                }
-                .portada {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    text-align: center;
-                    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-                    min-height: 85vh; /* Para que ocupe toda la altura de la página */
-                    width: 90vw; /* Para que ocupe todo el ancho de la página */
-                    font-family: Arial, sans-serif;
-                }
-                .header {
-                    margin-bottom: 20px;
-                }
-                .icon {
-                    margin: 20px 0;
-                }
-                .icon img {
-                    height: 100px;
-                }
-                .main-content h1 {
-                    font-size: 36px;
-                }
-                .main-content h3 {
-                    font-size: 24px;
-                }
-                .footer {
-                    margin-top: 20px;
-                }
-                .company-logo {
-                    height: 100px;
-                }
-                .page {
-                    page-break-after: always;
-                }
-            </style>
         </template>
 
         <!-- Componente de mostrar filtros  -->
