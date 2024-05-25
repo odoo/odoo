@@ -7,6 +7,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2023
 # Lasse L, 2023
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,8 @@ msgid ""
 "An error occurred during the processing of your payment (success code %s; "
 "primary response code %s). Please try again."
 msgstr ""
+"Ett fel inträffade under behandlingen av din betalning (framgångskod %s; "
+"primär svarskod %s). Vänligen försök igen."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
@@ -39,27 +42,27 @@ msgstr "AsiaPay"
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "AsiaPay Merchant ID"
-msgstr ""
+msgstr "AsiaPays försäljar-ID"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "AsiaPay Secure Hash Function"
-msgstr ""
+msgstr "AsiaPay säker hashfunktion"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
 msgid "AsiaPay Secure Hash Secret"
-msgstr ""
+msgstr "AsiaPay Secure Hash Secret"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "Asiapay Brand"
-msgstr ""
+msgstr "Asiapay varumärke"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__bimopay
 msgid "BimoPay"
-msgstr ""
+msgstr "BimoPay"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
@@ -74,7 +77,7 @@ msgstr "Kod"
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Merchant ID"
-msgstr ""
+msgstr "Handlarens ID"
 
 #. module: payment_asiapay
 #. odoo-python
@@ -88,12 +91,12 @@ msgstr "Ingen transaktion hittades som matchar referensen %s."
 #: code:addons/payment_asiapay/models/payment_provider.py:0
 #, python-format
 msgid "Only one currency can be selected by AsiaPay account."
-msgstr ""
+msgstr "Endast en valuta kan väljas för ett AsiaPay-konto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
 msgid "PayDollar"
-msgstr ""
+msgstr "PayDollar"
 
 #. module: payment_asiapay
 #: model:ir.model,name:payment_asiapay.model_payment_provider
@@ -108,66 +111,66 @@ msgstr "Betalningstransaktion"
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__pesopay
 msgid "PesoPay"
-msgstr ""
+msgstr "PesoPay"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing reference %(ref)s."
-msgstr ""
+msgstr "Mottagna data med saknade referens %(ref)s."
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing success code."
-msgstr ""
+msgstr "Mottagen data med saknad framgångskod."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
 msgid "SHA1"
-msgstr ""
+msgstr "SHA1"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha256
 msgid "SHA256"
-msgstr ""
+msgstr "SHA256"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha512
 msgid "SHA512"
-msgstr ""
+msgstr "SHA512"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Function"
-msgstr ""
+msgstr "Säker hashfunktion"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Secret"
-msgstr ""
+msgstr "Säker Hash Hemlighet"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
 msgid "SiamPay"
-msgstr ""
+msgstr "SiamPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "The Merchant ID solely used to identify your AsiaPay account."
-msgstr ""
+msgstr "Säljar-ID används endast för att identifiera ditt AsiaPay-konto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
 msgid "The brand associated to your AsiaPay account."
-msgstr ""
+msgstr "Det varumärke som är kopplat till ditt AsiaPay-konto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
 msgid "The secure hash function associated to your AsiaPay account."
-msgstr ""
+msgstr "Den säkra hashfunktionen som är kopplad till ditt AsiaPay-konto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
@@ -179,4 +182,4 @@ msgstr "Den tekniska koden för denna betalningsleverantör."
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 #, python-format
 msgid "Unknown success code: %s"
-msgstr ""
+msgstr "Okänd framgångskod: %s"
