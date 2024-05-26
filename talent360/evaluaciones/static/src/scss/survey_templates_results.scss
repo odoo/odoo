@@ -1,32 +1,33 @@
 @media print {
+
+    .page-break {
+        page-break-after: always;
+        break-after: always;
+    }
+    
+    .avoid-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    
+    .page {
+        break-inside:avoid;
+        break-after: always;
+        page-break-after: always;
+    }
+
     .detalles-wrapper:has(button.collapsed) {
         display: none;
     }
 
-    body{
+    body {
+        margin: 0;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100%;   
     }
-    .page-categoria{
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        text-align: center;
-        height: 90vh; /* Para que ocupe toda la altura de la página */
-        width: 90vw; /* Para que ocupe todo el ancho de la página */
-        page-break-before: always;
 
-    }
-    .chartjs-size-monitor {
-        display: none;
-    }
-    .chartjs-render-monitor {
-        width: 100% !important;
-        height: 100% !important;
-    }
     .tab-content > .tab-pane.always-print {
         display: block;
     }
@@ -39,7 +40,6 @@
     }
     @page {
         size: portrait; // force paper orientation to portrait
-        margin: auto 0; // force default left/rigth margins so elements (e.g.: graphs) are centered in the page
     }
     .o_frontend_to_backend_nav {
         display: none !important;
@@ -47,8 +47,16 @@
     .o_survey_brand_message {
         border: none !important;
     }
+    .movil {
+        display: none !important;
+    }
+
+    // .o_survey_result > *:not(:first-child) {
+    //     margin-top: 3rem;
+    // }
+
     .o_survey_result {
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         width: 100vw;
         height: max-content;
@@ -63,9 +71,11 @@
             page-break-inside: avoid;
         }
         .o_survey_results_question_wrapper {
-            .o_survey_results_question_header, .o_survey_question_description {
+            .o_survey_results_question_header {
                 page-break-inside: avoid;
+                break-inside: avoid;
                 page-break-after: avoid;
+                break-after: avoid;
             }
         }
         .o_survey_results_question_wrapper:has(button.collapsed) {
@@ -91,75 +101,7 @@
     }
 }
 
-.o_survey_results_topbar {
-
-    .nav-item.dropdown a {
-        min-width: 13em;
-    }
-    .o_survey_results_topbar_dropdown_filters {
-        // Dropdown adapted from event templates to get a coherent styling
-        .dropdown-toggle {
-            text-align: left;
-            &:hover, &:focus {
-                text-decoration: none;
-            }
-            &:after {
-                float:right;
-                margin-top: .5em;
-            }
-            .fa {
-                margin-right: .4em;
-            }
-        }
-        .dropdown-menu {
-            margin-top: $navbar-padding-y;
-            min-width: 12rem;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-        .dropdown-item {
-            &.active .badge { // Invert badge display when the item is active
-                background-color: color-contrast(map-get($theme-colors, 'primary'));
-                color: map-get($theme-colors, 'primary');
-            }
-        }
-    }
-    .o_survey_results_topbar_answer_filters {
-        .btn.filter-remove-answer {
-            border-color: #DEE2E6;
-            background-color: transparent;
-            white-space: normal;
-            text-align: left;
-            i.fa-times {
-                cursor: pointer;
-            }
-        }
-    }
-    .o_survey_results_topbar_clear_filters {
-        cursor: pointer;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
 .o_survey_results_question {
-    .o_survey_results_question_pill {
-        .only_right_radius {
-            border-radius: 0 2em 2em 0;
-        }
-        .only_left_radius {
-            border-radius: 2em 0 0 2em;
-        }
-    }
-    .o_survey_answer_image{
-        cursor: zoom-in;
-        &:hover {
-            box-sizing: border-box;
-            box-shadow: 0 0 5px 2px grey;
-        }
-    }
     .o_survey_answer i {
         padding:3px;
         cursor:pointer;
@@ -208,7 +150,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    width: 100%;
+    // width: 100%;
     align-items: center;
     page-break-inside: avoid;
 
@@ -221,6 +163,19 @@
     }
 }
 
+.demo-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 3rem;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .demo-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
 .o_survey_result {
     display: flex;
     flex-direction: column;
@@ -229,7 +184,27 @@
     align-items: flex-start;
     justify-content: center;
     gap: 2rem;
-    padding: 0 40px;
+    padding: 40px;
+}
+
+@media (max-width: 768px) {
+    .o_survey_result {
+        display: none;
+    }
+
+    .movil {
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+    .movil {
+        display: none;
+    }
+
+    .o_survey_result {
+        display: flex;
+    }
 }
 
 .o_survey_statistics_header{
@@ -296,4 +271,45 @@
     aspect-ratio: 1;
     width: 22px;
     border-radius: 100%;
+}
+
+
+@page {
+    margin: 0; /* Elimina los márgenes predeterminados de la página */
+}
+body {
+    margin: 0; /* Elimina los márgenes del cuerpo del documento */
+}
+.portada {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
+    min-height: 85vh; /* Para que ocupe toda la altura de la página */
+    width: 100%; /* Para que ocupe todo el ancho de la página */
+    font-family: Arial, sans-serif;
+}
+.header {
+    margin-bottom: 20px;
+}
+.icon {
+    margin: 20px 0;
+}
+.icon img {
+    height: 100px;
+}
+.main-content h1 {
+    font-size: 36px;
+}
+.main-content h3 {
+    font-size: 24px;
+}
+.footer {
+    margin-top: 20px;
+}
+.company-logo {
+    height: 100px;
 }

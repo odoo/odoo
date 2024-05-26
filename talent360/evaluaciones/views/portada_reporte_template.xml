@@ -12,84 +12,15 @@
                     <p class="center-align">[Nombre de la empresa]</p>
                     <p class="center-align fecha-expedicion">Fecha de expedición: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/></p>
                 </div>
-                <svg class="wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#fbb03c" fill-opacity="1" d="M0,32L120,58.7C240,85,480,139,720,170.7C960,203,1200,213,1320,218.7L1440,224L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
-                <svg class="wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#9b9b9b" fill-opacity="1" d="M0,256L120,261.3C240,267,480,277,720,256C960,235,1200,181,1320,154.7L1440,128L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+                <br></br>
+                <div class="footer">
+                    <img t-att-src="'/evaluaciones/static/src/img/logo.png'" alt="company logo" class="company-logo"/>
+                </div>
+                <br></br>
+                <h2 class="text-center">Fecha: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"/>
+                </h2>
                 <t t-if="filtros != None" t-call="evaluaciones.encuestas_reporte_filtros"/>
             </div>
-            <style>
-                @page {
-                    margin: 0;
-                }
-                body {
-                    margin: 0;
-                }
-                .portada {
-                    position: relative;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    text-align: center;
-                    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-                    height: 100vh; /* Para que ocupe toda la altura de la página */
-                    width: 100vw; /* Para que ocupe todo el ancho de la página */
-                    font-family: Arial, sans-serif;
-                    overflow: hidden;
-                    padding: 0;
-                    margin: 0;
-                }
-                .company-logo {
-                    position: absolute;
-                    top: 20px; /* Ajusta este valor según sea necesario */
-                    left: 20px; /* Ajusta este valor según sea necesario */
-                    height: 100px;
-                    width: auto;
-                }
-                .main-content {
-                    margin-top: 100px; /* Ajusta este valor para centrar verticalmente el contenido */
-                    width: 80%;
-                }
-                .main-content h1 {
-                    font-size: 60px;
-                    margin: 10px 0;
-                    text-align: left;
-                }
-                .main-content h2 {
-                    font-size: 48px;
-                    margin: 0;
-                    text-align: left;
-                }
-                .main-content p {
-                    font-size: 24px;
-                    margin: 5px 0;
-                    text-align: center;
-                }
-                .fecha-expedicion {
-                    margin-top: 30px;
-                }
-                .wave-top, .wave-bottom {
-                    position: absolute;
-                    width: 100%;
-                    height: auto;
-                }
-                .wave-top {
-                    top: 0;
-                }
-                .wave-bottom {
-                    bottom: 0;
-                }
-
-                /* Estilos específicos para la visualización en pantalla */
-                @media screen {
-                    .company-logo {
-                        top: 100px; /* Ajusta este valor según sea necesario */
-                        margin-top: 200px;
-                    }
-                    .main-content {
-                        margin-top: 80px; /* Ajusta este valor según sea necesario */
-                    }
-                }
-            </style>
         </template>
 
         <!-- Componente de mostrar filtros  -->

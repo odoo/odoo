@@ -4,6 +4,7 @@ from datetime import datetime
 from io import StringIO
 
 from odoo import fields, models, api, exceptions, _
+import os
 
 
 class AsignarUsuariosExternosWizard(models.TransientModel):
@@ -135,8 +136,9 @@ class AsignarUsuariosExternosWizard(models.TransientModel):
 
     def descargar_template_usuarios(self):
         # Descarga el archivo /evaluaciones/static/csv/template_usuarios_externos.csv
-        ruta_archivo = (
-            "talent360/evaluaciones/static/csv/template_usuarios_externos.csv"
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        ruta_archivo = os.path.join(
+            current_path, "../static/csv/template_usuarios_externos.csv"
         )
         with open(ruta_archivo, "r") as archivo:
             datos = archivo.read()

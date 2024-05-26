@@ -31,6 +31,10 @@ class ReporteResumen(models.Model):
         Función que calcula el número de usuarios asignados a una evaluación
         """
         for record in self:
+            if not isinstance(record.id, int):
+                record.conteo_asignados = 0
+                continue
+
             conteo = len(record.usuario_ids) + len(record.usuario_externo_ids)
             if conteo == 0:
                 record.conteo_asignados = "Sin asignados"
@@ -48,7 +52,7 @@ class ReporteResumen(models.Model):
         for record in self:
             if not isinstance(record.id, int):
                 record.porcentaje_respuestas = 0
-                return
+                continue
 
             conteo = len(record.usuario_ids) + len(record.usuario_externo_ids)
             if conteo == 0:

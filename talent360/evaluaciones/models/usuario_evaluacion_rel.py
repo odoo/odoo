@@ -47,6 +47,7 @@ class UsuarioEvaluacionRel(models.Model):
         string="Usuarios de Evaluación",
         readonly=True,
     )
+
     token = fields.Char()
 
     usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario Externo")
@@ -56,45 +57,29 @@ class UsuarioEvaluacionRel(models.Model):
 
         self.evaluacion_id._compute_porcentaje_respuestas()
 
-    def action_get_estado(self, usuario_id, evaluacion_id, token):
+    def action_get_estado(self, evaluacion_id, token):
         """Método para obtener el estado de la evaluación para el usuario.
 
         :param usuario_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         :return: estado de la evaluación
         """
-        if usuario_id:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [
-                    ("usuario_id.id", "=", usuario_id),
-                    ("evaluacion_id.id", "=", evaluacion_id),
-                ]
-            )
-        else:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
-            )
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
+        )
 
         return usuario_evaluacion.contestada
 
-    def action_update_estado(self, usuario_id, evaluacion_id, token):
+    def action_update_estado(self, evaluacion_id, token):
         """Método para actualizar el estado de la evaluación para el usuario.
 
         :param usuario_id: ID del usuario
         :param evaluacion_id: ID de la evaluación
         """
 
-        if usuario_id:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [
-                    ("usuario_id.id", "=", usuario_id),
-                    ("evaluacion_id.id", "=", evaluacion_id),
-                ]
-            )
-        else:
-            usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
-                [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
-            )
+        usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
+            [("evaluacion_id.id", "=", evaluacion_id), ("token", "=", token)]
+        )
 
         usuario_evaluacion.write({"contestada": "contestada"})
         usuario_evaluacion._onchange_contestada()
@@ -111,11 +96,14 @@ class UsuarioEvaluacionRel(models.Model):
         """
 
         length = 32
-        base_url = "http://localhost:8069/evaluacion/responder"
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        extension_url = "evaluacion/responder"
 
         usuario_evaluacion = self.env["usuario.evaluacion.rel"].search(
             [("evaluacion_id.id", "=", evaluacion_id)]
         )
+
+        evaluacion = self.env["evaluacion"].browse(evaluacion_id)
 
         lista_mails = []
         for usuario in usuario_evaluacion:
@@ -131,27 +119,23 @@ class UsuarioEvaluacionRel(models.Model):
                     raise ValueError(_("No se encontró un usuario asociado"))
 
                 usuario.write({"token": token, "contestada": "pendiente"})
-
-                evaluacion_url = f"{base_url}/{evaluacion_id}/{token}"
+                evaluacion_url = f"{base_url}/{extension_url}/{evaluacion_id}/{token}"
+                contenido_adicional = f"""<hr>{evaluacion.contenido_correo}<hr>""" if evaluacion.contenido_correo else ""
                 mail = {
                     "subject": "Invitación para completar la evaluación",
                     "email_from": "talent360@cr-organizacional.com",
                     "email_to": correo,
-                    "body_html": f"""<p>Hola, <strong>{nombre}</strong>,</p>
-                        <p>En <strong>{self.env.user.company_id.name}</strong> estamos interesados en tu opinión para mejorar.</p>
-                        <p>Por favor, participa en la evaluación de clima laboral disponible del <strong>(Fecha Inicio)</strong> al <strong>(Fecha Fin)</strong>.</p>
-                        <p>Puedes comenzar la evaluación haciendo clic en el siguiente enlace:</p>
-                        <p><a href="{evaluacion_url}">Comenzar Evaluación</a></p>""",
+                    "body_html": 
+                        f"""<p>Hola, <strong>{nombre}</strong>,</p>
+                        {contenido_adicional}
+                        <p>En <strong>{self.env.user.company_id.name}</strong> estamos interesados en que contestes la siguiente evaluación, tu participación nos ayudará a mejorar y crecer como organización. La evaluación estará disponible del <strong>{evaluacion.fecha_inicio}</strong> al <strong>{evaluacion.fecha_final}</strong>. Puedes comenzar la evaluación haciendo clic en el siguiente enlace: <a href="{evaluacion_url}">Comenzar {evaluacion.nombre}</a></p>
+                        <p>Gracias por tu colaboración.</p>
+                        <p>Atentamente,</p>
+                        <p><strong>{self.env.user.name}</strong> from <strong>{self.env.user.company_id.name}</strong></p>
+                        <p>Correo de contacto: <a href="mailto:{self.env.user.email}">{self.env.user.email}</a></p>
+                        """,
                 }
 
                 lista_mails.append(mail)
 
         self.env["mail.mail"].create(lista_mails)
-
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Evaluaciones",
-            "res_model": "evaluacion.evaluacion",
-            "view_mode": "tree,form",
-            "target": "current",
-        }
