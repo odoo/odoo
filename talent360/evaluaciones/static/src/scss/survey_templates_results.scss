@@ -281,6 +281,7 @@ body {
     margin: 0; /* Elimina los márgenes del cuerpo del documento */
 }
 .portada {
+    position: relative; /* Añadir posición relativa */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -288,28 +289,61 @@ body {
     text-align: center;
     border-radius: 10px;
     background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-    min-height: 85vh; /* Para que ocupe toda la altura de la página */
+    min-height: 90vh; /* Para que ocupe toda la altura de la página */
     width: 100%; /* Para que ocupe todo el ancho de la página */
     font-family: Arial, sans-serif;
+    padding: 0; /* Eliminar cualquier relleno */
+    margin: 0; /* Eliminar cualquier margen */
 }
-.header {
-    margin-bottom: 20px;
+
+.wave-top, .wave-bottom {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
-.icon {
-    margin: 20px 0;
+
+.wave-top {
+    top: 0;
 }
-.icon img {
-    height: 100px;
+
+.wave-bottom {
+    bottom: 0;
 }
-.main-content h1 {
-    font-size: 36px;
-}
-.main-content h3 {
-    font-size: 24px;
-}
-.footer {
-    margin-top: 20px;
-}
+
 .company-logo {
     height: 100px;
 }
+
+.main-content {
+    z-index: 1; /* Asegúrate de que el contenido principal esté encima de las olas */
+}
+
+.main-content h1, .main-content h2, .main-content p {
+    margin: 0; /* Eliminar márgenes adicionales */
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.icon {
+    margin: 20px 0;
+}
+
+.icon img {
+    height: 100px;
+}
+
+.main-content h1 {
+    font-size: 36px;
+}
+
+.main-content h3 {
+    font-size: 24px;
+}
+
+.footer {
+    margin-top: 20px;
+}
+
