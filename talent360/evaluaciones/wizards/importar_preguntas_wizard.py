@@ -95,7 +95,6 @@ class ImportarPreguntasWizard(models.TransientModel):
             raise exceptions.ValidationError(_("No se encontró la evaluación en el contexto."))
 
     def _validar_columnas(self, columnas: list[str]):
-        # Valida que las columnas del archivo CSV sean las correctas
         columnas_faltantes = []
         columnas_duplicadas = []
 
@@ -118,7 +117,6 @@ class ImportarPreguntasWizard(models.TransientModel):
             raise exceptions.ValidationError(mensaje)
 
     def _validar_fila(self, fila: dict):
-        # Validar campos requeridos
         if not fila.get("Pregunta") or not fila["Pregunta"].strip():
             raise exceptions.ValidationError(_("El campo 'Pregunta' es requerido y no puede estar vacío o solo contener espacios en blanco."))
         if not fila.get("Tipo"):
@@ -126,19 +124,16 @@ class ImportarPreguntasWizard(models.TransientModel):
         if not fila.get("Categoria"):
             raise exceptions.ValidationError(_("El campo 'Categoria' es requerido."))
 
-        # Validar que el tipo de pregunta sea válido
         if fila["Tipo"] not in self.tipos_validos:
             raise exceptions.ValidationError(
                 f"El tipo de pregunta '{fila['Tipo']}' no es válido. Los tipos permitidos son: {', '.join(self.tipos_validos)}."
             )
 
-        # Validar que la categoría sea válida
         if fila["Categoria"] not in self.categorias_validas:
             raise exceptions.ValidationError(
                 f"La categoría '{fila['Categoria']}' no es válida. Las categorías permitidas son: {', '.join(self.categorias_validas)}."
             )
 
-        # Validar que la ponderación sea válida si el tipo es 'escala'
         if fila["Tipo"] == "escala":
             if not fila.get("Ponderacion"):
                 raise exceptions.ValidationError(
@@ -149,13 +144,12 @@ class ImportarPreguntasWizard(models.TransientModel):
                     f"La ponderación '{fila['Ponderacion']}' no es válida. Las ponderaciones permitidas son: {', '.join(self.ponderaciones_validas)}."
                 )
         else:
-            # No permitir ponderación para otros tipos de preguntas
             if fila.get("Ponderacion"):
                 raise exceptions.ValidationError(
                     f"No se permite la ponderación para preguntas de tipo '{fila['Tipo']}'."
                 )
 
-        # Validar que las opciones sean válidas solo para preguntas de tipo 'multiple_choice'
+    
         if fila["Tipo"] == "multiple_choice":
             if not fila.get("Opciones"):
                 raise exceptions.ValidationError(
@@ -168,27 +162,27 @@ class ImportarPreguntasWizard(models.TransientModel):
                     "Las opciones para preguntas de tipo 'multiple_choice' no deben contener duplicados."
                 )
             
-            # Validar que el número de opciones no exceda el máximo permitido
+
             if len(opciones) > 10 or len(opciones) < 2:
                 raise exceptions.ValidationError(
                     "Las opciones para preguntas de tipo 'multiple_choice' tienen que ser más que 2 y menos que 10."
                 )
 
-            # Validar que ninguna opción esté vacía o contenga solo espacios en blanco
+      
             for opcion in opciones:
                 if not opcion.strip():
                     raise exceptions.ValidationError(
                         "Las opciones para preguntas de tipo 'multiple_choice' no pueden estar vacías o contener solo espacios en blanco."
                     )
         else:
-            # No permitir opciones para otros tipos de preguntas
+    
             if fila.get("Opciones"):
                 raise exceptions.ValidationError(
                     f"No se permiten opciones para preguntas de tipo '{fila['Tipo']}'."
                 )
 
     def descargar_template(self):
-        # Define el contenido del archivo CSV de la plantilla
+
         ruta_archivo = os.path.join(os.path.dirname(__file__), "../static/csv/plantilla_preguntas_clima.csv")
 
         with open(ruta_archivo, "r") as archivo:
