@@ -456,6 +456,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            في هذا الحساب: "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5845,15 +5847,6 @@ msgid "Duplicated Ref"
 msgstr "مرجع مكرر  "
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "مرجع مورد مكرر. ربما تكون أدخلت نفس الفاتورة أو إشعار الخصم مرتين."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "تقارير ديناميكية"
@@ -9862,13 +9855,6 @@ msgstr "عذراً "
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "فتح"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "فتح القائمة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -15969,7 +15955,7 @@ msgstr ""
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "لا يمكنك تسجيل مدفوعات لحركات صادرة وواردة في آن واحد. "
 
 #. module: account
 #. odoo-python
