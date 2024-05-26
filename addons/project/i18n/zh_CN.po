@@ -398,6 +398,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>您好！<br><br>\n"
+"    多谢联系我们。感谢您对我们的产品/服务感兴趣。<br>\n"
+"    我们的团队正在审查您的询问，并将尽快回复您的电子邮件。<br>\n"
+"    如果您在此期间有任何其他问题或疑虑，请随时告诉我们。我们将竭诚为您服务。<br><br>\n"
+"    感谢您耐心等待。<br>\n"
+"    祝好\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -714,6 +727,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Progress Report\", \"Stand-up Meeting\", ...)"
 msgstr ""
+"只需点击几下，活动计划就可用于分配活动列表\n"
+"                    （例如：“进度报告”、“常设会议”等）"
 
 #. module: project
 #. odoo-javascript
@@ -2077,7 +2092,7 @@ msgid ""
 "Facilitate efficient collaboration with key stakeholders by sharing the "
 "project with them. Collaborators will have the ability to edit tasks, send "
 "messages, and access the Kanban view of tasks."
-msgstr ""
+msgstr "通过与主要利益相关者共享项目，与他们高效协作。协作者可以编辑任务、发送信息，并访问任务的看板视图。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -2206,7 +2221,7 @@ msgid ""
 "Grant portal users access to your project by adding them as followers (the "
 "tasks of the project are not included). To grant access to tasks to a portal"
 " user, add them as followers for these tasks."
-msgstr ""
+msgstr "将门户网站用户添加为关注者，授予对您项目的访问权限（不包括项目内的任务）。要向门户用户授予任务访问权限，请将他们添加为这些任务的关注者。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
@@ -2512,7 +2527,7 @@ msgstr "已开具发票"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "是已关闭（燃尽图）"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -2536,7 +2551,7 @@ msgstr "是关注者"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_deadline_exceeded
 msgid "Is Milestone Deadline Exceeded"
-msgstr ""
+msgstr "是已逾里程碑期限"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
@@ -2594,7 +2609,7 @@ msgstr "上个月"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 msgid "Last Rating (1-5)"
-msgstr ""
+msgstr "最近评分（1 至 5）"
 
 #. module: project
 #. odoo-python
@@ -2800,19 +2815,19 @@ msgstr "完成"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "标记为不完整"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as reached"
-msgstr ""
+msgstr "标记为已达到"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "将任务标记为<b>已取消</b>"
 
 #. module: project
 #. odoo-javascript
@@ -2902,7 +2917,7 @@ msgstr "里程碑"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_progress
 msgid "Milestones Reached"
-msgstr ""
+msgstr "里程碑已达"
 
 #. module: project
 #. odoo-javascript
@@ -3094,7 +3109,7 @@ msgstr "下一活动类型"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__next_milestone_id
 msgid "Next Milestone"
-msgstr ""
+msgstr "下一里程碑"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -3125,7 +3140,7 @@ msgstr "未找到活动类型。让我们创建一个！"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found. Let's invite them!"
-msgstr ""
+msgstr "未找到协作者。让我们邀请他们吧！"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3302,7 +3317,7 @@ msgstr "开放任务"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Open sub-tasks notebook section"
-msgstr ""
+msgstr "开启子任务笔记本章节"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__is_closed__open
@@ -3401,7 +3416,7 @@ msgstr "伙伴公司不能与其分配任务的公司不同"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
 msgid "Partner's Tasks"
-msgstr ""
+msgstr "合作伙伴的任务"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -3681,7 +3696,7 @@ msgstr "项目分享"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
 msgid "Project Sharing Recurrence"
-msgstr ""
+msgstr "分享项目的重复周期"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4598,7 +4613,7 @@ msgstr "任务取消"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Converted from To-Do"
-msgstr ""
+msgstr "由待办事项转换成的任务"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -4624,7 +4639,7 @@ msgstr "任务依赖"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "Task Description History"
-msgstr ""
+msgstr "任务描述历史记录"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4700,7 +4715,7 @@ msgstr "任务标题..."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task Transferred from Project %s"
-msgstr ""
+msgstr "任务转移自以下项目%s"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_waiting
@@ -4717,7 +4732,7 @@ msgstr "任务已批准"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_canceled
 msgid "Task cancelled"
-msgstr ""
+msgstr "任务已取消"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4909,7 +4924,7 @@ msgid ""
 "The task cannot be shared with the recipient(s) because the privacy of the "
 "project is too restricted. Set the privacy of the project to "
 "'%(visibility)s' in order to make it accessible by the recipient(s)."
-msgstr ""
+msgstr "无法与接收者共享任务，因为项目的隐私受到太多限制。将项目隐私设置为'%(visibility)s'，以便收件人可以访问。"
 
 #. module: project
 #. odoo-javascript

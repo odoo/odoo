@@ -1,22 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-#
-# Translators:
-# Martin Trigaux, 2022
-#
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-03-26 15:05+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: account_tax_python
@@ -33,22 +29,11 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
-"\n"
-"    - Група податків: Податок включає субподатки.\n"
-"    - Фіксований: Сума податку залишається такою ж, незалежно від ціни.\n"
-"    - Відсоток ціни: Сума податку є % ціни:\n"
-"        напр., 100 * (1 + 10%) = 110 (не включає ціну)\n"
-"        напр., 110 / (1 + 10%) = 100 (ціна включена)\n"
-"    - Відсоток ціни із включеним податком: Сума податку - це поділ ціни:\n"
-"        напр., 180 / (1 - 10%) = 200 (не включає ціну)\n"
-"        напр., 200 * (1 - 10%) = 180 (ціна включена)\n"
-"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr "Придатний код"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -62,33 +47,6 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Обчислити суму податку, встановивши змінну \"результат\"\n"
-"\n"
-":param base_amount: float, фактична сума, на яку застосовується податок\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company набір одиночних записів\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Обчислити суму податку, встановивши змінну \"результат\".\n"
-"\n"
-":param base_amount: float, фактична сума, на яку застосовується податок\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -101,51 +59,29 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильна\" або \"Невірна\".\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param company: res.company набір одиночних записів\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
-
-#. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильний\" або \"Невірний\".\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product набір одиночних записів або Нічого\n"
-":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr "Код Python"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr "Податок"
+msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr "Розрахунок податку"
+msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Шаблон для податків"
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""

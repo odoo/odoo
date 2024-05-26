@@ -1176,7 +1176,7 @@ msgstr "アーカイブ済"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Are you sure you want to cancel this transfer?"
-msgstr ""
+msgstr "この運送を本当に取消しますか？"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1414,7 +1414,7 @@ msgstr "一括転送"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
 msgid "Before scheduled date"
-msgstr "予定された日より前"
+msgstr "予定日前"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -3224,7 +3224,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"予測数量(手持ち数量-予約数量として計算)\n"
+"予測数量(手持ち数量-引当済数量として計算)\n"
 "単一の在庫ロケーションのコンテキストでは、これには、このロケーションに保管されている製品またはその子が含まれます。\n"
 "単一の倉庫のコンテキストでは、これには、この倉庫の在庫場所またはその子のいずれかに保管されている製品が含まれます。\n"
 "それ以外の場合、これには'内部'タイプの任意の在庫場所に保管されている製品が含まれます。"
@@ -5149,7 +5149,7 @@ msgstr "次回棚卸予定"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "次回の手持在庫数量を数える計画日"
+msgstr "次回の手持在庫数量を数える予定日"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -6717,7 +6717,7 @@ msgstr "プロダクト単位数量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "この移動のためにまだ予約可能な在庫数"
+msgstr "この移動のためにまだ引当可能な在庫数"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
@@ -6762,13 +6762,13 @@ msgstr "この数量の製品の数量。製品のデフォルトの計量単位
 msgid ""
 "Quantity of reserved products in this quant, in the default unit of measure "
 "of the product"
-msgstr "製品のデフォルトの測定単位での、この数量の予約済み製品の数量"
+msgstr "プロダクトのデフォルトの測定単位での、この数量の引当済プロダクトの数量"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Quantity or Reserved Quantity should be set."
-msgstr "数量または引当数量を設定して下さい。"
+msgstr "数量または引当済数量を設定して下さい。"
 
 #. module: stock
 #. odoo-javascript
@@ -7191,7 +7191,7 @@ msgstr "部分梱包引当"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Reserve before scheduled date"
-msgstr "予定された日より前に在庫引当"
+msgstr "予定日前に引当"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__assigned
@@ -7207,7 +7207,7 @@ msgstr "引当済梱包数量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
 msgid "Reserved Quantity"
-msgstr "予約数量"
+msgstr "引当済数量"
 
 #. module: stock
 #. odoo-python
@@ -7481,7 +7481,7 @@ msgstr "販売履歴"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
-msgstr "計画日"
+msgstr "予定日"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -10022,7 +10022,7 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
-"製品の在庫を確保するために、使用している測定単位よりも小さい測定単位を使用しています。これにより、予約数量の丸めの問題が発生する可能性があります。在庫を評価したり、丸めの精度を小さい値に変更したりするには、可能な限り小さい測定単位を使用する必要があります(例:0.00001)。"
+"プロダクトの在庫を確保するために、使用している測定単位よりも小さい測定単位を使用しています。これにより、引当済数量の丸めの問題が発生する可能性があります。在庫を評価したり、丸めの精度を小さい値に変更したりするには、可能な限り小さい測定単位を使用する必要があります(例:0.00001)。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form

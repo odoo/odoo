@@ -1,28 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_links
-#
+# 
 # Translators:
-# Cozmin Candea <office@terrabit.ro>, 2022
-# Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
-# Martin Trigaux, 2022
-#
+# Cozmin Candea <office@terrabit.ro>, 2024
+# Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Martin Trigaux, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~17.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2024-03-26 15:06+0000\n"
+"PO-Revision-Date: 2024-03-27 13:34+0000\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
-"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: website_links
 #. odoo-javascript
@@ -46,6 +45,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Campaign</strong>"
 msgstr "<strong>Campanie</strong>"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.graphs
+msgid "<strong>Label</strong>"
+msgstr "<strong>Etichetă</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -80,10 +84,8 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the context of your link. It might be an event you want to promote or a "
-"special promotion.\"/>"
+"Campaign\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the context of your link. It might be an event you want to promote or a special promotion.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -101,6 +103,7 @@ msgstr "Copie"
 
 #. module: website_links
 #. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Edit code"
@@ -124,6 +127,13 @@ msgid "Icon"
 msgstr "Pictogramă"
 
 #. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid ""
+"Label\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines a label to ease reporting.\"/>"
+msgstr ""
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Last Month"
 msgstr "Ultima lună"
@@ -144,10 +154,8 @@ msgstr "Urmărire Link"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the medium used to share your link. It might be an email, or a Facebook Ads "
-"for instance.\"/>"
+"Medium\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -181,10 +189,8 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
-"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
-"the source from which your traffic will come from, Facebook or Twitter for "
-"instance.\"/>"
+"Source\n"
+"                                            <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines the source from which your traffic will come from, Facebook or Twitter for instance.\"/>"
 msgstr ""
 
 #. module: website_links
@@ -209,6 +215,8 @@ msgstr "Codul nu poate fi lăsat gol"
 #. module: website_links
 #. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
 msgid "There is no data to show"
 msgstr "Aici nu sunt date de afișat"
 
@@ -222,8 +230,8 @@ msgstr "Codul este deja luat"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Those trackers can be used in Google Analytics to track clicks and visitors, "
-"or in Odoo reports to track opportunities and related revenues."
+"Those trackers can be used in Google Analytics to track clicks and visitors,"
+" or in Odoo reports to track opportunities and related revenues."
 msgstr ""
 
 #. module: website_links
@@ -277,6 +285,11 @@ msgstr "clicuri"
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "copy"
 msgstr "copie"
+
+#. module: website_links
+#: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
+msgid "e.g. \"Black Friday Mailing Campaign\""
+msgstr ""
 
 #. module: website_links
 #. odoo-javascript

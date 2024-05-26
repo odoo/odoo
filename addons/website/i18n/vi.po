@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Duy BQ <duybq86@gmail.com>, 2024
-# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +49,21 @@ msgstr "\"URL từ\" không thể trống."
 #: code:addons/website/models/website_rewrite.py:0
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL tới\" không thể trống."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr ""
 
 #. module: website
 #. odoo-python
@@ -364,15 +379,13 @@ msgid ""
 "250 Executive Park Blvd, Suite 3400 <br/> San Francisco CA 94134 <br/>United"
 " States"
 msgstr ""
-"250 Executive Park Blvd, Suite 3400 <br/> San Francisco CA 94134 <br/>United"
-" States"
+"250 Executive Park Blvd, Suite 3400 <br/> San Francisco CA 94134 <br/>Hoa Kỳ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 msgid ""
 "250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States"
-msgstr ""
-"250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States"
+msgstr "250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • Hoa Kỳ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
@@ -680,7 +693,7 @@ msgid ""
 "Suite 3400 • San Francisco CA 94134 • United States"
 msgstr ""
 "<i class=\"fa fa-1x fa-fw fa-map-marker me-2\"/>250 Executive Park Blvd, "
-"Suite 3400 • San Francisco CA 94134 • United States"
+"Suite 3400 • San Francisco CA 94134 • Hoa Kỳ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -761,7 +774,7 @@ msgid ""
 "                            <span class=\"mt-1\">A password is required to access this page.</span>"
 msgstr ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
-"                            <span class=\"mt-1\">Cần password để truy cập vào trang này.</span>"
+"                            <span class=\"mt-1\">Cần mật khẩu để truy cập vào trang này.</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -770,7 +783,7 @@ msgid ""
 "                            <span class=\"mt-1\">Wrong password</span>"
 msgstr ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
-"                            <span class=\"mt-1\">Sai password</span>"
+"                            <span class=\"mt-1\">Sai mật khẩu</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1622,7 +1635,7 @@ msgstr "Accordion"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
-msgstr "Account &amp; Quản lý bán hàng"
+msgstr "Kế toán &amp; Quản lý bán hàng"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1919,19 +1932,19 @@ msgstr "Cảnh báo"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Align Bottom"
-msgstr "Align Bottom"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Align Middle"
-msgstr "Align Middle"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Align Top"
-msgstr "Align Top"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code_options
@@ -2199,7 +2212,7 @@ msgstr "Văn bản động"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Animated"
-msgstr "Animated"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2236,7 +2249,7 @@ msgstr "Ứng dụng"
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "Apps url"
-msgstr "Apps url"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch
@@ -2280,7 +2293,7 @@ msgstr "Bạn có chắc chắn muốn xóa các trang này không?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Arrows"
-msgstr "Arrows"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -3204,10 +3217,6 @@ msgid ""
 "resize and duplicate the blocks to create your own layout. Add images or "
 "icons to customize the blocks."
 msgstr ""
-"Color blocks are a simple and effective way to <b>present and highlight your"
-" content</b>. Choose an image or a color for the background. You can even "
-"resize and duplicate the blocks to create your own layout. Add images or "
-"icons to customize the blocks."
 
 #. module: website
 #. odoo-javascript
@@ -3494,15 +3503,6 @@ msgid ""
 "                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer\n"
 "                            better site experiences and tools in the future."
 msgstr ""
-"Cookies are small bits of text sent by our servers to your computer or device when you access our services.\n"
-"                            They are stored in your browser and later sent back to our servers so that we can provide contextual content.\n"
-"                            Without cookies, using the web would be a much more frustrating experience.\n"
-"                            We use them to support your activities on our website. For example, your session (so you don't have to login again) or your shopping cart.\n"
-"                            <br/>\n"
-"                            Cookies are also used to help us understand your preferences based on previous or current activity on our website (the pages you have\n"
-"                            visited), your language and country, which enables us to provide you with improved services.\n"
-"                            We also use cookies to help us compile aggregate data about site traffic and site interaction so that we can offer\n"
-"                            better site experiences and tools in the future."
 
 #. module: website
 #. odoo-javascript
@@ -4861,7 +4861,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Explore"
-msgstr "Explore"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_gallery_s_text_block_2nd
@@ -4892,7 +4892,7 @@ msgstr "ID bên ngoài"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Extra Large"
-msgstr "Extra Large"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -4902,7 +4902,7 @@ msgstr "Liên kết bổ sung"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "Extra items button"
-msgstr "Extra items button"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -5228,7 +5228,7 @@ msgstr "Theo dõi chúng tôi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font"
-msgstr "Font"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5238,7 +5238,7 @@ msgstr "Nhóm phông chữ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Font Size"
-msgstr "Cỡ Font"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
@@ -5282,9 +5282,6 @@ msgid ""
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing, and customer experience strategies."
 msgstr ""
-"Founder and chief visionary, Tony is the driving force behind the company. He loves\n"
-"                                to keep his hands full by participating in the development of the software,\n"
-"                                marketing, and customer experience strategies."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_0_s_three_columns
@@ -5613,10 +5610,6 @@ msgid ""
 " story will sound fake and lack emotion. No one will be interested. Write "
 "for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
-"Great stories are <b>for everyone</b> even when only written <b>for just one"
-" person</b>. If you try to write with a wide, general audience in mind, your"
-" story will sound fake and lack emotion. No one will be interested. Write "
-"for one person. If it’s genuine for the one, it’s genuine for the rest."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -5627,11 +5620,6 @@ msgid ""
 "small quirks like word choices or phrases. Write from your point of view, "
 "not from someone else's experience."
 msgstr ""
-"Great stories have a <b>personality</b>. Consider telling a great story that"
-" provides personality. Writing a story with personality for potential "
-"clients will assist with making a relationship connection. This shows up in "
-"small quirks like word choices or phrases. Write from your point of view, "
-"not from someone else's experience."
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website_controller_page__default_layout__grid
@@ -5705,7 +5693,7 @@ msgstr "Nửa màn hình"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Hamburger menu"
-msgstr "Hamburger menu"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_s_carousel
@@ -6125,10 +6113,6 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
-"If this view is inherited,\n"
-"* if True, the view always extends its parent\n"
-"* if False, the view currently does not extend its parent but can be enabled\n"
-"         "
 
 #. module: website
 #. odoo-javascript
@@ -6669,10 +6653,6 @@ msgid ""
 "            we recommend you to try to use the new color system, which is\n"
 "            still customizable."
 msgstr ""
-"It appears your website is still using the old color system of\n"
-"            Odoo 13.0 in some places. We made sure it is still working but\n"
-"            we recommend you to try to use the new color system, which is\n"
-"            still customizable."
 
 #. module: website
 #. odoo-javascript
@@ -6949,12 +6929,12 @@ msgstr "Bố cục"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background"
-msgstr "Bố cục Background"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Layout Background Color"
-msgstr "Màu Background bố cục"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7098,12 +7078,12 @@ msgstr "Liên kết"
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 msgid "Link Anchor"
-msgstr "Link Anchor"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
-msgstr "Link Style"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -7194,7 +7174,7 @@ msgstr "Trò chuyện Trực tiếp"
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/new_content.js:0
 msgid "Livechat Widget"
-msgstr "Livechat Widget"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7423,19 +7403,19 @@ msgstr "Gặp gỡ đội ngũ"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/edit_menu.xml:0
 msgid "Mega Menu"
-msgstr "Mega Menu"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__mega_menu_classes
 #: model:ir.model.fields,field_description:website.field_website_menu__mega_menu_classes
 msgid "Mega Menu Classes"
-msgstr "Mega Menu Classes"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__mega_menu_content
 #: model:ir.model.fields,field_description:website.field_website_menu__mega_menu_content
 msgid "Mega Menu Content"
-msgstr "Mega Menu Content"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
@@ -7809,7 +7789,7 @@ msgstr "Nhiều trang web được xuất bản Mixin"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__group_multi_website
 #: model:res.groups,name:website.group_multi_website
 msgid "Multi-website"
-msgstr "Multi-website"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -7905,7 +7885,7 @@ msgstr "Muốn nhận hàng ở cửa hàng? Khám phá cửa hàng gần bạn 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Network Advertising Initiative opt-out page"
-msgstr "Network Advertising Initiative opt-out page"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -8014,7 +7994,7 @@ msgstr "Chưa có khách truy cập!"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "No condition"
-msgstr "No condition"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -8151,7 +8131,7 @@ msgstr "Số lượng ngôn ngữ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Numbers"
-msgstr "Numbers"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -8331,15 +8311,6 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Only applies if this view inherits from an other one (inherit_id is not False/Null).\n"
-"\n"
-"* if extension (default), if this view is requested the closest primary view\n"
-"is looked up (via inherit_id), then all views inheriting from it with this\n"
-"view's model are applied\n"
-"* if primary, the closest primary view is fully resolved (even if it uses a\n"
-"different model than this one), then this view's inheritance specs\n"
-"(<xpath/>) are applied, and the result is used as if it were this view's\n"
-"actual arch.\n"
 
 #. module: website
 #. odoo-javascript
@@ -8815,7 +8786,7 @@ msgstr "Đường dẫn"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Pattern"
-msgstr "Pattern"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -8961,7 +8932,7 @@ msgstr "Vị trí"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Post heading"
-msgstr "Post heading"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9029,7 +9000,7 @@ msgstr "Trước đó"
 #: model:ir.model.fields,field_description:website.field_website_controller_page__arch_prev
 #: model:ir.model.fields,field_description:website.field_website_page__arch_prev
 msgid "Previous View Architecture"
-msgstr "Previous View Architecture"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9086,7 +9057,7 @@ msgstr "Tính riêng tư"
 #: model:website.configurator.feature,name:website.feature_page_privacy_policy
 #: model_terms:ir.ui.view,arch_db:website.privacy_policy
 msgid "Privacy Policy"
-msgstr "Privacy Policy"
+msgstr "Chính sách quyền riêng tư"
 
 #. module: website
 #. odoo-javascript
@@ -9447,7 +9418,7 @@ msgstr "Gỡ slide"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Remove Tab"
-msgstr "Remove Tab"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -9620,7 +9591,7 @@ msgstr "Đảo"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_widgets
 msgid "Round Corners"
-msgstr "Round Corners"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -9870,7 +9841,7 @@ msgstr "Danh sách thứ hai của các tính năng"
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary"
-msgstr "Secondary"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -10235,7 +10206,7 @@ msgstr "Hiển thị"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
-msgstr "Sidebar"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
@@ -10287,22 +10258,22 @@ msgstr "Bài viết"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Down"
-msgstr "Slide Down"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slide Hover"
-msgstr "Slide Hover"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Left"
-msgstr "Slide Left"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Right"
-msgstr "Slide Right"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -10312,7 +10283,7 @@ msgstr "Tiêu đề slide"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Slide Up"
-msgstr "Slide Up"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10484,7 +10455,7 @@ msgstr "Chồng"
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Standard"
-msgstr "Standard"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10614,7 +10585,7 @@ msgstr "Menu trải dài"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Stretch to Equal Height"
-msgstr "Stretch to Equal Height"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
@@ -10642,7 +10613,7 @@ msgstr "Phong cách"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sub Menus"
-msgstr "Sub Menus"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -10847,7 +10818,7 @@ msgstr "Bìa văn bản"
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text Highlight"
-msgstr "Text Highlight"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
@@ -10857,12 +10828,12 @@ msgstr "Chữ ảnh chữ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Text Inline"
-msgstr "Text Inline"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Text Position"
-msgstr "Text Position"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -11254,8 +11225,6 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
-"This field should be used when accessing view arch. It will use translation.\n"
-"                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__arch_db
@@ -11270,8 +11239,6 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
-"This field will save the current `arch_db` before writing on it.\n"
-"                                                                         Useful to (soft) reset a broken view."
 
 #. module: website
 #. odoo-javascript
@@ -11348,7 +11315,7 @@ msgstr "Thông điệp này đã được đăng trên website!"
 #. odoo-python
 #: code:addons/website/models/website_visitor.py:0
 msgid "This operator is not supported"
-msgstr "This operator is not supported"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_current_page
@@ -11642,7 +11609,7 @@ msgstr "Chuyển biến thương hiệu của bạn"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Transition"
-msgstr "Transition"
+msgstr ""
 
 #. module: website
 #. odoo-javascript

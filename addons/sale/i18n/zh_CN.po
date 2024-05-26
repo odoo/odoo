@@ -658,6 +658,54 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        您好！\n"
+"        <br><br>\n"
+"        您\n"
+"        <t t-if=\"ctx.get('proforma')\">\n"
+"            为<t t-out=\"doc_name or ''\">报价单</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>所开立的形式发票\n"
+"            <t t-if=\"object.origin\">\n"
+"                （参考：<t t-out=\"object.origin or ''\"></t>，\n"
+"            </t>\n"
+"            金额为<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>）现已准备好，可供审阅。\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"doc_name or ''\">报价单</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"            <t t-if=\"object.origin\">\n"
+"                （参考：<t t-out=\"object.origin or ''\">S00052</t>）\n"
+"            </t>\n"
+"            金额为<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>）现已准备好，可供审阅。\n"
+"        </t>\n"
+"        <br>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"></t>\n"
+"        <t t-if=\"documents\">\n"
+"            <br> \n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                以下是您可能感兴趣的其他文件：\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                以下是您可能感兴趣的另一份文件：\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"></a>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br>\n"
+"        如有任何疑问，请随时联系我们。\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -829,6 +877,9 @@ msgid ""
 "                                                By paying,\n"
 "                                            </span>"
 msgstr ""
+"<span id=\"o_sale_portal_use_amount_total\">\n"
+"                                                付款后，\n"
+"                                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1089,6 +1140,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                (e.g. \"Delivery scheduling\", \"Order Payment Follow-up\", ...)"
 msgstr ""
+"只需点击几下，活动计划就可用于分配活动列表\n"
+"                （例如，“交货安排”、“订单付款跟进”等）。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1129,6 +1182,11 @@ msgid ""
 "On order confirmation: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. "
 msgstr ""
+"允许您在销售过程中与客户共享文件。\n"
+"报价时：文档将发送给客户，客户可随时访问。\n"
+"例如，此选项可用于共享产品描述文件。\n"
+"订单确认时：文件将发送给客户并供其访问。\n"
+"例如，此选项可用于共享用户手册，或在电子商务平台购买的数字内容。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1335,17 +1393,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying a <u>down payment</u> of"
-msgstr ""
+msgstr "若支付一笔<u>首期付款</u>，金额为"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By paying,"
-msgstr ""
+msgstr "一旦付款，"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "By signing, you confirm acceptance on behalf of"
-msgstr ""
+msgstr "签署后，您即代表以下各方确认接受："
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1533,7 +1591,7 @@ msgstr "使用 Shiprocket 计算运输成本并发货"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
+msgstr "计算运输成本，并通过 Starshipit 送货"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1637,7 +1695,7 @@ msgstr "创建发票"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr ""
+msgstr "创建销售订单活动计划"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2061,13 +2119,13 @@ msgstr "预付款"
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (Cancelled)"
-msgstr ""
+msgstr "首期付款（已取消）"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payment (ref: %(reference)s on %(date)s)"
-msgstr ""
+msgstr "首期付款（参看：%(reference)s，日期%(date)s）"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
@@ -3016,12 +3074,12 @@ msgstr "在所有订单行上"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__sale_order
 msgid "On confirmed order"
-msgstr ""
+msgstr "确认订单时"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__quotation
 msgid "On quote"
-msgstr ""
+msgstr "报价时"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3803,14 +3861,14 @@ msgstr "要求客户在线签名确认订单。"
 msgid ""
 "Request a payment to confirm orders, in full (100%) or partial. The default "
 "can be changed per order or template."
-msgstr ""
+msgstr "要求全额（100%）或部分付款以确认订单。可根据订单或模板更改默认值。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Request customers to sign quotations to validate orders. The default can be "
 "changed per order or template."
-msgstr ""
+msgstr "要求客户签署报价单以验证订单。可根据订单或模板更改默认值。"
 
 #. module: sale
 #. odoo-python
@@ -3826,7 +3884,7 @@ msgstr "责任用户"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr ""
+msgstr "当月收入目标（收费发票未税总额）。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -4407,7 +4465,7 @@ msgstr "阶段"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
 msgid "Starshipit Connector"
-msgstr ""
+msgstr "Starshipit 连接器"
 
 #. module: sale
 #. odoo-javascript
@@ -4532,7 +4590,7 @@ msgstr "税项"
 msgid ""
 "Team %(team_name)s has %(sale_order_count)s active sale orders. Consider "
 "cancelling them or archiving the team instead."
-msgstr ""
+msgstr "%(team_name)s团队有%(sale_order_count)s张生效的销售订单。请考虑取消它们，或将团队封存。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5223,7 +5281,7 @@ msgstr "您无法取消锁定的订单。请先解锁。"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "您不能更改已确认订单的价目表！"
 
 #. module: sale
 #. odoo-python
@@ -5337,7 +5395,7 @@ msgstr "为该销售订单。"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "quote."
-msgstr ""
+msgstr "报价。"
 
 #. module: sale
 #. odoo-python
@@ -5362,7 +5420,7 @@ msgstr "单位"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "you confirm acceptance on the behalf of"
-msgstr ""
+msgstr "表示您代表他们，确认接纳："
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation

@@ -24,7 +24,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr "# Events"
+msgstr "# Sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
@@ -1733,8 +1733,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
-"A description of the ticket that you want to communicate to your customers."
+msgstr "Nội dung mô tả vé mà bạn muốn truyền tải tới khách hàng."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1821,7 +1820,7 @@ msgstr "Quản trị viên"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
 msgid "Advanced Sponsors"
-msgstr "Advanced Sponsors"
+msgstr "Nhà tài trợ cấp cao"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
@@ -2073,13 +2072,13 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr "Booked"
+msgstr "Đã đặt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr "Booked by"
+msgstr "Đã đặt bởi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
@@ -2250,7 +2249,7 @@ msgstr "Xác nhận"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr "Confirm Attendance"
+msgstr "Xác nhận tham dự"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -2365,9 +2364,9 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
-"Define the number of available tickets. If you have too many registrations "
-"you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
-"as unlimited."
+"Xác định số lượng vé sẽ cung cấp. Nếu bạn có quá nhiều lượt đăng ký, bạn sẽ "
+"không thể tiếp tục bán vé. Đặt là 0 để bỏ qua quy tắc này và không giới hạn "
+"số lượng."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__description
@@ -2396,7 +2395,7 @@ msgstr "Khám phá thêm"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
 msgid "Discussion Rooms"
-msgstr "Discussion Rooms"
+msgstr "Phòng thảo luận"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
@@ -2471,7 +2470,7 @@ msgstr "Ngày kết thúc "
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__pipe_end
 msgid "End Stage"
-msgstr "End Stage"
+msgstr "Kết thúc giai đoạn"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_done
@@ -2516,7 +2515,7 @@ msgstr "Nhóm Sự kiện"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_form
 msgid "Event Category Tag"
-msgstr "Event Category Tag"
+msgstr "Thẻ danh mục sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
@@ -2526,7 +2525,7 @@ msgstr "Ngày Kết thúc Sự kiện"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Event Gamification"
-msgstr "Game hóa sự kiện"
+msgstr "Trò chơi hóa sự kiện"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -2589,29 +2588,29 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
-"Event Scheduler for:\n"
-"  - Event: %(event_name)s (%(event_id)s)\n"
-"  - Scheduled: %(date)s\n"
-"  - Template: %(template_name)s (%(template_id)s)\n"
+"Trình lập lịch sự kiện cho:\n"
+"- Sự kiện: %(event_name)s (%(event_id)s)\n"
+"- Đã lên lịch: %(date)s\n"
+"- Mẫu: %(template_name)s (%(template_id)s)\n"
 "\n"
-"Failed with error:\n"
-"  - %(error)s\n"
+"Không thành công với lỗi:\n"
+"- %(error)s\n"
 "\n"
-"You receive this email because you are:\n"
-"  - the organizer of the event,\n"
-"  - or the responsible of the event,\n"
-"  - or the last writer of the template.\n"
+"Bạn nhận được email này vì bạn là:\n"
+"- người tổ chức sự kiện,\n"
+"- hoặc người chịu trách nhiệm sự kiện,\n"
+"- hoặc người viết cuối cùng của mẫu.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
 msgid "Event Stage"
-msgstr "Event Stage"
+msgstr "Giai đoạn sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr "Event Stages"
+msgstr "Giai đoạn sự kiện"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -2622,19 +2621,19 @@ msgstr "Ngày Bắt đầu Sự kiện"
 #. module: event
 #: model:ir.model,name:event.model_event_tag
 msgid "Event Tag"
-msgstr "Event Tag"
+msgstr "Thẻ sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
 msgid "Event Tag Category"
-msgstr "Event Tag Category"
+msgstr "Danh mục thẻ sự kiện"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_tag_category_action_tree
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr "Event Tags Categories"
+msgstr "Danh mục thẻ sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -2642,25 +2641,25 @@ msgstr "Event Tags Categories"
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr "Event Template"
+msgstr "Mẫu sự kiện"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr "Event Template Ticket"
+msgstr "Mẫu sự kiện Vé"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr "Event Template Tickets"
+msgstr "Mẫu sự kiện Vé"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr "Event Templates"
+msgstr "Mẫu sự kiện"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -2721,7 +2720,7 @@ msgstr "Sự kiện: Xác nhận đăng ký"
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr "Event: Reminder"
+msgstr "Sự kiện: Nhắc nhở"
 
 #. module: event
 #. odoo-javascript
@@ -2746,7 +2745,7 @@ msgstr "Trình ấn định Gửi thư Sự kiện"
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
-msgstr "Events Stage"
+msgstr "Giai đoạn sự kiện"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_stage__pipe_end
@@ -2857,7 +2856,7 @@ msgstr "Vào cửa miễn phí, không bao gồm đồ ăn!"
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr "Freshly created"
+msgstr "Vừa mới tạo"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -2882,7 +2881,7 @@ msgstr "Ví dụ về vé toàn trang"
 #. module: event
 #: model:event.stage,description:event.event_stage_done
 msgid "Fully ended"
-msgstr "Fully ended"
+msgstr "Hoàn toàn kết thúc"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2939,7 +2938,7 @@ msgstr "Cuộc đua khinh khí cầu Great Reno"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
-msgstr "Great! Now all you have to do is wait for your attendees to show up!"
+msgstr "Tuyệt vời! Giờ bạn chỉ cần chờ mọi người tới tham dự!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
@@ -3101,7 +3100,7 @@ msgstr "Giới thiệu, CRM, Quản lý bán hàng"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / ticket choice"
-msgstr "Invalid event / ticket choice"
+msgstr "Lựa chọn vé/sự kiện không hợp lệ"
 
 #. module: event
 #. odoo-javascript
@@ -3122,7 +3121,7 @@ msgstr "Đã hết hạn"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
 msgid "Is Finished"
-msgstr "Là hoàn thành"
+msgstr "Hoàn thành"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
@@ -3160,7 +3159,7 @@ msgstr "Hãy tham gia cuộc đua bóng bay lớn nhất từ trước tới nay
 #: model_terms:event.event,description:event.event_6
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr "Join us for this 24 hours Event"
+msgstr "Hãy tham dự sự kiện 24 giờ này cùng chúng tôi"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3260,7 +3259,7 @@ msgstr "Hạn chế số người tham dự"
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr "Limit Registrations"
+msgstr "Giới hạn đăng ký"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -3275,7 +3274,7 @@ msgstr "Phát trực tiếp"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr "Live Mode"
+msgstr "Chế độ trực tiếp"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -3332,7 +3331,7 @@ msgstr "Marc Demo"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Mark as Attending"
-msgstr "Mark as Attending"
+msgstr "Đánh dấu là đang tham dự"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
@@ -3359,7 +3358,7 @@ msgstr "Đăng ký tối đa"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr "Maximum Seats"
+msgstr "Số chỗ tối đa"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3488,7 +3487,9 @@ msgstr "Chưa có lịch trình!"
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Now that your event is ready, click here to move it to another stage."
-msgstr "Now that your event is ready, click here to move it to another stage."
+msgstr ""
+"Sự kiện hiện đã sẵn sàng, hãy bấm vào đây để chuyển sự kiện sang giai đoạn "
+"khác."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -3625,8 +3626,7 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection."
 msgstr ""
-"Override the default value displayed for the blocked state for kanban "
-"selection."
+"Ghi đè giá trị mặc định hiển thị cho giai đoạn bị chặn cho lựa chọn kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_done
@@ -3635,8 +3635,7 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
-"Override the default value displayed for the done state for kanban "
-"selection."
+"Ghi đè giá trị mặc định hiển thị cho giai đoạn hoàn tất cho lựa chọn kanban."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -3645,8 +3644,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
-"Override the default value displayed for the normal state for kanban "
-"selection."
+"Ghi đè giá trị mặc định hiển thị cho giai đoạn bình thường cho lựa chọn "
+"kanban."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3758,7 +3757,9 @@ msgstr "Sẵn sàng cho bước kế tiếp"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr "Ready to <b>organize events</b> in a few minutes? Let's get started!"
+msgstr ""
+"Bạn đã sẵn sàng <b>tổ chức sự kiện</b> chỉ trong vài phút chưa? Hãy cùng bắt"
+" đầu nhé!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -3801,12 +3802,12 @@ msgstr "Ngày Mở Đăng ký"
 #: model:res.groups,name:event.group_event_registration_desk
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Registration Desk"
-msgstr "Registration Desk"
+msgstr "Bàn đăng ký"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr "Registration End"
+msgstr "Kết thúc đăng ký"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3831,7 +3832,7 @@ msgstr "Thuộc tính đăng ký"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr "Registration Start"
+msgstr "Bắt đầu đăng ký"
 
 #. module: event
 #. odoo-javascript
@@ -3853,7 +3854,7 @@ msgstr "Thư đăng ký"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr "Registration open"
+msgstr "Đang mở đăng ký"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
@@ -4093,7 +4094,7 @@ msgstr "Tên giai đoạn"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr "Stage description"
+msgstr "Mô tả giai đoạn"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -4101,7 +4102,7 @@ msgstr "Stage description"
 #: model:event.event.ticket,name:event.event_3_ticket_0
 #: model:event.event.ticket,name:event.event_7_ticket_1
 msgid "Standard"
-msgstr "Standard"
+msgstr "Tiêu chuẩn"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -4117,7 +4118,7 @@ msgstr "Ngày bắt đầu"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__start_sale_datetime
 msgid "Start sale date"
-msgstr "Start sale date"
+msgstr "Ngày bắt đầu bán"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
@@ -4240,12 +4241,12 @@ msgstr "Ngày kết thúc không thể sớm hơn ngày bắt đầu."
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
 msgid "The event has been cancelled"
-msgstr "The event has been cancelled"
+msgstr "Sự kiện đã bị hủy"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr "The event has been publicly announced"
+msgstr "Sự kiện đã được đăng công khai"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -4278,7 +4279,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
 msgid "The place has been reserved"
-msgstr "The place has been reserved"
+msgstr "Chỗ đã được đặt trước"
 
 #. module: event
 #. odoo-javascript
@@ -4346,7 +4347,7 @@ msgstr "Thông tin này sẽ được in trên vé."
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "This is the <b>name</b> your guests will see when registering."
-msgstr "This is the <b>name</b> your guests will see when registering."
+msgstr "Đây là <b>tên</b> mà khách sẽ thấy khi đăng ký."
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -4371,7 +4372,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 msgid "This operator is not supported"
-msgstr "This operator is not supported"
+msgstr "Toán tử này không được hỗ trợ"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4427,8 +4428,7 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
-"Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
-"new one."
+"Loại vé cho phép bạn phân biệt người tham dự. Hãy <b>tạo</b> một loại mới."
 
 #. module: event
 #. odoo-python
@@ -4472,7 +4472,7 @@ msgstr "Tổng người tham dự"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr "Total Registrations for this Event"
+msgstr "Tổng đăng ký cho sự kiện này"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -4582,12 +4582,12 @@ msgstr "Dùng danh mục thẻ sự kiện để phân loại và tổ chức c�
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
-msgstr "Use the <b>breadcrumbs</b> to go back to your kanban overview."
+msgstr "Sử dụng đường dẫn <b>breadcrumb</b> để quay lại tổng quan kanban."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr "Used Seats"
+msgstr "Chỗ đã dùng"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -4607,7 +4607,7 @@ msgstr "VIP"
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 msgid "Value should be True or False (not %s)"
-msgstr "Value should be True or False (not %s)"
+msgstr "Giá trị phải là Đúng hoặc Sai (không phải %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
@@ -4696,7 +4696,7 @@ msgstr "Có gì mới?"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr "Whether event has begun"
+msgstr "Liệu sự kiện đã bắt đầu"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
@@ -4728,8 +4728,8 @@ msgid ""
 "You can define here labels that will be displayed for the state instead\n"
 "                            of the default labels in the kanban view."
 msgstr ""
-"You can define here labels that will be displayed for the state instead\n"
-"                            of the default labels in the kanban view."
+"Tại đây bạn có thể xác định nhãn sẽ hiển thị cho trạng thái thay vì\n"
+"                            nhãn mặc định trong chế độ xem kanban."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -4765,7 +4765,7 @@ msgstr "VD: \"Quảng bá\""
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr "e.g. Conference for Architects"
+msgstr "VD: Hội thảo cho kiến trúc sư"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4840,7 +4840,7 @@ msgstr "tuần tới"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "on %(date)s"
-msgstr "on %(date)s"
+msgstr "vào %(date)s"
 
 #. module: event
 #. odoo-javascript
