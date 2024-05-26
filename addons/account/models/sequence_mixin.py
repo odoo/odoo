@@ -213,10 +213,12 @@ class SequenceMixin(models.AbstractModel):
             where_string += " AND sequence_prefix = %(with_prefix)s "
             param['with_prefix'] = with_prefix
 
+        name_start_with_condition = "AND sequence_prefix NOT LIKE %(name_start_with)s" if param.get('name_start_with') else ""
+
         query = f"""
                 SELECT {self._sequence_field} FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
+                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} {name_start_with_condition} ORDER BY id DESC LIMIT 1)
                 ORDER BY sequence_number DESC
                 LIMIT 1
         """
@@ -318,7 +320,6 @@ class SequenceMixin(models.AbstractModel):
                     raise e
         self._compute_split_sequence()
         self.flush_recordset(['sequence_prefix', 'sequence_number'])
-
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.

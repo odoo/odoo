@@ -809,6 +809,9 @@ class AccountMove(models.Model):
                         continue
             if move.date and (not move_has_name or not move._sequence_matches_date()):
                 move._set_next_sequence()
+                if move.journal_id.change_sequence:
+                    if move.move_type in ('in_refund', 'out_refund'):
+                        move.journal_id.change_sequence = False
 
         self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
         self._inverse_name()
@@ -3052,7 +3055,11 @@ class AccountMove(models.Model):
 
         if self.journal_id.refund_sequence:
             if self.move_type in ('out_refund', 'in_refund'):
-                where_string += " AND move_type IN ('out_refund', 'in_refund') "
+                if self.journal_id.change_sequence:
+                    previous_prefix = self._get_previous_sequence_prefix()
+                    if previous_prefix:
+                        param['name_start_with'] = previous_prefix + '%'
+                where_string += " AND move_type IN ('out_refund', 'in_refund' ) "
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
         elif self.journal_id.payment_sequence:
@@ -3061,7 +3068,18 @@ class AccountMove(models.Model):
             else:
                 where_string += " AND payment_id IS NULL "
 
+        if not self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund', 'out_invoice', 'in_invoice'):
+            where_string += " AND move_type IN ('out_invoice', 'in_invoice') "
+
         return where_string, param
+
+    def _get_previous_sequence_prefix(self):
+        sequence_prefix = self.env["account.move"].search([
+            ("journal_id", "=", self.journal_id.id),
+            ("move_type", "in", ["out_refund", "in_refund"]),
+            ("sequence_prefix", "!=", ""),
+        ], order="id desc", limit=1).sequence_prefix
+        return sequence_prefix or False
 
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
