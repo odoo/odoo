@@ -16,8 +16,8 @@
 # A . <tiboreu@protonmail.com>, 2021
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2023
-# Szabolcs Rádi, 2023
-# Tamás Dombos, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
+# Tamás Dombos, 2024
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Tamás Dombos, 2023\n"
+"Last-Translator: Tamás Dombos, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5446,7 +5446,7 @@ msgstr ""
 "Az ebéd szervezésének alapmodulja.\n"
 "================================\n"
 "\n"
-"Több cég szokott rendelni szendvicset, pizzás és ételt, megszokott beszállítóktól, a munkások, személyzet részére, hogy megkönnyítse és szélesebb körű választékot biztosítson az étkezésre. \n"
+"Több vállalat szokott rendelni szendvicset, pizzás és ételt, megszokott beszállítóktól, a munkások, személyzet részére, hogy megkönnyítse és szélesebb körű választékot biztosítson az étkezésre. \n"
 "\n"
 "Az ebédbeszerzéshez, a cégnek pontos adminisztrációra van szüksége, főként akkor, ha sok munkavállalója vagy sokféle a beszállító.\n"
 "\n"
@@ -7031,7 +7031,7 @@ msgstr ""
 "Két szintje van az adószám érvényesítésének:\n"
 "--------------------------------------------------------\n"
 " * Alapesetben, egy egyszerű offline/kapcsolat nélküli érvényesítést végez az ismert ország azonosító-szabálya szerint, egy egyszerű számjegy-azonosítással. Ez gyors és mindig elérhető, de megengedhet olyan számokat is melyek nem biztos, hogy megfelelőek, vagy már nem érvényesek.\n"
-" * Ha a „VAT VIES Check” / „Adószám VIES ellenőrzés” be van kapcsolva (a vállalat konfigurációs beállításoknál), Az adószámok be lesznek nyújtva ellenőrzésre az online EU VIES adatbázishoz, ami ténylegesen ellenőrzi az adószám érvényességét és tényleges EU cég meglétét. Ez kicsit lassabb mint az egyszerű off-line ellenőrzés, szükséges az internetelérés biztosítása, és lehet, hogy nem mindig elérhető a szolgáltatás. Ha a szolgáltatás nem elérhető, vagy nem támogatja a szóban forgó államot (pl.. nem EU tagállam), akkor csak egy egyszerű ellenőrzés lesz végrehajtva.\n"
+" * Ha a „VAT VIES Check” / „Adószám VIES ellenőrzés” be van kapcsolva (a vállalat konfigurációs beállításoknál), Az adószámok be lesznek nyújtva ellenőrzésre az online EU VIES adatbázishoz, ami ténylegesen ellenőrzi az adószám érvényességét és tényleges EU vállalat meglétét. Ez kicsit lassabb mint az egyszerű off-line ellenőrzés, szükséges az internetelérés biztosítása, és lehet, hogy nem mindig elérhető a szolgáltatás. Ha a szolgáltatás nem elérhető, vagy nem támogatja a szóban forgó államot (pl.. nem EU tagállam), akkor csak egy egyszerű ellenőrzés lesz végrehajtva.\n"
 "\n"
 "A jelenleg támogatott országok az EU országok, és egy pár nem-EU ország, mint Chile, Kolumbia, Mexikó, Norvégia vagy Oroszország. A nem támogatott országnál, csak az országjelölő kód lesz érvényesítve.\n"
 "    "
@@ -11636,7 +11636,7 @@ msgstr "Vállalat neve..."
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Company Properties"
-msgstr "A cég tulajdonságai"
+msgstr "A vállalat tulajdonságai"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -23943,7 +23943,7 @@ msgstr "Ajánlások"
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_id
 #: model:ir.model.fields,field_description:base.field_res_users__parent_id
 msgid "Related Company"
-msgstr "Kapcsolódó cég"
+msgstr "Kapcsolódó vállalat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__related
@@ -24812,6 +24812,12 @@ msgstr "Ütemezett műveletek"
 #: model:ir.actions.act_window,name:base.ir_cron_trigger_action
 #: model:ir.ui.menu,name:base.ir_cron_trigger_menu
 msgid "Scheduled Actions Triggers"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid "Scheduled action disabled"
 msgstr ""
 
 #. module: base
@@ -26621,7 +26627,7 @@ msgstr "Az állapot kódjának egyedinek kell lennie országonként !"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_company_name_uniq
 msgid "The company name must be unique !"
-msgstr "A cég nevének egyedinek kell lennie"
+msgstr "A vállalat nevének egyedinek kell lennie"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.act_ir_actions_todo_form
@@ -27401,6 +27407,14 @@ msgstr ""
 msgid ""
 "This restriction is due to the following rules:\n"
 "%s"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_cron.py:0
+#, python-format
+msgid ""
+"This scheduled action has been disabled because its interval number is not a"
+" strictly positive value."
 msgstr ""
 
 #. module: base
@@ -29575,6 +29589,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/res_lang.py:0
+#, python-format
+msgid ""
+"You cannot archive the language in which Odoo was setup as it is used by "
+"automated processes."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
@@ -29629,6 +29651,14 @@ msgstr ""
 #: code:addons/base/models/ir_config_parameter.py:0
 #, python-format
 msgid "You cannot delete the %s record."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
 msgstr ""
 
 #. module: base

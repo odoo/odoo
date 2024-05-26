@@ -11,6 +11,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Lasse L, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-11-10 15:12+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,8 @@ msgstr "Adyen"
 msgid ""
 "An error occurred during the processing of your payment. Please try again."
 msgstr ""
+"Ett fel inträffade under behandlingen av din betalning. Vänligen försök "
+"igen."
 
 #. module: payment_adyen
 #. openerp-web
@@ -59,7 +62,7 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_client_key
 msgid "Client Key"
-msgstr ""
+msgstr "Kundnyckel"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_acquirer.py:0
@@ -70,7 +73,7 @@ msgstr "Det gick inte att upprätta anslutningen till API:et."
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_hmac_key
 msgid "HMAC Key"
-msgstr ""
+msgstr "HMAC-nyckel"
 
 #. module: payment_adyen
 #. openerp-web
@@ -82,7 +85,7 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
-msgstr ""
+msgstr "Handelskonto"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
@@ -126,7 +129,7 @@ msgstr "Leverantör"
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment state: %s"
-msgstr ""
+msgstr "Mottagen data med ogiltigt betalningsstatus: %s"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
@@ -138,7 +141,7 @@ msgstr "Mottagna data med saknad handelsreferens"
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing payment state."
-msgstr ""
+msgstr "Mottagen data med saknad betalningsstatus."
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
@@ -150,7 +153,7 @@ msgstr ""
 #: code:addons/payment_adyen/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "Mottagit manipulerade uppgifter om betalningsbegäran."
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
@@ -176,17 +179,17 @@ msgstr "Server Fel"
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "Shopper Reference"
-msgstr ""
+msgstr "Referens för shoppare"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_api_key
 msgid "The API key of the webservice user"
-msgstr ""
+msgstr "API-nyckeln för webbtjänstens användare"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_hmac_key
 msgid "The HMAC key of the webhook"
-msgstr ""
+msgstr "HMAC-nyckeln för webhooken"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__provider
@@ -206,7 +209,7 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_client_key
 msgid "The client key of the webservice user"
-msgstr ""
+msgstr "Klientnyckel för användaren av webbtjänsten"
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_merchant_account
@@ -217,7 +220,7 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_acquirer.py:0
 #, python-format
 msgid "The communication with the API failed."
-msgstr ""
+msgstr "Kommunikationen med API:et misslyckades."
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
@@ -228,7 +231,7 @@ msgstr "Transaktionen är inte kopplad till en token."
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr ""
+msgstr "Den unika referensen för partnern som äger denna pollett"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/utils.py:0
@@ -249,4 +252,4 @@ msgstr ""
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
 msgid "Your payment was refused. Please try again."
-msgstr ""
+msgstr "Din betalning har avvisats. Vänligen försök igen."

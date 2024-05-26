@@ -265,6 +265,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            sellel kontol:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -10165,6 +10167,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Valitud maksemeetod ei ole selle makse jaoks saadava. Palun vali teine "
+"maksemeetod. "
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -14145,7 +14149,7 @@ msgstr "Väljavõtte rida on juba sobitatud."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr ""
+msgstr "Kande loonud väljavõtte rida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__payment_tolerance_type
@@ -14233,7 +14237,7 @@ msgstr "Hetkel ei ole selle kontoga seotud ühtegi arvet ega makset."
 #: code:addons/account/wizard/account_validate_account_move.py:0
 #, python-format
 msgid "There are no journal items in the draft state to post."
-msgstr ""
+msgstr "Mustandis kanded puuduvad. "
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -14484,6 +14488,8 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
+"Seda sobitamise reeglit kasutatakse siis, kui kasutaja ei ole vastaspoole "
+"teabes kindel."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14561,6 +14567,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"Seda toodet on juba kasutatud postitatud andmiku kannetes.\n"
+"Mõõtühiku muutmiseks arhiveerige toode ja looge uus. "
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14848,6 +14856,8 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"QR-koodi tüüp, mis luuakse selle arve tasumiseks. Kui jätate tühjaks, "
+"kasutatakse esimest saadaolevat ja kasutatavat meetodit."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -15482,7 +15492,7 @@ msgstr "Valuutaga"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to record bills manually"
-msgstr ""
+msgstr "Odoo abil ei pea te arveid käsitsi sisestama."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -15541,6 +15551,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"Arhiveerida ei saa andmikku, mis sisaldab mustandis andmiku kandeid.\n"
+"\n"
+"Jätkamiseks:\n"
+"1/ vali ülevalt paremalt \"Andmiku kanded\"\n"
+"2/ filtreeri \"Mustand\" kanded\n"
+"3/ vali kõik ning postita või kustuta need \"toiming\" menüüst."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -15566,12 +15582,14 @@ msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
 msgstr ""
+"Perioodi/kontot on võimalik muuta ainult kannetel, mis ei ole veel "
+"sobitatud. "
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
-msgstr ""
+msgstr "Postitatud andmiku kannetel on võimalik muuta ainult perioodi/kontot"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15589,7 +15607,7 @@ msgstr "Teil on võimalik ainult postitatud kirjeid sobitada."
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr ""
+msgstr "Makset saab registreerida ainult postitatud andmiku kannetele. "
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -15601,7 +15619,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Postitatud kandeid saab ainult tühistada. "
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -15640,6 +15658,7 @@ msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
 msgstr ""
+"Kontol ei saa muuta ettevõtet, kuna sellega on seotud andmiku kanded. "
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15648,6 +15667,7 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
+"Andmikul ei saa muuta ettevõtet, kuna sellega on seotud andmiku kanded. "
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -15665,6 +15685,8 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
+"Uut makset ei saa luua kui \"laekuvad/väljuvad maksed\" kontod on "
+"seadistamata või %s maksemeetod määramata %s andmikus."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15672,7 +15694,7 @@ msgstr ""
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
-msgstr ""
+msgstr "Väljavõtte rida ei saa luua, millel puudub vahekonto %s andmikus."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15680,7 +15702,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create payments for entries belonging to different companies."
-msgstr ""
+msgstr "Ei saa luua makseid, mille kanded kuuluvad erinevatele ettevõtetele."
 
 #. module: account
 #: code:addons/account/models/account_payment_method.py:0
@@ -15689,6 +15711,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
 msgstr ""
+"Kahel erineval maksemeetodil ei saa olla sama makse tüüpi (%s) ja sama makse"
+" nimetust (%s) ühel andmikul."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15712,7 +15736,7 @@ msgstr ""
 msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
-msgstr ""
+msgstr "Välisvaluutas summat ei saa määrata ilma välisvaluutat määramata. "
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15721,6 +15745,8 @@ msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Makset ei saa registreerida, kuna tasumisele kuuluvad maksed puuduvad "
+"valitud andmikus. "
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15751,7 +15777,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
-msgstr ""
+msgstr "Kandeid ei saa lisada/muuta pärast lukustatud kuupäeva %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15813,6 +15839,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
+"Postitatud olekus kannet ei saa luua. Palun looge mustandis kanne ja "
+"postitage. "
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -15832,7 +15860,7 @@ msgstr ""
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
+msgstr "Konto silti ei saa kustutada (%s), kuna on kasutusel kontoplaanis. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15841,6 +15869,8 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
+"Kannet ei saa kustutada, kuna see on kasutanud järjekorranumbrit ja ei ole "
+"viimane. Tühistage kanne. "
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -15849,6 +15879,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Aruannet ei saa kustutada (%s), kuna seda kasutab raamatupidamise PDF-"
+"generaator."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -15867,6 +15899,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
+"Sobitatud kandeid ei saa muuta. Saate muuta mõningaid lubatud välju või tühistage esmalt kanne.\n"
+"Andmiku kanne (id): %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16083,6 +16117,8 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
+"Negatiivse summaga arvet ei saa postitada. Palun koostage selle asemel "
+"kreeditarve. Valige ülevalt \"toiming\" ja \"muuda kreeditarveks\"."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16118,7 +16154,7 @@ msgstr "Pead määrama 'Sisemise Siirde Konto' oma sularaha kassa registris."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Määrake kasumi konto (sõltub ettevõttest)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16427,6 +16463,8 @@ msgid ""
 "reserves the right to call on the services of a debt recovery company. All "
 "legal expenses will be payable by the client."
 msgstr ""
+"jätab endale õiguse osta võlgade sissenõudmise teenust sisse. Kõik "
+"juriidilised kulud kannab klient. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -16434,6 +16472,8 @@ msgid ""
 "reserves the right to request a fixed interest payment amounting to 10% of "
 "the sum remaining due."
 msgstr ""
+"jätab endale õiguse nõuda fikseeritud intressi summas, mis moodustab 10% "
+"koguvõlast. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16484,6 +16524,8 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr ""
+"kohustub tegema endast oleneva, et osutada teenus õigeaegselt ja "
+"kokkulepitud ajal. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16497,6 +16539,7 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"on volitatud peatama teenuse makseviivituse korral ilma ette teavitamata. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
