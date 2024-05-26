@@ -84,7 +84,7 @@ msgstr "<i class=\"fa fa-trash\"/> Eliminar"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "<span class=\"fs-4\">Saved payment methods</span>"
-msgstr ""
+msgstr "<span class=\"fs-4\">Métodos de pago guardados</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -251,7 +251,7 @@ msgstr "Añadir cargos extra"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Add new payment method"
-msgstr ""
+msgstr "Agregar un nuevo método de pago "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -592,7 +592,7 @@ msgstr "Crear un nuevo proveedor de pago"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "Create a payment method"
-msgstr ""
+msgstr "Crear un método de pago "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -814,7 +814,7 @@ msgstr "Cargos"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
 msgid "Fees Supported"
-msgstr ""
+msgstr "Comisiones compatibles"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
@@ -912,11 +912,14 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
 msgstr ""
+"Si se selecciona un proveedor de pago específico, los clientes solo podrán "
+"pagar a través del mismo. Si se selecciona \"Todos\", los clientes podrán "
+"pagar a través de cualquier proveedor de pago disponible."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "If not defined, the provider name will be used."
-msgstr ""
+msgstr "Si no se define, se utilizará el nombre del proveedor de pago."
 
 #. module: payment
 #. odoo-javascript
@@ -1059,7 +1062,7 @@ msgstr "Gestionar métodos de pago"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Managed by"
-msgstr ""
+msgstr "Gestionado por "
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1648,7 +1651,7 @@ msgstr "Mostrar mensaje hecho"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_method_ids
 msgid "Show Payment Method"
-msgstr ""
+msgstr "Mostrar método de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
@@ -1728,7 +1731,7 @@ msgstr "Modo de prueba"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.test_token_badge
 msgid "Test Token"
-msgstr ""
+msgstr "Token de prueba"
 
 #. module: payment
 #. odoo-python
@@ -1786,6 +1789,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the provider"
 msgstr ""
+"El importe de las comisiones, establecido por el sistema porque depende del "
+"proveedor de pago"
 
 #. module: payment
 #. odoo-python
@@ -1802,7 +1807,7 @@ msgstr "La referencia interna de la transacción"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method"
-msgstr ""
+msgstr "La lista de proveedores que son compatibles con este método de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1865,7 +1870,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction"
-msgstr ""
+msgstr "La referencia del proveedor de pago del token de la transacción"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
@@ -2015,6 +2020,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment method, limited to 64x64 px"
 msgstr ""
+"Este archivo contiene la imagen usada para este método de pago, limitada a "
+"64x64 px"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2112,7 +2119,7 @@ msgstr "Validación del método de pago"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
 msgid "Variable domestic fees"
-msgstr ""
+msgstr "Cuotas nacionales variables"
 
 #. module: payment
 #. odoo-python
@@ -2124,7 +2131,7 @@ msgstr "Las tarifas variables siempre deben ser positivas y menores a 100%."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
 msgid "Variable international fees"
-msgstr ""
+msgstr "Cuotas internacionales variables"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -2482,4 +2489,4 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "— created on"
-msgstr ""
+msgstr "— creado el"
