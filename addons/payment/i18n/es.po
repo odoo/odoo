@@ -742,7 +742,7 @@ msgstr "Cargos"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
 msgid "Fees Supported"
-msgstr ""
+msgstr "Comisiones compatibles"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
@@ -835,11 +835,14 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
 msgstr ""
+"Si se selecciona un proveedor de pago específico, los clientes solo podrán "
+"pagar a través del mismo. Si se selecciona \"Todos\", los clientes podrán "
+"pagar a través de cualquier proveedor de pago disponible."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "If not defined, the provider name will be used."
-msgstr ""
+msgstr "Si no se define, se utilizará el nombre del proveedor de pago."
 
 #. module: payment
 #. odoo-javascript
@@ -1666,6 +1669,8 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the provider"
 msgstr ""
+"El importe de las comisiones, establecido por el sistema porque depende del "
+"proveedor de pago"
 
 #. module: payment
 #. odoo-python
@@ -1745,7 +1750,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction"
-msgstr ""
+msgstr "La referencia del proveedor de pago del token de la transacción"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
