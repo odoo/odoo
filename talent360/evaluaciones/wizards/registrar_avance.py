@@ -4,11 +4,12 @@ class RegistrarAvance(models.TransientModel):
     _name = "registrar.avance.wizard"
     _description = "Registrar Avance Wizard"
 
-    name = fields.Char(string='Name')
-    progress = fields.Integer(string='Progress')
-    attachment = fields.Binary(string='Attachment')
-    attachment_filename = fields.Char(string='Attachment Filename')
-    comments = fields.Text(string='Comments')
+    id = fields.Integer(string='ID')
+    fecha = fields.Date(string='Fecha')
+    avance = fields.Integer(string='Avance')
+    archivos = fields.Many2many(comodel_name='ir.attachment', string='Subir Archivo')
+    nombres_archivos = fields.Char(string='Nombres de Archivos')
+    comentarios = fields.Text(string='Comentarios')
 
     def action_confirm(self):
         # Lógica del wizard aquí

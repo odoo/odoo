@@ -7,16 +7,16 @@
             <form string="Registrar Avance">
                 <group>
                     <group>
-                        <label for="progress" string="Avance: " />
-                        <field name="progress" nolabel="1" />
+                        <label for="avance" string="Avance: " />
+                        <field name="avance" nolabel="1" />
                     </group>
                     <group>
-                        <label for="attachment" string="Adjuntar Archivo: " />
-                        <field name="attachment" nolabel="1" />
+                        <label for="archivos" string="Evidencias: " />
+                        <field name="archivos" nolabel="1" widget="many2many_binary" />
                     </group>
                     <group>
-                        <label for="comments" string="Comentarios: " />
-                        <field name="comments" nolabel="1" />
+                        <label for="comentarios" string="Comentarios: " />
+                        <field name="comentarios" nolabel="1" />
                     </group>
                     <footer>
                         <button string="Confirmar" type="object" class="btn-primary" name="action_confirm"/>
