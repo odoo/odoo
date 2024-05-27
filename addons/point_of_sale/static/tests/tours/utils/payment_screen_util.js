@@ -127,7 +127,7 @@ export function clickBack() {
     return [
         {
             content: "click back button",
-            trigger: ".payment-screen .button.back",
+            trigger: ".back-button",
             mobile: false,
             run: "click",
         },

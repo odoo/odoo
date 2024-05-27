@@ -12,7 +12,6 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
-import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
@@ -29,6 +28,8 @@ import {
     getTaxesValues,
 } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
+import { ReceiptScreen } from "../screens/receipt_screen/receipt_screen";
+import { PaymentScreen } from "../screens/payment_screen/payment_screen";
 
 const { DateTime } = luxon;
 
@@ -1587,10 +1588,12 @@ export class PosStore extends Reactive {
     }
 
     showBackButton() {
+        const screenWoBackBtn = [ProductScreen, ReceiptScreen, PaymentScreen, TicketScreen];
+        const screenWoBackBtnMobile = [ProductScreen, ReceiptScreen];
         return (
-            this.mainScreen.component === PaymentScreen ||
-            (this.mainScreen.component === ProductScreen && this.mobile_pane == "left") ||
-            this.mainScreen.component === TicketScreen
+            !screenWoBackBtn.includes(this.mainScreen.component) ||
+            (this.ui.isSmall && !screenWoBackBtnMobile.includes(this.mainScreen.component)) ||
+            (this.mobile_pane === "left" && this.mainScreen.component === ProductScreen)
         );
     }
 
