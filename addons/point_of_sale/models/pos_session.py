@@ -1649,7 +1649,7 @@ class PosSession(models.Model):
                        'price_extra': ptav.price_extra,
                        # id of a value should be from the "product.template.attribute.value" record
                        'id': ptav.id,
-                       } for ptav in list(group)]
+                       } for ptav in list(group) if ptav.ptav_active]
             res[attribute_line_id] = {
                 'id': attribute_line_id,
                 'name': attribute.name,
