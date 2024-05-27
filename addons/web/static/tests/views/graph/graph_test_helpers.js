@@ -77,7 +77,7 @@ export const checkTooltip = (view, { title, lines }, index, datasetIndex = null)
 
     expect(`.o_graph_custom_tooltip`).toHaveCount(1);
     expect(`table thead tr th.o_measure`).toHaveText(title || "Count");
-    expect(queryAllTexts(`table tbody tr td span.o_label`)).toEqual(lineLabels);
+    expect(queryAllTexts(`table tbody tr td small.o_label`)).toEqual(lineLabels);
     expect(queryAllTexts(`table tbody tr td.o_value`)).toEqual(lineValues);
 };
 
@@ -105,11 +105,6 @@ export const getModeButton = (mode) => queryOne`.o_graph_button[data-mode=${mode
  * @param {GraphView} view
  */
 export const getScaleY = (view) => getChart(view).config.options.scales.y;
-
-/**
- * @param {GraphView} view
- */
-export const getXAxisLabel = (view) => getChart(view).config.options.scales.x.title.text;
 
 /**
  * @param {GraphView} view

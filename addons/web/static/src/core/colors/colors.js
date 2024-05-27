@@ -1,10 +1,11 @@
+import { clamp } from "@web/core/utils/numbers";
 /**
  * Lists of colors that contrast well with each other to be used in various
  * visualizations (eg. graphs/charts), both in bright and dark themes.
  */
 
 const COLORS_ENT_BRIGHT = ["#875A7B", "#A5D8D7", "#DCD0D9"];
-const COLORS_ENT_DARK = [ "#6B3E66", "#147875", "#5A395A"];
+const COLORS_ENT_DARK = ["#6B3E66", "#147875", "#5A395A"];
 const COLORS_SM = [
     "#4EA7F2", // Blue
     "#EA6175", // Red
@@ -115,9 +116,9 @@ export function getColors(colorScheme, paletteName) {
  */
 export function getColor(index, colorScheme, paletteSizeOrName) {
     let paletteName;
-    if(paletteSizeOrName === "odoo") {
+    if (paletteSizeOrName === "odoo") {
         paletteName = "odoo";
-    } else if(paletteSizeOrName <= 6 || paletteSizeOrName === "sm") {
+    } else if (paletteSizeOrName <= 6 || paletteSizeOrName === "sm") {
         paletteName = "sm";
     } else if (paletteSizeOrName <= 12 || paletteSizeOrName === "md") {
         paletteName = "md";
@@ -149,4 +150,68 @@ export function hexToRGBA(hex, opacity) {
         .map((n) => parseInt(n, 16))
         .join(",");
     return `rgba(${rgb},${opacity})`;
+}
+
+/**
+ * Used to return custom colors depending on the color scheme
+ * @param {string} colorScheme
+ * @param {string} brightModeColor
+ * @param {string} darkModeColor
+ * @returns {string|Number|Boolean}
+ */
+
+export function getCustomColor(colorScheme, brightModeColor, darkModeColor) {
+    if (darkModeColor === undefined) {
+        return brightModeColor;
+    } else {
+        return colorScheme === "dark" ? darkModeColor : brightModeColor;
+    }
+}
+
+/**
+ * Used to lighten a color
+ * @param {string} color
+ * @param {number} factor
+ * @returns {string}
+ */
+export function lightenColor(color, factor) {
+    factor = clamp(factor, 0, 1);
+
+    let r = parseInt(color.substring(1, 3), 16);
+    let g = parseInt(color.substring(3, 5), 16);
+    let b = parseInt(color.substring(5, 7), 16);
+
+    r = Math.round(r + (255 - r) * factor);
+    g = Math.round(g + (255 - g) * factor);
+    b = Math.round(b + (255 - b) * factor);
+
+    r = r.toString(16).padStart(2, "0");
+    g = g.toString(16).padStart(2, "0");
+    b = b.toString(16).padStart(2, "0");
+
+    return `#${r}${g}${b}`;
+}
+
+/**
+ * Used to darken a color
+ * @param {string} color
+ * @param {number} factor
+ * @returns {string}
+ */
+export function darkenColor(color, factor) {
+    factor = clamp(factor, 0, 1);
+
+    let r = parseInt(color.substring(1, 3), 16);
+    let g = parseInt(color.substring(3, 5), 16);
+    let b = parseInt(color.substring(5, 7), 16);
+
+    r = Math.round(r * (1 - factor));
+    g = Math.round(g * (1 - factor));
+    b = Math.round(b * (1 - factor));
+
+    r = r.toString(16).padStart(2, "0");
+    g = g.toString(16).padStart(2, "0");
+    b = b.toString(16).padStart(2, "0");
+
+    return `#${r}${g}${b}`;
 }
