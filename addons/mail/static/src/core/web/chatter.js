@@ -376,8 +376,8 @@ export class Chatter extends Component {
         }
     }
 
-    onUploaded(data) {
-        this.attachmentUploader.uploadData(data);
+    async onUploaded(data) {
+        await this.attachmentUploader.uploadData(data);
         if (this.props.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }
