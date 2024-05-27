@@ -84,7 +84,7 @@ export class ViewButton extends Component {
                 title: this.props.title,
             },
             context: this.props.record && this.props.record.context,
-            model: (this.props.record && this.props.record.resModel) || this.props.resModel,
+            model: this.props.record && this.props.record.resModel,
         });
         this.dropdownControl = useDropdownCloser();
     }
