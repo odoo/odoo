@@ -14,9 +14,9 @@ import re
 import subprocess
 from datetime import datetime, timedelta
 
+import pytz
 from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
-import pytz
 try:
     import jingtrang
 except ImportError:
@@ -36,18 +36,6 @@ safe_eval = lambda expr, ctx={}: s_eval(expr, ctx, nocopy=True)
 
 class ParseError(Exception):
     ...
-
-class RecordDictWrapper(dict):
-    """
-    Used to pass a record as locals in eval:
-    records do not strictly behave like dict, so we force them to.
-    """
-    def __init__(self, record):
-        self.record = record
-    def __getitem__(self, key):
-        if key in self.record:
-            return self.record[key]
-        return dict.__getitem__(self, key)
 
 def _get_idref(self, env, model_str, idref):
     idref2 = dict(idref,
@@ -86,8 +74,7 @@ def _eval_xml(self, node, env):
     if node.tag in ('field','value'):
         t = node.get('type','char')
         f_model = node.get('model')
-        if node.get('search'):
-            f_search = node.get("search")
+        if f_search := node.get('search'):
             f_use = node.get("use",'id')
             f_name = node.get("name")
             idref2 = {}
@@ -106,8 +93,7 @@ def _eval_xml(self, node, env):
                 if isinstance(f_val, tuple):
                     f_val = f_val[0]
             return f_val
-        a_eval = node.get('eval')
-        if a_eval:
+        if a_eval := node.get('eval'):
             idref2 = _get_idref(self, env, f_model, self.idref)
             try:
                 return safe_eval(a_eval, idref2)
@@ -140,44 +126,44 @@ def _eval_xml(self, node, env):
         if t == 'html':
             return _process("".join(etree.tostring(n, method='html', encoding='unicode') for n in node))
 
-        data = node.text
         if node.get('file'):
-            with file_open(node.get('file'), 'rb', env=env) as f:
+            if t == 'base64':
+                with file_open(node.get('file'), 'rb', env=env) as f:
+                    return base64.b64encode(f.read())
+
+            with file_open(node.get('file'), env=env) as f:
                 data = f.read()
+        else:
+            data = node.text or ''
 
-        if t == 'base64':
-            return base64.b64encode(data)
+        match t:
+            case 'file':
+                path = data.strip()
+                try:
+                    file_path(os.path.join(self.module, path))
+                except FileNotFoundError:
+                    raise FileNotFoundError(
+                        f"No such file or directory: {path!r} in {self.module}"
+                    ) from None
+                return '%s,%s' % (self.module, path)
+            case 'char':
+                return data
+            case 'int':
+                d = data.strip()
+                if d == 'None':
+                    return None
+                return int(d)
+            case 'float':
+                return float(data.strip())
+            case 'list':
+                return [_eval_xml(self, n, env) for n in node.iterchildren('value')]
+            case 'tuple':
+                return tuple(_eval_xml(self, n, env) for n in node.iterchildren('value'))
+            case 'base64':
+                raise ValueError("base64 type is only compatible with file data")
+            case t:
+                raise ValueError(f"Unknown type {t!r}")
 
-        # after that, only text content makes sense
-        data = pycompat.to_text(data)
-        if t == 'file':
-            path = data.strip()
-            try:
-                file_path(os.path.join(self.module, path))
-            except FileNotFoundError:
-                raise IOError("No such file or directory: '%s' in %s" % (
-                    path, self.module))
-            return '%s,%s' % (self.module, path)
-
-        if t == 'char':
-            return data
-
-        if t == 'int':
-            d = data.strip()
-            if d == 'None':
-                return None
-            return int(d)
-
-        if t == 'float':
-            return float(data.strip())
-
-        if t in ('list','tuple'):
-            res=[]
-            for n in node.iterchildren(tag='value'):
-                res.append(_eval_xml(self, n, env))
-            if t=='tuple':
-                return tuple(res)
-            return res
     elif node.tag == "function":
         model_str = node.get('model')
         model = env[model_str]
@@ -185,9 +171,8 @@ def _eval_xml(self, node, env):
         # determine arguments
         args = []
         kwargs = {}
-        a_eval = node.get('eval')
 
-        if a_eval:
+        if a_eval := node.get('eval'):
             idref2 = _get_idref(self, env, model_str, self.idref)
             args = list(safe_eval(a_eval, idref2))
         for child in node:
@@ -250,16 +235,14 @@ form: module.record_id""" % (xml_id,)
         d_model = rec.get("model")
         records = self.env[d_model]
 
-        d_search = rec.get("search")
-        if d_search:
+        if d_search := rec.get("search"):
             idref = _get_idref(self, self.env, d_model, {})
             try:
                 records = records.search(safe_eval(d_search, idref))
             except ValueError:
                 _logger.warning('Skipping deletion for failed search `%r`', d_search, exc_info=True)
 
-        d_id = rec.get("id")
-        if d_id:
+        if d_id := rec.get("id"):
             try:
                 records += records.browse(self.id_get(d_id))
             except ValueError:
@@ -361,8 +344,7 @@ form: module.record_id""" % (xml_id,)
             if not rec_id:
                 return None
 
-            record = env['ir.model.data']._load_xmlid(xid)
-            if record:
+            if record := env['ir.model.data']._load_xmlid(xid):
                 # if the resource already exists, don't update it but store
                 # its database id (can be useful)
                 self.idref[rec_id] = record.id
@@ -384,18 +366,16 @@ form: module.record_id""" % (xml_id,)
 
         res = {}
         sub_records = []
-        for field in rec.findall('./field'):
+        for field in rec.iterchildren('field'):
             #TODO: most of this code is duplicated above (in _eval_xml)...
             f_name = field.get("name")
-            f_ref = field.get("ref")
-            f_search = field.get("search")
             f_model = field.get("model")
             if not f_model and f_name in model._fields:
                 f_model = model._fields[f_name].comodel_name
             f_use = field.get("use",'') or 'id'
             f_val = False
 
-            if f_search:
+            if f_search := field.get("search"):
                 idref2 = _get_idref(self, env, f_model, self.idref)
                 q = safe_eval(f_search, idref2)
                 assert f_model, 'Define an attribute model="..." in your .XML file!'
@@ -410,7 +390,7 @@ form: module.record_id""" % (xml_id,)
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search
                     f_val = s[0][f_use]
-            elif f_ref:
+            elif f_ref := field.get("ref"):
                 if f_name in model._fields and model._fields[f_name].type == 'reference':
                     val = self.model_id_get(f_ref)
                     f_val = val[0] + ',' + str(val[1])
@@ -432,7 +412,7 @@ form: module.record_id""" % (xml_id,)
                     elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
                     elif field_type == 'one2many':
-                        for child in field.findall('./record'):
+                        for child in field.iterchildren('record'):
                             sub_records.append((child, model._fields[f_name].inverse_name))
                         if isinstance(f_val, str):
                             # We do not want to write on the field since we will write
