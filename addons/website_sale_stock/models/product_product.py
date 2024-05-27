@@ -19,7 +19,7 @@ class ProductProduct(models.Model):
         # When the cron is run manually, request has no attribute website, and that would cause a crash
         # so we check for it
         cart = website and request and hasattr(request, 'website') and website.sale_get_order() or None
-        return cart and sum(cart._get_common_product_lines(product=self).mapped('product_uom_qty')) or 0
+        return cart and cart._get_cart_qty(self) or 0
 
     def _is_sold_out(self):
         self.ensure_one()
