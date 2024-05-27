@@ -9,6 +9,7 @@ import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 const { formatValue, isDefined, toCartesian } = helpers;
+import { isMarkdownViewUrl, isMarkdownIrMenuIdUrl, isIrMenuXmlUrl } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -78,6 +79,12 @@ export async function waitForDataLoaded(model) {
     });
 }
 
+function containsLinkToOdoo(link) {
+    if (link && link.url) {
+        return isMarkdownViewUrl(link.url) || isIrMenuXmlUrl(link.url) || isMarkdownIrMenuIdUrl(link.url);
+    }
+}
+
 /**
  * @param {OdooSpreadsheetModel} model
  * @returns {Promise<object>}
@@ -87,18 +94,21 @@ export async function freezeOdooData(model) {
     const data = model.exportData();
     for (const sheet of Object.values(data.sheets)) {
         for (const [xc, cell] of Object.entries(sheet.cells)) {
+            const { col, row } = toCartesian(xc);
+            const sheetId = sheet.id;
+            const evaluatedCell = model.getters.getEvaluatedCell({
+                sheetId,
+                col,
+                row,
+            });
             if (containsOdooFunction(cell.content)) {
-                const { col, row } = toCartesian(xc);
-                const sheetId = sheet.id;
-                const evaluatedCell = model.getters.getEvaluatedCell({
-                    sheetId,
-                    col,
-                    row,
-                });
                 cell.content = evaluatedCell.value.toString();
                 if (evaluatedCell.format) {
                     cell.format = getItemId(evaluatedCell.format, data.formats);
                 }
+            }
+            if (containsLinkToOdoo(evaluatedCell.link)) {
+                cell.content = evaluatedCell.link.label;
             }
         }
         for (const figure of sheet.figures) {
