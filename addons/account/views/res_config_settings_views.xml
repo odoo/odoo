@@ -250,7 +250,7 @@
 
                         <t groups="account.group_account_user">
                             <block title="Default Accounts" id="default_accounts">
-                                <setting invisible="not group_multi_currency" string="Post Exchange difference entries in:">
+                                <setting invisible="not group_multi_currency" string="Exchange difference entries:">
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="currency_exchange_journal_id" class="col-lg-4 o_light_label" string="Journal" />
@@ -266,7 +266,7 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting id="post_bank_transactions_and_payments_setting" string="Post bank transactions and payments in:">
+                                <setting id="post_bank_transactions_and_payments_setting" string="Bank transactions and payments:">
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
@@ -286,20 +286,20 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting string="Separate discount accounts on invoices"
+                                <setting string="Invoice line discounts:"
                                          title="If empty, the discount will be discounted directly on the income/expense account. If set, discount on invoices will be realized in separate accounts.">
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_discount_expense_allocation_id" class="col-lg-5 o_light_label" string="Customer Invoices"/>
-                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account"/>
+                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account as product"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="account_discount_income_allocation_id" class="col-lg-5 o_light_label" string="Vendor Bills"/>
-                                            <field name="account_discount_income_allocation_id" placeholder="Same Account"/>
+                                            <field name="account_discount_income_allocation_id" placeholder="Same Account as product"/>
                                         </div>
                                     </div>
                                 </setting>
-                                <setting string="Post discounts in:">
+                                <setting string="Early payment discounts:">
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>
