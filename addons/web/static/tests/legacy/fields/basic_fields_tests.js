@@ -3238,17 +3238,13 @@ QUnit.module('Legacy basic_fields', {
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'incorrect_base64_value';
 
-        testUtils.mock.patch(basicFields.FieldBinaryImage, {
-            // Delay the _render function: this will ensure that the error triggered
-            // by the incorrect base64 value is dispatched before the src is replaced
-            // (see test_utils_mock.removeSrcAttribute), since that function is called
-            // when the element is inserted into the DOM.
-            async _render() {
-                const result = this._super.apply(this, arguments);
-                await concurrency.delay(100);
-                return result;
-            },
-        });
+        // In this tests, we throw an "error" event on the img to simulate that it is incorrect.
+        // However, QUnit will catch this error and make the test fail, se we have to prevent it
+        // from doing so
+        const onError = QUnit.onError;
+        QUnit.onError = (err) => {
+            return true;
+        };
 
         const form = await createView({
             View: FormView,
@@ -3261,12 +3257,31 @@ QUnit.module('Legacy basic_fields', {
             res_id: 1,
         });
 
+        assert.strictEqual(form.$('div[name="document"] img').attr("data-src"),
+            "data:image/png;base64,incorrect_base64_value",
+            "the image should have the correct src"
+        );
+
+        // As GET requests can't occur in tests, we must generate an error
+        // on the img element to check whether the data-src is replaced with
+        // a placeholder, here knowing that the GET request would fail
+        form.$('div[name="document"] img').trigger("error");
+        await nextTick();
+
         assert.hasClass(form.$('div[name="document"]'),'o_field_image',
             "the widget should have the correct class");
         assert.containsOnce(form, 'div[name="document"] > img',
             "the widget should contain an image");
+<<<<<<< HEAD
         assert.strictEqual(form.$('div[name="document"] > img')[0].dataset.src,
             `/web/static/img/placeholder.png`, "the image should have the correct src");
+||||||| parent of 161d30c115f9 (temp)
+=======
+        assert.strictEqual(form.$('div[name="document"] img').attr("src"),
+            "/web/static/img/placeholder.png",
+            "the image should have the correct src"
+        );
+>>>>>>> 161d30c115f9 (temp)
         assert.hasClass(form.$('div[name="document"] > img'), 'img-fluid',
             "the image should have the correct class");
         assert.hasAttrValue(form.$('div[name="document"] > img'), 'width', "90",
@@ -3274,9 +3289,15 @@ QUnit.module('Legacy basic_fields', {
         assert.strictEqual(form.$('div[name="document"] > img').css('max-width'), "90px",
             "the image should correctly set its attributes");
 
+<<<<<<< HEAD
 
+||||||| parent of 161d30c115f9 (temp)
+        assert.verifySteps(['call placeholder route']);
+
+=======
+>>>>>>> 161d30c115f9 (temp)
         form.destroy();
-        testUtils.mock.unpatch(basicFields.FieldBinaryImage);
+        QUnit.onError = onError;
     });
 
     QUnit.test('image: option accepted_file_extensions', async function (assert) {

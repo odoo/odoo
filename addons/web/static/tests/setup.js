@@ -3,7 +3,13 @@
 import { _t } from "web.core";
 import LegacyBus from "web.Bus";
 import session from "web.session";
+<<<<<<< HEAD
 import { assets, templates } from "@web/core/assets";
+||||||| parent of 161d30c115f9 (temp)
+import { _t } from "web.core";
+=======
+import { _t, qweb } from "web.core";
+>>>>>>> 161d30c115f9 (temp)
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
@@ -390,6 +396,62 @@ export async function setupTests() {
         patchOwlApp();
     });
 
+<<<<<<< HEAD
+||||||| parent of 161d30c115f9 (temp)
+    const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;
+    // TODO replace by `processTemplates` when the legacy system is removed
+    let templates = await loadFile(templatesUrl);
+    // as we currently have two qweb engines (owl and legacy), owl templates are
+    // flagged with attribute `owl="1"`. The following lines removes the 'owl'
+    // attribute from the templates, so that it doesn't appear in the DOM. For now,
+    // we make the assumption that 'templates' only contains owl templates. We
+    // might need at some point to handle the case where we have both owl and
+    // legacy templates. At the end, we'll get rid of all this.
+    const doc = new DOMParser().parseFromString(templates, "text/xml");
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll programatically and the time
+    // we assert for the scroll position. The src attribute is removed
+    // as well to make sure images won't trigger a GET request on the
+    // server.
+    removeUnwantedAttrsFromTemplates(doc, ['alt', 'src']);
+    const owlTemplates = [];
+    for (let child of doc.querySelectorAll("templates > [owl]")) {
+        child.removeAttribute("owl");
+        owlTemplates.push(child.outerHTML);
+    }
+    templates = `<templates> ${owlTemplates.join("\n")} </templates>`;
+    window.__ODOO_TEMPLATES__ = templates;
+    session.owlTemplates = templates;
+=======
+    const templatesUrl = `/web/webclient/qweb/${new Date().getTime()}?bundle=web.assets_qweb`;
+    // TODO replace by `processTemplates` when the legacy system is removed
+    let templates = await loadFile(templatesUrl);
+    // as we currently have two qweb engines (owl and legacy), owl templates are
+    // flagged with attribute `owl="1"`. The following lines removes the 'owl'
+    // attribute from the templates, so that it doesn't appear in the DOM. For now,
+    // we make the assumption that 'templates' only contains owl templates. We
+    // might need at some point to handle the case where we have both owl and
+    // legacy templates. At the end, we'll get rid of all this.
+    const doc = new DOMParser().parseFromString(templates, "text/xml");
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll programatically and the time
+    // we assert for the scroll position. The src attribute is removed
+    // as well to make sure images won't trigger a GET request on the
+    // server.
+    removeUnwantedAttrsFromTemplates(doc, ['alt', 'src']);
+    // at this point, templates might already be loaded in qweb, so remove unwanted attrs there
+    for (const template of Object.values(qweb.templates)) {
+        removeUnwantedAttrsFromTemplates(template, ["alt", "src"]);
+    }
+    const owlTemplates = [];
+    for (let child of doc.querySelectorAll("templates > [owl]")) {
+        child.removeAttribute("owl");
+        owlTemplates.push(child.outerHTML);
+    }
+    templates = `<templates> ${owlTemplates.join("\n")} </templates>`;
+    window.__ODOO_TEMPLATES__ = templates;
+    session.owlTemplates = templates;
+>>>>>>> 161d30c115f9 (temp)
     await Promise.all([whenReady(), legacyProm]);
 
     // make sure images do not trigger a GET on the server

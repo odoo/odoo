@@ -303,6 +303,91 @@ function intercept(widget, eventName, fn, propagate) {
 }
 
 /**
+<<<<<<< HEAD
+||||||| parent of 161d30c115f9 (temp)
+ * Removes the src attribute on images and iframes to prevent not found errors,
+ * and optionally triggers an rpc with the src url as route on a widget.
+ * This method is critical and must be fastest (=> no jQuery, no underscore)
+ *
+ * @param {HTMLElement} el
+ * @param {[function]} rpc
+ */
+function removeSrcAttribute(el, rpc) {
+    var nodes;
+    if (el.nodeName === "#comment") {
+        return;
+    }
+    el = el.nodeType === 8 ? el.nextSibling : el;
+    if (el.nodeName === 'IMG' || el.nodeName === 'IFRAME') {
+        nodes = [el];
+    } else {
+        nodes = Array.prototype.slice.call(el.getElementsByTagName('img'))
+            .concat(Array.prototype.slice.call(el.getElementsByTagName('iframe')));
+    }
+    var node;
+    while (node = nodes.pop()) {
+        var src = node.attributes.src && node.attributes.src.value;
+        if (src && src !== 'about:blank') {
+            node.setAttribute('data-src', src);
+            if (node.nodeName === 'IMG') {
+                node.attributes.removeNamedItem('src');
+            } else {
+                node.setAttribute('src', 'about:blank');
+            }
+            if (rpc) {
+                rpc(src, []);
+            }
+            $(node).trigger('load');
+        }
+    }
+}
+
+/**
+=======
+ * Removes the src attribute on images and iframes to prevent not found errors,
+ * and optionally triggers an rpc with the src url as route on a widget.
+ * This method is critical and must be fastest (=> no jQuery, no underscore)
+ *
+ * @param {HTMLElement} el
+ * @param {[function]} rpc
+ */
+function removeSrcAttribute(el, rpc) {
+    var nodes;
+    if (el.nodeName === "#comment") {
+        return;
+    }
+    el = el.nodeType === 8 ? el.nextSibling : el;
+    if (el.nodeName === 'IMG' || el.nodeName === 'IFRAME') {
+        nodes = [el];
+    } else {
+        nodes = Array.prototype.slice.call(el.getElementsByTagName('img'))
+            .concat(Array.prototype.slice.call(el.getElementsByTagName('iframe')));
+    }
+    var node;
+    while (node = nodes.pop()) {
+        const dataSrc = node.dataset.src;
+        if (dataSrc && dataSrc !== "about:blank" && rpc) {
+            rpc(dataSrc, []);
+            $(node).trigger("load");
+        }
+        var src = node.attributes.src && node.attributes.src.value;
+        if (src && src !== 'about:blank') {
+            node.setAttribute('data-src', src);
+            if (node.nodeName === 'IMG') {
+                node.attributes.removeNamedItem('src');
+            } else {
+                node.setAttribute('src', 'about:blank');
+            }
+            if (rpc) {
+                rpc(src, []);
+            }
+            $(node).trigger('load');
+        }
+    }
+}
+
+/**
+>>>>>>> 161d30c115f9 (temp)
  * Add a mock environment to test Owl Components. This function generates a test
  * env and sets it on the given Component. It also has several side effects,
  * like patching the global session or config objects. It returns a cleanup
