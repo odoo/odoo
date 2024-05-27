@@ -288,7 +288,12 @@ class Meeting(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            event.user_can_edit = self.env.user in event.partner_ids.user_ids + event.user_id
+            # By default, only current attendees and the organizer can edit the event.
+            editor_candidates = event.partner_ids.user_ids + event.user_id
+            # Right before saving the event, old partners must be able to save changes.
+            if event._origin:
+                editor_candidates += event._origin.partner_ids.user_ids
+            event.user_can_edit = self.env.user in editor_candidates
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):
