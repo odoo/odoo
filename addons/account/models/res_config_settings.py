@@ -181,7 +181,7 @@ class ResConfigSettings(models.TransientModel):
 
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Cash Discount Loss',
+        string='Early Discount Loss',
         help='Account for the difference amount after the expense discount has been granted',
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
@@ -190,7 +190,7 @@ class ResConfigSettings(models.TransientModel):
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Cash Discount Gain',
+        string='Early Discount Gain',
         help='Account for the difference amount after the income discount has been granted',
         readonly=False,
         check_company=True,
