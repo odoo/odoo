@@ -436,7 +436,6 @@ export class SearchBar extends Component {
             isDebugMode: this.env.searchModel.isDebugMode,
         });
         
-        /*
         const engine = new MacroEngine({ defaultCheckDelay: 0 });
         engine.activate({
             name: "prefill input",
@@ -452,7 +451,6 @@ export class SearchBar extends Component {
                 }
             ]
         });
-        */
         
     }
 

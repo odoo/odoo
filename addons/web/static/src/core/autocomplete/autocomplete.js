@@ -54,8 +54,6 @@ export class AutoComplete extends Component {
         this.inEdition = false;
         this.timeout = 250;
 
-        this.inputValuePrefill = this.env.getInputPrefill();
-
         this.state = useState({
             navigationRev: 0,
             optionsRev: 0,
@@ -112,10 +110,6 @@ export class AutoComplete extends Component {
             this.open(false);
         }
 
-        if (this.inputValuePrefill) {
-            useAutofocus({ refName: "input" });
-            this.onInput();
-        }
     }
 
     get targetDropdown() {

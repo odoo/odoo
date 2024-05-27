@@ -17,6 +17,9 @@ import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_s
 import { useService } from "@web/core/utils/hooks";
 import { useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 import { getDefaultCondition } from "./utils";
+import { deepCopy } from "@web/core/utils/objects";
+import { MacroEngine } from "../macro";
+
 
 const ARCHIVED_CONDITION = condition("active", "in", [true, false]);
 const ARCHIVED_DOMAIN = `[("active", "in", [True, False])]`;
@@ -51,22 +54,7 @@ export class DomainSelector extends Component {
         this.includeArchived = false;
 
         onWillStart(() => this.onPropsUpdated(this.props));
-        onWillUpdateProps((np) => this.onPropsUpdated(np));
-
-        const prefill = (() => {
-            let prefillHasBeenUsed = false;
-            return () => {
-                if (!prefillHasBeenUsed) {
-                    prefillHasBeenUsed = true;
-                    return this.props.prefill;
-                }
-                return undefined;
-            };
-        })();
-
-        useChildSubEnv({
-            getInputPrefill: prefill,
-        })
+        onWillUpdateProps((np) => this.onPropsUpdated(np));         
     }
 
     async onPropsUpdated(p) {
@@ -170,6 +158,36 @@ export class DomainSelector extends Component {
         this.props.update(domain, true);
     }
     update(tree) {
+        const tmpTree = deepCopy(tree);
+        for (let i = 0 ; i < tmpTree.children.length ; i++) {
+            let currentRowValue;
+            if (i === 0) {
+                currentRowValue = this.tree.value;
+            }
+            else {
+                currentRowValue = this.tree.children[i].value;
+            }
+            if (currentRowValue && !tree.children[i].value) {
+                if (typeof currentRowValue === "string") {
+                    const engine = new MacroEngine({ defaultCheckDelay: 0 });
+                    engine.activate({
+                        name: "prefill input",
+                        steps: [
+                            {
+                                trigger: ".o_tree_editor_value input",
+                                action: "click"
+                            },
+                            {
+                                trigger: ".o_tree_editor_value input",
+                                action: "text",
+                                value: currentRowValue
+                            }
+                        ]
+                    });
+                }
+            }
+        }
+
         const archiveDomain = this.includeArchived ? ARCHIVED_DOMAIN : `[]`;
         const domain = tree
             ? Domain.and([domainFromTree(tree), archiveDomain]).toString()
