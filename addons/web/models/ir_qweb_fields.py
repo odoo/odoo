@@ -7,7 +7,6 @@ from werkzeug.urls import url_quote
 from markupsafe import Markup
 
 from odoo import api, models, fields
-from odoo.tools import pycompat
 from odoo.tools import html_escape as escape
 
 
@@ -106,9 +105,9 @@ class Image(models.AbstractModel):
         for name, value in atts.items():
             if value:
                 img.append(' ')
-                img.append(escape(pycompat.to_text(name)))
+                img.append(escape(name))
                 img.append('="')
-                img.append(escape(pycompat.to_text(value)))
+                img.append(escape(value))
                 img.append('"')
         img.append('/>')
 
