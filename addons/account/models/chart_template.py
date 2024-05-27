@@ -165,7 +165,11 @@ class AccountChartTemplate(models.AbstractModel):
         if not self.env.is_system():
             raise AccessError(_("Only administrators can install chart templates"))
 
-        module_name = self._get_chart_template_mapping()[template_code].get('module')
+        chart_template_mapping = self._get_chart_template_mapping()[template_code]
+        if not company.country_id:
+            company.country_id = chart_template_mapping.get('country_id')
+
+        module_name = chart_template_mapping.get('module')
         module = self.env['ir.module.module'].search([('name', '=', module_name), ('state', '=', 'uninstalled')])
         if module:
             module.button_immediate_install()
