@@ -58,6 +58,7 @@ export class ViewButton extends Component {
         tag: "button",
         className: "",
         clickParams: {},
+        attrs: {},
     };
 
     setup() {
@@ -74,10 +75,10 @@ export class ViewButton extends Component {
                 string: this.props.string,
                 help: this.clickParams.help,
                 context: this.clickParams.context,
-                invisible: this.props.attrs?.invisible,
-                column_invisible: this.props.attrs?.column_invisible,
-                readonly: this.props.attrs?.readonly,
-                required: this.props.attrs?.required,
+                invisible: this.props.attrs.invisible,
+                column_invisible: this.props.attrs.column_invisible,
+                readonly: this.props.attrs.readonly,
+                required: this.props.attrs.required,
                 special: this.clickParams.special,
                 type: this.clickParams.type,
                 name: this.clickParams.name,
