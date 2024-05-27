@@ -19,6 +19,7 @@ function compileChatter(node, params) {
     });
     const chatterContainerHookXml = createElement("div");
     chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter");
+    setAttributes(chatterContainerHookXml, { "t-if": "!__comp__.env.inDialog" });
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
@@ -48,7 +49,6 @@ registry.category("form_compilers").add("attachment_preview_compiler", {
 
 patch(FormCompiler.prototype, {
     compile(node, params) {
-        // TODO no chatter if in dialog?
         const res = super.compile(node, params);
         const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
         if (!chatterContainerHookXml) {
