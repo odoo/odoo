@@ -149,7 +149,7 @@
                                         <!-- <button class="btn btn-outline-primary btn-lg px-4 lh-m" name="ver_respuestas" string="Detalle" type="object"/> -->
                                     </tree>
                                 </field>
-                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
+                                <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]" invisible="tipo != 'CLIMA'" >
                                     <tree create="true" delete="true">
                                     <field name="categoria" string="Categoría"/>
                                     <field name="pregunta_texto"/>
