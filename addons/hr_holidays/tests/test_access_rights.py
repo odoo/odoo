@@ -9,6 +9,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import mute_logger
 
+from freezegun import freeze_time
 
 @tests.tagged('access_rights', 'post_install', '-at_install')
 class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
@@ -752,11 +753,12 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
             'holiday_status_id': self.leave_type.id,
             'state': 'confirm',
         }
-        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=-4), 1, values)
-        other_leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(hours=-4), 1, values)
-        other_leave.with_user(self.user_employee.id).unlink()
-        with self.assertRaises(UserError), self.cr.savepoint():
-            leave.with_user(self.user_employee.id).unlink()
+        with freeze_time('2024-5-23 13:00:00'):
+            other_leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(hours=-4), 1, values)
+            other_leave.with_user(self.user_employee.id).unlink()
+            leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=-4), 1, values)
+            with self.assertRaises(UserError), self.cr.savepoint():
+                leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_validate_by_user(self):
         """ A simple user cannot delete its leave in validate state"""
