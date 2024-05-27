@@ -1,5 +1,20 @@
 @media print {
-
+    .portada {
+        display: flex !important;
+        position: relative; /* Añadir posición relativa */
+  
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 10px;
+        background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
+        min-height: 90vh; /* Para que ocupe toda la altura de la página */
+        width: 100%; /* Para que ocupe todo el ancho de la página */
+        font-family: Arial, sans-serif;
+        padding: 0; /* Eliminar cualquier relleno */
+        margin: 0; /* Eliminar cualquier margen */
+    }
     .page-break {
         page-break-after: always;
         break-after: always;
@@ -281,19 +296,7 @@ body {
     margin: 0; /* Elimina los márgenes del cuerpo del documento */
 }
 .portada {
-    position: relative; /* Añadir posición relativa */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-radius: 10px;
-    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-    min-height: 90vh; /* Para que ocupe toda la altura de la página */
-    width: 100%; /* Para que ocupe todo el ancho de la página */
-    font-family: Arial, sans-serif;
-    padding: 0; /* Eliminar cualquier relleno */
-    margin: 0; /* Eliminar cualquier margen */
+    display: none;
 }
 
 .wave-top, .wave-bottom {
