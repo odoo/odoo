@@ -142,6 +142,7 @@ class Registry(Mapping):
         self._ordinary_tables = None
         self._constraint_queue = deque()
         self.__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in _REGISTRY_CACHES.items()}
+        self.__caches_lock = threading.RLock()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()

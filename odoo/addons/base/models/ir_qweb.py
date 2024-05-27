@@ -386,6 +386,7 @@ from itertools import count, chain
 from lxml import etree
 from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
+from threading import RLock
 
 from odoo import api, models, tools
 from odoo.modules import registry
@@ -2679,6 +2680,7 @@ def render(template_name, values, load, **options):
         db_name = None
         _Registry__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in registry._REGISTRY_CACHES.items()}
         _Registry__caches_groups = {}
+        _Registry__caches_lock = RLock()
         for cache_name, cache in _Registry__caches.items():
             _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)
 

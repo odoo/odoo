@@ -5,6 +5,7 @@
 from collections import Counter, defaultdict
 from decorator import decorator
 from inspect import signature, Parameter
+import contextlib
 import logging
 import warnings
 
@@ -100,9 +101,14 @@ class ormcache(object):
             counter.hit += 1
             return r
         except KeyError:
-            counter.miss += 1
-            value = d[key] = self.method(*args, **kwargs)
-            return value
+            with args[0].pool._Registry__caches_lock:
+                with contextlib.suppress(KeyError):
+                    r = d[key]
+                    counter.hit += 1
+                    return r
+                counter.miss += 1
+                value = d[key] = self.method(*args, **kwargs)
+                return value
         except TypeError:
             _logger.warning("cache lookup error on %r", key, exc_info=True)
             counter.err += 1
