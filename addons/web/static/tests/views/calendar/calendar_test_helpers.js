@@ -1,5 +1,5 @@
-import { queryAll, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 
 import { createElement } from "@web/core/utils/xml";
@@ -231,23 +231,7 @@ export const FAKE_MODEL = {
  * @param {HTMLElement} element
  */
 function instantScrollTo(element) {
-    element.scrollIntoView({ behavior: "instant" });
-}
-
-/**
- * @returns {HTMLElement}
- */
-export function findPickedDate() {
-    return queryFirst(`.o_datetime_picker .o_selected`);
-}
-
-export function expandCalendarView() {
-    // Expends Calendar view and FC too
-    let tmpElement = queryFirst(`.fc`);
-    do {
-        tmpElement = tmpElement.parentElement;
-        tmpElement.classList.add("h-100");
-    } while (!tmpElement.classList.contains("o_view_controller"));
+    element.scrollIntoView({ behavior: "instant", block: "center" });
 }
 
 /**
@@ -287,7 +271,7 @@ export function findDateColumn(date) {
  * @returns {HTMLElement}
  */
 export function findTimeRow(time) {
-    return queryFirst(`.fc-timegrid-slot[data-time="${time}"]`);
+    return queryFirst(`.fc-timegrid-slot[data-time="${time}"]:eq(1)`);
 }
 
 /**
@@ -324,8 +308,7 @@ export function findFilterPanelSectionFilter(sectionName) {
 export async function pickDate(date) {
     const day = date.split("-")[2];
     const iDay = parseInt(day, 10) - 1;
-    const cell = queryFirst(`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range)`)[iDay];
-    instantScrollTo(cell);
+    const cell = queryFirst`.o_datetime_picker .o_date_item_cell:not(.o_out_of_range):eq(${iDay})`;
     await contains(cell).click();
 }
 
@@ -337,6 +320,7 @@ export async function clickAllDaySlot(date) {
     const slot = findAllDaySlot(date);
     instantScrollTo(slot);
     await contains(slot).click();
+    await animationFrame();
 }
 
 /**
@@ -347,6 +331,7 @@ export async function clickDate(date) {
     const cell = findDateCell(date);
     instantScrollTo(cell);
     await contains(cell).click();
+    await animationFrame();
 }
 
 /**
@@ -357,6 +342,7 @@ export async function clickEvent(eventId) {
     const event = findEvent(eventId);
     instantScrollTo(event);
     await contains(event).click();
+    await runAllTimers(); // wait for the popover to open (debounced)
 }
 
 /**
@@ -368,18 +354,30 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const [startDate, startTime] = startDateTime.split(" ");
     const [endDate, endTime] = endDateTime.split(" ");
 
-    const columns = queryAll(`.fc-col-header-cell.fc-day`);
-    const startColumnIndex = columns.indexOf(
-        queryFirst(`.fc-col-header-cell.fc-day[data-date="${startDate}"]`)
+    // Try to display both rows on the screen before drag'n'drop.
+    const startHour = Number(startTime.slice(0, 2));
+    const endHour = Number(endTime.slice(0, 2));
+    const midHour = Math.floor((startHour + endHour) / 2);
+    const midTime = `${String(midHour).padStart(2, "0")}:00:00`;
+    instantScrollTo(
+        queryFirst(`.fc-timegrid-slot[data-time="${midTime}"]:eq(1)`, { visible: false })
     );
-    const endColumnIndex = columns.indexOf(
-        queryFirst(`.fc-col-header-cell.fc-day[data-date="${endDate}"]`)
-    );
-    const startRow = queryAll(`.fc-timegrid-slot[data-time="${startTime}"]`)[1 + startColumnIndex];
-    const endRow = queryAll(`.fc-timegrid-slot[data-time="${endTime}"]`)[1 + endColumnIndex];
 
-    instantScrollTo(startRow);
-    await contains(startRow).dragAndDrop(endRow, { position: "top-top" });
+    const startColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${startDate}"]`);
+    const startRow = queryFirst(`.fc-timegrid-slot[data-time="${startTime}"]:eq(1)`);
+    const endColumnRect = queryRect(`.fc-col-header-cell.fc-day[data-date="${endDate}"]`);
+    const endRow = queryFirst(`.fc-timegrid-slot[data-time="${endTime}"]:eq(1)`);
+
+    const { moveTo, drop } = drag(startRow, {
+        relative: true,
+        position: { y: 1, x: startColumnRect.left },
+    });
+    moveTo(endRow, {
+        relative: true,
+        position: { y: -1, x: endColumnRect.left },
+    });
+    drop();
+
     await animationFrame();
 }
 
@@ -393,7 +391,10 @@ export async function selectDateRange(startDate, endDate) {
     const endCell = findDateCell(endDate);
 
     instantScrollTo(startCell);
-    await contains(startCell).dragAndDrop(endCell);
+    const { moveTo, drop } = drag(startCell);
+    moveTo(endCell);
+    drop();
+
     await animationFrame();
 }
 
@@ -407,131 +408,94 @@ export async function selectAllDayRange(startDate, endDate) {
     const end = findAllDaySlot(endDate);
 
     instantScrollTo(start);
-    await contains(start).dragAndDrop(end);
+    const { moveTo, drop } = drag(start);
+    moveTo(end);
+    drop();
+
+    await animationFrame();
 }
 
 /**
- * @todo
- *
  * @param {number} eventId
  * @param {string} date
  * @param {{ disableDrop: boolean }} [options]
  * @returns {Promise<void>}
  */
 export async function moveEventToDate(eventId, date, options = {}) {
-    // const event = findEvent(target, eventId);
-    // const cell = findDateCell(target, date);
-    // await scrollTo(event);
-    // await triggerEventForCalendar(event, "mousedown");
-    // await scrollTo(cell);
-    // await triggerEventForCalendar(cell, "mousemove");
-    // if (!options.disableDrop) {
-    //     await triggerEventForCalendar(cell, "mouseup");
-    // }
-    // await animationFrame();
+    const event = findEvent(eventId);
+    const cell = findDateCell(date);
+
+    instantScrollTo(event);
+    const { moveTo, drop } = drag(event);
+    moveTo(cell);
+
+    if (!options.disableDrop) {
+        drop();
+    }
+
+    await animationFrame();
+    await animationFrame();
 }
 
 /**
- * @todo
- *
  * @param {number} eventId
  * @param {string} dateTime
  * @returns {Promise<void>}
  */
 export async function moveEventToTime(eventId, dateTime) {
-    // const event = findEvent(target, eventId);
-    // const [date, time] = dateTime.split(" ");
-    // const col = findDateCol(target, date);
-    // const row = findTimeRow(target, time);
-    // // Find event position
-    // await scrollTo(event);
-    // const eventRect = event.getBoundingClientRect();
-    // const eventPos = {
-    //     x: eventRect.x + eventRect.width / 2,
-    //     y: eventRect.y,
-    // };
-    // await triggerEventForCalendar(event, "mousedown", eventPos);
-    // // Find target position
-    // await scrollTo(row, false);
-    // const colRect = col.getBoundingClientRect();
-    // const rowRect = row.getBoundingClientRect();
-    // const toPos = {
-    //     x: colRect.x + colRect.width / 2,
-    //     y: rowRect.y - 1,
-    // };
-    // await triggerEventForCalendar(row, "mousemove", toPos);
-    // await triggerEventForCalendar(row, "mouseup", toPos);
-    // await animationFrame();
+    const event = findEvent(eventId);
+    const [date, time] = dateTime.split(" ");
+    const columnRect = queryRect(findDateColumn(date));
+    const row = findTimeRow(time);
+
+    instantScrollTo(event);
+    const { moveTo, drop } = drag(event, { relative: true, position: { y: 0, x: 0 } });
+    moveTo(row, { relative: true, position: { y: 0, x: columnRect.x } });
+    drop();
+
+    await animationFrame();
 }
 
 /**
- * @todo
- *
  * @param {number} eventId
  * @param {string} date
  * @returns {Promise<void>}
  */
 export async function moveEventToAllDaySlot(eventId, date) {
-    // const event = findEvent(target, eventId);
-    // const slot = findAllDaySlot(target, date);
-    // // Find event position
-    // await scrollTo(event);
-    // const eventRect = event.getBoundingClientRect();
-    // const eventPos = {
-    //     x: eventRect.x + eventRect.width / 2,
-    //     y: eventRect.y,
-    // };
-    // await triggerEventForCalendar(event, "mousedown", eventPos);
-    // // Find target position
-    // await scrollTo(slot);
-    // const slotRect = slot.getBoundingClientRect();
-    // const toPos = {
-    //     x: slotRect.x + slotRect.width / 2,
-    //     y: slotRect.y - 1,
-    // };
-    // await triggerEventForCalendar(slot, "mousemove", toPos);
-    // await triggerEventForCalendar(slot, "mouseup", toPos);
-    // await animationFrame();
+    const event = findEvent(eventId);
+    const slot = findAllDaySlot(date);
+
+    instantScrollTo(event);
+    const { moveTo, drop } = drag(event);
+    moveTo(slot);
+    drop();
+
+    await animationFrame();
 }
 
 /**
- * @todo
- *
  * @param {number} eventId
  * @param {string} dateTime
  * @returns {Promise<void>}
  */
 export async function resizeEventToTime(eventId, dateTime) {
-    // const event = findEvent(target, eventId);
-    // const [date, time] = dateTime.split(" ");
-    // const col = findDateCol(target, date);
-    // const row = findTimeRow(target, time);
-    // // Find event position
-    // await scrollTo(event);
-    // await triggerEventForCalendar(event, "mouseover");
-    // // Find event resizer
-    // const resizer = event.querySelector(".fc-event-resizer-end");
-    // resizer.style.display = "block";
-    // resizer.style.width = "100%";
-    // resizer.style.height = "1em";
-    // resizer.style.bottom = "0";
-    // const resizerRect = resizer.getBoundingClientRect();
-    // const resizerPos = {
-    //     x: resizerRect.x + resizerRect.width / 2,
-    //     y: resizerRect.y + resizerRect.height / 2,
-    // };
-    // await triggerEventForCalendar(resizer, "mousedown", resizerPos);
-    // // Find target position
-    // await scrollTo(row, false);
-    // const colRect = col.getBoundingClientRect();
-    // const rowRect = row.getBoundingClientRect();
-    // const toPos = {
-    //     x: colRect.x + colRect.width / 2,
-    //     y: rowRect.y - 1,
-    // };
-    // await triggerEventForCalendar(row, "mousemove", toPos);
-    // await triggerEventForCalendar(row, "mouseup", toPos);
-    // await animationFrame();
+    const event = findEvent(eventId);
+    instantScrollTo(event);
+    hover(queryFirst(`.fc-event-main`, { root: event }));
+    await animationFrame();
+
+    const resizer = queryFirst(`.fc-event-resizer-end`, { root: event });
+    Object.assign(resizer.style, { display: "block", height: "1px", bottom: "0" });
+    const [date, time] = dateTime.split(" ");
+    const columnRect = queryRect(findDateColumn(date));
+    const row = findTimeRow(time);
+
+    const { moveTo, drop } = drag(resizer, { relative: true, position: { y: 0, x: 0 } });
+    moveTo(row, { relative: true, position: { y: -1, x: columnRect.x } });
+    drop();
+
+    await animationFrame();
+    await animationFrame();
 }
 
 /**
