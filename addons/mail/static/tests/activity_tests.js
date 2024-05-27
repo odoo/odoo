@@ -579,7 +579,7 @@ QUnit.test('Activity view: many2one_avatar_user widget in activity view', async 
 
     await legacyExtraNextTick();
     assert.containsN(webClient, '.o_m2o_avatar', 2);
-    assert.containsOnce(webClient, 'tr[data-res-id=13] .o_m2o_avatar > img[src="/web/image/res.users/1/avatar_128"]',
+    assert.containsOnce(webClient, 'tr[data-res-id=13] .o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128"]',
         "should have m2o avatar image");
     assert.containsNone(webClient, '.o_m2o_avatar > span',
         "should not have text on many2one_avatar_user if onlyImage node option is passed");

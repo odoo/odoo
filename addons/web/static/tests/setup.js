@@ -2,7 +2,7 @@
 
 import LegacyBus from "web.Bus";
 import session from "web.session";
-import { _t } from "web.core";
+import { _t, qweb } from "web.core";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { legacyProm } from "web.test_legacy";
@@ -241,6 +241,10 @@ export async function setupTests() {
     // as well to make sure images won't trigger a GET request on the
     // server.
     removeUnwantedAttrsFromTemplates(doc, ['alt', 'src']);
+    // at this point, templates might already be loaded in qweb, so remove unwanted attrs there
+    for (const template of Object.values(qweb.templates)) {
+        removeUnwantedAttrsFromTemplates(template, ["alt", "src"]);
+    }
     const owlTemplates = [];
     for (let child of doc.querySelectorAll("templates > [owl]")) {
         child.removeAttribute("owl");
