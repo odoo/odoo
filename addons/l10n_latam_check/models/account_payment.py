@@ -112,6 +112,10 @@ class AccountPayment(models.Model):
 
     def _l10n_latam_check_split_move(self):
         for payment in self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound'):
+            if len(payment.l10n_latam_new_check_ids) == 1:
+                liquidity_line, counterpart_lines, dummy = payment._seek_for_lines()
+                payment.l10n_latam_new_check_ids.split_move_line_id = liquidity_line.id
+                continue
             move_id = self.env['account.move'].create({
                 'journal_id': payment.journal_id.id,
             })
@@ -127,7 +131,7 @@ class AccountPayment(models.Model):
                 )
                 # Checks liquidity line
                 move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
-                    'name': check.name,
+                    'name': _('Check %s - ') % check.name + liquidity_line.name,
                     'date_maturity': check.payment_date,
                     'amount_currency': liquidity_amount_currency,
                     'currency_id': check.currency_id.id,
@@ -155,9 +159,12 @@ class AccountPayment(models.Model):
             (inverse_liquidity_line + liquidity_line).reconcile()
 
     def _l10n_latam_check_unlink_split_move(self):
-        split_move_ids = self.mapped('l10n_latam_new_check_ids.split_move_line_id.move_id')
-        split_move_ids.button_draft()
-        split_move_ids.unlink()
+        self.ensure_one()
+        for check in self.l10n_latam_new_check_ids:
+            if self.move_id == check.split_move_line_id.move_id:
+                continue
+            check.split_move_line_id.move_id.button_draft()
+            check.split_move_line_id.move_id.unlink()
 
     @api.depends(
         'payment_method_line_id', 'state', 'date', 'is_internal_transfer', 'amount', 'currency_id', 'company_id',
@@ -207,7 +214,17 @@ class AccountPayment(models.Model):
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         res = super()._get_trigger_fields_to_synchronize()
-        return res + ('l10n_latam_check_ids',)
+        return res + ('l10n_latam_new_check_ids',)
+
+    def _prepare_move_line_default_vals(self, write_off_line_vals=None, force_balance=None):
+        """ Add check name and operation on liquidity line """
+        res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance)
+        if self.filtered(lambda x: x.payment_method_code == 'own_checks' and x.payment_type == 'outbound' and len(x.l10n_latam_new_check_ids) == 1):
+            res[0].update({
+                'name': _('Check %s - ') % self.l10n_latam_new_check_ids.name + ''.join([item[1] for item in self._get_aml_default_display_name_list()]),
+                'date_maturity': self.l10n_latam_new_check_ids.payment_date,
+            })
+        return res
 
     def _create_paired_internal_transfer_payment(self):
         """
