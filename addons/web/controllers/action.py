@@ -41,7 +41,6 @@ class Action(Controller):
         base_action = Actions.browse([action_id]).sudo().read(['type'])
         if not base_action:
             raise MissingActionError(_("The action %r does not exist.", action_id))
-
         action_type = base_action[0]['type']
         if action_type == 'ir.actions.report':
             request.update_context(bin_size=True)
@@ -52,6 +51,9 @@ class Action(Controller):
             if parent_path:
                 result['path'] = parent_path
             return clean_action(result, env=action.env) if result else {'type': 'ir.actions.act_window_close'}
+        if action_type == 'ir.actions.act_window':
+            result = request.env[action_type].sudo().browse([action_id])._get_action_dict()
+            return clean_action(result, env=request.env) if result else False
         result = request.env[action_type].sudo().browse([action_id]).read()
         return clean_action(result[0], env=request.env) if result else False
 

@@ -228,6 +228,11 @@ class IrActions(models.Model):
         """
         self.ensure_one()
         readable_fields = self._get_readable_fields()
+        if (self.sudo().type == "ir.actions.act_window"):
+            result = self.sudo().read()[0]
+            embedded_actions = self.env["ir.embedded.actions"].browse(result["embedded_action_ids"]).read()
+            result.update({"embedded_action_ids": embedded_actions})
+            return result
         return {
             field: value
             for field, value in self.sudo().read()[0].items()
@@ -320,7 +325,13 @@ class IrActionsActWindow(models.Model):
     groups_id = fields.Many2many('res.groups', 'ir_act_window_group_rel',
                                  'act_id', 'gid', string='Groups')
     search_view_id = fields.Many2one('ir.ui.view', string='Search View Ref.')
+    embedded_action_ids = fields.One2many('ir.embedded.actions', compute="_compute_embedded_actions")
     filter = fields.Boolean()
+
+    def _compute_embedded_actions(self):
+        embedded_actions = self.env["ir.embedded.actions"].search([('parent_action_id', 'in', self.ids)]).filtered(lambda x: x.is_visible)
+        for action in self:
+            action.embedded_action_ids = embedded_actions.filtered(lambda rec: rec.parent_action_id == action)
 
     def read(self, fields=None, load='_classic_read'):
         """ call the method get_empty_list_help of the model and set the window action help message
@@ -365,7 +376,7 @@ class IrActionsActWindow(models.Model):
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
             "context", "mobile_view_mode", "domain", "filter", "groups_id", "limit",
-            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views",
+            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action
             "flags"

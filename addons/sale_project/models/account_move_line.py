@@ -11,3 +11,8 @@ class AccountMoveLine(models.Model):
         # analytic account from being overridden by analytic default rules and lack thereof
         project_amls = self.filtered(lambda aml: aml.analytic_distribution and any(aml.sale_line_ids.project_id))
         super(AccountMoveLine, self - project_amls)._compute_analytic_distribution()
+        project_id = self._context.get('project_id', False)
+        if project_id:
+            analytic_account = self.env['project.project'].browse(project_id).analytic_account_id
+            for line in self:
+                line.analytic_distribution = {analytic_account.id: 100}

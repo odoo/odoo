@@ -203,5 +203,27 @@
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
+
+        <!-- rules for embedded actions -->
+        <record id="embedded_action_user_delete_rule" model="ir.rule">
+            <field name="name">Users can modify or delete embedded actions that they have created or that are shared</field>
+            <field name="model_id" ref="model_ir_embedded_actions"/>
+            <field name="domain_force">[('user_id', 'in', [user.id, False])]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+         <record id="embedded_action_admin_delete_rule" model="ir.rule">
+            <field name="name">Admins have all the rights on embedded actions</field>
+            <field name="model_id" ref="model_ir_embedded_actions"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
     </data>
 </odoo>

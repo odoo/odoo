@@ -205,6 +205,8 @@ test("favorites have unique descriptions (the submenus of the favorite menu are 
             model_id: "foo",
             name: "My favorite 2",
             sort: `[]`,
+            embedded_action_id: false,
+            embedded_parent_res_id: false,
             user_id: 7,
         });
         return 2; // fake serverSideId

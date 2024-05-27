@@ -141,14 +141,26 @@ class ProjectProject(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).order_id
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]})._filter_access_rules_python('read').order_id
+        embedded_action_context = self.env.context.get('from_embedded_action', False)
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
             'name': _("%(name)s's Sales Orders", name=self.name),
-            "context": {"create": self.env.context.get('create_for_project_id', False), "show_sale": True},
+            "context": {
+                "create": self.env.context.get('create_for_project_id', embedded_action_context),
+                "show_sale": True,
+                'default_partner_id': self.partner_id.id,
+                'default_analytic_account_id': self.analytic_account_id.id,
+                "create_for_project_id": self.id if embedded_action_context else False,
+                "from_embedded_action": embedded_action_context
+            },
+            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s<br/>%s</p>" %
+            (_("Create a new quotation, the first step of a new sale!"),
+                _("Once the quotation is confirmed by the customer, it becomes a sales order."),
+                _("You will be able to create an invoice and collect the payment."))
         }
-        if len(all_sale_orders) <= 1:
+        if len(all_sale_orders) <= 1 and not embedded_action_context:
             action_window.update({
                 "res_id": all_sale_orders.id,
                 "views": [[False, "form"]],
@@ -233,10 +245,16 @@ class ProjectProject(models.Model):
             'views': [[False, 'tree'], [False, 'form'], [False, 'kanban']],
             'domain': [('id', 'in', invoice_ids)],
             'context': {
-                'create': False,
-            }
+                'create': self.env.context.get('from_embedded_action', False),
+                'default_move_type': 'out_invoice',
+                'default_partner_id': self.partner_id.id,
+                'project_id': self.id
+            },
+            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" %
+            (_("Create a customer invoice"),
+                _("Create invoices, register payments and keep track of the discussions with your customers."))
         }
-        if len(invoice_ids) == 1:
+        if len(invoice_ids) == 1 and not self.env.context.get('from_embedded_action', False):
             action['views'] = [[False, 'form']]
             action['res_id'] = invoice_ids[0]
         return action
