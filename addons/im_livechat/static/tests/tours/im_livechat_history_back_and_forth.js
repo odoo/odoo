@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
     steps: () => [
         {
             trigger: "body",
-            run: "press ctrl+k"
+            run: "press ctrl+k",
         },
         {
             trigger: ".o_command_palette_search input",

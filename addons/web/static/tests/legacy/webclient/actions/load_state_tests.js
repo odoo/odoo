@@ -204,8 +204,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("correctly sends additional context", async (assert) => {
-        // %2C is a URL-encoded comma
-        redirect("/odoo/4/action-1001?active_ids=4%2C8");
+        redirect("/odoo/4/action-1001");
         logHistoryInteractions(assert);
         function mockRPC(route, params) {
             if (route === "/web/action/load") {
@@ -213,7 +212,7 @@ QUnit.module("ActionManager", (hooks) => {
                     action_id: 1001,
                     context: {
                         active_id: 4, // aditional context
-                        active_ids: [4, 8], // aditional context
+                        active_ids: [4], // aditional context
                         lang: "en", // user context
                         tz: "taht", // user context
                         uid: 7, // user context
@@ -224,10 +223,10 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         assert.strictEqual(
             browser.location.href,
-            "http://example.com/odoo/4/action-1001?active_ids=4%2C8",
+            "http://example.com/odoo/4/action-1001",
             "url did not change"
         );
-        assert.verifySteps(["replaceState http://example.com/odoo/4/action-1001?active_ids=4%2C8"]);
+        assert.verifySteps(["replaceState http://example.com/odoo/4/action-1001"]);
     });
 
     QUnit.test("supports action as xmlId", async (assert) => {
@@ -385,7 +384,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("properly load client actions with updateResId", async function (assert) {
+    QUnit.test("properly load client actions with updateActionState", async function (assert) {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
             static props = ["*"];
@@ -394,7 +393,7 @@ QUnit.module("ActionManager", (hooks) => {
 
             setup() {
                 onMounted(() => {
-                    this.props.updateResId(12);
+                    this.props.updateActionState({ resId: 12 });
                 });
             }
         }

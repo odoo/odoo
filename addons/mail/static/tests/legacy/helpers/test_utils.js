@@ -34,14 +34,20 @@ registryNamesToCloneWithCleanup.push("mock_server_callbacks", "discuss.model");
 
 let currentEnv = null;
 
-export async function openDiscuss(activeId, { target } = {}) {
+export async function openDiscuss(channelId, { target } = {}) {
     const env = target ?? currentEnv;
-    await env.services.action.doAction({
-        context: { active_id: activeId },
+    const action = {
         id: DISCUSS_ACTION_ID,
         tag: "mail.action_discuss",
         type: "ir.actions.client",
-    });
+    };
+    const options = {};
+    if (typeof channelId === "number") {
+        options.props = { resId: channelId };
+    } else if (typeof channelId === "string") {
+        action.context = { active_id: channelId.split("_")[1] };
+    }
+    await env.services.action.doAction(action, options);
 }
 
 export async function openFormView(resModel, resId, { props = {}, target } = {}) {
