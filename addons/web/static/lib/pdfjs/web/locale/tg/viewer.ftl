@@ -51,12 +51,6 @@ pdfjs-download-button-label = Боргирӣ кардан
 pdfjs-bookmark-button =
     .title = Саҳифаи ҷорӣ (Дидани нишонии URL аз саҳифаи ҷорӣ)
 pdfjs-bookmark-button-label = Саҳифаи ҷорӣ
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Кушодан дар барнома
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Кушодан дар барнома
 
 ##  Secondary toolbar and context menu
 
@@ -301,8 +295,15 @@ pdfjs-editor-ink-button-label = Расмкашӣ
 pdfjs-editor-stamp-button =
     .title = Илова ё таҳрир кардани тасвирҳо
 pdfjs-editor-stamp-button-label = Илова ё таҳрир кардани тасвирҳо
-pdfjs-editor-remove-button =
-    .title = Тоза кардан
+pdfjs-editor-highlight-button =
+    .title = Ҷудокунӣ
+pdfjs-editor-highlight-button-label = Ҷудокунӣ
+pdfjs-highlight-floating-button =
+    .title = Ҷудокунӣ
+pdfjs-highlight-floating-button1 =
+    .title = Ҷудокунӣ
+    .aria-label = Ҷудокунӣ
+pdfjs-highlight-floating-button-label = Ҷудокунӣ
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +327,10 @@ pdfjs-editor-ink-opacity-input = Шаффофӣ
 pdfjs-editor-stamp-add-image-button =
     .title = Илова кардани тасвир
 pdfjs-editor-stamp-add-image-button-label = Илова кардани тасвир
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Ғафсӣ
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Иваз кардани ғафсӣ ҳангоми ҷудокунии унсурҳо ба ғайр аз матн
 pdfjs-free-text =
     .aria-label = Муҳаррири матн
 pdfjs-free-text-default-content = Нависед…
@@ -382,3 +387,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Гулобӣ
 pdfjs-editor-colorpicker-red =
     .title = Сурх
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Ҳамаро намоиш додан
+pdfjs-editor-highlight-show-all-button =
+    .title = Ҳамаро намоиш додан

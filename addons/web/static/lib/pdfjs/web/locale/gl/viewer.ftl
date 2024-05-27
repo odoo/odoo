@@ -301,6 +301,18 @@ pdfjs-editor-ink-button-label = Debuxo
 pdfjs-editor-stamp-button =
     .title = Engadir ou editar imaxes
 pdfjs-editor-stamp-button-label = Engadir ou editar imaxes
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-freetext-button =
+    .title = Eliminar o texto
+pdfjs-editor-remove-stamp-button =
+    .title = Eliminar a imaxe
+pdfjs-editor-remove-highlight-button =
+    .title = Eliminar o resaltado
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Cor
 pdfjs-editor-free-text-size-input = Tamaño
@@ -310,6 +322,8 @@ pdfjs-editor-ink-opacity-input = Opacidade
 pdfjs-editor-stamp-add-image-button =
     .title = Engadir imaxe
 pdfjs-editor-stamp-add-image-button-label = Engadir imaxe
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Grosor
 pdfjs-free-text =
     .aria-label = Editor de texto
 pdfjs-free-text-default-content = Comezar a teclear…
@@ -345,3 +359,6 @@ pdfjs-editor-resizer-label-bottom-right = Esquina inferior dereita: cambia o tam
 pdfjs-editor-resizer-label-bottom-middle = Abaixo medio: cambia o tamaño
 pdfjs-editor-resizer-label-bottom-left = Esquina inferior esquerda: cambia o tamaño
 pdfjs-editor-resizer-label-middle-left = Medio esquerdo: cambia o tamaño
+
+## Color picker
+

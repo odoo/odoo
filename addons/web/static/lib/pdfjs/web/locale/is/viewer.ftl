@@ -301,8 +301,15 @@ pdfjs-editor-ink-button-label = Teikna
 pdfjs-editor-stamp-button =
     .title = Bæta við eða breyta myndum
 pdfjs-editor-stamp-button-label = Bæta við eða breyta myndum
-pdfjs-editor-remove-button =
-    .title = Fjarlægja
+pdfjs-editor-highlight-button =
+    .title = Áherslulita
+pdfjs-editor-highlight-button-label = Áherslulita
+pdfjs-highlight-floating-button =
+    .title = Áherslulita
+pdfjs-highlight-floating-button1 =
+    .title = Áherslulita
+    .aria-label = Áherslulita
+pdfjs-highlight-floating-button-label = Áherslulita
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Ógegnsæi
 pdfjs-editor-stamp-add-image-button =
     .title = Bæta við mynd
 pdfjs-editor-stamp-add-image-button-label = Bæta við mynd
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Þykkt
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Breyta þykkt við áherslulitun annarra atriða en texta
 pdfjs-free-text =
     .aria-label = Textaritill
 pdfjs-free-text-default-content = Byrjaðu að skrifa…
@@ -382,3 +393,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Bleikt
 pdfjs-editor-colorpicker-red =
     .title = Rautt
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Birta allt
+pdfjs-editor-highlight-show-all-button =
+    .title = Birta allt

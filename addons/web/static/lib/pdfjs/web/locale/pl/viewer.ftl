@@ -303,8 +303,15 @@ pdfjs-editor-ink-button-label = Rysunek
 pdfjs-editor-stamp-button =
     .title = Dodaj lub edytuj obrazy
 pdfjs-editor-stamp-button-label = Dodaj lub edytuj obrazy
-pdfjs-editor-remove-button =
-    .title = Usuń
+pdfjs-editor-highlight-button =
+    .title = Wyróżnij
+pdfjs-editor-highlight-button-label = Wyróżnij
+pdfjs-highlight-floating-button =
+    .title = Wyróżnij
+pdfjs-highlight-floating-button1 =
+    .title = Wyróżnij
+    .aria-label = Wyróżnij
+pdfjs-highlight-floating-button-label = Wyróżnij
 
 ## Remove button for the various kind of editor.
 
@@ -328,6 +335,10 @@ pdfjs-editor-ink-opacity-input = Nieprzezroczystość
 pdfjs-editor-stamp-add-image-button =
     .title = Dodaj obraz
 pdfjs-editor-stamp-add-image-button-label = Dodaj obraz
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Grubość
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Zmień grubość podczas wyróżniania elementów innych niż tekst
 pdfjs-free-text =
     .aria-label = Edytor tekstu
 pdfjs-free-text-default-content = Zacznij pisać…
@@ -384,3 +395,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Różowy
 pdfjs-editor-colorpicker-red =
     .title = Czerwony
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Pokaż wszystkie
+pdfjs-editor-highlight-show-all-button =
+    .title = Pokaż wszystkie

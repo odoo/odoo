@@ -51,12 +51,6 @@ pdfjs-download-button-label = ڈاؤن لوڈ
 pdfjs-bookmark-button =
     .title = موجودہ ورقہ (موجودہ ورقے کنوں یوآرایل ݙیکھو)
 pdfjs-bookmark-button-label = موجودہ ورقہ
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = ایپ وچ کھولو
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = ایپ وچ کھولو
 
 ##  Secondary toolbar and context menu
 
@@ -226,6 +220,21 @@ pdfjs-find-match-diacritics-checkbox-label = ڈائیکرٹکس مشابہ کر�
 pdfjs-find-entire-word-checkbox-label = تمام الفاظ
 pdfjs-find-reached-top = ورقے دے شروع تے پُج ڳیا، تلوں جاری کیتا ڳیا
 pdfjs-find-reached-bottom = ورقے دے پاند تے پُڄ ڳیا، اُتوں شروع کیتا ڳیا
+# Variables:
+#   $current (Number) - the index of the currently active find result
+#   $total (Number) - the total number of matches in the document
+pdfjs-find-match-count =
+    { $total ->
+        [one] { $total } وِچوں { $current } مشابہ
+       *[other] { $total } وِچوں { $current } مشابے
+    }
+# Variables:
+#   $limit (Number) - the maximum number of matches
+pdfjs-find-match-count-limit =
+    { $limit ->
+        [one] { $limit } توں ودھ مماثلت۔
+       *[other] { $limit } توں ودھ مماثلتاں۔
+    }
 pdfjs-find-not-found = فقرہ نئیں ملیا
 
 ## Predefined zoom values
@@ -283,12 +292,45 @@ pdfjs-editor-free-text-button-label = متن
 pdfjs-editor-ink-button =
     .title = چھکو
 pdfjs-editor-ink-button-label = چھکو
+pdfjs-editor-stamp-button =
+    .title = تصویراں کوں شامل کرو یا ترمیم کرو
+pdfjs-editor-stamp-button-label = تصویراں کوں شامل کرو یا ترمیم کرو
+pdfjs-editor-highlight-button =
+    .title = نمایاں کرو
+pdfjs-editor-highlight-button-label = نمایاں کرو
+pdfjs-highlight-floating-button =
+    .title = نمایاں کرو
+pdfjs-highlight-floating-button1 =
+    .title = نمایاں کرو
+    .aria-label = نمایاں کرو
+pdfjs-highlight-floating-button-label = نمایاں کرو
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = ڈرائینگ ہٹاؤ
+pdfjs-editor-remove-freetext-button =
+    .title = متن ہٹاؤ
+pdfjs-editor-remove-stamp-button =
+    .title = تصویر ہٹاؤ
+pdfjs-editor-remove-highlight-button =
+    .title = نمایاں ہٹاؤ
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = رنگ
 pdfjs-editor-free-text-size-input = سائز
 pdfjs-editor-ink-color-input = رنگ
 pdfjs-editor-ink-thickness-input = ٹھولھ
 pdfjs-editor-ink-opacity-input = دھندلاپن
+pdfjs-editor-stamp-add-image-button =
+    .title = تصویر شامل کرو
+pdfjs-editor-stamp-add-image-button-label = تصویر شامل کرو
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = مُٹاݨ
+pdfjs-editor-free-highlight-thickness-title =
+    .title = متن توں ان٘ج ٻئے شئیں کوں نمایاں کرݨ ویلے مُٹاݨ کوں بدلو
 pdfjs-free-text =
     .aria-label = ٹیکسٹ ایڈیٹر
 pdfjs-free-text-default-content = ٹائپنگ شروع کرو …
@@ -299,7 +341,56 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button-label = Alt متن
+pdfjs-editor-alt-text-edit-button-label = alt متن وِچ ترمیم کرو
+pdfjs-editor-alt-text-dialog-label = ہِک اختیار چُݨو
+pdfjs-editor-alt-text-dialog-description = Alt متن (متبادل متن) اِیں ویلے مَدَت کرین٘دا ہِے جہڑیلے لوک تصویر کوں نِھیں ݙیکھ سڳدے یا جہڑیلے اِیہ لوڈ کائنی تِھین٘دا۔
+pdfjs-editor-alt-text-add-description-label = تفصیل شامل کرو
+pdfjs-editor-alt-text-add-description-description = 1-2 جملیاں دا مقصد جہڑے موضوع، ترتیب، یا اعمال کوں بیان کرین٘دے ہِن۔
+pdfjs-editor-alt-text-mark-decorative-label = آرائشی طور تے نشان زد کرو
+pdfjs-editor-alt-text-mark-decorative-description = اِیہ آرائشی تصویراں کِیتے استعمال تِھین٘دا ہِے، جیویں بارڈر یا واٹر مارکس۔
+pdfjs-editor-alt-text-cancel-button = منسوخ
+pdfjs-editor-alt-text-save-button = محفوظ
+pdfjs-editor-alt-text-decorative-tooltip = آرائشی دے طور تے نشان زد تِھی ڳِیا
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = مثال دے طور تے، "ہِک جؤان کھاݨاں کھاوݨ کِیتے میز اُتّے ٻیٹھا ہِے"
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+pdfjs-editor-resizer-label-top-left = اُتلی کَھٻّی نُکّڑ — سائز بدلو
+pdfjs-editor-resizer-label-top-middle = اُتلا وِچلا — سائز بدلو
+pdfjs-editor-resizer-label-top-right = اُتلی سَڄّی نُکَّڑ — سائز بدلو
+pdfjs-editor-resizer-label-middle-right = وِچلا سڄّا — سائز بدلو
+pdfjs-editor-resizer-label-bottom-right = تلوِیں سَڄّی نُکَّڑ — سائز بدلو
+pdfjs-editor-resizer-label-bottom-middle = تلواں وِچلا — سائز بدلو
+pdfjs-editor-resizer-label-bottom-left = تلوِیں کَھٻّی نُکّڑ — سائز بدلو
+pdfjs-editor-resizer-label-middle-left = وِچلا کَھٻّا — سائز بدلو
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = نشابر رنگ
+pdfjs-editor-colorpicker-button =
+    .title = رنگ بدلو
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = رنگ اختیارات
+pdfjs-editor-colorpicker-yellow =
+    .title = پیلا
+pdfjs-editor-colorpicker-green =
+    .title = ساوا
+pdfjs-editor-colorpicker-blue =
+    .title = نیلا
+pdfjs-editor-colorpicker-pink =
+    .title = گلابی
+pdfjs-editor-colorpicker-red =
+    .title = لال
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = سارے ݙکھاؤ
+pdfjs-editor-highlight-show-all-button =
+    .title = سارے ݙکھاؤ

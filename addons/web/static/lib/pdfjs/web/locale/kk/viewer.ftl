@@ -301,8 +301,15 @@ pdfjs-editor-ink-button-label = Сурет салу
 pdfjs-editor-stamp-button =
     .title = Суреттерді қосу немесе түзету
 pdfjs-editor-stamp-button-label = Суреттерді қосу немесе түзету
-pdfjs-editor-remove-button =
-    .title = Өшіру
+pdfjs-editor-highlight-button =
+    .title = Ерекшелеу
+pdfjs-editor-highlight-button-label = Ерекшелеу
+pdfjs-highlight-floating-button =
+    .title = Ерекшелеу
+pdfjs-highlight-floating-button1 =
+    .title = Ерекшелеу
+    .aria-label = Ерекшелеу
+pdfjs-highlight-floating-button-label = Ерекшелеу
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Мөлдірсіздігі
 pdfjs-editor-stamp-add-image-button =
     .title = Суретті қосу
 pdfjs-editor-stamp-add-image-button-label = Суретті қосу
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Қалыңдығы
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Мәтіннен басқа элементтерді ерекшелеу кезінде қалыңдықты өзгерту
 pdfjs-free-text =
     .aria-label = Мәтін түзеткіші
 pdfjs-free-text-default-content = Теруді бастау…
@@ -382,3 +393,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Қызғылт
 pdfjs-editor-colorpicker-red =
     .title = Қызыл
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Барлығын көрсету
+pdfjs-editor-highlight-show-all-button =
+    .title = Барлығын көрсету
