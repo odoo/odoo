@@ -153,14 +153,16 @@ export class Orderline extends PosModel {
         this.set_full_product_name();
         this.id = json.server_id || json.id || orderline_id++;
         orderline_id = Math.max(this.id + 1, orderline_id);
-        var pack_lot_lines = json.pack_lot_ids;
-        for (var i = 0; i < pack_lot_lines.length; i++) {
-            var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new Packlotline(
-                { env: this.env },
-                { json: { ...packlotline, order_line: this } }
-            );
-            this.pack_lot_lines.push(pack_lot_line);
+        if (this.has_product_lot) {
+            var pack_lot_lines = json.pack_lot_ids;
+            for (var i = 0; i < pack_lot_lines.length; i++) {
+                var packlotline = pack_lot_lines[i][2];
+                var pack_lot_line = new Packlotline(
+                    { env: this.env },
+                    { json: { ...packlotline, order_line: this } }
+                );
+                this.pack_lot_lines.push(pack_lot_line);
+            }
         }
         this.tax_ids = this.compute_related_tax(
             json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined
