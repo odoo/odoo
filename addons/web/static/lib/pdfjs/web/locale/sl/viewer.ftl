@@ -51,12 +51,6 @@ pdfjs-download-button-label = Prenesi
 pdfjs-bookmark-button =
     .title = Trenutna stran (prikaži URL, ki vodi do trenutne strani)
 pdfjs-bookmark-button-label = Na trenutno stran
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Odpri v programu
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Odpri v programu
 
 ##  Secondary toolbar and context menu
 
@@ -305,8 +299,9 @@ pdfjs-editor-ink-button-label = Riši
 pdfjs-editor-stamp-button =
     .title = Dodajanje ali urejanje slik
 pdfjs-editor-stamp-button-label = Dodajanje ali urejanje slik
-pdfjs-editor-remove-button =
-    .title = Odstrani
+pdfjs-editor-highlight-button =
+    .title = Označevalnik
+pdfjs-editor-highlight-button-label = Označevalnik
 
 ## Remove button for the various kind of editor.
 
@@ -330,6 +325,10 @@ pdfjs-editor-ink-opacity-input = Neprosojnost
 pdfjs-editor-stamp-add-image-button =
     .title = Dodaj sliko
 pdfjs-editor-stamp-add-image-button-label = Dodaj sliko
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Debelina
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Spremeni debelino pri označevanju nebesedilnih elementov
 pdfjs-free-text =
     .aria-label = Urejevalnik besedila
 pdfjs-free-text-default-content = Začnite tipkati …
@@ -386,3 +385,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Roza
 pdfjs-editor-colorpicker-red =
     .title = Rdeča
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Prikaži vse
+pdfjs-editor-highlight-show-all-button =
+    .title = Prikaži vse

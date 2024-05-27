@@ -29,7 +29,7 @@ pdfjs-zoom-in-button =
     .title = Խոշորացնել
 pdfjs-zoom-in-button-label = Խոշորացնել
 pdfjs-zoom-select =
-    .title = Մասշտաբ
+    .title = Դիտափոխում
 pdfjs-presentation-mode-button =
     .title = Անցնել Ներկայացման եղանակին
 pdfjs-presentation-mode-button-label = Ներկայացման եղանակ
@@ -39,6 +39,10 @@ pdfjs-open-file-button-label = Բացել
 pdfjs-print-button =
     .title = Տպել
 pdfjs-print-button-label = Տպել
+# Used in Firefox for Android as a label for the download button (“download” is a verb).
+# Length of the translation matters since we are in a mobile context, with limited screen estate.
+pdfjs-download-button-label = Ներբեռնել
+pdfjs-bookmark-button-label = Ընթացիկ էջ
 
 ##  Secondary toolbar and context menu
 
@@ -243,9 +247,26 @@ pdfjs-web-fonts-disabled = Վեբ-տառատեսակները անջատված ե
 ## Editing
 
 
+## Remove button for the various kind of editor.
+
+
+##
+
+pdfjs-free-text-default-content = Սկսել մուտքագրումը…
+
 ## Alt-text dialog
 
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+
+## Color picker
+
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Ցուցադրել բոլորը
+pdfjs-editor-highlight-show-all-button =
+    .title = Ցուցադրել բոլորը

@@ -39,6 +39,15 @@ pdfjs-open-file-button-label = افتح
 pdfjs-print-button =
     .title = اطبع
 pdfjs-print-button-label = اطبع
+pdfjs-save-button =
+    .title = احفظ
+pdfjs-save-button-label = احفظ
+# Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
+pdfjs-download-button =
+    .title = نزّل
+# Used in Firefox for Android as a label for the download button (“download” is a verb).
+# Length of the translation matters since we are in a mobile context, with limited screen estate.
+pdfjs-download-button-label = نزّل
 pdfjs-bookmark-button =
     .title = الصفحة الحالية (عرض URL من الصفحة الحالية)
 pdfjs-bookmark-button-label = الصفحة الحالية
@@ -66,6 +75,9 @@ pdfjs-cursor-text-select-tool-button-label = أداة اختيار النص
 pdfjs-cursor-hand-tool-button =
     .title = فعّل أداة اليد
 pdfjs-cursor-hand-tool-button-label = أداة اليد
+pdfjs-scroll-page-button =
+    .title = استخدم تمرير الصفحة
+pdfjs-scroll-page-button-label = تمرير الصفحة
 pdfjs-scroll-vertical-button =
     .title = استخدم التمرير الرأسي
 pdfjs-scroll-vertical-button-label = التمرير الرأسي
@@ -172,6 +184,9 @@ pdfjs-layers-button-label = ‏‏الطبقات
 pdfjs-thumbs-button =
     .title = اعرض مُصغرات
 pdfjs-thumbs-button-label = مُصغّرات
+pdfjs-current-outline-item-button =
+    .title = ابحث عن عنصر المخطّط التفصيلي الحالي
+pdfjs-current-outline-item-button-label = عنصر المخطّط التفصيلي الحالي
 pdfjs-findbar-button =
     .title = ابحث في المستند
 pdfjs-findbar-button-label = ابحث
@@ -201,9 +216,33 @@ pdfjs-find-next-button =
 pdfjs-find-next-button-label = التالي
 pdfjs-find-highlight-checkbox = أبرِز الكل
 pdfjs-find-match-case-checkbox-label = طابق حالة الأحرف
+pdfjs-find-match-diacritics-checkbox-label = طابِق الحركات
 pdfjs-find-entire-word-checkbox-label = كلمات كاملة
 pdfjs-find-reached-top = تابعت من الأسفل بعدما وصلت إلى بداية المستند
 pdfjs-find-reached-bottom = تابعت من الأعلى بعدما وصلت إلى نهاية المستند
+# Variables:
+#   $current (Number) - the index of the currently active find result
+#   $total (Number) - the total number of matches in the document
+pdfjs-find-match-count =
+    { $total ->
+        [zero] لا  مطابقة
+        [one] { $current } من أصل { $total } مطابقة
+        [two] { $current } من أصل { $total } مطابقة
+        [few] { $current } من أصل { $total } مطابقة
+        [many] { $current } من أصل { $total } مطابقة
+       *[other] { $current } من أصل { $total } مطابقة
+    }
+# Variables:
+#   $limit (Number) - the maximum number of matches
+pdfjs-find-match-count-limit =
+    { $limit ->
+        [zero] { $limit } مطابقة
+        [one] أكثر من { $limit } مطابقة
+        [two] أكثر من { $limit } مطابقة
+        [few] أكثر من { $limit } مطابقة
+        [many] أكثر من { $limit } مطابقة
+       *[other] أكثر من { $limit } مطابقات
+    }
 pdfjs-find-not-found = لا وجود للعبارة
 
 ## Predefined zoom values
@@ -255,10 +294,111 @@ pdfjs-web-fonts-disabled = خطوط الوب مُعطّلة: تعذّر استخ
 
 ## Editing
 
+pdfjs-editor-free-text-button =
+    .title = نص
+pdfjs-editor-free-text-button-label = نص
+pdfjs-editor-ink-button =
+    .title = ارسم
+pdfjs-editor-ink-button-label = ارسم
+pdfjs-editor-stamp-button =
+    .title = أضِف أو حرّر الصور
+pdfjs-editor-stamp-button-label = أضِف أو حرّر الصور
+pdfjs-editor-highlight-button =
+    .title = أبرِز
+pdfjs-editor-highlight-button-label = أبرِز
+pdfjs-highlight-floating-button =
+    .title = أبرِز
+pdfjs-highlight-floating-button1 =
+    .title = أبرِز
+    .aria-label = أبرِز
+pdfjs-highlight-floating-button-label = أبرِز
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = أزِل الرسم
+pdfjs-editor-remove-freetext-button =
+    .title = أزِل النص
+pdfjs-editor-remove-stamp-button =
+    .title = أزِل الصورة
+pdfjs-editor-remove-highlight-button =
+    .title = أزِل الإبراز
+
+##
+
+# Editor Parameters
+pdfjs-editor-free-text-color-input = اللون
+pdfjs-editor-free-text-size-input = الحجم
+pdfjs-editor-ink-color-input = اللون
+pdfjs-editor-ink-thickness-input = السماكة
+pdfjs-editor-ink-opacity-input = العتامة
+pdfjs-editor-stamp-add-image-button =
+    .title = أضِف صورة
+pdfjs-editor-stamp-add-image-button-label = أضِف صورة
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = السماكة
+pdfjs-editor-free-highlight-thickness-title =
+    .title = غيّر السُمك عند إبراز عناصر أُخرى غير النص
+pdfjs-free-text =
+    .aria-label = محرِّر النص
+pdfjs-free-text-default-content = ابدأ الكتابة…
+pdfjs-ink =
+    .aria-label = محرِّر الرسم
+pdfjs-ink-canvas =
+    .aria-label = صورة أنشأها المستخدم
 
 ## Alt-text dialog
 
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button-label = نص بديل
+pdfjs-editor-alt-text-edit-button-label = تحرير النص البديل
+pdfjs-editor-alt-text-dialog-label = اختر خيار
+pdfjs-editor-alt-text-dialog-description = يساعد النص البديل عندما لا يتمكن الأشخاص من رؤية الصورة أو عندما لا يتم تحميلها.
+pdfjs-editor-alt-text-add-description-label = أضِف وصف
+pdfjs-editor-alt-text-add-description-description = استهدف جملتين تصفان الموضوع أو الإعداد أو الإجراءات.
+pdfjs-editor-alt-text-mark-decorative-label = علّمها على أنها زخرفية
+pdfjs-editor-alt-text-mark-decorative-description = يُستخدم هذا في الصور المزخرفة، مثل الحدود أو العلامات المائية.
+pdfjs-editor-alt-text-cancel-button = ألغِ
+pdfjs-editor-alt-text-save-button = احفظ
+pdfjs-editor-alt-text-decorative-tooltip = عُلّمت على أنها زخرفية
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = على سبيل المثال، "يجلس شاب على الطاولة لتناول وجبة"
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+pdfjs-editor-resizer-label-top-left = الزاوية اليُسرى العُليا — غيّر الحجم
+pdfjs-editor-resizer-label-top-middle = أعلى الوسط - غيّر الحجم
+pdfjs-editor-resizer-label-top-right = الزاوية اليُمنى العُليا - غيّر الحجم
+pdfjs-editor-resizer-label-middle-right = اليمين الأوسط - غيّر الحجم
+pdfjs-editor-resizer-label-bottom-right = الزاوية اليُمنى السُفلى - غيّر الحجم
+pdfjs-editor-resizer-label-bottom-middle = أسفل الوسط - غيّر الحجم
+pdfjs-editor-resizer-label-bottom-left = الزاوية اليُسرى السُفلية - غيّر الحجم
+pdfjs-editor-resizer-label-middle-left = مُنتصف اليسار - غيّر الحجم
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = أبرِز اللون
+pdfjs-editor-colorpicker-button =
+    .title = غيّر اللون
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = اختيارات الألوان
+pdfjs-editor-colorpicker-yellow =
+    .title = أصفر
+pdfjs-editor-colorpicker-green =
+    .title = أخضر
+pdfjs-editor-colorpicker-blue =
+    .title = أزرق
+pdfjs-editor-colorpicker-pink =
+    .title = وردي
+pdfjs-editor-colorpicker-red =
+    .title = أحمر
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = أظهِر الكل
+pdfjs-editor-highlight-show-all-button =
+    .title = أظهِر الكل

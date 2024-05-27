@@ -51,12 +51,6 @@ pdfjs-download-button-label = ダウンロード
 pdfjs-bookmark-button =
     .title = 現在のページの URL です (現在のページを表示する URL)
 pdfjs-bookmark-button-label = 現在のページ
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = アプリで開く
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = アプリで開く
 
 ##  Secondary toolbar and context menu
 
@@ -293,16 +287,23 @@ pdfjs-web-fonts-disabled = ウェブフォントが無効になっています: 
 ## Editing
 
 pdfjs-editor-free-text-button =
-    .title = フリーテキスト注釈
+    .title = フリーテキスト注釈を追加します
 pdfjs-editor-free-text-button-label = フリーテキスト注釈
 pdfjs-editor-ink-button =
-    .title = インク注釈
+    .title = インク注釈を追加します
 pdfjs-editor-ink-button-label = インク注釈
 pdfjs-editor-stamp-button =
     .title = 画像を追加または編集します
 pdfjs-editor-stamp-button-label = 画像を追加または編集
-pdfjs-editor-remove-button =
-    .title = 削除
+pdfjs-editor-highlight-button =
+    .title = 強調します
+pdfjs-editor-highlight-button-label = 強調
+pdfjs-highlight-floating-button =
+    .title = 強調
+pdfjs-highlight-floating-button1 =
+    .title = 強調
+    .aria-label = 強調します
+pdfjs-highlight-floating-button-label = 強調
 
 ## Remove button for the various kind of editor.
 
@@ -312,6 +313,8 @@ pdfjs-editor-remove-freetext-button =
     .title = テキストを削除します
 pdfjs-editor-remove-stamp-button =
     .title = 画像を削除します
+pdfjs-editor-remove-highlight-button =
+    .title = 強調を削除します
 
 ##
 
@@ -324,6 +327,10 @@ pdfjs-editor-ink-opacity-input = 不透明度
 pdfjs-editor-stamp-add-image-button =
     .title = 画像を追加します
 pdfjs-editor-stamp-add-image-button-label = 画像を追加
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = 太さ
+pdfjs-editor-free-highlight-thickness-title =
+    .title = テキスト以外のアイテムを強調する時の太さを変更します
 pdfjs-free-text =
     .aria-label = フリーテキスト注釈エディター
 pdfjs-free-text-default-content = テキストを入力してください...
@@ -361,3 +368,29 @@ pdfjs-editor-resizer-label-bottom-right = 右下隅 — サイズ変更
 pdfjs-editor-resizer-label-bottom-middle = 下中央 — サイズ変更
 pdfjs-editor-resizer-label-bottom-left = 左下隅 — サイズ変更
 pdfjs-editor-resizer-label-middle-left = 左中央 — サイズ変更
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = 強調色
+pdfjs-editor-colorpicker-button =
+    .title = 色を変更します
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = 色の選択
+pdfjs-editor-colorpicker-yellow =
+    .title = 黄色
+pdfjs-editor-colorpicker-green =
+    .title = 緑色
+pdfjs-editor-colorpicker-blue =
+    .title = 青色
+pdfjs-editor-colorpicker-pink =
+    .title = ピンク色
+pdfjs-editor-colorpicker-red =
+    .title = 赤色
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = すべて表示
+pdfjs-editor-highlight-show-all-button =
+    .title = 強調の表示を切り替えます

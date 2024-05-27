@@ -301,8 +301,15 @@ pdfjs-editor-ink-button-label = Piirros
 pdfjs-editor-stamp-button =
     .title = Lisää tai muokkaa kuvia
 pdfjs-editor-stamp-button-label = Lisää tai muokkaa kuvia
-pdfjs-editor-remove-button =
-    .title = Poista
+pdfjs-editor-highlight-button =
+    .title = Korostus
+pdfjs-editor-highlight-button-label = Korostus
+pdfjs-highlight-floating-button =
+    .title = Korostus
+pdfjs-highlight-floating-button1 =
+    .title = Korostus
+    .aria-label = Korostus
+pdfjs-highlight-floating-button-label = Korostus
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Peittävyys
 pdfjs-editor-stamp-add-image-button =
     .title = Lisää kuva
 pdfjs-editor-stamp-add-image-button-label = Lisää kuva
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Paksuus
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Muuta paksuutta korostaessasi muita kohteita kuin tekstiä
 pdfjs-free-text =
     .aria-label = Tekstimuokkain
 pdfjs-free-text-default-content = Aloita kirjoittaminen…
@@ -382,3 +393,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Pinkki
 pdfjs-editor-colorpicker-red =
     .title = Punainen
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Näytä kaikki
+pdfjs-editor-highlight-show-all-button =
+    .title = Näytä kaikki

@@ -122,6 +122,19 @@ See https://github.com/adobe-type-tools/cmap-resources
             <div id="editorHighlightColorPicker" class="colorPicker">
               <span id="highlightColorPickerLabel" class="editorParamsLabel" data-l10n-id="pdfjs-editor-highlight-colorpicker-label">Highlight color</span>
             </div>
+            <div id="editorHighlightThickness">
+              <label for="editorFreeHighlightThickness" class="editorParamsLabel" data-l10n-id="pdfjs-editor-free-highlight-thickness-input">Thickness</label>
+              <div class="thicknessPicker">
+                <input type="range" id="editorFreeHighlightThickness" class="editorParamsSlider" data-l10n-id="pdfjs-editor-free-highlight-thickness-title" value="12" min="8" max="24" step="1" tabindex="101">
+              </div>
+            </div>
+            <div id="editorHighlightVisibility">
+              <div class="divider"></div>
+              <div class="toggler">
+                <label for="editorHighlightShowAll" class="editorParamsLabel" data-l10n-id="pdfjs-editor-highlight-show-all-button-label">Show all</label>
+                <button id="editorHighlightShowAll" class="toggle-button" data-l10n-id="pdfjs-editor-highlight-show-all-button" aria-pressed="true" tabindex="102"></button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -129,11 +142,11 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="editorParamsToolbarContainer">
             <div class="editorParamsSetter">
               <label for="editorFreeTextColor" class="editorParamsLabel" data-l10n-id="pdfjs-editor-free-text-color-input">Color</label>
-              <input type="color" id="editorFreeTextColor" class="editorParamsColor" tabindex="102">
+              <input type="color" id="editorFreeTextColor" class="editorParamsColor" tabindex="103">
             </div>
             <div class="editorParamsSetter">
               <label for="editorFreeTextFontSize" class="editorParamsLabel" data-l10n-id="pdfjs-editor-free-text-size-input">Size</label>
-              <input type="range" id="editorFreeTextFontSize" class="editorParamsSlider" value="10" min="5" max="100" step="1" tabindex="103">
+              <input type="range" id="editorFreeTextFontSize" class="editorParamsSlider" value="10" min="5" max="100" step="1" tabindex="104">
             </div>
           </div>
         </div>
@@ -142,22 +155,22 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div class="editorParamsToolbarContainer">
             <div class="editorParamsSetter">
               <label for="editorInkColor" class="editorParamsLabel" data-l10n-id="pdfjs-editor-ink-color-input">Color</label>
-              <input type="color" id="editorInkColor" class="editorParamsColor" tabindex="104">
+              <input type="color" id="editorInkColor" class="editorParamsColor" tabindex="105">
             </div>
             <div class="editorParamsSetter">
               <label for="editorInkThickness" class="editorParamsLabel" data-l10n-id="pdfjs-editor-ink-thickness-input">Thickness</label>
-              <input type="range" id="editorInkThickness" class="editorParamsSlider" value="1" min="1" max="20" step="1" tabindex="105">
+              <input type="range" id="editorInkThickness" class="editorParamsSlider" value="1" min="1" max="20" step="1" tabindex="106">
             </div>
             <div class="editorParamsSetter">
               <label for="editorInkOpacity" class="editorParamsLabel" data-l10n-id="pdfjs-editor-ink-opacity-input">Opacity</label>
-              <input type="range" id="editorInkOpacity" class="editorParamsSlider" value="100" min="1" max="100" step="1" tabindex="106">
+              <input type="range" id="editorInkOpacity" class="editorParamsSlider" value="100" min="1" max="100" step="1" tabindex="107">
             </div>
           </div>
         </div>
 
         <div class="editorParamsToolbar hidden doorHangerRight" id="editorStampParamsToolbar">
           <div class="editorParamsToolbarContainer">
-            <button id="editorStampAddImage" class="secondaryToolbarButton" title="Add image" tabindex="107" data-l10n-id="pdfjs-editor-stamp-add-image-button">
+            <button id="editorStampAddImage" class="secondaryToolbarButton" title="Add image" tabindex="108" data-l10n-id="pdfjs-editor-stamp-add-image-button">
               <span class="editorParamsLabel" data-l10n-id="pdfjs-editor-stamp-add-image-button-label">Add image</span>
             </button>
           </div>
@@ -291,7 +304,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <button id="editorInk" class="toolbarButton" disabled="disabled" title="Draw" role="radio" aria-checked="false" aria-controls="editorInkParamsToolbar" tabindex="33" data-l10n-id="pdfjs-editor-ink-button">
                     <span data-l10n-id="pdfjs-editor-ink-button-label">Draw</span>
                   </button>
-                  <button id="editorStamp" class="toolbarButton" disabled="disabled" title="Add or edit images" role="radio" aria-checked="false" aria-controls="editorStampParamsToolbar" tabindex="34" data-l10n-id="pdfjs-editor-stamp-button">
+                  <button id="editorStamp" class="toolbarButton hidden" disabled="disabled" title="Add or edit images" role="radio" aria-checked="false" aria-controls="editorStampParamsToolbar" tabindex="34" data-l10n-id="pdfjs-editor-stamp-button">
                     <span data-l10n-id="pdfjs-editor-stamp-button-label">Add or edit images</span>
                   </button>
                 </div>
@@ -432,8 +445,8 @@ See https://github.com/adobe-type-tools/cmap-resources
             <button id="documentPropertiesClose" class="dialogButton"><span data-l10n-id="pdfjs-document-properties-close-button">Close</span></button>
           </div>
         </dialog>
-        <dialog id="altTextDialog" aria-labelledby="dialogLabel" aria-describedby="dialogDescription">
-          <div id="altTextContainer">
+        <dialog class="dialog altText" id="altTextDialog" aria-labelledby="dialogLabel" aria-describedby="dialogDescription">
+          <div id="altTextContainer" class="mainContainer">
             <div id="overallDescription">
               <span id="dialogLabel" data-l10n-id="pdfjs-editor-alt-text-dialog-label" class="title">Choose an option</span>
               <span id="dialogDescription" data-l10n-id="pdfjs-editor-alt-text-dialog-description">
@@ -470,8 +483,8 @@ See https://github.com/adobe-type-tools/cmap-resources
               </div>
             </div>
             <div id="buttons">
-              <button id="altTextCancel" tabindex="0"><span data-l10n-id="pdfjs-editor-alt-text-cancel-button">Cancel</span></button>
-              <button id="altTextSave" tabindex="0"><span data-l10n-id="pdfjs-editor-alt-text-save-button">Save</span></button>
+              <button id="altTextCancel" class="secondaryButton" tabindex="0"><span data-l10n-id="pdfjs-editor-alt-text-cancel-button">Cancel</span></button>
+              <button id="altTextSave" class="primaryButton" tabindex="0"><span data-l10n-id="pdfjs-editor-alt-text-save-button">Save</span></button>
             </div>
           </div>
         </dialog>
@@ -491,7 +504,5 @@ See https://github.com/adobe-type-tools/cmap-resources
 
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
-
-    <input type="file" id="fileInput" class="hidden">
   </body>
 </html>

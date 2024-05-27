@@ -301,6 +301,29 @@ pdfjs-editor-ink-button-label = Marrazkia
 pdfjs-editor-stamp-button =
     .title = Gehitu edo editatu irudiak
 pdfjs-editor-stamp-button-label = Gehitu edo editatu irudiak
+pdfjs-editor-highlight-button =
+    .title = Nabarmendu
+pdfjs-editor-highlight-button-label = Nabarmendu
+pdfjs-highlight-floating-button =
+    .title = Nabarmendu
+pdfjs-highlight-floating-button1 =
+    .title = Nabarmendu
+    .aria-label = Nabarmendu
+pdfjs-highlight-floating-button-label = Nabarmendu
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = Kendu marrazkia
+pdfjs-editor-remove-freetext-button =
+    .title = Kendu testua
+pdfjs-editor-remove-stamp-button =
+    .title = Kendu irudia
+pdfjs-editor-remove-highlight-button =
+    .title = Kendu nabarmentzea
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Kolorea
 pdfjs-editor-free-text-size-input = Tamaina
@@ -310,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Opakutasuna
 pdfjs-editor-stamp-add-image-button =
     .title = Gehitu irudia
 pdfjs-editor-stamp-add-image-button-label = Gehitu irudia
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Loditasuna
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Aldatu loditasuna testua ez beste elementuak nabarmentzean
 pdfjs-free-text =
     .aria-label = Testu-editorea
 pdfjs-free-text-default-content = Hasi idazten…
@@ -347,3 +374,29 @@ pdfjs-editor-resizer-label-bottom-right = Beheko eskuineko izkina — aldatu tam
 pdfjs-editor-resizer-label-bottom-middle = Behean erdian — aldatu tamaina
 pdfjs-editor-resizer-label-bottom-left = Beheko ezkerreko izkina — aldatu tamaina
 pdfjs-editor-resizer-label-middle-left = Erdian ezkerrean —  aldatu tamaina
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = Nabarmentze kolorea
+pdfjs-editor-colorpicker-button =
+    .title = Aldatu kolorea
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = Kolore-aukerak
+pdfjs-editor-colorpicker-yellow =
+    .title = Horia
+pdfjs-editor-colorpicker-green =
+    .title = Berdea
+pdfjs-editor-colorpicker-blue =
+    .title = Urdina
+pdfjs-editor-colorpicker-pink =
+    .title = Arrosa
+pdfjs-editor-colorpicker-red =
+    .title = Gorria
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Erakutsi denak
+pdfjs-editor-highlight-show-all-button =
+    .title = Erakutsi denak

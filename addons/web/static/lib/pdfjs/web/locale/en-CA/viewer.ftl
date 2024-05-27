@@ -226,6 +226,21 @@ pdfjs-find-match-diacritics-checkbox-label = Match Diacritics
 pdfjs-find-entire-word-checkbox-label = Whole Words
 pdfjs-find-reached-top = Reached top of document, continued from bottom
 pdfjs-find-reached-bottom = Reached end of document, continued from top
+# Variables:
+#   $current (Number) - the index of the currently active find result
+#   $total (Number) - the total number of matches in the document
+pdfjs-find-match-count =
+    { $total ->
+        [one] { $current } of { $total } match
+       *[other] { $current } of { $total } matches
+    }
+# Variables:
+#   $limit (Number) - the maximum number of matches
+pdfjs-find-match-count-limit =
+    { $limit ->
+        [one] More than { $limit } match
+       *[other] More than { $limit } matches
+    }
 pdfjs-find-not-found = Phrase not found
 
 ## Predefined zoom values
@@ -286,6 +301,29 @@ pdfjs-editor-ink-button-label = Draw
 pdfjs-editor-stamp-button =
     .title = Add or edit images
 pdfjs-editor-stamp-button-label = Add or edit images
+pdfjs-editor-highlight-button =
+    .title = Highlight
+pdfjs-editor-highlight-button-label = Highlight
+pdfjs-highlight-floating-button =
+    .title = Highlight
+pdfjs-highlight-floating-button1 =
+    .title = Highlight
+    .aria-label = Highlight
+pdfjs-highlight-floating-button-label = Highlight
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = Remove drawing
+pdfjs-editor-remove-freetext-button =
+    .title = Remove text
+pdfjs-editor-remove-stamp-button =
+    .title = Remove image
+pdfjs-editor-remove-highlight-button =
+    .title = Remove highlight
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Colour
 pdfjs-editor-free-text-size-input = Size
@@ -295,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Opacity
 pdfjs-editor-stamp-add-image-button =
     .title = Add image
 pdfjs-editor-stamp-add-image-button-label = Add image
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Thickness
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Change thickness when highlighting items other than text
 pdfjs-free-text =
     .aria-label = Text Editor
 pdfjs-free-text-default-content = Start typing…
@@ -305,7 +347,56 @@ pdfjs-ink-canvas =
 
 ## Alt-text dialog
 
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button-label = Alt text
+pdfjs-editor-alt-text-edit-button-label = Edit alt text
+pdfjs-editor-alt-text-dialog-label = Choose an option
+pdfjs-editor-alt-text-dialog-description = Alt text (alternative text) helps when people can’t see the image or when it doesn’t load.
+pdfjs-editor-alt-text-add-description-label = Add a description
+pdfjs-editor-alt-text-add-description-description = Aim for 1-2 sentences that describe the subject, setting, or actions.
+pdfjs-editor-alt-text-mark-decorative-label = Mark as decorative
+pdfjs-editor-alt-text-mark-decorative-description = This is used for ornamental images, like borders or watermarks.
+pdfjs-editor-alt-text-cancel-button = Cancel
+pdfjs-editor-alt-text-save-button = Save
+pdfjs-editor-alt-text-decorative-tooltip = Marked as decorative
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = For example, “A young man sits down at a table to eat a meal”
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+pdfjs-editor-resizer-label-top-left = Top left corner — resize
+pdfjs-editor-resizer-label-top-middle = Top middle — resize
+pdfjs-editor-resizer-label-top-right = Top right corner — resize
+pdfjs-editor-resizer-label-middle-right = Middle right — resize
+pdfjs-editor-resizer-label-bottom-right = Bottom right corner — resize
+pdfjs-editor-resizer-label-bottom-middle = Bottom middle — resize
+pdfjs-editor-resizer-label-bottom-left = Bottom left corner — resize
+pdfjs-editor-resizer-label-middle-left = Middle left — resize
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = Highlight colour
+pdfjs-editor-colorpicker-button =
+    .title = Change colour
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = Colour choices
+pdfjs-editor-colorpicker-yellow =
+    .title = Yellow
+pdfjs-editor-colorpicker-green =
+    .title = Green
+pdfjs-editor-colorpicker-blue =
+    .title = Blue
+pdfjs-editor-colorpicker-pink =
+    .title = Pink
+pdfjs-editor-colorpicker-red =
+    .title = Red
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Show all
+pdfjs-editor-highlight-show-all-button =
+    .title = Show all

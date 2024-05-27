@@ -39,6 +39,24 @@ pdfjs-open-file-button-label = Отваряне
 pdfjs-print-button =
     .title = Отпечатване
 pdfjs-print-button-label = Отпечатване
+pdfjs-save-button =
+    .title = Запазване
+pdfjs-save-button-label = Запазване
+# Used in Firefox for Android as a tooltip for the download button (“download” is a verb).
+pdfjs-download-button =
+    .title = Изтегляне
+# Used in Firefox for Android as a label for the download button (“download” is a verb).
+# Length of the translation matters since we are in a mobile context, with limited screen estate.
+pdfjs-download-button-label = Изтегляне
+pdfjs-bookmark-button =
+    .title = Текуща страница (преглед на адреса на страницата)
+pdfjs-bookmark-button-label = Текуща страница
+# Used in Firefox for Android.
+pdfjs-open-in-app-button =
+    .title = Отваряне в приложение
+# Used in Firefox for Android.
+# Length of the translation matters since we are in a mobile context, with limited screen estate.
+pdfjs-open-in-app-button-label = Отваряне в приложение
 
 ##  Secondary toolbar and context menu
 
@@ -63,6 +81,9 @@ pdfjs-cursor-text-select-tool-button-label = Инструмент за избо�
 pdfjs-cursor-hand-tool-button =
     .title = Включване на инструмента ръка
 pdfjs-cursor-hand-tool-button-label = Инструмент ръка
+pdfjs-scroll-page-button =
+    .title = Използване на плъзгане на страници
+pdfjs-scroll-page-button-label = Плъзгане на страници
 pdfjs-scroll-vertical-button =
     .title = Използване на вертикално плъзгане
 pdfjs-scroll-vertical-button-label = Вертикално плъзгане
@@ -154,6 +175,8 @@ pdfjs-printing-not-ready = Внимание: Този PDF файл не е на�
 
 pdfjs-toggle-sidebar-button =
     .title = Превключване на страничната лента
+pdfjs-toggle-sidebar-notification-button =
+    .title = Превключване на страничната лента (документът има структура/прикачени файлове/слоеве)
 pdfjs-toggle-sidebar-button-label = Превключване на страничната лента
 pdfjs-document-outline-button =
     .title = Показване на структурата на документа (двукратно щракване за свиване/разгъване на всичко)
@@ -161,12 +184,19 @@ pdfjs-document-outline-button-label = Структура на документа
 pdfjs-attachments-button =
     .title = Показване на притурките
 pdfjs-attachments-button-label = Притурки
+pdfjs-layers-button =
+    .title = Показване на слоевете (двукратно щракване за възстановяване на всички слоеве към състоянието по подразбиране)
+pdfjs-layers-button-label = Слоеве
 pdfjs-thumbs-button =
     .title = Показване на миниатюрите
 pdfjs-thumbs-button-label = Миниатюри
+pdfjs-current-outline-item-button =
+    .title = Намиране на текущия елемент от структурата
+pdfjs-current-outline-item-button-label = Текущ елемент от структурата
 pdfjs-findbar-button =
     .title = Намиране в документа
 pdfjs-findbar-button-label = Търсене
+pdfjs-additional-layers = Допълнителни слоеве
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
@@ -192,9 +222,25 @@ pdfjs-find-next-button =
 pdfjs-find-next-button-label = Следваща
 pdfjs-find-highlight-checkbox = Открояване на всички
 pdfjs-find-match-case-checkbox-label = Съвпадение на регистъра
+pdfjs-find-match-diacritics-checkbox-label = Без производни букви
 pdfjs-find-entire-word-checkbox-label = Цели думи
 pdfjs-find-reached-top = Достигнато е началото на документа, продължаване от края
 pdfjs-find-reached-bottom = Достигнат е краят на документа, продължаване от началото
+# Variables:
+#   $current (Number) - the index of the currently active find result
+#   $total (Number) - the total number of matches in the document
+pdfjs-find-match-count =
+    { $total ->
+        [one] { $current } от { $total } съвпадение
+       *[other] { $current } от { $total } съвпадения
+    }
+# Variables:
+#   $limit (Number) - the maximum number of matches
+pdfjs-find-match-count-limit =
+    { $limit ->
+        [one] Повече от { $limit } съвпадение
+       *[other] Повече от { $limit } съвпадения
+    }
 pdfjs-find-not-found = Фразата не е намерена
 
 ## Predefined zoom values
@@ -209,6 +255,10 @@ pdfjs-page-scale-percent = { $scale }%
 
 ## PDF page
 
+# Variables:
+#   $page (Number) - the page number
+pdfjs-page-landmark =
+    .aria-label = Страница { $page }
 
 ## Loading indicator messages
 
@@ -220,6 +270,10 @@ pdfjs-rendering-error = Грешка при изчертаване на стра
 
 ## Annotations
 
+# Variables:
+#   $date (Date) - the modification date of the annotation
+#   $time (Time) - the modification time of the annotation
+pdfjs-annotation-date-string = { $date }, { $time }
 # .alt: This is used as a tooltip.
 # Variables:
 #   $type (String) - an annotation type from a list defined in the PDF spec
@@ -238,10 +292,93 @@ pdfjs-web-fonts-disabled = Уеб-шрифтовете са забранени: 
 
 ## Editing
 
+pdfjs-editor-free-text-button =
+    .title = Текст
+pdfjs-editor-free-text-button-label = Текст
+pdfjs-editor-ink-button =
+    .title = Рисуване
+pdfjs-editor-ink-button-label = Рисуване
+pdfjs-editor-stamp-button =
+    .title = Добавяне или променяне на изображения
+pdfjs-editor-stamp-button-label = Добавяне или променяне на изображения
+pdfjs-editor-remove-button =
+    .title = Премахване
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = Премахване на рисунката
+pdfjs-editor-remove-freetext-button =
+    .title = Премахване на текста
+pdfjs-editor-remove-stamp-button =
+    .title = Пермахване на изображението
+pdfjs-editor-remove-highlight-button =
+    .title = Премахване на открояването
+
+##
+
+# Editor Parameters
+pdfjs-editor-free-text-color-input = Цвят
+pdfjs-editor-free-text-size-input = Размер
+pdfjs-editor-ink-color-input = Цвят
+pdfjs-editor-ink-thickness-input = Дебелина
+pdfjs-editor-ink-opacity-input = Прозрачност
+pdfjs-editor-stamp-add-image-button =
+    .title = Добавяне на изображение
+pdfjs-editor-stamp-add-image-button-label = Добавяне на изображение
+pdfjs-free-text =
+    .aria-label = Текстов редактор
+pdfjs-free-text-default-content = Започнете да пишете…
+pdfjs-ink =
+    .aria-label = Промяна на рисунка
+pdfjs-ink-canvas =
+    .aria-label = Изображение, създадено от потребител
 
 ## Alt-text dialog
 
+# Alternative text (alt text) helps when people can't see the image.
+pdfjs-editor-alt-text-button-label = Алтернативен текст
+pdfjs-editor-alt-text-edit-button-label = Промяна на алтернативния текст
+pdfjs-editor-alt-text-dialog-label = Изберете от възможностите
+pdfjs-editor-alt-text-dialog-description = Алтернативният текст помага на потребителите, когато не могат да видят изображението или то не се зарежда.
+pdfjs-editor-alt-text-add-description-label = Добавяне на описание
+pdfjs-editor-alt-text-add-description-description = Стремете се към 1-2 изречения, описващи предмета, настройката или действията.
+pdfjs-editor-alt-text-mark-decorative-label = Отбелязване като декоративно
+pdfjs-editor-alt-text-mark-decorative-description = Използва се за орнаменти или декоративни изображения, като контури и водни знаци.
+pdfjs-editor-alt-text-cancel-button = Отказ
+pdfjs-editor-alt-text-save-button = Запазване
+pdfjs-editor-alt-text-decorative-tooltip = Отбелязване като декоративно
+# .placeholder: This is a placeholder for the alt text input area
+pdfjs-editor-alt-text-textarea =
+    .placeholder = Например, „Млад мъж седи на маса и се храни“
 
 ## Editor resizers
 ## This is used in an aria label to help to understand the role of the resizer.
 
+pdfjs-editor-resizer-label-top-left = Горен ляв ъгъл — преоразмеряване
+pdfjs-editor-resizer-label-top-middle = Горе в средата — преоразмеряване
+pdfjs-editor-resizer-label-top-right = Горен десен ъгъл — преоразмеряване
+pdfjs-editor-resizer-label-middle-right = Дясно в средата — преоразмеряване
+pdfjs-editor-resizer-label-bottom-right = Долен десен ъгъл — преоразмеряване
+pdfjs-editor-resizer-label-bottom-middle = Долу в средата — преоразмеряване
+pdfjs-editor-resizer-label-bottom-left = Долен ляв ъгъл — преоразмеряване
+pdfjs-editor-resizer-label-middle-left = Ляво в средата — преоразмеряване
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = Цвят на открояване
+pdfjs-editor-colorpicker-button =
+    .title = Промяна на цвят
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = Избор на цвят
+pdfjs-editor-colorpicker-yellow =
+    .title = Жълто
+pdfjs-editor-colorpicker-green =
+    .title = Зелено
+pdfjs-editor-colorpicker-blue =
+    .title = Синьо
+pdfjs-editor-colorpicker-pink =
+    .title = Розово
+pdfjs-editor-colorpicker-red =
+    .title = Червено

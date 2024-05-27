@@ -301,8 +301,15 @@ pdfjs-editor-ink-button-label = Tekenje
 pdfjs-editor-stamp-button =
     .title = Ofbyldingen tafoegje of bewurkje
 pdfjs-editor-stamp-button-label = Ofbyldingen tafoegje of bewurkje
-pdfjs-editor-remove-button =
-    .title = Fuortsmite
+pdfjs-editor-highlight-button =
+    .title = Markearje
+pdfjs-editor-highlight-button-label = Markearje
+pdfjs-highlight-floating-button =
+    .title = Markearje
+pdfjs-highlight-floating-button1 =
+    .title = Markearje
+    .aria-label = Markearje
+pdfjs-highlight-floating-button-label = Markearje
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Transparânsje
 pdfjs-editor-stamp-add-image-button =
     .title = Ofbylding tafoegje
 pdfjs-editor-stamp-add-image-button-label = Ofbylding tafoegje
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Tsjokte
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Tsjokte wizigje by aksintuearring fan oare items as tekst
 pdfjs-free-text =
     .aria-label = Tekstbewurker
 pdfjs-free-text-default-content = Begjin mei typen…
@@ -382,3 +393,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Roze
 pdfjs-editor-colorpicker-red =
     .title = Read
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Alles toane
+pdfjs-editor-highlight-show-all-button =
+    .title = Alles toane

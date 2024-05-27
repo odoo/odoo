@@ -293,8 +293,15 @@ pdfjs-editor-ink-button-label = 그리기
 pdfjs-editor-stamp-button =
     .title = 이미지 추가 또는 편집
 pdfjs-editor-stamp-button-label = 이미지 추가 또는 편집
-pdfjs-editor-remove-button =
-    .title = 제거
+pdfjs-editor-highlight-button =
+    .title = 강조 표시
+pdfjs-editor-highlight-button-label = 강조 표시
+pdfjs-highlight-floating-button =
+    .title = 강조 표시
+pdfjs-highlight-floating-button1 =
+    .title = 강조 표시
+    .aria-label = 강조 표시
+pdfjs-highlight-floating-button-label = 강조 표시
 
 ## Remove button for the various kind of editor.
 
@@ -305,7 +312,7 @@ pdfjs-editor-remove-freetext-button =
 pdfjs-editor-remove-stamp-button =
     .title = 이미지 제거
 pdfjs-editor-remove-highlight-button =
-    .title = 강조 제거
+    .title = 강조 표시 제거
 
 ##
 
@@ -318,6 +325,10 @@ pdfjs-editor-ink-opacity-input = 불투명도
 pdfjs-editor-stamp-add-image-button =
     .title = 이미지 추가
 pdfjs-editor-stamp-add-image-button-label = 이미지 추가
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = 두께
+pdfjs-editor-free-highlight-thickness-title =
+    .title = 텍스트 이외의 항목을 강조 표시할 때 두께 변경
 pdfjs-free-text =
     .aria-label = 텍스트 편집기
 pdfjs-free-text-default-content = 입력하세요…
@@ -359,7 +370,7 @@ pdfjs-editor-resizer-label-middle-left = 왼쪽 가운데 — 크기 조정
 ## Color picker
 
 # This means "Color used to highlight text"
-pdfjs-editor-highlight-colorpicker-label = 강조 색
+pdfjs-editor-highlight-colorpicker-label = 색상
 pdfjs-editor-colorpicker-button =
     .title = 색상 변경
 pdfjs-editor-colorpicker-dropdown =
@@ -374,3 +385,10 @@ pdfjs-editor-colorpicker-pink =
     .title = 분홍색
 pdfjs-editor-colorpicker-red =
     .title = 빨간색
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = 모두 보기
+pdfjs-editor-highlight-show-all-button =
+    .title = 모두 보기
