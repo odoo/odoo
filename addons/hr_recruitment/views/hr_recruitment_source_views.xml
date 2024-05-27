@@ -23,10 +23,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="float-start">
+                                        <a role="button" t-att-href="record.url.value" title="share it" class="fa fa-share-alt"/>
+                                    </div>
                                     <div class="o_kanban_record_body mt-3">
                                         <div class="text-end">
                                             <field name="email" invisible="not has_domain" widget="email"/>
                                             <button name="create_alias" class="btn btn-primary mb-2" type="object" invisible="not has_domain or email">Generate Email</button>
+                                              <field name="url" widget="CopyClipboardURL"/>
                                         </div>
                                     </div>
                                 </div>
@@ -46,6 +50,7 @@
                     <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" readonly="id"/>
                     <field name="medium_id" optional="hidden"/>
                     <field name="job_id" readonly="id"/>
+                    <field name="url" widget="url"/>
                     <field name="email" widget="email"
                            invisible="not email or not has_domain"/>
                     <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" invisible="not has_domain or email"/>

@@ -107,8 +107,8 @@ export class NewContentModal extends Component {
                     title: _t('Forum'),
                 },
                 {
-                    moduleName: 'website_hr_recruitment',
-                    moduleXmlId: 'base.module_website_hr_recruitment',
+                    moduleName: 'hr_recruitment',
+                    moduleXmlId: 'base.module_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-briefcase"/>`,
                     title: _t('Job Position'),

@@ -12,6 +12,7 @@ class HrDepartment(models.Model):
         compute='_compute_recruitment_stats', string='New Hired Employee')
     expected_employee = fields.Integer(
         compute='_compute_recruitment_stats', string='Expected Employee')
+    display_name = fields.Char(compute='_compute_display_name', compute_sudo=True)
 
     def _compute_new_applicant_count(self):
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer'):

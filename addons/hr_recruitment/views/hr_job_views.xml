@@ -11,7 +11,7 @@
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard o_hr_recruitment_kanban" on_create="hr_recruitment.create_job_simple" sample="1" limit="40" action="%(action_hr_job_applications)d" type="action">
+            <kanban class="o_kanban_dashboard o_hr_recruitment_kanban" on_create="hr_recruitment.create_job_simple" sample="1" limit="40" action="%(action_hr_job_applications)d" type="action" default_order="is_published desc, is_favorite desc, create_date DESC">
                 <field name="active"/>
                 <field name="name"/>
                 <field name="alias_email"/>
@@ -75,6 +75,10 @@
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div class="o_kanban_card_header d-flex align-items-baseline gap-1">
                                 <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                <field name="website_published" invisible="1"/>
+                                <div class="ribbon ribbon-top-right" invisible="not website_published">
+                                    <span class="text-bg-success">Published</span>
+                                </div>
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary">
                                         <span><t t-esc="record.name.value"/></span>
@@ -117,7 +121,20 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
+                                <div name="kanban_boxes" class="row flex-nowrap border-top pt-2" groups="hr_recruitment.group_hr_recruitment_user">
+                                    <field name="website_url" invisible="1"/>
+                                    <div class="col-6">
+                                        <field name="is_published" widget="boolean_toggle" class="me-1"/>
+                                        <t t-if="record.is_published.raw_value">Published</t>
+                                        <t t-else="">Not published</t>
+                                    </div>
+                                    <div class="o_link_trackers col-6 text-end">
+                                        <a type="object" name="open_website_url">
+                                            <i class="fa fa-fw fa-external-link" role="img"></i>
+                                            Job Page
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -125,6 +142,7 @@
             </kanban>
         </field>
     </record>
+
     <record id="view_job_filter_recruitment" model="ir.ui.view">
         <field name="name">Job</field>
         <field name="model">hr.job</field>
@@ -133,6 +151,13 @@
             <xpath expr="//field[@name='department_id']" position="after">
                 <filter string="My Favorites" name="my_favorite_jobs" domain="[('favorite_user_ids', 'in', uid)]"/>
                 <separator/>
+            </xpath>
+             <xpath expr="//filter[@name='message_needaction']" position="before">
+                <filter name="published" string="Published" domain="[('is_published', '=', True)]"/>
+                <separator/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Published" name="groupby_published" domain="[]" context="{'group_by': 'is_published'}"/>
             </xpath>
         </field>
     </record>
@@ -236,6 +261,20 @@
             <xpath expr="//sheet" position="after">
                 <chatter open_attachments="True"/>
             </xpath>
+             <page name="recruitment_page" position="inside">
+                <separator string="Process Details"/>
+                <field name="job_details" nolabel="1"/>
+            </page>
+            <div name="button_box" position="inside">
+                <field name="is_published" widget="website_redirect_button"/>
+            </div>
+            <xpath expr="//div[@name='recruitment_target']" position="after">
+                <field name="website_published" string="Is Published"/>
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
+            </xpath>
+            <field name="description" position="attributes">
+                <attribute name="placeholder">You can write here a short description of your Job Description that will be displayed on the main Jobs' list page.</attribute>
+            </field>
         </field>
     </record>
 
@@ -294,6 +333,12 @@
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="no_of_hired_employee" optional="hide"/>
             </field>
+            <field name="no_of_employee" position="before">
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </field>
+            <xpath expr="//field[@name='alias_id']" position="before">
+                <field name="is_published" string="Published"/>
+            </xpath>
         </field>
     </record>
 
@@ -403,4 +448,76 @@
         action="action_hr_job_platforms"
         sequence="50"/>
 
+    
+
+    <!-- MODE PRIMARY -->
+    <record id="job_pages_tree_view" model="ir.ui.view">
+        <field name="name">Job Pages Tree</field>
+        <field name="model">hr.job</field>
+        <field name="priority">99</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">website_pages_list</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="action">open_website_url</attribute>
+                <attribute name="multi_edit">1</attribute>
+            </xpath>
+
+            <field name="name" position="after">
+                <field name="website_url"/>
+                <field name="company_id" column_invisible="True"/>
+            </field>
+            <xpath expr="//tree">
+                <field name="is_seo_optimized"/>
+                <field name="is_published" position="move"/>
+
+                <field name="website_id" groups="website.group_multi_website"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="job_pages_kanban_view" model="ir.ui.view">
+        <field name="name">Job Pages Kanban</field>
+        <field name="model">hr.job</field>
+        <field name="priority">99</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_hr_job_kanban"/>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="js_class">website_pages_kanban</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="action">open_website_url</attribute>
+            </kanban>
+            <xpath expr="//div[hasclass('o_kanban_card_header_title')]" position="inside">
+                <div class="text-muted fw-bold ps-3">
+                    <span class="me-3" t-if="record.website_id.value" groups="website.group_multi_website">
+                        <i class="fa fa-globe me-1" title="Website"/>
+                        <field name="website_id"/>
+                    </span>
+                    <field name="is_seo_optimized" widget="boolean"/> SEO Optimized
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_link_trackers')]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="action_job_pages_list" model="ir.actions.act_window">
+        <field name="name">Job Pages</field>
+        <field name="res_model">hr.job</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('job_pages_tree_view')}),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('job_pages_kanban_view')}),
+        ]"/>
+        <field name="context">{'create_action': '/jobs/add'}</field>
+    </record>
+
+    <menuitem id="menu_job_pages"
+        parent="website.menu_content"
+        sequence="70"
+        name="Jobs"
+        action="action_job_pages_list"
+        groups="hr_recruitment.group_hr_recruitment_interviewer"/>
 </odoo>
