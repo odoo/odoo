@@ -1,5 +1,19 @@
 @media print {
 
+    .color_circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: inline-block;
+        background-color: #ccc; // Color de fondo por defecto para prueba
+    }
+
+    .color_circle.excelente { background-color: #2894a7; }
+    .color_circle.bueno { background-color: #5aaf2b; }
+    .color_circle.regular { background-color: #fcd703; }
+    .color_circle.malo { background-color: #fc8803; }
+    .color_circle.muy_malo { background-color: #ff4747; }
+
     .page-break {
         page-break-after: always;
         break-after: always;
@@ -91,7 +105,7 @@
             }
             tbody {
                 tr {
-                  break-inside: avoid;  
+                    break-inside: avoid;  
                 }
                 tr.d-none {
                     display: table-row !important;
@@ -271,6 +285,12 @@
     aspect-ratio: 1;
     width: 22px;
     border-radius: 100%;
+
+    &.excelente { background-color: #2894a7; }
+    &.bueno { background-color: #5aaf2b; }
+    &.regular { background-color: #fcd703; }
+    &.malo { background-color: #fc8803; }
+    &.muy_malo { background-color: #ff4747; }
 }
 
 
