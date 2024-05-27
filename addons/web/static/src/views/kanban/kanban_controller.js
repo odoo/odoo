@@ -140,9 +140,10 @@ export class KanbanController extends Component {
         });
 
         this.rootRef = useRef("root");
-        useViewButtons(this.model, this.rootRef, {
+        useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
+            reload: () => this.model.load(),
         });
         useSetupView({
             rootRef: this.rootRef,
@@ -182,9 +183,9 @@ export class KanbanController extends Component {
         const { activeFields, fields } = extractFieldsFromArchInfo(archInfo, this.props.fields);
 
         // Remove fields aggregator unused to avoid asking them for no reason
-        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name)
+        const aggregateFieldNames = this.progressBarAggregateFields.map((field) => field.name);
         for (const [key, value] of Object.entries(activeFields)) {
-            if (!aggregateFieldNames.includes(key)){
+            if (!aggregateFieldNames.includes(key)) {
                 value.aggregator = null;
             }
         }
