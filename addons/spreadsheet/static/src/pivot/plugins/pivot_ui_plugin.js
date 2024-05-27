@@ -242,7 +242,7 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
      * as if it was the individual pivot formula
      *
      * @param {{ col: number, row: number, sheetId: string }} position
-     * @returns {(string | number)[] | undefined}
+     * @returns {{domainArgs: (string | number)[], isHeader: boolean} | undefined}
      */
     getPivotDomainArgsFromPosition(position) {
         const cell = this.getters.getCorrespondingFormulaCell(position);
@@ -272,17 +272,18 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
             const pivotCol = position.col - mainPosition.col;
             const pivotRow = position.row - mainPosition.row;
             const pivotCell = pivotCells[pivotCol][pivotRow];
-            const domain = pivotCell.domain;
+            let domain = pivotCell.domain;
             if (domain?.at(-2) === "measure") {
-                return domain.slice(0, -2);
+                domain = domain.slice(0, -2);
             }
-            return domain;
+            return { domainArgs: domain, isHeader: pivotCell.isHeader };
         }
-        const domain = args.slice(functionName === "ODOO.PIVOT" ? 2 : 1);
+        let domain = args.slice(functionName === "ODOO.PIVOT" ? 2 : 1);
         if (domain.at(-2) === "measure") {
-            return domain.slice(0, -2);
+            domain = domain.slice(0, -2);
         }
-        return domain;
+        const isHeader = functionName === "ODOO.PIVOT.HEADER";
+        return { domainArgs: domain, isHeader };
     }
 
     /**
