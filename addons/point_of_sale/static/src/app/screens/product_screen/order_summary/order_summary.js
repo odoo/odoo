@@ -33,6 +33,10 @@ export class OrderSummary extends Component {
         return this.pos.get_order();
     }
 
+    get currentLines() {
+        return this.currentOrder.lines;
+    }
+
     async editPackLotLines(line) {
         const isAllowOnlyOneLot = line.product_id.isAllowOnlyOneLot();
         const editedPackLotLines = await this.pos.editLots(

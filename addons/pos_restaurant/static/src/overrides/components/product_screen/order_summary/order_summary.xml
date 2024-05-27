@@ -6,5 +6,26 @@
                 () => line.toggleSkipChange()
             </attribute>
         </xpath>
+        <xpath expr="//Orderline" position="inside">
+            <t t-set-slot="sequence_order">
+                <div t-if="pos.config.module_pos_restaurant and line.product_id.pos_sequence_stage_ids.length">
+                    <div class="sequence-stage-tooltip-btn bg-secondary d-flex align-items-center justify-content-center w-100 rounded p-2 cursor-pointer position-relative"
+                     t-attf-class="o_colorlist_item_color_transparent_{{line.pos_sequence_stage_id?.color or 'none'}}"
+                     t-on-click="() => this.toggleSequenceTooltip(line)">
+                        <span t-esc="line.pos_sequence_stage_id?.name?.substring(0, 1) or 'N/A'" class="fs-5" t-att-class="{'text-black': !line.pos_sequence_stage_id}" style="font-weight: 700 !important"/>
+                        <div t-if="sequenceTooltip.value === line.uuid" class="sequence-stage-tooltip p-1 d-flex rounded border bg-white gap-1 position-absolute top-100 start-50 translate-middle sequence_stage_tooltip">
+                            <div t-foreach="line.product_id.pos_sequence_stage_ids"
+                                t-as="sequenceStage"
+                                t-key="sequenceStage.id"
+                                class="p-3 border rounded"
+                                t-attf-class="o_colorlist_item_color_transparent_{{sequenceStage?.color or 'none'}}"
+                                t-on-click="() => this.selectSequenceStage(line, sequenceStage)">
+                                <span t-esc="sequenceStage.name.substring(0, 1)" class="fs-5" style="font-weight: 700 !important" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
     </t>
 </templates>

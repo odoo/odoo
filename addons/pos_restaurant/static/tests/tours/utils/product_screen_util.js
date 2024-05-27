@@ -50,3 +50,27 @@ export function tableNameShown(table_name) {
         },
     ];
 }
+
+export function openSequenceStageTooltip(lineName) {
+    return {
+        content: "click sequence stage tooltip",
+        trigger: `.orderline:contains('${lineName}') .sequence-stage-tooltip-btn`,
+        run: "click",
+    };
+}
+
+export function selectSequenceStage(stage) {
+    return {
+        content: `select sequence stage ${stage}`,
+        trigger: `.sequence-stage-tooltip span:contains('${stage}')`,
+        run: "click",
+    };
+}
+
+export function verifyFirstOrderline(lineName) {
+    return {
+        content: "verify first orderline",
+        trigger: `.order-container .orderline:first-child:contains('${lineName}')`,
+        run: function () {}, // it's a check
+    };
+}

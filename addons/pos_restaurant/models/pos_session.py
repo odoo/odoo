@@ -11,7 +11,7 @@ class PosSession(models.Model):
     def _load_pos_data_models(self, config_id):
         data = super()._load_pos_data_models(config_id)
         if self.config_id.module_pos_restaurant:
-            data += ['restaurant.floor', 'restaurant.table']
+            data += ['restaurant.floor', 'restaurant.table', 'pos.sequence.stage']
         return data
 
     @api.model

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_pos_sequence_stage_tree" model="ir.ui.view">
+            <field name="name">Sequence stage</field>
+            <field name="model">pos.sequence.stage</field>
+            <field name="arch" type="xml">
+                <tree string="Sequence stage" create="1" editable="bottom">
+                    <field name="sequence" widget="handle" />
+                    <field name="name" />
+                    <field name="color" widget="color_picker"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_restaurant_sequence_stage_form" model="ir.actions.act_window">
+            <field name="name">Sequence Stage</field>
+            <field name="res_model">pos.sequence.stage</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Add a new sequence stage
+              </p><p>
+                A sequence stage allow the user to quickly select the sequence of the meals. Leads to better priority visibility on the kitchen display/order.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_sequence_stage_all"
+            parent="point_of_sale.menu_point_config_product"
+            action="action_restaurant_sequence_stage_form"
+            sequence="10"
+            groups="point_of_sale.group_pos_user"/>
+</odoo>

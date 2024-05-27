@@ -54,3 +54,13 @@ class PosOrder(models.Model):
                 messages.append(('TABLE_ORDER_COUNT', order_count))
         if messages:
             a_config._notify(*messages, private=False)
+
+
+class PosOrderLine(models.Model):
+    _inherit = "pos.order.line"
+
+    pos_sequence_stage_id = fields.Many2one('pos.sequence.stage', string='Sequence Stage')
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return super()._load_pos_data_fields(config_id) + ['pos_sequence_stage_id']

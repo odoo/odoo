@@ -8,3 +8,5 @@ from . import pos_restaurant
 from . import pos_session
 from . import res_config_settings
 from . import account_fiscal_position
+from . import pos_sequence_stage
+from . import product

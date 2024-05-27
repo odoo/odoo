@@ -335,3 +335,22 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("SequenceNumberTour", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Cake"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.openSequenceStageTooltip("Cake"),
+            ProductScreen.selectSequenceStage("F"),
+            ProductScreen.openSequenceStageTooltip("Coca-Cola"),
+            ProductScreen.selectSequenceStage("D"),
+            ProductScreen.verifyFirstOrderline("Coca-Cola"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});

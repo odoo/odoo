@@ -16,6 +16,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         archive_products(cls.env)
 
         drinks_category = cls.env['pos.category'].create({'name': 'Drinks'})
+        foods_category = cls.env['pos.category'].create({'name': 'Foods'})
 
         printer = cls.env['pos.printer'].create({
             'name': 'Preparation Printer',
@@ -117,10 +118,20 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             main_company,
         )
 
+        sequence_stage_drink = cls.env['pos.sequence.stage'].create({
+            'name': 'Drink',
+            'sequence': 1,
+        })
+        sequence_stage_food = cls.env['pos.sequence.stage'].create({
+            'name': 'Food',
+            'sequence': 2,
+        })
+
         cls.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Coca-Cola',
+            'pos_sequence_stage_ids': [(4, sequence_stage_drink.id)],
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
             'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
@@ -131,6 +142,7 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'Water',
+            'pos_sequence_stage_ids': [(4, sequence_stage_drink.id)],
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
             'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
@@ -142,7 +154,19 @@ class TestFrontend(TestPointOfSaleHttpCommon):
             'list_price': 2.20,
             'name': 'Minute Maid',
             'weight': 0.01,
+            'pos_sequence_stage_ids': [(4, sequence_stage_drink.id)],
             'pos_categ_ids': [(4, drinks_category.id)],
+            'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
+            'taxes_id': [(6, 0, [])],
+        })
+
+        cls.env['product.product'].create({
+            'available_in_pos': True,
+            'list_price': 5.10,
+            'name': 'Cake',
+            'weight': 0.01,
+            'pos_sequence_stage_ids': [(4, sequence_stage_food.id)],
+            'pos_categ_ids': [(4, foods_category.id)],
             'categ_id': cls.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
@@ -282,3 +306,10 @@ class TestFrontend(TestPointOfSaleHttpCommon):
     def test_12_merge_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('MergeTableTour', login="pos_admin")
+
+    def test_13_sequence_number(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('SequenceNumberTour')
+        lines = self.env['pos.order'].search([])[-1].lines
+        self.assertEqual(lines[0].pos_sequence_stage_id.name, 'Drink')
+        self.assertEqual(lines[1].pos_sequence_stage_id.name, 'Food')
