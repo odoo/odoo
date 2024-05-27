@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- CLIMA -->
+    <!-- Vista de formulario para evaluación del clima -->
     <record id="evaluacion_clima_view_form" model="ir.ui.view">
         <field name="name">evaluacion_clima.form</field>
         <field name="model">evaluacion</field>
@@ -9,18 +8,19 @@
                 <header>
                     <button name="evaluacion_action_tree" string="Guardar" type="object" class="btn-primary my-3"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <button class=" btn btn-primary" name="action_importar_preguntas_clima" string="Agregar catálogo de preguntas" type="object" />
                 </header>
                 <sheet>
                     <h1>Crear evaluación Clima Laboral</h1>
                     <br></br>
                     <group>
-                        <field name="nombre"/>
+                        <field name="nombre" placeholder="Ingrese el nombre de la evaluación"/>
                     </group>
                     <group>
-                        <field name="estado"/>
+                        <field name="estado" placeholder="Estado de la evaluación"/>
                     </group>
                     <group>
-                        <field name="descripcion"/>
+                        <field name="descripcion" placeholder="Descripción de la evaluación"/>
                     </group>
                     <group>
                         <field name="fecha_inicio">
@@ -29,18 +29,33 @@
                         <field name="fecha_final">
                             <widget name="date"/>
                         </field>
-                        <field name="incluir_demograficos"/>
+                        <field name="incluir_demograficos" placeholder="Incluir datos demográficos"/>
                     </group>
                     <group>
+                        <!-- Campo para seleccionar el formato de las preguntas escalares -->
                         <field name="escalar_format"/>
                     </group>
                     <notebook>
                         <page string="Preguntas">
-                            <field class="lh-lg w-100" readonly="1" colspan="2" name="pregunta_ids">
-                                <tree create="false" editable="bottom">
-                                    <field class="lh-m" name="pregunta_texto" readonly="1"/>
-                                    <field class="lh-m" name="tipo" readonly="1"/>
+                            <field class="lh-lg w-100" name="pregunta_ids" domain="[('tipo', '=', False)]">
+                                <tree create="true" delete="true">
+                                    <field name="categoria" string="Categoría"/>
+                                    <field name="pregunta_texto"/>
+                                    <field name="tipo"/>
                                 </tree>
+                                <form string="Agregar pregunta">
+                                    <group>
+                                        <field name="pregunta_texto" placeholder="Ingrese la pregunta"/>
+                                        <field name="tipo"/>
+                                        <field name="categoria" placeholder="Seleccione o agregue una categoría" required="True"/>
+                                        <field name="ponderacion" invisible="tipo != 'escala'" required="True"/>
+                                        <field name="opcion_ids" placeholder="Opciones" context="{'default_pregunta_id': active_id}" invisible="tipo != 'multiple_choice'" required="True">
+                                            <tree create="true" delete="true" editable="bottom">
+                                                <field name="opcion_texto"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </form>
                             </field>
                         </page>
                         <page string="Asignados">

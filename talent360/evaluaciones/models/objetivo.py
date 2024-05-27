@@ -28,7 +28,7 @@ class Objetivo(models.Model):
     _description = "Objetivos de desempeño"
     _rec_name = "titulo"
 
-    titulo = fields.Char(required=True, string="Título")
+    titulo = fields.Char(required=True, string="Título", help="Título del objetivo")
     descripcion = fields.Text(
         required=True, string="Descripción", help="Descripción del objetivo", size="20"
     )
@@ -40,7 +40,7 @@ class Objetivo(models.Model):
         default="porcentaje",
         required=True,
         string="Métrica",
-        help="¿Cómo se medirá el objetivo? Ej. Porcentaje o Monto",
+        help="¿Cómo se medirá el objetivo? Ej. En porcentaje o en monto",
     )
 
     tipo = fields.Selection(
@@ -50,7 +50,7 @@ class Objetivo(models.Model):
         ],
         default="puesto",
         required=True,
-        help="Tipo de objetivo",
+        help="Si es individual, el objetivo es tipo 'Del Puesto'. Si es por equipo, el objetivo es tipo 'Estratégico'",
     )
 
     orden = fields.Selection(
@@ -63,12 +63,12 @@ class Objetivo(models.Model):
         help="Si el objetivo es para lograr una meta, es ascendente, si es para reducir algo, es descendente",
     )
 
-    peso = fields.Integer(required=True, help="Peso del objetivo en la evaluación")
+    peso = fields.Integer(required=True, help="Peso del objetivo en la evaluación (no debe incluir decimales).")
     piso_minimo = fields.Integer(
-        required=True, string="Piso Mínimo", help="¿Cuál es el mínimo aceptable?"
+        required=True, string="Piso Mínimo", help="¿Cuál es el resultado mínimo que se espera? (no debe incluir decimales)"
     )
     piso_maximo = fields.Integer(
-        required=True, string="Piso Máximo", help="¿Cuál es el máximo aceptable?"
+        required=True, string="Piso Máximo", help="¿Cuál es el resultado que se espera? (no debe incluir decimales)"
     )
     fecha_fin = fields.Date(
         required=True,
