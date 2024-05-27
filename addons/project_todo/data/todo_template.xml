@@ -4,12 +4,12 @@
 
     <template id="todo_user_onboarding">
 <h1>
-    <span style="font-size: 36px;">Hey <t t-out="object.name"/> &amp;#128075; <br />
+    <span style="font-size: 36px; color: #374151">Hey <t t-out="object.name"/> &amp;#128075; <br />
     Welcome to the To-do app! </span>
 </h1>
 <p>
     <span style="font-size: 14px;">
-        Use it to manage your urgent work, take notes on the go, and create tasks based on them. 
+        Use it to manage your work, take notes on the go, and create tasks based on them.
     </span>
 </p>
 <p><br /></p>
@@ -36,7 +36,7 @@
     <li id="checkId-980463482772">
         <span style="font-size: 14px;">
             Select text to
-            <font class="bg-o-color-2">Highlight</font>,
+            <font style="background-color: #017E84; color: white">Highlight</font>,
             <span style="text-decoration-line: line-through;">strikethrough</span>
             or
             <span style="font-weight: bolder;">style</span>
@@ -49,7 +49,7 @@
             <span style="font-weight: bolder;">commands</span>
             by
             <span style="font-weight: bolder;">
-                <font class="text-o-color-2">typing</font>
+                <font style="color: #017E84">typing</font>
             </span>
             "<span style="font-weight: bolder;">/</span>"
         </span>
@@ -80,47 +80,90 @@
 </ul>
 <p><br /></p>
 
-<h3 id="">Create a task</h3>
-<hr />
-<p>
-    <span style="font-size: 14px;">
-        You can convert your to-dos into tasks and assign them to a project. To do this, you need to access the
-        <span style="font-weight: bolder;">
-            <font class="text-o-color-2">Convert to Task</font>
-        </span>
-        pop-up from the action menu of the to-do.
-    </span>
-</p>
-<p>
-    <span style="font-size: 14px;">
-        To-dos are now like 
-        <span style="font-weight: bolder;">
-            <font class="text-o-color-2">private tasks</font>
-        </span>
-        and will appear in the Project app under 
-        <span>
-            <font style="font-weight: bolder;" class="text-o-color-2">My Tasks</font>.
-        </span>
-        Similarly, private tasks created in the Project app will also appear in your to-dos.
-    </span>
-</p>
-<p><br /></p>
-
 <h3>Who has access to what?</h3>
 <hr />
 <p>
     <span style="font-size: 14px;">
-        To-dos, like private tasks, are only accessible to the users specified as assignees. You can use the
-        <span style="font-weight: bolder;">
-            <font class="text-o-color-2">assignees</font>
+        By default, to-dos are only visible to you. You can share them with other users by adding them as
+        <span>
+            <font style="font-weight: bolder;" class="text-o-color-2">assignees</font>.
         </span>
-        field above to share this to-do with other users.
     </span>
+    <br/>
+    <img class="img-fluid d-none d-sm-block" src="/project_todo/static/img/todo_access.png" alt="todo-access"/>
 </p>
+<p><br /></p>
+
+<h3>Organize your to-dos however you want</h3>
+<hr />
 <p>
     <span style="font-size: 14px;">
-        During the conversion of a to-do to a task, you will be able to add or remove assignees to control who has access to the created task. Note that its visibility will also depend on the visibility settings of the project you are assigning it to.
+        Customize the stages from the
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">Kanban view</font>
+        </span>
+        to reflect your preferred workflow.
     </span>
+</p>
+<p><br /></p>
+
+<h3 class="fw-bolder">Manage your to-dos and assigned tasks from a single place</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        Access your personal pipeline with your to-dos and assigned tasks by going to the Project app and clicking
+        <span>
+            <font style="font-weight: bolder;" class="text-o-color-2">My Tasks</font>.
+        </span>
+    </span>
+    <br/>
+    <br/>
+    <span style="font-size: 14px;">
+        There, your to-dos are listed as
+        <span style="font-weight: bolder;">
+            <font class="text-o-color-2">private tasks.</font>
+        </span>
+        Any task you create privately will also be included in your to-dos. Essentially, they are interchangeable.
+    </span>
+</p>
+<p><br /></p>
+
+<h3>Convert to-dos into tasks</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        If you want to assign your to-do to a specific project, open the ⚙️ menu and click
+        <span>
+            <font style="font-weight: bolder;" class="text-o-color-2">Convert to Task</font>.
+        </span>
+        This action will make it visible to other users.
+    </span>
+    <br/>
+    <img class="img-fluid d-none d-sm-block" src="/project_todo/static/img/convert_todo.png" alt="convert-todo"/>
+</p>
+<p><br /></p>
+
+<h3>Create to-dos from anywhere</h3>
+<hr />
+<p>
+    <span style="font-size: 14px;">
+        Wherever you are, use the magic keyboard shortcut to add yourself a reminder 💡
+    </span>
+    <br/>
+    <ul>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Alt + Shift + T</font>
+            </span>
+            (Windows/Linux)
+        </li>
+        <li>
+            <span style="font-weight: bolder;">
+                <font class="text-o-color-2">Ctrl + Shift + T</font>
+            </span>
+            (MacOs)
+        </li>
+    </ul>
 </p>
     </template>
 
