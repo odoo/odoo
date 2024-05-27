@@ -16,7 +16,7 @@ import odoo.modules.registry
 from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
-from odoo.tools import lazy_property, osutil, pycompat
+from odoo.tools import lazy_property, osutil
 from odoo.tools.misc import xlsxwriter
 from odoo.tools.translate import _
 
@@ -542,11 +542,15 @@ class CSVExport(ExportFormat, http.Controller):
         for data in rows:
             row = []
             for d in data:
+                if d is None or d is False:
+                    d = ''
+                elif isinstance(d, bytes):
+                    d = d.decode()
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
                 if isinstance(d, str) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
-                row.append(pycompat.to_text(d))
+                row.append(d)
             writer.writerow(row)
 
         return fp.getvalue()
