@@ -1212,12 +1212,12 @@ class Evaluacion(models.Model):
         """
         return {
             
-            'type': 'ir.actions.report',
-            'report_name': 'evaluaciones.reporte_template',
-            'context': {
-                'evaluacion_id': self.id,
-                'fecha_inicio': self.fecha_inicio,
-                'fecha_final': self.fecha_final,
+            "type": "ir.actions.report",
+            "report_name": "evaluaciones.reporte_template",
+            "context": {
+                "evaluacion_id": self.id,
+                "fecha_inicio": self.fecha_inicio,
+                "fecha_final": self.fecha_final,
             }
         }
 
