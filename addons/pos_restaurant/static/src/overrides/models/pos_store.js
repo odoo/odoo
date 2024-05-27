@@ -1,12 +1,12 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
-import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
-import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -178,11 +178,15 @@ patch(PosStore.prototype, {
         return super.closePos(...arguments);
     },
     showBackButton() {
-        return (
-            super.showBackButton(...arguments) ||
-            this.mainScreen.component === TipScreen ||
-            (this.mainScreen.component === ProductScreen && this.config.module_pos_restaurant)
-        );
+        if (this.config.module_pos_restaurant) {
+            const screenWoBackBtn = [ReceiptScreen, FloorScreen, TicketScreen];
+            return (
+                !screenWoBackBtn.includes(this.mainScreen.component) ||
+                (this.ui.isSmall && this.mainScreen.component === TicketScreen)
+            );
+        } else {
+            return super.showBackButton(...arguments);
+        }
     },
     //@override
     async afterProcessServerData() {

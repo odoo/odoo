@@ -11,7 +11,7 @@
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="stopOrderTransfer">
                     <i class="fa fa-times" role="img" aria-label="Close" title="Close" />Discard</button>
             </div>
-            <div t-if="pos.isEditMode" class="edit-buttons d-flex align-items-center justify-content-center px-3 border-bottom bg-view overflow-x-auto w-100">
+            <div t-if="pos.isEditMode" class="edit-buttons d-flex px-3 border-bottom bg-view overflow-x-auto w-100">
                 <button t-attf-class="ms-auto {{editButtonClass}}" t-on-click.stop="createTable">
                     <i class="fa fa-plus" role="img" aria-label="Add" title="Add" />Table</button>
                 <button t-attf-class="{{editButtonClass}}" t-att-disabled="selectedTables.length == 0" t-on-click.stop="changeSeatsNum">
