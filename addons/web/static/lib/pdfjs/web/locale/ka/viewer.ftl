@@ -220,7 +220,7 @@ pdfjs-find-previous-button-label = წინა
 pdfjs-find-next-button =
     .title = ფრაზის შემდეგი კონტექსტის პოვნა
 pdfjs-find-next-button-label = შემდეგი
-pdfjs-find-highlight-checkbox = ყველას მონიშვნა
+pdfjs-find-highlight-checkbox = ყველაფრის მონიშვნა
 pdfjs-find-match-case-checkbox-label = მთავრულით
 pdfjs-find-match-diacritics-checkbox-label = ნიშნებით
 pdfjs-find-entire-word-checkbox-label = მთლიანი სიტყვები
@@ -303,6 +303,23 @@ pdfjs-editor-stamp-button =
 pdfjs-editor-stamp-button-label = სურათების დართვა ან ჩასწორება
 pdfjs-editor-remove-button =
     .title = მოცილება
+pdfjs-editor-highlight-button =
+    .title = მონიშვნა
+pdfjs-editor-highlight-button-label = მონიშვნა
+
+## Remove button for the various kind of editor.
+
+pdfjs-editor-remove-ink-button =
+    .title = დახაზულის მოცილება
+pdfjs-editor-remove-freetext-button =
+    .title = წარწერის მოცილება
+pdfjs-editor-remove-stamp-button =
+    .title = სურათის მოცილება
+pdfjs-editor-remove-highlight-button =
+    .title = მონიშვნის მოცილება
+
+##
+
 # Editor Parameters
 pdfjs-editor-free-text-color-input = ფერი
 pdfjs-editor-free-text-size-input = ზომა
@@ -316,24 +333,24 @@ pdfjs-free-text =
     .aria-label = ნაწერის ჩასწორება
 pdfjs-free-text-default-content = აკრიფეთ…
 pdfjs-ink =
-    .aria-label = ნახატის ჩასწორება
+    .aria-label = დახაზულის შესწორება
 pdfjs-ink-canvas =
     .aria-label = მომხმარებლის შექმნილი სურათი
 
 ## Alt-text dialog
 
 # Alternative text (alt text) helps when people can't see the image.
-pdfjs-editor-alt-text-button-label = დართული წარწერა
-pdfjs-editor-alt-text-edit-button-label = დართული წარწერის ჩასწორება
+pdfjs-editor-alt-text-button-label = თანდართული წარწერა
+pdfjs-editor-alt-text-edit-button-label = თანდართული წარწერის ჩასწორება
 pdfjs-editor-alt-text-dialog-label = არჩევა
-pdfjs-editor-alt-text-dialog-description = დართული წარწერა (შემნაცვლებელი ტექსტი) გამოსადეგია მათთვის, ვინც ვერ ხედავს სურათებს ან როცა სურათი ვერ იტვირთება.
-pdfjs-editor-alt-text-add-description-label = აღწერილობის დამატება
+pdfjs-editor-alt-text-dialog-description = თანდართული (შემნაცვლებელი) წარწერა გამოსადეგია მათთვის, ვინც ვერ ხედავს სურათებს ან გამოისახება მაშინ, როცა სურათი ვერ ჩაიტვირთება.
+pdfjs-editor-alt-text-add-description-label = აღწერილობის მითითება
 pdfjs-editor-alt-text-add-description-description = განკუთვნილია 1-2 წინადადებით საგნის, მახასიათებლის ან მოქმედების აღსაწერად.
-pdfjs-editor-alt-text-mark-decorative-label = მოინიშნოს მოსართავად
-pdfjs-editor-alt-text-mark-decorative-description = გამოიყენება შესამკობი სურათებისთვის, გარსშემოსავლები ჩარჩოებისა და ჭვირნიშნებისთვის.
+pdfjs-editor-alt-text-mark-decorative-label = მოინიშნოს მორთულობად
+pdfjs-editor-alt-text-mark-decorative-description = განკუთვნილია შესამკობი სურათებისთვის, გარსშემოსავლები ჩარჩოებისა და ჭვირნიშნებისთვის.
 pdfjs-editor-alt-text-cancel-button = გაუქმება
 pdfjs-editor-alt-text-save-button = შენახვა
-pdfjs-editor-alt-text-decorative-tooltip = მოინიშნოს მოსართავად
+pdfjs-editor-alt-text-decorative-tooltip = მოინიშნოს მორთულობად
 # .placeholder: This is a placeholder for the alt text input area
 pdfjs-editor-alt-text-textarea =
     .placeholder = მაგალითად, „ახალგაზრდა მამაკაცი მაგიდასთან ზის და სადილობს“
@@ -349,3 +366,22 @@ pdfjs-editor-resizer-label-bottom-right = ქვევით მარჯვნ�
 pdfjs-editor-resizer-label-bottom-middle = ქვევით შუაში — ზომაცვლა
 pdfjs-editor-resizer-label-bottom-left = ზვევით მარცხნივ — ზომაცვლა
 pdfjs-editor-resizer-label-middle-left = შუაში მარცხნივ — ზომაცვლა
+
+## Color picker
+
+# This means "Color used to highlight text"
+pdfjs-editor-highlight-colorpicker-label = მოსანიშნი ფერი
+pdfjs-editor-colorpicker-button =
+    .title = ფერის შეცვლა
+pdfjs-editor-colorpicker-dropdown =
+    .aria-label = ფერის არჩევა
+pdfjs-editor-colorpicker-yellow =
+    .title = ყვითელი
+pdfjs-editor-colorpicker-green =
+    .title = მწვანე
+pdfjs-editor-colorpicker-blue =
+    .title = ლურჯი
+pdfjs-editor-colorpicker-pink =
+    .title = ვარდისფერი
+pdfjs-editor-colorpicker-red =
+    .title = წითელი

@@ -301,8 +301,15 @@ pdfjs-editor-ink-button-label = Moha’ãnga
 pdfjs-editor-stamp-button =
     .title = Embojuaju térã embosako’i ta’ãnga
 pdfjs-editor-stamp-button-label = Embojuaju térã embosako’i ta’ãnga
-pdfjs-editor-remove-button =
-    .title = Mboguete
+pdfjs-editor-highlight-button =
+    .title = Mbosa’y
+pdfjs-editor-highlight-button-label = Mbosa’y
+pdfjs-highlight-floating-button =
+    .title = Mbosa’y
+pdfjs-highlight-floating-button1 =
+    .title = Mbosa’y
+    .aria-label = Mbosa’y
+pdfjs-highlight-floating-button-label = Mbosa’y
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +333,10 @@ pdfjs-editor-ink-opacity-input = Pytũngy
 pdfjs-editor-stamp-add-image-button =
     .title = Embojuaju ta’ãnga
 pdfjs-editor-stamp-add-image-button-label = Embojuaju ta’ãnga
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Anambusu
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Emoambue anambusukue embosa’ývo mba’eporu ha’e’ỹva moñe’ẽrã
 pdfjs-free-text =
     .aria-label = Moñe’ẽrã moheñoiha
 pdfjs-free-text-default-content = Ehai ñepyrũ…
@@ -382,3 +393,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Pytãngy
 pdfjs-editor-colorpicker-red =
     .title = Pyha
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Techaukapa
+pdfjs-editor-highlight-show-all-button =
+    .title = Techaukapa

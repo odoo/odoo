@@ -51,12 +51,6 @@ pdfjs-download-button-label = Last ned
 pdfjs-bookmark-button =
     .title = Gjeldende side (se URL fra gjeldende side)
 pdfjs-bookmark-button-label = Gjeldende side
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Åpne i app
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Åpne i app
 
 ##  Secondary toolbar and context menu
 
@@ -301,8 +295,15 @@ pdfjs-editor-ink-button-label = Tegn
 pdfjs-editor-stamp-button =
     .title = Legg til eller rediger bilder
 pdfjs-editor-stamp-button-label = Legg til eller rediger bilder
-pdfjs-editor-remove-button =
-    .title = Fjern
+pdfjs-editor-highlight-button =
+    .title = Markere
+pdfjs-editor-highlight-button-label = Markere
+pdfjs-highlight-floating-button =
+    .title = Markere
+pdfjs-highlight-floating-button1 =
+    .title = Markere
+    .aria-label = Markere
+pdfjs-highlight-floating-button-label = Markere
 
 ## Remove button for the various kind of editor.
 
@@ -326,6 +327,10 @@ pdfjs-editor-ink-opacity-input = Ugjennomsiktighet
 pdfjs-editor-stamp-add-image-button =
     .title = Legg til bilde
 pdfjs-editor-stamp-add-image-button-label = Legg til bilde
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Tykkelse
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Endre tykkelse når du markerer andre elementer enn tekst
 pdfjs-free-text =
     .aria-label = Tekstredigering
 pdfjs-free-text-default-content = Begynn å skrive…
@@ -382,3 +387,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Rosa
 pdfjs-editor-colorpicker-red =
     .title = Rød
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Vis alle
+pdfjs-editor-highlight-show-all-button =
+    .title = Vis alle

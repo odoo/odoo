@@ -51,12 +51,6 @@ pdfjs-download-button-label = Scarica
 pdfjs-bookmark-button =
     .title = Pagina corrente (mostra URL della pagina corrente)
 pdfjs-bookmark-button-label = Pagina corrente
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Apri in app
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Apri in app
 
 ##  Secondary toolbar and context menu
 
@@ -304,6 +298,13 @@ pdfjs-editor-ink-button-label = Disegno
 pdfjs-editor-stamp-button =
     .title = Aggiungi o rimuovi immagine
 pdfjs-editor-stamp-button-label = Aggiungi o rimuovi immagine
+pdfjs-editor-highlight-button =
+    .title = Evidenzia
+pdfjs-editor-highlight-button-label = Evidenzia
+pdfjs-highlight-floating-button1 =
+    .title = Evidenzia
+    .aria-label = Evidenzia
+pdfjs-highlight-floating-button-label = Evidenzia
 
 ## Remove button for the various kind of editor.
 
@@ -318,8 +319,6 @@ pdfjs-editor-remove-highlight-button =
 
 ##
 
-pdfjs-editor-remove-button =
-    .title = Rimuovi
 # Editor Parameters
 pdfjs-editor-free-text-color-input = Colore
 pdfjs-editor-free-text-size-input = Dimensione
@@ -329,6 +328,11 @@ pdfjs-editor-ink-opacity-input = Opacità
 pdfjs-editor-stamp-add-image-button =
     .title = Aggiungi immagine
 pdfjs-editor-stamp-add-image-button-label = Aggiungi immagine
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Spessore
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Modifica lo spessore della selezione per elementi non testuali
+
 pdfjs-free-text =
     .aria-label = Editor di testo
 pdfjs-free-text-default-content = Inizia a digitare…
@@ -387,3 +391,9 @@ pdfjs-editor-colorpicker-pink =
 pdfjs-editor-colorpicker-red =
     .title = Rosso
 
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Mostra tutto
+pdfjs-editor-highlight-show-all-button =
+    .title = Mostra tutto

@@ -303,8 +303,15 @@ pdfjs-editor-ink-button-label = Маляваць
 pdfjs-editor-stamp-button =
     .title = Дадаць або змяніць выявы
 pdfjs-editor-stamp-button-label = Дадаць або змяніць выявы
-pdfjs-editor-remove-button =
-    .title = Выдаліць
+pdfjs-editor-highlight-button =
+    .title = Вылучэнне
+pdfjs-editor-highlight-button-label = Вылучэнне
+pdfjs-highlight-floating-button =
+    .title = Вылучэнне
+pdfjs-highlight-floating-button1 =
+    .title = Падфарбаваць
+    .aria-label = Падфарбаваць
+pdfjs-highlight-floating-button-label = Падфарбаваць
 
 ## Remove button for the various kind of editor.
 
@@ -328,6 +335,10 @@ pdfjs-editor-ink-opacity-input = Непразрыстасць
 pdfjs-editor-stamp-add-image-button =
     .title = Дадаць выяву
 pdfjs-editor-stamp-add-image-button-label = Дадаць выяву
+# This refers to the thickness of the line used for free highlighting (not bound to text)
+pdfjs-editor-free-highlight-thickness-input = Таўшчыня
+pdfjs-editor-free-highlight-thickness-title =
+    .title = Змяняць таўшчыню пры вылучэнні іншых элементаў, акрамя тэксту
 pdfjs-free-text =
     .aria-label = Тэкставы рэдактар
 pdfjs-free-text-default-content = Пачніце набор тэксту…
@@ -384,3 +395,10 @@ pdfjs-editor-colorpicker-pink =
     .title = Ружовы
 pdfjs-editor-colorpicker-red =
     .title = Чырвоны
+
+## Show all highlights
+## This is a toggle button to show/hide all the highlights.
+
+pdfjs-editor-highlight-show-all-button-label = Паказаць усе
+pdfjs-editor-highlight-show-all-button =
+    .title = Паказаць усе
