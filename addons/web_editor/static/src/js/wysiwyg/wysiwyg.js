@@ -3436,7 +3436,7 @@ export class Wysiwyg extends Component {
 
     _hasICEServers() {
         // Hack: check if mail module is installed.
-        return session.notification_type;
+        return this.env.services['mail.store'];
     }
     _isCollaborationEnabled(options) {
         return options.collaborationChannel && options.collaborationChannel.collaborationResId && this._hasICEServers() && this.busService;
