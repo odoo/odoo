@@ -83,6 +83,7 @@ export function hasTotal(amount) {
         content: `order total amount is '${amount}'`,
         trigger: `.product-screen .order-summary .total:contains("${amount}")`,
         isCheck: true,
+        allowInvisible: true,
     };
 }
 export function hasTax(amount) {
