@@ -394,6 +394,83 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         );
     });
 
+    QUnit.test("copy/paste Odoo chart field matching", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
+        insertChartInSpreadsheet(model, "odoo_bar");
+        const sheetId = model.getters.getActiveSheetId();
+        const [chartId1, chartId2] = model.getters.getChartIds(sheetId);
+        const fieldMatching = {
+            chart: {
+                [chartId1]: { type: "many2one", chain: "partner_id.company_id" },
+                [chartId2]: { type: "many2one", chain: "user_id.company_id" },
+            },
+        };
+        const filterId = "44";
+        await addGlobalFilter(
+            model,
+            {
+                id: filterId,
+                type: "relation",
+                modelName: "res.company",
+                label: "Relation Filter",
+            },
+            fieldMatching
+        );
+        model.dispatch("SELECT_FIGURE", { id: chartId2 });
+        model.dispatch("COPY");
+        model.dispatch("PASTE", { target: [toZone("A1")] });
+        const chartIds = model.getters.getChartIds(sheetId);
+        assert.strictEqual(
+            model.getters.getOdooChartFieldMatching(chartId1, filterId).chain,
+            "partner_id.company_id"
+        );
+        assert.strictEqual(
+            model.getters.getOdooChartFieldMatching(chartId2, filterId).chain,
+            "user_id.company_id"
+        );
+        assert.strictEqual(
+            model.getters.getOdooChartFieldMatching(chartIds[2], filterId).chain,
+            "user_id.company_id"
+        );
+    });
+
+    QUnit.test("cut/paste Odoo chart field matching", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
+        insertChartInSpreadsheet(model, "odoo_bar");
+        const sheetId = model.getters.getActiveSheetId();
+        const [chartId1, chartId2] = model.getters.getChartIds(sheetId);
+        const fieldMatching = {
+            chart: {
+                [chartId1]: { type: "many2one", chain: "partner_id.company_id" },
+                [chartId2]: { type: "many2one", chain: "user_id.company_id" },
+            },
+        };
+        const filterId = "44";
+        await addGlobalFilter(
+            model,
+            {
+                id: filterId,
+                type: "relation",
+                modelName: "res.company",
+                label: "Relation Filter",
+            },
+            fieldMatching
+        );
+        model.dispatch("SELECT_FIGURE", { id: chartId2 });
+        model.dispatch("CUT");
+        model.dispatch("PASTE", { target: [toZone("A1")] });
+        const chartIds = model.getters.getChartIds(sheetId);
+        assert.strictEqual(
+            model.getters.getOdooChartFieldMatching(chartId1, filterId).chain,
+            "partner_id.company_id"
+        );
+        assert.throws(() => model.getters.getChartFieldMatch(chartId2));
+        assert.strictEqual(
+            model.getters.getOdooChartFieldMatching(chartIds[1], filterId).chain,
+            "user_id.company_id"
+        );
+    });
+
     QUnit.test("Can cut/paste Odoo chart", async (assert) => {
         const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
         const sheetId = model.getters.getActiveSheetId();
