@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import common, Form
 
 
-class TestProcurementException(common.TransactionCase):
+class TestProcurement(common.TransactionCase):
 
-    def test_00_procurement_exception(self):
+    def test_00_procurement(self):
         # Required for `partner_invoice_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('account.group_delivery_invoice_address')
         # Required for `route_id` to be visible in the view
@@ -50,9 +49,11 @@ class TestProcurementException(common.TransactionCase):
             line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
         sale_order_route_dropship01 = so_form.save()
 
-        # I confirm the sales order, but it will raise an error
-        with self.assertRaises(Exception):
-            sale_order_route_dropship01.action_confirm()
+        # I confirm the sales order, a PO without a vendor will be generated
+        sale_order_route_dropship01.action_confirm()
+        purchase = self.env['purchase.order.line'].search([
+            ('sale_line_id', '=', sale_order_route_dropship01.order_line.ids[0])]).order_id
+        self.assertFalse(purchase.partner_id, 'The purchase order should not have a vendor')
 
         # I set the at least one supplier on the product.
         with Form(product_with_no_seller) as f:
@@ -61,11 +62,13 @@ class TestProcurementException(common.TransactionCase):
                 seller.partner_id = res_partner_2
                 seller.min_qty = 2.0
 
-        # I confirm the sales order, no error this time
-        sale_order_route_dropship01.action_confirm()
+        # Create another sales order with the same product
+        sale_order_route_dropship02 = sale_order_route_dropship01.copy()
+        sale_order_route_dropship02.action_confirm()
 
         # I check a purchase quotation was created.
         purchase = self.env['purchase.order.line'].search([
-            ('sale_line_id', '=', sale_order_route_dropship01.order_line.ids[0])]).order_id
+            ('sale_line_id', '=', sale_order_route_dropship02.order_line.ids[0])]).order_id
 
         self.assertTrue(purchase, 'No Purchase Quotation is created')
+        self.assertEqual(purchase.partner_id, res_partner_2, 'The purchase order should have a vendor')
