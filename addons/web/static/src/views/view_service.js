@@ -13,6 +13,7 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
  * @property {boolean} is_default
  * @property {string} model_id
  * @property {[number, string] | false} action_id
+ * @property {[number, string] | false} topbar_action_id
  */
 
 /**
@@ -71,12 +72,22 @@ export const viewService = {
         async function loadViews(params, options = {}) {
             const { context, resModel, views } = params;
             const loadViewsOptions = {
+                topbar_action_id: options.topBarActionId || false,
+                res_id: options.resId || false,
                 action_id: options.actionId || false,
                 load_filters: options.loadIrFilters || false,
                 toolbar: (!context?.disable_toolbar && options.loadActionMenus) || false,
             };
             for (const key in options) {
-                if (!["actionId", "loadIrFilters", "loadActionMenus"].includes(key)) {
+                if (
+                    ![
+                        "topBarActionId",
+                        "actionId",
+                        "loadIrFilters",
+                        "loadActionMenus",
+                        "resId",
+                    ].includes(key)
+                ) {
                     loadViewsOptions[key] = options[key];
                 }
             }

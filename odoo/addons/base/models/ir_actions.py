@@ -327,7 +327,13 @@ class IrActionsActWindow(models.Model):
         """
         result = super(IrActionsActWindow, self).read(fields, load=load)
         if not fields or 'help' in fields:
+            topbar_dict_values = self.env["ir.actions.topbar"].search([
+                ('parent_action_id', '=', self.id),
+                ('res_id', 'in', (False, self.env.context.get('active_id', False))),
+                ('user_id', 'in', (False, self.env.uid)),
+            ]).filtered('is_visible').read()
             for values in result:
+                values["children_ids"] = topbar_dict_values
                 model = values.get('res_model')
                 if model in self.env:
                     eval_ctx = dict(self.env.context)
@@ -361,11 +367,10 @@ class IrActionsActWindow(models.Model):
         self._cr.execute("SELECT id FROM %s" % self._table)
         return set(row[0] for row in self._cr.fetchall())
 
-
     def _get_readable_fields(self):
         return super()._get_readable_fields() | {
             "context", "mobile_view_mode", "domain", "filter", "groups_id", "limit",
-            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views",
+            "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "children_ids",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action
             "flags"

@@ -68,6 +68,7 @@ export {
     MockServer,
     authenticate,
     defineActions,
+    defineTopBarActions,
     defineMenus,
     defineModels,
     defineParams,

@@ -45,7 +45,13 @@ export class CustomFavoriteItem extends Component {
             return this.descriptionRef.el.focus();
         }
         const { description, isDefault, isShared } = this.state;
-        this.env.searchModel.createNewFavorite({ description, isDefault, isShared });
+        const topBarActionId = this.env.config.currentTopbarActionId || false;
+        this.env.searchModel.createNewFavorite({
+            description,
+            isDefault,
+            isShared,
+            topBarActionId,
+        });
 
         Object.assign(this.state, {
             description: this.env.config.getDisplayName(),
