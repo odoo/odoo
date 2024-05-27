@@ -348,15 +348,15 @@
         // Customize custom selection field
         {
             content: "Change Option 1 Label",
-            trigger: 'we-list table input:eq(0)',
+            trigger: 'we-list table input:visible:eq(0)',
             run: "edit Germany",
         }, {
             content: "Change Option 2 Label",
-            trigger: 'we-list table input:eq(1)',
+            trigger: 'we-list table input:visible:eq(1)',
             run: "edit Belgium",
         }, {
             content: "Change first Option 3 label",
-            trigger: 'we-list table input:eq(2)',
+            trigger: 'we-list table input:visible:eq(2)',
             run: "edit France",
         }, 
         {
@@ -378,12 +378,12 @@
         },
         {
             content: "Change last Option label",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list table input:visible:eq(3)',
             // TODO: Fix code to avoid blur event
             run: "edit Canada",
         }, {
             content: "Remove Germany Option",
-            trigger: '.o_we_select_remove_option:eq(0)',
+            trigger: '.o_we_select_remove_option:visible:eq(0)',
         }, 
         {
             // TODO: Fix code to avoid this behavior
@@ -396,11 +396,11 @@
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last option label with a number",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list table input:visible:eq(3)',
             run: "edit 44 - UK",
         }, {
             content: "Check that the input value is the full option value",
-            trigger: 'we-list table input:eq(3)',
+            trigger: 'we-list table input:visible:eq(3)',
             run: () => {
                 const addedOptionEl = document.querySelector('iframe.o_iframe').contentDocument.querySelector('.s_website_form_field select option[value="44 - UK"]');
                 if (!addedOptionEl) {
@@ -412,7 +412,23 @@
             trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
                         ":has(label:contains('State'))" +
                         ":has(select[required])" +
-                        ":has(option[selected]:contains('Belgium'))" +
+                        ":has(option:contains('Please choose any one option'))" +
+                        ":has(option:contains('Belgium'))" +
+                        ":has(option:contains('France'))" +
+                        ":has(option:contains('Canada'))" +
+                        ":has(option:contains('44 - UK'))" +
+                        ":not(:has(option:contains('Germany')))",
+            run: function () {},
+        }, {
+            content: "Remove placeholder options.",
+            trigger: "we-button[data-name='form_allow_empty']"
+        }, {
+            content: "Check the resulting snippet without placeholder",
+            trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                        ":has(label:contains('State'))" +
+                        ":has(select[required])" +
+                        ":not(option:contains('Please choose any one option'))" +
+                        ":has(option:contains('Belgium'))" +
                         ":has(option:contains('France'))" +
                         ":has(option:contains('Canada'))" +
                         ":has(option:contains('44 - UK'))" +
