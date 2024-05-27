@@ -1183,7 +1183,7 @@ class Evaluacion(models.Model):
             if record.tipo == "generico" and len(record.pregunta_ids) < 1:
                 raise exceptions.ValidationError(_("La evaluación debe tener al menos una pregunta."))
             if record.tipo == "generico" and len(record.usuario_ids) < 1:
-                raise exceptions.ValidationError(_("La evaluación debe tener al menos una personas asignada."))
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una persona asignada."))
 
         return resultado
 
