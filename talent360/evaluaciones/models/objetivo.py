@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from datetime import date
+from odoo import models
 
 
 class Objetivo(models.Model):
@@ -36,12 +37,20 @@ class Objetivo(models.Model):
         [
             ("porcentaje", "Porcentaje"),
             ("monto", "Monto"),
+            ("otro", "Otro")
         ],
         default="porcentaje",
         required=True,
         string="Métrica",
         help="¿Cómo se medirá el objetivo? Ej. En porcentaje o en monto",
     )
+    nueva_metrica = fields.Char(string="Nueva Métrica", help="Ingrese una nueva métrica si seleccionó 'Otro'", size=20)
+    metrica_mostrar = fields.Char(
+        string="Métrica", compute="_compute_metrica_mostrar", store="True", size=20
+    )
+
+
+   
 
     tipo = fields.Selection(
         [
@@ -192,4 +201,24 @@ class Objetivo(models.Model):
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
             
-    
+    @api.onchange('metrica')
+    def _onchange_metrica(self):
+        if self.metrica != 'otro':
+            self.nueva_metrica = False
+
+    @api.depends("metrica", "nueva_metrica")
+    def _compute_metrica_mostrar(self):
+        """
+        Método para calcular la respuesta a mostrar en la vista.
+
+        :return: Respuesta a mostrar en la vista
+        """
+
+        for objetivo in self:
+            if objetivo.metrica == 'otro':
+                metrica_texto = objetivo.nueva_metrica
+            else:
+                metrica_texto = objetivo.metrica
+
+        objetivo.metrica_mostrar = metrica_texto
+            
