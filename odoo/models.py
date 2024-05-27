@@ -3015,8 +3015,8 @@ class BaseModel(metaclass=MetaModel):
                 new_value: str: the new translation for lang
                 new_value: False: void the current translation for lang and fallback to current en_US value
             if ``translate`` is a callable, it should be like
-            ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when ``digest`` is callable
-                new_value: str: the new translation of old_term for lang
+                ``{lang: {old_en_term: new_term}}``, or ``{lang: {digest(old_en_term): new_term}}`` when ``digest`` is
+                callable. new_value: str: the new translation of old_term for lang
         :param digest: an optional digest function for the old_term
         """
         self.ensure_one()
@@ -3079,7 +3079,7 @@ class BaseModel(metaclass=MetaModel):
             ''', (Json({'en_US': translation_fallback}), Json(translations), self.id))
         else:
             # Note:
-            # update terms in 'en_US' will not change its value other translated values
+            # update terms in 'en_US' will not change its value in other translated values
             # record_en = Model_en.create({'html': '<div>English 1</div><div>English 2<div/>'
             # record_en.update_field_translations('html', {'fr_FR': {'English 2': 'French 2'}}
             # record_en.update_field_translations('html', {'en_US': {'English 1': 'English 3'}}
@@ -3087,23 +3087,49 @@ class BaseModel(metaclass=MetaModel):
             # assert record_fr.with_context(lang='fr_FR') == '<div>English 1</div><div>French 2<div/>'
             # assert record_nl.with_context(lang='nl_NL') == '<div>English 3</div><div>English 2<div/>'
 
-            old_translations = field._get_stored_translations(self)
-            if not old_translations:
+            old_values = field._get_stored_translations(self)
+            if not old_values:
                 return False
-            new_translations = old_translations
-            old_value_en = old_translations.get('en_US')
-            for lang, translation in translations.items():
-                old_value = new_translations.get(lang, old_value_en)
-                if digest:
-                    old_terms = field.get_trans_terms(old_value)
-                    old_terms_digested2value = {digest(old_term): old_term for old_term in old_terms}
-                    translation = {
-                        old_terms_digested2value[key]: value
-                        for key, value in translation.items()
-                        if key in old_terms_digested2value
+            en_value = old_values.pop('en_US')
+            if 'en_US' in translations:
+                en_translations = translations.pop('en_US')
+                translation_dictionary = field.get_translation_dictionary(en_value, old_values)
+                translation_dictionary = {
+                    en_translations.get(src, src): values
+                    for src, values in translation_dictionary.items()
+                }
+                new_values = {'en_US': field.translate(en_translations.get, en_value)}
+                en_value = new_values['en_US']
+                translations = {
+                    lang: {en_translations.get(src, src): translation for src, translation in lang_translations.items()}
+                    for lang, lang_translations in translations.items()
+                }
+                for lang in old_values:
+                    translations.setdefault(lang, {})
+            else:
+                old_values_to_update = {lang: old_values.pop(lang) for lang in list(old_values) if lang in translations}
+                new_values = old_values
+                translation_dictionary = field.get_translation_dictionary(en_value, old_values_to_update)
+            if digest:
+                digested2term = {
+                    digest(old_en_term): old_en_term
+                    for old_en_term in translation_dictionary
+                }
+                translations = {
+                    lang: {
+                        digested2term[src]: value
+                        for src, value in lang_translations.items()
+                        if src in digested2term
                     }
-                new_translations[lang] = field.translate(translation.get, old_value)
-            self.env.cache.update_raw(self, field, [new_translations], dirty=True)
+                    for lang, lang_translations in translations.items()
+                }
+
+            for lang in translations:
+                new_lang_translations = {src: values[lang] for src, values in translation_dictionary.items() if lang in values and values[lang] != src}
+                new_lang_translations.update(translations.get(lang, {}))
+                new_values[lang] = field.translate(new_lang_translations.get, en_value)
+            new_values['en_US'] = en_value
+            self.env.cache.update_raw(self, field, [new_values], dirty=True)
 
         # the following write is incharge of
         # 1. mark field as modified

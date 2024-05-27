@@ -1709,18 +1709,33 @@ class _String(Field):
         if value is None:
             return False
         if callable(self.translate) and record.env.context.get('edit_translations'):
-            terms = self.get_trans_terms(value)
             base_lang = record._get_base_lang()
-            if base_lang != (record.env.lang or 'en_US'):
-                base_value = record.with_context(edit_translations=None, lang=base_lang)[self.name]
-                base_terms = self.get_trans_terms(base_value)
-                term_to_state = {term: "translated" if base_term != term else "to_translate" for term, base_term in zip(terms, base_terms)}
+            lang = (record.env.lang or 'en_US')
+            _cached_terms = {}
+
+            def get_terms(lang_):
+                terms = _cached_terms.get(lang_)
+                if terms:
+                    return terms
+                lang_value = record.with_context(edit_translations=None, lang=lang_)[self.name]
+                terms = self.get_trans_terms(lang_value)
+                _cached_terms[lang_] = terms
+                return terms
+
+            if lang != base_lang:
+                base_terms_iter = iter(get_terms(base_lang))
+                def get_translation_state(term): return 'translated' if next(base_terms_iter) != term else 'to_translate'
             else:
-                term_to_state = defaultdict(lambda: 'translated')
+                def get_translation_state(term): return 'translated'
+            if lang != 'en_US':
+                en_terms_iter = iter(get_terms('en_US'))
+                def get_en(term): return next(en_terms_iter)
+            else:
+                def get_en(term): return term
             # use a wrapper to let the frontend js code identify each term and its metadata in the 'edit_translations' context
             # pylint: disable=not-callable
             value = self.translate(
-                lambda term: f'''<span data-oe-model="{record._name}" data-oe-id="{record.id}" data-oe-field="{self.name}" data-oe-translation-state="{term_to_state[term]}" data-oe-translation-initial-sha="{sha256(term.encode()).hexdigest()}">{term}</span>''',
+                lambda term: f'''<span data-oe-model="{record._name}" data-oe-id="{record.id}" data-oe-field="{self.name}" data-oe-translation-state="{get_translation_state(term)}" data-oe-translation-initial-sha="{sha256(get_en(term).encode()).hexdigest()}">{term}</span>''',
                 value
             )
         return value
@@ -1740,6 +1755,7 @@ class _String(Field):
 
         from_lang_terms = self.get_trans_terms(from_lang_value)
         dictionary = defaultdict(lambda: defaultdict(dict))
+        dictionary.update({from_lang_term: defaultdict(dict) for from_lang_term in from_lang_terms})
 
         for lang, to_lang_value in to_lang_values.items():
             to_lang_terms = self.get_trans_terms(to_lang_value)

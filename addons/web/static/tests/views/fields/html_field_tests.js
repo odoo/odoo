@@ -237,7 +237,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
                                 en_US: { "first paragraph": "first paragraph modified" },
                                 fr_BE: {
                                     "first paragraph": "premier paragraphe modifié",
-                                    "deuxième paragraphe": "deuxième paragraphe modifié",
+                                    "second paragraph": "deuxième paragraphe modifié",
                                 },
                             },
                         ],

@@ -1118,7 +1118,7 @@ class TestXMLTranslation(TransactionCase):
 
         view.update_field_translations('arch_db', {
             'en_US': {'Fork': 'Fork2'},
-            'fr_FR': {'Fourchette': 'Fourchette2'}
+            'fr_FR': {'Fork': 'Fourchette2'}
         })
 
         self.assertEqual(view.arch_db, '<form string="X">Bread and cheese<div>Fork2</div></form>')
