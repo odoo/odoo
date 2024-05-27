@@ -14,7 +14,7 @@ import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
 
 /**
- * @typedef {string} JQuerySelector
+ * @typedef {string} HootSelector
  * @typedef {import("./tour_utils").RunCommand} RunCommand
  *
  * @typedef Tour
@@ -32,25 +32,30 @@ import { callWithUnloadCheck } from "./tour_utils";
  *
  * @typedef TourStep
  * @property {string} [id]
- * @property {JQuerySelector} trigger
- * @property {JQuerySelector} [extra_trigger]
- * @property {JQuerySelector} [alt_trigger]
- * @property {JQuerySelector} [skip_trigger]
- * @property {string} [content]
- * @property {"top" | "botton" | "left" | "right"} [position]
+ * @property {HootSelector} trigger The node on which the action will be executed.
+ * @property {HootSelector} [extra_trigger] Required (extra) node for the step to be executed.
+ * @property {HootSelector} [alt_trigger] An alternative node to the trigger (trigger or alt_trigger).
+ * @property {HootSelector} [skip_trigger] If node is present in the DOM, it bypasses the step.
+ * @property {string} [content] Description of the step.
+ * @property {"top" | "botton" | "left" | "right"} [position] The position where the UI helper is shown.
  * @property {"community" | "enterprise"} [edition]
- * @property {RunCommand} [run]
+ * @property {RunCommand} [run] The action to perform when trigger conditions are verified.
+ * @property {boolean} [allowInvisible] Allow trigger nodes (any of them) to be invisible
+ * @property {boolean} [allowDisabled] Allow the trigger node to be disabled.
+ * @property {boolean} [isCheck] ```isCheck: true === run() {}``` (mainly to avoid clicking on the trigger by default)
+ * WARNING: Note that isCheck: true, allows that trigger node can be disabled. run() {} does not allow this behavior.
  * @property {boolean} [auto]
- * @property {boolean} [in_modal]
+ * @property {boolean} [in_modal] When true, check that trigger node is present in the last visible .modal.
  * @property {number} [width]
- * @property {number} [timeout]
- * @property {boolean} [consumeVisibleOnly]
- * @property {string} [consumeEvent]
- * @property {boolean} [mobile]
+ * @property {number} [timeout] By default, when the trigger node isn't found after 10000 milliseconds, it throws an error.
+ * You can change this value to lengthen or shorten the time before the error occurs [ms].
+ * @property {boolean} [consumeVisibleOnly] TODO: Still used ???
+ * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
+ * @property {boolean} [mobile] When true, step will only trigger in mobile view.
  * @property {string} [title]
- * @property {string|false|undefined} [shadow_dom]
- * @property {object} [state]
- *
+ * @property {string|false|undefined} [shadow_dom] By default, trigger nodes are selected in the main document node 
+ * but this property forces to search in a shadowRoot document.
+
  * @typedef {"manual" | "auto"} TourMode
  */
 

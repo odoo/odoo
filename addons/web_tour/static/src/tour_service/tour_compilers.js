@@ -47,7 +47,7 @@ function findTrigger(selector, shadowDOM, inModal) {
         }
     }
     if (!nodes) {
-        nodes = hoot.queryAll(selector, { root: target });        
+        nodes = hoot.queryAll(selector, { root: target });
     }
     return nodes;
 }
@@ -65,7 +65,7 @@ function tryFindTrigger(tour, step, elKey) {
         const nodes = findTrigger(selector, step.shadow_dom, in_modal);
         //TODO : change _legacyIsVisible by isVisible (hoot lib)
         //Failed with tour test_snippet_popup_with_scrollbar_and_animations > snippet_popup_and_animations
-        return !step.allowInvisible && !step.isCheck ? nodes.find(_legacyIsVisible) : nodes.at(0);
+        return !step.allowInvisible ? nodes.find(_legacyIsVisible) : nodes.at(0);
     } catch (error) {
         throwError(tour, step, [`Trigger was not found : ${selector} : ${error.message}`]);
     }
@@ -103,12 +103,12 @@ function describeWhyStepFailed(step) {
         return `The error appears to be that one or more elements in the following list cannot be found in DOM.\n ${JSON.stringify(
             pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
         )}`;
-    } else if (!stepState.isDisplayed) {
-        return "Element has been found but isn't displayed";
+    } else if (!stepState.isVisible) {
+        return "Element has been found but isn't displayed. (Use 'step.allowInvisible: true,' if you want to skip this check)";
     } else if (!stepState.isEnabled) {
-        return "Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)";
+        return "Element has been found but is disabled. (If this step does not run action so that you only want to check that element is visible, you can use 'step.isCheck: true,')";
     } else if (stepState.isBlocked) {
-        return "Element has been found but DOM is blocked.";
+        return "Element has been found but DOM is blocked by UI.";
     } else if (!stepState.hasRun) {
         return `Element has been found. The error seems to be in run()`;
     }
@@ -125,19 +125,20 @@ function describeFailedStepDetailed(tour, step) {
     const start = stepIndex - offset >= 0 ? stepIndex - offset : 0;
     const end =
         stepIndex + offset + 1 <= tour.steps.length ? stepIndex + offset + 1 : tour.steps.length;
-    let result = [describeFailedStepSimple(tour, step)];
+    const result = [describeFailedStepSimple(tour, step)];
     for (let i = start; i < end; i++) {
-        const stepString = JSON.stringify(
-            omit(tour.steps[i], "state"),
-            (_key, value) => {
-                if (typeof value === "function") {
-                    return "[function]";
-                } else {
-                    return value;
-                }
-            },
-            2
-        ) + ",";
+        const stepString =
+            JSON.stringify(
+                omit(tour.steps[i], "state"),
+                (_key, value) => {
+                    if (typeof value === "function") {
+                        return "[function]";
+                    } else {
+                        return value;
+                    }
+                },
+                2
+            ) + ",";
         const text = [stepString];
         if (i === stepIndex) {
             const line = "-".repeat(10);
@@ -188,15 +189,15 @@ function canContinue(el, step) {
             ? el.ownerDocument.contains(rootNode.host)
             : el.ownerDocument.contains(el);
     state.isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
-    state.isDisplayed = !step.allowInvisible && !step.isCheck ? isVisible(el) : true;
+    state.isVisible = step.allowInvisible || isVisible(el);
     const isBlocked =
         document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
     state.isBlocked = !!isBlocked;
-    state.isEnabled = !el.disabled || !!step.isCheck;
+    state.isEnabled = step.allowDisabled || !el.disabled;
     state.canContinue = !!(
         state.isInDoc &&
         state.isElement &&
-        state.isDisplayed &&
+        state.isVisible &&
         state.isEnabled &&
         !state.isBlocked
     );
@@ -205,9 +206,7 @@ function canContinue(el, step) {
 
 function getStepState(step) {
     const checkRun =
-        (["string", "function"].includes(typeof step.run) && step.state.hasRun) ||
-        !step.run ||
-        step.isCheck;
+        (["string", "function"].includes(typeof step.run) && step.state.hasRun) || !step.run;
     const check = checkRun && step.state.canContinue;
     return check ? "succeeded" : "errored";
 }
@@ -345,12 +344,17 @@ export function compileStepManual(stepIndex, step, options) {
 
 let tourTimeout;
 
-/** @type {TourStepCompiler} */
+/**
+ * @type {TourStepCompiler}
+ * @param {number} stepIndex
+ * @param {TourStep} step
+ * @param {object} options
+ * @returns {{trigger, action}[]}
+ */
 export function compileStepAuto(stepIndex, step, options) {
     const { tour, pointer, stepDelay, keepWatchBrowser } = options;
     const { showPointerDuration, onStepConsummed } = options;
     const debugMode = tourState.get(tour.name, "debug");
-    let skipAction = false;
 
     async function tryToDoAction(action) {
         try {
@@ -381,7 +385,6 @@ export function compileStepAuto(stepIndex, step, options) {
         },
         {
             action: async () => {
-                skipAction = false;
                 console.log(`Tour ${tour.name} on step: '${describeStep(step)}'`);
                 if (!keepWatchBrowser) {
                     tourTimeout = browser.setTimeout(
@@ -399,8 +402,13 @@ export function compileStepAuto(stepIndex, step, options) {
                 let stepEl = extraTriggerOkay && (triggerEl || altEl);
 
                 if (skipEl) {
-                    skipAction = true;
                     stepEl = skipEl;
+                    step.isCheck = true;
+                }
+                // "isCheck: true" = no action to run and accept disabled elements.
+                if (step.isCheck) {
+                    step.run = () => {};
+                    step.allowDisabled = true;
                 }
 
                 if (!stepEl) {
@@ -411,11 +419,6 @@ export function compileStepAuto(stepIndex, step, options) {
             },
             action: async (stepEl) => {
                 tourState.set(tour.name, "currentIndex", stepIndex + 1);
-
-                if (skipAction) {
-                    step.state.hasRun = true;
-                    return;
-                }
 
                 if (showPointerDuration > 0) {
                     // Useful in watch mode.
@@ -438,20 +441,21 @@ export function compileStepAuto(stepIndex, step, options) {
                     result = willUnload && "will unload";
                 } else if (typeof step.run === "string") {
                     for (const todo of step.run.split("&&")) {
-                        const m = String(todo).trim().match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-                        await tryToDoAction(() => actionHelper[m.groups?.action](m.groups?.arguments));
+                        const m = String(todo)
+                            .trim()
+                            .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+                        await tryToDoAction(() =>
+                            actionHelper[m.groups?.action](m.groups?.arguments)
+                        );
                     }
-                } else if (!step.isCheck) {
+                } else {
                     if (stepIndex === tour.steps.length - 1) {
                         console.warn("Tour %s: ignoring action (auto) of last step", tour.name);
                         step.state.hasRun = true;
                     } else {
                         await tryToDoAction(() => actionHelper.click());
                     }
-                } else {
-                    step.state.hasRun = true;
                 }
-
                 return result;
             },
         },

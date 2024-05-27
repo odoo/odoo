@@ -860,7 +860,7 @@ QUnit.module("Tour service", (hooks) => {
         await mock.advanceTime(10000);
 
         const expectedError = [
-            "error: Tour tour3 failed at step .button1. Element has been found but is disabled. (Use step.isCheck if you just want to check if element is present in DOM)",
+            "error: Tour tour3 failed at step .button1. Element has been found but is disabled. (If this step does not run action so that you only want to check that element is visible, you can use 'step.isCheck: true,')",
         ];
         assert.verifySteps(expectedError);
     });

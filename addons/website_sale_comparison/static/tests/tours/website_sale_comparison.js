@@ -81,6 +81,7 @@
         content: "comparelist contains 4th product with correct variant",
         extra_trigger: '.o_product_circle:contains(4)',
         trigger: '.o_product_row:contains("Customizable Desk (Steel, Black)")',
+        allowInvisible: true, //trigger is not visible .o_product_panel_content => display: none;
         isCheck: true,
     },
     {
