@@ -61,26 +61,54 @@
                 <div class="col survey_section w-100" style="page-break-inside: avoid;">
                     <h4>Semáforo</h4>
                     <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #2894a7;"></div>
-                        <span class="col" t-field="evaluacion.descripcion_azul" />
+                        <!-- Excelente -->
+                        <div class="semaforo-item">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="11" fill="#2894a7" />
+                            </svg>
+                            <span>Excelente</span>
+                        </div>
+                        <!-- Bueno -->
+                        <div class="semaforo-item">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="11" fill="#5aaf2b" />
+                            </svg>
+                            <span>Bueno</span>
+                        </div>
+                        <!-- Regular -->
+                        <div class="semaforo-item">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="11" fill="#fcd703" />
+                            </svg>
+                            <span>Regular</span>
+                        </div>
+                        <!-- Malo -->
+                        <div class="semaforo-item">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="11" fill="#fc8803" />
+                            </svg>
+                            <span>Malo</span>
+                        </div>
+                        <!-- Muy malo -->
+                        <div class="semaforo-item">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="11" cy="11" r="11" fill="#ff4747" />
+                            </svg>
+                            <span>Muy malo</span>
+                        </div>
                     </div>
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #5aaf2b;"></div>
-                        <span class="col" t-field="evaluacion.descripcion_verde"/>
-                    </div>
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #fcd703;"></div>
-                        <span class="col" t-field="evaluacion.descripcion_amarillo" />
-                    </div>
+                </div>
+            </div>
 
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #fc8803;"></div>
-                        <span class="col" t-field="evaluacion.descripcion_naranja" />
-                    </div>
+            <t t-if="evaluacion.incluir_demograficos" t-call="evaluaciones.encuestas_reporte_demografico"/>
 
-                    <div class="container-fluid row gap-2 align-items-center">
-                        <div class="color_circle" style="background-color: #ff4747;"></div>
-                        <span class="col" t-field="evaluacion.descripcion_rojo" />
+            <div class="page-break"></div>
+
+            <div class="survey_page container-fluid d-flex flex-column" style="font-size: 0.9em;">
+                <div class="survey_section" style="page-break-inside: avoid;">
+                    <h4 style="font-size: 2em;">Resumen del Clima Laboral</h4>
+                    <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias" style="height: 745px;">
+                        <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
                     </div>
                 </div>
 

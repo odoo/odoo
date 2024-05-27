@@ -33,7 +33,7 @@ class Respuesta(models.Model):
     opcion_id = fields.Many2one("opcion", string="Opción")
 
     respuesta_mostrar = fields.Char(
-        string="Respuesta", compute="_compute_respuesta_mostrar"
+        string="Respuesta", compute="_compute_respuesta_mostrar", store="True"
     )
 
     valor_respuesta = fields.Float(
