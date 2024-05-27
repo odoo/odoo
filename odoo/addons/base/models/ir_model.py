@@ -17,7 +17,7 @@ from psycopg2.sql import Identifier, SQL, Placeholder
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import format_list, pycompat, unique, OrderedSet, sql as sqltools
+from odoo.tools import format_list, unique, OrderedSet, sql as sqltools
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -433,7 +433,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = pycompat.to_text(model_data['model'])
+            _name = model_data['model']
             _description = model_data['name']
             _module = False
             _custom = True

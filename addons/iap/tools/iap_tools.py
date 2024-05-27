@@ -9,7 +9,7 @@ import threading
 import uuid
 
 from odoo import exceptions, _
-from odoo.tools import email_normalize, pycompat
+from odoo.tools import email_normalize
 
 _logger = logging.getLogger(__name__)
 
@@ -171,7 +171,7 @@ def iap_authorize(env, key, account_token, credit, dbuuid=False, description=Non
     except InsufficientCreditError as e:
         if credit_template:
             arguments = json.loads(e.args[0])
-            arguments['body'] = pycompat.to_text(env['ir.qweb']._render(credit_template))
+            arguments['body'] = env['ir.qweb']._render(credit_template)
             e.args = (json.dumps(arguments),)
         raise e
     return transaction_token

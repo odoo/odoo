@@ -117,12 +117,12 @@ import logging
 import pytz
 import reprlib
 import traceback
-from datetime import date, datetime, time
 import warnings
+from datetime import date, datetime, time
 
 import odoo.modules
 from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
-from odoo.tools import pycompat, Query, SQL, get_lang
+from odoo.tools import Query, SQL, get_lang
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
 
 # Domain operators.
@@ -1033,7 +1033,7 @@ class expression(object):
 
                 else:
                     if operator in ('ilike', 'not ilike'):
-                        right = f'%{pycompat.to_text(right)}%'
+                        right = f'%{right}%'
                         unaccent = self._unaccent
                     else:
                         unaccent = lambda x: x
