@@ -32,7 +32,7 @@ test("action can be prevented", async () => {
         static props = ["*"];
         setup() {
             const rootRef = useRef("root");
-            useViewButtons({}, rootRef, {
+            useViewButtons(rootRef, {
                 beforeExecuteAction: () => {
                     expect.step("beforeExecuteAction in hook");
                     return executeInHook;
@@ -101,7 +101,7 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
         static props = ["*"];
         setup() {
             const rootRef = useRef("root");
-            useViewButtons({}, rootRef);
+            useViewButtons(rootRef);
         }
     }
 

@@ -240,9 +240,10 @@ export class FormController extends Component {
         }
 
         this.rootRef = useRef("root");
-        useViewButtons(this.model, this.rootRef, {
+        useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
+            reload: () => this.model.load(),
         });
 
         const state = this.props.state || {};
