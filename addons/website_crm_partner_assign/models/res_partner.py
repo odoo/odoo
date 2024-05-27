@@ -78,7 +78,7 @@ class ResPartner(models.Model):
             return action
         # perform searches independently as having OR with those leaves seems to
         # be counter productive
-        Lead = self.env['crm.lead'].with_context(**action_context_origin)
+        Lead = self.env['crm.lead'].with_context(**action_context_origin, active_test=False)
         ids_origin = Lead.search(action_domain_origin).ids
         ids_new = Lead.search(action_domain_assign).ids
         action['domain'] = [('id', 'in', sorted(list(set(ids_origin) | set(ids_new))))]
