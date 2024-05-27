@@ -1199,22 +1199,23 @@ class Evaluacion(models.Model):
     
     def actualizar_estados_eval(self):
         """
-        Actualiza el estado de las evaluacion segun la fecha actual.
+        Actualiza el estado de las evaluaciones según la fecha actual.
 
         - Si la fecha actual está dentro del rango de fechas de inicio y finalización,
-          se cambia el estado a 'publicado' (Abierta).
-        - De lo contrario pasa a 'finalizado' (Cerrada).
-        
+        se cambia el estado a 'publicado' (Abierta).
+        - De lo contrario, pasa a 'finalizado' (Cerrada).
+
         :return: None
         """
-        today = fields.Date.today()
+
+        hoy = fields.Date.today()
         evaluaciones = self.search([])
         for evaluacion in evaluaciones:
-            if evaluacion.fecha_inicio <= today <= evaluacion.fecha_final:
+            if evaluacion.fecha_inicio <= hoy <= evaluacion.fecha_final:
                 evaluacion.estado = "publicado"
-            elif evaluacion.fecha_final < today:
+            elif evaluacion.fecha_final < hoy:
                 evaluacion.estado = "finalizado"
-            elif evaluacion.fecha_inicio > today:
+            elif evaluacion.fecha_inicio > hoy:
                 evaluacion.estado = "borrador"
 
     def get_escalar_format(self):
