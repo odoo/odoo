@@ -9,6 +9,7 @@ import {
 } from "../web_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
+import {registry} from "@web/core/registry";
 
 /** Foo is dummy model to test `action.report` with domain of its field `value`. **/
 class Foo extends models.Model {
@@ -192,4 +193,79 @@ test("render ActionMenus in form view", async () => {
         "Some Report with domain 1",
     ]);
     expect.verifySteps(["web_read", "get_valid_action_reports"]);
+});
+
+test("render ActionMenus in list view with extraPrintItems", async () => {
+    stepAllNetworkCalls();
+    const listView = registry.category("views").get("list");
+    class ExtraPrintController extends listView.Controller {
+        get actionMenuProps() {
+            return {
+                ...super.actionMenuProps,
+                loadExtraPrintItems: () => {
+                    return [
+                        {
+                            key: "extra_print_key",
+                            description: "Extra Print Item",
+                            class: "o_menu_item",
+                        },
+                    ];
+                },
+            };
+        }
+    }
+    registry.category("views").add("extra_print", {
+        ...listView,
+        Controller: ExtraPrintController,
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree js_class="extra_print"><field name="value"/></tree>`,
+        actionMenus: {
+            action: [],
+            print: printItems,
+        },
+    });
+
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
+
+    // select all records
+    await contains(`thead .o_list_record_selector input`).click();
+    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(queryAllTexts(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`)).toEqual([
+        "Print",
+        "Actions",
+    ]);
+
+    // select Print dropdown
+    await contains(`.o_cp_action_menus .dropdown-toggle:eq(0)`).click();
+    expect(`.o-dropdown--menu .o-dropdown-item`).toHaveCount(4);
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
+        "Extra Print Item",
+        "Some Report always visible",
+        "Some Report with domain 1",
+        "Some Report with domain 2",
+    ]);
+
+    // the last RPC call to retrieve print items only happens when the dropdown is clicked
+    expect.verifySteps(["get_valid_action_reports"]);
+
+    // select only the record that satisfies domain 1
+    await contains(`.o_data_row:eq(1) input`).click();
+    await contains(`.o_cp_action_menus .dropdown-toggle:eq(0)`).click();
+    expect(`.o-dropdown--menu .o-dropdown-item`).toHaveCount(3);
+    expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
+        "Extra Print Item",
+        "Some Report always visible",
+        "Some Report with domain 1",
+    ]);
+
+    expect.verifySteps(["get_valid_action_reports"]);
 });

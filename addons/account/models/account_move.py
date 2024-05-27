@@ -4486,7 +4486,7 @@ class AccountMove(models.Model):
             raise UserError(_("You can only send sales documents"))
 
         return {
-            'name': _("Send"),
+            'name': _("Print & Send"),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -4510,6 +4510,13 @@ class AccountMove(models.Model):
             report_action['context']['default_from_invoice'] = self.move_type == 'out_invoice'
 
         return report_action
+
+    def action_invoice_download_pdf(self):
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_invoice_documents/{",".join(map(str, self.ids))}/pdf',
+            'target': 'download',
+        }
 
     def preview_invoice(self):
         self.ensure_one()
@@ -4962,21 +4969,60 @@ class AccountMove(models.Model):
         composer = self.env['account.move.send'].create(composer_vals)
         return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf)
 
-    def _get_invoice_legal_documents(self):
-        """ Return existing attachments or a temporary Pro Forma pdf. """
+    def _get_invoice_pdf_proforma(self):
+        """ Generate the Proforma of the invoice.
+        :return dict: the Proforma's data such as
+        {'filename': 'INV_2024_0001_proforma.pdf', 'filetype': 'pdf', 'content': ...}
+        """
+        self.ensure_one()
+        filename = self._get_invoice_proforma_pdf_report_filename()
+        content, _ = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids, data={'proforma': True})
+        return {
+            'filename': filename,
+            'filetype': 'pdf',
+            'content': content[self.id],
+        }
+
+    def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
+        """ Retrieve the invoice legal document of type filetype.
+        :param filetype: the type of legal document to retrieve. Example: 'pdf', 'all'.
+        :param bool allow_fallback: if True, returns a Proforma if the PDF invoice doesn't exist.
+        :return dict: the invoice PDF data such as
+        {'filename': 'INV_2024_0001.pdf', 'filetype': 'pdf', 'content':...}
+        To extend to add more supported filetypes.
+        """
+        self.ensure_one()
+        if filetype == 'pdf':
+            if invoice_pdf := self.invoice_pdf_report_id:
+                return {
+                    'filename': invoice_pdf.name,
+                    'filetype': invoice_pdf.mimetype,
+                    'content': invoice_pdf.raw,
+                }
+            elif allow_fallback:
+                return self._get_invoice_pdf_proforma()
+        elif filetype == 'all':
+            return self._get_invoice_legal_documents_all(allow_fallback=allow_fallback)
+
+    def _get_invoice_legal_documents_all(self, allow_fallback=False):
+        """ Retrieve the invoice legal attachments: PDF, XML, ...
+        :param bool allow_fallback: if True, returns a Proforma if the PDF invoice doesn't exist.
+        :return list: a list of the attachments data such as
+        [{'filename': 'INV_2024_0001.pdf', 'filetype': 'pdf', 'content': ...}, ...]
+        """
         self.ensure_one()
         if self.invoice_pdf_report_id:
             attachments = self.env['account.move.send']._get_invoice_extra_attachments(self)
-        else:
-            content, _ = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', self.ids, data={'proforma': True})
-            attachments = self.env['ir.attachment'].new({
-                'raw': content[self.id],
-                'name': self._get_invoice_proforma_pdf_report_filename(),
-                'mimetype': 'application/pdf',
-                'res_model': self._name,
-                'res_id': self.id,
-            })
-        return attachments
+            return [
+                {
+                    'filename': attachment.name,
+                    'filetype': attachment.mimetype,
+                    'content': attachment.raw,
+                }
+                for attachment in attachments
+            ]
+        elif allow_fallback:
+            return [self._get_invoice_pdf_proforma()]
 
     def get_invoice_pdf_report_attachment(self):
         if len(self) < 2 and self.invoice_pdf_report_id:
@@ -5382,3 +5428,14 @@ class AccountMove(models.Model):
         :return: an array of ir.model.fields for which the user should provide values.
         """
         return []
+
+    def get_extra_print_items(self):
+        """ Helper to dynamically add items in the 'Print' menu of list and form of account.move.
+        This is necessary to avoid the re-generation of the PDF through the action_report.
+        Indeed, once a legal PDF is generated, it should be used and not re-generated.
+        """
+        return [{
+            'key': 'download_pdf',
+            'description': _('PDF'),
+            **self.action_invoice_download_pdf()
+        }]
