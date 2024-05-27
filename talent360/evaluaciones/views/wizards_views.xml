@@ -31,7 +31,7 @@
                 <field name="filtros_ids">
                     <tree string="Filtros" editable="bottom" create="false" delete="false" edit="true">
                         <field name="categoria" readonly="1"/>
-                        <field name="filtro_seleccion_ids" widget="many2many_tags" domain="[('categoria', '=', categoria), ('filtro_original_id', '=', active_id)]" options="{'no_quick_create':True,'no_create_edit':True}"/>
+                        <field name="filtro_seleccion_ids" widget="many2many_tags" domain="[('categoria', '=', categoria), ('filtro_original_id', '=', active_id)]" options="{'create':False,'no_quick_create':True,'no_create_edit':True,'no_open':True, 'no_search':True}"/>
                     </tree>
                 </field>
                 <footer>
@@ -41,4 +41,14 @@
             </form>
         </field>
     </record>
+    <record id="view_filtros_wizard_tree" model="ir.ui.view">
+        <field name="name">filtro.seleccion.wizard.tree</field>
+        <field name="model">filtro.seleccion.wizard</field>
+        <field name="arch" type="xml">
+            <tree export_xlsx="false" create="false" delete="false" edit="false">
+                <field name="texto"/>
+            </tree>
+        </field>
+    </record>
+    
 </odoo>
