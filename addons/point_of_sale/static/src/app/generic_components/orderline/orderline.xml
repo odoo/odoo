@@ -19,8 +19,8 @@
                     <li class="price-per-unit">
                         <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" />
                         <t t-if="line.price !== 0">
-                            x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
-                            <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
+                            × <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" />
+                            <t t-esc="line.unitPrice" />
                         </t>
                     </li>
                     <li t-if="line.price !== 0 and line.discount and line.discount !== '0'">

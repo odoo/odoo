@@ -1,10 +1,10 @@
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TipScreen } from "@pos_restaurant/app/tip_screen/tip_screen";
-import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ListContainer } from "@point_of_sale/app/generic_components/list_container/list_container";
+import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
+import { _t } from "@web/core/l10n/translation";
 
 patch(Navbar, {
     components: { ...Navbar.components, ListContainer },
@@ -34,6 +34,9 @@ patch(Navbar.prototype, {
             return this.pos.getTableOrders(this.pos.selectedTable.id).length;
         }
         return super.orderCount;
+    },
+    get showTableIcon() {
+        return this.pos.selectedTable?.name && this.pos.showBackButton();
     },
     onSwitchButtonClick() {
         const mode = this.pos.floorPlanStyle === "kanban" ? "default" : "kanban";
