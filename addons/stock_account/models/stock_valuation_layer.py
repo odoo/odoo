@@ -64,7 +64,7 @@ class StockValuationLayer(models.Model):
         am_vals = []
         aml_to_reconcile = defaultdict(set)
         for svl in self:
-            if svl.with_company(svl.company_id).product_id.valuation != 'real_time' and svl.with_company(svl.company_id).product_id.categ_id:
+            if svl.with_company(svl.company_id).product_id.valuation != 'real_time':
                 continue
             if svl.currency_id.is_zero(svl.value):
                 continue

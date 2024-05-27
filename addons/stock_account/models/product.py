@@ -138,12 +138,17 @@ class ProductProduct(models.Model):
     @api.depends('categ_id')
     def _compute_valuation(self):
         for record in self:
-            record.valuation = record.categ_id.property_valuation if record.categ_id else "real_time"
+            if record.categ_id:
+                record.valuation = record.categ_id.property_valuation
+            elif self.env.user.has_group('stock_account.group_stock_accounting_automatic'):
+                record.valuation = 'real_time'
+            else:
+                record.valuation = 'manual_periodic'
 
     @api.depends("categ_id")
     def _compute_cost_method(self):
-        for recod in self:
-            recod.cost_method = recod.categ_id.property_cost_method if recod.categ_id else "standard"
+        for record in self:
+            record.cost_method = record.categ_id.property_cost_method if record.categ_id else "standard"
 
     def write(self, vals):
         if 'standard_price' in vals and not self.env.context.get('disable_auto_svl'):
