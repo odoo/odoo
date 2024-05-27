@@ -24,7 +24,7 @@ from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import Users
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, new_test_user
-from odoo.tools import email_normalize, formataddr, mute_logger, pycompat
+from odoo.tools import email_normalize, formataddr, mute_logger
 from odoo.tools.translate import code_translations
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
@@ -256,7 +256,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         )
 
     def from_string(self, text):
-        return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
+        return email.message_from_string(text, policy=email.policy.SMTP)
 
     def assertHtmlEqual(self, value, expected, message=None):
         tree = html.fragment_fromstring(value, parser=html.HTMLParser(encoding='utf-8'), create_parent='body')

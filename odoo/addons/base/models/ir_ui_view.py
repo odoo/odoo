@@ -21,7 +21,7 @@ from odoo.http import request
 from odoo.models import check_method_name
 from odoo.modules.module import get_resource_from_path
 from odoo.osv.expression import expression
-from odoo.tools import config, pycompat, lazy_property, frozendict, SQL
+from odoo.tools import config, lazy_property, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
@@ -246,7 +246,7 @@ actual arch.
                         lambda term: translation_dictionary[term][lang],
                         arch_fs
                     )
-            view.arch = pycompat.to_text(arch_fs or view.arch_db)
+            view.arch = arch_fs or view.arch_db
 
     def _inverse_arch(self):
         for view in self:
