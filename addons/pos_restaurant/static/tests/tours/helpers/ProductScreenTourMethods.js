@@ -32,10 +32,6 @@ export function clickPrintBillButton() {
             content: "click print bill button",
             trigger: ".control-buttons .control-button.order-printbill",
         },
-        {
-            content: "Close printing error",
-            trigger: ".popup-error .cancel",
-        },
     ];
 }
 export function clickSubmitButton() {

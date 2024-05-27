@@ -34,12 +34,15 @@ export class ReceiptScreen extends Component {
             // to send in preparation it is automatically sent
             if (this.pos.orderPreparationCategories.size) {
                 try {
-                    await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+                    this.sendToPreparationDisplay();
                 } catch (error) {
                     Promise.reject(error);
                 }
             }
         });
+    }
+    async sendToPreparationDisplay() {
+        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
     }
     _addNewOrder() {
         this.pos.add_new_order();
