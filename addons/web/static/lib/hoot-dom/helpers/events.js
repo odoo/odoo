@@ -1094,7 +1094,9 @@ const _keyDown = (target, eventInit) => {
          *  Do: focus next (or previous with 'Shift') focusable element
          */
         case "Tab": {
-            const next = shiftKey ? getPreviousFocusableElement() : getNextFocusableElement();
+            const next = shiftKey
+                ? getPreviousFocusableElement({ tabbable: true })
+                : getNextFocusableElement({ tabbable: true });
             if (next) {
                 triggerFocus(next);
             }
