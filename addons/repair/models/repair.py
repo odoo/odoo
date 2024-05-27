@@ -350,7 +350,9 @@ class Repair(models.Model):
                 "warehouse_id": self.picking_type_id.warehouse_id.id,
                 "repair_order_ids": [Command.link(repair.id)],
             })
-        self.env['sale.order'].create(sale_order_values_list)
+        sale_orders = self.env['sale.order'].create(sale_order_values_list)
+        for so in sale_orders:
+            so._onchange_sale_order_template_id()
         # Add Sale Order Lines for 'add' move_ids
         self.move_ids._create_repair_sale_order_line()
         return self.action_view_sale_order()

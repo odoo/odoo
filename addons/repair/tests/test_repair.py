@@ -626,3 +626,20 @@ class TestRepair(common.TransactionCase):
         repair_order.move_ids.quantity_done = 1
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
+
+    def test_repair_so_with_template(self):
+        """ Test that quotations templates are taken into account when
+        creating sale orders from repair orders
+        """
+        repair = self._create_simple_repair_order()
+        line = self._create_simple_part_move(repair.id, 1)
+        repair.move_ids |= line
+        quote_tmpl = self.env['sale.order.template'].create({
+            'name': 'test_template',
+            'sale_order_template_line_ids': [(0, 0, {
+                'product_id': self.product_product_6.id,
+            })],
+        })
+        self.env.company.sale_order_template_id = quote_tmpl
+        repair.action_create_sale_order()
+        self.assertEqual(repair.sale_order_id.order_line.product_id, self.product_product_6 | self.product_product_5, "order lines should be taken from both the template and the repair order")
