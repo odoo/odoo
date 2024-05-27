@@ -5,6 +5,8 @@ import { uniqueId } from "@web/core/utils/functions";
 import { registry } from "@web/core/registry";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useSortable } from "@web/core/utils/sortable_owl";
+import { camelToKebab } from "@web/core/utils/strings";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import { clamp } from "@web/core/utils/numbers";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -2439,63 +2441,41 @@ registry.category("snippet_widgets").add("WeDatetime", WeDatetime);
 
 const DatePickerUserValueWidget = DatetimePickerUserValueWidget.extend({});
 
-const ListUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-list',
-    events: {
-        'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
-        'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
-        'click we-button.o_we_list_add_existing': '_onAddExistingItemClick',
-        'click we-select.o_we_user_value_widget.o_we_add_list_item': '_onAddItemSelectClick',
-        'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
-        'input table input': '_onListItemBlurInput',
-        'blur table input': '_onListItemBlurInput',
-        'mousedown': '_onWeListMousedown',
-    },
+const ListUserValueWidget = UserValueWidget.extend({});
+class ListUserValue extends UserValue {
+    constructor() {
+        super(...arguments);
+        this._state.listRecords = [];
+        this._state.selected = [];
 
-    /**
-     * @override
-     */
-    willStart() {
-        if (this.options.createWidget) {
-            this.createWidget = this.options.createWidget;
-            this.createWidget.setParent(this);
-            this.registerSubWidget(this.createWidget);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start() {
-        this.addItemTitle = this.el.dataset.addItemTitle || _t("Add");
-        if (this.el.dataset.availableRecords) {
-            this.records = JSON.parse(this.el.dataset.availableRecords);
+        if (this._data.availableRecords) {
+            this.existingRecords = JSON.parse(this._data.availableRecords);
         } else {
-            this.isCustom = !this.el.dataset.notEditable;
+            this.isCustom = this._data.notEditable !== "true";
         }
-        if (this.el.dataset.defaults || this.el.dataset.hasDefault) {
-            this.hasDefault = this.el.dataset.hasDefault || 'unique';
-            this.selected = this.el.dataset.defaults ? JSON.parse(this.el.dataset.defaults) : [];
+        if (this._data.defaults || this._data.hasDefault) {
+            this.hasDefault = this._data.hasDefault || 'unique';
+            this._state.selected = this._data.defaults ? JSON.parse(this._data.defaults) : [];
         }
-        this.listTable = document.createElement('table');
-        const tableWrapper = document.createElement('div');
-        tableWrapper.classList.add('o_we_table_wrapper');
-        tableWrapper.appendChild(this.listTable);
-        this.containerEl.appendChild(tableWrapper);
-        this.el.classList.add('o_we_fw');
-        this._makeListItemsSortable();
-        if (this.createWidget) {
-            return this.createWidget.appendTo(this.containerEl);
-        }
-    },
-
+    }
     /**
-     * @override
+     * @type {Object[]}
      */
-    destroy() {
-        this.bindedSortable?.cleanup();
-        this._super(...arguments);
-    },
+    get listRecords() {
+        return this._state.listRecords;
+    }
+    set listRecords(value) {
+        this._state.listRecords = value;
+    }
+    /**
+     * @type {integer|string[]}
+     */
+    get selected() {
+        return this._state.selected;
+    }
+    set selected(value) {
+        this._state.selected = value;
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -2505,75 +2485,84 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @override
      */
     getMethodsParams() {
-        return Object.assign(this._super(...arguments), {
-            records: this.records,
+        return Object.assign(super.getMethodsParams(...arguments), {
+            records: this.existingRecords,
         });
-    },
+    }
     /**
      * @override
      */
     setValue() {
-        this._super(...arguments);
-        const currentValues = this._value ? JSON.parse(this._value) : [];
-        this.listTable.innerHTML = '';
-        if (this.addItemButton) {
-            this.addItemButton.remove();
-        }
+        super.setValue(...arguments);
+        const currentValues = this._state.value ? JSON.parse(this._state.value) : [];
 
-        if (this.createWidget) {
+        if (this.createUserValue) {
             const selectedIds = currentValues.map(({ id }) => id)
                 .filter(id => typeof id === 'number');
             // Note: it's important to simplify the domain at its maximum as the
             // rpc using it are cached. Similar domain components should be
             // written the same way for the cache to work.
-            this.createWidget.options.domainComponents.selected = selectedIds.length ? ['id', 'not in', selectedIds] : null;
-            this.createWidget.setValue('');
-            this.createWidget.inputEl.value = '';
-            $(this.createWidget.inputEl).trigger('input');
-        } else {
-            if (this.isCustom) {
-                this.addItemButton = document.createElement('we-button');
-                this.addItemButton.textContent = this.addItemTitle;
-                this.addItemButton.classList.add('o_we_list_add_optional');
-            } else {
-                // TODO use a real select widget ?
-                this.addItemButton = document.createElement('we-select');
-                this.addItemButton.classList.add('o_we_user_value_widget', 'o_we_add_list_item');
-                const divEl = document.createElement('div');
-                this.addItemButton.appendChild(divEl);
-                const togglerEl = document.createElement('we-toggler');
-                togglerEl.textContent = this.addItemTitle;
-                divEl.appendChild(togglerEl);
-                this.selectMenuEl = document.createElement('we-selection-items');
-                divEl.appendChild(this.selectMenuEl);
-            }
-            this.containerEl.appendChild(this.addItemButton);
+            this.createUserValue.options.domainComponents.selected = selectedIds.length ? ['id', 'not in', selectedIds] : null;
+            this.createUserValue.setValue("");
+            // Reset the search with an empty needle and the proper selected ids
+            this.createUserValue._search("");
+            // Reset the input value after creating a new record. The actual
+            // input element's value is reset `_onClick` of the WeMany2one.
+            this.createUserValue.createInputValue = "";
         }
-        currentValues.forEach(value => {
-            if (typeof value === 'object') {
-                const recordData = value;
-                const { id, display_name } = recordData;
-                delete recordData.id;
-                delete recordData.display_name;
-                this._addItemToTable(id, display_name, recordData);
+        this.listRecords = [];
+        this.selected = [];
+        currentValues.forEach((value) => {
+            if (typeof value === "object") {
+                const record = this._updateListRecords(value);
+                if (value.selected) {
+                    this.selected.push(record.id);
+                }
             } else {
-                this._addItemToTable(value, value);
+                this.listRecords.push({ id: value, display_name: value });
+                this.selected.push(value);
             }
         });
-        if (!this.createWidget && !this.isCustom) {
-            this._reloadSelectDropdown(currentValues);
-        }
-        this._makeListItemsSortable();
-    },
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        if (this.createWidget && this.createWidget.getMethodsNames().includes(methodName)) {
-            return this.createWidget.getValue(methodName);
+        if (this.createUserValue?.getMethodsNames().includes(methodName)) {
+            return this.createUserValue.getValue(methodName);
         }
-        return this._value;
-    },
+        return this._state.value;
+    }
+    /**
+     * @override
+     */
+    registerUserValue(userValue) {
+        if (userValue instanceof Many2oneUserValue && userValue._data.createUserValue) {
+            this.createUserValue = userValue;
+        }
+        super.registerUserValue(userValue);
+    }
+    /**
+     * @override
+     */
+    userValueNotification(params) {
+        const { widget, previewMode, prepare } = params;
+        if (widget && widget === this.createUserValue) {
+            if (widget.options.createMethod && widget.getValue(widget.options.createMethod)) {
+                return super.userValueNotification(...arguments);
+            }
+            if (previewMode) {
+                return;
+            }
+            prepare();
+            const recordData = JSON.parse(widget.getMethodsParams('addRecord').recordData);
+            if (!this.listRecords.find((record) => record.id === recordData.id)) {
+                this._updateListRecords(recordData);
+                this._notifyCurrentState();
+            }
+        }
+        return super.userValueNotification(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -2581,160 +2570,169 @@ const ListUserValueWidget = UserValueWidget.extend({
 
     /**
      * @private
-     * @param {string || integer} id
-     * @param {string} [value]
-     * @param {Object} [recordData] key, values that will be added to the
-     *     element's dataset
+     * @param {Object} newRecord
      */
-    _addItemToTable(id, value = this.el.dataset.defaultValue || _t("Item"), recordData) {
-        const trEl = document.createElement('tr');
-        if (!this.el.dataset.unsortable) {
-            const draggableEl = document.createElement('we-button');
-            draggableEl.classList.add('o_we_drag_handle', 'o_we_link', 'fa', 'fa-fw', 'fa-arrows');
-            draggableEl.dataset.noPreview = 'true';
-            const draggableTdEl = document.createElement('td');
-            draggableTdEl.appendChild(draggableEl);
-            trEl.appendChild(draggableTdEl);
+    _updateListRecords(newRecord) {
+        let id = newRecord.id;
+        // Create an ID if there is none, and avoid duplicate IDs.
+        if (
+            !newRecord.id
+            || this.listRecords.find((record) => record.id === this._toComparableId(newRecord.id))
+        ) {
+            id = uniqueId("list_record_");
         }
-        let recordDataSelected = false;
-        const inputEl = document.createElement('input');
-        inputEl.type = this.el.dataset.inputType || 'text';
-        if (value) {
-            inputEl.value = value;
+        const record = Object.assign({}, newRecord, {
+            id: this._toComparableId(id),
+            name: this._trimmed(newRecord.name),
+            display_name: this._trimmed(newRecord.display_name) || this._data.defaultValue,
+        });
+        this.listRecords.push(record);
+        return record;
+    }
+    /**
+     * @param {string} str
+     * @returns {string}
+     */
+    _trimmed(str) {
+        if (typeof str !== "string") {
+            return str;
         }
-        if (id) {
-            inputEl.name = id;
+        return str.trim().replace(/\s+/g, " ");
+    }
+    /**
+     * Cast ids to the right type (number or string) to compare them between
+     * record / state / DOM.
+     *
+     * @private
+     * @param {string|number} id
+     * @returns {string|number}
+     */
+    _toComparableId(id) {
+        if (typeof id === "string") {
+            id = this._trimmed(id);
+            return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
         }
-        if (recordData) {
-            recordDataSelected = recordData.selected;
-            if (recordData.placeholder) {
-                inputEl.placeholder = recordData.placeholder;
-            }
-            for (const key of Object.keys(recordData)) {
-                inputEl.dataset[key] = recordData[key];
-            }
-        }
-        inputEl.disabled = !this.isCustom;
-        const inputTdEl = document.createElement('td');
-        inputTdEl.classList.add('o_we_list_record_name');
-        inputTdEl.appendChild(inputEl);
-        trEl.appendChild(inputTdEl);
-        if (this.hasDefault) {
-            const checkboxEl = document.createElement('we-button');
-            checkboxEl.classList.add('o_we_user_value_widget', 'o_we_checkbox_wrapper');
-            if (this.selected.includes(id) || recordDataSelected) {
-                checkboxEl.classList.add('active');
-            }
-            if (!recordData || !recordData.notToggleable) {
-                const div = document.createElement('div');
-                const checkbox = document.createElement('we-checkbox');
-                div.appendChild(checkbox);
-                checkboxEl.appendChild(div);
-                checkboxEl.appendChild(checkbox);
-                const checkboxTdEl = document.createElement('td');
-                checkboxTdEl.appendChild(checkboxEl);
-                trEl.appendChild(checkboxTdEl);
-            }
-        }
-        if (!recordData || !recordData.undeletable) {
-            const buttonTdEl = document.createElement('td');
-            const buttonEl = document.createElement('we-button');
-            buttonEl.classList.add('o_we_select_remove_option', 'o_we_link', 'o_we_text_danger', 'fa', 'fa-fw', 'fa-minus');
-            buttonEl.dataset.removeOption = id;
-            buttonTdEl.appendChild(buttonEl);
-            trEl.appendChild(buttonTdEl);
-        }
-        this.listTable.appendChild(trEl);
-    },
+        return id;
+    }
+}
+
+class WeList extends UserValueComponent {
+    static template = "web_editor.WeList";
+    static StateModel = ListUserValue;
+    static props = {
+        ...UserValueComponent.props,
+        availableRecords: { type: String, optional: true },
+        hasDefault: { type: String, optional: true },
+        inputType: { type: String, optional: true },
+        defaults: { type: String, optional: true },
+        defaultValue: { type: String, optional: true },
+        addItemTitle: { type: String, optional: true },
+        unsortable: { type: String, optional: true },
+        notEditable: { type: String, optional: true },
+        allowEmpty: { type: String, optional: true },
+        newElementsNotToggleable: { type: String, optional: true },
+        renderOnInputBlur: { type: String, optional: true },
+    };
+    static defaultProps = {
+        inputType: "text",
+        defaultValue: _t("Item"),
+        addItemTitle: _t("Add"),
+    };
+    static isContainer = true;
+    static components = { WeTitle };
+
+    setup() {
+        super.setup();
+        this.tableRef = useRef("table");
+
+        this._makeListItemsSortable();
+        this.state._notifyCurrentState = this._notifyCurrentState.bind(this);
+
+        useEffect(
+            () => {
+                if (this.scrollToLast) {
+                    // Scroll to the new list element.
+                    this.tableRef.el.querySelector('tr:last-child')
+                        .scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                    this.scrollToLast = false;
+                }
+            },
+            () => [this.state.listRecords.length]
+        );
+    }
+
+    //------------------------------------------------------------------
+    // PRIVATE
+    //------------------------------------------------------------------
+
     /**
      * @override
      */
     _getFocusableElement() {
-        return this.listTable.querySelector('input');
-    },
+        return this.tableRef.el.querySelector("input");
+    }
     /**
      * @private
      */
     _makeListItemsSortable() {
-        if (this.el.dataset.unsortable) {
+        if (this.props.unsortable === "true") {
             return;
         }
-        this.bindedSortable = this.call(
-            "sortable",
-            "create",
-            {
-                ref: { el: this.listTable },
-                elements: "tr",
-                followingElementClasses: ["opacity-50"],
-                handle: ".o_we_drag_handle",
-                onDrop: () => this._notifyCurrentState(),
-                applyChangeOnDrop: true,
+        useSortable({
+            ref: this.tableRef,
+            elements: "tr",
+            followingElementClasses: ["opacity-50"],
+            handle: ".o_we_drag_handle",
+            onDrop: ({ element, next }) => {
+                const id = this.state._toComparableId(element.querySelector("input").name);
+                const recordIdx = this.state.listRecords.findIndex((rec) => rec.id === id);
+                const record = this.state.listRecords.splice(recordIdx, 1)[0];
+                const insertIdx = next
+                    ? this.state.listRecords.findIndex((rec) =>
+                        rec.id === this.state._toComparableId(next.querySelector("input").name)
+                    ) : this.state.listRecords.length;
+                this.state.listRecords.splice(insertIdx, 0, record);
+                this._notifyCurrentState();
             },
-        ).enable();
-    },
+            applyChangeOnDrop: true,
+        });
+    }
     /**
      * @private
      * @param {Boolean} [preview]
      */
     _notifyCurrentState(preview = false) {
-        const isIdModeName = this.el.dataset.idMode === "name" || !this.isCustom;
-        const trimmed = (str) => str.trim().replace(/\s+/g, " ");
-        const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = trimmed(isIdModeName ? el.name : el.value);
-            return Object.assign({
-                id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
-                name: trimmed(el.value),
-                display_name: trimmed(el.value),
-            }, el.dataset);
-        });
-        if (this.hasDefault) {
-            const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
-            this.selected = checkboxes.map(el => {
-                const input = el.parentElement.previousSibling.firstChild;
-                const id = trimmed(isIdModeName ? input.name : input.value);
-                return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
-            });
-            values.forEach(v => {
+        if (this.state.hasDefault) {
+            this.state.listRecords.forEach((v) => {
+                const id = this.state._toComparableId(v.id);
                 // Elements not toggleable are considered as always selected.
-                // We have to check that it is equal to the string 'true'
-                // because this information comes from the dataset.
-                v.selected = this.selected.includes(v.id) || v.notToggleable === 'true';
+                v.selected = this.state.selected.includes(id) || v.notToggleable;
             });
         }
-        this._value = JSON.stringify(values);
+
+        this.state.value = JSON.stringify(this.state.listRecords);
         if (preview) {
             this._onUserValuePreview();
         } else {
             this._onUserValueChange();
         }
-        if (!this.createWidget && !this.isCustom) {
-            this._reloadSelectDropdown(values);
-        }
-    },
+    }
     /**
+     * Maps listRecord properties to data-attributes.
+     *
      * @private
-     * @param {Array} currentValues
+     * @param {Object} listRecord
+     * @returns {Object}
      */
-    _reloadSelectDropdown(currentValues) {
-        this.selectMenuEl.innerHTML = '';
-        this.records.forEach(el => {
-            if (!currentValues.find(v => v.id === el.id)) {
-                const option = document.createElement('we-button');
-                option.classList.add('o_we_list_add_existing');
-                option.dataset.addOption = el.id;
-                option.dataset.noPreview = 'true';
-                const divEl = document.createElement('div');
-                divEl.textContent = el.display_name;
-                option.appendChild(divEl);
-                this.selectMenuEl.appendChild(option);
+    getInputDataAtts(listRecord) {
+        return Object.entries(listRecord).reduce((obj, entry) => {
+            if (["display_name", "id", "placeholder"].includes(entry[0])) {
+                return obj;
             }
-        });
-        if (!this.selectMenuEl.children.length) {
-            const title = document.createElement('we-title');
-            title.textContent = _t("No more records");
-            this.selectMenuEl.appendChild(title);
-        }
-    },
+            obj[`data-${camelToKebab(entry[0])}`] = entry[1];
+            return obj;
+        }, {});
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2743,58 +2741,71 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
+    _onClick(ev) {
+        if (!this.state.opened) {
+            this.state.open();
+        } else {
+            this.state.close();
+        }
+    }
+    /**
+     * @private
+     */
     _onAddCustomItemClick() {
         const recordData = {};
-        if (this.el.dataset.newElementsNotToggleable) {
+        if (this.props.newElementsNotToggleable === "true") {
             recordData.notToggleable = true;
         }
-        this._addItemToTable(undefined, this.el.dataset.defaultValue, recordData);
+        this.state._updateListRecords(recordData);
         this._notifyCurrentState();
-        // Scroll to the new list element.
-        this.el.querySelector('tr:last-child')
-            .scrollIntoView({behavior: 'smooth', block: 'nearest'});
-    },
+        this.scrollToLast = true;
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onAddExistingItemClick(ev) {
-        const value = ev.currentTarget.dataset.addOption;
-        this._addItemToTable(value, ev.currentTarget.textContent);
+        const record = this.state.existingRecords.find((record) => {
+            return record.id === this.state._toComparableId(ev.currentTarget.dataset.addOption);
+        });
+        this.state._updateListRecords(record);
         this._notifyCurrentState();
-    },
+        this.scrollToLast = true;
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onAddItemSelectClick(ev) {
-        ev.currentTarget.querySelector('we-toggler').classList.toggle('active');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAddItemCheckboxClick: function (ev) {
-        const isActive = ev.currentTarget.classList.contains('active');
-        if (this.hasDefault === 'unique') {
-            this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active').forEach(el => el.classList.remove('active'));
+    _onAddItemCheckboxClick(ev) {
+        const recordId = this.state._toComparableId(ev.currentTarget.dataset.select);
+        const isActive = this.state.selected.includes(recordId);
+        if (this.props.hasDefault === 'unique') {
+            this.state.selected = [];
         }
-        ev.currentTarget.classList.toggle('active', !isActive);
+        if (isActive) {
+            this.state.selected.splice(this.state.selected.indexOf(recordId), 1);
+        } else {
+            this.state.selected.push(recordId);
+        }
         this._notifyCurrentState();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onListItemBlurInput(ev) {
         const preview = ev.type === 'input';
-        if (preview || !this.el.contains(ev.relatedTarget) || this.el.dataset.renderOnInputBlur) {
+        if (preview || !this.tableRef.el.contains(ev.relatedTarget) || this.props.renderOnInputBlur === "true") {
             // We call the function below only if the element that recovers the
             // focus after this blur is not an element of the we-list or if it
             // is an input event (preview). This allows to use the TAB key to go
             // from one input to another in the list. This behavior can be
             // cancelled if the widget has reloadOnInputBlur = "true" in its
-            // dataset.
+            // props.
+            const recordToUpdate = this.state.listRecords.find((rec) =>
+                rec.id === this.state._toComparableId(ev.currentTarget.name)
+            );
+            recordToUpdate.display_name = ev.currentTarget.value;
             const timeSinceMousedown = ev.timeStamp - this.mousedownTime;
             if (timeSinceMousedown < 500) {
                 // Without this "setTimeOut", "click" events are not triggered when
@@ -2807,48 +2818,36 @@ const ListUserValueWidget = UserValueWidget.extend({
                 this._notifyCurrentState(preview);
             }
         }
-    },
+    }
     /**
      * @private
      */
     _onWeListMousedown(ev) {
         this.mousedownTime = ev.timeStamp;
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onRemoveItemClick(ev) {
-        const minElements = this.el.dataset.allowEmpty ? 0 : 1;
-        if (ev.target.closest('table').querySelectorAll('tr').length > minElements) {
-            ev.target.closest('tr').remove();
+        const minElements = this.props.allowEmpty ? 0 : 1;
+        if (this.state.listRecords.length > minElements) {
+            const removeId = this.state._toComparableId(ev.currentTarget.dataset.removeOption);
+            const recordIdx = this.state.listRecords.findIndex((record) => record.id === removeId);
+            if (recordIdx >= 0) {
+                this.state.listRecords.splice(recordIdx, 1);
+            }
+            if (this.state.hasDefault) {
+                const selectedIdx = this.state.selected.indexOf(removeId);
+                if (selectedIdx >= 0) {
+                    this.state.selected.splice(selectedIdx, 1);
+                }
+            }
             this._notifyCurrentState();
         }
-    },
-    /**
-     * @override
-     */
-    _onUserValueNotification(ev) {
-        const { widget, previewMode, prepare } = ev.data;
-        if (widget && widget === this.createWidget) {
-            if (widget.options.createMethod && widget.getValue(widget.options.createMethod)) {
-                return this._super(ev);
-            }
-            ev.stopPropagation();
-            if (previewMode) {
-                return;
-            }
-            prepare();
-            const recordData = JSON.parse(widget.getMethodsParams('addRecord').recordData);
-            const { id, display_name } = recordData;
-            delete recordData.id;
-            delete recordData.display_name;
-            this._addItemToTable(id, display_name, recordData);
-            this._notifyCurrentState();
-        }
-        return this._super(ev);
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeList", WeList);
 
 class RangeUserValue extends UnitUserValue {
     constructor() {
@@ -3169,6 +3168,8 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             ]);
             this.registerSubWidget(this.createInput);
             this.registerSubWidget(this.createButton);
+            // TODO @owl-options: rename `createWidget` once m2o and m2m widgets are
+            // refactored, into something OWL-y (probably `createTemplate`?).
             this.createWidget = _buildRowElement('', {
                 classes: ['o_we_full_row', 'o_we_m2o_create', 'p-1'],
                 childNodes: [this.createInput.el, this.createButton.el],
@@ -3515,6 +3516,8 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
         );
         // Don't register this one as a subWidget because it will be a subWidget
         // of the listWidget
+        // TODO @owl-options: rename `createWidget` once m2o and m2m widgets are
+        // refactored, into something OWL-y (probably `createTemplate`?).
         this.createWidget = new Many2oneUserValueWidget(null, undefined, {
             dataAttributes: Object.fromEntries(m2oDataAttributes),
         }, this.$target);

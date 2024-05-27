@@ -75,6 +75,13 @@
         <!-- name="fake_inset_shadow_opt" -->
         <WeCheckbox multiSequence="60" selectStyle="'inset'"/>
     </WeMulti>
+    <!-- Try with `hasDefault` = unique/multiple or not set,  with/out `addItemTitle`, `inputType` = number, with/out `defaultValue`,
+        with/out `availableRecords`, with/out `unsortable`, `notEditable`, `allowEmpty`, `newElementsNotToggleable`, `renderOnInputBlur`
+    -->
+    <WeList addItemTitle="'Add new item to list'" renderListItems="''" hasDefault="'unique'" availableRecords='`[{"id":1,"title":"delectus   aut   autem","completed":false,"display_name":"delectus   aut   autem"},{"id":2,"title":"quis ut nam facilis et officia qui ","completed":false,"display_name":"quis ut nam facilis et officia qui "},{"id":3,"title":"fugiat veniam minus","completed":false,"display_name":"fugiat veniam minus"},{"id":4,"title":"et porro tempora","completed":true,"display_name":"et porro tempora"},{"id":5,"title":"laboriosam mollitia et enim quasi adipisci quia provident illum","completed":false,"display_name":"laboriosam mollitia et enim quasi adipisci quia provident illum"},{"id":6,"title":"qui ullam ratione quibusdam voluptatem quia omnis","completed":false,"display_name":"qui ullam ratione quibusdam voluptatem quia omnis"},{"id":7,"title":"illo expedita consequatur quia in","completed":false,"display_name":"illo expedita consequatur quia in"},{"id":8,"title":"quo adipisci enim quam ut ab","completed":true,"display_name":"quo adipisci enim quam ut ab"},{"id":9,"title":"molestiae perspiciatis ipsa","completed":false,"display_name":"molestiae perspiciatis ipsa"},{"id":10,"title":"illo est ratione doloremque quia maiores aut","completed":true,"display_name":"illo est ratione doloremque quia maiores aut"}]`'>
+    <!-- <WeList addItemTitle="'Add new item to list'" renderListItems="''" hasDefault="'multiple'" defaultValue="'Something'"> -->
+        <t t-set-slot="title">A wonderful WeList</t>
+    </WeList>
 </t>
 
 <t t-name="web_editor.container_width">
@@ -285,5 +292,67 @@
             <t t-slot="default"/>
         </div>
     </we-multi>
+</t>
+<t t-name="web_editor.WeList">
+    <we-list class="o_we_user_value_widget o_we_fw" t-att-class="getAllClasses()" t-on-mousedown="_onWeListMousedown">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <div class="o_we_table_wrapper">
+                <table t-ref="table">
+                    <t t-foreach="state.listRecords" t-as="listRecord" t-key="listRecord.id">
+                        <tr>
+                            <td t-if="props.unsortable !== 'true'">
+                                <we-button class="o_we_drag_handle o_we_link fa fa-fw fa-arrows" data-no-preview="true"/>
+                            </td>
+                            <td class="o_we_list_record_name">
+                                <input t-att-type="props.inputType" t-att-value="listRecord.display_name || props.defaultValue"
+                                    t-att-name="listRecord.id" t-att-placeholder="listRecord.placeholder"
+                                    t-att="this.getInputDataAtts(listRecord)"
+                                    t-on-input="_onListItemBlurInput"
+                                    t-on-blur="_onListItemBlurInput"
+                                    t-att-disabled="!state.isCustom"/>
+                            </td>
+                            <td t-if="props.hasDefault and !listRecord.notToggleable">
+                                <we-button class="o_we_user_value_widget o_we_checkbox_wrapper"
+                                           t-att-data-select="listRecord.id"
+                                           t-att-class="{'active': state.selected.includes(listRecord.id) || listRecord.selected}"
+                                           t-on-click="_onAddItemCheckboxClick">
+                                    <we-checkbox/>
+                                </we-button>
+                            </td>
+                            <td t-if="!listRecord.undeletable">
+                                <we-button class="o_we_select_remove_option o_we_link o_we_text_danger fa fa-fw fa-minus"
+                                           t-att-data-remove-option="listRecord.id" t-on-click="_onRemoveItemClick"/>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+            <t t-slot="createUserValue"/>
+            <t t-if="!props.slots?.createUserValue">
+                <we-button t-if="state.isCustom" class="o_we_list_add_optional" t-on-click="_onAddCustomItemClick">
+                    <t t-out="props.addItemTitle"/>
+                </we-button>
+                <we-select t-else="" class="o_we_user_value_widget o_we_add_list_item" t-on-click="_onClick">
+                    <div>
+                        <we-toggler t-att-class="{'active': state.opened}" t-out="props.addItemTitle"/>
+                        <we-selection-items>
+                            <t t-set="noRecordInList" t-value="true"/>
+                            <t t-foreach="state.existingRecords" t-as="record" t-key="record.id">
+                                <t t-if="!state.listRecords.find(v => v.id === record.id)">
+                                    <t t-set="noRecordInList" t-value="false"/>
+                                    <we-button class="o_we_list_add_existing" t-att-data-add-option="record.id" data-no-preview="true" t-on-click="_onAddExistingItemClick">
+                                        <div t-out="record.display_name"/>
+                                    </we-button>
+                                </t>
+                            </t>
+                            <we-title t-if="noRecordInList">No more records</we-title>
+                        </we-selection-items>
+                    </div>
+                </we-select>
+            </t>
+        </div>
+    </we-list>
 </t>
 </templates>
