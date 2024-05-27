@@ -34,6 +34,9 @@ export class DashboardMobileSearchPanel extends Component {
     }
 
     openDashboardSelection() {
-        this.state.isOpen = true;
+        const dashboards = this.props.groups.map((group) => group.dashboards).flat();
+        if (dashboards.length > 1) {
+            this.state.isOpen = true;
+        }
     }
 }
