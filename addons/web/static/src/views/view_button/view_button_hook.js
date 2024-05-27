@@ -32,35 +32,39 @@ export async function executeButtonCallback(el, fct) {
 function undefinedAsTrue(val) {
     return typeof val === "undefined" || val;
 }
-export function useViewButtons(model, ref, options = {}) {
+
+/**
+ * @typedef {Object} Options
+ * @property {Function} [afterExecuteAction]
+ * @property {Function} [beforeExecuteAction]
+ * @property {Function} [reload]
+ */
+
+/**
+ * @param {{ readonly el: HTMLElement | null; }} ref
+ * @param {Options} [options={}]
+ */
+export function useViewButtons(ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
     const comp = useComponent();
     const env = useEnv();
-    const beforeExecuteAction =
-        options.beforeExecuteAction ||
-        (() => {
-            return true;
-        });
-    const afterExecuteAction = options.afterExecuteAction || (() => {});
     useSubEnv({
         async onClickViewButton({ clickParams, getResParams, beforeExecute }) {
-            // const el = getEl();
             async function execute() {
                 let _continue = true;
                 if (beforeExecute) {
                     _continue = undefinedAsTrue(await beforeExecute());
                 }
 
-                _continue = _continue && undefinedAsTrue(await beforeExecuteAction(clickParams));
+                _continue =
+                    _continue && undefinedAsTrue(await options.beforeExecuteAction?.(clickParams));
                 if (!_continue) {
                     return;
                 }
                 const closeDialog =
                     (clickParams.close || clickParams.special) && env.dialogData?.close;
                 const params = getResParams();
-                const resId = params.resId;
-                const resIds = params.resIds || model.resIds;
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
@@ -73,15 +77,14 @@ export function useViewButtons(model, ref, options = {}) {
                     Object.assign(buttonContext, clickParams.buttonContext);
                 }
                 const doActionParams = Object.assign({}, clickParams, {
-                    resModel: params.resModel || model.resModel,
-                    resId,
-                    resIds,
-                    context: params.context || {}, //LPE FIXME new Context(payload.env.context).eval();
+                    resModel: params.resModel,
+                    resId: params.resId,
+                    resIds: params.resIds,
+                    context: params.context || {},
                     buttonContext,
                     onClose: async () => {
                         if (!closeDialog && status(comp) !== "destroyed") {
-                            const reload = options.reload || (() => model.load());
-                            await reload();
+                            await options.reload?.();
                         }
                     },
                 });
@@ -91,7 +94,7 @@ export function useViewButtons(model, ref, options = {}) {
                 } catch (_e) {
                     error = _e;
                 }
-                await afterExecuteAction(clickParams);
+                await options.afterExecuteAction?.(clickParams);
                 if (closeDialog) {
                     closeDialog();
                 }
