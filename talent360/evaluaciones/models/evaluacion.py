@@ -44,7 +44,7 @@ class Evaluacion(models.Model):
             ("generico", "Genérico"),
         ],
         required=True,
-        default="competencia",
+        default="generico",
     )
     descripcion = fields.Text(string="Descripción")
     estado = fields.Selection(
@@ -1162,7 +1162,6 @@ class Evaluacion(models.Model):
                     ]
                 )
 
-                print(f"Respuestas: {respuestas}")
                 respuestas.unlink()
 
         if "usuario_externo_ids" in vals:
@@ -1178,8 +1177,13 @@ class Evaluacion(models.Model):
                         ("evaluacion_id.id", "=", self.id),
                     ]
                 )
-                print(f"Respuestas: {respuestas}")
                 respuestas.unlink()
+
+        for record in self:
+            if record.tipo == "generico" and len(record.pregunta_ids) < 1:
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una pregunta."))
+            if record.tipo == "generico" and len(record.usuario_ids) < 1:
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una persona asignada."))
 
         return resultado
 
@@ -1195,6 +1199,37 @@ class Evaluacion(models.Model):
             "res_model": "asignar.usuario.externo.wizard",
             "view_mode": "form",
             "target": "new",
+        }
+    
+    def evaluacion_general_action_form(self):
+        """
+        Ejecuta la acción de redireccionar a la evaluación general y devuelve un diccionario
+
+        Este método utiliza los parámetros necesarios para redireccionar a la evaluación general
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la evaluación general.
+
+        """
+        
+        nueva_evaluacion = self.env["evaluacion"].create(
+            {
+                "nombre": "",
+                "tipo": "generico",
+                "fecha_inicio": fields.Date.today(),
+                "fecha_final": fields.Date.today(),
+            }
+        )
+        self = nueva_evaluacion
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "General",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_general_view_form").id,
+            "target": "current",
+            "res_id": self.id,
         }
 
     def get_escalar_format(self):
