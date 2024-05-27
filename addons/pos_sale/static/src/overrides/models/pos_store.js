@@ -153,7 +153,7 @@ patch(PosStore.prototype, {
         }
     },
     async downPaymentSO(sale_order, isPercentage) {
-        if (!this.config.down_payment_product_id) {
+        if (!this.config.down_payment_product_id && this.config.raw.down_payment_product_id) {
             await this.data.read("product.product", [this.config.raw.down_payment_product_id]);
         }
         if (!this.config.down_payment_product_id) {
