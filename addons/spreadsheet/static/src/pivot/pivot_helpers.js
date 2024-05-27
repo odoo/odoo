@@ -20,6 +20,7 @@ const AGGREGATOR_NAMES = {
     bool_and: _t("Boolean And"),
     bool_or: _t("Boolean Or"),
     max: _t("Maximum"),
+    min: _t("Minimum"),
     avg: _t("Average"),
     sum: _t("Sum"),
 };
