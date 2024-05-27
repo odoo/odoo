@@ -31,7 +31,7 @@ class PosPayment(models.Model):
     payment_status = fields.Char('Payment Status')
     ticket = fields.Char('Payment Receipt Info')
     is_change = fields.Boolean(string='Is this payment change?', default=False)
-    account_move_id = fields.Many2one('account.move')
+    account_move_id = fields.Many2one('account.move', index='btree_not_null')
 
     @api.depends('amount', 'currency_id')
     def _compute_display_name(self):
