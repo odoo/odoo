@@ -9,17 +9,20 @@ export class MailActivityType extends models.ServerModel {
             id: 1,
             icon: "fa-envelope",
             name: "Email",
+            active: true,
         },
         {
             id: 2,
             category: "phonecall",
             icon: "fa-phone",
             name: "Call",
+            active: true,
         },
         {
             id: 28,
             icon: "fa-upload",
             name: "Upload Document",
+            active: true,
         },
     ];
 }
