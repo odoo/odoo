@@ -373,7 +373,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 value = str(value) if isinstance(value, bool) else False
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
-                value = str(value.id) if value else False
+                value = value.id
 
             if current_value == str(value) or current_value == value:
                 continue
