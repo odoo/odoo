@@ -52,9 +52,7 @@ class ProductTemplate(models.Model):
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     type = fields.Selection(
         string="Product Type",
-        help="A storable product is a product for which you manage stock. The Inventory app has to"
-             " be installed.\n"
-             "A consumable product is a product for which stock is not managed.\n"
+        help="Goods are tangible materials and merchandise you provide.\n"
              "A service is a non-material product you provide.",
         selection=[
             ('consu', "Goods"),
