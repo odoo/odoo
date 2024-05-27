@@ -257,14 +257,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             }
             ownerRecord[field.name] = recordToConnect;
         } else if (field.type === "one2many") {
-            const prevConnectedRecord = recordToConnect[inverse.name];
-            if (prevConnectedRecord === ownerRecord) {
-                return;
-            }
+            // It's necessary to remove the previous connected in one2many but it would cause issue for inherited one2many field.
+            // Also, we don't do modification in PoS and we can ignore the removing part to prevent issue.
             recordToConnect[inverse.name] = ownerRecord;
-            if (prevConnectedRecord) {
-                removeItem(prevConnectedRecord, field.name, recordToConnect);
-            }
             addItem(ownerRecord, field.name, recordToConnect);
         } else if (field.type === "many2many") {
             addItem(ownerRecord, field.name, recordToConnect);
