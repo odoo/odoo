@@ -250,9 +250,13 @@ class TestWebsocketCaryall(WebsocketCase):
             serve_forever_called_event.set()
 
         with patch.object(WebsocketConnectionHandler, '_serve_forever', side_effect=serve_forever) as mock:
-            self.websocket_connect(
+            ws = self.websocket_connect(
                 cookie=f'session_id={user_session.sid};',
                 origin="http://example.com"
+            )
+            self.assertTrue(
+                ws.getheaders().get('set-cookie').startswith(f'session_id={user_session.sid}'),
+                'The set-cookie response header must be the origin request session rather than the websocket session'
             )
             serve_forever_called_event.wait(timeout=5)
             self.assertTrue(mock.called)
