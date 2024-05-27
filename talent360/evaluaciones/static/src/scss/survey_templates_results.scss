@@ -1,4 +1,5 @@
 @media print {
+<<<<<<< HEAD
     .portada {
         display: flex !important;
         position: relative; /* Añadir posición relativa */
@@ -15,6 +16,14 @@
         padding: 0; /* Eliminar cualquier relleno */
         margin: 0; /* Eliminar cualquier margen */
     }
+=======
+    .semaforo-item {
+        display: flex;
+        align-items: center;
+        gap: 10px; 
+    }
+
+>>>>>>> develop
     .page-break {
         page-break-after: always;
         break-after: always;
@@ -106,7 +115,7 @@
             }
             tbody {
                 tr {
-                  break-inside: avoid;  
+                    break-inside: avoid;  
                 }
                 tr.d-none {
                     display: table-row !important;
@@ -281,13 +290,6 @@
     gap: 0.5rem;
     background-color: #dbdbdb;
 }
-
-.color_circle {
-    aspect-ratio: 1;
-    width: 22px;
-    border-radius: 100%;
-}
-
 
 @page {
     margin: 0; /* Elimina los márgenes predeterminados de la página */
