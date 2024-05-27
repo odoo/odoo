@@ -32,7 +32,7 @@ class Pregunta(models.Model):
             ("open_question", "Abierta"),
             ("escala", "Escala"),
         ],
-        default="multiple_choice",
+        default="escala",
         required=True,
     )
 
