@@ -122,7 +122,14 @@ export class ViewButton extends Component {
         this.env.onClickViewButton({
             clickParams: this.clickParams,
             getResParams: () =>
-                pick(this.props.record, "context", "evalContext", "resModel", "resId", "resIds"),
+                pick(
+                    this.props.record || {},
+                    "context",
+                    "evalContext",
+                    "resModel",
+                    "resId",
+                    "resIds"
+                ),
             beforeExecute: () => this.dropdownControl.close(),
         });
     }
