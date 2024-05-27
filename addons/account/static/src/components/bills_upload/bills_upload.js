@@ -211,8 +211,21 @@ export class AccountMoveListController extends ListController {
 
     setup() {
         super.setup();
+        this.orm = useService("orm");
         this.account_move_service = useService("account_move");
         this.showUploadButton = this.props.context.default_move_type !== 'entry' || 'active_id' in this.props.context;
+    }
+
+    get actionMenuProps() {
+        return {
+            ...super.actionMenuProps,
+            printDropdownTitle: _t("Download"),
+            loadExtraPrintItems: this.loadExtraPrintItems.bind(this),
+        };
+    }
+
+    async loadExtraPrintItems() {
+        return this.orm.call("account.move", "get_extra_print_items", [this.actionMenuProps.getActiveIds()]);
     }
 
     async onDeleteSelectedRecords() {
@@ -221,7 +234,7 @@ export class AccountMoveListController extends ListController {
             return super.onDeleteSelectedRecords(...arguments);
         }
     }
-};
+}
 
 export const AccountMoveUploadListView = {
     ...listView,

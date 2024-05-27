@@ -7,7 +7,7 @@
                 <Dropdown beforeOpen.bind="loadPrintItems">
                     <button class="btn btn-secondary" data-hotkey="shift+u">
                         <i class="fa fa-print me-1"/>
-                        <span class="o_dropdown_title">Print</span>
+                        <span class="o_dropdown_title" t-out="props.printDropdownTitle"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="state.printItems" t-as="item" t-key="item.key">

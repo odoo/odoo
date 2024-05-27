@@ -6,7 +6,7 @@ from collections import OrderedDict
 from odoo import http, _
 from odoo.osv import expression
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
-from odoo.addons.account.controllers.download_docs import _get_zip_headers
+from odoo.addons.account.controllers.download_docs import _get_headers, _build_zip_from_data
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
 
@@ -133,14 +133,15 @@ class PortalAccount(CustomerPortal):
 
         if report_type == 'pdf' and download and invoice_sudo.state == 'posted':
             # Download the official attachment(s) or a Pro Forma invoice
-            attachments = invoice_sudo._get_invoice_legal_documents()
-            if len(attachments) > 1:
+            docs_data = invoice_sudo._get_invoice_legal_documents_all(allow_fallback=True)
+            if len(docs_data) == 1:
+                headers = self._get_http_headers(invoice_sudo, report_type, docs_data[0]['content'], download)
+                return request.make_response(docs_data[0]['content'], list(headers.items()))
+            else:
                 filename = invoice_sudo._get_invoice_report_filename(extension='zip')
-                zip_content = attachments.sudo()._build_zip_from_attachments()
-                headers = _get_zip_headers(zip_content, filename)
+                zip_content = _build_zip_from_data(docs_data)
+                headers = _get_headers(filename, 'zip', zip_content)
                 return request.make_response(zip_content, headers)
-            headers = self._get_http_headers(invoice_sudo, report_type, attachments.raw, download)
-            return request.make_response(attachments.raw, list(headers.items()))
 
         elif report_type in ('html', 'pdf', 'text'):
             has_generated_invoice = bool(invoice_sudo.invoice_pdf_report_id)
