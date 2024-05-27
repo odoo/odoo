@@ -321,6 +321,11 @@ function removeSrcAttribute(el, rpc) {
             }
             $(node).trigger('load');
         }
+        const dataSrc = node.dataset.src;
+        if (dataSrc && dataSrc !== "about:blank" && rpc) {
+            rpc(dataSrc, []);
+            $(node).trigger("load");
+        }
     }
 }
 
