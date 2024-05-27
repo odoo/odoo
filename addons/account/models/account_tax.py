@@ -2175,6 +2175,103 @@ class AccountTax(models.Model):
             line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
         return self._fix_tax_included_price(price, prod_taxes, line_taxes)
 
+    @api.model
+    def _dispatch_negative_lines(self, base_lines, sorting_criteria=None, additional_dispatching_method=None):
+        """
+        This method tries to dispatch the amount of negative lines on positive ones with the same tax, resulting in
+        a discount for these positive lines.
+
+        :param base_lines: A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
+        :param sorting_criteria: Optional list of criteria to sort the candidate for a negative line
+        :param additional_dispatching_method: Optional method to transfer additional information (like tax amounts).
+                                              It takes as arguments:
+                                                  - neg_base_line: the negative line being dispatched
+                                                  - candidate: the positive line that will get discounted by neg_base_line
+                                                  - discount_to_distribute: the amount being transferred
+                                                  - is_zero: if the neg_base_line is nulled by the candidate
+
+        :return: A dictionary in the following form:
+            {
+                'result_lines': Remaining list of positive lines, with their potential increased discount
+                'orphan_negative_lines': A list of remaining negative lines that failed to be distributed
+                'nulled_candidate_lines': list of previously positive lines that have been nulled (with the discount)
+            }
+        """
+        results = {
+            'result_lines': [],
+            'orphan_negative_lines': [],
+            'nulled_candidate_lines': [],
+        }
+        for line in base_lines:
+            line['discount_amount'] = line['discount_amount_before_dispatching']
+
+            if line['currency'].compare_amounts(line['gross_price_subtotal'], 0) < 0.0:
+                results['orphan_negative_lines'].append(line)
+            else:
+                results['result_lines'].append(line)
+
+        for neg_base_line in list(results['orphan_negative_lines']):
+            candidates = [
+                candidate
+                for candidate in results['result_lines']
+                if (
+                    neg_base_line['currency'] == candidate['currency']
+                    and neg_base_line['partner'] == candidate['partner']
+                    and neg_base_line['taxes'] == candidate['taxes']
+                )
+            ]
+
+            sorting_criteria = sorting_criteria or self._get_negative_lines_sorting_candidate_criteria()
+            sorted_candidates = sorted(candidates, key=lambda candidate: tuple(method(candidate, neg_base_line) for method in sorting_criteria))
+
+            # Dispatch.
+            for candidate in sorted_candidates:
+                net_price_subtotal = neg_base_line['gross_price_subtotal'] - neg_base_line['discount_amount']
+                other_net_price_subtotal = candidate['gross_price_subtotal'] - candidate['discount_amount']
+                discount_to_distribute = min(other_net_price_subtotal, -net_price_subtotal)
+
+                candidate['discount_amount'] += discount_to_distribute
+                neg_base_line['discount_amount'] -= discount_to_distribute
+
+                remaining_to_distribute = neg_base_line['gross_price_subtotal'] - neg_base_line['discount_amount']
+                is_zero = neg_base_line['currency'].is_zero(remaining_to_distribute)
+
+                if additional_dispatching_method:
+                    additional_dispatching_method(neg_base_line=neg_base_line, candidate=candidate, discount_to_distribute=discount_to_distribute, is_zero=is_zero)
+
+                # Check if there is something left on the other line.
+                remaining_amount = candidate['discount_amount'] - candidate['gross_price_subtotal']
+                if candidate['currency'].is_zero(remaining_amount):
+                    results['result_lines'].remove(candidate)
+                    results['nulled_candidate_lines'].append(candidate)
+
+                if is_zero:
+                    results['orphan_negative_lines'].remove(neg_base_line)
+                    break
+
+        return results
+
+    @api.model
+    def _get_negative_lines_sorting_candidate_criteria(self):
+        # Ordering by priority:
+        # - same product
+        # - same amount
+        # - biggest amount
+        def same_product(candidate, negative_line):
+            return (
+                not candidate['product']
+                or not negative_line['product']
+                or candidate['product'] != negative_line['product']
+            )
+
+        def same_price_subtotal(candidate, negative_line):
+            return candidate['currency'].compare_amounts(candidate['price_subtotal'], -negative_line['price_subtotal']) != 0
+
+        def biggest_amount(candidate, negative_line):
+            return -candidate['price_subtotal']
+
+        return [same_product, same_price_subtotal, biggest_amount]
+
 
 class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"

@@ -265,20 +265,27 @@ class AccountMove(models.Model):
         """
         invoice_lines = []
         lines = self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section'))
-        for num, line in enumerate(lines):
-            sign = -1 if line.move_id.is_inbound() else 1
-            price_subtotal = (line.balance * sign) if convert_to_euros else line.price_subtotal
-            # The price_subtotal should be inverted when the line is a reverse charge refund.
-            if reverse_charge_refund:
-                price_subtotal = -price_subtotal
-
-            # Unit price
-            price_unit = 0
-            if line.quantity and line.discount != 100.0:
-                price_unit = price_subtotal / ((1 - (line.discount or 0.0) / 100.0) * abs(line.quantity))
+        base_lines = [invl._convert_to_tax_base_line_dict() for invl in lines]
+        inverse_factor = (-1 if reverse_charge_refund else 1)
+        for num, line in enumerate(base_lines):
+            line['sequence'] = num
+            line['price_subtotal'] = line['price_subtotal'] * inverse_factor
+            if line['discount'] != 100.0 and line['quantity']:
+                gross_price = line['price_subtotal'] / (1 - line['discount'] / 100.0)
+                line['discount_amount_before_dispatching'] = (gross_price - line['price_subtotal']) * inverse_factor
+                line['gross_price_subtotal'] = line['currency'].round(gross_price * inverse_factor)
+                line['price_unit'] = line['currency'].round(gross_price / abs(line['quantity']))
             else:
-                price_unit = line.price_unit
+                line['gross_price_subtotal'] = line['currency'].round(line['price_unit'] * line['quantity'])
+                line['discount_amount_before_dispatching'] = line['gross_price_subtotal']
 
+        dispatch_result = self.env['account.tax']._dispatch_negative_lines(base_lines)
+        if dispatch_result['orphan_negative_lines']:
+            raise UserError(_("You have negative lines that we can't dispatch on others. They need to have the same tax."))
+        base_lines = sorted(dispatch_result['result_lines'] + dispatch_result['nulled_candidate_lines'], key=lambda line: line['sequence'])
+
+        for num, line_dict in enumerate(base_lines):
+            line = line_dict['record']
             description = line.name
 
             # Down payment lines:
@@ -296,8 +303,9 @@ class AccountMove(models.Model):
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
-                'unit_price': price_unit,
-                'subtotal_price': price_subtotal,
+                'subtotal_price': (line_dict['gross_price_subtotal'] - line_dict['discount_amount']) * inverse_factor,
+                'unit_price': line_dict['price_unit'],
+                'discount_amount': line_dict['discount_amount'] - line_dict['discount_amount_before_dispatching'],
                 'vat_tax': line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0),
                 'downpayment_moves': downpayment_moves,
                 'discount_type': (
