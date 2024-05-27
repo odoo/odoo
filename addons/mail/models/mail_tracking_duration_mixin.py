@@ -38,7 +38,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
         ):
             self.duration_tracking = False
             raise ValueError(_(
-                'Field "(field)r on model %(model)r must be of type Many2one and have tracking=True for the computation of duration.',
+                'Field “%(field)s” on model “%(model)s” must be of type Many2one and have tracking=True for the computation of duration.',
                 field=self._track_duration_field, model=self._name
             ))
 
