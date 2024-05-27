@@ -57,8 +57,8 @@ class AccountTax(models.Model):
         return None
 
     def _l10n_it_filter_kind(self, kind):
-        """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""
-        return self if kind == 'vat' else self.env['account.tax']
+        """ Filters taxes depending on _l10n_it_get_tax_kind. """
+        return self.filtered(lambda tax: tax._l10n_it_get_tax_kind() == kind)
 
     def _l10n_it_is_split_payment(self):
         """ Split payment means that the Public Administration buyer will pay VAT
