@@ -262,6 +262,7 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
+            "first-item.focus",
             // Cancel
             "keydown:Escape",
             "keyup:Escape",
@@ -274,6 +275,7 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
+            "first-item.focus",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -308,6 +310,7 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
+            "first-item.focus",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -343,6 +346,7 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
+            "first-item.focus",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
@@ -377,6 +381,7 @@ describe(parseUrl(import.meta.url), () => {
             // Drag first
             "first-item.pointerdown",
             "first-item.mousedown",
+            "first-item.focus",
             // Leave first
             "first-item.dragstart",
             "first-item.drag",
