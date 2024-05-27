@@ -221,11 +221,11 @@ class ExportXlsxWriter:
                 # here. xlsxwriter does not support bytes values in Python 3 ->
                 # assume this is base64 and decode to a string, if this
                 # fails note that you can't export
-                cell_value = pycompat.to_text(cell_value)
+                cell_value = cell_value.decode()
             except UnicodeDecodeError:
-                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
+                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column]) from None
         elif isinstance(cell_value, (list, tuple, dict)):
-            cell_value = pycompat.to_text(cell_value)
+            cell_value = str(cell_value)
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:

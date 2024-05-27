@@ -24,7 +24,7 @@ from odoo.addons.calendar.models.calendar_recurrence import (
 )
 from odoo.tools.translate import _
 from odoo.tools.misc import get_lang
-from odoo.tools import pycompat, html2plaintext, is_html_empty, single_email_re
+from odoo.tools import html2plaintext, is_html_empty, single_email_re
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -1448,15 +1448,14 @@ class Meeting(models.Model):
         date_deadline = fields.Datetime.context_timestamp(self_tz, fields.Datetime.from_string(stop))
 
         # convert into string the date and time, using user formats
-        to_text = pycompat.to_text
-        date_str = to_text(date.strftime(format_date))
-        time_str = to_text(date.strftime(format_time))
+        date_str = date.strftime(format_date)
+        time_str = date.strftime(format_time)
 
         if zallday:
             display_time = _("All Day, %(day)s", day=date_str)
         elif zduration < 24:
             duration = date + timedelta(minutes=round(zduration*60))
-            duration_time = to_text(duration.strftime(format_time))
+            duration_time = duration.strftime(format_time)
             display_time = _(
                 u"%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
                 day=date_str,
@@ -1465,8 +1464,8 @@ class Meeting(models.Model):
                 timezone=timezone,
             )
         else:
-            dd_date = to_text(date_deadline.strftime(format_date))
-            dd_time = to_text(date_deadline.strftime(format_time))
+            dd_date = date_deadline.strftime(format_date)
+            dd_time = date_deadline.strftime(format_time)
             display_time = _(
                 u"%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
                 date_start=date_str,

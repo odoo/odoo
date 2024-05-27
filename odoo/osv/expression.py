@@ -123,7 +123,7 @@ import warnings
 import odoo.modules
 from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
 from odoo.tools import (
-    pycompat, pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern,
+    pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern,
     Query, SQL, get_lang,
 )
 
@@ -1047,7 +1047,7 @@ class expression(object):
 
                 else:
                     if operator in ('ilike', 'not ilike'):
-                        right = f'%{pycompat.to_text(right)}%'
+                        right = f'%{right}%'
                         unaccent = self._unaccent
                     else:
                         unaccent = lambda x: x

@@ -3058,7 +3058,7 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(value, SQL):
             sql_value = value
         elif need_wildcard:
-            sql_value = SQL("%s", f"%{pycompat.to_text(value)}%")
+            sql_value = SQL("%s", f"%{value}%")
         else:
             sql_value = SQL("%s", field.convert_to_column(value, self, validate=False))
 

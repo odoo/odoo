@@ -24,7 +24,6 @@ except ImportError:
     jingtrang = None
 
 import odoo
-from . import pycompat
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from .translate import _
@@ -141,16 +140,16 @@ def _eval_xml(self, node, env):
         if t == 'html':
             return _process("".join(etree.tostring(n, method='html', encoding='unicode') for n in node))
 
-        data = node.text
+        data: str = node.text or ''
         if node.get('file'):
             with file_open(node.get('file'), 'rb', env=env) as f:
-                data = f.read()
+                contents = f.read()
+                if t == 'base64':
+                    return base64.b64encode(contents)
+            data = contents.decode()
 
-        if t == 'base64':
-            return base64.b64encode(data)
+        assert t != 'base64', "base64 type is only compatible with file data"
 
-        # after that, only text content makes sense
-        data = pycompat.to_text(data)
         if t == 'file':
             path = data.strip()
             try:

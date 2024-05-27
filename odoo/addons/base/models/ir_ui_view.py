@@ -247,7 +247,7 @@ actual arch.
                         lambda term: translation_dictionary[term][lang],
                         arch_fs
                     )
-            view.arch = pycompat.to_text(arch_fs or view.arch_db)
+            view.arch = arch_fs or view.arch_db
 
     def _inverse_arch(self):
         for view in self:

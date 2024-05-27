@@ -255,7 +255,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         )
 
     def from_string(self, text):
-        return email.message_from_string(pycompat.to_text(text), policy=email.policy.SMTP)
+        return email.message_from_string(text, policy=email.policy.SMTP)
 
     def assertHtmlEqual(self, value, expected, message=None):
         tree = html.fragment_fromstring(value, parser=html.HTMLParser(encoding='utf-8'), create_parent='body')

@@ -433,7 +433,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = pycompat.to_text(model_data['model'])
+            _name = model_data['model']
             _description = model_data['name']
             _module = False
             _custom = True
