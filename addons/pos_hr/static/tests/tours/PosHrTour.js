@@ -52,6 +52,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     NumberPopup.do.clickConfirm();
     ProductScreen.check.isShown();
     ProductScreen.do.clickHomeCategory();
+    PosHr.check.cashInOutVisible(false);
 
     // Create orders and check if the ticket list has the right employee for each order
     // order for employee 2
@@ -63,6 +64,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     // order for employee 1
     PosHr.do.clickLockButton();
     PosHr.exec.login('Pos Employee1', '2580');
+    PosHr.check.cashInOutVisible();
     TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Desk Pad', '1', '4');
     ProductScreen.check.totalAmountIs('4.0')
@@ -74,6 +76,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     PosHr.do.clickCashierName();
     SelectionPopup.do.clickItem('Mitchell Admin');
     PosHr.check.cashierNameIs('Mitchell Admin');
+    PosHr.check.cashInOutVisible();
     TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Desk Pad', '1', '8');
     ProductScreen.check.totalAmountIs('8.0')
