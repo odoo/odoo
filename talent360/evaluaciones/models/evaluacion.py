@@ -1213,10 +1213,10 @@ class Evaluacion(models.Model):
         for evaluacion in evaluaciones:
             if evaluacion.fecha_inicio <= hoy <= evaluacion.fecha_final:
                 evaluacion.estado = "publicado"
-            elif evaluacion.fecha_final > hoy:
-                evaluacion.estado = "finalizado"
-            elif evaluacion.fecha_inicio < hoy:
+            elif evaluacion.fecha_final < hoy:
                 evaluacion.estado = "borrador"
+            elif evaluacion.fecha_inicio > hoy:
+                evaluacion.estado = "finalizado"
 
     def get_escalar_format(self):
         """
