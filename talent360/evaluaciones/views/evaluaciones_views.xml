@@ -331,7 +331,7 @@
         <field name="name">respuesta.tree</field>
         <field name="model">respuesta</field>
         <field name="arch" type="xml">
-            <tree create="false">
+            <tree create="false" duplicate="false" delete="false">
                 <field class="text-primary font-weight-bold" name="pregunta_texto" string="Pregunta"/>
                 <field name="respuesta_mostrar" string="Respuesta"/>
             </tree>
