@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class AccountMove(models.Model):
@@ -16,6 +16,44 @@ class AccountMove(models.Model):
         string="UBL/CII File",
         copy=False,
     )
+
+    # -------------------------------------------------------------------------
+    # ACTIONS
+    # -------------------------------------------------------------------------
+
+    def action_invoice_download_ubl(self):
+        if invoices_with_ubl := self.filtered('ubl_cii_xml_id'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/account/download_invoice_documents/{",".join(map(str, invoices_with_ubl.ids))}/ubl',
+                'target': 'download',
+            }
+        return False
+
+    # -------------------------------------------------------------------------
+    # BUSINESS
+    # -------------------------------------------------------------------------
+
+    def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
+        # EXTENDS account
+        if filetype == 'ubl':
+            if ubl_attachment := self.ubl_cii_xml_id:
+                return {
+                    'filename': ubl_attachment.name,
+                    'filetype': 'xml',
+                    'content': ubl_attachment.raw,
+                }
+        return super()._get_invoice_legal_documents(filetype, allow_fallback=allow_fallback)
+
+    def get_extra_print_items(self):
+        print_items = super().get_extra_print_items()
+        if self.ubl_cii_xml_id:
+            print_items.append({
+                'key': 'download_ubl',
+                'description': _('XML UBL'),
+                **self.action_invoice_download_ubl(),
+            })
+        return print_items
 
     # -------------------------------------------------------------------------
     # EDI

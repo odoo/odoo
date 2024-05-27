@@ -31,6 +31,7 @@ export class ActionMenus extends Component {
         getActiveIds: Function,
         context: Object,
         resModel: String,
+        printDropdownTitle: { type: String, optional: true },
         domain: { type: Array, optional: true },
         isDomainSelected: { type: Boolean, optional: true },
         items: {
@@ -42,10 +43,13 @@ export class ActionMenus extends Component {
         },
         onActionExecuted: { type: Function, optional: true },
         shouldExecuteAction: { type: Function, optional: true },
+        loadExtraPrintItems: { type: Function, optional: true },
     };
     static defaultProps = {
+        printDropdownTitle: _t("Print"),
         onActionExecuted: () => {},
         shouldExecuteAction: () => true,
+        loadExtraPrintItems: () => [],
     };
 
     setup() {
@@ -165,9 +169,13 @@ export class ActionMenus extends Component {
         if (!this.props.items.print?.length) {
             return;
         }
-        const items = await this.loadAvailablePrintItems();
-        if (!items.length) {
-            items.push({
+        const [items, extraItems] = await Promise.all([
+            this.loadAvailablePrintItems(),
+            this.props.loadExtraPrintItems(),
+        ]);
+        const allItems = [...extraItems, ...items];
+        if (!allItems.length) {
+            allItems.push({
                 description: _t("No report available."),
                 class: "o_menu_item disabled",
                 key: "nothing_to_display",

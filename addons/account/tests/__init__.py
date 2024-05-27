@@ -22,6 +22,7 @@ from . import test_audit_trail
 from . import test_chart_template
 from . import test_company_branch
 from . import test_digest
+from . import test_download_docs
 from . import test_fiscal_position
 from . import test_sequence_mixin
 from . import test_tax
@@ -30,6 +31,7 @@ from . import test_invoice_taxes
 from . import test_account_move_send
 from . import test_account_all_l10n
 from . import test_portal_attachment
+from . import test_portal_invoice
 from . import test_tax_report
 from . import test_transfer_wizard
 from . import test_account_incoming_supplier_invoice
