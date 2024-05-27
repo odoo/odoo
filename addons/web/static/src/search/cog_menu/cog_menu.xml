@@ -13,7 +13,7 @@
                         <t t-if="printItems.length">
                             <Dropdown t-if="printItems.length > 1">
                                 <button>
-                                    <i class="fa fa-print me-1"/> Print
+                                    <i class="fa fa-print me-1"/> <t t-out="actionMenuTitle()"/>
                                 </button>
                                 <t t-set-slot="content">
                                     <DropdownItem

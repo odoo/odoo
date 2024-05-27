@@ -1,6 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -59,6 +60,10 @@ export class ActionMenus extends Component {
             this.actionItems = await this.getActionItems(nextProps);
             this.printItems = await this.getPrintItems();
         });
+    }
+
+    actionMenuTitle() {
+        return _t("Print");
     }
 
     async getPrintItems() {

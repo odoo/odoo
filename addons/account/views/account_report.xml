@@ -3,7 +3,7 @@
     <data>
         <!-- QWeb Reports -->
         <record id="account_invoices" model="ir.actions.report">
-            <field name="name">Invoices</field>
+            <field name="name">Invoices PDF</field>
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">account.report_invoice_with_payments</field>
@@ -27,7 +27,7 @@
         </record>
 
         <record id="account_invoices_without_payment" model="ir.actions.report">
-            <field name="name">Invoices without Payment</field>
+            <field name="name">Invoices PDF without Payment</field>
             <field name="model">account.move</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">account.report_invoice</field>
