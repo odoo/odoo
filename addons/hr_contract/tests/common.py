@@ -14,4 +14,5 @@ class TestContractCommon(TransactionCase):
             'name': 'Richard',
             'gender': 'male',
             'country_id': cls.env.ref('base.be').id,
+            'tz': 'UTC',
         })
