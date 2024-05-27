@@ -196,11 +196,19 @@ describe.tags("ui")(parseUrl(import.meta.url), () => {
         await mountOnFixture(/* xml */ `
             <input class="input" />
             <div class="div" tabindex="0">aaa</div>
+            <span class="span" tabindex="-1">aaa</span>
             <button class="disabled-button" disabled="disabled">Disabled button</button>
             <button class="button" tabindex="1">Button</button>
         `);
 
         expect(getFocusableElements().map((el) => el.className)).toEqual([
+            "button",
+            "span",
+            "input",
+            "div",
+        ]);
+
+        expect(getFocusableElements({ tabbable: true }).map((el) => el.className)).toEqual([
             "button",
             "input",
             "div",
