@@ -19,7 +19,7 @@ class Respuesta(models.Model):
 
     _name = "respuesta"
     _description = "Respuesta a una pregunta"
-    _rec_name = "respuesta_mostrar"
+    _rec_name = "pregunta_texto"
 
     pregunta_id = fields.Many2one("pregunta", string="Preguntas")
     usuario_id = fields.Many2one("res.users", string="Usuario")
@@ -33,7 +33,7 @@ class Respuesta(models.Model):
     opcion_id = fields.Many2one("opcion", string="Opción")
 
     respuesta_mostrar = fields.Char(
-        string="Respuesta", compute="_compute_respuesta_mostrar", store="True"
+        string="Respuesta", compute="_compute_respuesta_mostrar"
     )
 
     valor_respuesta = fields.Float(
