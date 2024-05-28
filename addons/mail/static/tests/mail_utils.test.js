@@ -10,6 +10,7 @@ import {
     start,
     startServer,
 } from "./mail_test_helpers";
+import { useSequential } from "@mail/utils/common/hooks";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -183,4 +184,20 @@ test("url with number in subdomain", async () => {
     await contains(
         ".o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/web)"
     );
+});
+
+test("isSequential doesn't execute intermediate call.", async () => {
+    const sequential = useSequential();
+    let index = 0;
+    const sequence = () => {
+        index++;
+        const i = index;
+        return sequential(async () => {
+            expect.step(i.toString());
+            return new Promise((r) => setTimeout(() => r(i), 1));
+        });
+    };
+    const result = await Promise.all([sequence(), sequence(), sequence(), sequence(), sequence()]);
+    expect(result).toEqual([1, undefined, undefined, undefined, 5]);
+    expect(["1", "5"]).toVerifySteps();
 });
