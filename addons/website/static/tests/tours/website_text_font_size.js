@@ -40,12 +40,15 @@ function getFontSizeTestSteps(fontSizeClass) {
         {
             content: `[${fontSizeClass}] Click on the text block first paragraph (to auto select)`,
             trigger: ":iframe .s_text_block p",
+            run: "click",
         }, {
             content: `Open the font size dropdown to select ${fontSizeClass}`,
             trigger: "#font-size button",
+            run: "click",
         }, {
             content: `Select ${fontSizeClass} in the dropdown`,
             trigger: `a[data-apply-class="${fontSizeClass}"]:contains(${classNameInfo.get(fontSizeClass).start})`,
+            run: "click",
         },
         checkComputedFontSize(fontSizeClass, "start"),
         wTourUtils.goToTheme(),
@@ -53,6 +56,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable="` +
             `${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
+            run: "click",
         }, {
             content: `Check that the setting for ${fontSizeClass} is correct`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
@@ -66,6 +70,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         }, {
             content: `[${fontSizeClass}] Go to blocks tab`,
             trigger: ".o_we_add_snippet_btn",
+            run: "click",
         }, {
             content: `[${fontSizeClass}] Wait to be in blocks tab`,
             trigger: ".o_we_add_snippet_btn.active",
@@ -81,11 +86,13 @@ function getFontSizeTestSteps(fontSizeClass) {
             trigger: `we-collapse:has(we-input[data-variable=` +
                 `"${classNameInfo.get(fontSizeClass).scssVariableName}"]) we-toggler`,
             extra_trigger: `body:not(:has(.o_we_ui_loading))`,
+            run: "click",
         },
         checkComputedFontSize(fontSizeClass, "end"),
         {
             content: `Click again on the text with class ${fontSizeClass}`,
             trigger: `:iframe #wrap .s_text_block .${fontSizeClass}`,
+            run: "click",
         }, {
             content: `Remove the text snippet containing the text with class ${fontSizeClass}`,
             trigger: `.oe_snippet_remove`,

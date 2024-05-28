@@ -19,6 +19,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     {
         content: "Click on the 'Animate Text' button to activate the option",
         trigger: "div.o_we_animate_text",
+        run: "click",
     },
     {
         content: "Check that the animation was applied",
@@ -28,6 +29,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     {
         content: "Click on the 'Animate Text' button",
         trigger: "div.o_we_animate_text",
+        run: "click",
     },
     {
         content: "Check that the animation was disabled for the title",
@@ -37,6 +39,7 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     {
         content: "Try to apply the text animation again",
         trigger: "div.o_we_animate_text",
+        run: "click",
     },
     {
         content: "Check that the animation was applied",

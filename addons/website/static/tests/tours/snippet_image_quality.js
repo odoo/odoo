@@ -14,6 +14,7 @@ wTourUtils.registerWebsitePreviewTour('website_image_quality', {
     {
         content: "Select image",
         trigger: ':iframe .s_text_image img',
+        run: "click",
     },
     {
         content: "Set low quality",

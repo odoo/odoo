@@ -11,9 +11,11 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
 {
     content: 'Open "Test Event Booths" event',
     trigger: 'h5.card-title span:contains("Test Event Booths")',
+    run: "click",
 }, {
     content: 'Go to "Get A Booth" page',
     trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
+    run: "click",
 }, {
     content: 'Select the first two booths',
     trigger: '.o_wbooth_booths input[name="event_booth_ids"]',
@@ -24,6 +26,7 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
 }, {
     content: 'Confirm the booths by clicking the submit button',
     trigger: 'button.o_wbooth_registration_submit',
+    run: "click",
 }, {
     content: 'Fill in your contact information',
     trigger: 'input[name="contact_name"]',
@@ -34,6 +37,7 @@ registry.category("web_tour.tours").add('website_event_booth_tour', {
 }, {
     content: 'Submit your informations',
     trigger: 'button[type="submit"]',
+    run: "click",
 },
 ...wsTourUtils.assertCartAmounts({
     taxes: '20.00',

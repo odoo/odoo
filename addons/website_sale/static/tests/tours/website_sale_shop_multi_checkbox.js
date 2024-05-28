@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     {
         content: "select Product",
         trigger: ".oe_product_cart a:contains(/^Product Multi$/)",
+        run: "click",
     },
     {
         content: "check price",
@@ -20,15 +21,18 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     {
         content: 'click on the first option to select it',
         trigger: 'input[data-attribute_name="Options"][data-value_name="Option 1"]',
+        run: "click",
     },
     {
         content: 'click on the third option to select it',
         trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"]',
+        run: "click",
     },
     {
         content: 'check combination is not possible',
         trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
         timeout: 30000,
+        run: "click",
     },
     {
         content: "check add to cart not possible",
@@ -38,10 +42,12 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     {
         content: 'click on the third option to unselect it',
         trigger: 'input[data-attribute_name="Options"][data-value_name="Option 3"]',
+        run: "click",
     },
     {
         content: 'click on the second option to select it',
         trigger: 'input[data-attribute_name="Options"][data-value_name="Option 2"]',
+        run: "click",
     },
     {
         content: "check price of options is correct",
@@ -51,6 +57,7 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox', {
     {
         content: "add to cart",
         trigger: 'a:contains(Add to cart)',
+        run: "click",
     },
         tourUtils.goToCart(),
     {

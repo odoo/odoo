@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('forum_question', {
     {
         content: "Ask the question in this forum by clicking on the button.",
         trigger: '.o_wforum_ask_btn',
+        run: "click",
     }, {
         content: "Give your question content.",
         trigger: 'input[name=post_name]',
@@ -27,6 +28,7 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click to post your question.",
         extra_trigger: "#wrap:not(:has(input[id=s2id_autogen2]:value('')))",
         trigger: 'button:contains("Post")',
+        run: "click",
     }, {
         content: "This page contain new created question.",
         trigger: '#wrap:has(.fa-star)',
@@ -35,11 +37,13 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.btn-close",
+        run: "click",
     },
     {
         trigger: "a:contains(\"Reply\").collapsed",
         content: "Click to reply.",
         position: "bottom",
+        run: "click",
     },
     {
         content: "Put your answer here.",
@@ -49,10 +53,12 @@ registry.category("web_tour.tours").add('forum_question', {
         content: "Click to post your answer.",
         extra_trigger: '.note-editable:not(:has(br))',
         trigger: 'button:contains("Post Answer")',
+        run: "click",
     }, {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.btn-close",
+        run: "click",
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '.o_wforum_validate_toggler',

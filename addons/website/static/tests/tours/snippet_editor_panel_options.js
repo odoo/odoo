@@ -16,6 +16,7 @@ wTourUtils.dragNDrop({
 {
     content: "Click on the first paragraph.",
     trigger: ':iframe .s_text_image p',
+    run: "click",
 }, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -30,6 +31,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "Click on the width option.",
     trigger: '[data-select-class="o_container_small"]',
+    run: "click",
 }, {
     content: "The snippet should have the correct class.",
     trigger: ':iframe .s_text_image > .o_container_small',
@@ -85,6 +87,7 @@ wTourUtils.dragNDrop({
 {
     content: "Click on the first paragraph.",
     trigger: ':iframe .s_text_block p',
+    run: "click",
 }, {
     content: "The text toolbar should be visible. The paragraph should be selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -99,10 +102,12 @@ wTourUtils.dragNDrop({
 }, {
     content: "Click on the columns option.",
     trigger: '.snippet-option-layout_column we-select',
+    run: "click",
 },
 {
     content: "Change the number of columns.",
     trigger: '.snippet-option-layout_column [data-select-count="3"]',
+    run: "click",
 }, {
     content: "The snippet should have the correct number of columns.",
     trigger: ':iframe .s_text_block .container > .row .col-lg-4:eq(3)',
@@ -127,13 +132,16 @@ wTourUtils.dragNDrop({
 {
     content: "Click on the columns option.",
     trigger: '.snippet-option-layout_column we-select',
+    run: "click",
 },
 {
     content: "Change the number of columns.",
     trigger: '.snippet-option-layout_column [data-select-count="0"]',
+    run: "click",
 }, {
     content: "The snippet should have the correct number of columns.",
     trigger: ':iframe .s_text_block .container:not(:has(.row))',
+    run: "click",
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -186,6 +194,7 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 {
     content: "Open text style dropdown.",
     trigger: "#style button.dropdown-toggle",
+    run: "click",
 }, {
     content: "Check if dropdown opened correctly.",
     trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=true]",
@@ -197,6 +206,7 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 }, {
     content: "Click on the first paragraph again.",
     trigger: ":iframe .s_text_block p",
+    run: "click",
 }, {
     content: "Check if dropdown closed correctly.",
     trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=false]",

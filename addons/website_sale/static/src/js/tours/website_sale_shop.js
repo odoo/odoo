@@ -14,10 +14,12 @@
         extra_trigger: ":iframe .js_sale",
         consumeVisibleOnly: true,
         position: "bottom",
+        run: "click",
     }, {
         trigger: "a[data-module-xml-id='base.module_website_sale']",
         content: markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
         position: "bottom",
+        run: "click",
     }, {
         trigger: ".modal-dialog input[type=text]",
         content: _t("Enter a name for your new product"),
@@ -27,6 +29,7 @@
         trigger: ".modal-footer button.btn-primary",
         content: markup(_t("Click on <em>Save</em> to create the product.")),
         position: "right",
+        run: "click",
     }, {
         trigger: ":iframe .product_price .oe_currency_value:visible",
         extra_trigger: "#oe_snippets.o_loaded",
@@ -58,15 +61,18 @@
         trigger: "button[data-action=save]",
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
         position: "bottom",
+        run: "click",
     }, {
         trigger: ".o_menu_systray_item.o_website_publish_container a",
         extra_trigger: ":iframe body:not(.editor_enable)",
         content: _t("Click on this button so your customers can see it."),
         position: "bottom",
+        run: "click",
     }, {
         trigger: "button[data-menu-xmlid='website.menu_reporting']",
         content: _t("Click here to open the reporting menu"),
         position: "bottom",
+        run: "click",
     }, {
         trigger: "a[data-menu-xmlid='website.menu_website_dashboard'], a[data-menu-xmlid='website.menu_website_analytics']",
         content: _t("Let's now take a look at your eCommerce dashboard to get your eCommerce website ready in no time."),

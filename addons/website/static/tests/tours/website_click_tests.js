@@ -16,6 +16,7 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
     {
         content: "trigger a page navigation",
         trigger: ':iframe a[href="/contactus"]',
+        run: "click",
     },
     {
         content: "wait for the page to be loaded",
@@ -26,6 +27,7 @@ wTourUtils.registerWebsitePreviewTour('website_click_tour', {
     {
         content: "click on a link that would trigger navigation",
         trigger: ':iframe a[href="/"]',
+        run: "click",
     },
     wTourUtils.goBackToBlocks(),
     wTourUtils.dragNDrop(cover),

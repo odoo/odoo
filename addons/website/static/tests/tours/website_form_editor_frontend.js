@@ -30,7 +30,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')))" +
                         ":has(.s_website_form_field:has(input[name='email_to'][value='test@test.test']))" +
                         ":has(.s_website_form_field:has(input[name='website_form_signature']))",
-        trigger:  ".s_website_form_send"
+        trigger:  ".s_website_form_send",
+        run: "click",
     },
     {
         content:  "Check if required fields were detected and complete the Subject field",
@@ -50,7 +51,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Update required field status by trying to Send again",
-        trigger:  ".s_website_form_send"
+        trigger:  ".s_website_form_send",
+        run: "click",
     },
     {
         content:  "Check if required fields were detected and complete the Message field",
@@ -70,7 +72,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Update required field status by trying to Send again",
-        trigger:  ".s_website_form_send"
+        trigger:  ".s_website_form_send",
+        run: "click",
     },
     {
         content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
@@ -85,7 +88,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('Service')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
-        trigger:  "input[name=Products][value='Wiko Stairway']"
+        trigger:  "input[name=Products][value='Wiko Stairway']",
+        run: "click",
     },
     {
         content:  "Open datetime picker",
@@ -95,6 +99,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content:  "Complete Date field",
         trigger:  ".o_date_picker .o_today",
+        run: "click",
     },
     {
         content:  "Check another product",
@@ -144,6 +149,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content: "Check if conditional field is visible, it should.",
         trigger: "input[name='email_cc']",
+        run: "click",
     },
     {
         content: "Select state option",
@@ -152,7 +158,8 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     },
     {
         content:  "Send the form",
-        trigger:  ".s_website_form_send"
+        trigger:  ".s_website_form_send",
+        run: "click",
     },
     {
         content:  "Check form is submitted without errors",
@@ -216,6 +223,7 @@ registry.category("web_tour.tours").add('website_form_contactus_submit', {
     {
         content: 'Send the form',
         trigger: '.s_website_form_send',
+        run: "click",
     },
     {
         content: 'Check form is submitted without errors',

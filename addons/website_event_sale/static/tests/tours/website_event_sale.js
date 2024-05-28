@@ -10,10 +10,12 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
         {
             content: "Go to the `Events` page",
             trigger: 'a[href*="/event"]:contains("Conference for Architects TEST"):first',
+            run: "click",
         }, 
         {
             content: "Open the register modal",
             trigger: 'button:contains("Register")',
+            run: "click",
         },
         {
             content: "Select 1 unit of `Standard` ticket type",
@@ -31,6 +33,7 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             content: "Click on `Order Now` button",
             extra_trigger: 'select:eq(1):has(option:contains(2):selected)',
             trigger: '.btn-primary:contains("Register")',
+            run: "click",
         },
         {
             content: "Fill attendees details",
@@ -51,6 +54,7 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
             content: "Validate attendees details",
             extra_trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
             trigger: 'button[type=submit]',
+            run: "click",
         },
         wsTourUtils.goToCart({quantity: 3}),
         wsTourUtils.goToCheckout(),

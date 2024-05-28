@@ -9,6 +9,7 @@
         trigger: ".o_wforum_ask_btn",
         position: "left",
         content: _t("Create a new post in this forum by clicking on the button."),
+        run: "click",
     }, {
         trigger: "input[name=post_name]",
         position: "top",
@@ -33,15 +34,18 @@
         extra_trigger: `input[id=s2id_autogen2]:not(:contains(Tags))`,
         content: _t("Click to post your question."),
         position: "bottom",
+        run: "click",
     }, {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.btn-close",
         auto: true,
+        run: "click",
     },
     {
         trigger: "a:contains(\"Reply\").collapsed",
         content: _t("Click to reply."),
         position: "bottom",
+        run: "click",
     },
     {
         trigger: ".note-editable p",
@@ -53,14 +57,17 @@
         extra_trigger: `.note-editable p:not(:contains(/^<br>$/))`,
         content: _t("Click to post your answer."),
         position: "bottom",
+        run: "click",
     }, {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.btn-close",
         auto: true,
+        run: "click",
     }, {
         trigger: ".o_wforum_validate_toggler[data-karma]:first",
         content: _t("Click here to accept this answer."),
         position: "right",
+        run: "click",
     }, {
         content: "Check edit button is there",
         trigger: "a:contains('Edit your answer')",

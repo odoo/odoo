@@ -19,6 +19,7 @@ wTourUtils.registerWebsitePreviewTour('website_start_cloned_snippet', {
         {
             content: 'Click on clone snippet',
             trigger: '.oe_snippet_clone',
+            run: "click",
         },
         {
             content: 'Check that the cloned snippet has a canvas and that something has been drawn inside of it',

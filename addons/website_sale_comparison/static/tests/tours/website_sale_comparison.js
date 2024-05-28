@@ -11,6 +11,7 @@
     {
         content: "add first product 'Warranty' in a comparison list",
         trigger: '.oe_product_cart:contains("Warranty") .o_add_compare',
+        run: "click",
     },
     {
         content: "check compare button contains one product",
@@ -25,6 +26,7 @@
     {
         content: "add second product 'Conference Chair' in a comparison list",
         trigger: '.oe_product_cart:contains("Conference Chair") .o_add_compare',
+        run: "click",
     },
     {
         content: "check popover is now open and compare button contains two products",
@@ -42,6 +44,7 @@
     {
         content: "go to product page of customizable desk(with variants)",
         trigger: '.oe_product_cart a:contains("Customizable Desk")',
+        run: "click",
     },
     {
         content: "check compare button is still there and contains 2 products",
@@ -57,6 +60,7 @@
     {
         content: "add first variant to comparelist",
         trigger: '.o_add_compare_dyn',
+        run: "click",
     },
     {
         content: "check the comparelist is now open and contains 3rd product with correct variant",
@@ -76,6 +80,7 @@
         content: "click on compare button to add in comparison list when variant changed",
         extra_trigger: 'img[class*="product_detail_img"]:not([data-image-to-change])',
         trigger: '.o_add_compare_dyn',
+        run: "click",
     },
     {
         content: "comparelist contains 4th product with correct variant",
@@ -92,11 +97,13 @@
     {
         content: "select 3nd variant(Custom)",
         trigger: '.variant_attribute[data-attribute_name="Legs"] input[data-value_name="Custom"]',
+        run: "click",
     },
     {
         content: "click on compare button to add in comparison list when variant changed",
         extra_trigger: 'body:not(:has(.carousel-indicators))', // there is 1 image on the custom variant
         trigger: '.o_add_compare_dyn',
+        run: "click",
     },
     {
         content: "check limit is reached",
@@ -106,6 +113,7 @@
     {
         content: "click on compare button",
         trigger: '.o_comparelist_button a',
+        run: "click",
     },
     // test on compare page
     {
@@ -131,6 +139,7 @@
     {
         content: "remove Customizable Desk (Steel, Black) from compare table",
         trigger: '#o_comparelist_table .o_comparelist_remove:eq(2)',
+        run: "click",
     },
     {
         content: "check customizable table with black variant is removed",
@@ -141,10 +150,12 @@
         content: "open compare menu",
         extra_trigger: 'body:has(.o_product_row:contains("Warranty") .o_remove)',
         trigger: '.o_product_panel_header',
+        run: "click",
     },
     {
         content: "remove product",
         trigger: '.o_product_row:contains("Warranty") .o_remove',
+        run: "click",
     },
     {
         content: "click on compare button to reload",
@@ -158,6 +169,7 @@
     {
         content: "add product 'Conference Chair' to cart",
         trigger: '.product_summary:contains("Conference Chair") .a-submit:contains("Add to Cart")',
+        run: "click",
     },
         tourUtils.goToCart(),
     {

@@ -11,14 +11,17 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
         {
             content: "check that 1 website_sale_cart_notification_product_1 was added",
             trigger: '.toast-body span:contains("1 x website_sale_cart_notification_product_1")',
+            run: "click",
         },
         {
             content: "check the price of 1 website_sale_cart_notification_product_1",
             trigger: '.toast-body div:contains("$ 1,000.00")',
+            run: "click",
         },
         {
             content: "close the notification",
             trigger: '.toast-header button.btn-close',
+            run: "click",
         },
         {
             content: "check that the notification is closed",
@@ -37,6 +40,7 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
         {
             content: "select website_sale_cart_notification_product_2",
             trigger: '.oe_product_cart:first a:contains("website_sale_cart_notification_product_2")',
+            run: "click",
         },
         {
             content: "change quantity",
@@ -48,22 +52,27 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
             content: "click on add to cart",
             extra_trigger: '#product_detail',
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
+            run: "click",
         },
         {
             content: "check that 3 website_sale_cart_notification_product_2 was added",
             trigger: '.toast-body span:contains("3 x website_sale_cart_notification_product_2")',
+            run: "click",
         },
         {
             content: "check that the novariants/custom attributes are displayed.",
             trigger: '.toast-body span.text-muted.small:contains("Size: S")',
+            run: "click",
         },
         {
             content: "check the price of 1 website_sale_cart_notification_product_2",
             trigger: '.toast-body div:contains("$ 15,000.00")',
+            run: "click",
         },
         {
             content: "Go To Cart",
             trigger: '.toast-body a:contains("View cart")',
+            run: "click",
         },
         tourUtils.assertCartContains({
             productName: 'website_sale_cart_notification_product_1',

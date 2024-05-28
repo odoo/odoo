@@ -15,12 +15,14 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     {
         content: "Go to the 'Post Test' blog",
         trigger: ":iframe article[name=blog_post] a:contains('Post Test')",
+        run: "click",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.clickOnSnippet('#o_wblog_post_top .o_wblog_post_page_cover'),
     {
         content: "Open tag dropdown",
         trigger: "we-customizeblock-option:contains(Tags) .o_we_m2m we-toggler",
+        run: "click",
     }, {
         content: "Enter tag name",
         trigger: "we-customizeblock-option:contains(Tags) we-selection-items .o_we_m2o_create input",
@@ -28,6 +30,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     }, {
         content: "Click Create",
         trigger: "we-customizeblock-option:contains(Tags) we-selection-items .o_we_m2o_create we-button",
+        run: "click",
     }, {
         content: "Verify tag appears in options",
         trigger: "we-customizeblock-option:contains(Tags) we-list input[data-name=testtag]",
@@ -44,6 +47,7 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     {
         content: "Remove tag",
         trigger: "we-customizeblock-option:contains(Tags) we-list tr:has(input[data-name=testtag]) we-button.fa-minus",
+        run: "click",
     }, {
         content: "Verify tag does not appear in options anymore",
         trigger: "we-customizeblock-option:contains(Tags) we-list:not(:has(input[data-name=testtag]))",
@@ -57,9 +61,11 @@ wTourUtils.registerWebsitePreviewTour('blog_tags', {
     }, {
         content: "Go back to /blog",
         trigger: ":iframe .top_menu a[href='/blog'] span",
+        run: "click",
     }, {
         content: "Click on the adventure tag",
         trigger: ":iframe a[href^='/blog/tag/adventure']",
+        run: "click",
     }, {
         content: "Verify we are still on the backend",
         trigger: ":iframe span:contains(adventure) i.fa-tag",

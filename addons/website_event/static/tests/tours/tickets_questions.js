@@ -7,6 +7,7 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     steps: () => [{
     content: "Click on the Design Fair event",
     trigger: 'article:contains("Design Fair New York")',
+    run: "click",
 }, {
     content: "Click on Register modal tickets button",
     trigger: 'button:contains("Register")',

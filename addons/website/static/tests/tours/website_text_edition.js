@@ -13,6 +13,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     {
         content: "Open colorpicker to change website main color",
         trigger: 'we-select[data-color="o-color-1"] .o_we_color_preview',
+        run: "click",
     },
     {
         content: "Input the value for the new website main color (also make sure it is independent from the backend)",
@@ -24,14 +25,17 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     {
         content: "Click on the text block first paragraph (to auto select)",
         trigger: ':iframe .s_text_block p',
+        run: "click",
     },
     {
         content: "Open the foreground colorpicker",
         trigger: '#toolbar:not(.oe-floating) #oe-text-color',
+        run: "click",
     },
     {
         content: "Go to the 'solid' tab",
         trigger: '.o_we_colorpicker_switch_pane_btn[data-target="custom-colors"]',
+        run: "click",
     },
     {
         content: "Input the website main color explicitly",

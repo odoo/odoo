@@ -11,10 +11,12 @@ registry.category("web_tour.tours").add('website_event_pages_seo', {
         content: "Open the site menu",
         trigger: '[data-menu-xmlid="website.menu_site"]',
         extra_trigger: ':iframe #o_wevent_event_submenu', // Ensure we landed on the event page
+        run: "click",
     },
     {
         content: "Open the optimize SEO dialog",
         trigger: '[data-menu-xmlid="website.menu_optimize_seo"]',
+        run: "click",
     },
     {
         content: "Fill in the title input",
@@ -24,6 +26,7 @@ registry.category("web_tour.tours").add('website_event_pages_seo', {
     {
         content: "Save the dialog",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Check that the page title is adapted, inside and outside the iframe",

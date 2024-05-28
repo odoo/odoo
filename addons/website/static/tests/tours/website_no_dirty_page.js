@@ -10,9 +10,11 @@ const makeSteps = (steps = []) => [
     }), {
         content: "Click on Discard",
         trigger: '.o_we_website_top_actions [data-action="cancel"]',
+        run: "click",
     }, {
         content: "Check that discarding actually warns when there are dirty changes, and cancel",
         trigger: ".modal-footer .btn-secondary",
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -43,6 +45,7 @@ const makeSteps = (steps = []) => [
         content: "Click on Discard",
         trigger: '.o_we_website_top_actions [data-action="cancel"]',
         extra_trigger: 'body.o_test_delay',
+        run: "click",
     }, {
         content: "Confirm we are not in edit mode anymore",
         trigger: 'body:not(.editor_has_snippets)',
@@ -66,9 +69,11 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_page', {
         // the column on image move" feature.
         content: "Click on default image",
         trigger: ':iframe .s_text_image img',
+        run: "click",
     }, {
         content: "Click on default paragraph",
         trigger: ':iframe .s_text_image h2 + p.o_default_snippet_text',
+        run: "click",
     }, {
         // TODO this should be done in a dedicated test which would be testing
         // all default snippet texts behaviors. Will be done in master where a
@@ -108,6 +113,7 @@ wTourUtils.registerWebsitePreviewTour('website_no_dirty_lazy_image', {
         content: "Click elsewhere to be sure the editor fully process the new content",
         extra_trigger: ':iframe #wrap .s_text_image p:contains("SomeTestText")',
         trigger: ':iframe #wrap .s_text_image img',
+        run: "click",
     }, {
         content: "Check that there is no more than one dirty flag",
         extra_trigger: '.o_we_user_value_widget[data-replace-media="true"]',

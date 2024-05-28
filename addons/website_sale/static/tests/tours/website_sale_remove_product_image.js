@@ -7,6 +7,7 @@ const clickOnImgAndWaitForLoad = [
     {
         content: "Click on the product image",
         trigger: ":iframe #o-carousel-product img[alt='Test Remove Image']",
+        run: "click",
     },
     {
         content: "Check that the snippet editor of the clicked image has been loaded",
@@ -19,6 +20,7 @@ const enterEditModeOfTestProduct = () => [
     {
         content: "Click on the product anchor",
         trigger: ":iframe a:contains('Test Remove Image')",
+        run: "click",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
 ];
@@ -27,6 +29,7 @@ const removeImg = [
     {
         content: "Click on Remove",
         trigger: "we-customizeblock-options:has(we-title:contains('Image')) we-button[data-name='media_wsale_remove']",
+        run: "click",
     },
     // If the snippet editor is not visible, the remove process is considered as
     // finished.
@@ -50,6 +53,7 @@ wTourUtils.registerWebsitePreviewTour("add_and_remove_main_product_image_no_vari
     {
         content: "Click on the new image",
         trigger: ".o_select_media_dialog img[title='s_default_image.jpg']",
+        run: "click",
     },
     {
         content: "Check that the snippet editor of the clicked image has been loaded",

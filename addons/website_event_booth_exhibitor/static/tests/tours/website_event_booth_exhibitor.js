@@ -10,9 +10,11 @@
         steps: () => [{
         content: 'Go on "Online Reveal" page',
         trigger: 'a[href*="/event"]:contains("Online Reveal"):first',
+        run: "click",
     }, {
         content: 'Browse Booths',
         trigger: 'a:contains("Get A Booth")',
+        run: "click",
     }, {
         content: 'Wait for the first item to be properly selected before proceeding',
         trigger: 'label.d-block:has(input:checked) h5[name=booth_category_name]',
@@ -20,9 +22,11 @@
     }, {
         content: 'Choose Premium Booths',
         trigger: 'img[alt="Premium Booth"]',
+        run: "click",
     }, {
         content: 'Choose Booth',
         trigger: '.o_wbooth_booths div:contains("OpenWood Demonstrator 2") input',
+        run: "click",
     }, {
         content: "Validate attendees details",
         trigger: 'button:enabled:contains("Book my Booth(s)")',

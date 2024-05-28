@@ -21,6 +21,7 @@ registry.category("web_tour.tours").add("blog_autocomplete_with_date", {
     content: "Wait for suggestions then click on search icon",
     extra_trigger: '.o_searchbar_form .o_dropdown_menu .o_search_result_item',
     trigger: '.o_searchbar_form button:has(i.oi-search)',
+    run: "click",
 }, {
     content: "Ensure both filters are applied",
     trigger: `#o_wblog_posts_loop:has(span a[href="/blog?search=a"]):has(span i.fa-calendar-o):has(span a[href^="/blog?date_begin"]):has(span i.fa-search)`,

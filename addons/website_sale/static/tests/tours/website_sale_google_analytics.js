@@ -28,6 +28,7 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
     {
         content: "select customizable desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk")',
+        run: "click",
     },
     {
         content: "wait until `_getCombinationInfo()` rpc is done",
@@ -42,6 +43,7 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
         content: 'select another variant',
         extra_trigger: 'body:not([view-event-id])',
         trigger: 'ul.js_add_cart_variants ul.list-inline li:has(label.active) + li:has(label) input',
+        run: "click",
     },
     {
         content: 'wait until `_getCombinationInfo()` rpc is done (2)',

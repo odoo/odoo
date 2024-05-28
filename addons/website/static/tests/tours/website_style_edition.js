@@ -62,15 +62,19 @@ wTourUtils.goToTheme(),
 }, {
     content: "Open the color combinations area",
     trigger: '.o_we_theme_presets_collapse we-toggler',
+    run: "click",
 }, {
     content: "Open a color combination",
     trigger: '.o_we_cc_preview_wrapper',
+    run: "click",
 }, {
     content: "Edit the background color of that color combination",
     trigger: '.o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(0)',
+    run: "click",
 }, {
     content: "Choose a color",
     trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_BG_COLOR}"]`,
+    run: "click",
 }, {
     content: "Check the body background color was properly adapted",
     trigger: ':iframe body',
@@ -82,9 +86,11 @@ wTourUtils.goToTheme(),
 }, {
     content: "Edit the text color of that color combination",
     trigger: '.o_we_theme_presets_collapse we-collapse .o_we_so_color_palette:eq(1)',
+    run: "click",
 }, {
     content: "Choose a color",
     trigger: `.o_we_color_btn[style*="background-color:${TARGET_BODY_COLOR}"]`,
+    run: "click",
 }, {
     content: "Check the body color was properly adapted",
     trigger: ':iframe body',
@@ -114,6 +120,7 @@ wTourUtils.goToTheme(),
     content: "Click on the Background Image selection",
     trigger: '[data-customize-body-bg-type="\'image\'"]:not(.active)',
     extra_trigger: '[data-customize-body-bg-type="NONE"].active',
+    run: "click",
 }, {
     content: "The media dialog should open",
     trigger: '.o_select_media_dialog',
