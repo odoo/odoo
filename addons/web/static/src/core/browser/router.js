@@ -86,7 +86,7 @@ export function parseSearchQuery(search) {
 function pathFromActionState(state) {
     const path = [];
     const { action, model, active_id, resId } = state;
-    if (active_id) {
+    if (active_id && typeof active_id === "number") {
         path.push(active_id);
     }
     if (action) {
@@ -104,7 +104,7 @@ function pathFromActionState(state) {
             path.push(`m-${model}`);
         }
     }
-    if (resId) {
+    if (resId && (typeof resId === "number" || resId === "new")) {
         path.push(resId);
     }
     return path.join("/");
@@ -116,6 +116,7 @@ function pathFromActionState(state) {
  */
 export function stateToUrl(state) {
     let path = "";
+    const pathKeysToOmit = [...PATH_KEYS, "actionStack"];
     const actionStack = (state.actionStack || [state]).map((a) => ({ ...a }));
     if (actionStack.at(-1)?.action !== "menu") {
         for (const [prevAct, currentAct] of slidingWindow(actionStack, 2).reverse()) {
@@ -137,7 +138,13 @@ export function stateToUrl(state) {
             path = `/${pathSegments.join("/")}`;
         }
     }
-    const search = objectToUrlEncodedString(omit(state, "actionStack", ...PATH_KEYS));
+    if (state.active_id && typeof state.active_id !== "number") {
+        pathKeysToOmit.splice(pathKeysToOmit.indexOf("active_id"), 1);
+    }
+    if (state.resId && typeof state.resId !== "number" && state.resId !== "new") {
+        pathKeysToOmit.splice(pathKeysToOmit.indexOf("resId"), 1);
+    }
+    const search = objectToUrlEncodedString(omit(state, ...pathKeysToOmit));
     return `/odoo${path}${search ? `?${search}` : ""}`;
 }
 
