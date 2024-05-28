@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Now that you are done, submit your form."),
     position: 'bottom',
 }, {
-    trigger: '.o_survey_review a',
+    trigger: '.o_survey_review',
     content: _t("Let's have a look at your answers!"),
     position: 'bottom',
 }, {

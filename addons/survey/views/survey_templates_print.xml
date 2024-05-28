@@ -8,31 +8,36 @@
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap">
                 <div class="o_survey_print o_container_small">
-                    <div class='py-5 mt32'>
+                    <div class="pt-5 mt32">
                         <h1><span t-field='survey.title' class="text-break"/></h1>
                         <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty text-break"/></t>
-                        <t t-if="review" t-call="survey.survey_button_retake"/>
-                    </div>
-                    <div t-if="graph_data" class="o_survey_result p-4 col-12 row">
-                        <div t-if="survey.page_ids" class="survey_graph col-lg-6 d-none d-md-block"
-                                data-graph-type="by_section"
-                                t-att-data-graph-data="graph_data">
-                            <canvas id="by_section_chart"></canvas>
+                        <div class="d-flex gap-2">
+                            <t t-if="review" t-call="survey.survey_button_retake"/>
+                            <p><a role="button" title="Print Results" class="btn btn-secondary btn-lg d-print-none o_survey_user_results_print">
+                                <i class="fa fa-print"/>
+                            </a></p>
                         </div>
-                        <div t-attf-class="survey_graph col-lg-6 #{'offset-lg-3' if not survey.page_ids else ''}"
+                    </div>
+                    <div t-if="graph_data" class="o_survey_result px-4">
+                        <div class="survey_graph mb-4"
                                 data-graph-type="doughnut"
                                 t-att-data-graph-data="graph_data">
-                            <canvas id="doughnut_chart"></canvas>
+                            <canvas id="doughnut_chart" class="w-100 h-auto mx-auto"></canvas>
+                        </div>
+                        <div t-if="survey.page_ids" class="survey_graph d-none d-md-block"
+                                data-graph-type="by_section"
+                                t-att-data-graph-data="graph_data">
+                            <canvas id="by_section_chart" class="w-100 h-auto mx-auto"></canvas>
                         </div>
                     </div>
-                    <div>
+                    <div class="mt-5">
                         <fieldset disabled="disabled">
                             <t t-set="question" t-value="False" />
                             <t t-foreach='survey.question_and_page_ids' t-as='question'>
                                 <t t-if="question.is_page and
                                             (any(q in questions_to_display for q in question.question_ids)
                                             or not is_html_empty(question.description))">
-                                    <hr t-if="question != survey.page_ids[0]" />
+                                    <hr t-if="question != survey.page_ids[0]" class="my-5"/>
                                     <div class="o_page_header mb-5">
                                         <h1 t-field='question.title' class="text-break fs-2" />
                                         <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
