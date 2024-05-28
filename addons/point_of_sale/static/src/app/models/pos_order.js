@@ -376,7 +376,7 @@ export class PosOrder extends Base {
 
         const lines_to_recompute = this.lines.filter(
             (line) =>
-                line.uiState.price_type === "original" &&
+                line.price_type === "original" &&
                 !(line.combo_line_ids?.length || line.combo_parent_id)
         );
 
@@ -391,7 +391,7 @@ export class PosOrder extends Base {
 
         const attributes_prices = {};
         const combo_parent_lines = this.lines.filter(
-            (line) => line.uiState.price_type === "original" && line.combo_line_ids?.length
+            (line) => line.price_type === "original" && line.combo_line_ids?.length
         );
         for (const pLine of combo_parent_lines) {
             attributes_prices[pLine.id] = computeComboLines(
@@ -414,7 +414,7 @@ export class PosOrder extends Base {
             );
         }
         const combo_children_lines = this.lines.filter(
-            (line) => line.uiState.price_type === "original" && line.combo_parent_id
+            (line) => line.price_type === "original" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
             line.set_unit_price(

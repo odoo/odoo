@@ -129,7 +129,7 @@ export class OrderSummary extends Component {
             } else if (numpadMode === "discount" && val !== "remove") {
                 selectedLine.set_discount(val);
             } else if (numpadMode === "price" && val !== "remove") {
-                selectedLine.uiState.price_type = "manual";
+                selectedLine.price_type = "manual";
                 selectedLine.set_unit_price(val);
             }
         }
