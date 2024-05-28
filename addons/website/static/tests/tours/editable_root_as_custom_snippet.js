@@ -12,6 +12,7 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     {
         content: "Confirm modal",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Wait for the custom snippet to appear in the panel",
@@ -22,6 +23,7 @@ wTourUtils.registerWebsitePreviewTour("editable_root_as_custom_snippet", {
     {
         content: "Go to homepage",
         trigger: ':iframe a[href="/"].nav-link',
+        run: "click",
     },
     {
         content: "Wait to land on homepage",

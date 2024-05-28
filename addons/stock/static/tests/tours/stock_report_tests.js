@@ -8,12 +8,15 @@
     {
         trigger: '.o_kanban_record',
         extra_trigger: '.o_breadcrumb',
+        run: "click",
     },
     {
         trigger: '.nav-item > a:contains("Inventory")',
+        run: "click",
     },
     {
         trigger: '.btn[id="stock.view_diagram_button"]',
+        run: "click",
     },
     {
         trigger: ':iframe .o_report_stock_rule',

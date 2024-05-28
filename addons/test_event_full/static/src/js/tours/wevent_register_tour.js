@@ -13,6 +13,7 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
         steps = [{
             content: 'Go on "' + talkName + '" talk in List',
             trigger: 'a:contains("' + talkName + '")',
+            run: "click",
         }];
     }
     else {
@@ -80,6 +81,7 @@ var discoverRoomSteps = function (roomName) {
 var registerSteps = [{
     content: 'Open ticket modal',
     trigger: 'button.btn-primary:contains("Register")',
+    run: "click",
 }, {
     content: "Select 2 units of 'Standard' ticket type",
     trigger: '.o_wevent_ticket_selector select',
@@ -135,12 +137,14 @@ var initTourSteps = function (eventName) {
     return [{
         content: 'Go on "' + eventName + '" page',
         trigger: 'a[href*="/event"]:contains("' + eventName + '"):first',
+        run: "click",
     }];
 };
 
 var browseTalksSteps = [{
     content: 'Browse Talks',
     trigger: 'a:contains("Talks")',
+    run: "click",
 }, {
     content: 'Check we are on the talk list page',
     trigger: 'h5:contains("Book your talks")',
@@ -150,6 +154,7 @@ var browseTalksSteps = [{
 var browseBackSteps = [{
     content: 'Browse Back',
     trigger: 'a:contains("All Talks")',
+    run: "click",
 }, {
     content: 'Check we are back on the talk list page',
     trigger: 'h5:contains("Book your talks")',
@@ -159,6 +164,7 @@ var browseBackSteps = [{
 var browseMeetSteps = [{
     content: 'Browse Meet',
     trigger: 'a:contains("Community")',
+    run: "click",
 }, {
     content: 'Check we are on the community page',
     trigger: 'h3:contains("Join a room")',

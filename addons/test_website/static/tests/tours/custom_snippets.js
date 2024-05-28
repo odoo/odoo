@@ -38,10 +38,12 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "save custom snippet",
         trigger: ".snippet-option-SnippetSave we-button",
+        run: "click",
     },
     {
         content: "confirm reload",
         trigger: ".modal-dialog button:contains('Save and Reload')",
+        run: "click",
     },
     {
         content: "ensure custom snippet appeared",
@@ -57,6 +59,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         content: "rename custom snippet",
         trigger: ".oe_snippet[name='Custom Banner'] we-button.o_rename_btn",
         extra_trigger: ".oe_snippet[name='Custom Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+        run: "click",
     },
     {
         content: "set name",
@@ -66,6 +69,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "confirm rename",
         trigger: ".oe_snippet[name='Custom Banner'] we-button.o_we_confirm_btn",
+        run: "click",
     },
     wTourUtils.dragNDrop({ name: "Bruce Banner" }),
     {
@@ -87,10 +91,12 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         content: "delete custom snippet",
         trigger: ".oe_snippet[name='Bruce Banner'] we-button.o_delete_btn",
         extra_trigger: ".oe_snippet[name='Bruce Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+        run: "click",
     },
     {
         content: "confirm delete",
         trigger: ".modal-dialog button:contains('Yes')",
+        run: "click",
     },
     {
         content: "ensure custom snippet disappeared",

@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     test: true,
     steps: () => [].concat(accessSurveysteps, [{
     trigger: 'button[name="action_open_session_manager"]',
+    run: "click",
 }, {
     trigger: '.o_survey_session_attendees_count:contains("3")',
     run: function () {

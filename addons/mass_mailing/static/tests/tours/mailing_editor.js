@@ -8,13 +8,16 @@ registry.category("web_tour.tours").add('mailing_editor', {
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+    run: "click",
 }, {
     trigger: 'button.o_list_button_add',
+    run: "click",
 }, {
     trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
     run: "edit Test",
 }, {
-    trigger: 'div[name="contact_list_ids"] .ui-state-active'
+    trigger: 'div[name="contact_list_ids"] .ui-state-active',
+    run: "click",
 }, {
     content: 'choose the theme "empty" to edit the mailing with snippets',
     trigger: '[name="body_arch"] :iframe #empty',
@@ -58,6 +61,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: "edit TestFromTour",
 }, {
     trigger: '.o_form_view', // blur previous input
+    run: "click",
 },
 ...stepUtils.saveForm(),
 {

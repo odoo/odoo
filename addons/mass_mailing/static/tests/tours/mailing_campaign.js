@@ -11,18 +11,22 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         {
             content: 'Select the "Email Marketing" app',
             trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+            run: "click",
         },
         {
             content: 'Select "Campaings" Navbar item',
             trigger: '.o_nav_entry[data-menu-xmlid="mass_mailing.menu_email_campaigns"]',
+            run: "click",
         },
         {
             content: 'Select "Newsletter" campaign',
             trigger: '.oe_kanban_card:contains("Newsletter")',
+            run: "click",
         },
         {
             content: 'Add a line (create new mailing)',
             trigger: '.o_field_x2many_list_row_add a',
+            run: "click",
         },
         {
             content: 'Pick the basic theme',
@@ -46,10 +50,12 @@ registry.category('web_tour.tours').add('mailing_campaign', {
         {
             content: 'Pick "Newsletter" option',
             trigger: '.o_input_dropdown a:contains(Newsletter)',
+            run: "click",
         },
         {
             content: 'Save form',
             trigger: '.o_form_button_save',
+            run: "click",
         },
         {
             content: 'Check that newly created record is on the list',

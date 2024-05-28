@@ -17,16 +17,19 @@ registry.category("web_tour.tours").add('event_tour', {
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     position: 'bottom',
     edition: 'enterprise',
+    run: "click",
 }, {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     edition: 'community',
+    run: "click",
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_event_kanban_view',
     content: markup(_t("Let's create your first <b>event</b>.")),
     position: 'bottom',
     width: 175,
+    run: "click",
 }, {
     trigger: '.o_event_form_view div[name="name"] textarea',
     content: markup(_t("This is the <b>name</b> your guests will see when registering.")),
@@ -47,14 +50,17 @@ registry.category("web_tour.tours").add('event_tour', {
     content: _t("Apply change."),
     trigger: '.o_datetime_picker .o_datetime_buttons .o_apply',
     in_modal: false,
+    run: "click",
 }, {
     trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
     content: markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
+    run: "click",
 }, stepUtils.autoExpandMoreButtons(),
 ...new EventAdditionalTourSteps()._get_website_event_steps(), {
     trigger: '.o_event_form_view div[name="stage_id"]',
     content: _t("Now that your event is ready, click here to move it to another stage."),
     position: 'bottom',
+    run: "click",
 }, {
     trigger: 'ol.breadcrumb li.breadcrumb-item:first',
     extra_trigger: '.o_event_form_view div[name="stage_id"]',

@@ -11,10 +11,12 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Open Employees app",
         trigger: ".o_app[data-menu-xmlid='hr.menu_hr_root']",
+        run: "click",
     },
     {
         content: "Create a new employee",
         trigger: ".o-kanban-button-new",
+        run: "click",
     },
     {
         content: "Pick a name",
@@ -24,10 +26,12 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Save",
         trigger: ".o_form_button_save",
+        run: "click",
     },
     {
         content: "Add a new Resume experience",
         trigger: ".o_field_resume_one2many tr.o_resume_group_header button.btn-secondary",
+        run: "click",
     },
     {
         content: "Enter some company name",
@@ -74,6 +78,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Add a new Skill",
         trigger: ".o_field_skills_one2many button:contains('Pick a skill from the list')",
+        run: "click",
     },
     {
         content: "Select Music",
@@ -114,6 +119,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     {
         content: "Add a new Skill",
         trigger: ".o_field_skills_one2many button:contains('ADD')",
+        run: "click",
     },
     {
         content: "Select a song", // "Music" should be already selected

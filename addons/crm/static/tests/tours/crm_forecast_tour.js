@@ -40,6 +40,7 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: "button.o_kanban_edit",
         content: "edit lead",
+        run: "click",        
     }, {
         trigger: "div[name=date_deadline] input",
         content: "complete expected closing",

@@ -33,6 +33,7 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
                 trigger: ".modal-body .o_industry",
                 content: _t("Which Industry do you want to target?"),
                 position: "right",
+                run: "click",
             },
             {
                 trigger: ".modal-footer button[name=action_submit]",
@@ -41,6 +42,6 @@ patch(registry.category("web_tour.tours").get("crm_tour"), {
                 run: "click .modal-footer button[special=cancel]",
             }
         );
-        return originalSteps
+        return originalSteps;
     },
 });

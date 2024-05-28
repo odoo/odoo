@@ -15,20 +15,24 @@ registry.category("web_tour.tours").add('shop_checkout_address', {
         {
             content: "search Storage Box",
             trigger: 'form:has(input[name="search"]) .oe_search_button',
+            run: "click",
         },
         {
             content: "select Storage Box",
             trigger: '.oe_product_cart:first a:contains("Storage Box")',
+            run: "click",
         },
         {
             id: 'add_cart_step',
             content: "click on add to cart",
             trigger: '#product_detail form[action^="/shop/cart/update"] #add_to_cart',
+            run: "click",
         },
             tourUtils.goToCart(),
         {
             content: "go to address form",
             trigger: 'a[href="/shop/checkout?express=1"]',
+            run: "click",
         },
         // check if the fields Codice Fiscale and PA index are present
         {

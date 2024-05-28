@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             ),
             position: "right",
             edition: "community",
+            run: "click",
         },
         {
             trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
@@ -26,12 +27,14 @@ registry.category("web_tour.tours").add("purchase_tour", {
             ),
             position: "bottom",
             edition: "enterprise",
+            run: "click",
         },
         {
             trigger: ".o_list_button_add",
             extra_trigger: ".o_purchase_order",
             content: _t("Let's create your first request for quotation."),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
@@ -44,12 +47,14 @@ registry.category("web_tour.tours").add("purchase_tour", {
             trigger: ".ui-menu-item > a",
             auto: true,
             in_modal: false,
+            run: "click",
         },
         {
             trigger: ".o_field_x2many_list_row_add > a",
             extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
             content: _t("Add some products or services to your quotation."),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",
@@ -69,6 +74,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: '.ui-menu.ui-widget .ui-menu-item a:contains("DESK0001")',
             auto: true,
+            run: "click",
         },
         {
             trigger: '.o_form_editable textarea[name="name"].product_creation_success',

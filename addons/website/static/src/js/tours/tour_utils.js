@@ -72,6 +72,7 @@ function changeColumnSize(position = "right") {
         trigger: `:iframe .oe_overlay.o_draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
         content: markup(_t("<b>Slide</b> this button to change the column size.")),
         position: position,
+        run: "click",
     };
 }
 
@@ -137,6 +138,7 @@ function changePaddingSize(direction) {
         content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
         consumeEvent: 'mousedown',
         position: position,
+        run: "click",
     };
 }
 
@@ -187,6 +189,7 @@ function clickOnEditAndWaitEditMode(position = "bottom") {
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_menu_systray .o_edit_website_container a",
         position: position,
+        run: "click",
     }, {
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
@@ -206,10 +209,12 @@ function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") {
         content: markup(_t("<b>Click Edit</b> dropdown")),
         trigger: ".o_edit_website_container button",
         position: position,
+        run: "click",
     }, {
         content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
         trigger: ".o_edit_website_dropdown_item",
         position: position,
+        run: "click",
     }, {
         content: "Check that we are in edit mode",
         trigger: ".o_website_preview.editor_enable.editor_has_snippets",
@@ -249,6 +254,7 @@ function clickOnSave(position = "bottom", timeout) {
         content: markup(_t("Good job! It's time to <b>Save</b> your work.")),
         position: position,
         timeout: timeout,
+        run: "click",
     }, {
         trigger: ':iframe body:not(.editor_enable)',
         noPrepend: true,
@@ -480,10 +486,12 @@ function switchWebsite(websiteId, websiteName) {
     return [{
         content: `Click on the website switch to switch to website '${websiteName}'`,
         trigger: '.o_website_switcher_container button',
+        run: "click",
     }, {
         content: `Switch to website '${websiteName}'`,
         extra_trigger: `:iframe html:not([data-website-id="${websiteId}"])`,
         trigger: `.o-dropdown--menu .dropdown-item:contains("${websiteName}")`,
+        run: "click",
     }, {
         content: "Wait for the iframe to be loaded",
         // The page reload generates assets for the new website, it may take
@@ -509,6 +517,7 @@ function toggleMobilePreview(toggleOn) {
         content: `Toggle the mobile preview ${onOrOff}`,
         trigger: ".o_we_website_top_actions [data-action='mobile']",
         extra_trigger: `:iframe #wrapwrap${toggleOn ? mobileOffSelector : mobileOnSelector}`,
+        run: "click",
     }, {
         content: `Check that the mobile preview is ${onOrOff}`,
         trigger: `:iframe #wrapwrap${toggleOn ? mobileOnSelector : mobileOffSelector}`,

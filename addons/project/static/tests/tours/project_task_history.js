@@ -25,6 +25,7 @@ function changeDescriptionContentAndSave(newContent) {
         },
     }, {
         trigger: "button.o_form_button_save",
+        run: "click",
     }];
 }
 
@@ -34,13 +35,16 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     steps: () => [stepUtils.showAppsMenuItem(), {
         content: "Open the project app",
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
+        run: "click",
     }, {
         content: "Open Test History Project",
         trigger: "div span.o_text_overflow[title='Test History Project']",
         extra_trigger: ".o_kanban_view",
+        run: "click",
     }, {
         content: "Open Test History Task",
         trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
+        run: "click",
     },
         // edit the description content 3 times and save after each edit
         ...changeDescriptionContentAndSave("0"),
@@ -50,18 +54,22 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     {
         content: "Go back to kanban view of tasks. this step is added because it takes some time to save the changes, so it's a sort of timeout to wait a bit for the save",
         trigger: ".o_back_button a",
+        run: "click",
     }, {
         content: "Open Test History Task",
         trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
         extra_trigger: ".o_kanban_view",
+        run: "click",
     }, {
         content: "Open History Dialog",
         trigger: ".o_cp_action_menus i.fa-cog",
         extra_trigger: ".o_form_view",
+        run: "click",
     }, {
         content: "Open History Dialog",
         trigger: ".o_menu_item i.fa-history",
         extra_trigger: ".dropdown-menu",
+        run: "click",
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",
         trigger: ".html-history-dialog .revision-list .btn",
@@ -74,15 +82,19 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Verify that the active revision (revision 4) is related to the third edit",
         trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
+        run: "click",
     }, {
         content: "Go to the third revision related to the second edit",
         trigger: '.html-history-dialog .revision-list .btn:nth-child(2)',
+        run: "click",
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
         trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
+        run: "click",
     }, {
         content: "Go to comparison tab",
         trigger: ".history-container .nav-item:contains(Comparison) a",
+        run: "click",
     }, {
         content: "Verify comparaison text",
         trigger: ".history-container .tab-pane",
@@ -96,12 +108,15 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Click on Restore History btn to get back to the selected revision in the previous step",
         trigger: '.modal-footer .btn-primary:contains("Restore")',
+        run: "click",
     }, {
         content: "Verify the confirmation dialog is opened",
         trigger: '.modal-footer .btn-primary:contains("Restore")',
+        run: "click",
     }, {
         content: "Restore",
         trigger: 'button.btn-primary',
+        run: "click",
     }, {
         content: "Verify that the description contains the right text after the restore",
         trigger: `${descriptionField}`,
@@ -115,6 +130,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Go back to projects view. this step is added because Tour can't be finished with an open form view in edition mode.",
         trigger: 'a[data-menu-xmlid="project.menu_projects"]',
+        run: "click",
     }, {
         content: "Verify that we are on kanban view",
         trigger: 'button.o_switch_view.o_kanban.active',

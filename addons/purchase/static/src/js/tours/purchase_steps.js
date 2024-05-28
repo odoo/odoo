@@ -6,6 +6,7 @@ class PurchaseAdditionalTourSteps {
             {
                 auto: true, // Useless final step to trigger congratulation message
                 trigger: ".o_purchase_order",
+                run: "click",
             },
         ];
     }

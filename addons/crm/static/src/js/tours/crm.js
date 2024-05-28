@@ -15,16 +15,19 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
     position: 'bottom',
     edition: 'community',
+    run: "click",
 }, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
     position: 'bottom',
     edition: 'enterprise',
+    run: "click",
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_opportunity_kanban',
     content: markup(_t("<b>Create your first opportunity.</b>")),
     position: 'bottom',
+    run: "click",
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id'] input",
     content: markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),
@@ -34,10 +37,12 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".ui-menu-item > a",
     auto: true,
     in_modal: false,
+    run: "click",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),
     position: "bottom",
+    run: "click",
 }, {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type .oe_kanban_content",
     extra_trigger: ".o_opportunity_kanban",
@@ -50,12 +55,14 @@ registry.category("web_tour.tours").add('crm_tour', {
     extra_trigger: ".o_opportunity_kanban",
     content: markup(_t("Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep track of everything you have to do!</i>")),
     position: "bottom",
+    run: "click",
 }, {
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",
     extra_trigger: ".o_opportunity_kanban",
     content: markup(_t("Let's <b>Schedule an Activity.</b>")),
     position: "bottom",
     width: 200,
+    run: "click",
 }, {
     trigger: '.modal-footer button[name="action_schedule_activities"]',
     content: markup(_t("All set. Let’s <b>Schedule</b> it.")),
@@ -72,11 +79,12 @@ registry.category("web_tour.tours").add('crm_tour', {
     extra_trigger: ".o_opportunity_kanban",
     content: _t("Let’s have a look at an Opportunity."),
     position: "right",
-    run: "click .o_kanban_record",
+    run: "click",
 }, {
     trigger: ".o_lead_opportunity_form .o_statusbar_status",
     content: _t("You can make your opportunity advance through your pipeline from here."),
-    position: "bottom"
+    position: "bottom",
+    run: "click",
 }, {
     trigger: ".breadcrumb-item:not(.active):first",
     content: _t("Click on the breadcrumb to go back to your Pipeline. Odoo will save all modifications as you navigate."),

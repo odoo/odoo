@@ -10,12 +10,15 @@ export const accessSurveysteps = [
     {
         trigger: '.o_app[data-menu-xmlid="survey.menu_surveys"]',
         edition: "community",
+        run: "click",
     },
     {
         trigger: '.o_app[data-menu-xmlid="survey.menu_surveys"]',
         edition: "enterprise",
+        run: "click",
     },
     {
         trigger: '.oe_kanban_card:contains("User Session Survey")',
+        run: "click",
     },
 ];

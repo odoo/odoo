@@ -10,37 +10,46 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    run: "click",
 }, {
     trigger: '.o_list_button_add',
     extra_trigger: '.o_sale_order',
+    run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
     run: "edit Tajine Saucisse",
 }, {
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     auto: true,
+    run: "click",
 }, {
     trigger: 'a:contains("Add a product")',
+    run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
+    run: "click",
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label:contains("Aluminium")',
+    run: "click",
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk (TEST) (Aluminium, White)"))',
     isCheck: true,
 }, {
     trigger: 'button:contains(Confirm)',
+    run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
     extra_trigger: 'div[name="order_line"]',
     isCheck: true // check added product
 }, {
     trigger: 'div[name="product_template_id"]',
+    run: "click",
 }, {
     trigger: '.fa-pencil',
+    run: "click",
 }, {
     trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) td>div[name="ptal"]:has(div>label:contains("Legs")) label:has(span:contains("Aluminium")) ~ input:checked',
     isCheck: true, // check updated legs
@@ -61,6 +70,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     isCheck: true, // used to sync with server
 }, {
     trigger: 'button:contains(Confirm)',
+    run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, Black)")',
     extra_trigger: 'div[name="order_line"]',
@@ -71,22 +81,28 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     isCheck: true, // check custom value
 }, {
     trigger: 'div[name="product_template_id"]',
+    run: "click",
 }, {
     trigger: '.fa-pencil',
+    run: "click",
 },
     configuratorTourUtils.setCustomAttribute("Customizable Desk", "Legs", "another nice custom value"),
 {
     trigger: 'button:contains(Confirm)',
+    run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Custom: another nice custom value")',
     extra_trigger: 'div[name="order_line"]',
     isCheck: true, // check custom value
 }, {
     trigger: 'div[name="product_template_id"]',
+    run: "click",
 }, {
     trigger: '.fa-pencil',
+    run: "click",
 }, {
     trigger: 'table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) td>div[name="ptal"]:has(div>label:contains("Legs")) label:has(span:contains("Steel")) ~ input',
+    run: "click",
 },
     configuratorTourUtils.assertProductNameContains("Customizable Desk (TEST) (Steel, Black)"),
     configuratorTourUtils.increaseProductQuantity("Customizable Desk"),
@@ -94,6 +110,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     configuratorTourUtils.assertPriceTotal("1,200.00"),
 {
     trigger: 'button:contains(Confirm)',
+    run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("2.00")',
     isCheck: true, // check quantity

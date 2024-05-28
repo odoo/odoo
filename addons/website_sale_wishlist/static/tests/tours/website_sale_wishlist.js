@@ -11,28 +11,34 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "click on add to wishlist",
             trigger: '.o_add_wishlist',
+            run: "click",
         },
         {
             content: "go to wishlist",
             extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
             trigger: 'a[href="/shop/wishlist"]',
+            run: "click",
         },
         {
             content: "remove first item in whishlist",
             trigger: '.o_wish_rm:first',
+            run: "click",
         },
         {
             content: "go back to the store",
-            trigger: "a[href='/shop']"
+            trigger: "a[href='/shop']",
+            run: "click",
         },
         {
             content: "click on add to wishlist",
             trigger: '.o_add_wishlist',
+            run: "click",
         },
         {
             content: "check value of wishlist and go to login",
             extra_trigger: ".my_wish_quantity:contains(1)",
             trigger: 'a[href="/web/login"]',
+            run: "click",
         },
         {
             content: "submit login",
@@ -52,6 +58,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "click on Customizable Desk (TEST)",
             trigger: '.oe_product_cart a:contains("Customizable Desk")',
+            run: "click",
         },
         {
             content: "check the first variant is already in wishlist",
@@ -62,20 +69,24 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "change variant",
             extra_trigger: '#product_detail label:contains(Aluminium) input',
             trigger: 'label:contains(Aluminium) input',
+            run: "click",
         },
         {
             content: "wait button enable and click on add to wishlist",
             extra_trigger: '#product_detail .o_add_wishlist_dyn:not(:disabled)',
             trigger: '#product_detail .o_add_wishlist_dyn',
+            run: "click",
         },
         {
             content: "check that wishlist contains 2 items and go to wishlist",
             extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
             trigger: 'a[href="/shop/wishlist"]',
+            run: "click",
         },
         {
             content: "remove Customizable Desk (TEST)",
             trigger: 'tr:contains("Customizable Desk") .o_wish_rm:first',
+            run: "click",
         },
         {
             content: "check that wishlist contains 1 item",
@@ -85,10 +96,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "check B2B wishlist mode",
             trigger: "input#b2b_wish",
+            run: "click",
         },
         {
             content: "add item to cart",
             trigger: '.o_wish_add:eq(1)',
+            run: "click",
         },
         {
             content: "check that cart contains 1 item",
@@ -103,10 +116,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "remove B2B wishlist mode",
             trigger: "input#b2b_wish",
+            run: "click",
         },
         {
             content: "add last item to cart",
             trigger: '.o_wish_add:eq(1)',
+            run: "click",
         },
         {
             content: "check that user is redirect - wishlist is empty",
@@ -173,6 +188,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Add Bottle to wishlist from /shop",
             extra_trigger: '.oe_product_cart:contains("Bottle")',
             trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist',
+            run: "click",
         },
         {
             content: "Check that wishlist contains 1 item",
@@ -183,24 +199,29 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             content: "Click on product",
             extra_trigger: '.oe_product_cart:contains("Bottle") .o_add_wishlist.disabled',
             trigger: '.oe_product_cart a:contains("Bottle")',
+            run: "click",
         },
         {
             content: "Select Bottle with second variant from /product",
             trigger: '.js_variant_change[data-value_name="blue"]',
+            run: "click",
         },
         {
             content: "Add product in wishlist",
             extra_trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
             trigger: '#product_detail .o_add_wishlist_dyn',
+            run: "click",
         },
         {
             content: "Select Bottle with third variant from /product",
             trigger: '.js_variant_change[data-value_name="black"]',
+            run: "click",
         },
         {
             content: "Add product in wishlist",
             extra_trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
             trigger: '#product_detail .o_add_wishlist_dyn',
+            run: "click",
         },
         {
             content: "Check that wishlist contains 3 items and go to wishlist",
@@ -269,10 +290,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Click on product",
             trigger: '.oe_product_cart a:contains("Bottle")',
+            run: "click",
         },
         {
             content: "Select Bottle with first variant (red) from /product",
             trigger: '.js_variant_change[data-value_name="red"]',
+            run: "click",
         },
         {
             content: "Check there is no wishlist button when selecting impossible variant",
@@ -282,10 +305,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Select Bottle with second variant (blue) from /product",
             trigger: '.js_variant_change[data-value_name="blue"]',
+            run: "click",
         },
         {
             content: "Click on wishlist when selecting a possible variant from /product",
             trigger: '#product_detail .o_add_wishlist_dyn:not(.disabled)',
+            run: "click",
         },
         {
             content: "Check product added to wishlist and go to login",
@@ -337,6 +362,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Click on product",
             trigger: '.oe_product_cart a:contains("Bottle")',
+            run: "click",
         },
         {
             content: "Check that there is no wishlist button from /product",
@@ -354,10 +380,12 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Click on the product",
             trigger: '.oe_product_image_link img',
+            run: "click",
         },
         {
             content: "Add the product in the wishlist",
             trigger: '#product_option_block .o_add_wishlist_dyn',
+            run: "click",
         },
         {
             content: "Added into the wishlist",
@@ -367,6 +395,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Go to '/shop",
             trigger: 'header#top a[href="/shop"]',
+            run: "click",
         },
         {
             content: "Search the product Customizable Desk'",
@@ -386,14 +415,17 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Go to the wishlist",
             trigger: 'a[href="/shop/wishlist"]',
+            run: "click",
         },
         {
             content: "Remove the product from the wishlist",
             trigger: '.o_wish_rm',
+            run: "click",
         },
         {
             content: "Go to '/shop",
             trigger: 'header#top a[href="/shop"]',
+            run: "click",
         },
         {
             content: "Search the product Customizable Desk'",

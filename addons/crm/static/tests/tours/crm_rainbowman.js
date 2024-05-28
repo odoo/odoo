@@ -11,9 +11,11 @@
         {
             trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",
             content: "open crm app",
+            run: "click",
         }, {
             trigger: ".o-kanban-button-new",
             content: "click create",
+            run: "click",
         }, {
             trigger: ".o_field_widget[name=name] input",
             content: "complete name",
@@ -25,6 +27,7 @@
         }, {
             trigger: "button.o_kanban_add",
             content: "create lead",
+            run: "click",
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
             content: "move to won stage",
@@ -38,12 +41,14 @@
             // from the previous steps, a click event is triggered on the window element,
             // which closes the currently shown .o_kanban_quick_create.
             trigger: ".o_kanban_renderer",
+            run: "click",
         }, {
             trigger: ".o_kanban_renderer:not(:has(.o_kanban_quick_create))",
             run() {},
         }, {
             trigger: ".o-kanban-button-new",
             content: "create second lead",
+            run: "click",
         }, {
             trigger: ".o_field_widget[name=name] input",
             content: "complete name",
@@ -55,6 +60,7 @@
         }, {
             trigger: "button.o_kanban_add",
             content: "create lead",
+            run: "click",
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
             run: function () {} // wait for the record to be properly created
@@ -66,18 +72,22 @@
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
             content: "click on second lead",
+            run: "click",
         }, {
             trigger: ".o_statusbar_status button[data-value='4']",
             content: "move lead to won stage",
+            run: "click",
         },
         ...stepUtils.saveForm(),
         {
             trigger: ".o_statusbar_status button[data-value='1']",
             extra_trigger: ".o_reward_rainbow",
             content: "move lead to previous stage & rainbowman appears",
+            run: "click",
         }, {
             trigger: "button[name=action_set_won_rainbowman]",
             content: "click button mark won",
+            run: "click",
         },
         ...stepUtils.saveForm(),
         {

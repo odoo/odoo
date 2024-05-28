@@ -17,6 +17,7 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     {
         content: "Toggle to grid mode",
         trigger: '.o_we_user_value_widget[data-name="grid_mode"]',
+        run: "click",
     },
     {
         content: "Replace image",
@@ -26,14 +27,17 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     {
         content: "Pick new image",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
+        run: "click",
     },
     {
         content: "Add new image column",
         trigger: '.o_we_user_value_widget[data-add-element="image"]',
+        run: "click",
     },
     {
         content: "Pick new image",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image2.jpg"]',
+        run: "click",
     },
     {
         content: "Replace new image",
@@ -43,6 +47,7 @@ wTourUtils.registerWebsitePreviewTour('website_replace_grid_image', {
     {
         content: "Pick new image",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
+        run: "click",
     },
     ...wTourUtils.clickOnSave()
 ]);
@@ -64,6 +69,7 @@ wTourUtils.registerWebsitePreviewTour("scroll_to_new_grid_item", {
     {
         content: "Select the new image in the media dialog",
         trigger: '.o_select_media_dialog img[title="s_banner_default_image.jpg"]',
+        run: "click",
     }, {
         content: "Check that the page scrolled to the new grid item",
         trigger: ":iframe .s_text_image .o_grid_item:nth-child(3)",

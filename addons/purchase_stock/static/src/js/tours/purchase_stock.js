@@ -24,10 +24,12 @@ patch(PurchaseAdditionalTourSteps.prototype, {
             extra_trigger: ".modal-dialog",
             content: _t("Process all the receipt quantities."),
             position: "bottom",
+            run: "click",
         }, {
             trigger: ".o_back_button a, .breadcrumb-item:not('.active'):last",
             content: _t('Go back to the purchase order to generate the vendor bill.'),
             position: 'bottom',
+            run: "click",
         }, {
             trigger: ".o_statusbar_buttons button[name='action_create_invoice']",
             content: _t("Generate the draft vendor bill."),

@@ -10,11 +10,13 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
     stepUtils.showAppsMenuItem(), {
         content: "Select the 'Email Marketing' app.",
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+        run: "click",
     },
     {
         content: "Click on the create button to create a new mailing.",
         trigger: 'button.o_list_button_add',
         mobile: true,
+        run: "click",
     },
     {
         content: "Check templates available in theme selector",
@@ -41,11 +43,13 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar_mobile', 
         content: "Click on the 'Start From Scratch' template.",
         trigger: ':iframe #default',
         mobile: true,
+        run: "click",
     },
     {
         content: "Select an editable element",
         trigger: ':iframe .s_text_block',
         mobile: true,
+        run: "click",
     },
     {
         content: "Make sure the snippets menu is hidden",
