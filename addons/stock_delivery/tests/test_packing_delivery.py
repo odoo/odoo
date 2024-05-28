@@ -277,3 +277,64 @@ class TestPacking(TestPackingCommon):
         company_a_user.groups_id = [Command.unlink(self.env.ref('stock.group_stock_multi_warehouses').id)]
         res = delivery_company_a.with_user(company_a_user).read()
         self.assertTrue(res)
+
+    def test_reusable_package_weight(self):
+        reusable_box = self.env['stock.quant.package'].create({
+            'name': 'Reusable Box',
+            'package_use': 'reusable',
+        })
+
+        delivery_a = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids_without_package': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 5.0,
+                'location_id': self.stock_location.id,
+                'product_uom': self.productA.uom_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+            'move_line_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'result_package_id': reusable_box.id,
+                'quantity': 5.0,
+                'product_id': self.productA.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.productA.uom_id.id,
+            })],
+        })
+        reusable_box.shipping_weight = 5
+        delivery_a.action_confirm()
+        delivery_a.button_validate()
+        self.assertEqual(delivery_a.shipping_weight, reusable_box.shipping_weight)
+
+        reusable_box.unpack()
+
+        delivery_b = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids_without_package': [Command.create({
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 3.0,
+                'location_id': self.stock_location.id,
+                'product_uom': self.productA.uom_id.id,
+                'location_dest_id': self.customer_location.id,
+            })],
+            'move_line_ids': [Command.create({
+                'location_id': self.stock_location.id,
+                'result_package_id': reusable_box.id,
+                'quantity': 3.0,
+                'product_id': self.productA.id,
+                'location_dest_id': self.customer_location.id,
+                'product_uom_id': self.productA.uom_id.id,
+            })],
+        })
+        reusable_box.shipping_weight = 3
+        delivery_b.action_confirm()
+        delivery_b.button_validate()
+        self.assertEqual(delivery_b.shipping_weight, reusable_box.shipping_weight)
+        self.assertEqual(delivery_a.shipping_weight, 5)

@@ -71,11 +71,17 @@ class StockPicking(models.Model):
     @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
+            if picking.state == 'done':
+                continue
             # if shipping weight is not assigned => default to calculated product weight
             picking.shipping_weight = (
                 picking.weight_bulk +
                 sum(pack.shipping_weight or pack.weight for pack in picking.package_ids.sudo())
             )
+
+    def _action_done(self):
+        self._compute_shipping_weight()
+        super()._action_done()
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -93,7 +99,7 @@ class StockPicking(models.Model):
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
-    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight',
+    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight', store=True,
         help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
