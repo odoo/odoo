@@ -77,12 +77,8 @@ function ZoomOdoo(target, options) {
  */
 ZoomOdoo.prototype._init = function () {
     if (window.outerWidth > 467 || !this.opts.disabledOnMobile) {
-        this.link =
-            (this.target.querySelectorAll(this.opts.linkTag).length &&
-                this.target.querySelector(this.opts.linkTag)) ||
-            this.target;
-        this.image =
-            (this.target.querySelector("img") && this.target.querySelector("img")) || this.target;
+        this.link = this.target.querySelector(this.opts.linkTag) || this.target;
+        this.image = this.target.querySelector("img") || this.target;
         this.flyout = document.createElement("div");
         this.flyout.className = "zoomodoo-flyout";
 
@@ -341,6 +337,7 @@ ZoomOdoo.prototype._move = function (e) {
 
         this.opts.onMove.call(this, top, left);
     }
+
 };
 
 /**

@@ -164,7 +164,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
         // retrieve the hash before the redirect
         var redirect = {
             lang: encodeURIComponent(target.getAttribute("url_code")),
-            url: encodeURIComponent(target.getAttribute("href").replace(/[&?]edit_translations[^&?]+/, '')),
+            url: encodeURIComponent(target.getAttribute("href").replace(/[&?]edit_translations[^&?]+/, "")),
             hash: encodeURIComponent(window.location.hash)
         };
         window.location.href = `/website/lang/${redirect.lang}?r=${redirect.url}${redirect.hash}`;
@@ -207,7 +207,7 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend({
      * if not found
      */
     _unslugHtmlDataObject: function (dataAttr) {
-        const repr = window.getAttribute('data='+dataAttr)
+        const repr = window.getAttribute("data="+dataAttr)
         var match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
         if (!match) {
             return null;

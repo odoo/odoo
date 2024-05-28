@@ -576,7 +576,7 @@ registry.Parallax = Animation.extend({
     start: function () {
         this._rebuild();
         window.addEventListener("resize.animation_parallax", debounce(this._rebuild.bind(this), 500));
-        this.modalEl = this.$target[0].closest(".modal");
+        this.modalEl = this.target.closest(".modal");
         if (this.modalEl) {
             this.modalEl.addEventListener("shown.bs.modal.animation_parallax", () => {
                 this._rebuild();
@@ -656,10 +656,11 @@ registry.Parallax = Animation.extend({
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.observerUnactive('_updateBgCss');
         }
-        // for (const [key, value] of Object.entries(cssValues)) {
-        //     this.bg.style[key] = value;
-        // }
-        $(this.bg).css(cssValues);
+        for (let property in cssValues) {
+            if (cssValues.hasOwnProperty(property)) {
+                this.bg.style[property] = cssValues[property];
+            }
+        }
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.observerActive('_updateBgCss');
         }
@@ -1396,14 +1397,25 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             el.style.animationPlayState = "running";
             el.classList.add("o_animating");
 
-            el.addEventListener("animationend", () => {
+            const animationEndEvent = () => {
                 el.classList.add("o_animated");
                 el.classList.remove("o_animating");
                 this._toggleOverflowXYHidden(false);
-                // TODO: VISP take a look here
-                window.dispatchEvent(new Event("resize"));
-                el.removeEventListener("animationend");
-            });
+
+                // Trigger resize event on window
+                window.dispatchEvent(new Event('resize'));
+
+                // Remove the event listeners after executing once
+                el.removeEventListener('webkitAnimationEnd', animationEndEvent);
+                el.removeEventListener('oanimationend', animationEndEvent);
+                el.removeEventListener('msAnimationEnd', animationEndEvent);
+                el.removeEventListener('animationend', animationEndEvent);
+            }
+
+            el.addEventListener('webkitAnimationEnd', animationEndEvent);
+            el.addEventListener('oanimationend', animationEndEvent);
+            el.addEventListener('msAnimationEnd', animationEndEvent);
+            el.addEventListener('animationend', animationEndEvent);
         });
     },
     /**
@@ -1766,7 +1778,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      * @private
      */
     _onMouseEnter() {
-        if (!this.originalImgSrc || !this.$target[0].dataset.hoverEffect) {
+        if (!this.originalImgSrc || !this.target.dataset.hoverEffect) {
             return;
         }
         this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
@@ -1802,7 +1814,7 @@ registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
      */
     _onMouseLeave() {
         this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
-            if (!this.originalImgSrc || !this.svgInEl || !this.$target[0].dataset.hoverEffect) {
+            if (!this.originalImgSrc || !this.svgInEl || !this.target.dataset.hoverEffect) {
                 resolve();
                 return;
             }

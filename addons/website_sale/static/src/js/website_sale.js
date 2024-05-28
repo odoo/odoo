@@ -277,12 +277,14 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             for (const image of images) {
                 const $image = $(image);
                 const callback = () => {
-                    $image[0]?.zoomOdoo({
-                        event: "mouseenter",
-                        attach: this._getProductImageContainerSelector(),
-                        preventClicks: salePage.dataset.ecomZoomClick,
-                        attachToTarget: this._getProductImageLayout() === "grid",
-                    });
+                    if (typeof($image[0].zoomOdoo) !== "object") {
+                        $image[0].zoomOdoo({
+                            event: "mouseenter",
+                            attach: this._getProductImageContainerSelector(),
+                            preventClicks: salePage.dataset.ecomZoomClick,
+                            attachToTarget: this._getProductImageLayout() === "grid",
+                        });
+                    }
                     image.dataset.zoom = 1;
                 };
                 image.addEventListener('load', callback);

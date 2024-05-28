@@ -78,12 +78,13 @@ function autocompleteWithPages(input, options= {}) {
  * @param {HTMLElement} [excluded]
  */
 function onceAllImagesLoaded(element, excluded) {
-    const defs = Array.from(element).concat(element?.matches("img") ? [element] : []).map((img) => {
+    element = element instanceof jQuery ? element[0] : element;
+    const defs = Array.from(element).concat(element.matches("img") ? [element] : []).map((img) => {
         if (img.complete || excluded && (excluded === img || excluded.contains(img).length)) {
             return; // Already loaded
         }
         const def = new Promise(function (resolve, reject) {
-            img.addEventListener('load', function () {
+            img.addEventListener("load", function () {
                 resolve();
             }, { once: true });
         });
@@ -151,9 +152,9 @@ function prompt(options, _qweb) {
         const dialog = document.body.append(renderToElement(_qweb, options));
         options.dialog = dialog;
         let field = dialog.querySelectorAll(options.field_type)[0];
-        field.value = options['default']; // dict notation for IE<9
+        field.value = options["default"]; // dict notation for IE<9
         field.fillWith = function (data) {
-            if (field.tagName === 'SELECT') {
+            if (field.tagName === "SELECT") {
                 data.forEach(function (item) {
                     field.options[field.options.length] = new window.Option(item[1], item[0]);
                 });
@@ -168,25 +169,25 @@ function prompt(options, _qweb) {
             }
             Modal.getOrCreateInstance(dialog).show();
             field.focus();
-            dialog.querySelectorAll('.btn-primary').addEventListener('click', function () {
-                const backdrop = document.querySelector('.modal-backdrop');
+            dialog.querySelectorAll(".btn-primary").addEventListener("click", function () {
+                const backdrop = document.querySelector(".modal-backdrop");
                 resolve({ val: field.value, field: field, dialog: dialog });
-                dialog.classList.remove('show');
+                dialog.classList.remove("show");
                 dialog.parentNode.removeChild(dialog);
                 backdrop.parentNode.removeChild(backdrop);
             });
         });
-        dialog.addEventListener('hidden.bs.modal', function () {
-            const backdrop = document.querySelector('.modal-backdrop');
+        dialog.addEventListener("hidden.bs.modal", function () {
+            const backdrop = document.querySelector(".modal-backdrop");
             reject();
             dialog.remove();
                 backdrop.remove();
         });
-        if ((field.tagName === 'INPUT' && field.type === 'text') || field.tagName === 'SELECT') {
+        if ((field.tagName === "INPUT" && field.type === "text") || field.tagName === "SELECT") {
             field.keypress(function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
-                    dialog.querySelector('.btn-primary').click();
+                    dialog.querySelector(".btn-primary").click();
                 }
             });
         }
