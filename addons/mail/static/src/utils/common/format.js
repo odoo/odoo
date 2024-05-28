@@ -27,8 +27,7 @@ const _escapeEntities = (function () {
 
 /**
  * @param rawBody {string}
- * @param validRecords {Object}
- * @param validRecords.partners {Partner}
+ * @param validRecords {Mention[]}
  */
 export async function prettifyMessageContent(rawBody, validRecords = []) {
     // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
@@ -159,38 +158,43 @@ export function escapeAndCompactTextContent(content) {
 
 /**
  * @param body {string}
- * @param validRecords {Object}
- * @param validRecords.partners {Array}
+ * @param mentions {Mention[]}
  * @return {string}
  */
-function generateMentionsLinks(body, { partners = [], threads = [] }) {
-    const mentions = [];
-    for (const partner of partners) {
-        const placeholder = `@-mention-partner-${partner.id}`;
-        const text = `@${escape(partner.name)}`;
-        mentions.push({
-            class: "o_mail_redirect",
-            id: partner.id,
-            model: "res.partner",
-            placeholder,
-            text,
+function generateMentionsLinks(body, mentions = []) {
+    // mentions that create links
+    const linkMentions = mentions
+        .filter((mention) => mention.type != "special")
+        .map((mention) => {
+            switch (mention.type) {
+                case "partner": {
+                    const placeholder = `@-mention-partner-${mention.partner.id}`;
+                    const text = `@${escape(mention.partner.name)}`;
+                    body = body.replace(text, placeholder);
+                    return {
+                        class: "o_mail_redirect",
+                        id: mention.partner.id,
+                        model: "res.partner",
+                        placeholder,
+                        text,
+                    };
+                }
+                case "channel": {
+                    const placeholder = `#-mention-channel-${mention.channel.id}`;
+                    const text = `#${escape(mention.channel.displayName)}`;
+                    body = body.replace(text, placeholder);
+                    return {
+                        class: "o_channel_redirect",
+                        id: mention.channel.id,
+                        model: "discuss.channel",
+                        placeholder,
+                        text,
+                    };
+                }
+            }
         });
-        body = body.replace(text, placeholder);
-    }
-    for (const thread of threads) {
-        const placeholder = `#-mention-channel-${thread.id}`;
-        const text = `#${escape(thread.displayName)}`;
-        mentions.push({
-            class: "o_channel_redirect",
-            id: thread.id,
-            model: "discuss.channel",
-            placeholder,
-            text,
-        });
-        body = body.replace(text, placeholder);
-    }
     const baseHREF = url("/web");
-    for (const mention of mentions) {
+    for (const mention of linkMentions) {
         const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
         const attClass = `class='${mention.class}'`;
         const dataOeId = `data-oe-id='${mention.id}'`;
@@ -198,6 +202,13 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
         const target = "target='_blank'";
         const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target} contenteditable="false">${mention.text}</a>`;
         body = body.replace(mention.placeholder, link);
+    }
+    const specialMentions = mentions.filter((mention) => mention.type === "special");
+    for (const mention of specialMentions) {
+        body = body.replace(
+            `@${escape(mention.special)}`,
+            `<a href="#" class="o-discuss-mention">@${escape(mention.special)}</a>`
+        );
     }
     return body;
 }

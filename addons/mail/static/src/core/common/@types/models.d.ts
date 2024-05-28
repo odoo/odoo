@@ -18,6 +18,8 @@ declare module "models" {
     import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
+    import { Mention as MentionClass } from "@mail/core/common/mention_model";
+    import { Suggestion as SuggestionClass } from "@mail/core/common/suggestion_model";
 
     // define interfaces for jsdoc, including with patches
     export interface Attachment extends AttachmentClass {}
@@ -39,6 +41,8 @@ declare module "models" {
     export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
+    export interface Mention extends MentionClass {}
+    export interface Suggestion extends SuggestionClass {}
 
     // required to propagate types in relational fields
     export interface Models {
@@ -61,5 +65,7 @@ declare module "models" {
         "Store": Store,
         "Thread": Thread,
         "Volume": Volume,
+        "Mention": Mention,
+        "Suggestion": Suggestion,
     }
 }

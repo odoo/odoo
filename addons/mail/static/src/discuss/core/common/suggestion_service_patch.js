@@ -43,8 +43,11 @@ patch(SuggestionService.prototype, {
                     id: command.id,
                     name,
                 };
-            });
-        const sortFunc = (c1, c2) => {
+            })
+            .map((channelCommand) => this.store.Suggestion.new({ channelCommand }));
+        const sortFunc = (s1, s2) => {
+            const c1 = s1.channelCommand;
+            const c2 = s2.channelCommand;
             if (c1.channel_types && !c2.channel_types) {
                 return -1;
             }
@@ -73,9 +76,6 @@ patch(SuggestionService.prototype, {
             }
             return c1.id - c2.id;
         };
-        return {
-            type: "ChannelCommand",
-            suggestions: sort ? commands.sort(sortFunc) : commands,
-        };
+        return sort ? commands.sort(sortFunc) : commands;
     },
 });

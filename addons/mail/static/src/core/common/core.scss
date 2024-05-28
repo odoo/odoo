@@ -46,10 +46,18 @@
     z-index: 1;
 }
 
-a.o_mail_redirect, a.o_channel_redirect {
-    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
     padding: map-get($spacers, 1);
+}
+
+a.o_mail_redirect, a.o_channel_redirect {
+    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+}
+
+a.o-discuss-mention {
+    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%));
+    cursor: default !important;
 }
 
 .o-mail-DiscussSystray {
