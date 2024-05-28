@@ -39,9 +39,7 @@ from typing import TYPE_CHECKING
 import babel
 import babel.dates
 import markupsafe
-import passlib.utils
 import pytz
-import werkzeug.utils
 from lxml import etree
 
 import odoo
@@ -53,7 +51,6 @@ from odoo.tools.float_utils import float_round
 from . import pycompat
 from .cache import *
 from .config import config
-from .parse_version import parse_version
 from .which import which
 
 if TYPE_CHECKING:

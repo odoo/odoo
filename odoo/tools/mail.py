@@ -7,7 +7,6 @@ import logging
 import random
 import re
 import socket
-import threading
 import time
 from email.utils import getaddresses
 from urllib.parse import urlparse
@@ -19,7 +18,6 @@ from lxml import etree, html
 from lxml.html import clean, defs
 from werkzeug import urls
 
-import odoo
 from odoo.loglevels import ustr
 from odoo.tools import misc
 
