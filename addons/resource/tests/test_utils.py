@@ -60,6 +60,24 @@ class TestExpression(TransactionCase):
             ))
         )
 
+    def test_resource_calendar_leave_compute_date_to(self):
+        """
+        Test date_to is computed when date_from is changed,
+        except when it already has a valid value.
+        """
+        date_from = Datetime.from_string('2024-05-01 00:00:00')
+        date_to = Datetime.from_string('2024-05-03 23:59:59')
+        leave = self.env['resource.calendar.leaves'].create({
+            'date_from': date_from,
+            'date_to': date_to,
+        })
+
+        leave.date_from -= relativedelta(minutes=5)
+        self.assertEqual(leave.date_to, date_to, "date_to shouldn't get recomputed if still valid")
+
+        leave.date_from += relativedelta(years=5)
+        self.assertGreater(leave.date_to, date_to, "date_to should get recomputed when invalid")
+
     def test_resource_creation_with_date_from(self):
         """
         Test resource creation with a date_from.
