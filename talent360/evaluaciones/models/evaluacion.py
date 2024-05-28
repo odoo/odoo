@@ -28,7 +28,6 @@ class Evaluacion(models.Model):
     _description = "Evaluacion de personal"
     _rec_name = "nombre"
     nombre = fields.Char(string="Título de la evaluación", required=True)
-    
     escalar_format = fields.Selection([
         ("numericas", "Numéricas"),
         ("textuales", "Textuales"),
@@ -1239,6 +1238,24 @@ class Evaluacion(models.Model):
         :return: El formato escalar seleccionado para la evaluación.
         """
         return self.escalar_format
+    
+    def generar_reporte(self):
+        """
+        Devuelve las fechas de inicio y final que el usuario acordo al realizar la evaluación.
+
+        :return: Las fechas de inicio y final.
+        """
+        return {
+            
+            "type": "ir.actions.report",
+            "report_name": "evaluaciones.reporte_template",
+            "context": {
+                "evaluacion_id": self.id,
+                "fecha_inicio": self.fecha_inicio,
+                "fecha_final": self.fecha_final,
+            }
+        }
+
     def action_importar_preguntas_clima(self):
         """
         Abre la ventana para importar preguntas de clima laboral.
