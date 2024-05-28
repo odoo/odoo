@@ -1,7 +1,6 @@
 import random
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from odoo.tools import pycompat
 
 
 def Random(seed):

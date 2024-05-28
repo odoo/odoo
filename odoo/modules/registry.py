@@ -4,23 +4,24 @@
 """ Models registries.
 
 """
-from collections import defaultdict, deque
-from collections.abc import Mapping
-from contextlib import closing, contextmanager, nullcontext
-from functools import partial
-from operator import attrgetter
+from __future__ import annotations
 
 import inspect
 import logging
 import os
 import threading
 import time
+import typing
 import warnings
+from collections import defaultdict, deque
+from collections.abc import Mapping
+from contextlib import closing, contextmanager, nullcontext
+from functools import partial
+from operator import attrgetter
 
 import psycopg2
 
 import odoo
-from odoo.models import BaseModel
 from odoo.modules.db import FunctionStatus
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
@@ -32,6 +33,10 @@ from odoo.tools import (
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 from odoo.tools.misc import Collector, format_frame
+
+if typing.TYPE_CHECKING:
+    from odoo.models import BaseModel
+
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger('odoo.schema')
