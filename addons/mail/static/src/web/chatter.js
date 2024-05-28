@@ -95,6 +95,7 @@ export class Chatter extends Component {
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
+            isBannerVisible: false,
             composerType: false,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             jumpThreadPresent: 0,
@@ -111,6 +112,12 @@ export class Chatter extends Component {
         this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
+        this.env.bus.addEventListener("toggle_position_jumpPresent", ({ detail: { addTop } }) => {
+            this.state.isBannerVisible = addTop;
+            if (addTop) {
+                document.body.click(); // hack to close dropdown
+            }
+        });
         useChildSubEnv({
             inChatter: true,
             reloadParentView: () => this.reloadParentView(),

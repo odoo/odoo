@@ -162,6 +162,7 @@ export class Thread extends Component {
     updateShowJumpPresent() {
         this.state.showJumpPresent =
             this.props.thread.loadNewer || !this.presentThresholdState.isVisible;
+        this.env.bus.trigger("toggle_position_jumpPresent", { addTop: this.state.showJumpPresent });
     }
 
     onClickLoadOlder() {
