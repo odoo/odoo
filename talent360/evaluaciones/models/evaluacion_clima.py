@@ -100,9 +100,11 @@ class EvaluacionClima(models.Model):
 
         for techo in techos:
             if techo[1] <= 0:
-                raise ValidationError(_((f"El nivel {techo[0]} debe ser mayor a 0")))
+                raise ValidationError(
+                    _((f"El nivel {techo[0]} debe ser mayor a 0")))
             elif techo[1] > 100:
-                raise ValidationError((f"El nivel {techo[0]} no puede ser mayor a 100"))
+                raise ValidationError(
+                    (f"El nivel {techo[0]} no puede ser mayor a 100"))
 
         for i in range(len(techos) - 1):
             for j in range(i + 1, len(techos)):
@@ -114,3 +116,27 @@ class EvaluacionClima(models.Model):
                     raise ValidationError(
                         _((f"Los niveles de techo no pueden ser iguales"))
                     )
+
+    @api.constrains(
+        "descripcion_rojo", "descripcion_naranja", "descripcion_amarillo", "descripcion_verde", "descripcion_azul"
+    )
+    def _checar_descripciones(self):
+        """
+        Se valida que las descripciones no estén vacías.
+        """
+        descripciones = [
+            ("rojo", self.descripcion_rojo),
+            ("naranja", self.descripcion_naranja),
+            ("amarillo", self.descripcion_amarillo),
+            ("verde", self.descripcion_verde),
+            ("azul", self.descripcion_azul),
+        ]
+
+        for descripcion in descripciones:
+            if not descripcion[1]:
+                raise ValidationError(
+                    _((f"La descripción del nivel {descripcion[0]} no puede estar vacía")))
+
+            elif len(descripcion[1]) > 50:
+                raise ValidationError(
+                    _((f"La descripción del nivel {descripcion[0]} no puede tener más de 50 caracteres")))

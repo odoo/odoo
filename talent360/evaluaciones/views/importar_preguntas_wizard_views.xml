@@ -1,0 +1,51 @@
+<odoo>
+    <record id="importar_preguntas_wizard_views" model="ir.ui.view">
+        <field name="name">import.questions.wizard.form</field>
+        <field name="model">importar.preguntas.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar preguntas CSV">
+                <div>
+                    <div><strong>En este apartado se comunicará el uso correcto para la creación de preguntas con ayuda de un archivo CSV. Para esto porfavor leer todas las instrucciones, la carga de dicho archivo se encontrara al final de esta página</strong></div>
+                    
+                    <group string="Instrucciones"></group>
+                    <div>
+                        <p>Se revisará a detalle como poder rellenar la plantilla de CSV. Para que pueda crear preguntas conforme a sus necesidades:</p>
+
+                        <button name="descargar_template" string="Plantilla" type="object" class="btn-primary"/>
+                        <br></br>
+                        <p>Las diferentes categorías que puede utilizar son:</p>
+                        <ul>
+                            <li>datos_generales</li>
+                            <li>reclutamiento_y_seleccion_de_personal</li>
+                            <li>formacion_y_capacitacion</li>
+                            <li>permanencia_y_ascenso</li>
+                            <li>corresponsabilidad_en_la_vida_laboral_familiar_y_personal</li>
+                            <li>clima_laboral_libre_de_violencia</li>
+                            <li>acoso_y_hostigamiento</li>
+                            <li>accesibilidad</li>
+                            <li>respeto_a_la_diversidad</li>
+                            <li>condiciones_generales_de_trabajo</li>
+                        </ul>
+                        <p>Existen 3 tipos de pregunta</p>
+                        <ul>
+                            <li>Preguntas abiertas ( <strong>open_question </strong>)</li>
+                            <li>Preguntas de opción multiple ( <strong>multiple_choice </strong>)</li>
+                            <li>Preguntas de escala ( <strong>escala </strong>) = Son las preguntas de "Siempre, Casi Seimpre, A veces, Casi nunca y Nunca"</li>
+                        </ul>
+                        <p><strong>TODAS</strong> las preguntas requieren de una <strong>categoría</strong>.</p>
+                        <p>Para las preguntas de <strong>multiple_choice</strong> serán necesarios que tengan <strong>opciones</strong> las cuales serán delimitadas por <strong>comas</strong> . Ejemplos: A,B,C,D en este existen 4 opciones</p>
+                        <p>Las preguntas de tipo <strong>escala</strong> requieren ponderación. Use <strong>ascendente</strong> cuando el valor de "SIEMPRE" es el más alto y <strong>descendente</strong> cuando el valor "NUNCA" es el más alto.</p>
+                    </div>
+                    <group>
+                        <field name="nombre_archivo" invisible="1"/>
+                        <field name="archivo" filename="nombre_archivo"/>
+                    </group>
+                </div>
+                <footer>
+                    <button string="Guardar" type="object" name="importar_preguntas" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
