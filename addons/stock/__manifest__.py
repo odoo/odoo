@@ -102,8 +102,7 @@
         'web.assets_backend': [
             'stock/static/src/**/*.js',
             'stock/static/src/**/*.xml',
-            'stock/static/src/scss/*.scss',
-            'stock/static/src/views/**/*',
+            'stock/static/src/**/*.scss',
         ],
         'web.assets_frontend': [
             'stock/static/src/scss/stock_traceability_report.scss',
