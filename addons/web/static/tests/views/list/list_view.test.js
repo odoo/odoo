@@ -5283,6 +5283,33 @@ test(`grouped, update the count of the group (and ancestors) when a record is de
     expect(`.o_group_header:eq(2)`).toHaveText("Yes (3)");
 });
 
+test(`grouped list, reload aggregates when a record is deleted`, async () => {
+    Foo._records = [
+        { id: 121, foo: "blip", int_field: 100 },
+        { id: 122, foo: "blip", int_field: 300 },
+        { id: 123, foo: "blip", int_field: 700 },
+    ];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: /*xml*/ `
+            <tree expand="1">
+                <field name="foo"/>
+                <field name="int_field"/>
+            </tree>`,
+        groupBy: ["foo"],
+        actionMenus: {},
+    });
+
+    expect(".o_group_header .o_list_number").toHaveText("1,100");
+
+    await contains(".o_data_row input").click();
+    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleMenuItem("Delete");
+    await contains(`.modal-footer .btn-primary`).click();
+    expect(".o_group_header .o_list_number").toHaveText("1,000");
+});
+
 test(`pager (ungrouped and grouped mode), default limit`, async () => {
     onRpc("web_search_read", ({ kwargs }) => {
         expect.step("web_search_read");
@@ -9603,7 +9630,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
 
     onRpc("write", ({ args }) => {
         expect.step("write");
-        expect(args).toEqual([[1, 2], { date_start: "2021-04-01"}]);
+        expect(args).toEqual([[1, 2], { date_start: "2021-04-01" }]);
     });
 
     await mountView({
