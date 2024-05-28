@@ -1211,7 +1211,7 @@ class HrExpenseSheet(models.Model):
     def _compute_selectable_payment_method_line_ids(self):
         for sheet in self:
             sheet.selectable_payment_method_line_ids = sheet.company_id.company_expense_allowed_payment_method_line_ids\
-                or self.env['account.payment.method.line'].search([('payment_type', '=', 'outbound'), ('company_id', '=', sheet.company_id.id)])
+                or self.env['account.payment.method.line'].search([('payment_type', '=', 'outbound'), ('company_id', 'parent_of', sheet.company_id.id)])
 
     @api.depends('account_move_ids', 'payment_state', 'approval_state')
     def _compute_state(self):
