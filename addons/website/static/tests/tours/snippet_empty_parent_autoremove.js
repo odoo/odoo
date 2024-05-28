@@ -6,6 +6,7 @@ function removeSelectedBlock() {
     return {
         content: "Remove selected block",
         trigger: '#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove',
+        run: "click",
     };
 }
 
@@ -22,11 +23,13 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     {
         content: "Click on second column",
         trigger: ':iframe #wrap .s_text_image .row > :nth-child(2)',
+        run: "click",
     },
     removeSelectedBlock(),
     {
         content: "Click on first column",
         trigger: ':iframe #wrap .s_text_image .row > :first-child',
+        run: "click",
     },
     removeSelectedBlock(),
     {
@@ -67,6 +70,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     {
         content: "Click on the created column",
         trigger: ':iframe #wrap .s_cover .row > :first-child',
+        run: "click",
     },
     removeSelectedBlock(),
     {

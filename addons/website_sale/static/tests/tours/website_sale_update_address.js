@@ -12,11 +12,13 @@ registry.category("web_tour.tours").add('update_billing_shipping_address', {
         tourUtils.goToCheckout(),
         {
             content: "Edit Address",
-            trigger: '#shipping_and_billing a:contains("Edit")'
+            trigger: '#shipping_and_billing a:contains("Edit")',
+            run: "click",
         },
         {
             content: "Edit  billing address which is shipping address too",
-            trigger: 'a.js_edit_address'
+            trigger: 'a.js_edit_address',
+            run: "click",
         },
         {
             content: "Empty the phone field",

@@ -16,6 +16,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image", {
 {
     content: "Close the media dialog",
     trigger: ".o_select_media_dialog .btn-close",
+    run: "click",
 },
 {
     content: "Verify if the image placeholder has been removed",
@@ -32,6 +33,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image", {
 {
     content: "Click on the image",
     trigger: ".o_select_media_dialog .o_we_media_dialog_img_wrapper img",
+    run: "click",
 },
 {
     content: "Verify if the image has been added in the footer and if the image placeholder has been removed",
@@ -41,6 +43,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_image", {
 {
     content: "Click on the 'undo' button",
     trigger: '#oe_snippets button.fa-undo',
+    run: "click",
 },
 {
     content: "Check that the image and the image placeholder have been removed",

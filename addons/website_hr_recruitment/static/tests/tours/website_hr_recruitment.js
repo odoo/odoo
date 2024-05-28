@@ -8,9 +8,11 @@
         return [{
             content: "Select Job",
             trigger: `.oe_website_jobs h3:contains(${jobName})`,
+            run: "click",
         }, {
             content: "Apply",
             trigger: ".js_hr_recruitment a:contains('Apply')",
+            run: "click",
         }, {
             content: "Complete name",
             trigger: "input[name=partner_name]",
@@ -34,6 +36,7 @@
         }, { // TODO: Upload a file ?
             content: "Send the form",
             trigger: ".s_website_form_send",
+            run: "click",
         }, {
             content: "Check the form is submitted without errors",
             trigger: "#jobs_thankyou h1:contains('Congratulations')",
@@ -74,12 +77,15 @@
     {
         content: 'Go to the Guru job page',
         trigger: ':iframe a[href*="guru"]',
+        run: "click",
     }, {
         content: 'Go to the Guru job form',
         trigger: ':iframe a[href*="apply"]',
+        run: "click",
     }, {
         content: 'Check if the Guru form is present',
-        trigger: ':iframe form'
+        trigger: ':iframe form',
+        run: "click",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
@@ -93,9 +99,11 @@
     }, {
         content: 'Edit the form',
         trigger: ':iframe input[type="file"]',
+        run: "click",
     }, {
         content: 'Add a new field',
         trigger: 'we-button[data-add-field]',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -107,9 +115,11 @@
     }, {
         content: 'Go to the Internship job page',
         trigger: ':iframe a[href*="internship"]',
+        run: "click",
     }, {
         content: 'Go to the Internship job form',
         trigger: ':iframe a[href*="apply"]',
+        run: "click",
     }, {
         content: 'Check that a job_id has been loaded',
         trigger: ':iframe form',
@@ -143,14 +153,17 @@
     }, () => [{
         content: "Select Job",
         trigger: ":iframe h3:contains('Guru')",
+        run: "click",
     }, {
         content: "Apply",
         trigger: ":iframe a:contains('Apply')",
+        run: "click",
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "click on the your name field",
         trigger: ":iframe #hr_recruitment_form div.s_website_form_model_required",
+        run: "click",
     }, {
         content: "Select model-required field",
         trigger: "we-customizeblock-options we-alert > span:not(:contains(undefined))",

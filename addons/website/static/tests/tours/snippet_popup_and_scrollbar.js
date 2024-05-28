@@ -45,6 +45,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         content: 'Click on the s_popup snippet',
         in_modal: false,
         trigger: ':iframe .s_popup .modal',
+        run: "click",
     },
     toggleBackdrop(), // hide Popup backdrop
     checkScrollbar(true),
@@ -58,10 +59,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Select the Media List snippet in the Popup.",
         trigger: ":iframe #wrap .s_popup .modal-content .s_media_list",
+        run: "click",
     },
     {
         content: "Remove the Media List snippet in the Popup.",
         trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+        run: "click",
     },
     checkScrollbar(true),
     toggleBackdrop(), // show Popup backdrop
@@ -69,11 +72,13 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Close the Popup that has now backdrop.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
+        run: "click",
     },
     checkScrollbar(true),
     {
         content: "Open the Cookies Bar.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:last",
+        run: "click",
     },
     checkScrollbar(true),
     toggleBackdrop(), // show Cookies Bar backdrop
@@ -83,6 +88,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Open the Popup that has backdrop.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
+        run: "click",
     },
     checkScrollbar(false),
     wTourUtils.goBackToBlocks(),
@@ -96,6 +102,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         content: 'Click on the s_popup snippet',
         in_modal: false,
         trigger: ':iframe .s_popup .modal',
+        run: "click",
     },
     {
         content: "Remove the s_popup snippet",
@@ -117,6 +124,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Select the Media List snippet in the Cookies Bar.",
         trigger: ":iframe #website_cookies_bar .modal-content .s_media_list",
+        run: "click",
     },
     {
         content: "Duplicate the Media List snippet",
@@ -130,10 +138,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
     {
         content: "Remove the first Media List snippet in the Cookies Bar.",
         trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+        run: "click",
     },
     {
         content: "Remove the second Media List snippet in the Cookies Bar.",
         trigger: ":iframe .oe_overlay.oe_active .oe_snippet_remove",
+        run: "click",
     },
     checkScrollbar(true),
 ]);

@@ -10,6 +10,7 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     steps: () => [{
         content: "click on Customizable Desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
+        run: "click",
 }, {
     trigger: 'a.js_add_cart_json:has(i.fa-plus)',
     run: 'click',
@@ -29,6 +30,7 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     }
 }, {
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Aluminium"]',
+    run: "click",
 }, {
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Aluminium)")',
     run: function () {
@@ -42,6 +44,7 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
 }, {
     extra_trigger: '.oe_advanced_configurator_modal .js_product:eq(1) div:contains("image variant option src changed")',
     trigger: '.oe_advanced_configurator_modal .js_product:eq(1) input[data-value_name="Steel"]',
+    run: "click",
 }, {
     trigger: '.oe_price span:contains(22.90)',
     run: function (){}, // check

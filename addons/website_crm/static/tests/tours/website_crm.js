@@ -10,13 +10,16 @@
     }, () => [{
         content: "Select contact form",
         trigger: ":iframe #wrap.o_editable section.s_website_form",
+        run: "click",
     }, {
         content: "Open action select",
         trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
         extra_trigger: "#oe_snippets .o_we_customize_snippet_btn.active",
+        run: "click",
     }, {
         content: "Select 'Create an Opportunity' as form action",
         trigger: "we-select we-button:contains('Create an Opportunity')",
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -54,7 +57,8 @@
         run: "edit ### TOUR DATA ###",
     }, {
         content: "Send the form",
-        trigger: ".s_website_form_send"
+        trigger: ".s_website_form_send",
+        run: "click",
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thank You!'))",
@@ -74,7 +78,8 @@
         run: "edit ### TOUR DATA PREFILL ###",
     }, {
         content: "Send the form",
-        trigger: ".s_website_form_send"
+        trigger: ".s_website_form_send",
+        run: "click",
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thank You!'))",

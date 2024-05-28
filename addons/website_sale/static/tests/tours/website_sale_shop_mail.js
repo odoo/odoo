@@ -20,11 +20,13 @@ registry.category("web_tour.tours").add('shop_mail', {
     {
         content: "click confirm",
         trigger: '.btn[name="action_confirm"]',
+        run: "click",
     },
     {
         content: "click send by email",
         trigger: '.btn[name="action_quotation_send"]',
         extra_trigger: '.o_statusbar_status .o_arrow_button_current:contains("Sales Order")',
+        run: "click",
     },
     {
         trigger: ".modal-footer button[name='document_layout_save']",
@@ -32,6 +34,7 @@ registry.category("web_tour.tours").add('shop_mail', {
         content: "let's continue",
         position: "bottom",
         skip_trigger: ".modal-footer button[name='action_send_mail']",
+        run: "click",
     },
     {
         content: "Open recipients dropdown",
@@ -42,11 +45,13 @@ registry.category("web_tour.tours").add('shop_mail', {
         content: "Select azure interior",
         trigger: '.ui-menu-item a:contains(Interior24)',
         in_modal: false,
+        run: "click",
     },
     {
         content: "click Send email",
         trigger: '.btn[name="action_send_mail"]',
         extra_trigger: '.o_badge_text:contains("Azure")',
+        run: "click",
     },
     {
         content: "wait mail to be sent, and go see it",

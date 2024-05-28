@@ -66,10 +66,12 @@ registry.category("web_tour.tours").add('website_links_tour', {
         {
             content: "filter recently used links",
             trigger: '#filter-recently-used-links',
+            run: "click",
         },
         {
             content: "visit link stats page",
             trigger: "#o_website_links_recent_links a:contains(/^Stats$/):first",
+            run: "click",
         },
         {
             content: "check click number and ensure graphs are initialized",
@@ -80,6 +82,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         {
             content: "click on Last Month tab",
             trigger: '.o_website_links_chart .graph-tabs a:contains("Last Month")',
+            run: "click",
         },
         {
             content: "ensure tab is correctly resized",

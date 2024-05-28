@@ -8,6 +8,7 @@
         steps: () => [{
         content: "click on Customizable Desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
+        run: "click",
     }, {
         trigger: 'li.js_attribute_value span:contains(Custom)',
         extra_trigger: 'li.js_attribute_value',

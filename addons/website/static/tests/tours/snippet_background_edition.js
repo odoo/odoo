@@ -107,10 +107,12 @@ wTourUtils.clickOnSnippet(snippets[0]),
 {
     content: "Click on camera icon",
     trigger: ".snippet-option-ColoredLevelBackground we-button.fa-camera",
+    run: "click",
 },
 {
     content: "Click on image",
     trigger: ".o_select_media_dialog img[title='test.png']",
+    run: "click",
 },
 ...wTourUtils.clickOnSave(),
 {
@@ -124,6 +126,7 @@ wTourUtils.clickOnSnippet(snippets[0]),
 {
     content: "Click on camera icon",
     trigger: ".snippet-option-ColoredLevelBackground we-button.fa-camera",
+    run: "click",
 },
 
 // Add a color combination
@@ -213,11 +216,13 @@ wTourUtils.clickOnSnippet(snippets[0]),
     // Close the palette before selecting a media.
     trigger: '.snippet-option-ColoredLevelBackground we-title',
     content: 'Close palette',
+    run: "click",
 },
 wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_opt"]'),
 {
     trigger: '.o_existing_attachment_cell img',
     content: "Select an image in the media dialog",
+    run: "click",
 },
 {
     trigger: `:iframe .${snippets[0].id}.o_cc.o_cc1`,
@@ -394,6 +399,7 @@ wTourUtils.changeOption('ColoredLevelBackground', '[data-name="bg_image_toggle_o
 {
     trigger: '.o_colorpicker_reset',
     content: "Click on the None button of the color palette",
+    run: "click",
 },
 {
     trigger: `:iframe .${snippets[0].id}:not(.o_cc):not(.o_cc1):not([style*="background-image"])`,

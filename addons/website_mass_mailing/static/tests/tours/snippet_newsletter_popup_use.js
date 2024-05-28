@@ -36,6 +36,7 @@ registry.category("web_tour.tours").add('snippet_newsletter_popup_use', {
     {
         content: "Subscribe",
         trigger: '.modal-dialog .btn-primary',
+        run: "click",
     },
     {
         content: "Check the modal is now closed",

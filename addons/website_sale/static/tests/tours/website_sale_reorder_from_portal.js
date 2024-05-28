@@ -12,6 +12,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
+            run: "click",
         },
         wTourUtils.clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         wTourUtils.clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
@@ -33,6 +34,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
+            run: "click",
         },
         wTourUtils.clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         wTourUtils.clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
@@ -55,6 +57,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
+            run: "click",
         },
         wTourUtils.clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         wTourUtils.clickOnElement('Confirm', '.o_wsale_reorder_confirm'),

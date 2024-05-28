@@ -14,6 +14,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Click inside the popup to access its options menu.",
         in_modal: false,
         trigger: ":iframe .s_popup .s_banner",
+        run: "click",
     },
     wTourUtils.changeOption("SnippetPopup", 'we-select[data-attribute-name="display"] we-toggler'),
     {
@@ -53,11 +54,13 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Verify that the popup opens after clicked the button.",
         in_modal: false,
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
+        run: "click",
     },
     wTourUtils.clickOnElement("button to close the popup", ":iframe .s_popup_close"),
     {
         content: "Go to the 'contactus' page.",
         trigger: ":iframe a[href='/contactus']",
+        run: "click",
     },
     {
         content: "wait for the page to be loaded",
@@ -75,10 +78,12 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
     {
         content: "Open the page anchor selector",
         trigger: ".o_link_dialog_page_anchor .dropdown-toggle",
+        run: "click",
     },
     {
         content: "Click on the popup anchor to add it after the homepage link in the URL input",
         trigger: ".o_link_dialog_page_anchor we-button:contains('#Win-%2420')",
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),

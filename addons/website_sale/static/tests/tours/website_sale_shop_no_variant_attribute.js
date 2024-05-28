@@ -11,6 +11,7 @@ registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
     {
         content: "select Test Product 3",
         trigger: ".oe_product_cart a:contains(/^Test Product 3$/)",
+        run: "click",
     },
     {
         content: "check price",
@@ -20,6 +21,7 @@ registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
     {
         content: "add to cart",
         trigger: 'a:contains(Add to cart)',
+        run: "click",
     },
         tourUtils.goToCart(),
     {

@@ -17,14 +17,17 @@ wTourUtils.registerWebsitePreviewTour('category_page_and_products_snippet_editio
     {
         content: "Click on the product snippet to show its options",
         trigger: ':iframe #category_header .s_dynamic_snippet_products',
+        run: "click",
     },
     {
         content: "Open category option dropdown",
         trigger: 'we-select[data-attribute-name="productCategoryId"] we-toggler',
+        run: "click",
     },
     {
         content: "Choose the option to use the current page's category",
         trigger: 'we-button[data-select-data-attribute="current"]',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
 ]);

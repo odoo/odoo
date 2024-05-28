@@ -9,9 +9,11 @@ const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName)
     return [{
         content: `Click on the first column of the '${snippetName}' snippet`,
         trigger: `${snippetRowSelector} > div:nth-child(1)`,
+        run: "click",
     }, {
         content: "Change the orders of the 1st and 2nd columns",
         trigger: ":iframe .o_overlay_move_options [data-name='move_right_opt']",
+        run: "click",
     }];
 };
 
@@ -48,9 +50,11 @@ wTourUtils.clickOnSnippet({
 }), {
     content: "Open the columns count select",
     trigger: columnCountOptSelector,
+    run: "click",
 }, {
     content: "Set 5 columns on desktop",
     trigger: `${columnCountOptSelector} we-button[data-select-count='5']`,
+    run: "click",
 }, {
     content: "Check that there are now 5 items on 5 columns, and that it didn't change the mobile layout",
     trigger: `${columnsSnippetRow}:has(.col-lg-2:nth-child(5):not(.col-2)):not(:has(:nth-child(6)))`,
@@ -62,24 +66,31 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Open the columns count select",
     trigger: columnCountOptSelector,
+    run: "click",
 }, {
     content: "Set 2 columns on desktop",
     trigger: `${columnCountOptSelector} we-button[data-select-count='2']`,
+    run: "click",
 }, {
     content: "Check that there are still 5 items in the row and click on the last one",
     trigger: `${columnsSnippetRow} > :nth-child(5)`,
+    run: "click",
 }, {
     content: "Delete the item",
     trigger: "we-title:contains('Column'):not(:contains('Columns')) .oe_snippet_remove",
+    run: "click",
 }, {
     content: "Toggle mobile view",
     trigger: ".o_we_website_top_actions [data-action='mobile']",
+    run: "click",
 }, {
     content: "Check that there is 1 column on mobile and click on the selector",
     trigger: `${columnCountOptSelector} we-toggler:contains('1')`,
+    run: "click",
 }, {
     content: "Set 3 columns on mobile",
     trigger: `${columnCountOptSelector} we-button[data-select-count='3']`,
+    run: "click",
 }, {
     content: "Check that there are still 4 items but on rows of 3 columns",
     trigger: `${columnsSnippetRow}:has(.col-lg-6.col-4:nth-child(4))`,
@@ -103,9 +114,11 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Click on the 2nd item",
     trigger: `${columnsSnippetRow} > :nth-child(2)`,
+    run: "click",
 }, {
     content: "Change the orders of the 2nd and 3rd items",
     trigger: ":iframe .o_overlay_move_options [data-name='move_right_opt']",
+    run: "click",
 }, {
     content: "Check that the 1st item now has order: 0 and a class .order-lg-0 " +
              "and that order: 1, .order-lg-0 is set on the 3rd item, and order: 2, .order-lg-0 on the 2nd",
@@ -115,12 +128,15 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Toggle desktop view",
     trigger: ".o_we_website_top_actions [data-action='mobile']",
+    run: "click",
 }, {
     content: "Open the columns count select",
     trigger: columnCountOptSelector,
+    run: "click",
 }, {
     content: "Add 2 more items through the columns counter",
     trigger: `${columnCountOptSelector} we-button[data-select-count='6']`,
+    run: "click",
 }, {
     content: "Check that each item has a different mobile order from 0 to 5",
     trigger: `${columnsSnippetRow}${[0, 1, 2, 3, 4, 5].map(n => `:has([style*='order: ${n};'].order-lg-0)`).join("")}`,
@@ -128,6 +144,7 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Click on the 6th item",
     trigger: `${columnsSnippetRow} > :nth-child(6)`,
+    run: "click",
 }, {
     // TODO: remove this step. It should not be needed, but the build fails
     // without it.
@@ -137,6 +154,7 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Change the orders of the 5th and 6th items to override the mobile orders",
     trigger: ":iframe .o_overlay_move_options [data-name='move_left_opt']",
+    run: "click",
 }, {
     content: "Check that there are no orders anymore",
     trigger: `${columnsSnippetRow}:not(:has([style*='order: 0;'])):not(:has(.order-lg-0))`,
@@ -179,6 +197,7 @@ wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop",
     {
         content: "Click on the second column of the 'Columns' snippet",
         trigger: `${columnsSnippetRow} > div:nth-child(2)`,
+        run: "click",
     }, {
         content: "Drag the second column of 'Columns' and drop it in 'Text-Image'",
         trigger: ":iframe .o_overlay_move_options .o_move_handle",

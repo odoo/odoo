@@ -11,10 +11,12 @@
         {
             content: "Open the Pycon event",
             trigger: '.o_wevent_events_list a:contains("Pycon")',
+            run: "click",
         },
         {
             content: "Open the register modal",
             trigger: 'button:contains("Register")',
+            run: "click",
         },
         {
             content: "Click on Register button inside modal",
@@ -34,6 +36,7 @@
             content: "Validate attendees details",
             extra_trigger: "input[name*='1-name'], input[name*='2-name']",
             trigger: 'button[type=submit]',
+            run: "click",
         },
         ...getPriceListChecksSteps({
             pricelistName: "EUR With Discount Included",

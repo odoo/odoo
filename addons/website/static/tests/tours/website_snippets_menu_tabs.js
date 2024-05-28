@@ -23,6 +23,7 @@ wTourUtils.registerWebsitePreviewTour("website_snippets_menu_tabs", {
     {
         content: "Click on the style tab.",
         trigger: '#snippets_menu .o_we_customize_snippet_btn',
+        run: "click",
     },
     wTourUtils.goToTheme(),
     {

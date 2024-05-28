@@ -39,22 +39,27 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
     {
         content: "Change language to Parseltongue",
         trigger: ':iframe .js_language_selector .btn',
+        run: "click",
     },
     {
         content: "Change the language to English",
         trigger: ':iframe .js_language_selector .js_change_lang[data-url_code="en"]',
+        run: "click",
     },
     {
         content: "Open Edit dropdown",
         trigger: '.o_edit_website_container button',
+        run: "click",
     },
     {
         content: "Enable translation",
         trigger: '.o_translate_website_dropdown_item',
+        run: "click",
     },
     {
         content: "Close the dialog",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),

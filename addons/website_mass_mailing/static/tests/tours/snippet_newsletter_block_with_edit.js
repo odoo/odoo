@@ -23,28 +23,34 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         content: 'Wait for the email to be loaded in the newsletter input',
         trigger: ':iframe .s_newsletter_block .js_subscribe_btn',
         extra_trigger: ':iframe .s_newsletter_block input:value("admin@yourcompany.example.com")',
+        run: "click",
     },
     // Change the link style.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: 'Click on the Subscribe form',
         trigger: ':iframe .s_newsletter_block .s_newsletter_subscribe_form',
+        run: "click",
     },
     {
         content: 'Toggle the option to display the Thanks button',
         trigger: 'we-button[data-toggle-thanks-message] we-checkbox',
+        run: "click",
     },
     {
         content: 'Click on the Thanks button',
         trigger: ':iframe .s_newsletter_block .js_subscribed_btn',
+        run: "click",
     },
     {
         content: 'Click on the link style button',
         trigger: '.dropdown:has([name="link_style_color"]) > button',
+        run: "click",
     },
     {
         content: 'Click on the primary style button',
         trigger: '[data-value="primary"]',
+        run: "click",
     },
     {
         content: 'Verify that the shape option is not available for primary while the size option appeared',
@@ -55,18 +61,22 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     {
         content: 'Click on the link style button',
         trigger: '.dropdown:has([name="link_style_color"]) > button',
+        run: "click",
     },
     {
         content: 'Click on the custom style button',
         trigger: '[data-value="custom"]',
+        run: "click",
     },
     {
         content: 'Change the shape of the button',
         trigger: '.dropdown:has([name="link_style_shape"]) > button',
+        run: "click",
     },
     {
         content: 'Click on the flat shape button',
         trigger: '[data-value="flat"]',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     // Check if the button style is correct (make sure that the 'btn-success'
