@@ -32,7 +32,7 @@ class ResPartnerAutocompleteSync(models.Model):
 
             to_sync_item.write({'synched': True})
         done = len(to_sync_items)
-        self.env['ir.cron.progress']._notify_progress(
+        self.env['ir.cron']._notify_progress(
             done=done,
             remaining=0 if done < batch_size else self.search_count([('synched', '=', False)])
         )
