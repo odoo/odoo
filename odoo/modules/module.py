@@ -17,7 +17,6 @@ from os.path import join as opj, normpath
 import odoo
 import odoo.tools as tools
 import odoo.release as release
-from odoo.tools import pycompat
 from odoo.tools.misc import file_path
 
 

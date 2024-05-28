@@ -5,7 +5,6 @@ __all__ = [
     'convert_file', 'convert_sql_import',
     'convert_csv_import', 'convert_xml_import'
 ]
-
 import base64
 import io
 import logging
@@ -13,13 +12,11 @@ import os.path
 import pprint
 import re
 import subprocess
-import warnings
-
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
-import pytz
+from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
+import pytz
 try:
     import jingtrang
 except ImportError:
@@ -30,7 +27,6 @@ from . import pycompat
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from .translate import _
-from odoo import SUPERUSER_ID, api
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)

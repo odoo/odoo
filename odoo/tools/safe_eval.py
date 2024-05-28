@@ -19,7 +19,7 @@ import functools
 import logging
 import sys
 import types
-from opcode import HAVE_ARGUMENT, opmap, opname
+from opcode import opmap, opname
 from types import CodeType
 
 import werkzeug
