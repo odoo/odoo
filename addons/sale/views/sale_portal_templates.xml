@@ -181,7 +181,7 @@
                             <div t-if="sale_order.user_id">
                                 <h6><small class="text-muted">Your contact</small></h6>
                                 <t t-call="portal.portal_my_contact">
-                                    <t t-set="_contactAvatar" t-value="image_data_uri(sale_order.user_id.avatar_1024)"/>
+                                    <t t-set="_contactAvatar" t-value="image_data_uri(sale_order.user_id.avatar_128)"/>
                                     <t t-set="_contactName" t-value="sale_order.user_id.name"/>
                                     <t t-set="_contactLink" t-value="True"/>
                                 </t>
