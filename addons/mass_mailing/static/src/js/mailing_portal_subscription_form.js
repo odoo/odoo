@@ -7,7 +7,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 
 publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend({
     events: {
-        'click #button_form_send': '_onFormSend',
+        "click input[id^='mailing_list_id']": "_onFormSend",
     },
 
     /**
@@ -47,6 +47,8 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
      */
     _onFormSend: async function (event) {
         event.preventDefault();
+        const selectedOptOutReason = document.querySelector('div#o_mailing_subscription_feedback form input.o_mailing_subscription_opt_out_reason:checked');
+        const optoutReasonId = selectedOptOutReason ? parseInt(selectedOptOutReason.value) : null;
         const formData = new FormData(document.querySelector('div#o_mailing_subscription_form form'));
         const mailingListOptinIds = formData.getAll('mailing_list_ids').map(id_str => parseInt(id_str));
         return await rpc(
@@ -55,25 +57,17 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
                 csrf_token: formData.get('csrf_token'),
                 document_id: this.customerData.documentId,
                 email: this.customerData.email,
+                opt_out_reason_id: optoutReasonId,
                 hash_token: this.customerData.hashToken,
                 lists_optin_ids: mailingListOptinIds,
                 mailing_id: this.customerData.mailingId,
             }
         ).then((result) => {
             const has_error = ['error', 'unauthorized'].includes(result);
-            let callKey;
-            if (has_error) {
-                callKey = 'error';
-            }
-            else {
-                callKey = (parseInt(result) > 0) ? 'subscription_updated_optout': 'subscription_updated';
+            if (!has_error) {
                 this._updateDisplay(mailingListOptinIds);
             }
-            this._updateInfo(has_error ? 'error' : 'subscription_updated');
-            this.trigger_up(
-                'subscription_updated',
-                {'callKey': callKey},
-            );
+            this._updateInfo(has_error ? 'error' : undefined);
         });
     },
 
@@ -101,15 +95,19 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
      */
     _setReadonly: function (isReadonly) {
         const formInputNodes = document.querySelectorAll('#o_mailing_subscription_form_manage input');
-        const formButtonNode = document.getElementById('button_form_send');
+        const formButtonNodes = document.querySelectorAll('.mailing_lists_checkboxes');
         if (isReadonly) {
             formInputNodes.forEach(node => {node.setAttribute('disabled', 'disabled')});
-            formButtonNode.setAttribute('disabled', 'disabled');
-            formButtonNode.classList.add('d-none');
+            formButtonNodes.forEach(node => {
+                node.setAttribute('disabled', 'disabled');
+                node.classList.add('d-none');
+            });
         } else {
             formInputNodes.forEach(node => {node.removeAttribute('disabled')});
-            formButtonNode.removeAttribute('disabled');
-            formButtonNode.classList.remove('d-none');
+            formButtonNodes.forEach(node => {
+                node.removeAttribute('disabled');
+                node.classList.remove('d-none');
+            });
         }
     },
 
@@ -131,24 +129,13 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
         const formContent = renderToFragment(
             "mass_mailing.portal.list_form_content",
             {
-                listsMember: this.listInfo.filter(item => item.member === true),
-                listsProposal: this.listInfo.filter(item => item.member === false),
+                email: this.customerData.email,
+                listsMemberOrPoposal: this.listInfo,
             }
         );
         const manageForm = document.getElementById('o_mailing_subscription_form_manage');
         /*manageForm.innerHTML = formContent.innerHTML;*/
         manageForm.replaceChildren(formContent);
-
-        /* update readonly display of customer's lists */
-        const formReadonlyContent = renderToFragment(
-            "mass_mailing.portal.list_form_content_readonly",
-            {
-                listsOptin: this.listInfo.filter(item => item.opt_out === false),
-            }
-        );
-        const readonlyForm = document.getElementById('o_mailing_subscription_form_blocklisted');
-        /*readonlyForm.innerHTML = formReadonlyContent.innerHTML;*/
-        readonlyForm.replaceChildren(formReadonlyContent);
     },
 
     /*
@@ -156,16 +143,13 @@ publicWidget.registry.MailingPortalSubscriptionForm = publicWidget.Widget.extend
      */
     _updateInfo: function (infoKey) {
         const updateInfo = document.getElementById('o_mailing_subscription_update_info');
-        if (infoKey !== undefined) {
+        if (infoKey === 'error') {
             const infoContent = renderToFragment(
-                "mass_mailing.portal.list_form_update_info",
-                {
-                    infoKey: infoKey,
-                }
+                "mass_mailing.portal.list_form_update_error"
             );
             /*updateInfo.innerHTML = infoContent.innerHTML;*/
             updateInfo.replaceChildren(infoContent);
-            updateInfo.classList.add(infoKey === 'error' ? 'text-danger': 'text-success');
+            updateInfo.classList.add('text-danger');
             updateInfo.classList.remove('d-none');
         }
         else {

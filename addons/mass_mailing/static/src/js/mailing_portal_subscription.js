@@ -8,7 +8,6 @@ publicWidget.registry.MailingPortalSubscription = publicWidget.Widget.extend({
         'blocklist_add': '_onBlocklistAdd',
         'blocklist_remove': '_onBlocklistRemove',
         'feedback_sent': '_onFeedbackSent',
-        'subscription_updated': '_onSubscriptionUpdated',
     },
     selector: '#o_mailing_portal_subscription',
 
@@ -90,17 +89,6 @@ publicWidget.registry.MailingPortalSubscription = publicWidget.Widget.extend({
     _onFeedbackSent: function (event) {
         const callKey = event.data.callKey;
         this.lastAction = callKey;
-    },
-
-    _onSubscriptionUpdated: function (event) {
-        const callKey = event.data.callKey;
-        if (callKey === 'subscription_updated_optout') {
-            this.customerData.feedbackEnabled = true;
-        }
-        else if (callKey === 'subscription_updated') {
-            this.customerData.feedbackEnabled = false;
-        }
-        this._onActionDone(callKey);
     },
 
     _updateDisplay: function () {

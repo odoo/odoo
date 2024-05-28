@@ -336,12 +336,12 @@ class MassMailingList(models.Model):
                 body = force_message
             elif opt_out:
                 body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s unsubscribed from the following mailing list(s)', contact_name=contact.display_name),
+                    _('%(contact_name)s unsubscribed from the following mailing list(s):', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
             else:
                 body = Markup('<p>%s</p><ul>%s</ul>') % (
-                    _('%(contact_name)s subscribed to the following mailing list(s)', contact_name=contact.display_name),
+                    _('%(contact_name)s subscribed to the following mailing list(s):', contact_name=contact.display_name),
                     Markup().join(Markup('<li>%s</li>') % name for name in updated.mapped('name')),
                 )
             contact.with_context(mail_create_nosubscribe=True).message_post(
