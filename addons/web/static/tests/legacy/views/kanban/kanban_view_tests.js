@@ -5042,6 +5042,33 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(allNames, ["hello", "", "xmo", ""]);
     });
 
+    QUnit.test("drag and drop a record with load more", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban limit="1">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="id"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+        });
+
+        assert.deepEqual(getCardTexts(target, 0), ["4"]);
+        assert.deepEqual(getCardTexts(target, 1), ["1"]);
+
+        await dragAndDrop(
+            getColumn(target, 1).querySelector(".o_kanban_record"),
+            ".o_kanban_group:nth-child(1)"
+        );
+        assert.deepEqual(getCardTexts(target, 0), ["4", "1"]);
+        assert.deepEqual(getCardTexts(target, 1), ["2"]);
+    });
+
     QUnit.test("can drag and drop a record from one column to the next", async (assert) => {
         await makeView({
             type: "kanban",
@@ -14288,7 +14315,7 @@ QUnit.module("Views", (hooks) => {
             "gnap2",
             "blip3",
             "blip4",
-            "yop5",
+            "yop6",
         ]);
 
         def.resolve();
@@ -14297,7 +14324,7 @@ QUnit.module("Views", (hooks) => {
             "gnap2",
             "blip3",
             "blip4",
-            "yop5",
+            "yop6",
         ]);
 
         def = makeDeferred();
@@ -14310,8 +14337,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_record")), [
             "blip3",
             "blip4",
-            "yop5",
-            "gnap6",
+            "yop6",
+            "gnap8",
         ]);
 
         def.resolve();
@@ -14319,8 +14346,8 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_kanban_record")), [
             "blip3",
             "blip4",
-            "yop5",
-            "gnap6",
+            "yop6",
+            "gnap8",
         ]);
     });
 
