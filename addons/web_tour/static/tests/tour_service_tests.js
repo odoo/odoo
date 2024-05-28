@@ -19,6 +19,7 @@ import {
     triggerEvent,
     nextTick,
     patchWithCleanup,
+    makeDeferred,
 } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { Component, useState, xml } from "@odoo/owl";
@@ -630,6 +631,7 @@ QUnit.module("Tour service", (hooks) => {
                 .category("main_components")
                 .get("TourPointerContainer");
 
+            const def = makeDeferred();
             class Root extends Component {
                 static components = { TourPointerContainer };
                 static template = xml/*html*/ `
@@ -639,15 +641,20 @@ QUnit.module("Tour service", (hooks) => {
                                                 border: 3px solid black;">
                         <iframe
                             srcdoc="&lt;button id='demo-button' &gt; Test Button &lt;/button&gt;"
-                            style="height: 200px; width: 200px; background-color: grey; border: 2px solid black;">
-                        </iframe>
+                            style="height: 200px; width: 200px; background-color: grey; border: 2px solid black;"
+                            t-on-load="onIFrameLoad"
+                        />
                     </div>
                     <TourPointerContainer t-props="props.tourPointerProps" />
                 </t>
-            `;
+                `;
+                onIFrameLoad() {
+                    def.resolve();
+                }
             }
 
             await mount(Root, target, { env, props: { tourPointerProps } });
+            await def; // await the iframe's content
             env.services.tour_service.startTour("tour2", { mode: "manual" });
             await mock.advanceTime(750);
             assert.containsOnce($("*"), ".o_tour_pointer .o_tour_pointer_tip");
