@@ -3,6 +3,9 @@
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.website.tools import MockRequest
+from odoo.addons.sale.controllers.portal import CustomerPortal
+
 from odoo.addons.base.tests.common import BaseUsersCommon, HttpCaseWithUserPortal
 from odoo.addons.sale.tests.common import SaleCommon
 
@@ -63,6 +66,25 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
             allow_redirects=False,
         )
         self.assertEqual(req.status_code, 303)
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    def test_user_access_to_quotes(self):
+        """ Test that internal users can always access quotes for which
+        they are the *customer* (as if they were a portal user).
+        """
+        self.CustomerPortalController = CustomerPortal()
+        for user in (self.user_internal, self.user_portal):
+            so = self.env['sale.order'].create({
+                'name': 'test so',
+                'partner_id': user.partner_id.id,
+                'user_id': False,
+            })
+            so.action_quotation_sent()
+            with self.with_user(user.login):
+                with MockRequest(self.env):
+                    quotes = self.CustomerPortalController._prepare_sale_portal_rendering_values(quotation_page=True)['quotations']
+            self.assertTrue(so in quotes, "User should see their quotes")
+            self.assertEqual(quotes.partner_id, user.partner_id, "Users should only see their own quotes")
 
 
 @tagged('post_install', '-at_install')

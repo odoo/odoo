@@ -77,17 +77,17 @@ class CustomerPortal(portal.CustomerPortal):
 
         pager_values = portal_pager(
             url=url,
-            total=SaleOrder.search_count(domain),
+            total=SaleOrder.sudo().search_count(domain),
             page=page,
             step=self._items_per_page,
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
         )
-        orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
+        orders = SaleOrder.sudo().search(domain, order=sort_order, limit=self._items_per_page, offset=pager_values['offset'])
 
         values.update({
             'date': date_begin,
-            'quotations': orders.sudo() if quotation_page else SaleOrder,
-            'orders': orders.sudo() if not quotation_page else SaleOrder,
+            'quotations': orders if quotation_page else SaleOrder,
+            'orders': orders if not quotation_page else SaleOrder,
             'page_name': 'quote' if quotation_page else 'order',
             'pager': pager_values,
             'default_url': url,
