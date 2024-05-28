@@ -45,29 +45,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="o.line_ids" t-as="line_ids">
+                        <tr t-foreach="o.line_ids" t-as="line_id">
                             <td>
-                                <t t-if="line_ids.product_description_variants">
-                                    <span t-field="line_ids.product_description_variants"/>
+                                <t t-if="line_id.product_description_variants">
+                                    <span t-field="line_id.product_description_variants"/>
                                 </t>
                                 <t t-else="">
-                                    <span t-if="line_ids.product_id.code"><!--internal reference exists-->
-                                        [ <span t-field="line_ids.product_id.code">Code</span> ]
+                                    <span t-if="line_id.product_id.code">
+                                        [ <span t-field="line_id.product_id.code">Code</span> ]
                                     </span>
-                                    <span t-field="line_ids.product_id.name">Product</span>
+                                    <span t-field="line_id.product_id.name">Product</span>
                                 </t>
                             </td>
                             <td class="text-end">
-                                <span t-field="line_ids.product_qty">5</span>
+                                <span t-field="line_id.product_qty">5</span>
                             </td>
                             <td class="text-end" t-if="has_ordered_quantity">
-                                <span t-field="line_ids.qty_ordered">5</span>
+                                <span t-field="line_id.qty_ordered">5</span>
                             </td>
                             <td class="text-start" groups="uom.group_uom">
-                                <span t-field="line_ids.product_uom_id.name">Unit</span>
+                                <span t-field="line_id.product_uom_id.name">Unit</span>
                             </td>
                             <td class="text-end">
-                                <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": line_ids.requisition_id.currency_id}'>$50</span>
+                                <span t-field="line_id.price_unit" t-options='{"widget": "monetary", "display_currency": line_id.requisition_id.currency_id}'>$50</span>
                             </td>
                         </tr>
                     </tbody>
@@ -87,24 +87,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr t-foreach="o.purchase_ids" t-as="purchase_ids">
+                        <tr t-foreach="o.purchase_ids" t-as="purchase_id">
                             <td>
-                                <span t-field="purchase_ids.name">Purchase Reference</span>
+                                <span t-field="purchase_id.name">Purchase Reference</span>
                             </td>
                             <td>
-                                <span t-field="purchase_ids.date_order" t-options='{"widget": "date"}'>02/16/2024</span>
+                                <span t-field="purchase_id.date_order" t-options='{"widget": "date"}'>02/16/2024</span>
                             </td>
                             <td>
-                                <span t-field="purchase_ids.user_id.name">Mitchell Admin</span>
+                                <span t-if="purchase_id.user_id" t-field="purchase_id.user_id.name">Mitchell Admin</span>
                             </td>
                             <td>
-                                <span t-field="purchase_ids.date_planned" t-options='{"widget": "date"}'>12/25/2024</span>
+                                <span t-if="purchase_id.date_planned" t-field="purchase_id.date_planned" t-options='{"widget": "date"}'>12/25/2024</span>
                             </td>
                             <td class="text-end">
-                                <span t-field="purchase_ids.amount_total">$500</span>
+                                <span t-field="purchase_id.amount_total">$500</span>
                             </td>
                             <td>
-                                <span t-field="purchase_ids.state">RFQ</span>
+                                <span t-field="purchase_id.state">RFQ</span>
                             </td>
                         </tr>
                     </tbody>
