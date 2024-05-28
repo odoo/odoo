@@ -999,16 +999,10 @@ class Evaluacion(models.Model):
 
         :return: El color asignado al valor.
         """
-        if self.techo_verde <= valor <= self.techo_azul:
-            return "#2894a7"  # Azul clarito
-        elif self.techo_amarillo <= valor <= self.techo_verde:
-            return "#5aaf2b"  # Verde
-        elif self.techo_naranja <= valor <= self.techo_amarillo:
-            return "#ebae14"  # Amarillo
-        elif self.techo_rojo <= valor <= self.techo_naranja:
-            return "#ffa446"  # Naranja
-        else:
-            return "#ff4747"  # Rojo
+
+        for nivel in self.niveles:
+            if valor <= nivel.techo:
+                return nivel.color
 
     def obtener_dato(self, dato):
         """
