@@ -8,26 +8,7 @@
                 </div>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.portada_reporte_template"/>
-                    <t t-if="total_porcentaje == 0">
-                        <div class="page container-fluid row gap-5 justify-content-between g-2 text-center">
-                            <div class="col-12">
-                                <h2>No se encontraron datos</h2>
-                                <p style="font-style: italic;">El reporte no contiene información para mostrar con los filtros de:</p>
-                                <ul style="font-size: 1em;; font-weight: bold;">
-                                    <t t-foreach="filtros.items()" t-as="filtro">
-                                        <li>
-                                            <t t-esc="filtro[0]"/>: 
-                                            <t t-esc="', '.join(filtro[1]['valores'])"/>
-                                        </li>
-                                    </t>
-                                </ul>
-                                <img t-att-src="'/evaluaciones/static/src/img/oops.png'" alt="Error 404" class="img-fluid" style="margin-top: 40px; max-width: 100%; height: auto;"/>
-                            </div>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <t t-call="evaluaciones.encuestas_reporte_clima_body"/>
-                    </t>
+                    <t t-call="evaluaciones.encuestas_reporte_clima_body"/>
                 </div>
             </t>
         </template>
