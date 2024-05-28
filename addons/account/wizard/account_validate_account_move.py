@@ -9,6 +9,7 @@ class ValidateAccountMove(models.TransientModel):
     move_ids = fields.Many2many('account.move')
     force_post = fields.Boolean(string="Force", help="Entries in the future are set to be auto-posted by default. Check this checkbox to post them now.")
     display_force_post = fields.Boolean(compute='_compute_display_force_post')
+    is_entries = fields.Boolean(compute='_compute_is_entries')
     abnormal_date_partner_ids = fields.One2many('res.partner', compute='_compute_abnormal_date_partner_ids')
     ignore_abnormal_date = fields.Boolean()
     abnormal_amount_partner_ids = fields.One2many('res.partner', compute='_compute_abnormal_amount_partner_ids')
@@ -19,6 +20,11 @@ class ValidateAccountMove(models.TransientModel):
         today = fields.Date.context_today(self)
         for wizard in self:
             wizard.display_force_post = wizard.move_ids.filtered(lambda m: (m.date or m.invoice_date or today) > today)
+
+    @api.depends('move_ids')
+    def _compute_is_entries(self):
+        for wizard in self:
+            wizard.is_entries = all(move_type == 'entry' for move_type in wizard.move_ids.mapped('move_type'))
 
     @api.depends('move_ids')
     def _compute_abnormal_date_partner_ids(self):
