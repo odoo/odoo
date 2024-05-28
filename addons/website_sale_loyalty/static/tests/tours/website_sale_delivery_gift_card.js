@@ -13,6 +13,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         {
             content: "select delivery method 1",
             trigger: "li label:contains(delivery1)",
+            run: "click",
         },
         {
             content: "Enter gift card code",
@@ -23,6 +24,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         {
             content: "click on 'Pay'",
             trigger: "a[role='button'].a-submit:contains(Apply)",
+            run: "click",
         },
         ...wsTourUtils.assertCartAmounts({
             total: '0.00',

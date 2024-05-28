@@ -8,15 +8,18 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
+    run: "click",
 }, {
     trigger: ".o_list_button_add",
-    extra_trigger: ".o_purchase_order"
+    extra_trigger: ".o_purchase_order",
+    run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
     run: "edit Agrolait",
 }, {
     trigger: '.ui-menu-item > a:contains("Agrolait")',
     auto: true,
+    run: "click",
 }, {
     trigger: "a:contains('Add a product')"
 }, {
@@ -24,6 +27,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: "edit Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
+    run: "click",
 }, {
     trigger: '.o_matrix_input_table',
     run: function () {
@@ -41,8 +45,10 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 {
     trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
+    run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix
+    run: "click",
 }, {
     trigger: '.o_matrix_input_table',
     run: function () {
@@ -63,11 +69,13 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
 {
     trigger: 'a:contains("Add a product")',
     extra_trigger: '.o_form_status_indicator_buttons.invisible',
+    run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
+    run: "click",
 }, {
     trigger: 'input[value="4"]',
     run: function () {

@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
 }, {
     content: "Click on the 'Select all records' checkbox",
     trigger: "thead .o_list_record_selector",
+    run: "click",
 }, {
     content: "Check that there is only 2 records selected",
     trigger: ".o_list_selection_box:contains(2):contains(selected)",
@@ -26,12 +27,15 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
 }, {
     content: "Click on the 'Select all records' checkbox again to unselect all records and see the search bar",
     trigger: "thead .o_list_record_selector",
+    run: "click",
 }, {
 	content: "Click on the search options",
 	trigger: ".o_searchview_dropdown_toggler",
+    run: "click",
 }, {
     content: "Select My Website 2",
     trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+    run: "click",
 }, {
     // This step is just here to ensure there is more records than the 2
     // available on website 1, to ensure the test is actually testing something.
@@ -44,10 +48,12 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
 {
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
+    run: "click",
 }, {
     content: "Click on List View",
     extra_trigger: '.o_kanban_renderer',
     trigger: '.o_cp_switch_buttons .o_list',
+    run: "click",
 }, {
     content: "Wait for List View to be loaded",
     trigger: '.o_list_renderer',
@@ -62,6 +68,7 @@ registry.category("web_tour.tours").add('test_website_page_manager_js_class_bug'
 {
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
+    run: "click",
 }, {
     content: "Wait for Kanban View to be loaded",
     trigger: '.o_kanban_renderer',
@@ -76,6 +83,7 @@ registry.category("web_tour.tours").add('test_website_page_manager_no_website_id
 {
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
+    run: "click",
 }, {
     content: "Wait for Kanban View to be loaded",
     trigger: '.o_kanban_renderer',

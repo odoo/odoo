@@ -18,10 +18,12 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         {
             content: "Save name change",
             trigger: 'button[data-hotkey="s"]',
+            run: "click",
         },
         {
             content: "Return to calendar",
             trigger: ".o_back_button",
+            run: "click",
         },
         {
             content: "Access recurrence",
@@ -36,10 +38,12 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         {
             content: "Save duration change",
             trigger: 'button[data-hotkey="s"]',
+            run: "click",
         },
         {
             content: "Return to calendar",
             trigger: ".o_back_button",
+            run: "click",
         },
         {
             trigger: 'a[data-event-id="1"]',

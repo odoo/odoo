@@ -10,11 +10,13 @@ registry.category("web_tour.tours").add('website_sale_stock_reorder_from_portal'
         {
             content: 'Select first order',
             trigger: '.o_portal_my_doc_table a:first',
+            run: "click",
         },
         wTourUtils.clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         {
             content: "Check that there is one out of stock product",
             trigger: "#o_wsale_reorder_body div.text-warning span:contains('This product is out of stock.')",
+            run: "click",
         },
         {
             content: "Check that there is one product that does not have enough stock",

@@ -9,12 +9,15 @@ registry.category("web_tour.tours").add('project_task_activities_split', {
         {
             content: 'Open Activity Systray',
             trigger: '.o-mail-ActivityMenu-counter',
+            run: "click",
         }, {
             content: 'Open Task Activities',
             trigger: '.o-mail-ActivityGroup:contains("Task")',
+            run: "click",
         }, {
             content: 'Task "New Task!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New Task!")',
+            run: "click",
         }, {
             content: 'Task "New Sub-Task!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New Sub-Task!")',
@@ -29,9 +32,11 @@ registry.category("web_tour.tours").add('project_task_activities_split', {
         }, {
             content: 'Open Activity Systray',
             trigger: '.o-mail-ActivityMenu-counter',
+            run: "click",
         }, {
             content: 'Open To-Do Activities',
             trigger: '.o-mail-ActivityGroup:contains("To-Do")',
+            run: "click",
         }, {
             content: 'Record "New To-Do!" is listed in the activity view',
             trigger: '.o_activity_record .d-block:contains("New To-Do!")',

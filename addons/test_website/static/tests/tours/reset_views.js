@@ -30,10 +30,12 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
         {
             content: "open site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            run: "click",
         },
         {
             content: "open html editor",
             trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            run: "click",
         },
         {
             content: "add a broken t-field in page DOM",
@@ -46,6 +48,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
             content: "save the html editor",
             extra_trigger: '.ace_content:contains("not.exist")',
             trigger: ".o_resource_editor button:contains(Save)",
+            run: "click",
         },
         BROKEN_STEP
     ]
@@ -70,18 +73,22 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         {
             content: "open site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            run: "click",
         },
         {
             content: "open html editor",
             trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            run: "click",
         },
         {
             content: "select oe_structure view",
             trigger: '.o_resource_editor_title .o_select_menu_toggler',
+            run: "click",
         },
         {
             content: "select oe_structure view",
             trigger: '.o_select_menu_menu .o_select_menu_item:contains(Test Page View)',
+            run: "click",
         },
         {
             content: "add a broken t-field in page DOM",
@@ -93,6 +100,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         {
             content: "save the html editor",
             trigger: ".o_resource_editor button:contains(Save)",
+            run: "click",
         },
         BROKEN_STEP
     ]

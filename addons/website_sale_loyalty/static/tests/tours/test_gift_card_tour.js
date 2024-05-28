@@ -18,10 +18,12 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         {
             content: 'validate the gift card',
             trigger: 'form[name="coupon_code"] .a-submit',
+            run: "click",
         },
         {
             content: 'check gift card line',
             trigger: 'div>strong:contains("PAY WITH GIFT CARD")',
+            run: "click",
         },
         {
             content: 'insert gift card code',
@@ -32,6 +34,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         {
             content: 'validate the gift card',
             trigger: 'form[name="coupon_code"] .a-submit',
+            run: "click",
         },
         {
             content: 'check gift card amount',

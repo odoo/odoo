@@ -7,6 +7,7 @@ const checkIfUserMenuNotMasked = function () {
         {
             content: "Click on the user dropdown",
             trigger: ":iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown > a",
+            run: "click",
         },
         wTourUtils.checkIfVisibleOnScreen(":iframe #wrapwrap header .o_header_hide_on_scroll li.dropdown .dropdown-menu.show a[href='/my/home']"),
     ];

@@ -44,21 +44,26 @@ registry.category("web_tour.tours").add('course_member_youtube', {
 },
 // eLearning: go on /all, find free course and join it
 {
-    trigger: 'a.o_wslides_home_all_slides'
+    trigger: 'a.o_wslides_home_all_slides',
+    run: "click",
 }, {
-    trigger: 'a:contains("Choose your wood")'
+    trigger: 'a:contains("Choose your wood")',
+    run: "click",
 }, {
-    trigger: 'a:contains("Join this Course")'
+    trigger: 'a:contains("Join this Course")',
+    run: "click",
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     run: function () {} // check membership
 }, {
     trigger: 'a:contains("Comparing Hardness of Wood Species")',
+    run: "click",
 },  {
     trigger: '.o_wslides_progress_percentage:contains("50")',
     run: function () {} // check progression
 }, {
     trigger: '.o_wslides_fs_slide_name:contains("Wood Bending With Steam Box")',
+    run: "click",
 }, {
     trigger: '.player',
     run: function () {} // check player loading
@@ -69,6 +74,7 @@ registry.category("web_tour.tours").add('course_member_youtube', {
     trigger: '.o_wslides_channel_completion_completed:contains(Completed)',
     run: function () {} // check progression
 }, {
-    trigger: 'a:contains("Back to course")'
+    trigger: 'a:contains("Back to course")',
+    run: "click",
 }
 ]});

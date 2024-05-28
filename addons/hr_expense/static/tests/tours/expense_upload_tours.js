@@ -10,14 +10,17 @@
         {
             content: "Go to Expense",
             trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
+            run: "click",
         },
         {
             content: "Go to My Expenses",
             trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_my_expenses"]',
+            run: "click",
         },
         {
             content: "Go to My Expenses to Report",
             trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_my_expenses_to_submit"]',
+            run: "click",
         },
         {
             content: "Check Upload Button",
@@ -32,6 +35,7 @@
         {
             content: "Go to kanban view",
             trigger: "button.o_switch_view.o_kanban",
+            run: "click",
         },
         {
             content: "Check Upload Button",
@@ -46,10 +50,12 @@
         {
             content: "Go to Reporting",
             trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_reports"]',
+            run: "click",
         },
         {
             content: "Go to Expenses Analysis",
             trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_all_expenses"]',
+            run: "click",
         },
         {
             content: "Check Upload Button",
@@ -64,6 +70,7 @@
         {
             content: "Go to kanban view",
             trigger: "button.o_switch_view.o_kanban",
+            run: "click",
         },
         {
             content: "Check Upload Button",
@@ -84,22 +91,27 @@
         {
             content: "Go to Expense",
             trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
+            run: "click",
         },
         {
             content: "Go to My Expenses",
             trigger: 'button[data-menu-xmlid="hr_expense.menu_hr_expense_my_expenses"]',
+            run: "click",
         },
         {
             content: "Go to My Reports",
             trigger: 'a[data-menu-xmlid="hr_expense.menu_hr_expense_sheet_my_reports"]',
+            run: "click",
         },
         {
             content: "Go to First Expense for employee",
             trigger: 'td[data-tooltip="First Expense for employee"]',
+            run: "click",
         },
         {
             content: "Click Submit to Manager Button",
             trigger: '.o_expense_sheet_submit',
+            run: "click",
         },
         {
             content: 'Verify the expene sheet is submitted',

@@ -10,6 +10,7 @@ const FIRST_PARAGRAPH = ':iframe #wrap .s_text_image p:nth-child(2)';
 const clickFooter = [{
     content: "Save the link by clicking outside the URL input (not on a link element)",
     trigger: ':iframe footer h5:first',
+    run: "click",
 }, {
     content: "Wait delayed click on footer",
     trigger: '.o_we_customize_panel we-title:contains("Footer")',
@@ -19,6 +20,7 @@ const clickFooter = [{
 const clickEditLink = [{
     content: "Click on Edit Link in Popover",
     trigger: ':iframe .o_edit_menu_popover .o_we_edit_link',
+    run: "click",
 }, {
     content: "Ensure popover is closed",
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
@@ -44,6 +46,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Click on 'Link' to open Link Dialog",
         trigger: "#toolbar:not(.oe-floating) #create-link",
+        run: "click",
     },
     {
         content: "Type the link URL /contactus",
@@ -54,6 +57,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Click on newly created link",
         trigger: `${FIRST_PARAGRAPH} a`,
+        run: "click",
     },
     {
         content: "Popover should be shown",
@@ -70,6 +74,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Click on link",
         trigger: `${FIRST_PARAGRAPH} a`,
+        run: "click",
     },
     {
         content: "Popover should be shown with updated preview data",
@@ -79,6 +84,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Click on Remove Link in Popover",
         trigger: ':iframe .o_edit_menu_popover .o_we_remove_link',
+        run: "click",
     },
     {
         content: "Link should be removed",
@@ -94,6 +100,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Click navbar menu Home",
         trigger: ':iframe .top_menu a:contains("Home")',
+        run: "click",
     },
     {
         content: "Popover should be shown (2)",
@@ -109,11 +116,13 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Save the Edit Menu modal",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Click on the Home menu again",
         extra_trigger: 'div:not(.o_loading_dummy) > #oe_snippets',
         trigger: ':iframe .top_menu a:contains("Home")[href="/contactus"]',
+        run: "click",
     },
     {
         content: "Popover should be shown with updated preview data (2)",
@@ -123,6 +132,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Click on Edit Menu in Popover",
         trigger: ':iframe .o_edit_menu_popover .js_edit_menu',
+        run: "click",
     },
     {
         content: "Edit Menu (tree) should open",
@@ -155,6 +165,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Click CTA in navbar",
         trigger: ':iframe .o_main_nav a.btn-primary[href="/contactus"]',
+        run: "click",
     },
     {
         content: "Popover should be shown (3)",

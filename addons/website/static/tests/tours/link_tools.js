@@ -6,6 +6,7 @@ import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/sr
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
     trigger: ':iframe #wrap .s_text_image img',
+    run: "click",
 };
 
 wTourUtils.registerWebsitePreviewTour('link_tools', {
@@ -26,6 +27,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Open link tools",
         trigger: "#toolbar:not(.oe-floating) #create-link",
+        run: "click",
     },
     {
         content: "Type the link URL odoo.com",
@@ -37,6 +39,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Click on the newly created link",
         trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo.com")',
+        run: "click",
     },
     {
         content: "Change content (editing the label input) to odoo website_2",
@@ -46,6 +49,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Click again on the link",
         trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website_2")',
+        run: "click",
     },
     {
         content: "Change content (editing the DOM) to odoo website",
@@ -56,6 +60,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Click again on the link",
         trigger: ':iframe .s_text_image a[href="http://odoo.com"]:contains("odoo website")',
+        run: "click",
     },
     {
         content: "Check that the label input contains the new content",
@@ -74,14 +79,17 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "The new link content should be odoo website and url odoo.be",
         trigger: ':iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
+        run: "click",
     },
     {
         content: "The new link content should be odoo website and url odoo.be",
         trigger: '#toolbar:not(.oe-floating) .dropdown:has([name="link_style_color"]) > button',
+        run: "click",
     },
     {
         content: "Click on the secondary style button.",
         trigger: '#toolbar:not(.oe-floating) we-button[data-value="secondary"]',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -98,10 +106,12 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Click on the first image.",
         trigger: ':iframe .s_three_columns .row > :nth-child(1) img',
+        run: "click",
     },
     {
         content: "Activate link.",
         trigger: '.o_we_customize_panel we-row:contains("Media") we-button.fa-link',
+        run: "click",
     },
     {
         content: "Set URL.",
@@ -112,10 +122,12 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Deselect image.",
         trigger: ':iframe .s_three_columns .row > :nth-child(2) img',
+        run: "click",
     },
     {
         content: "Re-select image.",
         trigger: ':iframe .s_three_columns .row > :nth-child(1) img',
+        run: "click",
     },
     {
         content: "Check that the second image is not within a link.",
@@ -131,6 +143,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Remove link.",
         trigger: ':iframe .popover:contains("http://odoo.com") a .fa-chain-broken',
+        run: "click",
     },
     {
         content: "Check that image is not within a link anymore.",
@@ -144,6 +157,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Click on 'Add Mega Menu Item' link",
         extra_trigger: '.o_website_dialog:visible',
         trigger: ".modal-body a:contains('Add Mega Menu Item')",
+        run: "click",
     },
     {
         content: "Enter mega menu name",
@@ -211,6 +225,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Open link tools",
         trigger: "#toolbar #create-link",
+        run: "click",
     },
     clickOnImgStep,
     {
@@ -223,6 +238,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Click on link to open the link tools",
         trigger: ":iframe .s_text_image p a[href='http://odoo.com']",
+        run: "click",
     },
     // 8. Check that http links are not coerced to https and vice-versa.
     {
@@ -371,6 +387,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Pick '/contactus",
         trigger: "ul.ui-autocomplete li div:contains('/contactus (Contact Us)')",
+        run: "click",
     },
     {
         content: "Check that links's href and label were updated",
@@ -386,6 +403,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that the link's href was updated and click on it",
         trigger: ":iframe .s_text_image p a[href='/this-address-does-not-exist']",
+        run: "click",
     },
     // TODO this step is disabled for now because it is a cause of race
     // condition (last check: 3 times over 95). The popover seems to sometimes
@@ -402,6 +420,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Click on contact us button",
         trigger: ":iframe a.btn[href='/contactus']",
+        run: "click",
     },
     {
         content: "Verify that the link label input does not contain ZWS",

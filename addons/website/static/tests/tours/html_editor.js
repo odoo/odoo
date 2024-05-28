@@ -23,10 +23,12 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         {
             content: "open site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            run: "click",
         },
         {
             content: "open html editor",
             trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            run: "click",
         },
         {
             content: "add something in the generic view",
@@ -44,10 +46,12 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         {
             content: "open file selector menu",
             trigger: ".o_resource_editor .o_select_menu_toggler",
+            run: "click",
         },
         {
             content: "open oe_structure_test_ui view",
             trigger: ".o-dropdown--menu .o-dropdown-item:contains(oe_structure_test_ui)",
+            run: "click",
         },
         {
             content: "add something in the oe_structure specific view",
@@ -61,6 +65,7 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
             content: "save the html editor",
             extra_trigger: 'div.ace_line .ace_xml:contains("anothernewcontent")',
             trigger: ".o_resource_editor button:contains(Save)",
+            run: "click",
         },
         {
            content: "check that the page has both modification",
@@ -81,18 +86,22 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
             content: "open site menu",
             extra_trigger: ':iframe #wrap:visible', // ensure state for later
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            run: "click",
         },
         {
             content: "open html editor",
             trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            run: "click",
         },
         {
             content: "open type switcher",
             trigger: '.o_resource_editor_type_switcher button',
+            run: "click",
         },
         {
             content: "select scss files",
             trigger: '.o-dropdown--menu .dropdown-item:contains("SCSS")',
+            run: "click",
         },
         {
             content: "select 'user_custom_rules'",
@@ -111,6 +120,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
             content: "save the html editor",
             extra_trigger: `div.ace_line:contains("${adminCssModif}")`,
             trigger: ".o_resource_editor_title button:contains(Save)",
+            run: "click",
         },
         {
             content: "check that the scss modification got applied",
@@ -121,10 +131,12 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "reset view (after reload, html editor should have been reopened where it was)",
             trigger: '#resource-editor-id button:contains(Reset)',
+            run: "click",
         },
         {
             content: "confirm reset warning",
             trigger: '.modal-footer .btn-primary',
+            run: "click",
         },
         {
             content: "check that the scss file was reset correctly, wrap content should now be visible again",
@@ -145,6 +157,7 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
             content: "save the html editor",
             extra_trigger: `div.ace_line:contains("${adminCssModif}")`,
             trigger: ".o_resource_editor_title button:contains(Save)",
+            run: "click",
         },
         {
             content: "check that the scss modification got applied",
@@ -166,18 +179,22 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         {
             content: "open site menu",
             trigger: 'button[data-menu-xmlid="website.menu_site"]',
+            run: "click",
         },
         {
             content: "open html editor",
             trigger: 'a[data-menu-xmlid="website.menu_ace_editor"]',
+            run: "click",
         },
         {
             content: "open type switcher",
             trigger: '.o_resource_editor_type_switcher button',
+            run: "click",
         },
         {
             content: "select scss files",
             trigger: '.o-dropdown--menu .dropdown-item:contains("SCSS")',
+            run: "click",
         },
         {
             content: "select 'user_custom_rules'",
@@ -196,15 +213,18 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
             content: "save the html editor",
             extra_trigger: `div.ace_line:contains("${demoCssModif}")`,
             trigger: ".o_resource_editor button:contains(Save)",
+            run: "click",
         },
         {
             content: "reset view (after reload, html editor should have been reopened where it was)",
             trigger: '#resource-editor-id button:contains(Reset)',
             timeout: 30000, // SCSS compilation might take some time
+            run: "click",
         },
         {
             content: "confirm reset warning",
             trigger: '.modal-footer .btn-primary',
+            run: "click",
         },
         {
             content: "check that the scss file was reset correctly",

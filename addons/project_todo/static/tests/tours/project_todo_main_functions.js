@@ -9,9 +9,11 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     url: '/web',
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project_todo.menu_todo_todos"]',
+    run: "click",
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add_column",
     content: "Create a personal stage from the To-do kanban view",
+    run: "click",
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_header input",
     extra_trigger: '.o_kanban_group',
@@ -20,6 +22,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add",
     content: "Save the personal stage",
+    run: "click",
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_header input",
     extra_trigger: '.o_kanban_group',
@@ -28,10 +31,12 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add",
     content: "Save the personal stage",
+    run: "click",
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_group:eq(1)',
     content: "Create a task in the first stage",
+    run: "click",
 }, {
     trigger: '.o_kanban_quick_create div.o_field_char[name=name] input',
     extra_trigger: '.o_project_task_kanban_view',
@@ -41,6 +46,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     extra_trigger: '.o_project_task_kanban_view',
     content: "Save the personal task",
+    run: "click",
 }, {
     trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_project_task_kanban_view',
@@ -50,21 +56,26 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_kanban_record:first",//:contains(Send message)
     extra_trigger: '.o_project_task_kanban_view',
     content: "Open the first todo record",
+    run: "click",
 }, {
     trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-sendMessage",
     extra_trigger: '.o_todo_form_view',
     content: "A 'send message' button should be present in the chatter",
+    run: "click",
 }, {
     trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-logNote",
     extra_trigger: '.o_todo_form_view',
     content: "A 'log note' button should be present in the chatter",
+    run: "click",
 }, {
     trigger: ".o-mail-Chatter-topbar button.o-mail-Chatter-activity",
     extra_trigger: '.o_todo_form_view',
     content: "An 'Activities' button should be present in the chatter",
+    run: "click",
 }, {
     trigger: "button[name=action_schedule_activities]",
     content: "Schedule an activity",
+    run: "click",
 }, {
     trigger: ".o_field_widget[name='user_ids'] input",
     extra_trigger: '.o_todo_form_view',
@@ -75,6 +86,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 }, {
     trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
     auto: true,
+    run: "click",
 }, {
     trigger: '.o_breadcrumb input.o_todo_breadcrumb_name_input',
     content: 'Edit the name of the personal task directly in the breadcrumb',
@@ -82,16 +94,20 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 }, {
     trigger: '.o_breadcrumb .o_todo_done_button',
     content: 'Mark the task as done directly from the breadcrumb',
+    run: "click",
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: '.o_todo_form_view .o_form_dirty',
     content: "Save the record",
+    run: "click",
 }, {
     trigger: '.o_breadcrumb .o_control_panel_breadcrumbs_actions button',
     content: 'Convert the Todo to a task belonging to a project',
+    run: "click",
 }, {
     trigger: '.o_menu_item:contains("Convert to Task")',
     content: "Click on the action menu 'Convert to task'",
+    run: "click",
 }, {
     trigger: '.o_todo_conversion_form_view .o_field_many2one[name=project_id] input',
     content: 'Create a new project that will be set to the task',
@@ -99,12 +115,15 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
 }, {
     trigger: '.o_todo_conversion_form_view .o_field_many2one[name=project_id] li.o_m2o_dropdown_option_create a',
     content: 'Create the new project',
+    run: "click",
 }, {
     trigger: 'button[name="action_convert_to_task"]',
     content: 'Convert the todo to a task',
+    run: "click",
 }, {
     trigger: ".breadcrumb-item:nth-child(1)",
     content: markup("Let's go back to the <b>kanban view</b> to have an overview of your next tasks."),
+    run: "click",
 }, {
     trigger: ".o_kanban_view",
     isCheck: true,

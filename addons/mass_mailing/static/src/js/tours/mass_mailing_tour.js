@@ -18,15 +18,18 @@
         width: 225,
         position: 'bottom',
         edition: 'enterprise',
+        run: "click",
     }, {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
         content: _t("Let's try the Email Marketing app."),
         edition: 'community',
+        run: "click",
     }, {
         trigger: '.o_list_button_add',
         extra_trigger: '.o_mass_mailing_mailing_tree',
         content: markup(_t("Start by creating your first <b>Mailing</b>.")),
         position: 'bottom',
+        run: "click",
     }, {
         trigger: 'input[name="subject"]',
         content: markup(_t('Pick the <b>email subject</b>.')),
@@ -73,14 +76,17 @@
         trigger: 'button[name="action_test"]',
         content: _t("Test this mailing by sending a copy to yourself."),
         position: 'bottom',
+        run: "click",
     }, {
         trigger: 'button[name="send_mail_test"]',
         content: _t("Check the email address and click send."),
         position: 'bottom',
+        run: "click",
     }, {
         trigger: 'button[name="action_launch"]',
         content: _t("Ready for take-off!"),
         position: 'bottom',
+        run: "click",
     }, {
         trigger: '.btn-primary:contains("Ok")',
         content: _t("Don't worry, the mailing contact we created is an internal user."),

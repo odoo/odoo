@@ -61,9 +61,17 @@ export function getConsumeEventType(element, runCommand) {
         tag === "textarea" ||
         (tag === "input" &&
             (!type ||
-                ["email", "number", "password", "search", "tel", "text", "url", "date", "range"].includes(
-                    type
-                )))
+                [
+                    "email",
+                    "number",
+                    "password",
+                    "search",
+                    "tel",
+                    "text",
+                    "url",
+                    "date",
+                    "range",
+                ].includes(type)))
     ) {
         if (
             utils.isSmall() &&
@@ -149,11 +157,9 @@ export const triggerPointerEvent = (el, type, canBubbleAndBeCanceled, additional
 };
 
 export class RunningTourActionHelper {
-
     /**
      * @typedef {string|Node} Selector
      */
-
 
     constructor(anchor) {
         this.anchor = anchor;
@@ -271,7 +277,7 @@ export class RunningTourActionHelper {
         await dragEffectDelay();
     }
 
-     /**
+    /**
      * Edit input or textarea given by **{@link selector}**
      * @param {string} text
      * @param {Selector} selector
@@ -300,7 +306,6 @@ export class RunningTourActionHelper {
         hoot.keyUp("_");
         hoot.manuallyDispatchProgrammaticEvent(element, "change");
     }
-
 
     /**
      * Fills the **{@link Selector}** with the given `value`.
@@ -449,8 +454,15 @@ export class RunningTourActionHelper {
      * Helper to facilitate drag and drop debugging
      */
     _showCursor() {
+        const infoElement = document.createElement("div");
+        function getCursor(event) {
+            const x = event.clientX;
+            const y = event.clientY;
+            infoElement.textContent = `[ X: ${x} | Y: ${y} ]`;
+            infoElement.style.top = y + 3 + "px";
+            infoElement.style.left = x + 3 + "px";
+        }
         if (!document.querySelector("div.o_tooltip_mouse_coordinates")) {
-            const infoElement = document.createElement("div");
             infoElement.classList.add(".o_tooltip_mouse_coordinates");
             infoElement.style.backgroundColor = "red";
             infoElement.style.position = "absolute";
@@ -458,19 +470,12 @@ export class RunningTourActionHelper {
             document.body.appendChild(infoElement);
             document.addEventListener("mousemove", (event) => {
                 getCursor(event);
-            })
+            });
             hoot.queryAll(":iframe").forEach((iframe) => {
                 iframe.addEventListener("mousemove", (event) => {
                     getCursor(event);
-                })
-            })
-            function getCursor(event) {
-                let x = event.clientX;
-                let y = event.clientY;
-                infoElement.textContent = `[ X: ${x} | Y: ${y} ]`;
-                infoElement.style.top = (y+3) + "px";
-                infoElement.style.left = (x+3) + "px";
-            }
+                });
+            });
         }
     }
 }
@@ -505,6 +510,7 @@ export const stepUtils = {
             trigger: ".o_navbar_apps_menu button",
             auto: true,
             position: "bottom",
+            run: "click",
         };
     },
 
@@ -514,6 +520,7 @@ export const stepUtils = {
             trigger: ".o_main_navbar .o_menu_toggle",
             content: markup(_t("Click on the <i>Home icon</i> to navigate across apps.")),
             position: "bottom",
+            run: "click",
         };
     },
 
@@ -539,6 +546,7 @@ export const stepUtils = {
             extra_trigger: element,
             content: description,
             position: "bottom",
+            run: "click",
             debugHelp: this._getHelpMessage(
                 "goBackBreadcrumbsMobile",
                 description,
@@ -555,12 +563,14 @@ export const stepUtils = {
                 content: description,
                 position: "right",
                 edition: "community",
+                run: "click",
             },
             {
                 trigger: `.o_app[data-menu-xmlid="${dataMenuXmlid}"]`,
                 content: description,
                 position: "bottom",
                 edition: "enterprise",
+                run: "click",
             },
         ].map((step) =>
             this.addDebugHelp(this._getHelpMessage("goToApp", dataMenuXmlid, description), step)
@@ -574,6 +584,7 @@ export const stepUtils = {
             extra_trigger: extraTrigger,
             content: _t("Open bugger menu."),
             position: "bottom",
+            run: "click",
             debugHelp: this._getHelpMessage("openBurgerMenu", extraTrigger),
         };
     },
@@ -598,6 +609,7 @@ export const stepUtils = {
                 trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}'), .dropdown-item button:enabled:contains('${innerTextButton}')`,
                 content: description,
                 position: "bottom",
+                run: "click",
             },
         ].map((step) =>
             this.addDebugHelp(
@@ -629,6 +641,7 @@ export const stepUtils = {
                 mobile: true,
                 trigger: `.o_control_panel_navigation .btn .fa-search`,
                 position: "bottom",
+                run: "click",
             },
             {
                 mobile: true,
@@ -642,6 +655,7 @@ export const stepUtils = {
                 mobile: true,
                 trigger: `.o_kanban_record .o_kanban_record_title :contains('${valueSearched}')`,
                 position: "bottom",
+                run: "click",
             },
         ].map((step) =>
             this.addDebugHelp(
@@ -700,11 +714,10 @@ export const stepUtils = {
     },
 
     waitIframeIsReady() {
-        return  {
+        return {
             content: "Wait until the iframe is ready",
             trigger: `:has([is-ready="true"]):iframe html`,
             isCheck: true,
         };
-    }
-
+    },
 };

@@ -20,6 +20,7 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_logged'
     }
 }, {
     trigger: 'a:contains("Join this Course")',
+    run: "click",
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     content: 'Check that user is enrolled',

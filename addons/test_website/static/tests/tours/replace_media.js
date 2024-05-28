@@ -40,6 +40,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "select image",
         trigger: ":iframe .s_picture figure img",
+        run: "click",
     },
     {
         content: "ensure image size is displayed",
@@ -51,10 +52,12 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "replace image",
         trigger: "#oe_snippets we-button[data-replace-media]",
+        run: "click",
     },
     {
         content: "select svg",
         trigger: ".o_select_media_dialog img[title='sample.svg']",
+        run: "click",
     },
     {
         content: "ensure the svg doesn't have a shape",
@@ -69,14 +72,17 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "replace image",
         trigger: "#oe_snippets we-button[data-replace-media]",
+        run: "click",
     },
     {
         content: "go to pictogram tab",
         trigger: ".o_select_media_dialog .nav-link:contains('Icons')",
+        run: "click",
     },
     {
         content: "select an icon",
         trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-lemon-o",
+        run: "click",
     },
     {
         content: "ensure icon block is displayed",
@@ -86,10 +92,12 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "select footer",
         trigger: ":iframe footer",
+        run: "click",
     },
     {
         content: "select icon",
         trigger: ":iframe .s_picture figure span.fa-lemon-o",
+        run: "click",
     },
     {
         content: "ensure icon block is still displayed",
@@ -99,10 +107,12 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "replace icon",
         trigger: "#oe_snippets we-button[data-replace-media]",
+        run: "click",
     },
     {
         content: "go to video tab",
         trigger: ".o_select_media_dialog .nav-link:contains('Video')",
+        run: "click",
     },
     {
         content: "enter a video URL",
@@ -119,6 +129,7 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "confirm selection",
         trigger: ".o_select_media_dialog .modal-footer .btn-primary",
+        run: "click",
     },
     {
         content: "ensure video option block is displayed",
@@ -128,14 +139,17 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "replace image",
         trigger: "#oe_snippets we-button[data-replace-media]",
+        run: "click",
     },
     {
         content: "go to pictogram tab",
         trigger: ".o_select_media_dialog .nav-link:contains('Icons')",
+        run: "click",
     },
     {
         content: "select an icon",
         trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-lemon-o",
+        run: "click",
     },
     {
         content: "ensure icon block is displayed",
@@ -145,10 +159,12 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "select footer",
         trigger: ":iframe footer",
+        run: "click",
     },
     {
         content: "select icon",
         trigger: ":iframe .s_picture figure span.fa-lemon-o",
+        run: "click",
     },
     {
         content: "ensure icon block is still displayed",

@@ -11,6 +11,7 @@ function selectNthOrder(n) {
             content: `select nth order`,
             trigger: `table.o_list_table tbody tr.o_data_row:nth-child(${n}) td`,
             in_modal: true,
+            run: "click",
         },
     ];
 }
@@ -22,6 +23,7 @@ export function settleNthOrder(n) {
             content: `Choose to settle the order`,
             trigger: `.selection-item:contains('Settle the order')`,
             in_modal: true,
+            run: "click",
         },
     ];
 }
@@ -32,6 +34,7 @@ export function downPaymentFirstOrder() {
         {
             content: `click on select the order`,
             trigger: `.selection-item:contains('Apply a down payment')`,
+            run: "click",
         },
         Numpad.click("+10"),
         Dialog.confirm(),

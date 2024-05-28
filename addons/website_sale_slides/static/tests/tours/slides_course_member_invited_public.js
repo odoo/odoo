@@ -26,11 +26,13 @@ registry.category('web_tour.tours').add('invited_on_payment_course_public', {
     }
 }, {
     trigger: 'a:contains("Log in")',
+    run: "click",
 }, {
     trigger: 'input[id="password"]',
     run: "edit portal",
 }, {
     trigger: 'button:contains("Log in")',
+    run: "click",
 }, {
     trigger: 'a:contains("Gardening: The Know-How")',
     content: 'Check that preview slides are now accessible',

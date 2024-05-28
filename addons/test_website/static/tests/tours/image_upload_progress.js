@@ -67,9 +67,11 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     {
         content: "click on dropped snippet",
         trigger: ":iframe #wrap .s_image_gallery .img",
+        run: "click",
     }, {
         content: "click on add images to open image dialog (in multi mode)",
         trigger: 'we-customizeblock-option [data-add-images]',
+        run: "click",
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
@@ -112,17 +114,21 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         content: "close notification",
         trigger: '.o_notification_close',
         in_modal: false,
+        run: "click",
     }, {
         content: "close media dialog",
         trigger: '.modal-footer .btn-secondary',
+        run: "click",
     },
     // 2. Check success single image upload
     {
         content: "click on dropped snippet",
         trigger: ":iframe #wrap .s_text_image .img",
+        run: "click",
     }, {
         content: "click on replace media to open image dialog",
         trigger: 'we-customizeblock-option [data-replace-media]',
+        run: "click",
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
@@ -163,9 +169,11 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     {
         content: "click on dropped snippet",
         trigger: ":iframe #wrap .s_text_image .img",
+        run: "click",
     }, {
         content: "click on replace media to open image dialog",
         trigger: 'we-customizeblock-option [data-replace-media]',
+        run: "click",
     }, {
         content: "manually trigger input change",
         trigger: ".o_select_media_dialog .o_upload_media_button",
@@ -209,16 +217,19 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
     {
         content: "click on dropped snippet",
         trigger: ":iframe #wrap .s_image_gallery .img",
+        run: "click",
     }, {
         content: "click on replace media to open image dialog",
         trigger: 'we-customizeblock-option [data-replace-media]',
+        run: "click",
     }, {
         content: "search 'fox' images",
         trigger: ".o_we_search",
         run: "edit fox",
     }, {
         content: "click on unsplash result", // note that unsplash is mocked
-        trigger: "img[alt~=fox]"
+        trigger: "img[alt~=fox]",
+        run: "click",
     }, {
         content: "check that the upload progress bar is correctly shown",
         // ensure it is there so we are sure next step actually test something
@@ -230,6 +241,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         content: "notification should close after 3 seconds",
         trigger: 'body:not(:has(.o_notification_close))',
         in_modal: false,
+        run: "click",
     }, {
         content: "unsplash image (mocked to logo) should have been used",
         trigger: ":iframe #wrap .s_image_gallery .img[data-original-src^='/unsplash/HQqIOc8oYro/fox']",
