@@ -33,8 +33,8 @@
             <div
                 role="menuitemcheckbox"
                 t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
-                t-att-aria-label="props.company.name"
-                t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + props.company.name + ' content.'"
+                t-att-aria-label="toggleCompanyTooltip"
+                t-att-title="toggleCompanyTooltip"
                 tabindex="0"
                 class="border-end toggle_company"
                 t-att-class="{ 'border-primary': isCurrent, 'disabled': !isCompanyAllowed }"
@@ -48,8 +48,8 @@
             <div
                 role="button"
                 t-att-aria-pressed="isCurrent ? 'true' : 'false'"
-                t-att-aria-label="'Switch to ' + props.company.name "
-                t-att-title="'Switch to ' + props.company.name "
+                t-att-aria-label="switchCompanyTooltip"
+                t-att-title="switchCompanyTooltip"
                 tabindex="0"
                 class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
                 t-att-class="isCurrent ? 'bg-primary-subtle' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-link text-primary' : 'disabled')"

@@ -33,6 +33,7 @@ export class Many2ManyBinaryField extends Component {
             return {
                 ...record.data,
                 id: record.resId,
+                tooltip: _t("Download %s", record.data.name),
             };
         });
     }
