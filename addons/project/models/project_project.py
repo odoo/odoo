@@ -87,7 +87,7 @@ class Project(models.Model):
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
-        string='Members', export_string_translation=False)
+        string='Members', export_string_translation=False, copy=False)
     is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
         compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False)
     label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
