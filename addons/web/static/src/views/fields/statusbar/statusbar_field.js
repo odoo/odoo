@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, onWillRender, useEffect, useExternalListener, useRef } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
@@ -11,7 +11,6 @@ import { registry } from "@web/core/registry";
 import { groupBy } from "@web/core/utils/arrays";
 import { escape } from "@web/core/utils/strings";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
 /**
@@ -93,21 +92,9 @@ export class StatusBarField extends Component {
 
         // Special data
         if (this.field.type === "many2one") {
-            this.specialData = useSpecialData((orm, props) => {
-                const { foldField, name: fieldName, record } = props;
-                const { relation } = record.fields[fieldName];
-                const fieldNames = ["display_name"];
-                if (foldField) {
-                    fieldNames.push(foldField);
-                }
-                const value = props.record.data[fieldName];
-                let domain = props.domain;
-                if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value[0]]], domain]).toList(
-                        props.record.evalContext
-                    );
-                }
-                return orm.searchRead(relation, domain, fieldNames);
+            onWillStart(async() => await this.fetchstatusbar(this.props));
+            onWillUpdateProps(async (nextProps) => {
+                await this.fetchstatusbar(nextProps);
             });
         }
 
@@ -149,6 +136,24 @@ export class StatusBarField extends Component {
                 }
             );
         }
+    }
+
+    async fetchstatusbar(props) {
+        const { foldField, name: fieldName, record } = props;
+        const { relation } = record.fields[fieldName];
+        const fieldNames = ["display_name"];
+        if (foldField) {
+            fieldNames.push(foldField);
+        }
+        const value = record.data[fieldName];
+        let domain = props.domain;
+        if (domain.length && value) {
+            domain = Domain.or([[["id", "=", value[0]]], domain]).toList(
+                record.evalContext
+            );
+        }
+        const searchData = await this.env.model.orm.searchRead(relation, domain, fieldNames);
+        this.specialData = { data: searchData };
     }
 
     /**
