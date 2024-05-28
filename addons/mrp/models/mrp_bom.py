@@ -298,6 +298,15 @@ class MrpBom(models.Model):
         for bom in self:
             bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom, warehouse, bom.product_id, ignore_stock=True)
             bom.days_to_prepare_mo = self.env['report.mrp.report_bom_structure']._get_max_component_delay(bom_data['components'])
+            if bom_data.get('availability_state') == 'unavailable' and not bom_data.get('components_available', True):
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _('Cannot compute days to prepare due to missing route info for at least 1 component or for the final product.'),
+                        'sticky': False,
+                    }
+                }
 
     @api.constrains('product_tmpl_id', 'product_id', 'type')
     def check_kit_has_not_orderpoint(self):
