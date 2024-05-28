@@ -6,10 +6,7 @@ Some functions related to the os and os.path module
 """
 import os
 import re
-import warnings
 import zipfile
-
-from os.path import join as opj
 
 
 WINDOWS_RESERVED = re.compile(r'''
