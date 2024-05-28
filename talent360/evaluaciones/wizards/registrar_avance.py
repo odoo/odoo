@@ -15,11 +15,11 @@ class RegistrarAvance(models.TransientModel):
     _name = "registrar.avance.wizard"
     _description = "Registrar Avance Wizard"
 
-    fecha = fields.Date(string='Fecha', default=fields.Date.today())
-    avance = fields.Integer(string='Avance', required=True)
+    fecha = fields.Date(default=fields.Date.today())
+    avance = fields.Integer(required=True)
     archivos = fields.Many2many(comodel_name='ir.attachment', string='Subir Archivo')
     nombres_archivos = fields.Char(string='Nombres de Archivos')
-    comentarios = fields.Text(string='Comentarios')
+    comentarios = fields.Text()
             
     @api.constrains('avance')
     def _validar_avance(self):
@@ -101,7 +101,7 @@ class RegistrarAvance(models.TransientModel):
         Se crea un registro en el modelo objetivo.avances con los datos del avance
         Se actualiza el campo resultado del objetivo con el valor del avance
         """
-        
+
         avance = self.avance
         archivos = self.archivos
         comentarios = self.comentarios
