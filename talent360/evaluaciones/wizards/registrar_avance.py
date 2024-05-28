@@ -1,5 +1,4 @@
 from odoo import fields, models, api, exceptions, _
-from odoo.http import request
 
 class RegistrarAvance(models.TransientModel):
     _name = "registrar.avance.wizard"
@@ -18,9 +17,5 @@ class RegistrarAvance(models.TransientModel):
         fecha = self.fecha
         
         objetivo_id = self.env.context.get("objetivo_id")
-        usuario_objetivo_model = self.env["objetivo"].browse(objetivo_id)
-        usuario_objetivo_model.sudo().write({"resultado": avance})
-
-        message = f"ID: {self.id}\nFecha: {fecha}\nAvance: {avance}\nArchivos: {', '.join(archivos.mapped('name'))}\nComentarios: {comentarios}"
-        
-        print(message)
+        usuario_objetivo = self.env["objetivo"].browse(objetivo_id)
+        usuario_objetivo.sudo().write({"resultado": avance})
