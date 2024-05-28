@@ -110,21 +110,21 @@
     </template>
 
     <template id="survey_button_retake" name="Survey: retake button">
-        <div>
-            <t t-if="not answer.scoring_success and not answer.is_session_answer">
-                <t t-if="survey.is_attempts_limited">
-                    <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
-                    <t t-if="attempts_left > 0">
-                        <p><span>Number of attempts left</span>: <span t-esc="attempts_left"></span></p>
-                        <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
-                        Retry</a></p>
-                    </t>
-                </t>
-                <t t-else="">
-                    <p><a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
-                        Take Again</a></p>
-                </t>
+        <div t-if="not answer.scoring_success and not answer.is_session_answer" class="d-print-none">
+            <t t-if="survey.is_attempts_limited">
+                <t t-set="attempts_left" t-value="survey._get_number_of_attempts_lefts(answer.partner_id, answer.email, answer.invite_token)" />
+                <p t-if="attempts_left > 0">
+                    <span>Number of attempts left</span>: <span t-out="attempts_left"/>
+                    <a role="button" class="btn btn-primary btn-lg ms-3" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                        Retry
+                    </a>
+                </p>
             </t>
+            <p t-else="">
+                <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/retry/%s/%s' % (survey.access_token, answer.access_token)">
+                    Take Again
+                </a>
+            </p>
         </div>
     </template>
 

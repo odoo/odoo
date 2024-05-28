@@ -5,6 +5,9 @@ import { resizeTextArea } from "@web/core/utils/autoresize";
 
 publicWidget.registry.SurveyPrintWidget = publicWidget.Widget.extend({
     selector: '.o_survey_print',
+    events: {
+        'click .o_survey_user_results_print': '_onPrintUserResultsClick',
+    },
 
     //--------------------------------------------------------------------------
     // Widget
@@ -21,6 +24,14 @@ publicWidget.registry.SurveyPrintWidget = publicWidget.Widget.extend({
                 resizeTextArea(this);
             });
         });
+    },
+
+    // -------------------------------------------------------------------------
+    // Handlers
+    // -------------------------------------------------------------------------
+
+    _onPrintUserResultsClick: function () {
+        window.print();
     },
 
 });
