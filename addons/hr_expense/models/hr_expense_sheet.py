@@ -286,7 +286,7 @@ class HrExpenseSheet(models.Model):
             else:
                 sheet.selectable_payment_method_line_ids = self.env['account.payment.method.line'].search([
                     ('payment_type', '=', 'outbound'),
-                    ('company_id', '=', sheet.company_id.id)
+                    ('company_id', 'parent_of', sheet.company_id.id)
                 ])
 
     @api.depends('account_move_ids', 'payment_state', 'approval_state')
