@@ -4453,6 +4453,31 @@ test.tags("desktop")("kanban with reference field", async () => {
     expect(queryAllTexts(".o_kanban_record span")).toEqual(["hello", "", "xmo", ""]);
 });
 
+test.tags("desktop")("drag and drop a record with load more", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban limit="1">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="id"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+
+    expect(queryAllTexts(".o_kanban_group:eq(0) .o_kanban_record")).toEqual(["4"]);
+    expect(queryAllTexts(".o_kanban_group:eq(1) .o_kanban_record")).toEqual(["1"]);
+
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").dragAndDrop(
+        queryFirst(".o_kanban_group:eq(0)")
+    );
+    expect(queryAllTexts(".o_kanban_group:eq(0) .o_kanban_record")).toEqual(["4", "1"]);
+    expect(queryAllTexts(".o_kanban_group:eq(1) .o_kanban_record")).toEqual(["2"]);
+});
+
 test.tags("desktop")("can drag and drop a record from one column to the next", async () => {
     onRpc("/web/dataset/resequence", () => {
         expect.step("resequence");
@@ -12931,12 +12956,12 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["gnap2", "blip3", "blip4", "yop5"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["gnap2", "blip3", "blip4", "yop6"]);
 
     def.resolve();
     await animationFrame();
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["gnap2", "blip3", "blip4", "yop5"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["gnap2", "blip3", "blip4", "yop6"]);
 
     def = new Deferred();
 
@@ -12944,12 +12969,12 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip3", "blip4", "yop5", "gnap6"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip3", "blip4", "yop6", "gnap8"]);
 
     def.resolve();
     await animationFrame();
 
-    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip3", "blip4", "yop5", "gnap6"]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual(["blip3", "blip4", "yop6", "gnap8"]);
 });
 
 test("sample server: _mockWebReadGroup API", async () => {
