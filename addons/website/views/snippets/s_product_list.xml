@@ -2,56 +2,83 @@
 <odoo>
 
 <template name="Items" id="s_product_list">
-    <t t-set="url" value="url or '#'"/>
-    <section class="s_product_list">
-        <div class="container-fluid">
+    <t t-set="url" t-value="url or '#'"/>
+    <section class="s_product_list pt64 pb64" data-vcss="001">
+        <div class="container">
             <div class="row">
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a t-att-href="url">
-                        <img src="/web/image/website.s_product_list_default_image_1" alt="" class="img img-fluid"/>
-                    </a>
-                    <div class="s_product_list_item_link">
-                        <a t-att-href="url" class="btn btn-secondary">Furniture</a>
+                <div class="col-lg-12">
+                    <h2 class="h3-fs">Our finest selection</h2>
+                </div>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url">
+                                <img src="/web/image/website.s_product_list_default_image_1" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Elegant</a></h3>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a t-att-href="url">
-                        <img src="/web/image/website.s_product_list_default_image_2" alt="" class="img img-fluid"/>
-                    </a>
-                    <div class="s_product_list_item_link">
-                        <a t-att-href="url" class="btn btn-secondary">Clothes</a>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url">
+                                <img src="/web/image/website.s_product_list_default_image_2" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Simple</a></h3>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a t-att-href="url">
-                        <img src="/web/image/website.s_product_list_default_image_3" alt="" class="img img-fluid"/>
-                    </a>
-                    <div class="s_product_list_item_link">
-                        <a t-att-href="url" class="btn btn-secondary">Books</a>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url">
+                                <img src="/web/image/website.s_product_list_default_image_3" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Balanced</a></h3>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a t-att-href="url">
-                        <img src="/web/image/website.s_product_list_default_image_4" alt="" class="img img-fluid"/>
-                    </a>
-                    <div class="s_product_list_item_link">
-                        <a t-att-href="url" class="btn btn-secondary">Essential oils</a>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url">
+                                <img src="/web/image/website.s_product_list_default_image_4" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Subtle</a></h3>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a t-att-href="url">
-                        <img src="/web/image/website.s_product_list_default_image_5" alt="" class="img img-fluid"/>
-                    </a>
-                    <div class="s_product_list_item_link">
-                        <a t-att-href="url" class="btn btn-secondary">Service</a>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url">
+                                <img src="/web/image/website.s_product_list_default_image_5" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Sleek</a></h3>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a t-att-href="url">
-                        <img src="/web/image/website.s_product_list_default_image_6" alt="" class="img img-fluid"/>
-                    </a>
-                    <div class="s_product_list_item_link">
-                        <a t-att-href="url" class="btn btn-secondary">Multimedia</a>
+                <div data-name="Card" class="col-lg-2 col-6">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-snippet="s_card" data-vxml="001" data-name="Card">
+                        <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                            <a t-att-href="url">
+                                <img src="/web/image/website.s_product_list_default_image_6" alt="" class="o_card_img card-img-top"/>
+                            </a>
+                        </figure>
+                        <div class="card-body">
+                            <h3 class="card-title h5-fs" style="text-align: center;"><a t-att-href="url">Modern</a></h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,10 +92,17 @@
     <field name="path">website/static/src/snippets/s_product_list/000_variables.scss</field>
 </record>
 
+<record id="website.s_product_list_001_scss" model="ir.asset">
+    <field name="name">Product list 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_product_list/001.scss</field>
+</record>
+
 <record id="website.s_product_list_000_scss" model="ir.asset">
     <field name="name">Product list 000 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_product_list/000.scss</field>
+    <field name="active" eval="False"/>
 </record>
 
 </odoo>
