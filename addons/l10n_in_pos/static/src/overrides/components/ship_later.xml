@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_in_pos.ShipLater" t-inherit="point_of_sale.DatePickerPopup" t-inherit-mode="primary">
+        <xpath expr="//input" position="after">
+            <div class="o_input_dropdown form-control form-control-lg w-75 mx-auto my-2">
+                <AutoComplete
+                    value="defaultValue"
+                    placeholder="'Enter Place of supply'"
+                    sources="sources"
+                    onSelect.bind="onSelect"
+                    dropdown="true"
+                    autoSelect="true"
+                    autofocus="true"
+                />
+            </div>
+        </xpath>
+    </t>
+</templates>
