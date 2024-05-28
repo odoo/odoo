@@ -18,4 +18,14 @@ class RegistrarAvance(models.TransientModel):
         
         objetivo_id = self.env.context.get("objetivo_id")
         usuario_objetivo = self.env["objetivo"].browse(objetivo_id)
+        
+        self.env["objetivo.avances"].create({
+            "objetivo_id": usuario_objetivo.id,
+            "fecha": fecha,
+            "avance": avance,
+            "comentarios": comentarios,
+            "archivos": [(6, 0, archivos.ids)],
+        })
+        
         usuario_objetivo.sudo().write({"resultado": avance})
+        

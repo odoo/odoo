@@ -99,6 +99,8 @@ class Objetivo(models.Model):
 
     evaluador = fields.Char()
 
+    avances = fields.One2many("objetivo.avances", "objetivo_id", string="Avances")
+
     @api.constrains("piso_minimo", "piso_maximo")
     def _checar_pisos(self):
         """

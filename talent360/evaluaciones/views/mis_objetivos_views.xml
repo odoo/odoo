@@ -65,7 +65,13 @@
                             </group>
                         </page>
                         <page string="Avances">
-                            <h1>En progreso...</h1>
+                            <field name="avances">
+                                <tree string="Avances" create="false" delete="false" duplicate="false">
+                                    <field name="fecha"/>
+                                    <field name="avance"/>
+                                    <field name="comentarios"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
