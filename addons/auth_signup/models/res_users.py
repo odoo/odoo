@@ -265,7 +265,7 @@ class ResUsers(models.Model):
             template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
 
         done = len(res_users_with_details)
-        self.env['ir.cron.progress']._notify_progress(
+        self.env['ir.cron']._notify_progress(
             done=done,
             remaining=0 if done < batch_size else self.env['res.users'].search_count(domain)
         )
