@@ -59,7 +59,10 @@
                         </t>
 
                         <t t-else="true">
-                            <span>Fuera de rango</span>
+                            <span>
+                                <t t-esc="evaluacion.nombre"/> - 
+                                <t t-esc="evaluacion.descripcion_azul"/>
+                            </span>
                         </t>
                     </span>
                 </div>
