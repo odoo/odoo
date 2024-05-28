@@ -32,6 +32,9 @@
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
         'data/digest_data.xml',
+        'data/website_design_font.xml',
+        'data/website_design_color.xml',
+        'data/website_design_palette.xml',
         'views/website_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_title.xml',
@@ -113,6 +116,8 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'views/neutralize_views.xml',
+        # Data that does ref to the views:
+        'data/website_design.xml',
         'wizard/base_language_install_views.xml',
         'wizard/website_robots.xml',
         # Replaces a post_init_hook that should be run on upgrade too.

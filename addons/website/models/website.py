@@ -139,6 +139,8 @@ class Website(models.Model):
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
 
+    design_ids = fields.One2many(comodel_name='website.design', inverse_name='website_id', string='Website Design')
+
     specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
     auth_signup_uninvited = fields.Selection([
         ('b2b', 'On invitation'),
@@ -209,8 +211,13 @@ class Website(models.Model):
 
         websites = super().create(vals_list)
         websites.company_id._compute_website_id()
+        self.env['website']._force()
         for website in websites:
             website._bootstrap_homepage()
+            if not self.env.context.get('install_mode'):
+                # We don't do it when installing website because we cannot find
+                # the asset to write scss in it.
+                self.env['website.design'].create({'website_id': website.id})
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -337,6 +344,23 @@ class Website(models.Model):
         :return: True if the url has to be indexed, False otherwise
         """
         return get_base_domain(url, True) == get_base_domain(self.domain, True)
+
+    def get_customize_data(self, keys, is_view_data):
+        model = 'ir.ui.view' if is_view_data else 'ir.asset'
+        Model = self.env[model].with_context(active_test=False)
+        domain = AND([[("key", "in", keys)], self.env['website'].get_current_website().website_domain()])
+        return Model.search(domain).filter_duplicate()
+
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
+        if disable:
+            records = self.get_customize_data(disable, is_view_data).filtered('active')
+            if reset_view_arch:
+                records.reset_arch(mode='hard')
+            records.write({'active': False})
+
+        if enable:
+            records = self.get_customize_data(enable, is_view_data)
+            records.filtered(lambda x: not x.active).write({'active': True})
 
     # ----------------------------------------------------------
     # Configurator

@@ -150,285 +150,6 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     }
 });
 
-const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
-    events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
-        'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
-        'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
-    }),
-    fontVariables: [], // Filled by editor menu when all options are loaded
-
-    /**
-     * @override
-     */
-    init() {
-        this.dialog = this.bindService("dialog");
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start: async function () {
-        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
-        const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
-        // User fonts served by google server.
-        const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
-        this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
-        this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
-        // Local user fonts.
-        const googleLocalFontsProperty = weUtils.getCSSVariableValue('google-local-fonts', style);
-        this.googleLocalFonts = googleLocalFontsProperty ?
-            googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
-        // If a same font exists both remotely and locally, we remove the remote
-        // font to prioritize the local font. The remote one will never be
-        // displayed or loaded as long as the local one exists.
-        this.googleFonts = this.googleFonts.filter(font => {
-            const localFonts = this.googleLocalFonts.map(localFont => localFont.split(":")[0]);
-            return localFonts.indexOf(`'${font}'`) === -1;
-        });
-        this.allFonts = [];
-
-        await this._super(...arguments);
-
-        const fontsToLoad = [];
-        for (const font of this.googleFonts) {
-            const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}`;
-            fontsToLoad.push(fontURL);
-        }
-        for (const font of this.googleLocalFonts) {
-            const attachmentId = font.split(/\s*:\s*/)[1];
-            const fontURL = `/web/content/${encodeURIComponent(attachmentId)}`;
-            fontsToLoad.push(fontURL);
-        }
-        // TODO ideally, remove the <link> elements created once this widget
-        // instance is destroyed (although it should not hurt to keep them for
-        // the whole backend lifecycle).
-        const proms = fontsToLoad.map(async fontURL => loadCSS(fontURL));
-        const fontsLoadingProm = Promise.all(proms);
-
-        const fontEls = [];
-        const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
-        const variable = this.el.dataset.variable;
-        const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length);
-        for (let fontNb = 0; fontNb < nbFonts; fontNb++) {
-            const realFontNb = fontNb + 1;
-            const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
-            this.allFonts.push(fontKey);
-            let fontName = fontKey.slice(1, -1); // Unquote
-            let fontFamily = fontName;
-            const isSystemFonts = fontName === "SYSTEM_FONTS";
-            if (isSystemFonts) {
-                fontName = _t("System Fonts");
-                fontFamily = 'var(--o-system-fonts)';
-            }
-            const fontEl = document.createElement('we-button');
-            fontEl.setAttribute('string', fontName);
-            fontEl.dataset.variable = variable;
-            fontEl.dataset[methodName] = fontKey;
-            fontEl.dataset.fontFamily = fontFamily;
-            if ((realFontNb <= themeFontsNb) && !isSystemFonts) {
-                // Add the "cloud" icon next to the theme's default fonts
-                // because they are served by Google.
-                fontEl.appendChild(Object.assign(document.createElement('i'), {
-                    role: 'button',
-                    className: 'text-info me-2 fa fa-cloud',
-                    title: _t("This font is hosted and served to your visitors by Google servers"),
-                }));
-            }
-            fontEls.push(fontEl);
-            this.menuEl.appendChild(fontEl);
-        }
-
-        if (this.googleLocalFonts.length) {
-            const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
-            googleLocalFontsEls.forEach((el, index) => {
-                $(el).append(renderToFragment('website.delete_google_font_btn', {
-                    index: index,
-                    local: "true",
-                }));
-            });
-        }
-
-        if (this.googleFonts.length) {
-            const googleFontsEls = fontEls.splice(-this.googleFonts.length);
-            googleFontsEls.forEach((el, index) => {
-                $(el).append(renderToFragment('website.delete_google_font_btn', {
-                    index: index,
-                }));
-            });
-        }
-
-        $(this.menuEl).append($(renderToElement('website.add_google_font_btn', {
-            variable: variable,
-        })));
-
-        return fontsLoadingProm;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-
-        this.menuTogglerEl.style.fontFamily = '';
-        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        if (activeWidget) {
-            this.menuTogglerEl.style.fontFamily = activeWidget.el.dataset.fontFamily;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onAddGoogleFontClick: function (ev) {
-        const addGoogleFontDialog = class extends Component {
-            static template = "website.dialog.addGoogleFont";
-            static components = { Dialog };
-            static props = { close: Function, title: String, onClickSave: Function };
-            title = _t("Add a Google Font");
-            state = useState({ valid: true, loading: false, googleServe: true });
-            fontInput = useRef("fontInput");
-            async onClickSave() {
-                if (this.state.loading) {
-                    return;
-                }
-                this.state.loading = true;
-                const shouldClose = await this.props.onClickSave(this.state, this.fontInput.el);
-                if (shouldClose) {
-                    this.props.close();
-                    return;
-                }
-                this.state.loading = false;
-            }
-            onClickCancel() {
-                this.props.close();
-            }
-        };
-        const variable = $(ev.currentTarget).data('variable');
-        this.dialog.add(addGoogleFontDialog, {
-            title: _t("Add a Google Font"),
-            onClickSave: async (state, inputEl) => {
-                // if font page link (what is expected)
-                let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
-                if (!m) {
-                    // if embed code (so that it works anyway if the user put the embed code instead of the page link)
-                    m = inputEl.value.match(/\bfamily=([\w+]+)/);
-                    if (!m) {
-                        inputEl.classList.add('is-invalid');
-                        return;
-                    }
-                }
-
-                let isValidFamily = false;
-
-                try {
-                    // Font family is an encoded query parameter:
-                    // "Open+Sans" needs to remain "Open+Sans".
-                    const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
-                    // Google fonts server returns a 400 status code if family is not valid.
-                    if (result.ok) {
-                        isValidFamily = true;
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-
-                if (!isValidFamily) {
-                    inputEl.classList.add('is-invalid');
-                    return;
-                }
-
-                const font = m[1].replace(/\+/g, ' ');
-                const googleFontServe = state.googleServe;
-                const fontName = `'${font}'`;
-                // If the font already exists, it will only be added if
-                // the user chooses to add it locally when it is already
-                // imported from the Google Fonts server.
-                const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
-                const fontExistsOnServer = this.allFonts.includes(fontName);
-                const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
-                if (preventFontAddition) {
-                    inputEl.classList.add('is-invalid');
-                    // Show custom validity error message.
-                    inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
-                    inputEl.reportValidity();
-                    return;
-                }
-                if (googleFontServe) {
-                    this.googleFonts.push(font);
-                } else {
-                    this.googleLocalFonts.push(`'${font}': ''`);
-                }
-                this.trigger_up('google_fonts_custo_request', {
-                    values: {[variable]: `'${font}'`},
-                    googleFonts: this.googleFonts,
-                    googleLocalFonts: this.googleLocalFonts,
-                });
-                return true;
-            },
-        });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onDeleteGoogleFontClick: async function (ev) {
-        ev.preventDefault();
-        const values = {};
-
-        const save = await new Promise(resolve => {
-            this.dialog.add(ConfirmationDialog, {
-                body: _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"),
-                confirm: () => resolve(true),
-                cancel: () => resolve(false),
-            });
-        });
-        if (!save) {
-            return;
-        }
-
-        // Remove Google font
-        const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
-        const isLocalFont = ev.target.dataset.localFont;
-        let googleFontName;
-        if (isLocalFont) {
-            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
-            // Remove double quotes
-            googleFontName = googleFont[0].substring(1, googleFont[0].length - 1);
-            values['delete-font-attachment-id'] = googleFont[1];
-            this.googleLocalFonts.splice(googleFontIndex, 1);
-        } else {
-            googleFontName = this.googleFonts[googleFontIndex];
-            this.googleFonts.splice(googleFontIndex, 1);
-        }
-
-        // Adapt font variable indexes to the removal
-        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
-        FontFamilyPickerUserValueWidget.prototype.fontVariables.forEach((variable) => {
-            const value = weUtils.getCSSVariableValue(variable, style);
-            if (value.substring(1, value.length - 1) === googleFontName) {
-                // If an element is using the google font being removed, reset
-                // it to the theme default.
-                values[variable] = 'null';
-            }
-        });
-
-        this.trigger_up('google_fonts_custo_request', {
-            values: values,
-            googleFonts: this.googleFonts,
-            googleLocalFonts: this.googleLocalFonts,
-        });
-    },
-});
-
 const GPSPicker = InputUserValueWidget.extend({
     // Explicitly not consider all InputUserValueWidget events. E.g. we actually
     // don't want input focusout messing with the google map API. Because of
@@ -644,9 +365,364 @@ const GPSPicker = InputUserValueWidget.extend({
         }
     },
 });
+// TODO: put cache function names at the plural form
+const DESIGN_DATA_CACHE = {
+    /**
+     * Fetches the website.design.option records, store them in a cache and
+     * returns the requested website.design.option record.
+     *
+     * @param {string} name - The name of the design option to retrieve.
+     * @param {Object} orm - The ORM service.
+     * @returns {Array<Object>} - The design.option records that match the name.
+     */
+    async getDesignOption(name, orm) {
+        if (this.options?.[name]) {
+            return this.options[name];
+        }
+        // TODO: maybe find a cleaner solution.
+        if (!this._designOptionsPromise) {
+            console.log("Fetching design options");
+            this._designOptionsPromise = orm.searchRead(
+                "website.design.option",
+                [],
+                ["name", "value", "display_name"],
+            );
+            this._designOptionsPromise.then(designOptions => {
+                this.options = [];
+                for (const option of designOptions) {
+                    if (!this.options[option.name]) {
+                        this.options[option.name] = [];
+                    }
+                    this.options[option.name].push(option);
+                }
+            });
+        }
+        await this._designOptionsPromise;
+        this._designOptionsPromise = null;
+        return this.options[name];
+    },
+    // TODO: avoid code duplication.
+    /**
+     * Fetches the website.design.option records, store them in a cache and
+     * returns the requested website.design.option record.
+     *
+     * @param {Object} orm - The ORM service.
+     * @param {Object} self - TODO
+     * @returns {Array<Object>} - The design.option records that match the name.
+     */
+    async getDesignFont(orm, self) {
+        if (this.fonts) {
+            return this.fonts;
+        }
+        // TODO: maybe find a cleaner solution.
+        if (!this._designFontsPromise) {
+            console.log("Fetching design fonts");
+            this._designFontsPromise = orm.searchRead(
+                "website.design.font",
+                wUtils.websiteDomain(self),
+                ["name", "is_local", "is_native"],
+            );
+            this._designFontsPromise.then(designFonts => {
+                this.fonts = designFonts;
+            });
+        }
+        await this._designFontsPromise;
+        this._designFontsPromise = null;
+        return this.fonts;
+    },
+    async getDesignPalettes(orm) {
+        if (this.palettes) {
+            return this.palettes;
+        }
+        // TODO: maybe find a cleaner solution.
+        if (!this._designPalettesPromise) {
+            console.log("Fetching design palettes");
+            this._designPalettesPromise = orm.searchRead(
+                "website.design.palette",
+                [],
+                ["name", "colors"],
+            );
+            this._designPalettesPromise.then(palettes => {
+                this.palettes = palettes;
+            });
+        }
+        await this._designPalettesPromise;
+        this._designPalettesPromise = null;
+        return this.palettes;
+    },
+    async getDesignColors(orm) {
+        if (this.colors) {
+            return this.colors;
+        }
+        // TODO: maybe find a cleaner solution.
+        if (!this._designColorsPromise) {
+            console.log("Fetching design colors");
+            this._designColorsPromise = orm.searchRead(
+                "website.design.color",
+                [],
+                ["name", "hex_value"],
+            );
+            this._designColorsPromise.then(colors => {
+                this.colors = colors;
+            });
+        }
+        await this._designColorsPromise;
+        this._designColorsPromise = null;
+        return this.colors;
+    },
+ };
+
+const DesignOptionSelector = SelectUserValueWidget.extend({
+    /**
+     * @override
+     */
+    init() {
+        this.orm = this.bindService("orm");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super.bind(this)(...arguments);
+        const possibleValues = await DESIGN_DATA_CACHE.getDesignOption(
+            this.el.dataset.variable,
+            this.orm,
+        );
+        const textMode = this.el.dataset.textMode || "string";
+        for (const option of possibleValues) {
+            // Rename it buttonEl.
+            const button = document.createElement("we-button");
+            button.setAttribute(textMode, option.display_name);
+            button.dataset.customizeWebsiteVariable = option.id;
+            button.dataset.name = `${option.name}_${option.value}_opt`;
+            this.menuEl.appendChild(button);
+        }
+        const attributeEls = this.menuEl.querySelectorAll("attribute");
+        attributeEls.forEach(attEl => {
+            const selector = `${attEl.getAttribute("target")}:not(attribute)`;
+            this.menuEl.querySelectorAll(selector).forEach(el => {
+                el.setAttribute(attEl.getAttribute("name"), attEl.getAttribute("value"));
+            });
+        });
+        attributeEls.forEach(el => el.remove());
+    },
+});
+
+const DesignFontSelector = SelectUserValueWidget.extend({
+    events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
+        "click .o_we_add_google_font_btn": "_onAddGoogleFontClick",
+        "click .o_we_delete_google_font_btn": "_onDeleteGoogleFontClick",
+    }),
+    /**
+     * @override
+     */
+    init() {
+        this.orm = this.bindService("orm");
+        this.dialog = this.bindService("dialog");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super.bind(this)(...arguments);
+        this.fonts = await DESIGN_DATA_CACHE.getDesignFont(
+            this.orm,
+            this,
+        );
+        const createFontButton = (data) => {
+            const buttonEl = document.createElement("we-button");
+            buttonEl.setAttribute("string", data.name || data.string);
+            buttonEl.dataset.variable = this.el.dataset.variable;
+            buttonEl.dataset.customizeWebsiteVariable = data.id;
+            buttonEl.dataset.fontFamily = data.fontFamily || data.name;
+            $(buttonEl).append(renderToFragment('website.google_font_btns', {
+                index: data.id,
+                local: data.is_local,
+                native: data.is_native,
+            }));
+            return buttonEl;
+        }
+        this.menuEl.appendChild(createFontButton({
+            name: _t("System Fonts"),
+            id: "false",
+            is_local: true,
+            is_native: true,
+            fontFamily: "var(--o-system-fonts)"
+        }));
+        for (const font of this.fonts) {
+            this.menuEl.appendChild(createFontButton(font));
+        }
+        const addButtonEl = document.createElement("we-button");
+        addButtonEl.setAttribute("string", _t("Add a Google Font"));
+        addButtonEl.dataset.variable = this.el.dataset.variable;
+        addButtonEl.classList.add("o_we_add_google_font_btn");
+        this.menuEl.appendChild(addButtonEl);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAddGoogleFontClick(ev) {
+        const addGoogleFontDialog = class extends Component {
+            static template = "website.dialog.addGoogleFont";
+            static components = { Dialog };
+            static props = { close: Function, title: String, onClickSave: Function };
+            title = _t("Add a Google Font");
+            state = useState({ valid: true, loading: false, googleServe: true });
+            fontInput = useRef("fontInput");
+            async onClickSave() {
+                if (this.state.loading) {
+                    return;
+                }
+                this.state.loading = true;
+                const shouldClose = await this.props.onClickSave(this.state, this.fontInput.el);
+                if (shouldClose) {
+                    this.props.close();
+                    return;
+                }
+                this.state.loading = false;
+            }
+            onClickCancel() {
+                this.props.close();
+            }
+        };
+        const variable = ev.currentTarget.dataset.variable;
+        this.dialog.add(addGoogleFontDialog, {
+            title: _t("Add a Google Font"),
+            onClickSave: async (state, inputEl) => {
+                // if font page link (what is expected)
+                let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
+                if (!m) {
+                    // if embed code (so that it works anyway if the user put
+                    // the embed code instead of the page link)
+                    m = inputEl.value.match(/\bfamily=([\w+]+)/);
+                    if (!m) {
+                        inputEl.classList.add("is-invalid");
+                        return;
+                    }
+                }
+
+                let isValidFamily = false;
+
+                try {
+                    // Font family is an encoded query parameter:
+                    // "Open+Sans" needs to remain "Open+Sans".
+                    const result = await fetch(
+                        `https://fonts.googleapis.com/css?family=${m[1]}:300,300i,400,400i,700,700i`,
+                        { method: "HEAD" },
+                    );
+                    // Google returns a 400 status code if family is not valid.
+                    if (result.ok) {
+                        isValidFamily = true;
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+
+                if (!isValidFamily) {
+                    inputEl.classList.add("is-invalid");
+                    return;
+                }
+
+                const fontName = m[1].replace(/\+/g, ' ');
+                const googleFontServe = state.googleServe;
+                // If the font already exists, it will only be added if
+                // the user chooses to add it locally when it is already
+                // imported from the Google Fonts server.
+                const fontExistsLocally = this.fonts.some(localFont => localFont.name === fontName);
+                const fontExistsOnServer = this.fonts.find(el => el.name === fontName);
+                const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
+                if (preventFontAddition) {
+                    inputEl.classList.add("is-invalid");
+                    // Show custom validity error message.
+                    inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
+                    inputEl.reportValidity();
+                    return;
+                }
+                this.trigger_up("google_fonts_custo_request", {
+                    values: { [variable]: fontName },
+                    isLocal: !googleFontServe,
+                });
+                delete DESIGN_DATA_CACHE.fonts;
+                return true;
+            },
+        });
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    async _onDeleteGoogleFontClick(ev) {
+        ev.preventDefault();
+
+        const save = await new Promise(resolve => {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        const fontId = parseInt(ev.target.dataset.fontIndex);
+        await this.orm.unlink("website.design.font", [fontId]);
+        this.trigger_up("request_save", {
+            reloadEditor: true,
+        });
+        delete DESIGN_DATA_CACHE.fonts;
+    },
+});
+
+const DesignPaletteSelector = SelectUserValueWidget.extend({
+    /**
+     * @override
+     */
+    init() {
+        this.orm = this.bindService("orm");
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super.bind(this)(...arguments);
+        const palettes = await DESIGN_DATA_CACHE.getDesignPalettes(
+            this.orm,
+        );
+        const colors = await DESIGN_DATA_CACHE.getDesignColors(
+            this.orm,
+        );
+        for (const palette of palettes) {
+            const buttonEl = document.createElement("we-button");
+            buttonEl.classList.add("o_palette_color_preview_button");
+            buttonEl.dataset.customizeWebsiteVariable = `'${palette.name}'`;
+            // TODO: make the click on button work.
+            [1, 3, 2].forEach(n => {
+                const colorPreviewEl = document.createElement("span");
+                colorPreviewEl.classList.add("o_palette_color_preview");
+                const color = colors.find(c =>
+                    c.name === `o-color-${n}` && palette.colors.includes(c.id)
+                )["hex_value"];
+                colorPreviewEl.style.backgroundColor = color;
+                buttonEl.appendChild(colorPreviewEl);
+            });
+            this.menuEl.appendChild(buttonEl);
+        }
+    },
+});
+
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
-options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
+options.userValueWidgetsRegistry['we-designoptionselector'] = DesignOptionSelector;
+options.userValueWidgetsRegistry['we-designfontselector'] = DesignFontSelector;
+options.userValueWidgetsRegistry['we-designpaletteselector'] = DesignPaletteSelector;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -701,12 +777,6 @@ options.Class.include({
     customizeWebsiteColor: async function (previewMode, widgetValue, params) {
         await this._customizeWebsite(previewMode, widgetValue, params, 'color');
     },
-    /**
-     * @see this.selectClass for parameters
-     */
-    async customizeWebsiteAssets(previewMode, widgetValue, params) {
-        await this._customizeWebsite(previewMode, widgetValue, params, 'assets');
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -740,26 +810,18 @@ options.Class.include({
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
             }
             case 'customizeWebsiteVariable': {
-                const ownerDocument = this.$target[0].ownerDocument;
-                const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
-                let finalValue = weUtils.getCSSVariableValue(params.variable, style);
-                if (!params.colorNames) {
-                    return finalValue;
+                const data = await this.options.wysiwyg.getWebsiteDesignData();
+                if (Array.isArray(data[params.variable])) {
+                    // It's a reference to website.design.xxx. We return the
+                    // id of the record.
+                    return data[params.variable][0];
                 }
-                let tempValue = finalValue;
-                while (tempValue) {
-                    finalValue = tempValue;
-                    tempValue = weUtils.getCSSVariableValue(tempValue.replaceAll("'", ''), style);
-                }
-                return finalValue;
+                return data[params.variable];
             }
             case 'customizeWebsiteColor': {
                 const ownerDocument = this.$target[0].ownerDocument;
                 const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
                 return weUtils.getCSSVariableValue(params.color, style);
-            }
-            case 'customizeWebsiteAssets': {
-                return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
         }
         return this._super(...arguments);
@@ -775,7 +837,7 @@ options.Class.include({
 
         switch (type) {
             case 'views':
-                await this._customizeWebsiteData(widgetValue, params, true);
+                await this._customizeWebsiteViews(widgetValue, params);
                 break;
             case 'variable':
                 await this._customizeWebsiteVariable(widgetValue, params);
@@ -792,9 +854,6 @@ options.Class.include({
                 break;
             case 'color':
                 await this._customizeWebsiteColor(widgetValue, params);
-                break;
-            case 'assets':
-                await this._customizeWebsiteData(widgetValue, params, false);
                 break;
             default:
                 if (params.customCustomization) {
@@ -876,14 +935,13 @@ options.Class.include({
     /**
      * @private
      */
-    async _customizeWebsiteData(value, params, isViewData) {
+    async _customizeWebsiteViews(value, params) {
         const allDataKeys = this._getDataKeysFromPossibleValues(params.possibleValues);
         const enableDataKeys = value.split(/\s*,\s*/);
         const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
-        return rpc('/website/theme_customize_data', {
-            'is_view_data': isViewData,
+        return rpc('/website/theme_customize_views', {
             'enable': enableDataKeys,
             'disable': disableDataKeys,
             'reset_view_arch': resetViewArch,
@@ -930,7 +988,8 @@ options.Class.include({
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        return this.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        await this.options.wysiwyg.customizeWebsiteDesignData(values);
+        return;
     },
     /**
      * Refreshes all public widgets related to the given element.
@@ -986,24 +1045,26 @@ options.Class.include({
      * @private
      * @param {OdooEvent} ev
      */
-    _onGoogleFontsCustoRequest: function (ev) {
+    async _onGoogleFontsCustoRequest (ev) {
         const values = ev.data.values ? Object.assign({}, ev.data.values) : {};
-        const googleFonts = ev.data.googleFonts;
-        const googleLocalFonts = ev.data.googleLocalFonts;
-        if (googleFonts.length) {
-            values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
-        } else {
-            values['google-fonts'] = 'null';
-        }
-        if (googleLocalFonts.length) {
-            values['google-local-fonts'] = "(" + googleLocalFonts.join(", ") + ")";
-        } else {
-            values['google-local-fonts'] = 'null';
-        }
-        this.trigger_up('snippet_edition_request', {exec: async () => {
-            return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
+        const isLocal = ev.data.isLocal;
+        let websiteId;
+        this.trigger_up("context_get", {
+            callback: function (ctx) {
+                websiteId = ctx["website_id"];
+            },
+        });
+        const [id] = await this.orm.create("website.design.font", [{
+            "name": Object.values(values)[0],
+            "is_local": isLocal,
+            "is_native": false,
+            "website_id": websiteId,
+        }]);
+        values[Object.keys(values)[0]] = id;
+        this.trigger_up("snippet_edition_request", {exec: async () => {
+            return this.options.wysiwyg.customizeWebsiteDesignData(values);
         }});
-        this.trigger_up('request_save', {
+        this.trigger_up("request_save", {
             reloadEditor: true,
         });
     },
@@ -1530,8 +1591,8 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
      */
     async customizeButtonStyle(previewMode, widgetValue, params) {
         await this._customizeWebsiteVariables({
-            [`btn-${params.button}-outline`]: widgetValue === 'outline',
-            [`btn-${params.button}-flat`]: widgetValue === 'flat',
+            [`btn__${params.button}__outline`]: widgetValue === 'outline',
+            [`btn__${params.button}__flat`]: widgetValue === 'flat',
         }, params.nullValue);
     },
 
@@ -1588,7 +1649,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         }
         for (const widget of widgets) {
             if (widget.getMethodsNames().includes('customizeWebsiteVariable')
-                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-name') {
+                    && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color__palettes__name') {
                 const hasCustomizedColors = weUtils.getCSSVariableValue('has-customized-colors');
                 if (hasCustomizedColors && hasCustomizedColors !== 'false') {
                     return _t("Changing the color palette will reset all your color customizations, are you sure you want to proceed?");
@@ -1615,7 +1676,7 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
         if (methodName === 'customizeButtonStyle') {
             const isOutline = weUtils.getCSSVariableValue(`btn-${params.button}-outline`);
             const isFlat = weUtils.getCSSVariableValue(`btn-${params.button}-flat`);
-            return isFlat === "'True'" ? 'flat' : isOutline === "'True'" ? 'outline' : 'fill';
+            return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
         }
         return this._super(...arguments);
     },
@@ -1630,10 +1691,9 @@ options.registry.OptionsTab = options.registry.WebsiteLevelColor.extend({
             return this.grayHueIsDefined;
         }
         if (params.removeFont) {
-            const font = await this._computeWidgetState('customizeWebsiteVariable', {
-                variable: params.removeFont,
-            });
-            return !!font;
+            const ownerDocument = this.$target[0].ownerDocument;
+            const style = ownerDocument.defaultView.getComputedStyle(ownerDocument.documentElement);
+            return !!weUtils.getCSSVariableValue(params.removeFont, style);
         }
         return this._super(...arguments);
     },
@@ -1674,24 +1734,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-name"]');
-        const style = window.getComputedStyle(document.documentElement);
-        const allPaletteNames = weUtils.getCSSVariableValue('palette-names', style).split(', ').map((name) => {
-            return name.replace(/'/g, "");
-        });
-        for (const paletteName of allPaletteNames) {
-            const btnEl = document.createElement('we-button');
-            btnEl.classList.add('o_palette_color_preview_button');
-            btnEl.dataset.customizeWebsiteVariable = `'${paletteName}'`;
-            [1, 3, 2].forEach(c => {
-                const colorPreviewEl = document.createElement('span');
-                colorPreviewEl.classList.add('o_palette_color_preview');
-                const color = weUtils.getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
-                colorPreviewEl.style.backgroundColor = color;
-                btnEl.appendChild(colorPreviewEl);
-            });
-            paletteSelectorEl.appendChild(btnEl);
-        }
+        const paletteSelectorEl = uiFragment.querySelector('[data-variable="color__palettes__name"]');
 
         const presetCollapseEl = uiFragment.querySelector('we-collapse.o_we_theme_presets_collapse');
         let ccPreviewEls = [];
@@ -4191,5 +4234,4 @@ options.registry.SnippetMove.include({
 
 export default {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
-    FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
 };

@@ -51,15 +51,6 @@ class Assets(models.AbstractModel):
                 **preset_gradients,
             })
 
-        delete_attachment_id = values.pop('delete-font-attachment-id', None)
-        if delete_attachment_id:
-            delete_attachment_id = int(delete_attachment_id)
-            IrAttachment.search([
-                '|', ('id', '=', delete_attachment_id),
-                ('original_id', '=', delete_attachment_id),
-                ('name', 'like', 'google-font'),
-            ]).unlink()
-
         google_local_fonts = values.get('google-local-fonts')
         if google_local_fonts and google_local_fonts != 'null':
             # "('font_x': 45, 'font_y': '')" -> {'font_x': '45', 'font_y': ''}
@@ -117,6 +108,13 @@ class Assets(models.AbstractModel):
                     # here to link font family attachment to the main font
                     # attachment. It will ease the unlink later.
                     font_family_attachments.original_id = attach_font.id
+                    website_id = self.env['website'].get_current_website().id
+                    self.env['website.design.font'].search([
+                        ('website_id', '=', website_id),
+                        ('name', '=', font_name),
+                        ('is_local', '=', True)]
+                    ).attachment_id = attach_font.id
+
 
             # {'font_x': 45, 'font_y': 55} -> "('font_x': 45, 'font_y': 55)"
             values['google-local-fonts'] = str(google_local_fonts).replace('{', '(').replace('}', ')')

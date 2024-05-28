@@ -51,7 +51,7 @@ $o-social-colors: (
 );
 
 $o-theme-figcaption-opacity: 0.6;
-
+// TODO: those palette should be written by the Python code.
 $o-color-palettes: map-merge($o-color-palettes,
     (
         'base-1': map-merge(map-get($o-color-palettes, 'base-1'), (
@@ -1977,17 +1977,6 @@ $o-selected-color-palettes-names: (
 
 $o-base-website-values-palette: (
     'font-size-base': 1rem, // Need a set value as the value is used in bootstrap_overridden files
-    'body-line-height': 1.5,
-    'headings-line-height': 1.2,
-    'paragraph-margin-top': 0,
-    'paragraph-margin-bottom': 16px,
-    'headings-margin-top': 0,
-    'headings-margin-bottom': 0.5rem,
-
-    'display-1-font-size': null, // Default to BS
-    'display-2-font-size': null, // Default to BS
-    'display-3-font-size': null, // Default to BS
-    'display-4-font-size': null, // Default to BS
 
     // Note that this custom value is not directly linked to the
     // "small-font-size" variable of bootstrap. Indeed we want the default
@@ -1998,58 +1987,9 @@ $o-base-website-values-palette: (
     // this value anyway. See SMALLER_FONT_SIZE_RATIO.
     'small-font-size': 0.875rem,
 
-    'google-fonts': null,
-    'google-local-fonts': null,
-
     'body-image': null,
     'body-image-type': 'image', // 'image' or 'pattern'
 
-    'layout': 'full', // 'full' / 'boxed'
-    'color-palettes-name': null, // Default to the individual variables for each color palette type
-
-    'btn-primary-outline': false,
-    'btn-secondary-outline': false,
-    'btn-primary-flat': false,
-    'btn-secondary-flat': false,
-    'btn-primary-outline-border-width': 1px,
-    'btn-secondary-outline-border-width': 1px,
-    'link-underline': 'hover', // 'never' / 'hover' / 'always'
-    'btn-ripple': false,
-
-    'btn-padding-y': null, // Default to BS
-    'btn-padding-x': null, // Default to BS
-    'btn-font-size': null, // Default to BS
-    'btn-padding-y-sm': null, // Default to portal value
-    'btn-padding-x-sm': null, // Default to BS
-    'btn-font-size-sm': null, // Default to BS
-    'btn-padding-y-lg': null, // Default to BS
-    'btn-padding-x-lg': null, // Default to BS
-    'btn-font-size-lg': null, // Default to BS
-    'btn-border-width': null, // Default to BS
-    'btn-border-radius': null, // Default to BS
-    'btn-border-radius-sm': null, // Default to BS
-    'btn-border-radius-lg': null, // Default to BS
-
-    'input-padding-y': null, // Default to BS
-    'input-padding-x': null, // Default to BS
-    'input-font-size': null, // Default to BS
-    'input-padding-y-sm': null, // Default to BS
-    'input-padding-x-sm': null, // Default to BS
-    'input-font-size-sm': null, // Default to BS
-    'input-padding-y-lg': null, // Default to BS
-    'input-padding-x-lg': null, // Default to BS
-    'input-font-size-lg': null, // Default to BS
-    'input-border-width': null, // Default to BS
-    'input-border-radius': null, // Default to BS
-    'input-border-radius-sm': null, // Default to BS
-    'input-border-radius-lg': null, // Default to BS
-
-    // A key from the $o-theme-font-configs map (null = default to the first key
-    // for the base 'font' value, the others just fallback to 'font').
-    'font': null,
-    'headings-font': null,
-    'navbar-font': null,
-    'buttons-font': null,
 
     // Gradients
     'menu-gradient': null,
@@ -2057,22 +1997,7 @@ $o-base-website-values-palette: (
     'footer-gradient': null,
     'copyright-gradient': null,
 
-    'header-template': 'default', // 'default' / 'hamburger' / 'vertical' / 'sidebar'
-    'header-font-size': null, // Default to BS (normal font-size)
     'header-text-color': null,
-    'header-links-style': 'default', // 'default' / 'fill' / 'outline' / 'pills' / 'block' / 'border-bottom'
-    'logo-height': null, // Default to navbar height (see portal)
-    'hamburger-position': 'left', // 'left' / 'center' / 'right'
-    'hamburger-position-mobile': 'left', // 'left' / 'center' / 'right'
-    'menu-border-width': null, // Default to classes used on the template
-    'menu-border-style': solid, // Default to classes used on the template
-    'menu-border-radius': null, // Default to classes used on the template
-    'menu-box-shadow': null, // Default to classes used on the template
-    'sidebar-width': 18.75rem, // 300px
-
-    'footer-template': 'default',
-    'footer-effect': null, // null / 'slideout_slide_hover' / 'slideout_shadow'
-    'footer-scrolltop': false,
 );
 $o-font-aliases-to-keys: (
     'base': 'font',

@@ -316,14 +316,14 @@
 <template id="snippet_options_header_box">
     <t t-call="website.snippet_options_border_widgets">
         <t t-set="so_rounded_no_dependencies" t-value="True"/>
-        <t t-set="width_variable" t-value="'menu-border-width'"/>
-        <t t-set="style_variable" t-value="'menu-border-style'"/>
+        <t t-set="width_variable" t-value="'menu__border__width'"/>
+        <t t-set="style_variable" t-value="'menu__border__style'"/>
         <t t-set="color_variable" t-value="'menu-border-color'"/>
-        <t t-set="radius_variable" t-value="'menu-border-radius'"/>
+        <t t-set="radius_variable" t-value="'menu__border__radius'"/>
         <t t-set="no_border_radius" t-value="_no_border_radius"/>
     </t>
     <t t-call="website.snippet_options_shadow_widgets">
-        <t t-set="shadow_variable" t-value="'menu-box-shadow'"/>
+        <t t-set="shadow_variable" t-value="'menu__box__shadow'"/>
     </t>
 </template>
 
@@ -725,84 +725,40 @@
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-select string="Template" data-variable="header-template"
-                   data-default-variables="header-links-style: default"
-                   data-reload="/" data-no-preview="true">
-            <we-button title="Default"
-                       data-name="header_default_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_default"
-                       data-customize-website-variable="'default'"
-                       data-img="/website/static/src/img/snippets_options/header_template_default.svg"/>
-            <we-button title="Hamburger menu"
-                       data-name="header_hamburger_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.no_autohide_menu"
-                       data-customize-website-variable="'hamburger'"
-                       data-img="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
-            <we-button title="Rounded box menu"
-                       data-name="header_boxed_opt"
-                       data-trigger="over_content_header_visibility_opt"
-                       data-customize-website-views="website.header_navbar_pills_style,website.template_header_boxed"
-                       data-customize-website-variable="'boxed'"
-                       data-customize-website-variables="header-links-style: pills"
-                       data-img="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
-            <we-button title="Stretch menu"
-                       data-name="header_stretch_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_stretch"
-                       data-customize-website-variable="'stretch'"
-                       data-img="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
-            <we-button title="Vertical"
-                       data-name="header_vertical_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_vertical"
-                       data-customize-website-variable="'vertical'"
-                       data-img="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
-            <we-button title="Menu with Search bar"
-                       data-name="header_search_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_search"
-                       data-customize-website-variable="'search'"
-                       data-img="/website/static/src/img/snippets_options/header_template_search.svg"/>
-            <we-button title="Menu - Sales 1"
-                       data-name="header_sales_one_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_one"
-                       data-customize-website-variable="'sales_one'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
-            <we-button title="Menu - Sales 2"
-                       data-name="header_sales_two_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_two"
-                       data-customize-website-variable="'sales_two'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
-            <we-button title="Menu - Sales 3"
-                       data-name="header_sales_three_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_three"
-                       data-customize-website-variable="'sales_three'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
-            <we-button title="Menu - Sales 4"
-                       data-name="header_sales_four_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sales_four"
-                       data-customize-website-variable="'sales_four'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
-            <we-button title="Sidebar"
-                       data-name="header_sidebar_opt"
-                       data-trigger="regular_header_visibility_opt"
-                       data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
-                       data-customize-website-variable="'sidebar'"
-                       data-img="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
-        </we-select>
+        <!-- TODO: make the data-trigger work with the `header__links__style` stuff (maybe by merging calls ?) -->
+        <we-designoptionselector string="Template" data-variable="header__template" data-reload="/" data-no-preview="true" data-text-mode="title">
+            <attribute target="[data-name='header__template_default_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_default.svg"/>
+            <attribute target="[data-name='header__template_hamburger_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
+            <attribute target="[data-name='header__template_boxed_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
+            <attribute target="[data-name='header__template_stretch_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
+            <attribute target="[data-name='header__template_vertical_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
+            <attribute target="[data-name='header__template_search_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_search.svg"/>
+            <attribute target="[data-name='header__template_sales_one_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
+            <attribute target="[data-name='header__template_sales_two_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
+            <attribute target="[data-name='header__template_sales_three_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
+            <attribute target="[data-name='header__template_sales_four_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
+            <attribute target="[data-name='header__template_sidebar_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
+
+            <attribute target="[data-name='header__template_default_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_hamburger_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_boxed_opt']" name="data-trigger" value="header__links__style_pills_opt, over_content_header_visibility_opt"/>
+
+            <attribute target="[data-name='header__template_stretch_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_vertical_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_search_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_one_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_two_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_three_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sales_four_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+            <attribute target="[data-name='header__template_sidebar_opt']" name="data-trigger" value="header__links__style_default_opt, regular_header_visibility_opt"/>
+        </we-designoptionselector>
 
         <!-- Header Sidebar Template - Options -->
         <we-input string="Width"
                   class="o_we_sublevel_1"
-                  data-dependencies="header_sidebar_opt"
+                  data-dependencies="header__template_sidebar_opt"
                   data-customize-website-variable="null"
-                  data-variable="sidebar-width"
+                  data-variable="sidebar__width"
                   data-unit="px"
                   data-save-unit="rem"/>
 
@@ -813,28 +769,28 @@
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_one_opt"
+            <we-colorpicker data-dependencies="header__template_sales_one_opt"
                             data-customize-website-color="" data-color="header-sales_one"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_one-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_two_opt"
+            <we-colorpicker data-dependencies="header__template_sales_two_opt"
                             data-customize-website-color="" data-color="header-sales_two"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_two-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_three_opt"
+            <we-colorpicker data-dependencies="header__template_sales_three_opt"
                             data-customize-website-color="" data-color="header-sales_three"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_three-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
                             data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_sales_four_opt"
+            <we-colorpicker data-dependencies="header__template_sales_four_opt"
                             data-customize-website-color="" data-color="header-sales_four"
                             data-customize-website-layer2-color="" data-layer-color="header-sales_four-custom" data-layer-gradient="menu-secondary-gradient"
                             data-no-bundle-reload="true"
@@ -868,71 +824,26 @@
     <div data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-
-        <we-select string="Scroll Effect" data-dependencies="!header_sidebar_opt" class="o_scroll_effects_selector" data-variable="header-scroll-effect">
-            <t t-set="header_effect_standard_label">Standard</t>
-            <t t-set="header_effect_scroll_label">Scroll</t>
-            <t t-set="header_effect_fixed_label">Fixed</t>
-            <t t-set="header_effect_disappears_label">Disappears</t>
-            <t t-set="header_effect_fadeout_label">Fade Out</t>
-            <we-button id="option_header_visibility_standard"
-                       t-att-data-select-label="header_effect_standard_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'standard'"
-                       data-name="header_visibility_standard_opt"
-                       data-select-class="o_header_standard"
-                       data-customize-website-views="website.header_visibility_standard"
-                       data-img="/website/static/src/img/snippets_options/header_effect_standard.png">
-                <span t-esc='header_effect_standard_label'/>
-            </we-button>
-            <we-button id="option_header_effect_scroll"
-                       t-att-data-select-label="header_effect_scroll_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'scroll'"
-                       data-name="header_effect_scroll_opt"
-                       data-select-class=""
-                       data-customize-website-views=""
-                       data-img="/website/static/src/img/snippets_options/header_effect_scroll.png">
-                <span t-esc='header_effect_scroll_label'/>
-            </we-button>
-            <we-button id="option_header_effect_fixed"
-                       t-att-data-select-label="header_effect_fixed_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'fixed'"
-                       data-name="header_effect_fixed_opt"
-                       data-select-class="o_header_fixed"
-                       data-customize-website-views="website.header_visibility_fixed"
-                       data-img="/website/static/src/img/snippets_options/header_effect_fixed.png">
-                <span t-esc='header_effect_fixed_label'/>
-            </we-button>
-            <we-button id="option_header_effect_disappears"
-                       t-att-data-select-label="header_effect_disappears_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'disappears'"
-                       data-name="header_effect_disappears_opt"
-                       data-select-class="o_header_disappears"
-                       data-customize-website-views="website.header_visibility_disappears"
-                       data-img="/website/static/src/img/snippets_options/header_effect_disappears.png">
-                <span t-esc="header_effect_disappears_label" />
-            </we-button>
-            <we-button id="option_header_effect_fade_out"
-                       t-att-data-select-label="header_effect_fadeout_label"
-                       class="o_we_img_animate"
-                       data-customize-website-variable="'fade-out'"
-                       data-name="header_effect_fade_out_opt"
-                       data-select-class="o_header_fade_out"
-                       data-customize-website-views="website.header_visibility_fade_out"
-                       data-img="/website/static/src/img/snippets_options/header_effect_fade_out.png">
-               <span t-esc='header_effect_fadeout_label'/>
-            </we-button>
-        </we-select>
+        <we-designoptionselector string="Scroll Effect" data-dependencies="!header__template_sidebar_opt" class="o_scroll_effects_selector" data-variable="header__scroll__effect">
+            <attribute target="*" name="class" value="o_we_img_animate"/>
+            <attribute target="[data-name='header__scroll__effect_standard_opt']" name="data-select-class" value="o_header_standard"/>
+            <attribute target="[data-name='header__scroll__effect_standard_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_standard.png"/>
+            <attribute target="[data-name='header__scroll__effect_scroll_opt']" name="data-select-class" value=""/>
+            <attribute target="[data-name='header__scroll__effect_scroll_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_scroll.png"/>
+            <attribute target="[data-name='header__scroll__effect_fixed_opt']" name="data-select-class" value="o_header_fixed"/>
+            <attribute target="[data-name='header__scroll__effect_fixed_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_fixed.png"/>
+            <attribute target="[data-name='header__scroll__effect_disappears_opt']" name="data-select-class" value="o_header_disappears"/>
+            <attribute target="[data-name='header__scroll__effect_disappears_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_disappears.png"/>
+            <attribute target="[data-name='header__scroll__effect_fade-out_opt']" name="data-select-class" value="o_header_fade_out"/>
+            <attribute target="[data-name='header__scroll__effect_fade-out_opt']" name="data-img" value="/website/static/src/img/snippets_options/header_effect_fade_out.png"/>
+        </we-designoptionselector>
     </div>
 
     <div data-js="TopMenuVisibility"
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
         <we-select string="Header Position" data-no-preview="true"
-                   data-dependencies="!header_sidebar_opt">
+                   data-dependencies="!header__template_sidebar_opt">
             <we-button data-name="over_content_header_visibility_opt"
                        data-visibility="transparent">Over The Content</we-button>
             <we-button data-name="regular_header_visibility_opt"
@@ -1010,62 +921,30 @@
          data-selector="#wrapwrap > header nav.navbar"
          data-no-check="true"
          groups="website.group_website_designer">
+        <we-designoptionselector string="Mobile Alignment"
+                                 data-variable="hamburger__position__mobile"
+                                 data-reload="/"/>
 
-        <we-select string="Mobile Alignment"
-                   data-name="header_mobile_alignment_opt"
-                   data-variable="hamburger-position-mobile"
-                   data-reload="/">
-            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center"
-                       data-customize-website-variable="'center'">Center</we-button>
-            <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right"
-                       data-customize-website-variable="'right'">Right</we-button>
-        </we-select>
-
-        <we-fontfamilypicker string="Font" data-variable="navbar-font"/>
+        <we-designfontselector string="Font" data-variable="navbar__font"/>
 
         <we-row string="Format" class="o_we_header_font_row">
-            <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
+            <we-input data-customize-website-variable="null" data-variable="header__font__size" data-unit="px" data-save-unit="rem"/>
             <we-colorpicker data-variable="header-text-color" data-customize-website-variable=""/>
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_boxed_opt, header_stretch_opt, header_search_opt, header_sales_one_opt, header_sales_two_opt, header_sales_four_opt, header_sidebar_opt">
-                <we-button data-customize-website-views=""
-                           data-customize-website-variable="'left'"
-                           data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_boxed_align_center, website.template_header_stretch_align_center, website.template_header_search_align_center, website.template_header_sales_one_align_center, website.template_header_sales_two_align_center, website.template_header_sales_four_align_center, website.template_header_sidebar_align_center"
-                           data-customize-website-variable="'center'"
-                           data-icon="fa-align-center"
-                           data-dependencies="!header_hamburger_opt"/>
-                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_stretch_align_right, website.template_header_search_align_right, website.template_header_sales_one_align_right, website.template_header_sales_two_align_right, website.template_header_sales_four_align_right, website.template_header_sidebar_align_right"
-                           data-customize-website-variable="'right'"
-                           data-icon="fa-align-right"/>
-            </we-select>
+            <we-designoptionselector class="o_we_icon_select" data-variable="hamburger__position" data-reload="/" title="Alignment" data-text-mode="data-no-text"
+                                     data-dependencies="header__template_default_opt, header__template_hamburger_opt, header__template_boxed_opt, header__template_stretch_opt, header__template_search_opt, header__template_sales_one_opt, header__template_sales_two_opt, header__template_sales_four_opt, header__template_sidebar_opt">
+                <attribute target="[data-name='hamburger__position_left_opt']" name="data-icon" value="fa-align-left"/>
+                <attribute target="[data-name='hamburger__position_center_opt']" name="data-icon" value="fa-align-center"/>
+                <attribute target="[data-name='hamburger__position_center_opt']" name="data-dependencies" value="header__template_hamburger_opt"/>
+                <attribute target="[data-name='hamburger__position_right_opt']" name="data-icon" value="fa-align-right"/>
+            </we-designoptionselector>
         </we-row>
 
-        <we-select string="Links Style" data-variable="header-links-style" data-reload="/" data-dependencies="!header_stretch_opt">
-            <we-button data-name="option_header_navbar_links_default"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'default'">Default</we-button>
-            <we-button data-name="option_header_navbar_links_fill"
-                       data-customize-website-views="website.header_navbar_pills_style"
-                       data-customize-website-variable="'fill'">Fill</we-button>
-            <we-button data-name="option_header_navbar_links_outline"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'outline'">Outline</we-button>
-            <we-button data-name="option_header_navbar_links_pills"
-                       data-customize-website-views="website.header_navbar_pills_style"
-                       data-customize-website-variable="'pills'">Pills</we-button>
-            <we-button data-name="option_header_navbar_block"
-                       data-customize-website-views="website.header_navbar_pills_style"
-                       data-customize-website-variable="'block'">Block</we-button>
-            <we-button data-name="option_header_navbar_border_bottom"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'border-bottom'">Border Bottom</we-button>
-        </we-select>
+        <we-designoptionselector string="Links Style" data-variable="header__links__style" data-reload="/" data-dependencies="!header__template_stretch_opt"/>
 
-        <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header_hamburger_opt" data-no-preview="true">
+        <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header__template_hamburger_opt" data-no-preview="true">
             <we-button data-select-class="o_hoverable_dropdown"
                        data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
             <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
@@ -1100,7 +979,7 @@
                   class="o_we_sublevel_1"
                   data-dependencies="!option_header_brand_none"
                   data-customize-website-variable="null"
-                  data-variable="logo-height"
+                  data-variable="logo__height"
                   data-unit="px"
                   data-save-unit="rem"/>
         <we-input string="Height (Scrolled)"
@@ -1110,7 +989,7 @@
                   data-variable="fixed-logo-height"
                   data-unit="px"
                   data-save-unit="rem"
-                  data-dependencies="!header_effect_scroll_opt"/>
+                  data-dependencies="!header__scroll__effect_scroll_opt"/>
     </div>
 
     <!-- Footer - Colors & Layouts -->
@@ -1120,42 +999,16 @@
          groups="website.group_website_designer">
 
         <!-- Layouts -->
-        <we-select string="Template"
-            data-variable="footer-template"
-            data-reload="/">
-            <we-button title="Default"
-                       data-customize-website-views="website.footer_custom"
-                       data-customize-website-variable="'default'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_default.svg"/>
-            <we-button title="Descriptive"
-                       data-customize-website-views="website.template_footer_descriptive"
-                       data-customize-website-variable="'descriptive'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_descriptive.svg"/>
-            <we-button title="Centered"
-                       data-customize-website-views="website.template_footer_centered"
-                       data-customize-website-variable="'centered'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_centered.svg"/>
-            <we-button title="Links"
-                       data-customize-website-views="website.template_footer_links"
-                       data-customize-website-variable="'links'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_links.svg"/>
-            <we-button title="Minimalist"
-                       data-customize-website-views="website.template_footer_minimalist"
-                       data-customize-website-variable="'minimalist'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_minimalist.svg"/>
-            <we-button title="Contact"
-                       data-customize-website-views="website.template_footer_contact"
-                       data-customize-website-variable="'contact'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_contact.svg"/>
-            <we-button title="Call-to-action"
-                       data-customize-website-views="website.template_footer_call_to_action"
-                       data-customize-website-variable="'call_to_action'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_call_to_action.svg"/>
-            <we-button title="Headline"
-                       data-customize-website-views="website.template_footer_headline"
-                       data-customize-website-variable="'headline'"
-                       data-img="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
-        </we-select>
+        <we-designoptionselector string="Template" data-variable="footer__template" data-reload="/" data-text-mode="title">
+            <attribute target="[data-name='footer__template_default_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_default.svg"/>
+            <attribute target="[data-name='footer__template_descriptive_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_descriptive.svg"/>
+            <attribute target="[data-name='footer__template_centered_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_centered.svg"/>
+            <attribute target="[data-name='footer__template_links_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_links.svg"/>
+            <attribute target="[data-name='footer__template_minimalist_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_minimalist.svg"/>
+            <attribute target="[data-name='footer__template_contact_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_contact.svg"/>
+            <attribute target="[data-name='footer__template_call_to_action_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_call_to_action.svg"/>
+            <attribute target="[data-name='footer__template_headline_opt']" name="data-img" value="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
+        </we-designoptionselector>
         <!-- Colors -->
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="footer"
@@ -1164,17 +1017,7 @@
                         data-null-value="'NULL'"
                         data-with-combinations="customizeWebsiteColor"
                         data-with-gradients="true"/>
-        <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
-            <we-button string="Regular"
-                       data-customize-website-views=""
-                       data-customize-website-variable=""/>
-            <we-button string="Slide Hover"
-                       data-customize-website-views="website.template_footer_slideout"
-                       data-customize-website-variable="'slideout_slide_hover'"/>
-            <we-button string="Shadow"
-                       data-customize-website-views="website.template_footer_slideout"
-                       data-customize-website-variable="'slideout_shadow'"/>
-        </we-select>
+        <we-designoptionselector string="Slideout Effect" data-variable="footer__effect" data-reload="/"/>
         <we-checkbox string="Copyright"
                 data-name="footer_copyright_opt"
                 data-customize-website-views="website.footer_no_copyright|"
@@ -1200,7 +1043,7 @@
             <we-checkbox data-name="footer_scrolltop_opt"
                          data-customize-website-views="website.option_footer_scrolltop"
                          data-customize-website-variable="false|true"
-                         data-variable="footer-scrolltop"
+                         data-variable="footer__scrolltop"
                          data-reload="/"/>
             <we-select data-dependencies="footer_scrolltop_opt" data-apply-to="#o_footer_scrolltop_wrapper">
                 <we-button string="Left" data-select-class="justify-content-start"/>
@@ -1698,7 +1541,7 @@
                 <we-colorpicker data-customize-website-color="" data-color="o-color-5"
                                 data-use-css-color="true" data-selected-tab="custom-colors"/>
             </div>
-            <we-select data-img="/website/static/src/img/snippets_options/palette.svg" class="o_we_theme_colors_select" data-variable="color-palettes-name"/>
+            <we-designpaletteselector data-img="/website/static/src/img/snippets_options/palette.svg" class="o_we_theme_colors_select" data-variable="color__palettes__name"/>
         </we-row>
         <we-collapse class="o_we_theme_presets_collapse" string="Color Presets">
         </we-collapse>
@@ -1710,12 +1553,7 @@
         <we-row string="Language">
             <we-button data-add-language="" data-no-preview="true" class="o_we_bg_brand_primary">Add a Language</we-button>
         </we-row>
-        <we-select string="Page Layout" data-variable="layout">
-            <we-button data-customize-website-variable="'full'" data-name="layout_full_opt">Full</we-button>
-            <we-button data-customize-website-variable="'boxed'">Boxed</we-button>
-            <we-button data-customize-website-variable="'framed'">Framed</we-button>
-            <we-button data-customize-website-variable="'postcard'">Postcard</we-button>
-        </we-select>
+        <we-designoptionselector string="Page Layout" data-variable="layout"/>
         <we-row string="Background" class="o_we_sublevel_1" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
                             data-customize-website-color=""
@@ -1737,7 +1575,7 @@
         <we-collapse>
             <we-input string="Font Size"
                     data-customize-website-variable="null"
-                    data-variable="font-size-base"
+                    data-variable="font__size__base"
                     data-unit="px"
                     data-save-unit="rem"/>
             <we-input string="Small"
@@ -1747,15 +1585,15 @@
                     data-unit="px"
                     data-save-unit="rem"/>
         </we-collapse>
-        <we-fontfamilypicker string="Font Family" data-variable="font"/>
+        <we-designfontselector string="Font Family" data-variable="font"/>
         <!-- "× ": \u00D7\u2000 -->
         <we-input string="Line Height"
                   data-customize-website-variable="null"
-                  data-variable="body-line-height"
+                  data-variable="body__line__height"
                   data-fake-unit="× "/>
         <we-row string="Margins">
-            <we-input title="Top" data-customize-website-variable="" data-variable="paragraph-margin-top" data-unit="px" data-save-unit="px"/>
-            <we-input title="Bottom" data-customize-website-variable="" data-variable="paragraph-margin-bottom" data-unit="px" data-save-unit="px"/>
+            <we-input title="Top" data-customize-website-variable="" data-variable="paragraph__margin__top" data-unit="px" data-save-unit="px"/>
+            <we-input title="Bottom" data-customize-website-variable="" data-variable="paragraph__margin__bottom" data-unit="px" data-save-unit="px"/>
         </we-row>
     </div>
     <div data-js="OptionsTab" data-selector="theme-headings" data-no-check="true">
@@ -1780,21 +1618,21 @@
             <t t-foreach="used_display_font_sizes" t-as="depth">
                 <we-input t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1"
                           data-customize-website-variable="null"
-                          t-attf-data-variable="display-#{depth}-font-size"
+                          t-attf-data-variable="display__#{depth}__font__size"
                           data-unit="px"
                           data-save-unit="rem"/>
             </t>
         </we-collapse>
         <we-collapse>
             <we-row string="Font Family" title="Heading 1">
-                <we-fontfamilypicker data-variable="headings-font"/>
+                <we-designfontselector data-variable="headings__font"/>
                 <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
-                    data-customize-website-variable="" data-variable="headings-font"
+                    data-customize-website-variable="" data-variable="headings__font"
                     data-remove-font="set-headings-font" data-no-preview="true"/>
             </we-row>
             <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
                 <we-row t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1">
-                    <we-fontfamilypicker t-attf-data-variable="h#{depth}-font"/>
+                    <we-designfontselector t-attf-data-variable="h#{depth}-font"/>
                     <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Headings Font Family"
                         data-customize-website-variable="" t-attf-data-variable="h#{depth}-font"
                         t-attf-data-remove-font="set-h#{depth}-font" data-no-preview="true"/>
@@ -1802,7 +1640,7 @@
             </t>
             <t t-foreach="used_display_font_sizes" t-as="depth">
                 <we-row t-attf-string="#{display_label} #{depth}" class="o_we_sublevel_1">
-                    <we-fontfamilypicker t-attf-data-variable="display-#{depth}-font"/>
+                    <we-designfontselector t-attf-data-variable="display-#{depth}-font"/>
                     <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Headings Font Family"
                         data-customize-website-variable="" t-attf-data-variable="display-#{depth}-font"
                         t-attf-data-remove-font="set-display-#{depth}-font" data-no-preview="true"/>
@@ -1814,7 +1652,7 @@
             <we-input string="Line Height"
                       title="Heading 1"
                       data-customize-website-variable="null"
-                      data-variable="headings-line-height"
+                      data-variable="headings__line__height"
                       data-fake-unit="× "/>
             <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
                 <we-input t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1"
@@ -1831,8 +1669,8 @@
         </we-collapse>
         <we-collapse>
             <we-row string="Margins" title="Heading 1">
-                <we-input title="Top" data-customize-website-variable="" data-variable="headings-margin-top" data-unit="px" data-save-unit="px"/>
-                <we-input title="Bottom" data-customize-website-variable="" data-variable="headings-margin-bottom" data-unit="px" data-save-unit="px"/>
+                <we-input title="Top" data-customize-website-variable="" data-variable="headings__margin__top" data-unit="px" data-save-unit="px"/>
+                <we-input title="Bottom" data-customize-website-variable="" data-variable="headings__margin__bottom" data-unit="px" data-save-unit="px"/>
             </we-row>
             <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth">
                 <we-row t-attf-string="#{heading_label} #{depth}" class="o_we_sublevel_1">
@@ -1855,7 +1693,7 @@
             <we-button data-customize-button-style="flat">Flat</we-button>
         </we-select>
         <we-input string="Border Width" class="o_we_sublevel_1" data-customize-website-variable=""
-            data-variable="btn-primary-outline-border-width" data-dependencies="btn_primary_outline_opt"
+            data-variable="btn__primary__outline__border__width" data-dependencies="btn_primary_outline_opt"
             data-unit="px" data-save-unit="rem"/>
         <we-select string="Secondary Style" data-button="secondary" data-no-preview="true">
             <we-button data-customize-button-style="fill">Fill</we-button>
@@ -1863,77 +1701,70 @@
             <we-button data-customize-button-style="flat">Flat</we-button>
         </we-select>
         <we-input string="Border Width" class="o_we_sublevel_1" data-customize-website-variable=""
-            data-variable="btn-secondary-outline-border-width" data-dependencies="btn_secondary_outline_opt"
+            data-variable="btn__secondary__outline__border__width" data-dependencies="btn_secondary_outline_opt"
             data-unit="px" data-save-unit="rem"/>
         <we-row string="Font Family">
-            <we-fontfamilypicker data-variable="buttons-font"/>
+            <we-designfontselector data-variable="buttons__font"/>
             <we-button class="fa fa-fw fa-remove o_we_hover_danger o_we_link" title="Reset to Paragraph Font Family"
-                data-customize-website-variable="" data-variable="buttons-font"
+                data-customize-website-variable="" data-variable="buttons__font"
                 data-remove-font="set-buttons-font" data-no-preview="true"/>
         </we-row>
         <we-collapse>
             <we-row string="Padding">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn__padding__y" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn__padding__x" data-unit="px" data-save-unit="rem"/>
             </we-row>
             <we-row string="Small" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-sm" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn__padding__y__sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn__padding__x__sm" data-unit="px" data-save-unit="rem"/>
             </we-row>
             <we-row string="Large" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-lg" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="btn__padding__y__lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="btn__padding__x__lg" data-unit="px" data-save-unit="rem"/>
             </we-row>
         </we-collapse>
         <we-collapse>
-            <we-input string="Font Size" data-customize-website-variable="" data-variable="btn-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Font Size" data-customize-website-variable="" data-variable="btn__font__size" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn__font__size__sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn__font__size__lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-collapse>
-            <we-input string="Round Corners" data-customize-website-variable="" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Round Corners" data-customize-website-variable="" data-variable="btn__border__radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn__border__radius__sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn__border__radius__lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
-        <we-select string="On Click Effect" data-variable="btn-ripple">
-            <we-button data-customize-website-variable="false">None</we-button>
-            <we-button data-customize-website-variable="true" data-customize-website-assets="website.ripple_effect_scss, website.ripple_effect_js">Ripple</we-button>
-        </we-select>
+        <we-designoptionselector string="On Click Effect" data-variable="btn__ripple"/>
     </div>
     <div data-js="OptionsTab" data-selector="theme-link" data-no-check="true">
-        <we-select string="Link Style" data-variable="link-underline">
-            <we-button data-customize-website-variable="'never'">No Underline</we-button>
-            <we-button data-customize-website-variable="'hover'">Underline On Hover</we-button>
-            <we-button data-customize-website-variable="'always'">Always Underline</we-button>
-        </we-select>
+        <we-designoptionselector string="Link Style" data-variable="link__underline"/>
     </div>
     <div data-js="OptionsTab" data-selector="theme-input" data-no-check="true">
         <we-collapse>
             <we-row string="Paddings">
-                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="input__padding__y" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="input__padding__x" data-unit="px" data-save-unit="rem"/>
             </we-row>
             <we-row string="Small" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-sm" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="input__padding__y__sm" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="input__padding__x__sm" data-unit="px" data-save-unit="rem"/>
             </we-row>
             <we-row string="Large" class="o_we_sublevel_1">
-                <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-lg" data-unit="px" data-save-unit="rem"/>
-                <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="Y" data-customize-website-variable="" data-variable="input__padding__y__lg" data-unit="px" data-save-unit="rem"/>
+                <we-input title="X" data-customize-website-variable="" data-variable="input__padding__x__lg" data-unit="px" data-save-unit="rem"/>
             </we-row>
         </we-collapse>
         <we-collapse>
-            <we-input string="Font Size" data-customize-website-variable="" data-variable="input-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-font-size-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Font Size" data-customize-website-variable="" data-variable="input__font__size" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input__font__size__sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input__font__size__lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-collapse>
-            <we-input string="Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Border Width" data-customize-website-variable="" data-variable="input__border__width" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-collapse>
-            <we-input string="Border Radius" data-customize-website-variable="" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Border Radius" data-customize-website-variable="" data-variable="input__border__radius" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input__border__radius__sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input__border__radius__lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-row string="Background">
             <we-colorpicker title="Background"
