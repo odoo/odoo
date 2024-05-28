@@ -2,10 +2,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderReceipt">
         <div class="pos-receipt p-2">
+            <t t-set="showTaxGroupLabels" t-value="doesAnyOrderlineHaveTaxLabel()"/>
             <ReceiptHeader data="props.data.headerData" />
             <OrderWidget lines="props.data.orderlines" t-slot-scope="scope">
                 <t t-set="line" t-value="scope.line"/>
-                <Orderline line="omit(scope.line, 'customerNote')" class="{ 'pe-none': true, 'px-0': true }">
+                <Orderline line="omit(scope.line, 'customerNote')" class="{ 'px-0': true }" showTaxGroupLabels="showTaxGroupLabels">
                     <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break">
                         <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
                         <t t-esc="line.customerNote" />
@@ -13,9 +14,30 @@
                 </Orderline>
             </OrderWidget>
 
-            <!-- Total -->
-            <div class="pos-receipt-right-align">--------</div>
-            <br/>
+            <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
+                <div class="text-center">--------------------------------</div>
+                <div class="d-flex">
+                    <span t-if="showTaxGroupLabels" class="me-2" style="visibility: hidden;">A</span>
+                    <span class="fw-bolder">Untaxed Amount</span>
+                    <span t-esc="props.formatCurrency(props.data.total_without_tax)" class="ms-auto"/>
+                </div>
+
+                <div t-foreach="props.data.tax_details" t-as="tax" t-key="tax.id" class="d-flex">
+                    <t t-if="showTaxGroupLabels">
+                        <span t-if="tax._pos_receipt_label" t-esc="tax._pos_receipt_label" class="me-2"/>
+                        <span t-else="" class="me-2" style="visibility: hidden;">A</span>
+                    </t>
+                    <span>
+                        <span t-esc="tax.name"/>
+                        on
+                        <span t-esc="props.formatCurrency(tax.base)"/>
+                    </span>
+                    <span t-esc="props.formatCurrency(tax.amount)" class="ms-auto"/>
+                </div>
+            </div>
+
+      <!-- Total -->
+            <div class="text-center">--------------------------------</div>
             <div class="pos-receipt-amount">
                 TOTAL
                 <span t-esc="props.formatCurrency(props.data.amount_total)" class="pos-receipt-right-align"/>
@@ -33,9 +55,9 @@
 
             <!-- Payment Lines -->
 
-            <div class="paymentlines" t-foreach="props.data.paymentlines" t-as="line" t-key="line_index" style="padding-left: 7.5em;" >
+            <div class="paymentlines text-start" t-foreach="props.data.paymentlines" t-as="line" t-key="line_index">
                 <t t-esc="line.name" />
-                <span t-esc="props.formatCurrency(line.amount, false)" class="pos-receipt-right-align"/>
+                <span t-esc="props.formatCurrency(line.amount)" class="pos-receipt-right-align"/>
             </div>
 
             <div  t-if="props.data.change != 0" class="pos-receipt-amount receipt-change">
@@ -46,33 +68,11 @@
             <!-- Extra Payment Info -->
 
             <t t-if="props.data.total_discount">
-                <div>
+                <div class="text-center">
                     Discounts
                     <span t-esc="props.formatCurrency(props.data.total_discount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
-            <div t-if="props.data.tax_details.length > 0" class="pos-receipt-taxes">
-                <span />
-                <span>Tax</span>
-                <span>Amount</span>
-                <span>Base</span>
-                <span>Total</span>
-                <t t-foreach="props.data.tax_details" t-as="taxValues" t-key="taxValues.id">
-                    <span t-esc="taxValues._letter || ''"/>
-                    <span t-if="taxValues.amount_type != 'fixed'"><t t-esc="taxValues.tax_percentage"/>%</span>
-                    <span t-else="" t-esc="taxValues.name"/>
-                    <span t-esc="props.formatCurrency(taxValues.amount, false)" />
-                    <span t-esc="props.formatCurrency(taxValues.base, false)" />
-                    <span t-esc="props.formatCurrency(taxValues.amount + taxValues.base, false)" />
-                </t>
-                <t t-if="props.data.tax_details.length > 1">
-                    <span />
-                    <span />
-                    <span t-esc="props.formatCurrency(props.data.amount_tax, false)" />
-                    <span t-esc="props.formatCurrency(props.data.total_without_tax, false)" />
-                    <span t-esc="props.formatCurrency(props.data.amount_total, false)" />
-                </t>
-            </div>
 
             <div class="before-footer" />
 

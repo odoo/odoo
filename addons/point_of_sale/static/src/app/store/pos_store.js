@@ -477,14 +477,15 @@ export class PosStore extends Reactive {
             merge = false;
         }
 
+        const product = vals.product_id;
+
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
             price_unit: 0,
             order_id: this.get_order(),
             qty: 1,
-            product_id: vals.product_id,
-            tax_ids: vals.product_id.taxes_id[0] ? [["link", vals.product_id.taxes_id[0]]] : [],
+            tax_ids: product.taxes_id.length ? [["link", ...product.taxes_id]] : [],
             ...vals,
         };
 
@@ -586,8 +587,8 @@ export class PosStore extends Reactive {
                 "create",
                 {
                     product_id: comboLine.combo_line_id.product_id,
-                    tax_ids: comboLine.combo_line_id.product_id.taxes_id[0]
-                        ? [["link", comboLine.combo_line_id.product_id.taxes_id[0]]]
+                    tax_ids: comboLine.combo_line_id.product_id.taxes_id.length
+                        ? [["link", ...comboLine.combo_line_id.product_id.taxes_id]]
                         : [],
                     combo_line_id: comboLine.combo_line_id,
                     price_unit: comboLine.price_unit,

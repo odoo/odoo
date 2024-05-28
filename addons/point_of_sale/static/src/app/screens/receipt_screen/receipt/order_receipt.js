@@ -18,4 +18,7 @@ export class OrderReceipt extends Component {
     omit(...args) {
         return omit(...args);
     }
+    doesAnyOrderlineHaveTaxLabel() {
+        return this.props.data.orderlines.some((line) => line.taxGroupLabels);
+    }
 }
