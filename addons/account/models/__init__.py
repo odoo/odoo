@@ -36,6 +36,8 @@ from . import res_users
 from . import ir_attachment
 from . import ir_actions_report
 from . import ir_module
+from . import ir_ui_menu
+from . import mail_message
 from . import res_currency
 from . import account_report
 from . import onboarding_onboarding_step

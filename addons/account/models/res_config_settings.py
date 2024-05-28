@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-
 from odoo.addons.account.models.company import PEPPOL_LIST
 
 
@@ -219,6 +218,9 @@ class ResConfigSettings(models.TransientModel):
         string='PEPPOL eligible',
         compute='_compute_is_account_peppol_eligible',
     ) # technical field used for showing the Peppol settings conditionally
+
+    # Audit trail
+    check_account_audit_trail = fields.Boolean(string='Audit Trail', related='company_id.check_account_audit_trail', readonly=False)
 
     @api.depends('country_code')
     def _compute_is_account_peppol_eligible(self):
