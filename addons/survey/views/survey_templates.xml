@@ -305,9 +305,14 @@
                                 <div>Unfortunately, you have failed the test.</div>
                             </t>
                         </t>
-                        <t t-call="survey.survey_button_retake"/>
-                        <div t-if="survey.scoring_type != 'scoring_without_answers'" class="o_survey_review">
-                            If you wish, you can <a t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">review your answers</a>
+                        <div class="d-flex gap-3 mt-3">
+                            <t t-call="survey.survey_button_retake"/>
+                            <p t-if="survey.scoring_type != 'scoring_without_answers'">
+                                <a role="button" class="o_survey_review btn btn-secondary btn-lg"
+                                    t-att-href="'/survey/print/%s?answer_token=%s&amp;review=True' % (survey.access_token, answer.access_token)">
+                                    Review your answers
+                                </a>
+                            </p>
                         </div>
                     </div>
                     <div class="col-6 text-center" t-if="survey.certification_give_badge and answer.scoring_success">

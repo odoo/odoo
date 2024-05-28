@@ -445,6 +445,12 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
  **********************************************************/
 
 .o_survey_print {
+    @media print {
+        // force to print background-images to render the answers green/red/gray background
+        -webkit-print-color-adjust: exact !important; /* Chrome, Safari */
+        print-color-adjust: exact !important; /*Firefox*/
+    }
+
     .o_survey_choice_btn {
         background-color: $gray-500;
         border-color: transparent;
