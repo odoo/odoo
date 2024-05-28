@@ -1658,3 +1658,14 @@ class TestBoM(TestMrpCommon):
         self.assertFalse(bom.bom_line_ids.operation_id)
         self.assertFalse(bom.byproduct_ids.operation_id)
         self.assertFalse(operation_2.blocked_by_operation_ids)
+
+    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
+        """
+        Checks that a notification is sent when at least one component can not be resupplied.
+        """
+        product = self.bom_1.product_id
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
+        product.route_ids = [Command.set([manufacturing_route_id])]
+        notification = product.product_tmpl_id.action_compute_bom_days()
+        self.assertEqual(product.days_to_prepare_mo, 0.0)
+        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
