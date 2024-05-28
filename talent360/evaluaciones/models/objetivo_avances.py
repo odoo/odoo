@@ -16,7 +16,7 @@ class ObjetivoAvance(models.Model):
     _name = "objetivo.avances"
     _description = "Objetivo Avance"
 
-    objetivo_id = fields.Many2one('objetivo', string='Objetivo', required=True)
+    objetivo_id = fields.Many2one('objetivo', string='Objetivo', required=True, ondelete='cascade')
     fecha = fields.Date(string='Fecha', required=True)
     avance = fields.Integer(string='Avance', required=True)
     comentarios = fields.Text(string='Comentarios')
