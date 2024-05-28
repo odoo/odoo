@@ -271,6 +271,7 @@
                                 <field name="country_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="sequence"/>
+                                <field name="pos_receipt_label" string="Label on PoS Receipts" groups="base.group_no_one"/>
                             </group>
                             <group>
                                 <field name="tax_payable_account_id" domain="[('company_id', '=', company_id)]"/>

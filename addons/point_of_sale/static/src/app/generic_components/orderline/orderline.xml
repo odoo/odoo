@@ -2,17 +2,19 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <t t-set="line" t-value="props.line" />
-        <li class="orderline d-flex align-items-center lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
-            <img class="p-2" t-attf-style="width: 4rem; border-radius: 1rem;" t-if="line.imageSrc" t-att-src="line.imageSrc"/>
-            <div class="p-2 d-flex flex-column w-100">
-                <div class="d-flex justify-content-between">
-                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+        <li class="orderline p-2 d-flex align-items-center lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
+            <img class="" t-attf-style="width: 4rem; border-radius: 1rem;" t-if="line.imageSrc" t-att-src="line.imageSrc"/>
+            <div class=" d-flex flex-column w-100">
+                <div class="d-flex">
+                    <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1">
                         <span class="text-wrap" t-esc="line.productName"/>
                         <t t-slot="product-name"/>
                     </div>
-                    <div class="product-price d-inline-block text-end price fw-bolder">
-                        <t t-esc="line.price"/>
+                    <div class="product-price price fw-bolder">
+                        <t t-if="line.price === 'free'">Free</t>
+                        <t t-else="" t-esc="line.price"/>
                     </div>
+                    <div t-if="props.showTaxGroupLabels" t-esc="line.taxGroupLabels" class="text-end" style="width: 2rem"/>
                 </div>
                 <ul class="info-list" t-attf-class="{{props.infoListClasses}}">
                     <li class="price-per-unit">
