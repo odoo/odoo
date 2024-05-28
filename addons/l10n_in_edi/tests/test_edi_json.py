@@ -1,54 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.fields import Command
 from odoo.tests import tagged
 
+from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
+
 
 @tagged("post_install_l10n", "post_install", "-at_install")
-class TestEdiJson(AccountTestInvoicingCommon):
+class TestEdiJson(L10nInTestInvoicingCommon):
 
     @classmethod
-    @AccountTestInvoicingCommon.setup_country('in')
     def setUpClass(cls):
         super().setUpClass()
         cls.env['ir.config_parameter'].set_param('l10n_in_edi.manage_invoice_negative_lines', True)
         cls.maxDiff = None
-        cls.company_data["company"].write({
-            "street": "Block no. 401",
-            "street2": "Street 2",
-            "city": "City 1",
-            "zip": "500001",
-            "state_id": cls.env.ref("base.state_in_ts").id,
-            "vat": "36AABCT1332L011",
-        })
-        cls.partner_a.write({
-            "vat": "36BBBFF5679L8ZR",
-            "street": "Block no. 401",
-            "street2": "Street 2",
-            "city": "City 2",
-            "zip": "500001",
-            "state_id": cls.env.ref("base.state_in_ts").id,
-            "country_id": cls.env.ref("base.in").id,
-            "l10n_in_gst_treatment": "regular",
-        })
-        sgst_sale_5 = cls.env["account.chart.template"].ref("sgst_sale_5")
-        sgst_purchase_5 = cls.env["account.chart.template"].ref("sgst_purchase_5")
-        cls.product_a.write({
-            "l10n_in_hsn_code": "01111",
-            'taxes_id': sgst_sale_5,
-            'supplier_taxes_id': sgst_purchase_5,
-        })
-        cls.product_a2 = cls.env['product.product'].create({
-            'name': 'product_a2',
-            'uom_id': cls.env.ref('uom.product_uom_unit').id,
-            'lst_price': 1000.0,
-            'standard_price': 1000.0,
-            'property_account_income_id': cls.company_data['default_account_revenue'].id,
-            'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [Command.set(sgst_sale_5.ids)],
-            'supplier_taxes_id': [Command.set(sgst_purchase_5.ids)],
-            "l10n_in_hsn_code": "01111",
-        })
+
+        cls.partner_a.l10n_in_gst_treatment = "regular"
+
         cls.product_a_discount = cls.env['product.product'].create({
             'name': 'product_a discount',
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
@@ -56,8 +23,8 @@ class TestEdiJson(AccountTestInvoicingCommon):
             'standard_price': 400.0,
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [Command.set(sgst_sale_5.ids)],
-            'supplier_taxes_id': [Command.set(sgst_purchase_5.ids)],
+            'taxes_id': [Command.set(cls.sgst_sale_5.ids)],
+            'supplier_taxes_id': [Command.set(cls.sgst_purchase_5.ids)],
             "l10n_in_hsn_code": "01111",
         })
         gst_with_cess = cls.env.ref("account.%s_sgst_sale_12" % (cls.company_data["company"].id)
@@ -70,7 +37,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
             "property_account_income_id": cls.company_data["default_account_revenue"].id,
             "property_account_expense_id": cls.company_data["default_account_expense"].id,
             "taxes_id": [Command.set(gst_with_cess.ids)],
-            "supplier_taxes_id": [Command.set(sgst_purchase_5.ids)],
+            "supplier_taxes_id": [Command.set(cls.sgst_purchase_5.ids)],
             "l10n_in_hsn_code": "02222",
         })
         rounding = cls.env["account.cash.rounding"].create({
@@ -121,7 +88,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
                 (1, cls.invoice_negative_with_discount.invoice_line_ids[1].id, {"price_unit": -400}),
             ]})
         cls.invoice_negative_with_discount.action_post()
-        cls.invoice_negative_more_than_max_line = cls.init_invoice("out_invoice", post=False, products=cls.product_a + cls.product_a2 + cls.product_a_discount)
+        cls.invoice_negative_more_than_max_line = cls.init_invoice("out_invoice", post=False, products=cls.product_a + cls.product_b + cls.product_a_discount)
         cls.invoice_negative_more_than_max_line.write({
             "invoice_line_ids": [
                 (1, cls.invoice_negative_more_than_max_line.invoice_line_ids[0].id, {"price_unit": 2000, 'discount': 50}),
@@ -147,24 +114,24 @@ class TestEdiJson(AccountTestInvoicingCommon):
         expected = {
             "Version": "1.1",
             "TranDtls": {"TaxSch": "GST", "SupTyp": "B2B", "RegRev": "N", "IgstOnIntra": "N"},
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00001", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00002", "Dt": "01/01/2019"},
             "SellerDtls": {
-                "Addr1": "Block no. 401",
-                "Loc": "City 1",
-                "Pin": 500001,
-                "Stcd": "36",
-                "Addr2": "Street 2",
-                "LglNm": "company_1_data",
-                "GSTIN": "36AABCT1332L011"},
+                "Addr1": "Khodiyar Chowk",
+                "Loc": "Amreli",
+                "Pin": 365220,
+                "Stcd": "24",
+                "Addr2": "Sala Number 3",
+                "LglNm": "Default Company",
+                "GSTIN": "24AAGCC7144L6ZE"},
             "BuyerDtls": {
-                "Addr1": "Block no. 401",
-                "Loc": "City 2",
-                "Pin": 500001,
-                "Stcd": "36",
-                "Addr2": "Street 2",
-                "POS": "36",
-                "LglNm": "partner_a",
-                "GSTIN": "36BBBFF5679L8ZR"},
+                "Addr1": "Karansinhji Rd",
+                "Loc": "Rajkot",
+                "Pin": 360001,
+                "Stcd": "24",
+                "Addr2": "Karanpara",
+                "POS": "24",
+                "LglNm": "Partner Intra State",
+                "GSTIN": "24ABCPM8965E1ZE"},
             "ItemList": [
                 {
                     "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
@@ -191,7 +158,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
         #=================================== Full discount test =====================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_full_discount)
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00002", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00003", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 1000.0, "AssAmt": 0.0,
@@ -206,7 +173,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
         #=================================== Zero quantity test =============================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_zero_qty)
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00003", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00004", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 0.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 0.0, "Discount": 0.0, "AssAmt": 0.0,
@@ -219,7 +186,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
         #=================================== Negative unit price test =============================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_unit_price)
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00004", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00005", "Dt": "01/01/2019"},
             "ItemList": [
                 {
                     "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
@@ -243,16 +210,16 @@ class TestEdiJson(AccountTestInvoicingCommon):
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price sent json value is not matched")
 
-        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/2019/00005", "Dt": "01/01/2019"}})
+        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/2019/00006", "Dt": "01/01/2019"}})
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_qty)
         self.assertDictEqual(json_value, expected, "Indian EDI with negative quantity sent json value is not matched")
 
-        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/2019/00006", "Dt": "01/01/2019"}})
+        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/2019/00007", "Dt": "01/01/2019"}})
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_unit_price_and_qty)
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
 
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00007", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00008", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 1400.0, "AssAmt": 600.0,
@@ -269,7 +236,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
 
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00008", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00009", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 2000.0, "AssAmt": 0.0,
@@ -278,7 +245,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
                 "OthChrg": 0.0, "TotItemVal": 0.0
             },
             {
-                "SlNo": "2", "PrdDesc": "product_a2", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "SlNo": "2", "PrdDesc": "product_b", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 100.0, "AssAmt": 900.0,
                 "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 22.5, "SgstAmt": 22.5, "CesRt": 0.0, "CesAmt": 0.0,
                 "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
@@ -294,7 +261,7 @@ class TestEdiJson(AccountTestInvoicingCommon):
 
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_cash_rounding)
         expected_copy_rounding.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00009", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00010", "Dt": "01/01/2019"},
             "ValDtls": {
                 "AssVal": 1800.0, "CgstVal": 79.3, "SgstVal": 79.3, "IgstVal": 0.0, "CesVal": 46.59,
                 "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": -0.19, "TotInvVal": 2005.00
