@@ -91,3 +91,40 @@ export function compareDatetime(date1, date2) {
     }
     return date1.ts - date2.ts;
 }
+
+/**
+ * Compares two version strings.
+ *
+ * @param {string} v1 - The first version string to compare.
+ * @param {string} v2 - The second version string to compare.
+ * @return {number} -1 if v1 is less than v2, 1 if v1 is greater than v2, and 0 if they are equal.
+ */
+function compareVersion(v1, v2) {
+    const parts1 = v1.split(".");
+    const parts2 = v2.split(".");
+
+    for (let i = 0; i < Math.max(parts1.length, parts2.length); i++) {
+        const num1 = parseInt(parts1[i]) || 0;
+        const num2 = parseInt(parts2[i]) || 0;
+        if (num1 < num2) {
+            return -1;
+        }
+        if (num1 > num2) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/**
+ * Return a version object that can be compared to other version strings.
+ *
+ * @param {string} v The version string to evaluate.
+ */
+export function parseVersion(v) {
+    return {
+        isLowerThan(other) {
+            return compareVersion(v, other) < 0;
+        },
+    };
+}
