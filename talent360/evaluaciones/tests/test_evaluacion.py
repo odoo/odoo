@@ -96,3 +96,28 @@ class test_evaluacion(TransactionCase):
         evaluacion.pregunta_ids = [(6, 0, template.pregunta_ids.ids)]
         # Verificar que las preguntas se han copiado correctamente
         self.assertEqual(len(evaluacion.pregunta_ids), 2)
+
+    def test_crear_evaluacion_generica(self):
+        """
+        Prueba crear una evaluación genérica.
+
+        Este método simula la creación de una evaluación genérica sin preguntas predefinidas.
+        Se crea una evaluación sin preguntas y se verifica que no se haya copiado ninguna pregunta.
+
+        :param nombre: El nombre de la evaluación.
+        :param estado: El estado de la evaluación (por defecto es 'borrador').
+        """
+        
+        evaluacion = self.crear_evaluacion("Evaluación Genérica")
+
+        preguntas = self.env["pregunta"].create(
+            [
+                {"pregunta_texto": "Pregunta 1", "tipo": "open_question"},
+                {"pregunta_texto": "Pregunta 2", "tipo": "open_question"},
+            ]
+        )
+
+        evaluacion.pregunta_ids = [(6, 0, preguntas.ids)]
+        
+        # Verificar que no se han copiado preguntas
+        self.assertEqual(len(evaluacion.pregunta_ids), 2)

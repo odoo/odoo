@@ -28,7 +28,6 @@ class Evaluacion(models.Model):
     _description = "Evaluacion de personal"
     _rec_name = "nombre"
     nombre = fields.Char(string="Título de la evaluación", required=True)
-    
     escalar_format = fields.Selection([
         ("numericas", "Numéricas"),
         ("textuales", "Textuales"),
@@ -44,7 +43,7 @@ class Evaluacion(models.Model):
             ("generico", "Genérico"),
         ],
         required=True,
-        default="competencia",
+        default="generico",
     )
     descripcion = fields.Text(string="Descripción")
     estado = fields.Selection(
@@ -94,7 +93,7 @@ class Evaluacion(models.Model):
     mensaje_bienvenida = fields.Text(
         string="Mensaje de bienvenida",
     )
-    contenido_correo = fields.Html(
+    contenido_correo = fields.Text(
         string="Contenido del correo",
     )
     mensaje_agradecimiento = fields.Text(
@@ -1162,7 +1161,6 @@ class Evaluacion(models.Model):
                     ]
                 )
 
-                print(f"Respuestas: {respuestas}")
                 respuestas.unlink()
 
         if "usuario_externo_ids" in vals:
@@ -1178,8 +1176,13 @@ class Evaluacion(models.Model):
                         ("evaluacion_id.id", "=", self.id),
                     ]
                 )
-                print(f"Respuestas: {respuestas}")
                 respuestas.unlink()
+
+        for record in self:
+            if record.tipo == "generico" and len(record.pregunta_ids) < 1:
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una pregunta."))
+            if record.tipo == "generico" and len(record.usuario_ids) < 1:
+                raise exceptions.ValidationError(_("La evaluación debe tener al menos una persona asignada."))
 
         return resultado
 
@@ -1196,6 +1199,37 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+    
+    def evaluacion_general_action_form(self):
+        """
+        Ejecuta la acción de redireccionar a la evaluación general y devuelve un diccionario
+
+        Este método utiliza los parámetros necesarios para redireccionar a la evaluación general
+
+        :return: Un diccionario que contiene todos los parámetros necesarios para redireccionar la
+        a una vista de la evaluación general.
+
+        """
+        
+        nueva_evaluacion = self.env["evaluacion"].create(
+            {
+                "nombre": "",
+                "tipo": "generico",
+                "fecha_inicio": fields.Date.today(),
+                "fecha_final": fields.Date.today(),
+            }
+        )
+        self = nueva_evaluacion
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": "General",
+            "res_model": "evaluacion",
+            "view_mode": "form",
+            "view_id": self.env.ref("evaluaciones.evaluacion_general_view_form").id,
+            "target": "current",
+            "res_id": self.id,
+        }
 
     def get_escalar_format(self):
         """
@@ -1204,3 +1238,36 @@ class Evaluacion(models.Model):
         :return: El formato escalar seleccionado para la evaluación.
         """
         return self.escalar_format
+    
+    def generar_reporte(self):
+        """
+        Devuelve las fechas de inicio y final que el usuario acordo al realizar la evaluación.
+
+        :return: Las fechas de inicio y final.
+        """
+        return {
+            
+            "type": "ir.actions.report",
+            "report_name": "evaluaciones.reporte_template",
+            "context": {
+                "evaluacion_id": self.id,
+                "fecha_inicio": self.fecha_inicio,
+                "fecha_final": self.fecha_final,
+            }
+        }
+
+    def action_importar_preguntas_clima(self):
+        """
+        Abre la ventana para importar preguntas de clima laboral.
+
+        :return: Una acción para abrir la ventana de importación de preguntas
+        """
+        return {
+            "name": "Importar preguntas de clima laboral",
+            "type": "ir.actions.act_window",
+            "res_model": "importar.preguntas.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }
+    
+    

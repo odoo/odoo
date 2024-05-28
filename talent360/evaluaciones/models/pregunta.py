@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError
 
 
 class Pregunta(models.Model):
@@ -31,7 +32,7 @@ class Pregunta(models.Model):
             ("open_question", "Abierta"),
             ("escala", "Escala"),
         ],
-        default="multiple_choice",
+        default="escala",
         required=True,
     )
 
@@ -85,6 +86,14 @@ class Pregunta(models.Model):
             ("violencia", "Violencia"),
         ],
     )
+
+    @api.constrains("opcion_ids")
+    def checkar_opciones(self):
+        """
+        Verifica que haya al menos una opción de respuesta para las preguntas de tipo 'multiple_choice'.
+        """
+        if self.tipo == "multiple_choice" and len(self.opcion_ids) < 2:
+            raise ValidationError(_("Debe haber al menos dos opciones de respuesta."))
 
     def _calculate_valor_maximo(self):
         if self.tipo == "escala":
