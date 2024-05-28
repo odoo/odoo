@@ -4,12 +4,15 @@
     <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
         <xpath expr="//t[@t-set='entries']/div/div/div[hasclass('o_download_pdf')]" position="inside">
             <t t-if="sale_order.timesheet_count > 0 and sale_order.state == 'sale'">
-                <a class="btn btn-light flex-grow-1" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name" title="View Timesheets" role="button">View Timesheets</a>
+                <a class="btn btn-light flex-grow-1" t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name" title="View Timesheets" target="_blank" role="button">View Timesheets</a>
             </t>
         </xpath>
     </template>
 
     <template id="portal_my_timesheets_inherit" inherit_id="hr_timesheet.portal_my_timesheets">
+        <xpath expr="//t[@t-foreach='grouped_timesheets']/tbody/tr[hasclass('table-light')]/th[hasclass('text-end')]" position="attributes">
+            <attribute name="colspan">2</attribute>
+        </xpath>
         <xpath expr="//t[@t-foreach='grouped_timesheets']/tbody/tr[hasclass('table-light')]/th[hasclass('text-end')]" position="before">
             <t t-elif="groupby == 'so_line'">
                 <t t-set="sol" t-value="timesheets[0].so_line"/>
@@ -57,9 +60,11 @@
         </xpath>
         <th name="t_label" position="before">
             <th t-if="not groupby == 'so_line'">Sales Order Item</th>
+            <th t-if="not groupby == 'timesheet_invoice_id'">Invoice</th>
         </th>
         <xpath expr="//tbody//td[hasclass('text-end')]" position="before">
             <td t-if="not groupby == 'so_line'"><span t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span></td>
+            <td t-if="not groupby == 'timesheet_invoice_id'"><span t-field="timesheet.timesheet_invoice_id" t-att-title="timesheet.timesheet_invoice_id.display_name"></span></td>
         </xpath>
     </template>
 
