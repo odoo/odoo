@@ -9,17 +9,26 @@
             <field name="arch" type="xml">
                 <form string="Confirm Entries">
                     <field name="move_ids" invisible="1"/>
-                    <h2 class="mb-4">Validating invoices is a key action. Have you reviewed everything?</h2>
+                    <h2 class="mb-4">
+                        Validating
+                        <t invisible="not is_entries"> entries </t>
+                        <t invisible="is_entries"> invoices </t>
+                        is a key action. Have you reviewed everything?</h2>
                     <group invisible="not display_force_post">
                         <field name="display_force_post" invisible="1"/>
                         <div colspan="2">
-                            Future-dated invoices will auto-confirm on their respective dates.
+                            Future-dated
+                            <t invisible="not is_entries"> entries </t>
+                            <t invisible="is_entries"> invoices </t>
+                            will auto-confirm on their respective dates.
                             <field name="force_post" class="oe_inline"/><label for="force_post" string="Confirm them now"/>
                         </div>
                     </group>
                     <group invisible="not abnormal_date_partner_ids">
                         <div colspan="2">
-                            Invoice dates for
+                            <t invisible="not is_entries"> Entries </t>
+                            <t invisible="is_entries"> Invoices </t>
+                            dates for
                             <field name="abnormal_date_partner_ids" widget="many2many_tags" class="oe_inline"/>
                             fall outside the typical range.
                             <field name="ignore_abnormal_date" class="oe_inline"/><label for="ignore_abnormal_date" string="Ignore future alerts"/>
@@ -27,7 +36,9 @@
                     </group>
                     <group invisible="not abnormal_amount_partner_ids">
                         <div colspan="2">
-                            Invoice amounts for
+                            <t invisible="not is_entries"> Entries </t>
+                            <t invisible="is_entries"> Invoices </t>
+                            amounts for
                             <field name="abnormal_amount_partner_ids" widget="many2many_tags" class="oe_inline"/>
                             fall outside the typical range.
                             <field name="ignore_abnormal_amount" class="oe_inline"/><label for="ignore_abnormal_amount" string="Ignore future alerts"/>
