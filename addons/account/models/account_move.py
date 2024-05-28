@@ -2838,6 +2838,30 @@ class AccountMove(models.Model):
     def check_move_sequence_chain(self):
         return self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain()
 
+    def _get_unlink_logger_message(self):
+        """ Before unlink, get a log message for audit trail if it's enabled.
+        Logger is added here because in api ondelete, account.move.line is deleted, and we can't get total amount """
+        if not self._context.get('force_delete'):
+            pass
+
+        moves_details = []
+        for move in self.filtered(lambda m: m.posted_before and m.company_id.check_account_audit_trail):
+            entry_details = f"{move.name} ({move.id}) amount {move.amount_total} {move.currency_id.name} and partner {move.partner_id.display_name}"
+            account_balances_per_account = defaultdict(float)
+            for line in move.line_ids:
+                account_balances_per_account[line.account_id] += line.balance
+            account_details = "\n".join(
+                f"- {account.name} ({account.id}) with balance {balance} {move.currency_id.name}"
+                for account, balance in account_balances_per_account.items()
+            )
+            moves_details.append(f"{entry_details}\n{account_details}")
+
+        return "\nForce deleted Journal Entries by {user_name} ({user_id})\nEntries\n{moves_details}".format(
+            user_name=self.env.user.name,
+            user_id=self.env.user.id,
+            moves_details="\n".join(moves_details),
+        )
+
     @api.ondelete(at_uninstall=False)
     def _unlink_forbid_parts_of_chain(self):
         """ For a user with Billing/Bookkeeper rights, when the fidu mode is deactivated,
@@ -2859,10 +2883,25 @@ class AccountMove(models.Model):
                     "You should probably revert it instead."
                 ))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_account_audit_trail_except_once_post(self):
+        if not self._context.get('force_delete') and any(
+                move.posted_before and move.company_id.check_account_audit_trail
+                for move in self
+        ):
+            raise UserError(_(
+                "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+                "Instead, you can cancel the journal entry."
+            ))
+
     def unlink(self):
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
+        logger_message = self._get_unlink_logger_message()
         self.line_ids.unlink()
-        return super().unlink()
+        res = super().unlink()
+        if logger_message:
+            _logger.info(logger_message)
+        return res
 
     @api.depends('partner_id', 'date', 'state', 'move_type')
     @api.depends_context('input_full_display_name')

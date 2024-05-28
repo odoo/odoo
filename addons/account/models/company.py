@@ -194,6 +194,9 @@ class ResCompany(models.Model):
     account_discount_income_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')
     account_discount_expense_allocation_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
 
+    # Audit trail
+    check_account_audit_trail = fields.Boolean(string='Audit Trail')
+
     def _get_company_root_delegated_field_names(self):
         return super()._get_company_root_delegated_field_names() + [
             'fiscalyear_last_day',
@@ -201,6 +204,12 @@ class ResCompany(models.Model):
             'account_storno',
             'tax_exigibility',
         ]
+
+    def cache_invalidation_fields(self):
+        # EXTENDS base
+        invalidation_fields = super().cache_invalidation_fields()
+        invalidation_fields.add('check_account_audit_trail')
+        return invalidation_fields
 
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
@@ -218,6 +227,13 @@ class ResCompany(models.Model):
             max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
             if rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
+
+    @api.constrains('check_account_audit_trail')
+    def _check_audit_trail_records(self):
+        if not self.check_account_audit_trail:
+            move_count = self.env['account.move'].search_count([('company_id', '=', self.id)], limit=1)
+            if move_count:
+                raise UserError(_("Can't disable audit trail when there are existing records."))
 
     @api.depends('fiscal_position_ids.foreign_vat')
     def _compute_multi_vat_foreign_country(self):
