@@ -110,7 +110,15 @@ describe("stateToUrl", () => {
         // action
         expect(stateToUrl({ action: "some-path" })).toBe("/odoo/some-path");
         expect(stateToUrl({ active_id: 5, action: "some-path" })).toBe("/odoo/5/some-path");
+        expect(stateToUrl({ active_id: "some-active_id", action: "some-path" })).toBe(
+            "/odoo/some-path?active_id=some-active_id",
+            { message: "only numeric active_id are encoded in path" }
+        );
         expect(stateToUrl({ action: "some-path", resId: 2 })).toBe("/odoo/some-path/2");
+        expect(stateToUrl({ action: "some-path", resId: "some-resId" })).toBe(
+            "/odoo/some-path?resId=some-resId",
+            { message: "only numeric resId are encoded in path" }
+        );
         expect(stateToUrl({ active_id: 5, action: "some-path", resId: 2 })).toBe(
             "/odoo/5/some-path/2"
         );
