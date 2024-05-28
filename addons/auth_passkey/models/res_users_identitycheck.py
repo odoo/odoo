@@ -7,12 +7,12 @@ from odoo.addons.base.models.res_users import CheckIdentity
 class CheckIdentityPasskeys(CheckIdentity):
     _inherit = 'res.users.identitycheck'
 
-    auth_method = fields.Selection(selection_add=[('passkey', 'Passkey')])
+    auth_method = fields.Selection(selection_add=[('webauthn', 'Passkey')])
 
     @api.model
     def _get_default_auth_method(self):
         if self.env.user.auth_passkey_key_ids:
-            return 'passkey'
+            return 'webauthn'
         else:
             return super()._get_default_auth_method()
     
@@ -20,7 +20,7 @@ class CheckIdentityPasskeys(CheckIdentity):
         try:
             super()._check_identity()
         except UserError:
-            if self.auth_method == 'passkey':
+            if self.auth_method == 'webauthn':
                 raise UserError(_("Incorrect Passkey. Please provide a valid passkey or use a different authentication method."))
             raise
 

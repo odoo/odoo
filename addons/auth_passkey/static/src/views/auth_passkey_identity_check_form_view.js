@@ -18,7 +18,7 @@ export class PassKeyIdentityCheckFormController extends FormController {
     async beforeExecuteActionButton(clickParams) {
         if (
             clickParams.name === "run_check" &&
-            this.model.root.data.auth_method == "passkey"
+            this.model.root.data.auth_method == "webauthn"
         ) {
             const serverOptions = await this.rpc("/auth/passkey/start-auth");
             const auth = await startAuthentication(serverOptions).catch(e => console.log(e));

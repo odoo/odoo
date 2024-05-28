@@ -31,11 +31,9 @@ class UsersPasskey(models.Model):
         }
 
     @classmethod
-    def _login(cls, db, login, password, user_agent_env):
-        webauthn = None
-        with contextlib.suppress(Exception):
-            webauthn = json.loads(password)
-        if webauthn and webauthn.get('id'):
+    def _login(cls, db, login, credential, user_agent_env):
+        if credential['type'] == 'webauthn':
+            webauthn = json.loads(credential['content'])
             with registry(db).cursor() as cr:
                 identifier = base64.urlsafe_b64decode(webauthn['id'] + '===').hex()
                 cr.execute("""
@@ -48,13 +46,11 @@ class UsersPasskey(models.Model):
                 if not res:
                     raise AccessDenied(_('Unknown passkey'))
                 login = res[0]
-        return super()._login(db, login, password, user_agent_env=user_agent_env)
+        return super()._login(db, login, credential, user_agent_env=user_agent_env)
 
-    def _check_credentials(self, password, env):
-        webauthn = None
-        with contextlib.suppress(Exception):
-            webauthn = json.loads(password)
-        if webauthn and webauthn.get('id'):
+    def _check_credentials(self, credential, env):
+        if credential['type'] == 'webauthn':
+            webauthn = json.loads(credential['content'])
             identifier = base64.urlsafe_b64decode(webauthn['id'] + '===').hex()
             passkey = self.env['auth.passkey.key'].sudo().search([
                 ("create_uid", "=", self.env.user.id),
@@ -74,4 +70,4 @@ class UsersPasskey(models.Model):
             passkey.sign_count = new_sign_count
             request.session['skip_totp'] = True
         else:
-            return super()._check_credentials(password, env)
+            return super()._check_credentials(credential, env)

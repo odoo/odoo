@@ -1744,7 +1744,8 @@ class HttpCase(TransactionCase):
             # than this transaction.
             self.cr.flush()
             self.cr.clear()
-            uid = self.registry['res.users'].authenticate(session.db, user, password, {'interactive': False})
+            credential = {'content': password, 'type': 'password'}
+            uid = self.registry['res.users'].authenticate(session.db, user, credential, {'interactive': False})
             env = api.Environment(self.cr, uid, {})
             session.uid = uid
             session.login = user

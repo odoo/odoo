@@ -64,10 +64,11 @@ class PasskeyTest(TransactionCase):
         }
         with MockRequest(self.env) as request:
             request.session['webauthn_challenge'] = b'\xa2==\xce\xbb\x94\xca\xa5\x0c S\xb4\xa2^T\x96\xd5\x1d\xf7\x9eP\xab\x0fbr\x17\xb9\xc3\xf8=\x93\xa8\xc1\xc9\x1e\xbd\x8a\x85\xad\x9c/\x91X\xb4b{\xff,\xa8s\xbfOf\xc8\x08\x9aei\x03OG\x17\xe9x'
-            self.env['res.users']._login(get_db_name(), 'admin', json.dumps(auth), None)
+            credential = {'content': json.dumps(auth), 'type': 'webauthn'}
+            self.env['res.users']._login(get_db_name(), 'admin', credential, None)
             # Replay attacks will raise an error
             with self.assertRaises(Exception):
-                self.env['res.users']._login(get_db_name(), 'admin', json.dumps(auth), None)
+                self.env['res.users']._login(get_db_name(), 'admin', credential, None)
 
     def test_verification(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')
@@ -88,13 +89,13 @@ class PasskeyTest(TransactionCase):
         webauthn_challenge = b',\xdaU\xd1\xd3\xc82\xd9\xa9K\x01\x9e\x9c\x81\xff\x87Urq\x0b\x80\x80X\x10D\x9fS<\xa0h5\xac\x92p\xd0\x04\xad/\xab\xb2v\x94\xd7\xd9\xfb\xfc\x06\x97\xcd\xe8\x98F\r\xe7\x18\x8d\xf2\xb8}\x1a\x8b\xa5\x0f\\'
         with MockRequest(self.env) as request:
             request.session['webauthn_challenge'] = webauthn_challenge
-            idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'passkey'})
+            idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'webauthn'})
             idcheck.password = json.dumps(auth)
             idcheck._check_identity()
             # Due to lack of support of sign_count, replay attacks are possible
             # This is an accepted risk in order to increase compatbility with passkey implementations
             request.session['webauthn_challenge'] = webauthn_challenge
-            idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'passkey'})
+            idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'webauthn'})
             idcheck.password = json.dumps(auth)
             idcheck._check_identity()
 
@@ -117,6 +118,6 @@ class PasskeyTest(TransactionCase):
         with self.assertRaises(UserError):
             with MockRequest(self.env) as request:
                 request.session['webauthn_challenge'] = webauthn_challenge
-                idcheck = self.env['res.users.identitycheck'].with_user(self.admin_user).create({'auth_method': 'passkey'})
+                idcheck = self.env['res.users.identitycheck'].with_user(self.admin_user).create({'auth_method': 'webauthn'})
                 idcheck.password = json.dumps(auth)
                 idcheck._check_identity()

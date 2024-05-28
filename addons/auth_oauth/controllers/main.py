@@ -150,7 +150,8 @@ class OAuthController(http.Controller):
             elif menu:
                 url = '/web#menu_id=%s' % menu
 
-            pre_uid = request.session.authenticate(dbname, login, key)
+            credential = {'content': key, 'type': 'oauth'}
+            pre_uid = request.session.authenticate(dbname, login, credential)
             resp = request.redirect(_get_login_redirect_url(pre_uid, url), 303)
             resp.autocorrect_location_header = False
 

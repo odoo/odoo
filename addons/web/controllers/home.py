@@ -110,7 +110,8 @@ class Home(http.Controller):
 
         if request.httprequest.method == 'POST':
             try:
-                uid = request.session.authenticate(request.db, request.params['login'], request.params['password'])
+                credential = kw.get('credential', {'content': request.params['password'], 'type': 'password'})
+                uid = request.session.authenticate(request.db, request.params['login'], credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(uid, redirect=redirect))
             except odoo.exceptions.AccessDenied as e:

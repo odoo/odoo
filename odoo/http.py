@@ -964,10 +964,10 @@ class Session(collections.abc.MutableMapping):
     #
     # Session methods
     #
-    def authenticate(self, dbname, login=None, password=None):
+    def authenticate(self, dbname, login=None, credential=None):
         """
         Authenticate the current user with the given db, login and
-        password. If successful, store the authentication parameters in
+        credential. If successful, store the authentication parameters in
         the current session, unless multi-factor-auth (MFA) is
         activated. In that case, that last part will be done by
         :ref:`finalize`.
@@ -986,7 +986,7 @@ class Session(collections.abc.MutableMapping):
         }
 
         registry = Registry(dbname)
-        pre_uid = registry['res.users'].authenticate(dbname, login, password, wsgienv)
+        pre_uid = registry['res.users'].authenticate(dbname, login, credential, wsgienv)
 
         self.uid = None
         self.pre_login = login

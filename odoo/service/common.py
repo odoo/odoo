@@ -24,7 +24,8 @@ def exp_authenticate(db, login, password, user_agent_env):
         user_agent_env = {}
     res_users = odoo.registry(db)['res.users']
     try:
-        return res_users.authenticate(db, login, password, {**user_agent_env, 'interactive': False})
+        credential = {'content': password, 'type': 'password'}
+        return res_users.authenticate(db, login, credential, {**user_agent_env, 'interactive': False})
     except AccessDenied:
         return False
 
