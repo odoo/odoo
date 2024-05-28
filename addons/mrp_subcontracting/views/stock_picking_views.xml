@@ -17,8 +17,7 @@
             </xpath>
             <xpath expr="//field[@name='move_ids_without_package']//tree" position="inside">
                 <field name="is_subcontract" column_invisible="True"/>
-                <button name="action_show_details" invisible="not is_subcontract" type="object" icon="fa-adjust" width="0.1" title="Details"
-                                        attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
+                <button name="action_show_details" invisible="not is_subcontract" type="object" icon="fa-list" width="0.1" title="Details"/>
             </xpath>
         </field>
     </record>
