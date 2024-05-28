@@ -179,8 +179,9 @@ test("chat window: basic rendering", async () => {
         text: "There are no messages in this conversation.",
     });
     await click("[title='Open Actions Menu']");
-    await contains(".o-mail-ChatWindow-command", { count: 12 });
+    await contains(".o-mail-ChatWindow-command", { count: 13 });
     await contains("[title='Search Messages']");
+    await contains("[title='Notification Settings']");
     await contains("[title='Rename']");
     await contains("[title='Pinned Messages']");
     await contains("[title='Show Attachments']");
@@ -942,4 +943,31 @@ test("mark as read when opening chat window", async () => {
     await click(".o-mail-NotificationItem", { text: "bob" });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header", { text: "bob" });
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
+});
+
+test("Notification settings rendering in chatwindow", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+        ],
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem", { text: "general" });
+    await contains(".o-mail-ChatWindow", { count: 1 });
+    await click("[title='Open Actions Menu']");
+    await click("[title='Notification Settings']");
+    await contains("button", { text: "All Messages" });
+    await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
+    await contains("button", { text: "Nothing" });
+    await click("button", { text: "Mute Channel" });
+    await contains("button", { text: "For 15 minutes" });
+    await contains("button", { text: "For 1 hour" });
+    await contains("button", { text: "For 3 hours" });
+    await contains("button", { text: "For 8 hours" });
+    await contains("button", { text: "For 24 hours" });
+    await contains("button", { text: "Until I turn it back on" });
 });
