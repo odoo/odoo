@@ -275,3 +275,12 @@ class TestHasGroup(TransactionCase):
             self.registry._Registry__caches['default'],
             "call_cache_clearing_methods() must invalidate user._has_group cache"
         )
+
+    def test_has_group_with_new_id(self):
+        user = self.env['res.users'].new({'partner_id': self.test_user.partner_id.id})
+        self.assertEqual(user.has_group(self.group0), False)
+        self.assertEqual(user.has_group(self.group1), False)
+
+        user2 = self.env['res.users'].new({'partner_id': self.test_user.partner_id.id}, origin=self.test_user)
+        self.assertEqual(user2.has_group(self.group0), True)
+        self.assertEqual(user2.has_group(self.group1), False)
