@@ -16,17 +16,13 @@
                         <img class="img img-fluid d-block" src="/web/image/website.library_image_02" data-name="Image" data-index="2" alt=" "/>
                     </div>
                 </div>
-                <ul class="carousel-indicators">
-                    <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
-                        <i class="oi oi-chevron-left"/>
-                    </li>
-                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active"/>
-                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.library_image_03)"/>
-                    <li data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.library_image_02)"/>
-                    <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
-                        <i class="oi oi-chevron-right"/>
-                    </li>
-                </ul>
+                <div class="carousel-indicators o_not_editable" contenteditable="false">
+                    <i class="o_indicators_left text-center d-none oi oi-chevron-left" aria-label="Previous" title="Previous"/>
+                    <img data-bs-target="#slideshow_sample" data-bs-slide-to="0" src="/web/image/website.library_image_08" class="active"/>
+                    <img data-bs-target="#slideshow_sample" data-bs-slide-to="1" src="/web/image/website.library_image_03"/>
+                    <img data-bs-target="#slideshow_sample" data-bs-slide-to="2" src="/web/image/website.library_image_02"/>
+                    <i class="o_indicators_right text-center d-none oi oi-chevron-right" aria-label="Next" title="Next"/>
+                </div>
                 <a class="carousel-control-prev o_we_no_overlay o_not_editable" href="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
                     <span class="oi oi-chevron-left fa-2x text-white"/>
                     <span class="visually-hidden">Previous</span>

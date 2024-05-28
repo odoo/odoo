@@ -2,6 +2,7 @@
 import codecs
 import fnmatch
 import functools
+import html as html_stdlib
 import inspect
 import io
 import itertools
@@ -153,7 +154,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'label',
+    'value_label', 'data-tooltip', 'label', 'src', 'href', 'data-oe-expression',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -1091,6 +1092,16 @@ class TranslationReader:
                     _logger.exception("Failed to extract terms from %s %s", xml_name, name)
                     continue
                 for term_en, term_langs in translation_dictionary.items():
+                    term_en_unescaped = html_stdlib.unescape(term_en)
+                    value_en_unescaped = html_stdlib.unescape(value_en)
+                    attr_no_export = ['src', 'href', 'data-oe-expression']
+                    for attr in attr_no_export:
+                        if value_en_unescaped.count(f"{attr}='{term_en_unescaped}'") + value_en_unescaped.count(f'{attr}="{term_en_unescaped}"') > 0:
+                            # That's not perfect, we could check that the term
+                            # is ONLY in src attributes, but that's not perfect
+                            # either, because we could have this HTML:
+                            # <img src="X"/> <div style="background-image: url(X)"/>
+                            continue
                     term_lang = term_langs.get(self._lang)
                     self._push_translation(module, trans_type, name, xml_name, term_en, record_id=record.id, value=term_lang if term_lang != term_en else '')
 

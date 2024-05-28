@@ -175,7 +175,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
             carouselItemEl.appendChild(imgHolderEls[index]);
         });
         this._replaceContent($slideshow);
-        this.$("img").toArray().forEach((img, index) => {
+        this.$("img:not([data-bs-slide-to])").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});
         });
         this.$target.css('height', Math.round(window.innerHeight * 0.7));
@@ -188,7 +188,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @override
      */
     _getItemsGallery() {
-        const imgs = this.$('img').get();
+        const imgs = this.$('img:not([data-bs-slide-to])').get();
         imgs.sort((a, b) => this._getIndex(a) - this._getIndex(b));
         return imgs;
     },
@@ -356,11 +356,11 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      */
     start() {
         // Make sure image previews are updated if images are changed
-        this.$target.on('image_changed.gallery', 'img', ev => {
-            const $img = $(ev.currentTarget);
+        this.$target.on('image_changed.gallery', 'img:not([data-bs-slide-to])', ev => {
             const index = this.$target.find('.carousel-item.active').index();
-            this.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
-                .css('background-image', 'url(' + $img.attr('src') + ')');
+            ev.currentTarget.closest("section")
+                .querySelectorAll(".carousel-indicators img[data-bs-target]")[index]
+                ?.setAttribute("src", ev.currentTarget.src);
         });
 
         // When the snippet is empty, an edition button is the default content
@@ -370,7 +370,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
             this.addImages(false);
         });
 
-        this.$target.on('dropped.gallery', 'img', ev => {
+        this.$target.on('dropped.gallery', 'img:not([data-bs-slide-to])', ev => {
             this._relayout();
             if (!ev.target.height) {
                 $(ev.target).one('load', () => {
@@ -418,7 +418,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
      * @see this.selectClass for parameters
      */
     addImages(previewMode) {
-        const $images = this.$('img');
+        const $images = this.$('img:not([data-bs-slide-to])');
         const $container = this.$('> .container, > .container-fluid, > .o_container_small');
         const lastImage = this._getItemsGallery().at(-1);
         let index = lastImage ? this._getIndex(lastImage) : -1;
