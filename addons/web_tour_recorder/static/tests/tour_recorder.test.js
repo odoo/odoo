@@ -409,7 +409,7 @@ test("Drag and drop", async () => {
     await contains(".o_drag").dragAndDrop(".o_drop");
     await animationFrame();
     checkTourSteps([".o_drag"]);
-    expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["drag_and_drop_native .o_drop"]);
+    expect(tourRecorder.state.steps.map((s) => s.run)).toEqual(["drag_and_drop .o_drop"]);
 });
 
 test("Edit contenteditable", async () => {
