@@ -411,8 +411,12 @@ class SaleOrder(models.Model):
             # Calculate the actual point cost if the cost is per point
             converted_discount = self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today())
             point_cost = converted_discount / reward.discount
-        # Gift cards and eWallets are considered gift cards and should not have any taxes
-        if reward.program_id.is_payment_program:
+        # Gift cards, eWallets and 'per_point'/'per_order' rewards applicable to the whole order
+        # should not have any taxes
+        if reward.program_id.is_payment_program or (
+            reward.discount_applicability == 'order' and
+            reward.discount_mode in ['per_point', 'per_order']
+            ):
             return [{
                 'name': reward.description,
                 'product_id': reward.discount_line_product_id.id,
