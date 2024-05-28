@@ -169,7 +169,7 @@ export function urlToState(urlObj) {
             delete sanitizedHash.view_type;
         }
         Object.assign(state, sanitizedHash);
-        const url = browser.location.origin + stateToUrl(state);
+        const url = browser.location.origin + router.stateToUrl(state);
         // Change the url of the current history entry to the canonical url
         browser.history.replaceState(browser.history.state, null, url);
         urlObj.href = url;
@@ -232,7 +232,7 @@ let pushArgs;
 let _lockedKeys;
 
 export function startRouter() {
-    state = urlToState(new URL(browser.location));
+    state = router.urlToState(new URL(browser.location));
     pushTimeout = null;
     pushArgs = {
         replace: false,
@@ -256,7 +256,7 @@ browser.addEventListener("popstate", (ev) => {
         browser.history.replaceState({ nextState: state }, "", browser.location.href);
         return;
     }
-    state = ev.state?.nextState || urlToState(new URL(browser.location));
+    state = ev.state?.nextState || router.urlToState(new URL(browser.location));
     // Some client actions want to handle loading their own state. This is a ugly hack to allow not
     // reloading the webclient's state when they manipulate history.
     if (!ev.state?.skipRouteChange && !router.skipLoad) {
@@ -289,7 +289,7 @@ browser.addEventListener("click", (ev) => {
             ev.target.target !== "_blank"
         ) {
             ev.preventDefault();
-            state = urlToState(url);
+            state = router.urlToState(url);
             new Promise((res) => setTimeout(res, 0)).then(() => routerBus.trigger("ROUTE_CHANGE"));
         }
     }
@@ -302,7 +302,7 @@ function makeDebouncedPush(mode) {
     function doPush() {
         // Calculates new route based on aggregated search and options
         const nextState = computeNextState(pushArgs.state, pushArgs.replace);
-        const url = browser.location.origin + stateToUrl(nextState);
+        const url = browser.location.origin + router.stateToUrl(nextState);
         if (url + browser.location.hash !== browser.location.href) {
             // If the route changed: pushes or replaces browser state
             if (mode === "push") {
@@ -348,12 +348,13 @@ function makeDebouncedPush(mode) {
     };
 }
 
-startRouter();
-
 export const router = {
     get current() {
         return state;
     },
+    // state <-> url conversions can be patched if needed in a custom webclient.
+    stateToUrl,
+    urlToState,
     // TODO: stop debouncing these and remove the ugly hack to have the correct title for history entries
     pushState: makeDebouncedPush("push"),
     replaceState: makeDebouncedPush("replace"),
@@ -361,6 +362,8 @@ export const router = {
     addLockedKey: (key) => _lockedKeys.add(key),
     skipLoad: false,
 };
+
+startRouter();
 
 export function objectToQuery(obj) {
     const query = {};
