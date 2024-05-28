@@ -6557,6 +6557,40 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("grouped list, reload aggregates when a record is deleted", async function (assert) {
+        serverData.models.foo.records = [
+            { id: 121, foo: "blip", int_field: 100 },
+            { id: 122, foo: "blip", int_field: 300 },
+            { id: 123, foo: "blip", int_field: 700 },
+        ];
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: /*xml*/ `
+                <tree expand="1">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+            groupBy: ["foo"],
+            actionMenus: {},
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_group_header .o_list_number").textContent.trim(),
+            "1100"
+        );
+
+        await click(target.querySelector(".o_data_row input"));
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        await click(target, ".modal .btn-primary");
+        assert.strictEqual(
+            target.querySelector(".o_group_header .o_list_number").textContent.trim(),
+            "1000"
+        );
+    });
+
     QUnit.test("pager (ungrouped and grouped mode), default limit", async function (assert) {
         assert.expect(4);
 
