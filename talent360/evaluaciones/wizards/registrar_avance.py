@@ -16,10 +16,23 @@ class RegistrarAvance(models.TransientModel):
     _description = "Registrar Avance Wizard"
 
     fecha = fields.Date(default=fields.Date.today())
-    avance = fields.Integer(required=True)
-    archivos = fields.Many2many(comodel_name='ir.attachment', string='Subir Archivo')
+    avance = fields.Integer(
+        required=True,
+        help="Avance que consideras que has logrado en el objetivo."
+    )
+
+    archivos = fields.Many2many(
+        required=True,
+        comodel_name='ir.attachment',
+        string='Subir Archivo',
+        help='Evidencias que sustenten el porqué del avance registrado. Solo se permiten archivos con extensión pdf, xlsx, csv, txt, png, jpeg'
+    )
+
     nombres_archivos = fields.Char(string='Nombres de Archivos')
-    comentarios = fields.Text()
+    comentarios = fields.Text(
+        required=True,
+        help="Comentarios que sustentan el avance que se está registrando."
+    )
             
     @api.constrains('avance')
     def _validar_avance(self):
@@ -99,7 +112,7 @@ class RegistrarAvance(models.TransientModel):
         Método para registrar un avance en un objetivo de desempeño
         
         Se crea un registro en el modelo objetivo.avances con los datos del avance
-        Se actualiza el campo resultado del objetivo con el valor del avance
+        Se actualiza el campo resultado del objetivo con la suma del valor del avance
         """
 
         avance = self.avance
@@ -118,5 +131,6 @@ class RegistrarAvance(models.TransientModel):
             "archivos": [(6, 0, archivos.ids)],
         })
         
-        usuario_objetivo.sudo().write({"resultado": avance})
+        nuevo_resultado = usuario_objetivo.resultado + avance
+        usuario_objetivo.sudo().write({"resultado": nuevo_resultado})
         
