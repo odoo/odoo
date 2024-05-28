@@ -11,7 +11,7 @@ from psycopg2 import Error
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import SQL, check_barcode_encoding, format_list, groupby
+from odoo.tools import SQL, check_barcode_encoding, format_list, groupby, str2bool
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 _logger = logging.getLogger(__name__)
@@ -1247,7 +1247,7 @@ class StockQuant(models.Model):
         :param domain: List for the domain, empty by default.
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks'):
+        if not str2bool(self.env['ir.config_parameter'].sudo().get_param('stock.skip_quant_tasks')):
             self._quant_tasks()
         ctx = dict(self.env.context or {})
         ctx['inventory_report_mode'] = True

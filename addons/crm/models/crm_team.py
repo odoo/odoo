@@ -11,7 +11,7 @@ from markupsafe import Markup
 
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, str2bool
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class Team(models.Model):
             team.assignment_max = sum(member.assignment_max for member in team.crm_team_member_ids)
 
     def _compute_assignment_enabled(self):
-        assign_enabled = self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment', False)
+        assign_enabled = str2bool(self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment', False))
         auto_assign_enabled = False
         if assign_enabled:
             assign_cron = self.sudo().env.ref('crm.ir_cron_crm_lead_assign', raise_if_not_found=False)

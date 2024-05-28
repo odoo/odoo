@@ -4,10 +4,11 @@ from . import controllers
 from . import models
 from . import populate
 from . import report
+from odoo.tools import str2bool
 
 
 def _post_init_hook(env):
-    terms_conditions = env['ir.config_parameter'].get_param('account.use_invoice_terms')
+    terms_conditions = str2bool(env['ir.config_parameter'].get_param('account.use_invoice_terms'))
     if not terms_conditions:
         env['ir.config_parameter'].set_param('account.use_invoice_terms', True)
     companies = env['res.company'].search([])

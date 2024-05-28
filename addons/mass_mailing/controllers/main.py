@@ -10,7 +10,7 @@ from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
 from odoo import _, fields, http, tools
 from odoo.http import request, Response
-from odoo.tools import consteq
+from odoo.tools import consteq, str2bool
 
 
 class MassMailController(http.Controller):
@@ -200,7 +200,7 @@ class MassMailController(http.Controller):
             'feedback_readonly': False,
             'opt_out_reasons': opt_out_reasons,
             # blocklist
-            'blocklist_enabled': bool(
+            'blocklist_enabled': str2bool(
                 request.env['ir.config_parameter'].sudo().get_param(
                     'mass_mailing.show_blacklist_buttons',
                     default=True,

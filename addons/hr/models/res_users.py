@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
-from odoo.tools.misc import clean_context
+from odoo.tools.misc import clean_context, str2bool
 
 
 HR_READABLE_FIELDS = [
@@ -154,7 +154,7 @@ class User(models.Model):
         self.is_system = self.env.user._is_system()
 
     def _compute_can_edit(self):
-        can_edit = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
+        can_edit = str2bool(self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit')) or self.env.user.has_group('hr.group_hr_user')
         for user in self:
             user.can_edit = can_edit
 
@@ -240,7 +240,7 @@ class User(models.Model):
             for field_name, field in self._fields.items()
             if field.related_field and field.related_field.model_name == 'hr.employee' and field_name in vals
         }
-        can_edit_self = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
+        can_edit_self = str2bool(self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit')) or self.env.user.has_group('hr.group_hr_user')
         if hr_fields and not can_edit_self:
             # Raise meaningful error message
             raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))

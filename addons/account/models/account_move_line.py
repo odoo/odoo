@@ -7,7 +7,7 @@ import re
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
-from odoo.tools import frozendict, format_date, float_compare, format_list, Query
+from odoo.tools import frozendict, format_date, float_compare, format_list, Query, str2bool
 from odoo.tools.sql import create_index, SQL
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -2378,7 +2378,7 @@ class AccountMoveLine(models.Model):
 
     def _reconcile_plan_with_sync(self, plan_list, all_amls):
         # Parameter allowing to disable the exchange journal entries on partials.
-        disable_partial_exchange_diff = bool(self.env['ir.config_parameter'].sudo().get_param('account.disable_partial_exchange_diff'))
+        disable_partial_exchange_diff = str2bool(self.env['ir.config_parameter'].sudo().get_param('account.disable_partial_exchange_diff'))
 
         # ==== Prefetch the fields all at once to speedup the reconciliation ====
         # All of those fields will be cached by the orm. Since the amls are split into multiple batches, the orm is not

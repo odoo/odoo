@@ -11,7 +11,7 @@ from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
-from odoo.tools.misc import clean_context, OrderedSet, groupby
+from odoo.tools.misc import clean_context, OrderedSet, groupby, str2bool
 
 PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
@@ -1034,11 +1034,11 @@ Please change the quantity done or the rounding precision of your unit of measur
             'package_level_id', 'propagate_cancel', 'description_picking',
             'product_packaging_id',
         ]
-        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
+        if str2bool(self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date')):
             fields.append('date')
         if self.env.context.get('merge_extra'):
             fields.pop(fields.index('procure_method'))
-        if not self.env['ir.config_parameter'].sudo().get_param('stock.merge_ignore_date_deadline'):
+        if not str2bool(self.env['ir.config_parameter'].sudo().get_param('stock.merge_ignore_date_deadline')):
             fields.append('date_deadline')
         return fields
 
@@ -2121,7 +2121,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _trigger_scheduler(self):
         """ Check for auto-triggered orderpoints and trigger them. """
-        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler'):
+        if not self or str2bool(self.env['ir.config_parameter'].sudo().get_param('stock.no_auto_scheduler')):
             return
 
         orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
@@ -2147,7 +2147,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         """ Check for and trigger action_assign for confirmed/partially_available moves related to done moves.
             Disable auto reservation if user configured to do so.
         """
-        if not self or self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve'):
+        if not self or str2bool(self.env['ir.config_parameter'].sudo().get_param('stock.picking_no_auto_reserve')):
             return
 
         domains = [
