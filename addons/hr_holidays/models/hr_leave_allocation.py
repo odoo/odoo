@@ -787,7 +787,7 @@ class HolidaysAllocation(models.Model):
 
         self.write({'state': 'refuse', 'approver_id': current_employee.id})
         # If a category that created several holidays, cancel all related
-        linked_requests = self.mapped('linked_request_ids')
+        linked_requests = self.linked_request_ids.filtered(lambda alloc: alloc.state in ['confirm', 'validate'])
         if linked_requests:
             linked_requests.action_refuse()
         self.activity_update()

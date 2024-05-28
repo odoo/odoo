@@ -53,6 +53,11 @@ class TestAllocations(TestHrHolidaysCommon):
         num_of_allocations = self.env['hr.leave.allocation'].search_count([('employee_id', '=', self.employee.id), ('multi_employee', '=', False)])
         self.assertEqual(num_of_allocations, 1)
 
+        # Refuse, validate and re-refuse to test leave linked to the company holiday
+        company_allocation.action_refuse()
+        company_allocation.action_validate()
+        company_allocation.action_refuse()
+
     def test_allocation_multi_employee(self):
         employee_allocation = self.env['hr.leave.allocation'].create({
             'name': 'Bank Holiday',
