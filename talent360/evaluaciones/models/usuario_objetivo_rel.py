@@ -17,6 +17,7 @@ class UsuarioObjetivoRel(models.Model):
 
     _name = "usuario.objetivo.rel"
     _description = "Relación entre objetivos y usuarios"
+    _rec_name = "titulo"
 
     objetivo_id = fields.Many2one("objetivo", string="Objetivos", ondelete="cascade")
     usuario_id = fields.Many2one("res.users", string="Usuario", ondelete="cascade")

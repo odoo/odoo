@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from datetime import date
+from odoo import models
 
 
 class Objetivo(models.Model):
@@ -28,7 +29,7 @@ class Objetivo(models.Model):
     _description = "Objetivos de desempeño"
     _rec_name = "titulo"
 
-    titulo = fields.Char(required=True, string="Título")
+    titulo = fields.Char(required=True, string="Título", help="Título del objetivo")
     descripcion = fields.Text(
         required=True, string="Descripción", help="Descripción del objetivo", size="20"
     )
@@ -36,12 +37,20 @@ class Objetivo(models.Model):
         [
             ("porcentaje", "Porcentaje"),
             ("monto", "Monto"),
+            ("otro", "Otro")
         ],
         default="porcentaje",
         required=True,
         string="Métrica",
-        help="¿Cómo se medirá el objetivo? Ej. Porcentaje o Monto",
+        help="¿Cómo se medirá el objetivo? Ej. En porcentaje o en monto",
     )
+    nueva_metrica = fields.Char(string="Nueva Métrica", help="Ingrese una nueva métrica si seleccionó 'Otro'", size=20)
+    metrica_mostrar = fields.Char(
+        string="Métrica", compute="_compute_metrica_mostrar", store="True", size=20
+    )
+
+
+   
 
     tipo = fields.Selection(
         [
@@ -50,7 +59,7 @@ class Objetivo(models.Model):
         ],
         default="puesto",
         required=True,
-        help="Tipo de objetivo",
+        help="Si es individual, el objetivo es tipo 'Del Puesto'. Si es por equipo, el objetivo es tipo 'Estratégico'",
     )
 
     orden = fields.Selection(
@@ -63,12 +72,12 @@ class Objetivo(models.Model):
         help="Si el objetivo es para lograr una meta, es ascendente, si es para reducir algo, es descendente",
     )
 
-    peso = fields.Integer(required=True, help="Peso del objetivo en la evaluación")
+    peso = fields.Integer(required=True, help="Peso del objetivo en la evaluación (no debe incluir decimales).")
     piso_minimo = fields.Integer(
-        required=True, string="Piso Mínimo", help="¿Cuál es el mínimo aceptable?"
+        required=True, string="Piso Mínimo", help="¿Cuál es el resultado mínimo que se espera? (no debe incluir decimales)"
     )
     piso_maximo = fields.Integer(
-        required=True, string="Piso Máximo", help="¿Cuál es el máximo aceptable?"
+        required=True, string="Piso Máximo", help="¿Cuál es el resultado que se espera? (no debe incluir decimales)"
     )
     fecha_fin = fields.Date(
         required=True,
@@ -192,4 +201,30 @@ class Objetivo(models.Model):
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
             
-    
+    @api.onchange("metrica")
+    def _onchange_metrica(self):
+        if self.metrica != "otro":
+            self.nueva_metrica = False
+
+    @api.depends("metrica", "nueva_metrica")
+    def _compute_metrica_mostrar(self):
+        """
+        Método para calcular la respuesta a mostrar en la vista.
+
+        :return: Respuesta a mostrar en la vista
+        """
+
+        for objetivo in self:
+            if objetivo.metrica == "otro":
+                metrica_texto = objetivo.nueva_metrica
+            else:
+                metrica_texto = objetivo.metrica
+
+        objetivo.metrica_mostrar = metrica_texto
+
+    @api.constrains("metrica", "nueva_metrica")
+    def _check_nueva_metrica(self):
+        for record in self:
+            if record.metrica == "otro" and (not record.nueva_metrica or record.nueva_metrica.strip() == ''):
+                raise ValidationError(("El campo 'Métrica Personalizada' no puede estar vacío."))
+                

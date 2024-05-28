@@ -229,5 +229,28 @@
             </div>
 
         </template>
+
+        <template id="encuestas_reporte_no_respuestas" name="Reporte: Pantalla de no respuestas">
+            <t t-call="evaluaciones.diseño">
+                <div class="page container-fluid row gap-5 justify-content-between g-2 text-center">
+                    <div class="col-12">
+                        <h2>No se encontraron datos</h2>
+                        <p style="font-style: italic;">El reporte no contiene información para mostrar 
+                            <span t-if="filtros != None">con los filtros de:</span>
+                        </p>
+                        <ul t-if="filtros != None" class="list-unstyled" style="font-size: 1em;; font-weight: bold;">
+                            <t t-foreach="filtros.items()" t-as="filtro">
+                                <li>
+                                    <t t-esc="filtro[0]"/>
+                                    : 
+                                    <t t-esc="', '.join(filtro[1]['valores'])"/>
+                                </li>
+                            </t>
+                        </ul>
+                        <img t-att-src="'/evaluaciones/static/src/img/oops.png'" alt="Error 404" class="img-fluid" style="margin-top: 40px; max-width: 100%; height: auto;"/>
+                    </div>
+                </div>
+            </t>
+        </template>
     </data>
 </odoo>

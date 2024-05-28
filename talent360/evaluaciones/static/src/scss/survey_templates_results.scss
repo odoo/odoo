@@ -1,4 +1,25 @@
 @media print {
+    .portada {
+        display: flex !important;
+        position: relative; /* Añadir posición relativa */
+  
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 10px;
+        background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
+        min-height: 90vh; /* Para que ocupe toda la altura de la página */
+        width: 100%; /* Para que ocupe todo el ancho de la página */
+        font-family: Arial, sans-serif;
+        padding: 0; /* Eliminar cualquier relleno */
+        margin: 0; /* Eliminar cualquier margen */
+    }
+    .semaforo-item {
+        display: flex;
+        align-items: center;
+        gap: 10px; 
+    }
 
     .page-break {
         page-break-after: always;
@@ -91,7 +112,7 @@
             }
             tbody {
                 tr {
-                  break-inside: avoid;  
+                    break-inside: avoid;  
                 }
                 tr.d-none {
                     display: table-row !important;
@@ -255,6 +276,38 @@
     color: #ff4747;
 }
 
+.clima_color_nulo {
+    @extend .category_number;
+    color: #000000;
+}
+
+.clima_color_deficiente {
+    @extend .category_number;
+    color: #ff4747;
+}
+
+.clima_color_regular {
+    @extend .category_number;
+    color: #fc8803;
+}
+
+.clima_color_marginal {
+    @extend .category_number;
+    color: #fcd703;
+}
+
+.clima_color_suficiente {
+    @extend .category_number;
+    color: #5aaf2b;
+}
+
+.clima_color_superior {
+    @extend .category_number;
+    color: #2894a7;
+}
+
+
+
 .pill {
     padding: 0.5rem 1rem;
     border-radius: 2em;
@@ -266,50 +319,72 @@
     gap: 0.5rem;
     background-color: #dbdbdb;
 }
-
-.color_circle {
-    aspect-ratio: 1;
-    width: 22px;
-    border-radius: 100%;
-}
-
-
 @page {
     margin: 0; /* Elimina los márgenes predeterminados de la página */
 }
+
 body {
     margin: 0; /* Elimina los márgenes del cuerpo del documento */
 }
+
 .portada {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-radius: 10px;
-    background-color: #f8f9fa; /* Ajusta el color de fondo según tus necesidades */
-    min-height: 85vh; /* Para que ocupe toda la altura de la página */
-    width: 100%; /* Para que ocupe todo el ancho de la página */
-    font-family: Arial, sans-serif;
+    display: none;
 }
+
+.wave-top, .wave-bottom {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.wave-top {
+    top: 0;
+}
+
+.wave-bottom {
+    bottom: 0;
+}
+
+.company-logo {
+    height: 250px;
+    margin-bottom: 10px; /* Añade margen inferior para separar el logo del contenido */
+}
+
+.main-content {
+    z-index: 1; /* Asegúrate de que el contenido principal esté encima de las olas */
+    padding: 20px; /* Añade padding para separar el contenido del borde */
+}
+
+.main-content h1, .main-content h2, .main-content p {
+    margin: 0; /* Eliminar márgenes adicionales */
+    margin-bottom: 20px; /* Añade margen inferior para separar los elementos entre sí */
+}
+
 .header {
     margin-bottom: 20px;
 }
+
 .icon {
     margin: 20px 0;
 }
+
 .icon img {
     height: 100px;
 }
+
 .main-content h1 {
     font-size: 36px;
+    margin-bottom: 10px; /* Añade margen inferior para separar los encabezados */
 }
+
 .main-content h3 {
     font-size: 24px;
+    margin-bottom: 10px; /* Añade margen inferior para separar los encabezados */
 }
+
 .footer {
     margin-top: 20px;
 }
-.company-logo {
-    height: 100px;
-}
+
+

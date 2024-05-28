@@ -11,6 +11,7 @@
                 <field name="tipo" string="Tipo"/>
                 <field name="estado" string="Estado"/>
                 <field name="peso" string="Peso"/>
+                <field name="metrica_mostrar" string="Métrica"/>
                 <field name="piso_minimo" string="Piso Mínimo"/>
                 <field name="piso_maximo" string="Piso Máximo"/>
             </tree>
@@ -103,7 +104,9 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="metrica" string="Métrica" />
-                                        <field name="metrica" />
+                                        <field name="metrica" options="{'no_create': False, 'no_open': True}" />
+                                        <field name="nueva_metrica" invisible="metrica != 'otro'" placeholder="Métrica Personalizada"/>
+
                                         <br />
                                         <label for="orden" string="Orden" />
                                         <field name="orden" />

@@ -26,8 +26,10 @@ function confirmacion() {
     if (!allFieldsFilled) {
         alert('Por favor, llena todos los campos requeridos antes de enviar el formulario.');
         if (firstUnfilledField) {
-            firstUnfilledField.scrollIntoView({ behavior: 'smooth' });
-            firstUnfilledField.focus();
+            firstUnfilledField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                firstUnfilledField.focus();
+            }, 300); // Adjust the delay as needed
         }
         return false;
     }
