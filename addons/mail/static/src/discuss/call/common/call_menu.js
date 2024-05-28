@@ -9,6 +9,22 @@ export class CallMenu extends Component {
     setup() {
         super.setup();
         this.rtc = useState(useService("discuss.rtc"));
+        this.store = useState(useService("mail.store"));
+    }
+
+    get rtcState() {
+        return this.rtc.state.channel ? this.rtc.state : this.rtc.sharedState;
+    }
+    
+    get rtcChannel() {
+        let channel = this.rtcState.channel;
+        if (!channel) {
+            channel = this.store.Thread.get({
+                model: "discuss.channel",
+                id: this.rtcState.channelId
+            });
+        }
+        return channel;
     }
 }
 

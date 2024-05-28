@@ -26,6 +26,11 @@ let multiTabId = 0;
 export const multiTabService = {
     start() {
         const bus = new EventBus();
+        let broadcastChannel = null;
+        if (browser.BroadcastChannel) {
+            broadcastChannel = new browser.BroadcastChannel("multi.tab.service");
+            broadcastChannel.onmessage = ({ data }) => bus.trigger(data.type, data.payload);
+        }
 
         // CONSTANTS
         const TAB_HEARTBEAT_PERIOD = 10000; // 10 seconds
@@ -88,6 +93,16 @@ export const multiTabService = {
                 // Removing main peer from queue.
                 delete lastPresenceByTab[newMain];
                 setItemInStorage("lastPresenceByTab", lastPresenceByTab);
+            }
+        }
+
+        function getAnyOtherTabId() {
+            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
+            for (const tab of Object.entries(lastPresenceByTab)) {
+                if (tab[0] === tabId) {
+                    continue;
+                }
+                return tab[0];
             }
         }
 
@@ -178,6 +193,7 @@ export const multiTabService = {
             get currentTabId() {
                 return tabId;
             },
+            getAnyOtherTabId,
             /**
              * Determine whether or not this tab is the main one.
              *
@@ -215,6 +231,9 @@ export const multiTabService = {
              */
             removeSharedValue(key) {
                 browser.localStorage.removeItem(generateLocalStorageKey(key));
+            },
+            broadcast(type, payload) {
+                broadcastChannel?.postMessage({ type, payload });
             },
         };
     },

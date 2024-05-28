@@ -27,7 +27,7 @@
                         'o-isInvitation': !rtcSession,
                         }"
                         class="h-100 rounded-circle border-5 o_object_fit_cover"
-                        t-att-src="channelMember.persona.avatarUrl"
+                        t-att-src="channelMember?.persona?.avatarUrl"
                         draggable="false"
                 />
             </div>
@@ -48,6 +48,9 @@
                     </span>
                     <span t-if="rtcSession.isDeaf" class="d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="deaf" aria-label="deaf">
                         <i class="fa fa-deaf"/>
+                    </span>
+                    <span t-if="rtcSession.isCameraOn and !hasVideo" class="d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': props.minimized, 'p-2': !props.minimized }" title="camera" aria-label="camera">
+                        <i class="fa fa-video-camera"/>
                     </span>
                     <span t-if="hasMediaError" class="o-discuss-CallParticipantCard-overlay-replayButton d-flex flex-column justify-content-center me-1 p-2 rounded-circle" title="media player Error" t-on-click.stop="onClickReplay">
                         <i t-if="rootHover.isHover" class="fa fa-repeat text-danger"/>
