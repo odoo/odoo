@@ -1080,7 +1080,6 @@ class Users(models.Model):
         the current request is in debug mode.
         """
         self.ensure_one()
-
         if not (self.env.su or self == self.env.user or self._has_group('base.group_user')):
             # this prevents RPC calls from non-internal users to retrieve
             # information about other users
@@ -1101,7 +1100,8 @@ class Users(models.Model):
            given external ID (XML ID), else False.
         """
         group_id = self.env['res.groups']._get_group_definitions().get_id(group_ext_id)
-        return group_id in self._get_group_ids()
+        # for new record don't fill the ormcache
+        return group_id in (self._get_group_ids() if self.id else self.groups_id._origin._ids)
 
     @tools.ormcache('self.id')
     def _get_group_ids(self):
