@@ -16,17 +16,20 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
             position: "right",
-            edition: "community"
+            edition: "community",
+            run: "click",
         }, {
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
             position: "bottom",
-            edition: "enterprise"
+            edition: "enterprise",
+            run: "click",
         }, {
             trigger: "button.o_list_button_add",
             extra_trigger: ".o_sale_order",
             content: _t("Build your first quotation right here!"),
             position: "bottom",
+            run: "click",
         }, {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
             extra_trigger: ".o_sale_order",
@@ -37,10 +40,12 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".ui-menu-item > a:contains('Agrolait')",
             auto: true,
             in_modal: false,
+            run: "click",
         }, {
             trigger: ".o_field_x2many_list_row_add > a",
             content: _t("Click here to add some products or services to your quotation."),
             position: "bottom",
+            run: "click",
         }, {
             trigger: ".o_field_widget[name='product_id'], .o_field_widget[name='product_template_id']",
             extra_trigger: ".o_sale_order",
@@ -63,6 +68,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         }, {
             trigger: "a:contains('DESK0001')",
             auto: true,
+            run: "click",
         }, {
             trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
             run: () => {},
@@ -76,6 +82,7 @@ registry.category("web_tour.tours").add("sale_tour", {
         }, {
             trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
             auto: true,
+            run: "click",
         },
         ...stepUtils.statusbarButtonsSteps(
             "Send by Email",
@@ -88,16 +95,19 @@ registry.category("web_tour.tours").add("sale_tour", {
             content: _t("let's continue"),
             position: "bottom",
             skip_trigger: ".modal-footer button[name='action_send_mail']",
+            run: "click",
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
             extra_trigger: ".modal-footer button[name='action_send_mail']",
             content: _t("Go ahead and send the quotation."),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: "body:not(.modal-open)",
             auto: true,
+            run: "click",
         }
     ],
 });

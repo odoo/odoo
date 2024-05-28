@@ -11,6 +11,7 @@
         {
             trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
             content: 'open crm app',
+            run: "click",
         }, {
             trigger: '.o_kanban_record .o_kanban_record_title span:contains(Test Lead Propagation)',
             content: 'Open the first lead',
@@ -31,6 +32,7 @@
         {
             trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
             content: 'open crm app',
+            run: "click",
         }, {
             trigger: '.o_kanban_record .o_kanban_record_title span:contains(Test Lead Propagation)',
             content: 'Open the first lead',

@@ -7,10 +7,12 @@ import { registry } from "@web/core/registry";
 const checkKanbanGroupBy = [{
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
+    run: "click",
 }, {
     content: "Open search panel menu",
     extra_trigger: '.o_kanban_renderer',
     trigger: '.o_control_panel .o_searchview_dropdown_toggler',
+    run: "click",
 }, {
     content: "Select 'Active' in the select of Add Custom Group",
     trigger: "select.o_add_custom_group_menu",
@@ -19,18 +21,22 @@ const checkKanbanGroupBy = [{
     content: "Click on List View",
     extra_trigger: '.o_kanban_renderer .o_kanban_header',
     trigger: '.o_cp_switch_buttons .o_list',
+    run: "click",
 }, {
     content: "Remove applied Group By",
     extra_trigger: '.o_list_renderer',
     trigger: '.o_cp_searchview .o_facet_remove',
+    run: "click",
 }];
 
 const checkWebsiteFilter = [{
 	content: "Click on the search options",
 	trigger: ".o_searchview_dropdown_toggler",
+    run: "click",
 }, {
 	content: "Select My Website 2",
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
+    run: "click",
 }, {
 	content: "Check that the homepage is now the one of My Website 2",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
@@ -43,6 +49,7 @@ const checkWebsiteFilter = [{
 }, {
 	content: "Go back to My Website",
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website')",
+    run: "click",
 }, {
 	content: "Check that the homepage is now the one of My Website",
 	trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
@@ -54,10 +61,12 @@ const deleteSelectedPage = [
     {
         content: "Click on Action",
         trigger: '.o_cp_action_menus button',
+        run: "click",
     },
     {
         content: "Click on Delete",
         trigger: '.o-dropdown--menu span:contains("Delete")',
+        run: "click",
     },
     {
         content: "Click on I am sure about this",
@@ -65,10 +74,12 @@ const deleteSelectedPage = [
         // The loading of the dependencies can take a while and
         // sometimes reach the default 10s timeout
         timeout: 20000,
+        run: "click",
     },
     {
         content: "Click on OK",
         trigger: '.modal-content footer button.btn-primary:not([disabled])',
+        run: "click",
     }
 ];
 const homePage = 'tr:contains("Home")';
@@ -80,16 +91,19 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
     {
         content: "Click on Site",
         trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
+        run: "click",
     },
     {
         content: "Click on Pages",
         trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
+        run: "click",
     },
     ...checkKanbanGroupBy,
     ...checkWebsiteFilter,
     {
         content: "Click on Home Page",
         trigger: `.o_list_renderer ${homePage} td.o_list_record_selector input[type="checkbox"]`,
+        run: "click",
     },
     ...deleteSelectedPage,
     {
@@ -100,6 +114,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
     {
         content: "Click on All Pages",
         trigger: '.o_list_renderer thead input[type="checkbox"]',
+        run: "click",
     },
     ...deleteSelectedPage,
     {
@@ -115,9 +130,11 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
 }, () => [...wTourUtils.switchWebsite(2, 'My Website 2'), {
     content: "Click on Site",
     trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
+    run:" click",
 }, {
     content: "Click on Pages",
     trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
+    run:" click",
 }, {
     content: "Check that the homepage is the one of My Website 2",
     trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
@@ -126,6 +143,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
 }, {
 	content: "Click on the search options",
 	trigger: ".o_searchview_dropdown_toggler",
+    run:" click",
 }, {
 	content: "Check that the selected website is My Website 2",
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",
@@ -143,6 +161,7 @@ registry.category("web_tour.tours").add('website_page_manager_direct_access', {
 }, {
 	content: "Click on the search options",
 	trigger: ".o_searchview_dropdown_toggler",
+    run:" click",
 }, {
 	content: "Check that the selected website is My Website 2",
 	trigger: ".o_dropdown_container.o_website_menu > .dropdown-item:contains('My Website 2')",

@@ -30,6 +30,7 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     {
         content: "Toggle gray color palette",
         trigger: '.o_we_gray_preview.o_we_collapse_toggler',
+        run: "click",
     },
     {
         content: "Drag the hue slider",

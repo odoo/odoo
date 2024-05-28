@@ -10,6 +10,7 @@ registry.category("web_tour.tours").add('edit_translated_page_redirect', {
     {
         content: "Enter backend",
         trigger: 'a.o_frontend_to_backend_edit_btn',
+        run: "click",
     },
     {
         content: "Check the data-for attribute",
@@ -30,6 +31,7 @@ registry.category("web_tour.tours").add('edit_translated_page_redirect', {
     {
         content: "Enter backend",
         trigger: 'a.o_frontend_to_backend_edit_btn',
+        run: "click",
     },
     ...wTourUtils.clickOnEditAndWaitEditModeInTranslatedPage(),
 ]});

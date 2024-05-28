@@ -93,6 +93,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     {
         content: "Pick the same icon",
         trigger: '.o_select_media_dialog .o_we_attachment_selected.fa-unlock-alt',
+        run: "click",
     },
     {
         content: "Check if the icon remains the same",
@@ -107,6 +108,7 @@ wTourUtils.registerWebsitePreviewTour('website_media_dialog_icons', {
     {
         content: "Click on the ADD button",
         trigger: '.o_select_media_dialog .btn:contains(Add)',
+        run: "click",
     },
     {
         content: "Check if the icon remains the same",
@@ -128,6 +130,7 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     {
         content: "Click on the image",
         trigger: ":iframe .s_text_image img",
+        run: "click",
     },
     wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
     wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
@@ -139,10 +142,12 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     {
         content: "Click on the 'Icons' tab",
         trigger: '.o_select_media_dialog .o_notebook_headers .nav-item a:contains("Icons")',
+        run: "click",
     },
     {
         content: "Select an icon",
         trigger: ".o_select_media_dialog:has(.nav-link.active:contains('Icons')) .tab-content span.fa-heart",
+        run: "click",
     },
     {
         content: "Checks that the icon doesn't have a shape",

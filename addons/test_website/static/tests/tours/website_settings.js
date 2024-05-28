@@ -13,10 +13,12 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         {
             content: "open settings",
             trigger: ".o_app[data-menu-xmlid='base.menu_administration']",
+            run: "click",
         },
         {
             content: "open website settings",
             trigger: ".settings_tab .tab[data-key='website']",
+            run: "click",
         },
         {
             content: "check that the 'Shared Customers Accounts' setting is checked",
@@ -31,6 +33,7 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         {
             content: `select ${websiteName} in the website switcher`,
             trigger: `li:has(.dropdown-item:contains('${websiteName}'))`,
+            run: "click",
         },
         {
             content: `check that the settings of ${websiteName} are loaded (Shared Customers Accounts)`,
@@ -40,6 +43,7 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         {
             content: "click on the fake website setting after checking the edited website",
             trigger: "button[name='action_website_test_setting']",
+            run: "click",
         },
         {
             content: "check that we are on '/'",

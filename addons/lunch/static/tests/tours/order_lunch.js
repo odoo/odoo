@@ -10,17 +10,20 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     trigger: 'a[data-menu-xmlid="lunch.menu_lunch"]',
     content: _t("Start by accessing the lunch app."),
     position: 'bottom',
+    run: "click",
 },
 {
     trigger: ".o_search_panel_filter_value .form-check-input",
     content: _t("Restrict your search using filters"),
     position: 'bottom',
+    run: "click",
 },
 {
     trigger: "div[role=article]",
     extra_trigger: '.o_search_panel_filter_value .form-check-input:checked',
     content: _t("Click on a product you want to order and is available."),
     position: 'bottom',
+    run: "click",
 },
 {
     trigger: 'textarea[name="note"]',
@@ -33,6 +36,7 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     trigger: 'button[name="add_to_cart"]',
     content: _t("Add your order to the cart."),
     position: 'bottom',
+    run: "click",
 },
 {
     trigger: '.o_lunch_widget_order_button',

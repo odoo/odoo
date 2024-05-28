@@ -12,23 +12,28 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    run: "click",
 },  {
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order'
+    extra_trigger: '.o_sale_order',
+    run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
     run: "edit Tajine Saucisse",
 }, {
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     auto: true,
+    run: "click",
 }, {
     trigger: 'a:contains("Add a product")',
     extra_trigger: '.o_field_widget[name=partner_shipping_id] .o_external_button', // Wait for onchange_partner_id
+    run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
+    run: "click",
 },
     ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "Legs", "Custom", "Custom 1"),
     ...configuratorTourUtils.selectAndSetCustomAttribute("Customizable Desk", "PA1", "PAV9", "Custom 2"),
@@ -58,6 +63,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     }
 }, {
     trigger: 'button:contains(Confirm)',
+    run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, White, PAV9, PAV5, PAV1)"):not(:contains("PA9: Single PAV"))',
     isCheck: true,

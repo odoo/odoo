@@ -16,6 +16,7 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
     {
         content: "website is in preview mode",
         trigger: '.o_website_preview',
+        run: "click",
     },
     {
         content: "records are listed in grid mode by default",
@@ -30,15 +31,18 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
     {
         content: "open customize tab",
         trigger: '.o_we_customize_snippet_btn',
+        run: "click",
     },
     {
         content: "open 'Layout' selector",
         extra_trigger: '#oe_snippets .o_we_customize_panel',
         trigger: '[data-name="default_listing_layout"] we-toggler',
+        run: "click",
     },
     {
         content: "click on 'List' option of the 'Layout' selector",
         trigger: '.o_we_user_value_widget we-button[data-name="list_view_opt"]',
+        run: "click",
     },
     {
         content: "records are now displayed in list mode",

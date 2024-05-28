@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
             run: "click",
         },
         {
-            trigger: '.scale_button_selection',
+            trigger: ".scale_button_selection",
             content: "Click to change calendar view",
             run: "click",
         },
@@ -66,10 +66,12 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
         {
             trigger: ".fc-col-header-cell.fc-day.fc-day-mon",
             content: "Check the day is properly displayed",
+            run: "click",
         },
         {
             trigger: '.fc-time:contains("10:00")',
             content: "Check the time is properly displayed",
+            run: "click",
         },
         {
             trigger: '.o_event_title:contains("TEST EVENT")',
@@ -96,11 +98,13 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
         {
             content: "Select filter (everybody)",
             trigger: 'div[data-value="all"] input',
+            run: "click",
         },
         clickOnTheEvent,
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
+            run: "click",
         },
         {
             content: "Validate the deletion",
@@ -120,6 +124,7 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
+            run: "click",
         },
         {
             content: "Wait declined status",
@@ -135,15 +140,18 @@ registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_fi
         {
             content: "Select filter (everybody)",
             trigger: 'div[data-value="all"] input',
+            run: "click",
         },
         clickOnTheEvent,
         {
             content: "Delete the event",
             trigger: ".o_cw_popover_delete",
+            run: "click",
         },
         {
             content: "Select filter (everybody)",
             trigger: 'div[data-value="all"] input',
+            run: "click",
         },
         {
             content: "Wait declined status",

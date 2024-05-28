@@ -9,6 +9,7 @@ registry.category("web_tour.tours").add('stock_notification_wishlist', {
         {
             content: "Click on 'Be notified when back in stock'",
             trigger: '#wishlist_stock_notification_message',
+            run: "click",
         },
         {
             content: "Fill email form",
@@ -18,6 +19,7 @@ registry.category("web_tour.tours").add('stock_notification_wishlist', {
         {
             content: "Click on the button",
             trigger: '#wishlist_stock_notification_form_submit_button',
+            run: "click",
         },
         {
             content: "Success Message",

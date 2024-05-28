@@ -11,9 +11,11 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: 'Go to Survey',
         trigger: '.o_app[data-menu-xmlid="survey.menu_surveys"]',
+        run: "click",
     }, {
         content: "Create a new survey",
         trigger: ".o-kanban-button-new",
+        run: "click",
     }, {
         content: "Set the Survey's title",
         trigger: ".o_field_widget[name=title] textarea",
@@ -21,6 +23,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Add a first question",
         trigger: "td.o_field_x2many_list_row_add a",
+        run: "click",
     }, {
         content: "Set the first question's title",
         trigger: ".modal-content .o_field_widget[name=title] input",
@@ -93,6 +96,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that an alert is shown",
         trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
         in_modal: true,
+        run: "click",
     },
     ...changeTab("options"),
     {
@@ -158,6 +162,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that an alert is shown also when only one trigger is misplaced",
         trigger: ".o_form_sheet_bg div:first-child.alert-warning:contains('positioned before some or all of its triggers')",
         in_modal: true,
+        run: "click",
     },
     ...changeTab("options"),
     {
@@ -189,6 +194,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Delete Answer B",
         trigger: "div[name=suggested_answer_ids] tr:contains('Answer B') button[name=delete]",
+        run: "click",
     },
     ...stepUtils.saveForm(),
     {
@@ -212,6 +218,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: 'Go back to Kanban View',
         trigger: '[data-menu-xmlid="survey.menu_survey_form"]',
+        run: "click",
     }, {
         content: "Check that we arrived on the kanban view",
         trigger: ".o-kanban-button-new",
@@ -225,6 +232,7 @@ function addTwoAnswers() {
             content: "Add the first answer",
             trigger: "div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
             in_modal: true,
+            run: "click",
         }, {
             trigger: 'tr.o_selected_row div[name=value] input',
             run: "edit Answer A",
@@ -233,6 +241,7 @@ function addTwoAnswers() {
             content: "Add the second answer",
             trigger: "div[name=suggested_answer_ids] .o_field_x2many_list_row_add a",
             in_modal: true,
+            run: "click",
         }, {
             trigger: 'tr:nth-child(2).o_selected_row div[name=value] input',
             run: "edit Answer B",
@@ -247,6 +256,7 @@ function saveAndNew() {
             content: "Click Save & New",
             trigger: "button.o_form_button_save_new",
             in_modal: true,
+            run: "click",
         }, {
             content: "Wait for the dialog to render new question form",
             // suggested_answer_ids required even though in_modal is specified...
@@ -264,7 +274,8 @@ function changeTab(tabName) {
         {
             content: `Go to ${tabName} tab`,
             trigger: `.modal-content a[name=${tabName}].nav-link`,
-            in_modal: true
+            in_modal: true,
+            run: "click",
         }, {
             content: `Wait for tab ${tabName} tab`,
             trigger: `.modal-content a[name=${tabName}].nav-link.active`,

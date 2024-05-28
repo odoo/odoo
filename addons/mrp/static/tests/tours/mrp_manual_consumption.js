@@ -24,6 +24,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         {
             content: "Click Pager",
             trigger: ".o_pager_value:first()",
+            run: "click",
         },
         {
             trigger: "input[id='qty_producing_0']",
@@ -32,6 +33,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         {
             content: "Click Pager",
             trigger: ".o_pager_value:first()",
+            run: "click",
         },
         {
             trigger: 'div[name=move_raw_ids] td[name="quantity"]:last:contains("16.00")',

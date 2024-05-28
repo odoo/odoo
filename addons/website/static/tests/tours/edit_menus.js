@@ -11,15 +11,18 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "open site menu",
         extra_trigger: ":iframe #wrapwrap",
         trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
     },
     {
         content: "Click on Edit Menu",
         trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
         extra_trigger: '.o_website_dialog:visible',
         trigger: '.modal-body a:eq(1)',
+        run: "click",
     },
     {
         content: "Write a label for the new menu item",
@@ -29,11 +32,13 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Confirm the mega menu label",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Save the new menu",
         trigger: '.modal-footer .btn-primary',
         extra_trigger: '.oe_menu_editor [data-is-mega-menu="true"] .js_menu_label:contains("Megaaaaa!")',
+        run: "click",
     },
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}, true),
     {
@@ -46,20 +51,24 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Click on a menu item",
         trigger: ":iframe .top_menu .nav-item a",
+        run: "click",
     },
     {
         content: "Click on Edit Menu",
         trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        run: "click",
     },
     {
         content: "Trigger the link dialog (click 'Add Menu Item')",
         extra_trigger: '.o_website_dialog:visible',
         trigger: '.modal-body a:eq(0)',
+        run: "click",
     },
     {
         content: "Confirm the new menu entry without a label",
         extra_trigger: '.modal-dialog .o_website_dialog input:eq(0)',
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "It didn't save without a label. Fill label input.",
@@ -70,6 +79,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Confirm the new menu entry without a url",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "It didn't save without a url. Fill url input.",
@@ -80,11 +90,13 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Confirm the new menu entry",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Save the website menu with the new entry",
         trigger: '.modal-footer .btn-primary',
         extra_trigger: '.oe_menu_editor .js_menu_label:contains("Random!")',
+        run: "click",
     },
     // Edit the new menu item from the "edit link" popover button
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}, true),
@@ -93,10 +105,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: ':iframe .top_menu .nav-item a:contains("Random!")',
         // Don't click the new menu when the editor is still blocked.
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
+        run: "click",
     },
     {
         content: "Click on Edit Link",
         trigger: ':iframe .o_edit_menu_popover a.o_we_edit_link',
+        run: "click",
     },
     {
         content: "Change the label",
@@ -106,6 +120,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Confirm the new label",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     ...wTourUtils.clickOnSave(),
     wTourUtils.clickOnExtraMenuItem({}, true),
@@ -120,10 +135,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Click on the 'Modnar' link",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
+        run: "click",
     },
     {
         content: "Click on the popover Edit Menu button",
         trigger: ':iframe .o_edit_menu_popover a.js_edit_menu',
+        run: "click",
     },
     {
         content: "Click on the dialog Edit Menu button",
@@ -141,11 +158,13 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Confirm the new menu label",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Save the website menu with the new menu label",
         trigger: '.modal-footer .btn-primary',
         extra_trigger: '.oe_menu_editor .js_menu_label:contains("Modnar !!")',
+        run: "click",
     },
     // Drag a block to be able to scroll later.
     wTourUtils.dragNDrop({id: 's_media_list', name: 'Media List'}),
@@ -160,10 +179,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "open site menu",
         trigger: 'button[data-menu-xmlid="website.menu_site"]',
+        run: "click",
     },
     {
         content: "Click on Edit Menu",
         trigger: 'a[data-menu-xmlid="website.menu_edit_menu"]',
+        run: "click",
     },
     {
         content: `Drag "Contact Us" menu below "Home" menu`,
@@ -210,10 +231,12 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Save the website menu with new nested menus",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     {
         content: "Menu item should have a child",
         trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        run: "click",
     },
     // Check that with the auto close of dropdown menus, the dropdowns remain
     // openable.
@@ -234,6 +257,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Open the Home menu after scroll",
         trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        run: "click",
     },
     {
         content: "Check that the Home menu is opened",
@@ -244,6 +268,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Close the Home menu",
         trigger: ':iframe .top_menu .nav-item:has(a.dropdown-toggle:contains("Home"))',
+        run: "click",
     },
     {
         content: "Check that the Home menu is closed",
@@ -253,6 +278,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Open the mega menu",
         trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        run: "click",
     },
     {
         content: "When the mega menu is opened, scroll up",
@@ -276,6 +302,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Open the mega menu after scroll",
         trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        run: "click",
     },
     {
         content: "Check that the mega menu is opened",
@@ -287,6 +314,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Open nested menu item",
         trigger: ':iframe .top_menu .nav-item:contains("Home"):nth-child(2) .dropdown-toggle',
+        run: "click",
     },
     {
         // If this step fails, it means that a patch inside bootstrap was lost.

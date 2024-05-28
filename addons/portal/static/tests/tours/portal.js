@@ -9,11 +9,13 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
         {
             content: "Check portal is loaded",
             trigger: 'a[href*="/my/account"]:contains("Edit"):first',
+            run: "click",
         },
         {
             content: "Load my account details",
             trigger: 'input[value="Joel Willis"]',
             isCheck: true,
+            run: "click",
         },
         {
             content: 'type a different phone number',
@@ -23,6 +25,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
         {
             content: "Submit the form",
             trigger: 'button[type=submit]',
+            run: "click",
         },
         {
             content: "Check that we are back on the portal",

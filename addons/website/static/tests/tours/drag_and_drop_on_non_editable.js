@@ -14,6 +14,7 @@ wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
     {
         content: "Click on an editable media in non editable env.",
         trigger: ":iframe .s_company_team .o_not_editable > .o_editable_media",
+        run: "click",
     },
     {
         content: "Verify that the Replace options is in the editor.",

@@ -11,10 +11,12 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
             content: 'select Super Chair',
             extra_trigger: '.oe_search_found',
             trigger: '.oe_product_cart a:contains("Super Chair")',
+            run: "click",
         },
         {
             content: 'Add Super Chair into cart',
             trigger: 'a:contains(Add to cart)',
+            run: "click",
         },
         tourUtils.goToCart(),
         {
@@ -26,6 +28,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         {
             content: 'validate the promo code',
             trigger: 'form[name="coupon_code"] .a-submit',
+            run: "click",
         },
         {
             content: 'check reward',
@@ -35,6 +38,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         {
             content: 'claim reward',
             trigger: '.alert:contains("10% on Super Chair") .btn:contains("Claim")',
+            run: "click",
         },
         {
             content: 'check claimed reward',
@@ -51,6 +55,7 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         {
             content: 'validate the promo code',
             trigger: 'form[name="coupon_code"] .a-submit',
+            run: "click",
         },
         {
             content: 'check refused message',

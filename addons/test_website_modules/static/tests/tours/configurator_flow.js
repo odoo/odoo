@@ -10,6 +10,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
     {
         content: "click on create new website",
         trigger: 'button[name="action_website_create_new"]',
+        run: "click",
     }, {
         content: "insert website name",
         trigger: '[name="name"] input',
@@ -17,16 +18,19 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "validate the website creation modal",
         trigger: 'button.btn-primary:contains("Create")',
+        run: "click",
     },
     // Configurator first screen
     {
         content: "click next",
         trigger: 'button.o_configurator_show',
+        run: "click",
     },
     // Description screen
     {
         content: "select a website type",
         trigger: 'a.o_change_website_type',
+        run: "click",
     }, {
         content: "insert a website industry",
         trigger: '.o_configurator_industry input',
@@ -34,22 +38,27 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "select a website industry from the autocomplete",
         trigger: '.o_configurator_industry ul li a',
+        run: "click",
     }, {
         content: "select an objective",
         trigger: '.o_configurator_purpose_dd a',
+        run: "click",
     }, {
         content: "choose from the objective list",
         trigger: 'a.o_change_website_purpose',
+        run: "click",
     },
     // Palette screen
     {
         content: "chose a palette card",
         trigger: '.palette_card',
+        run: "click",
     },
     // Features screen
     {
         content: "select Pricing",
         trigger: '.card:contains("Pricing")',
+        run: "click",
     }, {
         content: "Events should be selected (module already installed)",
         extra_trigger: '.card.border-success:contains("Pricing")',
@@ -67,6 +76,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "Click on build my website",
         trigger: 'button.btn-primary',
+        run: "click",
     }, {
         content: "Loader should be shown",
         trigger: '.o_website_loader_container',

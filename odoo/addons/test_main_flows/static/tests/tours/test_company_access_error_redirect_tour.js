@@ -17,6 +17,7 @@ registry.category("web_tour.tours").add("test_company_access_error_redirect", {
         },
         {
             trigger: ".o_switch_company_menu button",
+            run: "click",
         },
         {
             trigger: ".o-dropdown--menu",

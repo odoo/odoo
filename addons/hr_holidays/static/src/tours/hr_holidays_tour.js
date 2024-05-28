@@ -19,11 +19,13 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
             content: _t("Let's discover the Time Off application"),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: "button.btn-time-off",
             content: _t("Click on any date or on this button to request a time-off"),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: 'div[name="holiday_status_id"] input',
@@ -32,9 +34,9 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
         {
             trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
-            run: "click",
             auto: true,
             in_modal: false,
+            run: "click",
         },
         {
             trigger: "input[data-field=request_date_from]",
@@ -63,16 +65,19 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             trigger: `button:contains(${_t("Save")})`,
             content: _t("Submit your request"),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: 'button[data-menu-xmlid="hr_holidays.menu_hr_holidays_management"]',
             content: _t("Let's go validate it"),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: 'a[data-menu-xmlid="hr_holidays.menu_open_department_leave_approve"]',
             content: _t("Select Time Off"),
             position: "right",
+            run: "click",
         },
         {
             trigger: "table.o_list_table",
@@ -87,6 +92,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             trigger: 'button[name="action_approve"]',
             content: _t("Let's approve it"),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: `tr.o_data_row:first:not(:has(button[name="action_approve"])),table tbody:not(tr.o_data_row)`,

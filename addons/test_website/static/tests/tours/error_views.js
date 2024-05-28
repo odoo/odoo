@@ -10,45 +10,57 @@ registry.category("web_tour.tours").add('test_error_website', {
     {
         content: "trigger rpc user error",
         trigger: 'a[href="/test_user_error_json"]',
+        run: "click",
     }, {
         content: "rpc user error modal has message",
         extra_trigger: 'div.o_notification_content:contains("This is a user rpc test")',
         trigger: 'button.o_notification_close',
+        run: "click",
     }, {
         content: "trigger rpc access error",
         trigger: 'a[href="/test_access_error_json"]',
+        run: "click",
     }, {
         content: "rpc access error modal has message",
         extra_trigger: 'div.o_notification_content:contains("This is an access rpc test")',
         trigger: 'button.o_notification_close',
+        run: "click",
     }, {
         content: "trigger validation rpc error",
         trigger: 'a[href="/test_validation_error_json"]',
+        run: "click",
     }, {
         content: "rpc validation error modal has message",
         extra_trigger: 'div.o_notification_content:contains("This is a validation rpc test")',
         trigger: 'button.o_notification_close',
+        run: "click",
     }, {
         content: "trigger rpc missing error",
         trigger: 'a[href="/test_missing_error_json"]',
+        run: "click",
     }, {
         content: "rpc missing error modal has message",
         extra_trigger: 'div.o_notification_content:contains("This is a missing rpc test")',
         trigger: 'button.o_notification_close',
+        run: "click",
     }, {
         content: "trigger rpc error 403",
         trigger: 'a[href="/test_access_denied_json"]',
+        run: "click",
     }, {
         content: "rpc error 403 modal has message",
         extra_trigger: 'div.o_notification_content:contains("This is an access denied rpc test")',
         trigger: 'button.o_notification_close',
+        run: "click",
     }, {
         content: "trigger rpc error 500",
         trigger: 'a[href="/test_internal_error_json"]',
+        run: "click",
     }, {
         content: "rpc error 500 modal is an ErrorDialog",
         extra_trigger: 'div.o_error_dialog.modal-content',
         trigger: '.modal-footer button.btn.btn-primary',
+        run: "click",
     },
     // HTTP ERROR
     {

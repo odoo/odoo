@@ -9,21 +9,26 @@ registry.category("web_tour.tours").add('sale_product_configurator_recursive_opt
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    run: "click",
 }, {
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order'
+    extra_trigger: '.o_sale_order',
+    run: "click",
 }, {
     trigger: 'a:contains("Add a product")',
+    run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
+    run: "click",
 },
     configuratorTourUtils.selectAttribute("Customizable Desk", "Legs", "Aluminium"),
     configuratorTourUtils.addOptionalProduct("Conference Chair"),
     configuratorTourUtils.addOptionalProduct("Chair floor protection"),
 {
     trigger: 'button:contains(Confirm)',
+    run: "click",
 }, ...stepUtils.discardForm()
 ]});

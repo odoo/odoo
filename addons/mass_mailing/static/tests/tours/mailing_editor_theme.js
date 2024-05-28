@@ -12,10 +12,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Select the 'Email Marketing' app.",
             trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+            run: "click",
         },
         {
             content: "Click on the create button to create a new mailing.",
             trigger: 'button.o_list_button_add',
+            run: "click",
         },
         {
             content: "Fill in Subject",
@@ -30,11 +32,13 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Pick 'Newsletter' option",
             trigger: '.o_input_dropdown a:contains(Newsletter)',
+            run: "click",
         },
         {
             content: "Pick the basic theme",
             trigger: ':iframe #basic',
             extra_trigger: ':iframe .o_mail_theme_selector_new',
+            run: "click",
         },
         {
             content: "Make sure the snippets menu is hidden",
@@ -46,6 +50,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Click on the New button to create another mailing",
             trigger: 'button.o_form_button_create',
+            run: "click",
         },
         {
             content: "Fill in Subject",
@@ -61,10 +66,12 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Pick 'Newsletter' option",
             trigger: '.o_input_dropdown a:contains(Newsletter)',
+            run: "click",
         },
         {
             content: "Pick the newsletter theme",
             trigger: ':iframe #newsletter',
+            run: "click",
         },
         {
             content: "Make sure the snippets menu is displayed",
@@ -75,6 +82,7 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: 'Go back to previous mailing',
             trigger: 'td[name="subject"]:contains(Test Basic Theme)',
+            run: "click",
         },
         {
             content: "Make sure the snippets menu is hidden",
@@ -101,14 +109,17 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Open the color picker",
             trigger: '#toolbar #oe-text-color',
+            run: "click",
         },
         {
             content: "Switch back to solid tab from custom tab",
             trigger: '.colorpicker button[data-target="theme-colors"]',// Switch back to solid tab
+            run: "click",
         },
         {
             content: "Pick a color",
             trigger: '#toolbar button[data-color="o-color-1"]',
+            run: "click",
         },
         {
             content: "Check that color was applied",
@@ -118,11 +129,13 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         ...stepUtils.saveForm(),
         {
             content: "Go to 'Mailings' list view",
-            trigger: '.breadcrumb a:contains(Mailings)'
+            trigger: '.breadcrumb a:contains(Mailings)',
+            run: "click",
         },
         {
             content: "Open newly created mailing",
             trigger: 'td:contains("Test Basic Theme")',
+            run: "click",
         },
         {
             content: "Make sure the snippets menu is hidden",

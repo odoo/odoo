@@ -11,8 +11,10 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
         stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+            run: "click",
         }, {
             trigger: 'button.o_list_button_add',
+            run: "click",
         }, {
             trigger: 'input#subject_0',
             content: markup('Pick the <b>email subject</b>.'),

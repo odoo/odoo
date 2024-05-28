@@ -19,15 +19,19 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_public'
     }
 }, {
     trigger: 'a:contains("Join this Course")',
+    run: "click",
 }, {
     trigger: 'a:contains("login")',
+    run: "click",
 }, {
     trigger: 'input[id="password"]',
     run: "edit portal",
 }, {
     trigger: 'button:contains("Log in")',
+    run: "click",
 }, {
     trigger: 'a:contains("Join this Course")',
+    run: "click",
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     content: 'Check that user is enrolled',

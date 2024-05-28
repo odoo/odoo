@@ -20,10 +20,12 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
     stepUtils.waitIframeIsReady(),
     {
     // open to the course
-    trigger: ':iframe a:contains("Basics of Gardening")'
+    trigger: ':iframe a:contains("Basics of Gardening")',
+    run: "click",
 }, {
     // click on a slide to open the fullscreen view
-    trigger: ':iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")'
+    trigger: ':iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")',
+    run: "click",
 }, {
     trigger: ':iframe .o_wslides_fs_main',
     run: function () {} // check we land on the fullscreen view
