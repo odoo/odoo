@@ -196,7 +196,29 @@
                         <p>El formato seleccionado para las preguntas escalares es Textual.</p>
                     </t>
                     <t t-elif="evaluacion.escalar_format == 'caritas'">
-                        <p>El formato seleccionado para las preguntas escalares es Caritas.</p>
+                        <p>El formato seleccionado para las preguntas escalares es "LIKERT", estas son las ponderaciones: </p>
+                        <div class="caritas-rating">
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/muy_enojado.png" alt="Muy enojado" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Muy enojado</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/casi_enojado.png" alt="Casi enojado" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Casi enojado</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/medio.png" alt="Medio" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Medio</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/normal.png" alt="Normal" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Normal</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/contento.png" alt="Contento" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Contento</span>
+                            </div>
+                        </div>
                     </t>
                     <t t-elif="evaluacion.escalar_format == 'estrellas'">
                         <p>El formato seleccionado para las preguntas escalares es "Estrellas", estas son las ponderaciones: </p>
@@ -226,20 +248,20 @@
                 </div>
             </div>
             <style>
-                .star-rating {
+                .star-rating, .caritas-rating {
                     display: flex;
                     gap: 10px;
                 }
-                .star {
+                .star, .carita {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                 }
-                .star img {
+                .star img, .carita img {
                     width: 50px;
                     height: 50px;
                 }
-                .star span {
+                .star span, .carita span {
                     margin-top: 5px;
                     margin-bottom: 20px;
                 }
