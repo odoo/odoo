@@ -19,6 +19,7 @@ import {
     triggerEvent,
     nextTick,
     patchWithCleanup,
+    makeDeferred,
 } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { Component, useState, xml } from "@odoo/owl";
@@ -629,6 +630,7 @@ QUnit.module("Tour service", (hooks) => {
         });
         const env = await makeTestEnv({});
 
+<<<<<<< HEAD
         const { Component: OverlayContainer, props: overlayContainerProps } = registry
             .category("main_components")
             .get("OverlayContainer");
@@ -636,7 +638,18 @@ QUnit.module("Tour service", (hooks) => {
         class Root extends Component {
             static components = { OverlayContainer };
             static template = xml/*html*/ `
+||||||| parent of eb277f1c7354 (temp)
+            class Root extends Component {
+                static components = { TourPointerContainer };
+                static template = xml/*html*/ `
+=======
+            const def = makeDeferred();
+            class Root extends Component {
+                static components = { TourPointerContainer };
+                static template = xml/*html*/ `
+>>>>>>> eb277f1c7354 (temp)
                 <t>
+<<<<<<< HEAD
                     <button class="button0">Button 0</button>
                     <button class="button1">Button 1</button>
                     <button class="button2">Button 2</button>
@@ -646,8 +659,80 @@ QUnit.module("Tour service", (hooks) => {
                     <button class="button6">Button 6</button>
                     <button class="button7">Button 7</button>
                     <OverlayContainer t-props="props.overlayContainerProps" />
+||||||| parent of eb277f1c7354 (temp)
+                    <div id="container" style="display: flex; align-items:center; justify-content: center;
+                                                margin: 25px; height: 450px; width: 450px; background-color: DodgerBlue;
+                                                border: 3px solid black;">
+                        <iframe
+                            srcdoc="&lt;button id='demo-button' &gt; Test Button &lt;/button&gt;"
+                            style="height: 200px; width: 200px; background-color: grey; border: 2px solid black;">
+                        </iframe>
+                    </div>
+                    <TourPointerContainer t-props="props.tourPointerProps" />
+=======
+                    <div id="container" style="display: flex; align-items:center; justify-content: center;
+                                                margin: 25px; height: 450px; width: 450px; background-color: DodgerBlue;
+                                                border: 3px solid black;">
+                        <iframe
+                            srcdoc="&lt;button id='demo-button' &gt; Test Button &lt;/button&gt;"
+                            style="height: 200px; width: 200px; background-color: grey; border: 2px solid black;"
+                            t-on-load="onIFrameLoad"
+                        />
+                    </div>
+                    <TourPointerContainer t-props="props.tourPointerProps" />
+>>>>>>> eb277f1c7354 (temp)
                 </t>
+<<<<<<< HEAD
             `;
+||||||| parent of eb277f1c7354 (temp)
+            `;
+            }
+
+            await mount(Root, target, { env, props: { tourPointerProps } });
+            env.services.tour_service.startTour("tour2", { mode: "manual" });
+            await mock.advanceTime(750);
+            assert.containsOnce($("*"), ".o_tour_pointer .o_tour_pointer_tip");
+            assert.containsOnce($("iframe").contents(), "#demo-button");
+
+            // Check the expected position
+            const iframe = target.querySelector("iframe");
+            const { top: iframeTop } = iframe.getBoundingClientRect();
+            const { bottom: btnBottom } = iframe.contentDocument
+                .querySelector("#demo-button")
+                .getBoundingClientRect();
+            const { top: tourPointerTop } = target
+                .querySelector(".o_tour_pointer_tip")
+                .getBoundingClientRect();
+
+            // The margin (equal to 6) is added below, which is passed when calling the reposition function.
+            assert.strictEqual(Math.floor(iframeTop + btnBottom + 6), Math.floor(tourPointerTop));
+=======
+                `;
+                onIFrameLoad() {
+                    def.resolve();
+                }
+            }
+
+            await mount(Root, target, { env, props: { tourPointerProps } });
+            await def; // await the iframe's content
+            env.services.tour_service.startTour("tour2", { mode: "manual" });
+            await mock.advanceTime(750);
+            assert.containsOnce($("*"), ".o_tour_pointer .o_tour_pointer_tip");
+            assert.containsOnce($("iframe").contents(), "#demo-button");
+
+            // Check the expected position
+            const iframe = target.querySelector("iframe");
+            const { top: iframeTop } = iframe.getBoundingClientRect();
+            const { bottom: btnBottom } = iframe.contentDocument
+                .querySelector("#demo-button")
+                .getBoundingClientRect();
+            const { top: tourPointerTop } = target
+                .querySelector(".o_tour_pointer_tip")
+                .getBoundingClientRect();
+
+            // The margin (equal to 6) is added below, which is passed when calling the reposition function.
+            assert.strictEqual(Math.floor(iframeTop + btnBottom + 6), Math.floor(tourPointerTop));
+>>>>>>> eb277f1c7354 (temp)
         }
 
         await mount(Root, target, { env, props: { overlayContainerProps } });
