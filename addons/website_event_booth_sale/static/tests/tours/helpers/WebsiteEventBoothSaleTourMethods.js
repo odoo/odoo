@@ -7,14 +7,17 @@
             {
                 content: "Go to page Event",
                 trigger: '.nav-link:contains("Event")',
+                run: "click",
             },
             {
                 content: 'Open "Test Event Booths" event',
                 trigger: `h5.card-title span:contains(${eventName})`,
+                run: "click",
             },
             {
                 content: 'Go to "Get A Booth" page',
                 trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
+                run: "click",
             },
             {
                 content: 'Select the booth',

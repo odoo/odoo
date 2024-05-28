@@ -98,6 +98,7 @@ function fillAdressForm(adressParams = {
     steps.push({
         content: "Continue checkout",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
+        run: "click",
     });
     return steps;
 }
@@ -132,14 +133,16 @@ function pay() {
         content: 'Pay',
         //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
         // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)'
+        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)', 
+        run: "click",
     };
 }
 
 function payWithDemo() {
     return [{
         content: 'eCommerce: select Test payment provider',
-        trigger: 'input[name="o_payment_radio"][data-payment-method-code="demo"]'
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="demo"]',
+        run: "click",
     }, {
         content: 'eCommerce: add card number',
         trigger: 'input[name="customer_input"]',
@@ -157,6 +160,7 @@ function payWithTransfer(redirect=false) {
     const first_step = {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
+        run: "click",
     }
     if (!redirect) {
         return [
@@ -208,10 +212,12 @@ function selectPriceList(pricelist) {
         {
             content: "Click on pricelist dropdown",
             trigger: "div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
+            run: "click",
         },
         {
             content: "Click on pricelist",
             trigger: `span:contains(${pricelist})`,
+            run: "click",
         },
     ];
 }

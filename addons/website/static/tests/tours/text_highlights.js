@@ -19,6 +19,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Click on the 'Highlight Effects' button to activate the option",
         trigger: "div.o_we_text_highlight",
+        run: "click",
     },
     {
         content: "Check that the highlight was applied",
@@ -33,6 +34,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Disable the highlight effect",
         trigger: "div.o_we_text_highlight",
+        run: "click",
     },
     {
         content: "Check that the highlight was disabled for the title",
@@ -62,10 +64,12 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Add the highlight effect on the muti-line text",
         trigger: "div.o_we_text_highlight",
+        run: "click",
     },
     {
         content: "Check if the text was correctly updated",
-        trigger: ":iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",        isCheck: true,
+        trigger: ":iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",
+        isCheck: true,
     },
     ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
     {
@@ -77,6 +81,7 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Disable the highlight effect",
         trigger: "div.o_we_text_highlight",
+        run: "click",
     },
     {
         content: "Check if the original DOM structure was restored",

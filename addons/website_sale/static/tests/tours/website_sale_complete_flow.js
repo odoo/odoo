@@ -13,10 +13,12 @@
     {
         content: "Open product page",
         trigger: '.oe_product_cart a:contains("Storage Box Test")',
+        run: "click",
     },
     {
         content: "Add one more storage box",
         trigger: '.js_add_cart_json:eq(1)',
+        run: "click",
     },
     {
         content: "Check b2b Tax-Excluded Prices",
@@ -26,12 +28,14 @@
     {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
+        run: "click",
     },
         tourUtils.goToCart({quantity: 2}),
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         trigger: 'a[href*="/shop/checkout"]',
+        run: "click",
     },
     ...tourUtils.assertCartAmounts({
         taxes: '23.70',
@@ -70,10 +74,12 @@
     {
         content: "Shipping address is not same as billing address",
         trigger: '#shipping_use_same',
+        run: "click",
     },
     {
         content: "Click on next button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
+        run: "click",
     },
     {
         content: "Fulfill shipping address form",
@@ -104,6 +110,7 @@
     {
         content: "Click on next button",
         trigger: '.oe_cart .btn:contains("Save address")',
+        run: "click",
     },
     {
         content: "Check selected billing address is same as typed in previous step",
@@ -118,10 +125,12 @@
     {
         content: "Click for edit address",
         trigger: 'a:contains("Edit") i',
+        run: "click",
     },
     {
         content: "Click for edit billing address",
         trigger: '.js_edit_address:first',
+        run: "click",
     },
     {
         content: "Change billing address form",
@@ -148,6 +157,7 @@
     {
         content: "Click on next button",
         trigger: '.oe_cart .btn:contains("Save address")',
+        run: "click",
     },
         tourUtils.confirmOrder(),
     {
@@ -158,15 +168,18 @@
     {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
+        run: "click",
     },
     {
         content: "Pay Now",
         extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
         trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
+        run: "click",
     },
     {
         content: "Sign up",
         trigger: '.oe_cart a:contains("Sign Up")',
+        run: "click",
     },
     {
         trigger: `.oe_signup_form input[name="password"]`,
@@ -184,20 +197,24 @@
     {
         content: "See Quotations",
         trigger: '.o_portal_docs a:contains("Quotations to review")',
+        run: "click",
     },
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
         content: "Open Dropdown for logout",
         extra_trigger: ".o_header_standard:not(.o_transitioning)",
         trigger: 'header#top li.dropdown:visible a:contains("abcd")',
+        run: "click",
     },
     {
         content: "Logout",
         trigger: '#o_logout:contains("Logout")',
+        run: "click",
     },
     {
         content: "Sign in as admin",
         trigger: 'header a[href="/web/login"]',
+        run: "click",
     },
     {
         trigger: `.oe_login_form input[name="login"]`,
@@ -250,10 +267,12 @@
     {
         content: "Open product page",
         trigger: '.oe_product_cart a:contains("Storage Box Test")',
+        run: "click",
     },
     {
         content: "Add one more Storage Box Test",
         trigger: '.js_add_cart_json:eq(1)',
+        run: "click",
     },
     {
         content: "Check b2c Tax-Included Prices",
@@ -263,6 +282,7 @@
     {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
+        run: "click",
     },
         tourUtils.goToCart({quantity: 2}),
     {
@@ -278,6 +298,7 @@
     {
         content: "Click on Sign in Button",
         trigger: `.oe_cart a:contains(Sign in)`,
+        run: "click",
     },
     {
         trigger: `.oe_login_form input[name="login"]`,
@@ -295,6 +316,7 @@
     {
         content: "Add new shipping address",
         trigger: '.all_delivery a[href^="/shop/address"]:contains("Add address")',
+        run: "click",
     },
     {
         content: "Fulfill shipping address form",
@@ -324,25 +346,30 @@
     {
         content: "Click on next button",
         trigger: '.oe_cart .btn:contains("Save address")',
+        run: "click",
     },
     {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
+        run: "click",
     },
     {
         content: "Pay Now",
         extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
         trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
+        run: "click",
     },
     {
         content: "Open Dropdown for See quotation",
         extra_trigger: '.oe_cart .oe_website_sale_tx_status',
         trigger: 'header#top li.dropdown:visible a:contains("abc")',
+        run: "click",
     },
     {
         content: "My account",
         extra_trigger: 'header#top li.dropdown .js_usermenu.show',
         trigger: 'header#top .dropdown-menu a[href="/my/home"]:visible',
+        run: "click",
     },
 
     // enable extra step on website checkout and check extra step on checkout process
@@ -350,14 +377,17 @@
         content: "Open Dropdown for logout",
         extra_trigger: ".o_header_standard:not(.o_transitioning)",
         trigger: 'header#top li.dropdown:visible a:contains("abc")',
+        run: "click",
     },
     {
         content: "Logout",
         trigger: '#o_logout:contains("Logout")',
+        run: "click",
     },
     {
         content: "Sign in as admin",
         trigger: 'header a[href="/web/login"]',
+        run: "click",
     },
     {
         trigger: `.oe_login_form input[name="login"]`,
@@ -388,14 +418,17 @@
         content: "Open Dropdown for logout",
         extra_trigger: '.o_wizard:contains("Extra Info")',
         trigger: 'header#top li.dropdown:visible a:contains("Mitchell Admin")',
+        run: "click",
     },
     {
         content: "Logout",
         trigger: '#o_logout:contains("Logout")',
+        run: "click",
     },
     {
         content: "Sign in as abc",
         trigger: 'header a[href="/web/login"]',
+        run: "click",
     },
     {
         trigger: `.oe_login_form input[name="login"]`,
@@ -420,16 +453,19 @@
     {
         content: "Open product page",
         trigger: '.oe_product_cart a:contains("Storage Box Test")',
+        run: "click",
     },
     {
         content: "Click on add to cart",
         trigger: '#add_to_cart',
+        run: "click",
     },
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
     {
         content: "Click on 'Continue checkout' button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
+        run: "click",
     },
     {
         content: "Check selected billing address is same as typed in previous step",

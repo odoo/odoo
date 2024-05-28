@@ -10,14 +10,17 @@ wTourUtils.registerWebsitePreviewTour('translate_menu_name', {
     {
         content: "Open Edit dropdown",
         trigger: '.o_edit_website_container button',
+        run: "click",
     },
     {
         content: "activate translate mode",
         trigger: '.o_translate_website_dropdown_item',
+        run: "click",
     },
     {
         content: "Close the dialog",
         trigger: '.modal-footer .btn-primary',
+        run: "click",
     },
     wTourUtils.clickOnExtraMenuItem({}, true),
     {

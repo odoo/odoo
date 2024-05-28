@@ -10,11 +10,13 @@ wTourUtils.registerWebsitePreviewTour('website_sale_tour_backend', {
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
+            run: "click",
         },
         {
             content: "Enable Extra step",
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-customize-website-views="website_sale.extra_info"] we-checkbox',
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
     ],

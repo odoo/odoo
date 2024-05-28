@@ -13,6 +13,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "select product attribute Steel",
             trigger: ':iframe form.js_attributes input:not(:checked) + label:contains(Steel - Test)',
+            run: "click",
         },
         {
             content: "check the selection",
@@ -23,6 +24,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "select product",
             extra_trigger: ':iframe body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))',
             trigger: ':iframe .oe_product_cart a:contains("Test Product")',
+            run: "click",
         },
         {
             content: "check list view of variants is disabled initially",
@@ -34,15 +36,18 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
+            run: "click",
         },
         {
             content: "open 'Variants' selector",
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
+            run: "click",
         },
         {
             content: "click on 'Products List' of the 'Variants' selector",
             trigger: 'we-button[data-name="variants_products_list_opt"]',
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
         {
@@ -58,6 +63,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "switch to another variant",
             trigger: ":iframe .js_product label:contains('Aluminium')",
+            run: "click",
         },
         {
             content: "verify that price has changed when changing variant",
@@ -68,15 +74,18 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
+            run: "click",
         },
         {
             content: "open 'Variants' selector",
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
+            run: "click",
         },
         {
             content: "click on 'Options' of the 'Variants' selector",
             trigger: 'we-button[data-name="variants_options_opt"]',
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
         {
@@ -92,6 +101,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "switch to Aluminium variant",
             trigger: ':iframe .js_product input[data-value_name="Aluminium"]',
+            run: "click",
         },
         {
             content: "verify that price has changed when changing variant",
@@ -101,6 +111,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "switch back to Steel variant",
             trigger: ":iframe .js_product label:contains('Steel - Test')",
+            run: "click",
         },
         {
             content: "check price is 750",
@@ -110,6 +121,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "click on 'Add to Cart' button",
             trigger: ":iframe a:contains(Add to cart)",
+            run: "click",
         },
         {
             content: "check quantity",
@@ -121,21 +133,25 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "click on shop",
             trigger: ":iframe a:contains(Continue shopping)",
             extra_trigger: ':iframe body:not(:has(#products_grid_before .js_attributes))',
+            run: "click",
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
             trigger: '.o_we_customize_snippet_btn',
+            run: "click",
         },
         {
             content: "remove 'Attributes'",
             extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: 'we-button[data-name="attributes_opt"]',
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
         {
             content: "wait to exit edit mode",
             trigger: '.o_website_preview:not(.editor_has_snippets)',
+            run: "click",
         },
         {
             content: "finish",

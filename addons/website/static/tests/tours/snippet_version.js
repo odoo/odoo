@@ -39,14 +39,17 @@ wTourUtils.registerWebsitePreviewTour("snippet_version_2", {
 {
     content: "Edit s_test_snip",
     trigger: ':iframe #wrap.o_editable .s_test_snip',
+    run: "click",
 }, {
     content: "Edit text_image",
     extra_trigger: 'we-customizeblock-options:contains(Test snip) .snippet-option-VersionControl > we-alert',
     trigger: ':iframe #wrap.o_editable .s_text_image',
+    run: "click",
 }, {
     content: "Edit s_share",
     extra_trigger: 'we-customizeblock-options:contains(Text - Image) .snippet-option-VersionControl  > we-alert',
     trigger: ':iframe #wrap.o_editable .s_share',
+    run: "click",
 }, {
     content: "s_share is outdated",
     extra_trigger: 'we-customizeblock-options:contains(Share) .snippet-option-VersionControl > we-alert',

@@ -43,6 +43,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_options', {
     {
         content: "Click on 'header' in the invisible elements list",
         trigger: '.o_we_invisible_el_panel .o_we_invisible_entry',
+        run: "click",
     },
     wTourUtils.clickOnSnippet({id: 'o_footer', name: 'Footer'}),
     wTourUtils.changeOption('HideFooter', 'we-button[data-name="hide_footer_page_opt"] we-checkbox'),

@@ -24,6 +24,7 @@ const selectSignImageStep = {
     content: "Click on image 14",
     extra_trigger: ".o_we_customize_panel:not(:has(.snippet-option-GalleryElement))",
     trigger: ":iframe .s_image_gallery img[data-original-src*='library_image_14']",
+    run: "click",
 };
 // Without reselecting the image, the tour manages to click on the
 // move button before the active image is updated.
@@ -37,6 +38,7 @@ const reselectSignImageSteps = [
     content: "Select footer",
     extra_trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'])",
     trigger: ":iframe footer",
+    run: "click",
 }, selectSignImageStep];
 
 wTourUtils.registerWebsitePreviewTour("snippet_images_wall", {
@@ -55,6 +57,7 @@ selectSignImageStep,
 {
     content: "Click on add a link",
     trigger: ".snippet-option-ReplaceMedia we-button[data-set-link]",
+    run: "click",
 }, {
     content: "Change the link of the image",
     trigger: ".snippet-option-ReplaceMedia [data-set-url] input",
@@ -67,6 +70,7 @@ selectSignImageStep,
 }, {
     content: "Click on move to previous",
     trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
+    run: "click",
 }, {
     content: "Check if sign is in second column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][data-original-src*='library_image_14'])",
@@ -76,6 +80,7 @@ selectSignImageStep,
 {
     content: "Click on move to first",
     trigger: ".snippet-option-GalleryElement we-button[data-position='first']",
+    run: "click",
 }, {
     content: "Check if sign is in first column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
@@ -85,6 +90,7 @@ selectSignImageStep,
 {
     content: "Click on move to previous",
     trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
+    run: "click",
 }, {
     content: "Check if sign is in third column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
@@ -94,6 +100,7 @@ selectSignImageStep,
 {
     content: "Click on move to next",
     trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+    run: "click",
 }, {
     content: "Check if sign is in first column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
@@ -103,6 +110,7 @@ selectSignImageStep,
 {
     content: "Click on move to last",
     trigger: ".snippet-option-GalleryElement we-button[data-position='last']",
+    run: "click",
 }, {
     content: "Check layout",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
