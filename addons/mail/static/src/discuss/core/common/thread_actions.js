@@ -12,7 +12,10 @@ import { usePopover } from "@web/core/popover/popover_hook";
 threadActionsRegistry
     .add("notification-settings", {
         condition(component) {
-            return component.thread?.model === "discuss.channel" && !component.props.chatWindow;
+            return (
+                component.thread?.model === "discuss.channel" &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            );
         },
         setup(action) {
             const component = useComponent();
@@ -46,7 +49,7 @@ threadActionsRegistry
                 : "fa fa-fw fa-lg fa-bell";
         },
         name: _t("Notification Settings"),
-        sequence: 5,
+        sequence: (component) => (component.props.chatWindow ? 16.5 : 5),
         toggle: true,
     })
     .add("attachments", {
