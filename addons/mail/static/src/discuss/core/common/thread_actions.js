@@ -14,8 +14,8 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
-                !component.props.chatWindow &&
-                component.store.self.type !== "guest"
+                component.store.self.type !== "guest" &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
         setup(action) {
@@ -50,7 +50,7 @@ threadActionsRegistry
                 : "fa fa-fw fa-lg fa-bell";
         },
         name: _t("Notification Settings"),
-        sequence: 5,
+        sequence: (component) => (component.props.chatWindow ? 16.5 : 5),
         toggle: true,
     })
     .add("attachments", {
