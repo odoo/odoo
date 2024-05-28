@@ -10,6 +10,7 @@ test("default state", () => {
     expect(odoo.debug).toBe("");
     expect(serverState).toEqual({
         companies: [{ id: 1, name: "Hermit" }],
+        db: "test",
         debug: "",
         groupId: 11,
         lang: "en",
@@ -20,6 +21,7 @@ test("default state", () => {
         publicPartnerId: 18,
         publicPartnerName: "Public user",
         publicUserId: 8,
+        serverVersion: [1, 0, 0, "final", 0, ""],
         timezone: "taht",
         userContext: {},
         userId: 7,
