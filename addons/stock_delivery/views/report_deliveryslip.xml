@@ -2,21 +2,44 @@
 <odoo>
     <template id="report_delivery_document2" inherit_id="stock.report_delivery_document">
         <xpath expr="//div[@name='div_sched_date']" position="after">
-            <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
-                <strong>Carrier:</strong>
-                <p t-field="o.carrier_id"/>
-            </div>
-            <div t-if="o.shipping_weight" class="col-auto">
-                <strong>Total Weight:</strong>
-                <br/>
-                <span t-field="o.shipping_weight"/>
-                <span t-field="o.weight_uom_name"/>
-            </div>
-            <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
-                <strong>Tracking Number:</strong>
-                <p t-field="o.carrier_tracking_ref"/>
-            </div>
+            <t t-if="not (o.sudo().sale_id.incoterm or o.sudo().sale_id.client_order_ref)">
+                <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
+                    <strong>Carrier:</strong>
+                    <p t-field="o.carrier_id"/>
+                </div>
+                <div t-if="o.shipping_weight" class="col-auto">
+                    <strong>Total Weight:</strong>
+                    <br/>
+                    <span t-field="o.shipping_weight"/>
+                    <span t-field="o.weight_uom_name"/>
+                </div>
+                <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
+                    <strong>Tracking Number:</strong>
+                    <p t-field="o.carrier_tracking_ref"/>
+                </div>
+            </t>
             <t t-set="has_hs_code" t-value="o.move_ids.filtered(lambda l: l.product_id.hs_code)"/>
+        </xpath>
+
+        <xpath expr="//div[@name='picking_info']" position="after">
+            <t t-if="o.sudo().sale_id.incoterm or o.sudo().sale_id.client_order_ref">
+                <div class="row mb32">
+                    <div t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id" class="col-auto">
+                        <strong>Carrier:</strong>
+                        <p t-field="o.carrier_id"/>
+                    </div>
+                    <div t-if="o.shipping_weight" class="col-auto">
+                        <strong>Total Weight:</strong>
+                        <br/>
+                        <span t-field="o.shipping_weight"/>
+                        <span t-field="o.weight_uom_name"/>
+                    </div>
+                    <div t-if="o.carrier_tracking_ref" class="col-auto" style="max-width:30%;">
+                        <strong>Tracking Number:</strong>
+                        <p t-field="o.carrier_tracking_ref"/>
+                    </div>
+                </div>
+            </t>
         </xpath>
 
         <xpath expr="//table[@name='stock_move_line_table']/thead/tr" position="inside">
