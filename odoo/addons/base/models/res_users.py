@@ -1081,12 +1081,18 @@ class Users(models.Model):
         """
         self.ensure_one()
 
-        if not (self.env.su or self == self.env.user or self._has_group('base.group_user')):
+        user = self
+        if isinstance(user.id, models.NewId):
+            user = user._origin
+            if not user.id:
+                return False
+
+        if not (self.env.su or user == self.env.user or user._has_group('base.group_user')):
             # this prevents RPC calls from non-internal users to retrieve
             # information about other users
             raise AccessError(_("You can ony call user.has_group() with your current user."))
 
-        result = self._has_group(group_ext_id)
+        result = user._has_group(group_ext_id)
         if group_ext_id == 'base.group_no_one':
             result = result and bool(request and request.session.debug)
         return result
