@@ -22,6 +22,7 @@ class Objetivo(models.Model):
     :param estado(fields.Selection): Seleccionar el estado actual del objetivo
     :param usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
     :param evaluador(fields.Char): Nombre del evaluador del objetivo
+    :param avances(fields.One2Many): Avances del objetivo
     """
 
     _name = "objetivo"
@@ -196,7 +197,7 @@ class Objetivo(models.Model):
             
     def action_registrar_avance(self):
         """
-        Método para registrar el avance de un objetivo.
+        Método para llamar la funcionalidad de registro de avances.
         """
         return {
             "name": "Registrar Avance",
