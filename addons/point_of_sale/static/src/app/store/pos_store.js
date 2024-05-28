@@ -337,18 +337,15 @@ export class PosStore extends Reactive {
         }
 
         const options = {
-            uiState: {
-                price_type: "original",
-            },
             ...opts,
         };
 
         if ("price_unit" in vals) {
             merge = false;
-            options.uiState.price_type = "manual";
         }
 
         const values = {
+            price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
             price_unit: 0,
             order_id: this.get_order(),

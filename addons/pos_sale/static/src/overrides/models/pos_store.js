@@ -225,7 +225,7 @@ patch(PosStore.prototype, {
                     total: line.price_total,
                 })),
         });
-        new_line.uiState.price_type = "automatic";
+        new_line.price_type = "automatic";
         new_line.set_unit_price(proposed_down_payment);
     },
     selectOrderLine(order, line) {

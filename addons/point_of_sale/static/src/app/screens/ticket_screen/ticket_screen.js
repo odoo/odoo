@@ -285,9 +285,7 @@ export class TicketScreen extends Component {
                 tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
                 refunded_orderline_id: refundLine,
                 pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => ["link", packLot]),
-            });
-            line.setOptions({
-                uiState: { price_type: "automatic" },
+                price_type: "automatic",
             });
             lines.push(line);
             refundDetail.destination_order_uuid = destinationOrder.uuid;

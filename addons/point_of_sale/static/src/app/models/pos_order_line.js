@@ -22,7 +22,6 @@ export class PosOrderline extends Base {
 
         // Data that are not saved in the backend
         this.uiState = {
-            price_type: "original",
             hasChange: true,
         };
 
@@ -48,7 +47,7 @@ export class PosOrderline extends Base {
                 this.set_quantity(code.value);
             } else if (code.type === "price") {
                 this.set_unit_price(code.value);
-                this.uiState.price_type = "manual";
+                this.price_type = "manual";
             }
 
             if (product_packaging_by_barcode[code.code]) {
@@ -242,7 +241,7 @@ export class PosOrderline extends Base {
         }
 
         // just like in sale.order changing the qty will recompute the unit price
-        if (!keep_price && this.uiState.price_type === "original") {
+        if (!keep_price && this.price_type === "original") {
             this.set_unit_price(
                 this.product_id.get_price(
                     this.order_id.pricelist_id,
