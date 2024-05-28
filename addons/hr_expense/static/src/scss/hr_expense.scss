@@ -62,9 +62,12 @@
 }
 
 .o_center_attachment .o-mail-Attachment-imgContainer {
+    --o-Mail-Attachment-img-margin: #{map-get($spacers, 1)} auto auto auto;
+
     display: flex;
     justify-content: center;
     z-index: -1;
+    padding: 0 map-get($spacers, 3);
 
     img {
         max-height: 100%;
