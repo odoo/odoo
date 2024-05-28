@@ -319,6 +319,8 @@
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
                         <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="project_id" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
+                    <!-- Used in inherited views to display the eventual warnings -->
+                    <t name="warning_section"/>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <!-- Dummy tag for organizing buttons, using position='replace' when inheriting -->
