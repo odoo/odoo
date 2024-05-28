@@ -113,7 +113,7 @@
         <field name="path">stock-valuation</field>
         <field name="view_mode">tree,form,pivot,graph</field>
         <field name="view_id" ref="stock_valuation_layer_tree"/>
-        <field name="domain">[('product_id.type', '=', 'product')]</field>
+        <field name="domain">[('product_id.is_storable', '=', True)]</field>
         <field name="context">{
             'pivot_column_groupby': ['create_date:month'],
             'pivot_row_groupby': ['categ_id'],
@@ -179,7 +179,7 @@
         <field name="view_mode">tree,form,pivot</field>
         <field name="view_id" ref="stock_valuation_layer_report_tree"/>
         <field name="context">{'search_default_has_remaining_qty': 1}</field>
-        <field name="domain">[('product_id.type', '=', 'product')]</field>
+        <field name="domain">[('product_id.is_storable', '=', True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face"/>
             <p>
