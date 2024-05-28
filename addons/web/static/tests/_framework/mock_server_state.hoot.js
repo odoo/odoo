@@ -31,6 +31,7 @@ const DEFAULT_LUXON_SETTINGS = {
 };
 const SERVER_STATE_VALUES = {
     companies: [{ id: 1, name: "Hermit" }],
+    db: "test",
     debug: "",
     groupId: 11,
     lang: "en",
@@ -41,6 +42,7 @@ const SERVER_STATE_VALUES = {
     publicPartnerId: 18,
     publicPartnerName: "Public user",
     publicUserId: 8,
+    serverVersion: [1, 0, 0, "final", 0, ""],
     timezone: "taht",
     userContext: {},
     userId: 7,
@@ -55,7 +57,22 @@ const getServerStateValues = createJobScopedGetter(
 );
 
 /** @type {Map<any, (state: ServerState) => any>} */
-const subscriptions = new Map([[odoo, (state) => ({ ...odoo, debug: state.debug })]]);
+const subscriptions = new Map([
+    [
+        odoo,
+        ({ db, debug, serverVersion }) => ({
+            ...odoo,
+            debug,
+            info: {
+                db,
+                server_version: serverVersion.slice(0, 2).join("."),
+                server_version_info: serverVersion,
+                isEnterprise: serverVersion.slice(-1)[0] === "e",
+            },
+            isReady: true,
+        }),
+    ],
+]);
 
 /**
  * @template T

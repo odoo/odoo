@@ -25,9 +25,11 @@ export function mockSessionFactory() {
  */
 export function _makeSession({
     companies,
+    db,
     lang,
     partnerId,
     partnerName,
+    serverVersion,
     timezone,
     userContext,
     userId,
@@ -42,7 +44,7 @@ export function _makeSession({
             load_menus: "164b675eb9bf49f8bca52e350cd81482a8cf0d0c1c8a47d99bd063c0a0bf4f0d",
             translations: "f17c8e4bb0fd4d5db2615d28713486df97853a8f",
         },
-        db: "test",
+        db,
         display_switch_company_menu: false,
         home_action_id: false,
         is_admin: true,
@@ -55,8 +57,8 @@ export function _makeSession({
         profile_collectors: null,
         profile_params: null,
         profile_session: null,
-        server_version: "1.0",
-        server_version_info: [1, 0, 0, "final", 0, ""],
+        server_version: serverVersion.slice(0, 2).join("."),
+        server_version_info: serverVersion,
         show_effect: true,
         uid: userId,
         // Commit: 3e847fc8f499c96b8f2d072ab19f35e105fd7749
