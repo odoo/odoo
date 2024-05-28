@@ -41,6 +41,10 @@ class MondialRelay(http.Controller):
             'new_partner_shipping_id': order.partner_shipping_id.id,
         }
 
+    @http.route('/website_sale_mondialrelay/get_mondialrelay', type='http', auth="user", website=True)
+    def get_mondialrelay(self):
+        return request.render('website_sale_mondialrelay.website_sale_mondialrelay_widget', {})
+
 
 class WebsiteSaleMondialrelay(WebsiteSale):
 

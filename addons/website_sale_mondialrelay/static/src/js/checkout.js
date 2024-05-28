@@ -35,7 +35,7 @@ websiteSaleCheckoutWidget.include({
     _updateAmountBadge(radio, result) {
         this._super(...arguments);
         if (result.mondial_relay) {
-            if (!this.el.querySelector("#modal_mondialrelay")) {
+            if (!document.querySelector("#modal_mondialrelay")) {
                 this._loadMondialRelayModal(result);
             } else {
                 this.modal_mondialrelay
@@ -62,9 +62,19 @@ websiteSaleCheckoutWidget.include({
             ?.addEventListener("click", this._onClickBtnConfirmRelay.bind(this));
 
         // load mondial relay script
-        const script = document.createElement('script');
-        script.src = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
-        script.onload = () => {
+        const iframeEL = document.createElement("iframe");
+        iframeEL.src = "/website_sale_mondialrelay/get_mondialrelay";
+        iframeEL.style.width = "100%";
+        iframeEL.style.height = "950px";
+        iframeEL.scrolling = "no";
+        this.modal_mondialrelay.querySelector("#o_zone_widget").append(iframeEL);
+        
+        iframeEL.onload = () => {
+            const iframeEl = document.querySelector("iframe");
+            const script = document.createElement("script");
+            script.src = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
+            iframeEl.contentWindow.document.head.append(script);
+
             // instanciate MondialRelay widget
             const params = {
                 Target: "", // required but handled by OnParcelShopSelected
@@ -94,15 +104,14 @@ websiteSaleCheckoutWidget.include({
                     }, 10000);
                 },
             };
-            // TODO: MSH: Need to find a way to remove jQuery plugin dependency
-            $(this.modal_mondialrelay.querySelector("#o_zone_widget")).MR_ParcelShopPicker(params);
-            new Modal(this.modal_mondialrelay).show();
-            this.modal_mondialrelay
-                .querySelector("#o_zone_widget")
-                .dispatchEvent(new Event("MR_RebindMap"));
+            script.onload = () =>  {
+                const zoneWidgetEl = iframeEl.contentWindow.document.querySelector("#o_iframe_zone_widget");
+                const $ = iframeEl.contentWindow.$;
+                $(zoneWidgetEl).MR_ParcelShopPicker(params);
+                new Modal(this.modal_mondialrelay).show();
+                $(zoneWidgetEl).trigger("MR_RebindMap");
+            }
         };
-        document.body.appendChild(script);
-
     },
 
     //--------------------------------------------------------------------------
@@ -123,8 +132,10 @@ websiteSaleCheckoutWidget.include({
         rpc('/website_sale_mondialrelay/update_shipping', {
             ...this.lastRelaySelected,
         }).then((o) => {
-            this.el.querySelector("#address_on_payment").innerHTML = o.address;
-            new Modal(this.modal_mondialrelay).hide();
+            if (document.querySelector('#address_on_payment')) {
+                document.querySelector('#address_on_payment').innerHTML = o.address;
+            }
+            Modal.getOrCreateInstance(this.modal_mondialrelay).hide();
         });
     },
 });
