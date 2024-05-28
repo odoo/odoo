@@ -467,6 +467,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     'Untaxed Amount': [
                         {
                             'tax_group_name': tax.tax_group_id.name,
+                            'tax_group_label': tax.tax_group_id.pos_receipt_label,
                             'tax_group_amount': 90.0,
                             'tax_group_base_amount': 900.0,
                             'tax_group_id': tax.tax_group_id.id,
@@ -656,6 +657,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     'Untaxed Amount': [
                         {
                             'tax_group_name': tax.tax_group_id.name,
+                            'tax_group_label': tax.tax_group_id.pos_receipt_label,
                             'tax_group_amount': 20.58,
                             'tax_group_base_amount': 98,
                             'tax_group_id': tax.tax_group_id.id,

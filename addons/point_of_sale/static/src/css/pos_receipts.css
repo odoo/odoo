@@ -44,7 +44,7 @@
 
 .pos-receipt .pos-receipt-amount {
     font-size: 125%;
-    padding-left: 6em;
+    text-align: start;
 }
 
 .pos-receipt .pos-receipt-title {
@@ -86,10 +86,8 @@
 }
 
 .pos-receipt .pos-receipt-taxes {
-    display: grid;
-    grid-template-columns: min-content min-content auto auto auto;
-    width: 100%;
-    justify-items: end;
+    display: flex;
+    flex-direction: column;
 }
 
 .pos-receipt .orderlines {

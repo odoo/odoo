@@ -60,6 +60,7 @@ class AccountTaxGroup(models.Model):
              "If not set, the tax group will be displayed after the 'Untaxed amount' subtotal.",
         translate=True,
     )
+    pos_receipt_label = fields.Char(string='PoS receipt label')
 
     @api.depends('company_id')
     def _compute_country_id(self):
@@ -602,7 +603,7 @@ class AccountTax(models.Model):
             'price_include': self.price_include,
             'include_base_amount': self.include_base_amount,
             'is_base_affected': self.is_base_affected,
-            '_letter': None,
+            '_pos_receipt_label': self.tax_group_id.pos_receipt_label,
             '_children_tax_ids': [
                 {
                     **tax_data,
@@ -2117,6 +2118,7 @@ class AccountTax(models.Model):
                 'group_key': tax_group.id,
                 'tax_group_id': tax_group.id,
                 'tax_group_name': tax_group.name,
+                'tax_group_label': tax_group.pos_receipt_label,
                 'tax_group_amount': tax_detail['tax_amount_currency'],
                 'tax_group_amount_company_currency': tax_detail['tax_amount'],
                 'tax_group_base_amount': currency.round(tax_detail['display_base_amount_currency']),
