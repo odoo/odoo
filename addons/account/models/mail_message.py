@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
@@ -19,7 +18,7 @@ class Message(models.Model):
     )
     account_audit_log_activated = fields.Boolean(
         string="Audit Log Activated",
-        compute="_compute_account_audit_log_activated",
+        compute="_compute_account_audit_log_move_id",
         search="_search_account_audit_log_activated")
 
     @api.depends('tracking_value_ids')

@@ -4495,7 +4495,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_hourly_cost',
             'product_margin',
             'hr_contract_salary_holidays',
-            'account_audit_trail',
             'product_email_template',
             'stock_enterprise',
             'l10n_be_reports',
