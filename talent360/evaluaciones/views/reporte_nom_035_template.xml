@@ -10,27 +10,8 @@
                 </div>
                 <div class="o_survey_result mb-5">
                     <t t-call="evaluaciones.portada_reporte_template"/>
-                    <t t-if="final == 0">
-                        <div class="page container-fluid row gap-5 justify-content-between g-2 text-center">
-                            <div class="col-12">
-                                <h2>No se encontraron datos</h2>
-                                <p style="font-style: italic;">El reporte no contiene información para mostrar con los filtros de:</p>
-                                <ul style="font-size: 1em;; font-weight: bold;">
-                                    <t t-foreach="filtros.items()" t-as="filtro">
-                                        <li>
-                                            <t t-esc="filtro[0]"/>: 
-                                            <t t-esc="', '.join(filtro[1]['valores'])"/>
-                                        </li>
-                                    </t>
-                                </ul>
-                                <img t-att-src="'/evaluaciones/static/src/img/oops.png'" alt="Error 404" class="img-fluid" style="margin-top: 40px; max-width: 100%; height: auto;"/>
-                            </div>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <t t-call="evaluaciones.encuestas_reporte_nom_035_body" />
-                        <t t-call="evaluaciones.encuestas_reporte_inner" />
-                    </t>
+                    <t t-call="evaluaciones.encuestas_reporte_nom_035_body" />
+                    <t t-call="evaluaciones.encuestas_reporte_inner" />
                 </div>
             </t>
         </template>
@@ -67,7 +48,8 @@
                     <div class="container-fluid row gap-2 align-items-center">
                         <!-- Riesgo muy alto -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#ff4747" />
                             </svg>
                             <span>Riesgo muy alto</span>
@@ -75,7 +57,8 @@
 
                         <!-- Riesgo alto -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#fc8803" />
                             </svg>
                             <span>Riesgo alto</span>
@@ -83,15 +66,17 @@
 
                         <!-- Riesgo medio -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#fcd703" />
                             </svg>
                             <span>Riesgo medio</span>
                         </div>
-                        
+
                         <!-- Riesgo bajo -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#5aaf2b" />
                             </svg>
                             <span>Riesgo bajo</span>
@@ -99,7 +84,8 @@
 
                         <!-- Riesgo nulo -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22"
+                                xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#2894a7" />
                             </svg>
                             <span>Riesgo nulo</span>
