@@ -70,7 +70,20 @@
                                     <field name="fecha"/>
                                     <field name="avance"/>
                                     <field name="comentarios"/>
+                                    <field name="archivos" widget="many2many_tags"/>
                                 </tree>
+                                <form>
+                                    <group>
+                                        <field name="fecha"/>
+                                        <field name="avance"/>
+                                        <field name="archivos">
+                                            <tree create="false" editable="bottom" edit="false">
+                                                <field name="name"/>
+                                                <field name="datas" filename="name" widget="binary"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </form>
                             </field>
                         </page>
                     </notebook>
