@@ -481,6 +481,7 @@
             <field name="list_price">4.70</field>
             <field name="name">Espresso</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-espresso.png"/>
         </record>
 
@@ -489,6 +490,7 @@
             <field name="list_price">4.70</field>
             <field name="name">Green Tea</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-green_tea.png"/>
         </record>
 
@@ -497,6 +499,7 @@
             <field name="list_price">3.60</field>
             <field name="name">Milkshake Banana</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-milkshake_banana.png"/>
         </record>
 
@@ -505,6 +508,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Ice Tea</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-ice_tea.png"/>
         </record>
 
@@ -513,6 +517,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Schweppes</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-schweppes.png"/>
         </record>
 
@@ -521,6 +526,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Fanta</field>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-fanta.png"/>
         </record>
 
@@ -568,6 +574,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/combo-hamb.png"/>
             <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('burger_combo')])]"/>
+            <field name="categ_id" ref="point_of_sale.product_category_food"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="taxes_id" eval="[(5,)]"/>  <!-- no taxes -->
         </record>
