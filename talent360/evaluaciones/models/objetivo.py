@@ -201,9 +201,9 @@ class Objetivo(models.Model):
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
             
-    @api.onchange('metrica')
+    @api.onchange("metrica")
     def _onchange_metrica(self):
-        if self.metrica != 'otro':
+        if self.metrica != "otro":
             self.nueva_metrica = False
 
     @api.depends("metrica", "nueva_metrica")
@@ -215,7 +215,7 @@ class Objetivo(models.Model):
         """
 
         for objetivo in self:
-            if objetivo.metrica == 'otro':
+            if objetivo.metrica == "otro":
                 metrica_texto = objetivo.nueva_metrica
             else:
                 metrica_texto = objetivo.metrica
@@ -225,6 +225,6 @@ class Objetivo(models.Model):
     @api.constrains("metrica", "nueva_metrica")
     def _check_nueva_metrica(self):
         for record in self:
-            if record.metrica == 'otro' and (not record.nueva_metrica or record.nueva_metrica.strip() == ''):
+            if record.metrica == "otro" and (not record.nueva_metrica or record.nueva_metrica.strip() == ''):
                 raise ValidationError(("El campo 'Métrica Personalizada' no puede estar vacío."))
                 
