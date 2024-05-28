@@ -31,8 +31,10 @@ class TestOldRules(TestStockCommon):
             'location_src_id': reception_route_3.rule_ids[1].location_dest_id.id,
         })
         reception_route_3.rule_ids[1].write({'action': 'pull_push'})
-        reception_route_3.rule_ids[2].write({'action': 'pull_push'})
-
+        if len(reception_route_3.rule_ids) >= 3:
+            reception_route_3.rule_ids[2].write({'action': 'pull_push'})
+        else:
+            reception_route_3.rule_ids.location_dest_from_rule = True
 
         # Create a warehouse with 2 steps using old rules setup.
         cls.warehouse_2_steps = cls.env['stock.warehouse'].create({

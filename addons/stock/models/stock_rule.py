@@ -302,7 +302,9 @@ class StockRule(models.Model):
             group_id = values.get('group_id', False) and values['group_id'].id
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
-        if not values.get('orderpoint_id') and not group_id and self.procure_method == 'mts_else_mto' and len(self.route_id.rule_ids) > 1:  # move created without parent (SO/MO/PO)
+
+        positive_qty = float_compare(product_qty, 0, precision_rounding=product_uom.rounding) >= 0
+        if positive_qty and not values.get('orderpoint_id') and not group_id and self.procure_method == 'mts_else_mto' and len(self.route_id.rule_ids) > 1:  # move created without parent (SO/MO/PO)
             group_id = self.group_id.create({
                 'name': self.name,
             }).id

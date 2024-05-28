@@ -1438,12 +1438,11 @@ Please change the quantity done or the rounding precision of your unit of measur
                 key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
                 to_assign[key].add(move.id)
 
-        move_create_proc, move_waiting = self.browse(move_create_proc), self.browse(move_waiting)
+        move_create_proc, move_to_confirm, move_waiting = self.browse(move_create_proc), self.browse(move_to_confirm), self.browse(move_waiting)
 
         procurement_requests = move_create_proc._prepare_procurements()
         self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
-        move_to_confirm = self.browse(move_to_confirm)
         move_create_proc -= move_to_confirm
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
@@ -2238,7 +2237,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if depth >= 0:  # N.B False == 0
             seen.update(unseen)
             moves_to_unroll = self.filtered(lambda m: m.id in unseen)
-            (moves_to_unroll.move_dest_ids | moves_to_unroll.group_id.group_dest_ids.stock_move_ids)._rollup_move_dests(seen, self._get_rollup_depth(depth))
+            moves_to_unroll._get_next_moves()._rollup_move_dests(seen, self._get_rollup_depth(depth))
         return seen
 
     def _rollup_move_origs(self, seen=False, depth=False):
@@ -2250,7 +2249,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if depth >= 0:
             seen.update(unseen)
             moves_to_unroll = self.filtered(lambda m: m.id in unseen)
-            (moves_to_unroll.move_orig_ids | moves_to_unroll.group_id.group_orig_ids.stock_move_ids)._rollup_move_origs(seen, self._get_rollup_depth(depth))
+            moves_to_unroll._get_previous_moves()._rollup_move_origs(seen, self._get_rollup_depth(depth))
         return seen
 
     @api.model

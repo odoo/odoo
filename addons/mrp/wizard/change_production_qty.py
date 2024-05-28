@@ -67,6 +67,7 @@ class ChangeProductionQty(models.TransientModel):
 
             factor = new_production_qty / old_production_qty
             update_info = production._update_raw_moves(factor)
+            production._update_mtso_sam_moves(factor)
             documents = {}
             for move, old_qty, new_qty in update_info:
                 iterate_key = production._get_document_iterate_key(move)

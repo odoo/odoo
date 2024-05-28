@@ -18,7 +18,7 @@ class StockRule(models.Model):
 
     def _get_linked_mo_id(self, procurement, rule, bom):
         group_id = procurement.values.get('group_id', self.env['procurement.group'])
-        mo = next((p for p in group_id.group_orig_ids.mrp_production_ids if p.state == 'confirmed'), False) if group_id else False
+        mo = next((p for p in group_id.group_orig_ids.mrp_production_ids if p.state == 'confirmed'), False) if group_id else False  # FIXME condition p.state == 'confirmed' insufficient
         if not mo and procurement.origin != 'MPS':
             gpo = rule.group_propagation_option
             group = (gpo == 'fixed' and rule.group_id) or \
@@ -141,6 +141,8 @@ class StockRule(models.Model):
                 group = procurement.values.get('group_id')
                 if group:
                     procurement.values['group_id'] = group.copy({'name': name})
+                    if rule.procure_method == 'mts_else_mto':
+                        procurement.values['group_id'].group_dest_ids = [Command.set(group.ids)]
                 else:
                     procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
         return super()._run_pull(procurements)
