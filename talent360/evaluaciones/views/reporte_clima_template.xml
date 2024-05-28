@@ -9,6 +9,7 @@
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.portada_reporte_template"/>
                     <t t-call="evaluaciones.encuestas_reporte_clima_body"/>
+                    <t t-call="evaluaciones.encuestas_reporte_inner"/>
                 </div>
             </t>
         </template>
@@ -183,7 +184,6 @@
                         <t t-else="true">El riesgo resulta despreciable por lo que no se requiere medidas adicionales.</t>
                     </span>
                 </div>
-
             </div>
         </template>
 
