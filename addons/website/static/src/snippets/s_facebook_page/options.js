@@ -26,7 +26,7 @@ options.registry.facebookPage = options.Class.extend({
             small_header: true,
             hide_cover: "true",
         };
-        this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, Object.keys(defaults)), defaults);
+        this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, ...Object.keys(defaults)));
         if (!this.fbData.href) {
             // Fetches the default url for facebook page from website config
             var self = this;
