@@ -619,7 +619,7 @@ font[class*='bg-'] {
             border: $border-width solid $-value;
             color: var(--color, increase-contrast($-value , $-bg)) !important;
 
-            @at-root a, a#{&}:hover, a:hover > & {
+            @at-root a#{&}:hover, a:hover > & {
                 --background-color: #{$-value};
                 --color: #{color-contrast($-value, $min-contrast-ratio: 3)};
                 text-decoration: none;
@@ -647,39 +647,18 @@ font[class*='bg-'] {
         --color-light: #{$-color-light};
 
         --color-light-contrast: #{$-color-light-contrast};
+    }
+}
 
-        // Assign default values
-        background-color: var(--bg, var(--bg-solid));
-        color: var(--color, var(--color-solid));
-        border-color: var(--border, --bg-solid);
+.badge {
+    background: var(--background-color, var(--bg-light));
+    color: var(--color, var(--color-light));
+    border: $border-width solid var(--bg-solid);
 
-        &.badge {
-            --bg: var(--bg-light);
-            --color: var(--color-light);
-
-            border: $border-width solid var(--bg-solid);
-
-            @at-root a, a#{&}:hover, a:hover > & {
-                --bg: var(--bg-solid);
-                --color: var(--color-solid);
-
-                text-decoration: none;
-            }
-        }
-
-        &.event_track > div {
-            border-top: $border-width * 3 solid var(--bg-solid);
-            background-color: var(--bg-light);
-            color: var(--color-light-contrast);
-        }
-
-        &.o_wesession_list_item {
-            --bg: var(--bg-light);
-            --color: var(--color-light-contrast);
-
-            border: $border-width solid var(--o-border-color);
-            border-left: $border-width * 3 solid var(--bg-solid);
-        }
+    @at-root a#{&}:hover, a:hover > & {
+        --background-color: var(--bg-solid);
+        --color: var(--color-solid);
+        text-decoration: none;
     }
 }
 
