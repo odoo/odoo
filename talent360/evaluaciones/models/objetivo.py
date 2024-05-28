@@ -221,4 +221,10 @@ class Objetivo(models.Model):
                 metrica_texto = objetivo.metrica
 
         objetivo.metrica_mostrar = metrica_texto
-            
+
+    @api.constrains("metrica", "nueva_metrica")
+    def _check_nueva_metrica(self):
+        for record in self:
+            if record.metrica == 'otro' and (not record.nueva_metrica or record.nueva_metrica.strip() == ''):
+                raise ValidationError(("El campo 'Métrica Personalizada' no puede estar vacío."))
+                
