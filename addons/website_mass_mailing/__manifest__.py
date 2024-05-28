@@ -14,6 +14,7 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'data': [
         'data/ir_model_data.xml',
         'views/snippets/s_popup.xml',
+        'views/mailing_mailing_views.xml',
         'views/snippets_templates.xml',
     ],
     'auto_install': ['website', 'mass_mailing'],
