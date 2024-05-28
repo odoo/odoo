@@ -21,37 +21,37 @@
         <record id="livechat_channel_session_7_message_1" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_7"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="body">Hello, how may I help you?</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=26)" name="date"/>
         </record>
         <record id="livechat_channel_session_7_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_7"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Hi, I need a software to easily manage my stock, and generate sales orders.</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=27)" name="date"/>
         </record>
         <record id="livechat_channel_session_7_message_3" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_7"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="body">Joel Willis, you'll need our Inventory and Sales application to do so. You can try them for 15 days, FOR FREE :)</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=28)" name="date"/>
         </record>
         <record id="livechat_channel_session_7_message_4" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_7"/>
-            <field name="message_type">email</field>
             <field name="author_id" ref="base.partner_demo_portal"/>
             <field name="body">Good to hear, thanks!</field>
             <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field eval="DateTime.today() + relativedelta(months=-3, days=-6, minutes=29)" name="date"/>
         </record>
         <record id="livechat_channel_session_7_rating_message" model="mail.message">
