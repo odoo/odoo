@@ -1011,10 +1011,14 @@ class PosOrder(models.Model):
 
     def _prepare_mail_values(self, email, ticket):
         message = Markup(
-            _("<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the %(pos_name)s. </p>")
+            _("<p>Dear %(client_name)s,<br/>Here is your Receipt %(is_invoiced)sfor \
+            %(pos_name)s amounting in %(amount)s from %(company_name)s. </p>")
         ) % {
             'client_name': self.partner_id.name or _('Customer'),
             'pos_name': self.name,
+            'amount': self.currency_id.format(self.amount_total),
+            'company_name': self.company_id.name,
+            'is_invoiced': "and Invoice " if self.account_move else "",
         }
 
         return {
