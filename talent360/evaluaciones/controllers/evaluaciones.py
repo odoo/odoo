@@ -39,6 +39,16 @@ class EvaluacionesController(http.Controller):
 
         parametros["filtros"] = filtros
 
+        tiene_respuestas = True
+
+        for pregunta in parametros["preguntas"]:
+            if not pregunta["respuestas"]:
+                tiene_respuestas = False
+                break
+    
+        if not tiene_respuestas:
+            return request.render("evaluaciones.encuestas_reporte_no_respuestas", parametros)        
+
         if evaluacion.incluir_demograficos:
             parametros.update(evaluacion.generar_datos_demograficos(filtros))
         if evaluacion.tipo == "NOM_035":
