@@ -37,6 +37,15 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
+const beforeInputHandlers = {
+    deleteContentBackward: "DELETE_BACKWARD",
+    deleteContentForward: "DELETE_FORWARD",
+    deleteWordBackward: "DELETE_BACKWARD_WORD",
+    deleteWordForward: "DELETE_FORWARD_WORD",
+    deleteHardLineBackward: "DELETE_BACKWARD_LINE",
+    deleteHardLineForward: "DELETE_FORWARD_LINE",
+};
+
 export class DeletePlugin extends Plugin {
     static dependencies = ["selection"];
     static name = "delete";
@@ -48,17 +57,18 @@ export class DeletePlugin extends Plugin {
             { hotkey: "delete", command: "DELETE_FORWARD" },
             { hotkey: "control+backspace", command: "DELETE_BACKWARD_WORD" },
             { hotkey: "control+delete", command: "DELETE_FORWARD_WORD" },
-            // @todo @phoenix
-            // { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
-            // { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
+            { hotkey: "control+shift+backspace", command: "DELETE_BACKWARD_LINE" },
+            { hotkey: "control+shift+delete", command: "DELETE_FORWARD_LINE" },
         ],
         handle_delete_backward: [
             { callback: p.deleteBackwardContentEditableFalse.bind(p) },
             { callback: p.deleteBackwardUnmergeable.bind(p) },
         ],
         handle_delete_backward_word: { callback: p.deleteBackwardUnmergeable.bind(p) },
+        handle_delete_backward_line: { callback: p.deleteBackwardUnmergeable.bind(p) },
         handle_delete_forward: { callback: p.deleteForwardUnmergeable.bind(p) },
         handle_delete_forward_word: { callback: p.deleteForwardUnmergeable.bind(p) },
+        handle_delete_forward_line: { callback: p.deleteForwardUnmergeable.bind(p) },
 
         // @todo @phoenix: move these predicates to different plugins
         unremovables: [
@@ -96,13 +106,12 @@ export class DeletePlugin extends Plugin {
             case "DELETE_FORWARD_WORD":
                 this.delete("forward", "word");
                 break;
-            // @todo @phoenix
-            // case "DELETE_BACKWARD_LINE":
-            //     this.delete("backward", "line");
-            //     break;
-            // case "DELETE_FORWARD_LINE":
-            //     this.delete("forward", "line");
-            //     break;
+            case "DELETE_BACKWARD_LINE":
+                this.delete("backward", "line");
+                break;
+            case "DELETE_FORWARD_LINE":
+                this.delete("forward", "line");
+                break;
         }
     }
 
@@ -177,7 +186,7 @@ export class DeletePlugin extends Plugin {
         const resources = {
             character: this.resources["handle_delete_backward"],
             word: this.resources["handle_delete_backward_word"],
-            line: [],
+            line: this.resources["handle_delete_backward_line"],
         };
         for (const { callback } of resources[granularity]) {
             if (callback(range)) {
@@ -207,7 +216,7 @@ export class DeletePlugin extends Plugin {
         const resources = {
             character: this.resources["handle_delete_forward"],
             word: this.resources["handle_delete_forward_word"],
-            line: [],
+            line: this.resources["handle_delete_forward_line"],
         };
         for (const { callback } of resources[granularity]) {
             if (callback(range)) {
@@ -226,49 +235,55 @@ export class DeletePlugin extends Plugin {
 
     getRangeForDeleteBackward(selection, granularity) {
         const { endContainer, endOffset } = selection;
-        if (granularity === "character") {
-            let [startContainer, startOffset] = this.findPreviousPosition(endContainer, endOffset);
-            if (!startContainer) {
-                [startContainer, startOffset] = [endContainer, endOffset];
-            }
-            return { startContainer, startOffset, endContainer, endOffset };
+        let startContainer, startOffset;
+
+        switch (granularity) {
+            case "character":
+                [startContainer, startOffset] = this.findPreviousPosition(endContainer, endOffset);
+                break;
+            case "word":
+                // @todo @phoenix: write more tests for ctrl+delete
+                ({ startContainer, startOffset } = this.shared.extendSelection("backward", "word"));
+                break;
+            case "line":
+                [startContainer, startOffset] = this.findPreviousLineBoundary(
+                    endContainer,
+                    endOffset
+                );
+                break;
+            default:
+                throw new Error("Invalid granularity");
         }
 
-        // @todo @phoenix: write more tests for ctrl+backspace
-        if (granularity === "word") {
-            const { startContainer, startOffset } = this.shared.extendSelection(
-                "backward",
-                granularity
-            );
-            return { startContainer, startOffset, endContainer, endOffset };
+        if (!startContainer) {
+            [startContainer, startOffset] = [endContainer, endOffset];
         }
-
-        if (granularity === "line") {
-            // @todo @phoenix: implement
-        }
-        throw new Error("Invalid granularity");
+        return { startContainer, startOffset, endContainer, endOffset };
     }
 
     getRangeForDeleteForward(selection, granularity) {
         const { startContainer, startOffset } = selection;
-        if (granularity === "character") {
-            let [endContainer, endOffset] = this.findNextPosition(startContainer, startOffset);
-            if (!endContainer) {
-                [endContainer, endOffset] = [startContainer, startOffset];
-            }
-            return { startContainer, startOffset, endContainer, endOffset };
+        let endContainer, endOffset;
+
+        switch (granularity) {
+            case "character":
+                [endContainer, endOffset] = this.findNextPosition(startContainer, startOffset);
+                break;
+            case "word":
+                // @todo @phoenix: write more tests for ctrl+delete
+                ({ endContainer, endOffset } = this.shared.extendSelection("forward", "word"));
+                break;
+            case "line":
+                [endContainer, endOffset] = this.findNextLineBoundary(startContainer, startOffset);
+                break;
+            default:
+                throw new Error("Invalid granularity");
         }
 
-        // @todo @phoenix: write tests for ctrl+delete (there are none?)
-        if (granularity === "word") {
-            const { endContainer, endOffset } = this.shared.extendSelection("forward", granularity);
-            return { startContainer, startOffset, endContainer, endOffset };
+        if (!endContainer) {
+            [endContainer, endOffset] = [startContainer, startOffset];
         }
-
-        if (granularity === "line") {
-            // @todo @phoenix: implement
-        }
-        throw new Error("Invalid granularity");
+        return { startContainer, startOffset, endContainer, endOffset };
     }
 
     // --------------------------------------------------------------------------
@@ -1022,6 +1037,38 @@ export class DeletePlugin extends Plugin {
         return this.findNextPosition(leaf, 0, blockSwitch);
     }
 
+    findPreviousLineBoundary(endContainer, endOffset) {
+        const block = closestBlock(endContainer);
+        let last = endContainer;
+        let node = previousLeaf(endContainer, this.editable);
+        // look for a BR or a block start
+        while (node && node.nodeName !== "BR" && closestBlock(node) === block) {
+            last = node;
+            node = previousLeaf(node, this.editable);
+        }
+        if (last === endContainer && endOffset === 0) {
+            // Cursor is already next to the line break, go to previous position.
+            return this.findPreviousPosition(endContainer, endOffset);
+        }
+        return leftPos(last);
+    }
+
+    findNextLineBoundary(startContainer, startOffset) {
+        const block = closestBlock(startContainer);
+        let last = startContainer;
+        let node = nextLeaf(startContainer, this.editable);
+        // look for a BR or a block start
+        while (node && node.nodeName !== "BR" && closestBlock(node) === block) {
+            last = node;
+            node = nextLeaf(node, this.editable);
+        }
+        if (last === startContainer && startOffset === nodeSize(startContainer)) {
+            // Cursor is already next to the line break, go to next position.
+            return this.findNextPosition(startContainer, startOffset);
+        }
+        return rightPos(last);
+    }
+
     // @todo @phoenix: there are not enough tests for visibility of characters
     // (invisible whitespace, separate nodes, etc.)
     isVisibleChar(char, textNode, offset) {
@@ -1088,18 +1135,9 @@ export class DeletePlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     onBeforeInput(e) {
-        if (e.inputType === "deleteContentBackward") {
+        if (Object.hasOwnProperty.call(beforeInputHandlers, e.inputType)) {
             e.preventDefault();
-            this.dispatch("DELETE_BACKWARD");
-        } else if (e.inputType === "deleteContentForward") {
-            e.preventDefault();
-            this.dispatch("DELETE_FORWARD");
-        } else if (e.inputType === "deleteWordBackward") {
-            e.preventDefault();
-            this.dispatch("DELETE_BACKWARD_WORD");
-        } else if (e.inputType === "deleteWordForward") {
-            e.preventDefault();
-            this.dispatch("DELETE_FORWARD_WORD");
+            this.dispatch(beforeInputHandlers[e.inputType]);
         }
     }
     /**
