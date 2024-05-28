@@ -450,18 +450,6 @@ class PickingType(models.Model):
 
         return action
 
-    @api.model
-    def get_action_picking_tree_incoming(self):
-        return self._get_action('stock.action_picking_tree_incoming')
-
-    @api.model
-    def get_action_picking_tree_outgoing(self):
-        return self._get_action('stock.action_picking_tree_outgoing')
-
-    @api.model
-    def get_action_picking_tree_internal(self):
-        return self._get_action('stock.action_picking_tree_internal')
-
     def get_action_picking_tree_late(self):
         return self._get_action('stock.action_picking_tree_late')
 
@@ -1732,6 +1720,30 @@ class Picking(models.Model):
                     return self._post_put_in_pack_hook(package)
                 return res
             raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
+
+    def _get_action(self, action_xmlid):
+        action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
+        context = literal_eval(action['context'])
+
+        action['help'] = self.env['ir.ui.view']._render_template(
+            'stock.help_message_template', {
+                'picking_type_code': context.get('restricted_picking_type_code') or self.picking_type_code,
+            }
+        )
+
+        return action
+
+    @api.model
+    def get_action_picking_tree_incoming(self):
+        return self._get_action('stock.action_picking_tree_incoming')
+
+    @api.model
+    def get_action_picking_tree_outgoing(self):
+        return self._get_action('stock.action_picking_tree_outgoing')
+
+    @api.model
+    def get_action_picking_tree_internal(self):
+        return self._get_action('stock.action_picking_tree_internal')
 
     def button_scrap(self):
         self.ensure_one()
