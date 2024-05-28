@@ -801,14 +801,10 @@ patch(PosOrder.prototype, {
                 coupon_id: this.models["loyalty.card"].get(rewardLine.coupon_id),
                 tax_ids: rewardLine.tax_ids.map((tax) => ["link", tax]),
             };
-            const newLine = this.models["pos.order.line"].create({
+            this.models["pos.order.line"].create({
                 ...prepareRewards,
                 order_id: this,
-            });
-            newLine.setOptions({
-                uiState: {
-                    price_type: "manual",
-                },
+                price_type: "manual",
             });
         }
         return true;
