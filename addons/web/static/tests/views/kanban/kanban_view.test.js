@@ -4574,6 +4574,31 @@ test.tags("desktop")("kanban with reference field", async () => {
     expect(queryAllTexts(".o_kanban_record span")).toEqual(["hello", "", "xmo", ""]);
 });
 
+test.tags("desktop")("drag and drop a record with load more", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban limit="1">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="id"/></div>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+
+    expect(queryAllTexts(".o_kanban_group:eq(0) .o_kanban_record")).toEqual(["4"]);
+    expect(queryAllTexts(".o_kanban_group:eq(1) .o_kanban_record")).toEqual(["1"]);
+
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").dragAndDrop(
+        queryFirst(".o_kanban_group:eq(0)")
+    );
+    expect(queryAllTexts(".o_kanban_group:eq(0) .o_kanban_record")).toEqual(["4", "1"]);
+    expect(queryAllTexts(".o_kanban_group:eq(1) .o_kanban_record")).toEqual(["2"]);
+});
+
 test.tags("desktop")("can drag and drop a record from one column to the next", async () => {
     onRpc("/web/dataset/resequence", () => {
         expect.step("resequence");
@@ -13062,17 +13087,17 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(renderCounts).toEqual({ 1: 2, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
 
     saveDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 3, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
 
     resequenceDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 1, 4: 1 });
 
     // drag gnap to the second column
     saveDef = new Deferred();
@@ -13081,17 +13106,17 @@ test.tags("desktop")("rerenders only once after resequencing records", async () 
         queryFirst(".o_kanban_group:nth-child(2)")
     );
 
-    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 2, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 2, 4: 1 });
 
     saveDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 3, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 3, 4: 1 });
 
     resequenceDef.resolve();
     await animationFrame();
 
-    expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 4, 4: 1 });
+    expect(renderCounts).toEqual({ 1: 5, 2: 1, 3: 4, 4: 1 });
 
     expect.verifySteps([
         "/web/webclient/translations",
