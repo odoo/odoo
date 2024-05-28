@@ -109,8 +109,19 @@ class AccountEdiFormat(models.Model):
             # - If called from a cron, then the re-ordering of jobs should prevent this from triggering
             # - If called manually, then the user will see this error pop up when it triggers
             chain_head = invoice.company_id._get_l10n_es_tbai_last_posted_invoice()
+            error_msg = ''
             if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
-                raise UserError(f"TicketBAI: Cannot post invoice while chain head ({chain_head.name}) has not been posted")
+                error_msg = _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head.name)
+            if invoice.move_type == 'out_refund' and not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain():
+                error_msg = _("TicketBAI: Cannot post a reversal move while the source document (%s) has not been posted", invoice.reversed_entry_id.name)
+
+            if error_msg:
+                return {
+                    invoice: {
+                        'error': error_msg,
+                        'blocking_level': 'error',
+                    }
+                }
 
             # Generate the XML values.
             inv_dict = self._get_l10n_es_tbai_invoice_xml(invoice)
