@@ -504,21 +504,21 @@
 
         <record id="method_action_picking_tree_incoming" model="ir.actions.server">
             <field name="name">stock.method_action_picking_tree_incoming</field>
-            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="state">code</field>
             <field name="code">action = model.get_action_picking_tree_incoming()</field>
         </record>
 
         <record id="method_action_picking_tree_outgoing" model="ir.actions.server">
             <field name="name">stock.method_action_picking_tree_outgoing</field>
-            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="state">code</field>
             <field name="code">action = model.get_action_picking_tree_outgoing()</field>
         </record>
 
         <record id="method_action_picking_tree_internal" model="ir.actions.server">
             <field name="name">stock.method_action_picking_tree_internal</field>
-            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="model_id" ref="stock.model_stock_picking"/>
             <field name="state">code</field>
             <field name="code">action = model.get_action_picking_tree_internal()</field>
         </record>
