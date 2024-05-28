@@ -64,9 +64,9 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         extra_trigger: ".dropdown-menu",
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",
-        trigger: ".html-history-dialog .revision-list .btn",
+        trigger: ".html-history-dialog .revision-list .revision-list-detail",
         run: function () {
-            const items = document.querySelectorAll(".revision-list .btn");
+            const items = document.querySelectorAll(".revision-list .revision-list-detail");
             if (items.length !== 4) {
                 throw new Error('Expect 4 Revisions in the history dialog, got ' + items.length);
             }
@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 2")`,
     }, {
         content: "Go to the third revision related to the second edit",
-        trigger: '.html-history-dialog .revision-list .btn:nth-child(2)',
+        trigger: '.html-history-dialog .revision-list .revision-list-detail:nth-child(4)',
     }, {
         content: "Verify that the active revision is the one clicked in the previous step",
         trigger: `.history-container .tab-pane:contains("${baseDescriptionContent} 1")`,
@@ -87,8 +87,8 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Verify comparaison text",
         trigger: ".history-container .tab-pane",
         run: function () {
-            const comparaisonHtml = document.querySelector(".history-container .tab-pane").innerHTML;
-            const correctHtml = `<p><removed>${baseDescriptionContent} 3</removed><added>${baseDescriptionContent} 1</added></p>`;
+            const comparaisonHtml = document.querySelector(".history-container .history-tab-content").innerHTML;
+            const correctHtml = `<p><removed>${baseDescriptionContent} 1</removed><added>${baseDescriptionContent} 3</added></p>`;
             if (comparaisonHtml !== correctHtml) {
                 throw new Error(`Expect comparison to be ${correctHtml}, got ${comparaisonHtml}`);
             }
