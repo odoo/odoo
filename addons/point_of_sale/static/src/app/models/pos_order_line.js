@@ -618,6 +618,11 @@ export class PosOrderline extends Base {
                 this.getUnitDisplayPriceBeforeDiscount(),
                 this.currency
             ),
+            taxGroupLabels: [
+                ...new Set(
+                    this.product_id.taxes_id?.map((tax) => tax._label).filter((label) => label)
+                ),
+            ].join(" "),
         };
     }
 

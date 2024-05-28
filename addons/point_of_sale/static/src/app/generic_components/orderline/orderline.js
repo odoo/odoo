@@ -21,13 +21,16 @@ export class Orderline extends Component {
                 imageSrc: { type: String, optional: true },
                 packLotLines: { type: Array, optional: true },
                 price_without_discount: { type: String, optional: true },
+                taxGroupLabels: { type: String, optional: true },
             },
         },
         infoListClasses: { type: String, optional: true },
+        showTaxGroupLabels: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
     static defaultProps = {
         class: {},
         infoListClasses: "",
+        showTaxGroupLabels: false,
     };
 }
