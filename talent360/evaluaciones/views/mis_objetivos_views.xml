@@ -42,7 +42,7 @@
         <field name="arch" type="xml">
             <form string="Objetivo">
                 <header>
-                    <button name="action_registrar_avance" string="Registrar Avance" type="object" class="btn-primary"/>
+                    <button name="action_registrar_avance" string="Registrar Avance" type="object" class="btn-primary" context="{'actual_objetivo_id': active_id}"/>
                     <field name="estado" widget="statusbar" statusbar_visible="rojo, amarillo, verde, azul"/>
                 </header>
                 <sheet>
@@ -61,6 +61,7 @@
                                 <field name="tipo" readonly="1"/>
                                 <field name="piso_minimo" readonly="1"/>
                                 <field name="piso_maximo" readonly="1"/>
+                                <field name="resultado" string="Progreso" readonly="1"/>
                             </group>
                         </page>
                         <page string="Avances">
