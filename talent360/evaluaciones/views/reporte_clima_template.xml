@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <data>
-
         <template id="encuestas_reporte_clima" name="Reporte: página de reporte genérico">
             <t t-call="evaluaciones.diseño">
                 <t t-set="limite_registros" t-value="10"/>
@@ -11,8 +8,26 @@
                 </div>
                 <div class="o_survey_result">
                     <t t-call="evaluaciones.portada_reporte_template"/>
-                    <t t-call="evaluaciones.encuestas_reporte_clima_body" />
-                    <t t-call="evaluaciones.encuestas_reporte_inner" />
+                    <t t-if="total_porcentaje == 0">
+                        <div class="page container-fluid row gap-5 justify-content-between g-2 text-center">
+                            <div class="col-12">
+                                <h2>No se encontraron datos</h2>
+                                <p style="font-style: italic;">El reporte no contiene información para mostrar con los filtros de:</p>
+                                <ul style="font-size: 1em;; font-weight: bold;">
+                                    <t t-foreach="filtros.items()" t-as="filtro">
+                                        <li>
+                                            <t t-esc="filtro[0]"/>: 
+                                            <t t-esc="', '.join(filtro[1]['valores'])"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                                <img t-att-src="'/evaluaciones/static/src/img/oops.png'" alt="Error 404" class="img-fluid" style="margin-top: 40px; max-width: 100%; height: auto;"/>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call="evaluaciones.encuestas_reporte_clima_body"/>
+                    </t>
                 </div>
             </t>
         </template>
@@ -69,40 +84,35 @@
                     <div class="container-fluid row gap-2 align-items-center">
                         <!-- Nivel Azul -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#2894a7" />
                             </svg>
                             <span class="col" t-field="evaluacion.descripcion_azul" />
                         </div>
                         <!-- Nivel verde -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#5aaf2b" />
                             </svg>
                             <span class="col" t-field="evaluacion.descripcion_verde" />
                         </div>
                         <!-- Nivel amarillo -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#fcd703" />
                             </svg>
                             <span class="col" t-field="evaluacion.descripcion_amarillo" />
                         </div>
                         <!-- Nivel naranja -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#fc8803" />
                             </svg>
                             <span class="col" t-field="evaluacion.descripcion_naranja" />
                         </div>
                         <!-- Muy malo -->
                         <div class="semaforo-item">
-                            <svg width="22" height="22"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="11" cy="11" r="11" fill="#ff4747" />
                             </svg>
                             <span class="col" t-field="evaluacion.descripcion_rojo" />
@@ -123,42 +133,31 @@
                     </div>
                 </div>
 
-                <t t-if="evaluacion.incluir_demograficos" t-call="evaluaciones.encuestas_reporte_demografico"/>
-
                 <div class="page-break"></div>
 
-                <div class="survey_page container-fluid d-flex flex-column" style="font-size: 0.9em;">
-                    <div class="survey_section" style="page-break-inside: avoid;">
-                        <h4 style="font-size: 2em;">Resumen del Clima Laboral</h4>
-                        <div class="survey_graph" t-att-id="'grafica_radar_categorias_clima'" t-att-data-graph-type="'radar'" t-att-data-label="'Categorías'" t-att-data-graph-data="categorias" style="height: 745px;">
-                            <canvas t-att-id="'canvas_barras_categorias_clima'"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="container-fluid">
-                        <div class="row gap-5">
-                            <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
-                                <h4 style="font-size: 1em;">Categoría con mayor puntaje</h4>
-                                <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
-                                    <span class="fs-1" style="font-size: 1.5em;">
-                                        <t t-esc="'{:.2f}'.format(max(categorias, key=lambda x: x['valor'])['valor'])"/>
-                                    </span>
-                                    <span class="fs-5" style="font-size: 1em;">
-                                        <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
-                                    </span>
-                                </div>
+                <div class="container-fluid">
+                    <div class="row gap-5">
+                        <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
+                            <h4 style="font-size: 1em;">Categoría con mayor puntaje</h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1" style="font-size: 1.5em;">
+                                    <t t-esc="'{:.2f}'.format(max(categorias, key=lambda x: x['valor'])['valor'])"/>
+                                </span>
+                                <span class="fs-5" style="font-size: 1em;">
+                                    <t t-esc="max(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
                             </div>
+                        </div>
 
-                            <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
-                                <h4 style="font-size: 1em;">Categoría con menor puntaje:</h4>
-                                <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
-                                    <span class="fs-1" style="font-size: 1.5em;">
-                                        <t t-esc="'{:.2f}'.format(min(categorias, key=lambda x: x['valor'])['valor'])"/>
-                                    </span>
-                                    <span class="fs-5" style="font-size: 1em;">
-                                        <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
-                                    </span>
-                                </div>
+                        <div class="col survey_section align-items-start" style="page-break-inside: avoid;">
+                            <h4 style="font-size: 1em;">Categoría con menor puntaje:</h4>
+                            <div class="container-fluid d-flex flex-row gap-3 align-items-center justify-content-center">
+                                <span class="fs-1" style="font-size: 1.5em;">
+                                    <t t-esc="'{:.2f}'.format(min(categorias, key=lambda x: x['valor'])['valor'])"/>
+                                </span>
+                                <span class="fs-5" style="font-size: 1em;">
+                                    <t t-esc="min(categorias, key=lambda x: x['valor'])['nombre']"/>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -190,7 +189,6 @@
                     </div>
                 </t>
 
-
                 <div class="survey_section mb-5" style="page-break-inside: avoid;  margin-top: 50px;">
                     <h4>Necesidad de acción</h4>
                     <span class="container-fluid">
@@ -205,9 +203,5 @@
             </div>
         </template>
 
-
-
     </data>
-
-
 </odoo>
