@@ -20,7 +20,7 @@ const getShortestSelector = (paths) => {
     let hasOdooClass = false;
     for (
         let currentElem = paths.pop();
-        currentElem && queryAll(filteredPath.join(" > ")).length !== 1 || !hasOdooClass;
+        (currentElem && queryAll(filteredPath.join(" > ")).length !== 1) || !hasOdooClass;
         currentElem = paths.pop()
     ) {
         if (currentElem.parentElement.contentEditable === "true") {
@@ -139,7 +139,7 @@ export class TourRecorder extends Component {
             JSON.stringify(pathElements.map((e) => e.tagName)) !==
             JSON.stringify(this.originClickEvent.map((e) => e.tagName))
         ) {
-            lastStepInput.run = `drag_and_drop_native ${lastStepInput.trigger}`;
+            lastStepInput.run = `drag_and_drop ${lastStepInput.trigger}`;
             lastStepInput.trigger = getShortestSelector(this.originClickEvent);
         } else {
             const lastStepInput = this.state.steps.at(-1);
