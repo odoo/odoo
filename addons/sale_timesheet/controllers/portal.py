@@ -82,7 +82,8 @@ class SaleTimesheetCustomerPortal(TimesheetCustomerPortal):
 
     def _get_searchbar_sortings(self):
         return super()._get_searchbar_sortings() | {
-            'so_line': {'label': _('Sales Order Item')}
+            'so_line': {'label': _('Sales Order Item')},
+            'timesheet_invoice_id': {'label': _('Invoice')},
         }
 
     def _task_get_page_view_values(self, task, access_token, **kwargs):
