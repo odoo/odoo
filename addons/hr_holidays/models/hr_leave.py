@@ -349,7 +349,7 @@ class HolidaysRequest(models.Model):
         if not is_officer:
             domain = expression.AND([domain, [('user_id', '=', self.env.user.id)]])
 
-        leaves = self.search(domain)
+        leaves = self.sudo().search(domain)
         return [('id', 'in', leaves.ids)]
 
     @api.depends('holiday_status_id')
