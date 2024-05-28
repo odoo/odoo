@@ -2243,6 +2243,7 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(operation.bom_id, self.bom_1)
         self.assertFalse(bom.bom_line_ids.operation_id)
         self.assertFalse(bom.byproduct_ids.operation_id)
+<<<<<<< HEAD
 
 
 @tagged('-at_install', 'post_install')
@@ -2266,3 +2267,20 @@ class TestTourBoM(HttpCase):
 
         self.start_tour(url, 'test_mrp_bom_product_catalog', login='admin')
         self.assertEqual(len(bom.bom_line_ids), 1)
+||||||| parent of 81db9073cb94 (temp)
+        self.assertFalse(operation_2.blocked_by_operation_ids)
+=======
+        self.assertFalse(operation_2.blocked_by_operation_ids)
+
+    def test_compute_days_to_prepare_from_mo_if_unavailable(self):
+        """
+        Checks that a notification is sent when at least one component can not be resupplied.
+        """
+        bom = self.bom_1
+        product = bom.product_id
+        manufacturing_route_id = self.ref('mrp.route_warehouse0_manufacture')
+        product.route_ids = [Command.set([manufacturing_route_id])]
+        notification = bom.action_compute_bom_days()
+        self.assertEqual(bom.days_to_prepare_mo, 0.0)
+        self.assertEqual((notification['type'], notification['tag']), ('ir.actions.client', 'display_notification'))
+>>>>>>> 81db9073cb94 (temp)
