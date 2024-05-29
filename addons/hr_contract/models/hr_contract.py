@@ -255,7 +255,7 @@ class Contract(models.Model):
             auto_commit = not getattr(threading.current_thread(), 'testing', False)
             for contract in self:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint():  # TODO savepoint in loop, use transaction commit and rollback
                         contract.write(vals)
                 except ValidationError as e:
                     _logger.warning(e)

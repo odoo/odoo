@@ -4152,7 +4152,7 @@ class AccountMove(models.Model):
             current_invoice.flush_recordset()
             if decoder or file_data['type'] in ('pdf', 'binary'):
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint(): # TODO savepoint in a loop
                         invoice = current_invoice or self.create({})
                         existing_lines = invoice.invoice_line_ids
                         if not decoder and file_data['type'] in ('pdf', 'binary'):
@@ -4942,10 +4942,13 @@ class AccountMove(models.Model):
                 purchase_amls = invoice.line_ids.filtered(lambda line: line.partner_id and line.account_id.account_type == 'liability_payable')
                 for partner in purchase_amls.mapped('partner_id'):
                     supplier_count[partner] += 1
-        for partner, count in customer_count.items():
-            (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
-        for partner, count in supplier_count.items():
-            (partner | partner.commercial_partner_id)._increase_rank('supplier_rank', count)
+        # Group partner by count to minimize the call to _increase_rank in order to minimize the number of savepoint
+        count_per_customer = self.env['res.partner'].browse(p.id for p in customer_count.keys()).grouped(customer_count.get)
+        count_per_supplier = self.env['res.partner'].browse(p.id for p in supplier_count.keys()).grouped(supplier_count.get)
+        for count, partners in count_per_customer.items():
+            (partners | partners.commercial_partner_id)._increase_rank('customer_rank', count)
+        for count, partners in count_per_supplier.items():
+            (partners | partners.commercial_partner_id)._increase_rank('supplier_rank', count)
 
         # Trigger action for paid invoices if amount is zero
         to_post.filtered(
@@ -5371,7 +5374,7 @@ class AccountMove(models.Model):
         except UserError:  # if at least one move cannot be posted, handle moves one by one
             for move in moves:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint():  # TODO savepoint in a loop
                         move._post()
                 except UserError as e:
                     move.checked = False

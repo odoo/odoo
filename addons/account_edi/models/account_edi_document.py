@@ -225,7 +225,7 @@ class AccountEdiDocument(models.Model):
             move_to_lock = documents.move_id
             attachments_potential_unlink = documents.sudo().attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
             try:
-                with self.env.cr.savepoint(flush=False):
+                with self.env.cr.savepoint(flush=False): # TODO Savepoint in a loop
                     self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
                     self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_lock.ids)])
 

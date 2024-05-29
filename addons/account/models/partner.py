@@ -783,7 +783,7 @@ class ResPartner(models.Model):
     def _increase_rank(self, field, n=1):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
-                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
+                with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'): # TODO savepoint definitly in a loop
                     self.env.execute_query(SQL("""
                         SELECT %(field)s FROM res_partner WHERE ID IN %(partner_ids)s FOR NO KEY UPDATE NOWAIT;
                         UPDATE res_partner SET %(field)s = %(field)s + %(n)s
