@@ -47,73 +47,32 @@ class ProductTemplate(models.Model):
             if not product.service_policy and product.type == 'service':
                 product.service_policy = 'ordered_prepaid'
 
-    @api.depends('service_tracking', 'service_policy', 'type', 'sale_ok')
+    @api.depends('service_policy')
     def _compute_product_tooltip(self):
         super()._compute_product_tooltip()
-        for record in self.filtered(lambda record: record.type == 'service' and record.sale_ok):
-            if record.service_policy == 'ordered_prepaid':
-                if record.service_tracking == 'no':
-                    record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold."
-                    )
-                elif record.service_tracking == 'task_global_project':
-                    record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold. "
-                        "Create a task in an existing project to track the time spent."
-                    )
-                elif record.service_tracking == 'project_only':
-                    record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold. "
-                        "Create a project for the order with a task for each sales order line "
-                        "to track the time spent."
-                    )
-                elif record.service_tracking == 'task_in_project':
-                    record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold. "
-                        "Create an empty project for the order to track the time spent."
-                    )
-            elif record.service_policy == 'delivered_milestones':
-                if record.service_tracking == 'no':
-                    record.product_tooltip = _(
-                        "Invoice your milestones when they are reached."
-                    )
-                elif record.service_tracking == 'task_global_project':
-                    record.product_tooltip = _(
-                        "Invoice your milestones when they are reached. "
-                        "Create a task in an existing project to track the time spent."
-                    )
-                elif record.service_tracking == 'project_only':
-                    record.product_tooltip = _(
-                        "Invoice your milestones when they are reached. "
-                        "Create a project for the order with a task for each sales order line "
-                        "to track the time spent."
-                    )
-                elif record.service_tracking == 'task_in_project':
-                    record.product_tooltip = _(
-                        "Invoice your milestones when they are reached. "
-                        "Create an empty project for the order to track the time spent."
-                    )
-            elif record.service_policy == 'delivered_manual':
-                if record.service_tracking == 'no':
-                    record.product_tooltip = _(
-                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
-                    )
-                elif record.service_tracking == 'task_global_project':
-                    record.product_tooltip = _(
-                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
-                        "Create a task in an existing project to track the time spent."
-                    )
-                elif record.service_tracking == 'project_only':
-                    record.product_tooltip = _(
-                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
-                        "Create a project for the order with a task for each sales order line "
-                        "to track the time spent."
-                    )
-                elif record.service_tracking == 'task_in_project':
-                    record.product_tooltip = _(
-                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
-                        "Create an empty project for the order to track the time spent."
-                    )
+
+    def _prepare_service_tracking_tooltip(self):
+        if self.service_tracking == 'task_global_project':
+            return _("Create a task in an existing project to track the time spent.")
+        elif self.service_tracking == 'project_only':
+            return _(
+                "Create a project for the order with a task for each sales order line to track the"
+                " time spent."
+            )
+        elif self.service_tracking == 'task_in_project':
+            return _("Create an empty project for the order to track the time spent.")
+        elif self.service_tracking == 'no':
+            return _(
+                "Create projects or tasks later, and link them to order to track the time spent."
+            )
+        return super()._prepare_service_tracking_tooltip()
+
+    def _prepare_invoicing_tooltip(self):
+        if self.service_policy == 'delivered_milestones':
+            return _("Invoice your milestones when they are reached.")
+        # ordered_prepaid and delivered_manual are handled in the super call, according to the
+        # corresponding value in the `invoice_policy` field (delivered/ordered quantities)
+        return super()._prepare_invoicing_tooltip()
 
     def _get_service_to_general_map(self):
         return {
@@ -162,13 +121,6 @@ class ProductTemplate(models.Model):
             self.project_template_id = False
         elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
-
-    @api.onchange('type')
-    def _onchange_type(self):
-        res = super()._onchange_type()
-        if self.type != 'service':
-            self.service_tracking = 'no'
-        return res
 
     def write(self, vals):
         if 'type' in vals and vals['type'] != 'service':

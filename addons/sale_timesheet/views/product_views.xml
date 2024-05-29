@@ -6,8 +6,18 @@
         <field name="inherit_id" ref="sale.product_template_form_view"/>
         <field name="arch" type="xml">
             <field name="product_tooltip" position="after">
-                <label for="product_tooltip" string="" invisible="type != 'service' or service_policy != 'ordered_prepaid' or not sale_ok"/>
-                <div invisible="type != 'service' or service_policy != 'ordered_prepaid' or not sale_ok" class="fst-italic text-muted">
+                <label for="service_upsell_threshold" string=""
+                    invisible="type != 'service'
+                    or service_policy != 'ordered_prepaid'
+                    or not sale_ok
+                    or service_tracking not in ['no', 'task_global_project', 'task_in_project', 'project_only']"
+                />
+                <div invisible="type != 'service'
+                        or service_policy != 'ordered_prepaid'
+                        or not sale_ok
+                        or service_tracking not in ['no', 'task_global_project', 'task_in_project', 'project_only']"
+                    class="fst-italic text-muted"
+                >
                     Warn the salesperson for an upsell when work done exceeds
                     <field name="service_upsell_threshold" widget="percentage" class="oe_inline"/>
                     of hours sold. <field name="service_upsell_threshold_ratio" class="oe_inline" invisible="not service_upsell_threshold_ratio"/>
