@@ -4281,6 +4281,9 @@ export class OdooEditor extends EventTarget {
      * @param {String} currentKeyPress
      */
     _fixSelectionOnEditableRoot(selection, currentKeyPress) {
+        if (!this.editable.isContentEditable) {
+            return;
+        }
         let nodeAfterCursor = this.editable.childNodes[selection.anchorOffset];
         let nodeBeforeCursor = nodeAfterCursor && nodeAfterCursor.previousElementSibling;
         // Handle arrow key presses.
