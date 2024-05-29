@@ -442,8 +442,12 @@ class Picking(models.Model):
         other_pickings.products_availability_state = False
 
         all_moves = pickings.move_lines
-        # Force to prefetch more than 1000 by 1000
-        all_moves._fields['forecast_availability'].compute_value(all_moves)
+
+        # Force to prefetch more than 1000 by 1000, only for records not in cache.
+        forecast_missing_ids = set(self.env.cache.get_missing_ids(all_moves, all_moves._fields['forecast_availability']))
+        all_moves_without_forecast = all_moves.filtered(lambda m: m.id in forecast_missing_ids)
+        all_moves_without_forecast._fields['forecast_availability'].compute_value(all_moves_without_forecast)
+        
         for picking in pickings:
             # In case of draft the behavior of forecast_availability is different : if forecast_availability < 0 then there is a issue else not.
             if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in picking.move_lines):

@@ -296,8 +296,12 @@ class MrpProduction(models.Model):
         other_productions.components_availability_state = False
 
         all_raw_moves = productions.move_raw_ids
-        # Force to prefetch more than 1000 by 1000
-        all_raw_moves._fields['forecast_availability'].compute_value(all_raw_moves)
+        
+        # Force to prefetch more than 1000 by 1000, only for records not in cache.
+        forecast_missing_ids = set(self.env.cache.get_missing_ids(all_raw_moves, all_raw_moves._fields['forecast_availability']))
+        all_raw_moves_without_forecast = all_raw_moves.filtered(lambda m: m.id in forecast_missing_ids)
+        all_raw_moves_without_forecast._fields['forecast_availability'].compute_value(all_raw_moves_without_forecast)
+
         for production in productions:
             if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
