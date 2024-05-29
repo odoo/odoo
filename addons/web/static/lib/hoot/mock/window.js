@@ -34,12 +34,10 @@ import {
 //-----------------------------------------------------------------------------
 
 const {
-    console,
     document,
     innerHeight,
     innerWidth,
     Object: {
-        assign: $assign,
         defineProperty: $defineProperty,
         entries: $entries,
         getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
@@ -205,7 +203,6 @@ const optionsMap = new WeakMap();
 
 const mockLocalStorage = new MockStorage();
 const mockSessionStorage = new MockStorage();
-const originalConsole = { ...console };
 let mockTitle = "";
 
 // Mock descriptors
@@ -260,9 +257,6 @@ export function cleanupWindow() {
 
     // Title
     mockTitle = "";
-
-    // Console
-    $assign(console, originalConsole);
 
     // Touch
     globalThis.ontouchstart = ontouchstart;
