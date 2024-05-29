@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { createMock, isNil, stringToNumber } from "../hoot_utils";
+import { isNil, stringToNumber } from "../hoot_utils";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -16,48 +16,6 @@ const { floor: $floor, random: $random } = Math;
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
-
-/**
- * Returns a seeded random number generator equivalent to the native
- * {@link Math.random} method.
- *
- * It exposes a `seed` property that can be changed at any time to reset the
- * generator.
- *
- * @param {number} seed
- * @example
- *  const randA = makeSeededRandom(1e16);
- *  const randB = makeSeededRandom(1e16);
- *  randA() === randB(); // true
- * @example
- *  const random = makeSeededRandom(1e16);
- *  random() === random(); // false
- */
-const makeSeededRandom = (seed) => {
-    function random() {
-        state ^= (state << 13) >>> 0;
-        state ^= (state >>> 17) >>> 0;
-        state ^= (state << 5) >>> 0;
-
-        return ((state >>> 0) & 0x7fffffff) / 0x7fffffff; // Normalize to [0, 1)
-    }
-
-    let state = seed;
-
-    $defineProperties(random, {
-        seed: {
-            get() {
-                return seed;
-            },
-            set(value) {
-                seed = toValidSeed(value);
-                state = seed;
-            },
-        },
-    });
-
-    return random;
-};
 
 /**
  * @param {unknown} [seed]
@@ -85,15 +43,46 @@ export function generateSeed() {
 }
 
 /**
- * @param {number} [seed]
+ * Returns a seeded random number generator equivalent to the native
+ * {@link Math.random} method.
+ *
+ * It exposes a `seed` property that can be changed at any time to reset the
+ * generator.
+ *
+ * @param {number} seed
+ * @example
+ *  const randA = makeSeededRandom(1e16);
+ *  const randB = makeSeededRandom(1e16);
+ *  randA() === randB(); // true
+ * @example
+ *  const random = makeSeededRandom(1e16);
+ *  random() === random(); // false
  */
-export function setRandomSeed(seed) {
-    MockMath.random.seed = toValidSeed(seed);
-}
+export function makeSeededRandom(seed) {
+    function random() {
+        state ^= (state << 13) >>> 0;
+        state ^= (state >>> 17) >>> 0;
+        state ^= (state << 5) >>> 0;
 
-export const MockMath = createMock(Math, {
-    random: { value: makeSeededRandom(DEFAULT_SEED) },
-});
+        return ((state >>> 0) & 0x7fffffff) / 0x7fffffff; // Normalize to [0, 1)
+    }
+
+    let state = seed;
+
+    $defineProperties(random, {
+        seed: {
+            get() {
+                return seed;
+            },
+            set(value) {
+                seed = toValidSeed(value);
+                state = seed;
+            },
+        },
+    });
+
+    return random;
+}
 
 /**
  * `random` function used internally to not generate unwanted calls on global
