@@ -312,6 +312,12 @@ class ResPartnerBank(models.Model):
             account.partner_id._message_log(body=msg)
         return super().unlink()
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_trusted(self):
+        for account in self:
+            if account.allow_out_payment:
+                raise UserError(_('You cannot delete a trusted bank account'))
+
     def default_get(self, fields_list):
         if 'acc_number' not in fields_list:
             return super().default_get(fields_list)
