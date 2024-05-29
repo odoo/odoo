@@ -358,7 +358,10 @@ class Website(models.Model):
     def sale_product_domain(self):
         website_domain = self.get_current_website().website_domain()
         if not self.env.user._is_internal():
-            website_domain = expression.AND([website_domain, [('is_published', '=', True)]])
+            website_domain = expression.AND([website_domain, [
+                ('is_published', '=', True),
+                ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
+            ]])
         return expression.AND([self._product_domain(), website_domain])
 
     def _product_domain(self):
