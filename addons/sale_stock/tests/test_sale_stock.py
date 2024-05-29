@@ -1938,3 +1938,32 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         return_pick.button_validate()
         # check the qty delivered in the SOL
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
+
+    def test_2_step_delivery_qty_delivered_computation(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price,
+            })],
+        })
+        so.action_confirm()
+        output_picking = so.picking_ids
+        output_picking.move_ids.write({'quantity': 10, 'picked': True})
+        output_picking.button_validate()
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=output_picking.ids, active_id=output_picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        return_wizard.product_return_moves.quantity = 2
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.write({'quantity': 2, 'picked': True})
+        return_picking.button_validate()
+        self.assertEqual(so.order_line.qty_delivered, 0)
