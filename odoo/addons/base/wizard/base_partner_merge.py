@@ -287,6 +287,268 @@ class MergePartnerAutomatic(models.TransientModel):
             except ValidationError:
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 
+    @api.model
+    def _update_foreign_keys_generic(self, destination, source):
+        """
+        Update all the foreign keys referring to `source` records with `destination` as new referencee.
+        The parameters are the real records and not data_merge.record
+
+        :param destination: destination record of the foreign keys
+        :param source: list of records
+        """
+        query = """
+            SELECT cl1.relname as table, array_agg(att1.attname) as columns
+            FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, pg_attribute as att1, pg_attribute as att2
+            WHERE con.conrelid = cl1.oid
+                AND con.confrelid = cl2.oid
+                AND array_lower(con.conkey, 1) = 1
+                AND con.conkey[1] = att1.attnum
+                AND att1.attrelid = cl1.oid
+                AND att2.attname = 'id'
+                AND array_lower(con.confkey, 1) = 1
+                AND con.confkey[1] = att2.attnum
+                AND att2.attrelid = cl2.oid
+                AND con.contype = 'f'
+                AND cl2.relname = %s
+            GROUP BY cl1.relname"""
+
+        self.env.flush_all()
+        self._cr.execute(query, (destination._table,))
+        references = {r[0]: r[1] for r in self._cr.fetchall()}
+
+        source_ids = source.ids
+        self.env.flush_all()
+
+        for table, columns in references.items():
+            for column in columns:
+                query_dict = {
+                    "table": table,
+                    "column": column,
+                }
+
+                # Query to check the number of columns in the referencing table
+                query = psycopg2.sql.SQL(
+                    """
+                    SELECT COUNT("column_name")
+                    FROM "information_schema"."columns"
+                    WHERE "table_name" ILIKE %s
+                    """
+                )
+                self._cr.execute(query, (query_dict["table"],))
+                column_count = self._cr.fetchone()[0]
+
+                ## Relation table for M2M
+                if column_count == 2:
+                    # Retrieve the "other" column
+                    query = psycopg2.sql.SQL(
+                        """
+                        SELECT "column_name"
+                        FROM "information_schema"."columns"
+                        WHERE
+                            "table_name" LIKE %s
+                        AND "column_name" <> %s
+                        """
+                    )
+                    self._cr.execute(query, (query_dict["table"], query_dict["column"]))
+                    othercol = self._cr.fetchone()[0]
+                    query_dict.update({"othercol": othercol})
+
+                    for rec_id in source_ids:
+                        # This query will filter out existing records
+                        # e.g. if the record to merge has tags A, B, C and the master record has tags C, D, E
+                        #      we only need to add tags A, B
+                        query = psycopg2.sql.SQL(
+                            """
+                            UPDATE {table} o
+                            SET {column} =  %(destination_id)s            --- master record
+                            WHERE {column} = %(record_id)s         --- record to merge
+                            AND NOT EXISTS (
+                            SELECT 1
+                            FROM  {table} i
+                            WHERE {column} = %(destination_id)s
+                            AND i.{othercol} = o.{othercol}
+                            )
+                            """
+                        ).format(
+                            table=psycopg2.sql.Identifier(query_dict["table"]),
+                            column=psycopg2.sql.Identifier(query_dict["column"]),
+                            othercol=psycopg2.sql.Identifier(query_dict["othercol"]),
+                        )
+                        params = {
+                            "destination_id": destination.id,
+                            "record_id": rec_id,
+                            "othercol": othercol,
+                        }
+                        self._cr.execute(query, params)
+                else:
+                    query = psycopg2.sql.SQL(
+                        """
+                        UPDATE {table} o
+                        SET {column}  = %(destination_id)s            --- master record
+                        WHERE {column} = %(record_id)s         --- record to merge
+                        """
+                    ).format(
+                        table=psycopg2.sql.Identifier(query_dict["table"]),
+                        column=psycopg2.sql.Identifier(query_dict["column"]),
+                    )
+                    for rec_id in source_ids:
+                        try:
+                            with self._cr.savepoint():
+                                params = {
+                                    "destination_id": destination.id,
+                                    "record_id": rec_id,
+                                }
+                                self._cr.execute(query, params)
+                        except psycopg2.IntegrityError as e:
+                            # Failed update, probably due to a unique constraint
+                            # updating fails, most likely due to a violated unique constraint
+                            if e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                                _logger.warning(
+                                    "Query %s failed, due to an unique constraint",
+                                    query,
+                                )
+                            else:
+                                _logger.warning("Query %s failed", query)
+                        except psycopg2.Error:
+                            raise ValidationError(_("Query Failed."))
+
+        self._merge_additional_models(destination, source_ids)
+        fields_to_recompute = [
+            f.name for f in destination._fields.values() if f.compute and f.store
+        ]
+        destination.modified(fields_to_recompute)
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+    ## Manual merge of ir.attachment & mail.activity
+    @api.model
+    def _merge_additional_models(self, destination, source_ids):
+        models_to_adapt = [
+            {
+                "table": "ir_attachment",
+                "id_field": "res_id",
+                "model_field": "res_model",
+            },
+            {
+                "table": "mail_activity",
+                "id_field": "res_id",
+                "model_field": "res_model",
+            },
+            {
+                "table": "ir_model_data",
+                "id_field": "res_id",
+                "model_field": "model",
+            },
+            {
+                "table": "mail_message",
+                "id_field": "res_id",
+                "model_field": "model",
+            },
+            {
+                "table": "mail_followers",
+                "id_field": "res_id",
+                "model_field": "res_model",
+            },
+        ]
+        query = """
+            UPDATE %(table)s
+            SET %(id_field)s = %%(destination_id)s
+            WHERE %(id_field)s = %%(record_id)s
+            AND %(model_field)s = %%(model)s"""
+        for model in models_to_adapt:
+            q = query % model
+            for rec_id in source_ids:
+                try:
+                    with self._cr.savepoint():
+                        params = {
+                            "destination_id": destination.id,
+                            "record_id": rec_id,
+                            "model": destination._name,
+                        }
+                        self._cr.execute(q, params)
+                except psycopg2.IntegrityError as e:
+                    # Failed update, probably due to a unique constraint
+                    # updating fails, most likely due to a violated unique constraint
+                    if e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                        _logger.warning(
+                            "Query %s failed, due to an unique constraint", query
+                        )
+                    else:
+                        _logger.warning("Query %s failed", query)
+                except psycopg2.Error:
+                    raise ValidationError(_("Query Failed."))
+
+        # Company-dependent fields
+        with self._cr.savepoint():
+            params = {
+                "destination_id": f"{destination._name},{destination.id}",
+                "source_ids": tuple(f"{destination._name},{src}" for src in source_ids),
+            }
+            self._cr.execute(
+                """
+                UPDATE ir_property AS _ip1
+                SET res_id = %(destination_id)s
+                WHERE res_id IN %(source_ids)s
+                AND NOT EXISTS (
+                    SELECT
+                    FROM ir_property AS _ip2
+                    WHERE _ip2.res_id = %(destination_id)s
+                    AND _ip2.fields_id = _ip1.fields_id
+                    AND _ip2.company_id = _ip1.company_id
+                )""",
+                params,
+            )
+
+    @api.model
+    def _handle_duplicate_res_partner_banks(self, src_partners, dst_partner):
+        """
+        Merge the res_partner_bank entries that would cause unicity issue if the given partners were to be merged.
+
+        :param src_partners: Recordset of source partners whose bank accounts need to be merged.
+        :param dst_partner: Destination partner to which bank accounts should be merged.
+        """
+
+        # Fetch bank accounts of source partners
+        src_bnk_accounts = self.env["res.partner.bank"].search(
+            [("partner_id", "in", src_partners.ids)]
+        )
+
+        # Fetch bank accounts of the destination partner
+        dst_bnk_accounts = self.env["res.partner.bank"].search(
+            [("partner_id", "=", dst_partner.id)]
+        )
+
+        # Create a dictionary of destination account numbers mapped to their IDs
+        dst_acc_numbers = {
+            entry.sanitized_acc_number: entry.id for entry in dst_bnk_accounts
+        }
+
+        dst_to_src_account_mapping = {}
+
+        # Determine mapping of bank accounts to merge
+        for src_account in src_bnk_accounts:
+            if src_account.sanitized_acc_number in dst_acc_numbers:
+                dst_id = dst_acc_numbers[src_account.sanitized_acc_number]
+                if dst_id not in dst_to_src_account_mapping:
+                    dst_to_src_account_mapping[dst_id] = []
+                dst_to_src_account_mapping[dst_id].append(src_account.id)
+
+        # Merge bank accounts
+        for destination_id, source_ids in dst_to_src_account_mapping.items():
+            destination = self.env["res.partner.bank"].browse(destination_id)
+            source = self.env["res.partner.bank"].browse(source_ids)
+
+            self._update_foreign_keys_generic(destination, source)
+
+        # Delete merged source bank accounts
+        if dst_to_src_account_mapping:
+            to_delete = [
+                src_id
+                for src_ids in dst_to_src_account_mapping.values()
+                for src_id in src_ids
+            ]
+            self.env["res.partner.bank"].browse(to_delete).unlink()
+
     def _merge(self, partner_ids, dst_partner=None, extra_checks=True):
         """ private implementation of merge partner
             :param partner_ids : ids of partner to merge
@@ -336,6 +598,7 @@ class MergePartnerAutomatic(models.TransientModel):
             })
 
         # call sub methods to do the merge
+        self._handle_duplicate_res_partner_banks(src_partners, dst_partner)
         self._update_foreign_keys(src_partners, dst_partner)
         self._update_reference_fields(src_partners, dst_partner)
         self._update_values(src_partners, dst_partner)
