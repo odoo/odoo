@@ -309,9 +309,7 @@ def schema_valid(arch, **kwargs):
     """ Get RNG validator and validate RNG file."""
     validator = relaxng(arch.tag)
     if validator and not validator.validate(arch):
-        result = True
         for error in validator.error_log:
-            _logger.warning(tools.ustr(error))
-            result = False
-        return result
+            _logger.warning("%s", error)
+        return False
     return True

@@ -181,22 +181,23 @@ class Currency(models.Model):
             logging.getLogger(__name__).warning("The library 'num2words' is missing, cannot render textual amounts.")
             return ""
 
-        formatted = "%.{0}f".format(self.decimal_places) % amount
-        parts = formatted.partition('.')
-        integer_value = int(parts[0])
-        fractional_value = int(parts[2] or 0)
-
+        integral, _sep, fractional = f"{amount:.{self.decimal_places}f}".partition('.')
+        integer_value = int(integral)
         lang = tools.get_lang(self.env)
-        amount_words = tools.ustr('{amt_value} {amt_word}').format(
-                        amt_value=_num2words(integer_value, lang=lang.iso_code),
-                        amt_word=self.currency_unit_label,
-                        )
-        if not self.is_zero(amount - integer_value):
-            amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
-                        amt_value=_num2words(fractional_value, lang=lang.iso_code),
-                        amt_word=self.currency_subunit_label,
-                        )
-        return amount_words
+        if self.is_zero(amount - integer_value):
+            return _(
+                '%(integral_amount)s %(currency_unit)s',
+                integral_amount=_num2words(integer_value, lang=lang.iso_code),
+                currency_unit=self.currency_unit_label,
+            )
+        else:
+            return _(
+                '%(integral_amount)s %(currency_unit)s and %(fractional_amount)s %(currency_subunit)s',
+                integral_amount=_num2words(integer_value, lang=lang.iso_code),
+                currency_unit=self.currency_unit_label,
+                fractional_amount=_num2words(int(fractional or 0), lang=lang.iso_code),
+                currency_subunit=self.currency_subunit_label,
+            )
 
     def format(self, amount):
         """Return ``amount`` formatted according to ``self``'s rounding rules, symbols and positions.

@@ -383,8 +383,6 @@ class Selection(models.AbstractModel):
         value = element.text_content().strip()
         selection = field.get_description(self.env)['selection']
         for k, v in selection:
-            if isinstance(v, str):
-                v = ustr(v)
             if value == v:
                 return k
 

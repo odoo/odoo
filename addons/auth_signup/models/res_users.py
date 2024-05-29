@@ -160,7 +160,7 @@ class ResUsers(models.Model):
                 return template_user.with_context(no_reset_password=True).copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.
-            raise SignupError(ustr(e))
+            raise SignupError(str(e))
 
     def reset_password(self, login):
         """ retrieve the user corresponding to login (login or email),
