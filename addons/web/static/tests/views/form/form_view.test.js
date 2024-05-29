@@ -10832,3 +10832,91 @@ test(`an empty json object does not pass the required check`, async () => {
     expect(`.o_field_widget[name=json_field]`).toHaveClass("o_field_invalid");
     expect(["notification"]).toVerifySteps();
 });
+
+test('onchange returns values w.r.t. extended record specs, for not extended one',  async () => {
+    Product._fields.partner_type_ids = fields.One2many({
+        string: "Partner type",
+        relation: "partner",
+    });
+    Product._views = {
+        form: `
+            <form>
+                <field name="name"/>
+                <field name="partner_type_ids">
+                    <tree>
+                        <field name="name"/>
+                    </tree>
+                </field>
+            </form>
+        `
+    }
+    Partner._records[1].product_ids = [37, 41];
+    Partner._onChanges = {
+        bar(record) {
+            record.product_ids = [
+                [
+                    1,
+                    37,
+                    {
+                        name: "name changed",
+                        partner_type_ids: [[0, 0, { name: "one" }]],
+                    },
+                ],
+                [
+                    1,
+                    41,
+                    {
+                        name: "name twisted",
+                        partner_type_ids: [[0, 0, { name: "two" }]],
+                    },
+                ],
+            ]
+        },
+    };
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual({
+            bar: false,
+            product_ids: [
+                [
+                    1,
+                    37,
+                    {
+                        name: "name changed",
+                        partner_type_ids: [[0, 0, { name: "one" }]],
+                    },
+                ],
+                [
+                    1,
+                    41,
+                    {
+                        name: "name twisted",
+                        partner_type_ids: [[0, 0, { name: "two" }]],
+                    },
+                ],
+            ],
+        });
+    });
+    await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+                <form>
+                    <field name="bar"/>
+                    <field name="product_ids">
+                        <tree>
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                </form>
+            `,
+            resId: 2,
+    });
+
+    await contains(`.o_data_cell`).click()
+    await contains(`.btn-secondary.o_form_button_cancel`).click()
+    await contains(`.o-checkbox`).click()
+    expect(queryAllTexts(`.o_data_cell`)).toEqual(["name changed", "name twisted"])
+    await contains(`.o_form_button_save`).click();
+    expect(["web_save"]).toVerifySteps();
+});
