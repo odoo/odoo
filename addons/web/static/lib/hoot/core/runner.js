@@ -237,7 +237,7 @@ const ORINAL_CONSOLE_METHODS = {
 // Exports
 //-----------------------------------------------------------------------------
 
-export class TestRunner {
+export class Runner {
     // Properties
     aborted = false;
     /** @type {boolean | Test | Suite} */
@@ -285,12 +285,12 @@ export class TestRunner {
         /** @type {"ready" | "running" | "done"} */
         status: "ready",
         /**
-         * List of suites that will be run (only available after {@link TestRunner.start})
+         * List of suites that will be run (only available after {@link Runner.start})
          * @type {Suite[]}
          */
         suites: [],
         /**
-         * List of tests that will be run (only available after {@link TestRunner.start})
+         * List of tests that will be run (only available after {@link Runner.start})
          * @type {Test[]}
          */
         tests: [],
@@ -933,7 +933,7 @@ export class TestRunner {
 
             // ! The following assignment should stay in the `start` function to
             // ! keep the smallest stack trace possible:
-            // !    TestRunner.start() > Test.run() > Error
+            // !    Runner.start() > Test.run() > Error
             const testPromise = Promise.resolve(test.run());
             const timeout = $floor(test.config.timeout || this.config.timeout);
             const timeoutPromise = new Promise((resolve, reject) => {

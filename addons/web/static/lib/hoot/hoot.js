@@ -1,12 +1,12 @@
 /** @odoo-module alias=@odoo/hoot default=false */
 
 import { logger } from "./core/logger";
-import { TestRunner } from "./core/runner";
+import { Runner } from "./core/runner";
 import { setupHootUI } from "./ui/setup_hoot_ui";
 
 /**
  * @typedef {{
- *  runner: TestRunner;
+ *  runner: Runner;
  *  ui: import("./ui/setup_hoot_ui").UiState
  * }} Environment
  */
@@ -16,7 +16,7 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
 //-----------------------------------------------------------------------------
 
 // - Instantiate the test runner
-const runner = new TestRunner();
+const runner = new Runner();
 
 //-----------------------------------------------------------------------------
 // Exports

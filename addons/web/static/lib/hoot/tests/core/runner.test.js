@@ -1,13 +1,13 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
-import { TestRunner } from "../../core/runner";
+import { Runner } from "../../core/runner";
 import { Suite } from "../../core/suite";
 import { parseUrl } from "../local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("can register suites", () => {
-        const runner = new TestRunner();
+        const runner = new Runner();
         runner.describe("a suite", () => {});
         runner.describe("another suite", () => {});
 
@@ -19,14 +19,14 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can register nested suites", () => {
-        const runner = new TestRunner();
+        const runner = new Runner();
         runner.describe(["a", "b", "c"], () => {});
 
         expect([...runner.suites.values()].map((s) => s.name)).toEqual(["a", "b", "c"]);
     });
 
     test("can register tests", () => {
-        const runner = new TestRunner();
+        const runner = new Runner();
         runner.describe("suite 1", () => {
             runner.test("test 1", () => {});
         });
@@ -40,7 +40,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("should not have duplicate suites", () => {
-        const runner = new TestRunner();
+        const runner = new Runner();
         runner.describe(["parent", "child a"], () => {});
         runner.describe(["parent", "child b"], () => {});
 
@@ -52,7 +52,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can refuse standalone tests", async () => {
-        const runner = new TestRunner();
+        const runner = new Runner();
         expect(() =>
             runner.test([], "standalone test", () => {
                 expect(true).toBe(false);
@@ -61,7 +61,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("can register test tags", async () => {
-        const runner = new TestRunner();
+        const runner = new Runner();
         runner.describe("suite", () => {
             let testFn = runner.test;
             for (let i = 1; i <= 10; i++) {
