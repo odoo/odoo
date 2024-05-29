@@ -8,7 +8,12 @@ import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { session } from "@web/session";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import { callWithUnloadCheck, getConsumeEventType, getScrollParent } from "./tour_utils";
+import {
+    callWithUnloadCheck,
+    getConsumeEventType,
+    getScrollParent,
+    getSubActions,
+} from "./tour_utils";
 import { utils } from "@web/core/ui/ui_service";
 import { TourHelpers } from "./tour_helpers";
 
@@ -163,6 +168,7 @@ function getAnchorEl(el, consumeEvent) {
         // be one of its children (or the element itself)
         return el.closest(".ui-draggable, .o_draggable");
     }
+
     if (consumeEvent === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {
         return el.closest("[contenteditable='true']");
     }
@@ -275,27 +281,54 @@ function throwError(tour, step, errors = []) {
 /**
  * @param {Object} params
  * @param {HTMLElement} params.anchorEl
- * @param {string} params.consumeEvent
+ * @param {import("./tour_utils").ConsumeEvent[]} params.consumeEvents
  * @param {() => void} params.onMouseEnter
  * @param {() => void} params.onMouseLeave
  * @param {(ev: Event) => any} params.onScroll
  * @param {(ev: Event) => any} params.onConsume
+ * @param {(ev: Event) => any | undefined} params.onMiss
  */
 function setupListeners({
     anchorEl,
-    consumeEvent,
+    consumeEvents,
     onMouseEnter,
     onMouseLeave,
     onScroll,
     onConsume,
 }) {
-    anchorEl.addEventListener(consumeEvent, onConsume);
+    let altOnConsume;
+    for (const event of consumeEvents) {
+        if (event.name === "pointerup") {
+            altOnConsume = (ev) => {
+                if (document.elementsFromPoint(ev.clientX, ev.clientY).includes(event.target)) {
+                    onConsume();
+                }
+            };
+            document.addEventListener(event.name, altOnConsume);
+            continue;
+        }
+
+        altOnConsume = !event.conditional
+            ? onConsume
+            : function (ev) {
+                  if (event.conditional(ev)) {
+                      onConsume();
+                  }
+              };
+        event.target.addEventListener(event.name, altOnConsume, true);
+    }
     anchorEl.addEventListener("mouseenter", onMouseEnter);
     anchorEl.addEventListener("mouseleave", onMouseLeave);
 
     const cleanups = [
         () => {
-            anchorEl.removeEventListener(consumeEvent, onConsume);
+            for (const event of consumeEvents) {
+                if (event.name === "pointerup") {
+                    document.removeEventListener(event.name, altOnConsume);
+                } else {
+                    event.target.removeEventListener(event.name, altOnConsume, true);
+                }
+            }
             anchorEl.removeEventListener("mouseenter", onMouseEnter);
             anchorEl.removeEventListener("mouseleave", onMouseLeave);
         },
@@ -318,48 +351,63 @@ function setupListeners({
 /** @type {TourStepCompiler} */
 export function compileStepManual(stepIndex, step, options) {
     const { tour, pointer, onStepConsummed } = options;
-    let proceedWith = null;
+    let currentSubStep = 0;
+    const subSteps = [];
+    let anchorEl;
+    let hasBeenFound = false;
     let removeListeners = () => {};
 
-    return [
-        {
-            action: () => console.log(step.trigger),
-        },
-        {
+    const subActions = getSubActions(step);
+    if (!subActions.length) {
+        return [];
+    }
+
+    for (const [subActionIndex, subAction] of subActions.entries()) {
+        subSteps.push({
             trigger: () => {
                 removeListeners();
+                step.state = step.state || {};
+
                 if (!isActive(step, "manual")) {
-                    return true;
-                }
-                if (proceedWith) {
-                    return proceedWith;
+                    return hoot.queryFirst("body");
                 }
 
-                const { triggerEl, altEl, extraTriggerOkay } = findStepTriggers(tour, step);
+                if (subActionIndex < currentSubStep) {
+                    return anchorEl;
+                }
 
-                const stepEl = extraTriggerOkay && (triggerEl || altEl);
+                anchorEl = hoot.queryAll(subAction.anchor).at(0);
+                const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
 
-                if (stepEl && canContinue(stepEl, step)) {
-                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                    const anchorEl = getAnchorEl(stepEl, consumeEvent);
-                    const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
+                if (anchorEl && canContinue(anchorEl, step)) {
+                    hasBeenFound = true;
+                    anchorEl = getAnchorEl(anchorEl, subAction.event);
+                    const consumeEvents = getConsumeEventType(anchorEl, subAction.event);
+
+                    if (subAction.altAnchor) {
+                        let altAnchorEl = hoot.queryAll(subAction.altAnchor).at(0);
+                        altAnchorEl = getAnchorEl(altAnchorEl, subAction.event);
+                        consumeEvents.push(...getConsumeEventType(altAnchorEl, subAction.event));
+                    }
 
                     const updatePointer = () => {
+                        pointer.pointTo(anchorEl, step, subAction.event === "drop");
+
                         pointer.setState({
                             onMouseEnter: () => debouncedToggleOpen(true),
                             onMouseLeave: () => debouncedToggleOpen(false),
                         });
-                        pointer.pointTo(anchorEl, step);
                     };
 
                     removeListeners = setupListeners({
                         anchorEl,
-                        consumeEvent,
+                        consumeEvents,
                         onMouseEnter: () => pointer.showContent(true),
                         onMouseLeave: () => pointer.showContent(false),
                         onScroll: updatePointer,
                         onConsume: () => {
-                            proceedWith = stepEl;
+                            hasBeenFound = false;
+                            currentSubStep++;
                             pointer.hide();
                         },
                     });
@@ -367,16 +415,35 @@ export function compileStepManual(stepIndex, step, options) {
                     updatePointer();
                 } else {
                     pointer.hide();
+                    // Don't backward when the user go back on the home menu
+                    if (
+                        !hoot.queryAll(".o_home_menu").length &&
+                        (hasBeenFound || step.state.canContinue)
+                    ) {
+                        step.state.canContinue = false;
+                        tourState.set(tour.name, "currentIndex", stepIndex - 1);
+                        return [false, true];
+                    }
                 }
             },
-            action: () => {
-                tourState.set(tour.name, "currentIndex", stepIndex + 1);
-                tourState.set(tour.name, "stepState", "succeeded");
-                pointer.hide();
-                proceedWith = null;
-                onStepConsummed(tour, step);
-            },
+        });
+    }
+
+    subSteps.at(-1)["action"] = () => {
+        step.state.canContinue = true;
+        step.state.hasRun = true;
+        tourState.set(tour.name, "currentIndex", stepIndex + 1);
+        tourState.set(tour.name, "stepState", getStepState(step));
+        pointer.hide();
+        currentSubStep = 0;
+        onStepConsummed(tour, step);
+    };
+
+    return [
+        {
+            action: () => console.log(step.trigger),
         },
+        ...subSteps,
     ];
 }
 
@@ -527,16 +594,18 @@ export function compileStepAuto(stepIndex, step, options) {
 export function compileTourToMacro(tour, options) {
     const {
         filteredSteps,
-        stepCompiler,
+        mode,
         pointer,
         stepDelay,
         keepWatchBrowser,
         showPointerDuration,
-        checkDelay,
         onStepConsummed,
         onTourEnd,
     } = options;
     const currentStepIndex = tourState.get(tour.name, "currentIndex");
+    const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
+    const checkDelay = mode === "auto" ? tour.checkDelay : 100;
+
     return {
         ...tour,
         checkDelay,
