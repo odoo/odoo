@@ -424,6 +424,8 @@ This module provides the core of the Odoo Web Client.
             # Assets for features to test (views, services, fields, ...)
             # Typically includes most files in 'web.web.assets_backend'
             ('include', 'web.assets_backend'),
+
+            'web/static/src/public/public_component_service.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [
@@ -484,7 +486,6 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/tests/legacy/views/calendar/helpers.js'),
             'web/static/tests/legacy/webclient/**/*.js',
             ('remove', 'web/static/tests/legacy/webclient/**/helpers.js'),
-            'web/static/tests/legacy/public/**/*.js',
 
             # Legacy
             'web/static/tests/legacy/legacy_tests/**/*.js',
