@@ -1430,6 +1430,7 @@ class PosOrderLine(models.Model):
             'combo_parent_id': orderline.combo_parent_id.id,
             'combo_line_ids': orderline.combo_line_ids.mapped('id'),
             'combo_line_id': orderline.combo_line_id.id,
+            'note': orderline.note,
         }
 
     def export_for_ui(self):
