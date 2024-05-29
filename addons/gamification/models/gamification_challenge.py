@@ -10,7 +10,6 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models
 from odoo.http import SESSION_LIFETIME
-from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -190,8 +189,8 @@ class Challenge(models.Model):
     def create(self, vals_list):
         """Overwrite the create method to add the user of groups"""
         for vals in vals_list:
-            if vals.get('user_domain'):
-                users = self._get_challenger_users(ustr(vals.get('user_domain')))
+            if user_domain := vals.get('user_domain'):
+                users = self._get_challenger_users(str(user_domain))
 
                 if not vals.get('user_ids'):
                     vals['user_ids'] = []
@@ -200,14 +199,14 @@ class Challenge(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        if vals.get('user_domain'):
-            users = self._get_challenger_users(ustr(vals.get('user_domain')))
+        if user_domain := vals.get('user_domain'):
+            users = self._get_challenger_users(str(user_domain))
 
             if not vals.get('user_ids'):
                 vals['user_ids'] = []
             vals['user_ids'].extend((4, user.id) for user in users)
 
-        write_res = super(Challenge, self).write(vals)
+        write_res = super().write(vals)
 
         if vals.get('report_message_frequency', 'never') != 'never':
             # _recompute_challenge_users do not set users for challenges with no reports, subscribing them now

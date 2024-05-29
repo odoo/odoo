@@ -9,7 +9,7 @@ import psycopg2
 import pytz
 
 from odoo import api, Command, fields, models, _
-from odoo.tools import ustr, OrderedSet
+from odoo.tools import OrderedSet
 from odoo.tools.translate import code_translations, _lt
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
@@ -365,7 +365,6 @@ class IrFieldsConverter(models.AbstractModel):
         selection = field.get_description(env)['selection']
 
         for item, label in selection:
-            label = ustr(label)
             if callable(field.selection):
                 labels = [label]
                 for item2, label2 in field._description_selection(self.env):

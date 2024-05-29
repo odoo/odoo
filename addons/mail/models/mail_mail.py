@@ -785,7 +785,7 @@ class MailMail(models.Model):
                     error_code = e.args[0]
                     if len(e.args) > 1 and error_code == IrMailServer.NO_VALID_FROM:
                         # log failing email in additional arguments message
-                        failure_reason = tools.ustr(e.args[1])
+                        failure_reason = str(e.args[1])
                     else:
                         failure_reason = error_code
                     if error_code == IrMailServer.NO_VALID_FROM:
@@ -794,7 +794,7 @@ class MailMail(models.Model):
                         failure_type = "mail_from_missing"
                 # generic (unknown) error as fallback
                 if not failure_reason:
-                    failure_reason = tools.ustr(e)
+                    failure_reason = tools.exception_to_unicode(e)
                 if not failure_type:
                     failure_type = "unknown"
 
