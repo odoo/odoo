@@ -2,7 +2,6 @@
 import * as hoot from "@odoo/hoot-dom";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { utils } from "@web/core/ui/ui_service";
 
 /**
  * Calls the given `func` then returns/resolves to `true`
@@ -27,69 +26,6 @@ export function callWithUnloadCheck(func, ...args) {
     }
 }
 
-/**
- * @param {HTMLElement} [element]
- * @param {RunCommand} [runCommand]
- * @returns {string}
- */
-export function getConsumeEventType(element, runCommand) {
-    if (!element) {
-        return "click";
-    }
-    const { classList, tagName, type } = element;
-    const tag = tagName.toLowerCase();
-
-    // Many2one
-    if (classList.contains("o_field_many2one")) {
-        return "autocompleteselect";
-    }
-
-    // Inputs and textareas
-    if (
-        tag === "textarea" ||
-        (tag === "input" &&
-            (!type ||
-                [
-                    "email",
-                    "number",
-                    "password",
-                    "search",
-                    "tel",
-                    "text",
-                    "url",
-                    "date",
-                    "range",
-                ].includes(type)))
-    ) {
-        if (
-            utils.isSmall() &&
-            element.closest(".o_field_widget")?.matches(".o_field_many2one, .o_field_many2many")
-        ) {
-            return "click";
-        }
-        return "input";
-    }
-
-    // Drag & drop run command
-    if (typeof runCommand === "string" && /^drag_and_drop/.test(runCommand)) {
-        // this is a heuristic: the element has to be dragged and dropped but it
-        // doesn't have class 'ui-draggable-handle', so we check if it has an
-        // ui-sortable parent, and if so, we conclude that its event type is 'sort'
-        if (element.closest(".ui-sortable")) {
-            return "sort";
-        }
-        if (
-            (/^drag_and_drop_native/.test(runCommand) && classList.contains("o_draggable")) ||
-            element.closest(".o_draggable") ||
-            element.draggable
-        ) {
-            return "pointerdown";
-        }
-    }
-
-    // Default: click
-    return "click";
-}
 /**
  * @param {HTMLElement} element
  * @returns {HTMLElement | null}

@@ -8,9 +8,10 @@ import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { session } from "@web/session";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import { callWithUnloadCheck, getConsumeEventType, getScrollParent } from "./tour_utils";
+import { callWithUnloadCheck, getScrollParent } from "./tour_utils";
 import { utils } from "@web/core/ui/ui_service";
 import { TourHelpers } from "./tour_helpers";
+import { isMacOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -21,12 +22,19 @@ import { TourHelpers } from "./tour_helpers";
  *
  * @typedef {(stepIndex: number, step: TourStep, options: TourCompilerOptions) => MacroDescriptor[]} TourStepCompiler
  *
+ * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
+ *
  * @typedef TourCompilerOptions
  * @property {Tour} tour
  * @property {number} stepDelay
  * @property {keepWatchBrowser} boolean
  * @property {showPointerDuration} number
  * @property {*} pointer - used for controlling the pointer of the tour
+ *
+ * @typedef ConsumeEvent
+ * @property {string} name
+ * @property {Element} target
+ * @property {(ev: Event) => boolean} conditional
  */
 
 /**
@@ -156,6 +164,7 @@ function getAnchorEl(el, consumeEvent) {
         // be one of its children (or the element itself)
         return el.closest(".ui-draggable, .o_draggable");
     }
+
     if (consumeEvent === "input" && !["textarea", "input"].includes(el.tagName.toLowerCase())) {
         return el.closest("[contenteditable='true']");
     }
@@ -268,27 +277,54 @@ function throwError(tour, step, errors = []) {
 /**
  * @param {Object} params
  * @param {HTMLElement} params.anchorEl
- * @param {string} params.consumeEvent
+ * @param {import("./tour_utils").ConsumeEvent[]} params.consumeEvents
  * @param {() => void} params.onMouseEnter
  * @param {() => void} params.onMouseLeave
  * @param {(ev: Event) => any} params.onScroll
  * @param {(ev: Event) => any} params.onConsume
+ * @param {(ev: Event) => any | undefined} params.onMiss
  */
 function setupListeners({
     anchorEl,
-    consumeEvent,
+    consumeEvents,
     onMouseEnter,
     onMouseLeave,
     onScroll,
     onConsume,
 }) {
-    anchorEl.addEventListener(consumeEvent, onConsume);
+    let altOnConsume;
+    for (const event of consumeEvents) {
+        if (event.name === "pointerup") {
+            altOnConsume = (ev) => {
+                if (document.elementsFromPoint(ev.clientX, ev.clientY).includes(event.target)) {
+                    onConsume();
+                }
+            };
+            document.addEventListener(event.name, altOnConsume);
+            continue;
+        }
+
+        altOnConsume = !event.conditional
+            ? onConsume
+            : function (ev) {
+                  if (event.conditional(ev)) {
+                      onConsume();
+                  }
+              };
+        event.target.addEventListener(event.name, altOnConsume, true);
+    }
     anchorEl.addEventListener("mouseenter", onMouseEnter);
     anchorEl.addEventListener("mouseleave", onMouseLeave);
 
     const cleanups = [
         () => {
-            anchorEl.removeEventListener(consumeEvent, onConsume);
+            for (const event of consumeEvents) {
+                if (event.name === "pointerup") {
+                    document.removeEventListener(event.name, altOnConsume);
+                } else {
+                    event.target.removeEventListener(event.name, altOnConsume, true);
+                }
+            }
             anchorEl.removeEventListener("mouseenter", onMouseEnter);
             anchorEl.removeEventListener("mouseleave", onMouseLeave);
         },
@@ -308,51 +344,209 @@ function setupListeners({
     };
 }
 
+/**
+ *
+ * @param {TourStep} step
+ * @returns {{
+ *  event: string,
+ *  anchor: string,
+ *  altAnchor: string | undefined,
+ * }[]}
+ */
+function getSubActions(step) {
+    const actions = [];
+    if (!step.run || typeof step.run === "function") {
+        return [];
+    }
+
+    for (const todo of step.run.split("&&")) {
+        const m = String(todo)
+            .trim()
+            .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
+
+        const action = m.groups?.action;
+        const anchor = m.groups?.arguments || step.trigger;
+        if (action === "drag_and_drop") {
+            actions.push({
+                event: "drag",
+                anchor: step.trigger,
+            });
+            actions.push({
+                event: "drop",
+                anchor,
+            });
+        } else {
+            actions.push({
+                event: action,
+                anchor: action === "edit" ? step.trigger : anchor,
+                altAnchor: step.alt_trigger,
+            });
+        }
+    }
+
+    return actions;
+}
+
+/**
+ * @param {HTMLElement} [element]
+ * @param {RunCommand} [runCommand]
+ * @returns {ConsumeEvent[]}
+ */
+function getConsumeEventType(element, runCommand) {
+    const consumeEvents = [];
+    if (runCommand === "click") {
+        consumeEvents.push({
+            name: "click",
+            target: element,
+        });
+
+        // Use the hotkey should also consume
+        if (element.hasAttribute("data-hotkey")) {
+            consumeEvents.push({
+                name: "keydown",
+                target: element,
+                conditional: (ev) =>
+                    ev.key === element.getAttribute("data-hotkey") &&
+                    (isMacOS() ? ev.ctrlKey : ev.altKey),
+            });
+        }
+
+        // Click on a field widget with an autocomplete should be also completed with a selection though Enter or Tab
+        // This case is for the steps that click on field_widget
+        if (element.querySelector(".o-autocomplete--input")) {
+            consumeEvents.push({
+                name: "keydown",
+                target: element.querySelector(".o-autocomplete--input"),
+                conditional: (ev) =>
+                    ["Tab", "Enter"].includes(ev.key) &&
+                    ev.target.parentElement.querySelector(
+                        ".o-autocomplete--dropdown-item .ui-state-active"
+                    ),
+            });
+        }
+
+        // Click on an element of a dropdown should be also completed with a selection though Enter or Tab
+        // This case is for the steps that click on a dropdown-item
+        if (element.closest(".o-autocomplete--dropdown-menu")) {
+            consumeEvents.push({
+                name: "keydown",
+                target: element.closest(".o-autocomplete").querySelector("input"),
+                conditional: (ev) => ["Tab", "Enter"].includes(ev.key),
+            });
+        }
+
+        // Press enter on a button do the same as a click
+        if (element.tagName === "BUTTON") {
+            consumeEvents.push({
+                name: "keydown",
+                target: element,
+                conditional: (ev) => ev.key === "Enter",
+            });
+
+            // Pressing enter in the input group does the same as clicking on the button
+            if (element.closest(".input-group")) {
+                for (const inputEl of element.parentElement.querySelectorAll("input")) {
+                    consumeEvents.push({
+                        name: "keydown",
+                        target: inputEl,
+                        conditional: (ev) => ev.key === "Enter",
+                    });
+                }
+            }
+        }
+    }
+
+    if (["fill", "edit"].includes(runCommand)) {
+        if (
+            utils.isSmall() &&
+            element.closest(".o_field_widget")?.matches(".o_field_many2one, .o_field_many2many")
+        ) {
+            consumeEvents.push({
+                name: "click",
+                target: element,
+            });
+        } else {
+            consumeEvents.push({
+                name: "input",
+                target: element,
+            });
+        }
+    }
+
+    // Drag & drop run command
+    if (runCommand === "drag") {
+        consumeEvents.push({
+            name: "pointerdown",
+            target: element,
+        });
+    }
+
+    if (runCommand === "drop") {
+        consumeEvents.push({
+            name: "pointerup",
+            target: element,
+        });
+    }
+
+    return consumeEvents;
+}
+
 /** @type {TourStepCompiler} */
 export function compileStepManual(stepIndex, step, options) {
     const { tour, pointer, onStepConsummed } = options;
-    let proceedWith = null;
+    let currentSubStep = 0;
+    const subSteps = [];
+    let anchorEl;
     let removeListeners = () => {};
 
-    return [
-        {
-            action: () => console.log(step.trigger),
-        },
-        {
+    const subActions = getSubActions(step);
+    if (!subActions.length) {
+        return [];
+    }
+
+    for (const [subActionIndex, subAction] of subActions.entries()) {
+        subSteps.push({
             trigger: () => {
                 removeListeners();
+
                 if (!isActive(step, "manual")) {
-                    return true;
-                }
-                if (proceedWith) {
-                    return proceedWith;
+                    return hoot.queryFirst(".o-main-components-container");
                 }
 
-                const { triggerEl, altEl } = findStepTriggers(tour, step);
+                if (subActionIndex < currentSubStep) {
+                    return anchorEl;
+                }
 
-                const stepEl = triggerEl || altEl;
+                anchorEl = hoot.queryFirst(subAction.anchor);
+                const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
 
-                if (stepEl && canContinue(stepEl, step)) {
-                    const consumeEvent = step.consumeEvent || getConsumeEventType(stepEl, step.run);
-                    const anchorEl = getAnchorEl(stepEl, consumeEvent);
-                    const debouncedToggleOpen = debounce(pointer.showContent, 50, true);
+                if (anchorEl && canContinue(anchorEl, step)) {
+                    anchorEl = getAnchorEl(anchorEl, subAction.event);
+                    const consumeEvents = getConsumeEventType(anchorEl, subAction.event);
+
+                    if (subAction.altAnchor) {
+                        let altAnchorEl = hoot.queryAll(subAction.altAnchor).at(0);
+                        altAnchorEl = getAnchorEl(altAnchorEl, subAction.event);
+                        consumeEvents.push(...getConsumeEventType(altAnchorEl, subAction.event));
+                    }
 
                     const updatePointer = () => {
+                        pointer.pointTo(anchorEl, step, subAction.event === "drop");
+
                         pointer.setState({
                             onMouseEnter: () => debouncedToggleOpen(true),
                             onMouseLeave: () => debouncedToggleOpen(false),
                         });
-                        pointer.pointTo(anchorEl, step);
                     };
 
                     removeListeners = setupListeners({
                         anchorEl,
-                        consumeEvent,
+                        consumeEvents,
                         onMouseEnter: () => pointer.showContent(true),
                         onMouseLeave: () => pointer.showContent(false),
                         onScroll: updatePointer,
                         onConsume: () => {
-                            proceedWith = stepEl;
+                            currentSubStep++;
                             pointer.hide();
                         },
                     });
@@ -362,14 +556,22 @@ export function compileStepManual(stepIndex, step, options) {
                     pointer.hide();
                 }
             },
-            action: () => {
-                tourState.set(tour.name, "currentIndex", stepIndex + 1);
-                tourState.set(tour.name, "stepState", "succeeded");
-                pointer.hide();
-                proceedWith = null;
-                onStepConsummed(tour, step);
-            },
+        });
+    }
+
+    subSteps.at(-1)["action"] = () => {
+        tourState.set(tour.name, "currentIndex", stepIndex + 1);
+        tourState.set(tour.name, "stepState", "succeeded");
+        pointer.hide();
+        currentSubStep = 0;
+        onStepConsummed(tour, step);
+    };
+
+    return [
+        {
+            action: () => console.log(step.trigger),
         },
+        ...subSteps,
     ];
 }
 
@@ -520,16 +722,18 @@ export function compileStepAuto(stepIndex, step, options) {
 export function compileTourToMacro(tour, options) {
     const {
         filteredSteps,
-        stepCompiler,
+        mode,
         pointer,
         stepDelay,
         keepWatchBrowser,
         showPointerDuration,
-        checkDelay,
         onStepConsummed,
         onTourEnd,
     } = options;
     const currentStepIndex = tourState.get(tour.name, "currentIndex");
+    const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
+    const checkDelay = mode === "auto" ? tour.checkDelay : 100;
+
     return {
         ...tour,
         checkDelay,

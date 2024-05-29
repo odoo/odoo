@@ -8,14 +8,14 @@ import { registry } from "@web/core/registry";
 import { config as transitionConfig } from "@web/core/transition";
 import { session } from "@web/session";
 import { TourPointer } from "../tour_pointer/tour_pointer";
-import { compileStepAuto, compileStepManual, compileTourToMacro } from "./tour_compilers";
+import { compileTourToMacro } from "./tour_compilers";
 import { createPointerState } from "./tour_pointer_state";
 import { tourState } from "./tour_state";
 import { callWithUnloadCheck } from "./tour_utils";
 
 /**
  * @typedef {string} HootSelector
- * @typedef {import("./tour_utils").RunCommand} RunCommand
+ * @typedef {import("./tour_compilers").RunCommand} RunCommand
  *
  * @typedef Tour
  * @property {string} url
@@ -188,8 +188,8 @@ export const tourService = {
                     methods.destroy();
                 },
                 ...methods,
-                async pointTo(anchor, step) {
-                    possiblePointTos.push([tourName, () => methods.pointTo(anchor, step)]);
+                async pointTo(anchor, step, isZone) {
+                    possiblePointTos.push([tourName, () => methods.pointTo(anchor, step, isZone)]);
                     await Promise.resolve();
                     // only done once per macro advance
                     if (!possiblePointTos.length) {
@@ -232,18 +232,14 @@ export const tourService = {
             pointer,
             { mode, stepDelay, keepWatchBrowser, showPointerDuration }
         ) {
-            // IMPROVEMENTS: Custom step compiler. Will probably require decoupling from `mode`.
-            const stepCompiler = mode === "auto" ? compileStepAuto : compileStepManual;
-            const checkDelay = mode === "auto" ? tour.checkDelay : 100;
             const filteredSteps = tour.steps;
             return compileTourToMacro(tour, {
                 filteredSteps,
-                stepCompiler,
+                mode,
                 pointer,
                 stepDelay,
                 keepWatchBrowser,
                 showPointerDuration,
-                checkDelay,
                 onStepConsummed(tour, step) {
                     bus.trigger("STEP-CONSUMMED", { tour, step });
                 },
