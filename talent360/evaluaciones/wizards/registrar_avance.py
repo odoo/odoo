@@ -33,7 +33,7 @@ class RegistrarAvance(models.TransientModel):
         required=True,
         help="Comentarios que sustentan el avance que se está registrando."
     )
-            
+
     @api.constrains('avance')
     def _validar_avance(self):
         """
@@ -47,7 +47,7 @@ class RegistrarAvance(models.TransientModel):
                 raise exceptions.ValidationError(_('Por favor registra el avance del objetivo'))
             
             elif registro.avance < 0:
-                raise exceptions.ValidationError(_('El avance no puede ser negativo'))
+                raise exceptions.ValidationError(_('El avance no puede ser menor a 0'))
 
     @api.constrains('archivos')
     def _validar_peso_archivo(self):
@@ -76,10 +76,12 @@ class RegistrarAvance(models.TransientModel):
         archivos_permitidos = ['csv', 'xlsx', 'txt', 'pdf', 'png', 'jpeg', 'jpg']
 
         for archivo in self.archivos:
+            if '.' not in archivo.name:
+                raise exceptions.ValidationError(_('No se pueden subir archivos sin extensión'))
             nombre, tipo_archivo = archivo.name.rsplit('.', 1)
             if tipo_archivo.lower() not in archivos_permitidos:
                     raise exceptions.ValidationError(_('Solo se pueden subir archivos con extensión pdf, xlsx, csv, txt, png, jpeg'))
-                
+    
     @api.constrains('comentarios')
     def _validar_comentarios(self):
         """
@@ -93,6 +95,8 @@ class RegistrarAvance(models.TransientModel):
                 palabras = len(registro.comentarios.split())
                 if palabras > 200:
                     raise exceptions.ValidationError(_('Los comentarios no deben exceder las 200 palabras'))
+                if len(registro.comentarios) > 600:
+                    raise exceptions.ValidationError(_('Los comentarios no deben exceder los 600 caracteres'))
     
     @api.constrains('archivos')
     def _validar_numero_archivos(self):
@@ -106,7 +110,21 @@ class RegistrarAvance(models.TransientModel):
             if len(registro.archivos) > 10:
                 raise exceptions.ValidationError(_('Solo se puede subir un máximo de 10 archivos'))
 
-    
+    @api.constrains('archivos') 
+    def _validar_contenido_archivos(self):
+        """
+        Método para validar que los archivos no estén vacíos
+
+        Si un archivo está vacío, se levanta una excepción
+        """
+
+        for registro in self:
+            for archivo in registro.archivos:
+                if archivo.type == 'url':
+                    raise exceptions.ValidationError(_('No se pueden subir URL, solo archivos. Por favor descarga el archivo y sube el archivo en lugar de la URL'))
+                if not archivo.datas:
+                    raise exceptions.ValidationError(_('El archivo no debe estar vacío'))   
+
     def action_confirmar(self):
         """
         Método para registrar un avance en un objetivo de desempeño

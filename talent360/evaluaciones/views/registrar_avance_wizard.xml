@@ -6,6 +6,7 @@
         <field name="model">registrar.avance.wizard</field>
         <field name="arch" type="xml">
             <form string="Registrar Avance">
+                <h4>Registra el progreso de tu objetivo, adjunta archivos que respalden tu avance y añade comentarios para ofrecer aclaraciones adicionales.</h4>
                 <group>
                     <group>
                         <label for="avance" string="Avance: " />
@@ -13,7 +14,7 @@
                     </group>
                     <group>
                         <label for="archivos" string="Evidencias: " />
-                        <field name="archivos" nolabel="1" widget="many2many_binary" />
+                        <field name="archivos" nolabel="1" widget="many2one_binary" />
                     </group>
                     <group>
                         <label for="comentarios" string="Comentarios: " />
