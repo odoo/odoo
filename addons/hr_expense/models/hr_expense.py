@@ -1410,7 +1410,7 @@ class HrExpenseSheet(models.Model):
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
             action['context'] = {'default_sheet_ids': self.ids, 'default_expense_ids': duplicates.ids}
             return action
-        self._do_approve()
+        return self._do_approve()
 
     def _validate_analytic_distribution(self):
         for line in self.expense_line_ids:
