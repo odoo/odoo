@@ -222,3 +222,11 @@ class ProductTemplate(models.Model):
                 'message': self.sale_line_warn_msg,
             }
         return res
+
+    @api.model
+    def _get_saleable_tracking_types(self):
+        """Return list of salealbe service_tracking types.
+
+        :rtype: list
+        """
+        return ['no']

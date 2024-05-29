@@ -177,3 +177,11 @@ class ProductTemplate(models.Model):
                 'project_id': False
             })
         return super().write(vals)
+
+    @api.model
+    def _get_saleable_tracking_types(self):
+        return super()._get_saleable_tracking_types() + [
+            'task_global_project',
+            'task_in_project',
+            'project_only',
+        ]
