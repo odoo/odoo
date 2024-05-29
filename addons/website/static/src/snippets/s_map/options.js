@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import options from '@web_editor/js/editor/snippets.options.legacy';
-import {generateGMapIframe, generateGMapLink} from '@website/js/utils';
+import { registry } from "@web/core/registry";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
+import { generateGMapIframe, generateGMapLink } from '@website/js/utils';
 
-options.registry.Map = options.Class.extend({
+export class Map extends SnippetOption {
     /**
      * @override
      */
@@ -18,7 +19,7 @@ options.registry.Map = options.Class.extend({
             this.$target[0].querySelector('.s_map_color_filter').before(iframeEl);
             this._updateSource();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -28,11 +29,11 @@ options.registry.Map = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async selectDataAttribute(previewMode, widgetValue, params) {
-        await this._super(...arguments);
+        await super.selectDataAttribute(...arguments);
         if (['mapAddress', 'mapType', 'mapZoom'].includes(params.attributeName)) {
             this._updateSource();
         }
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -48,7 +49,7 @@ options.registry.Map = options.Class.extend({
         } else if (!widgetValue && descriptionEl) {
             descriptionEl.remove();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -61,8 +62,8 @@ options.registry.Map = options.Class.extend({
         if (methodName === 'showDescription') {
             return !!this.$target[0].querySelector('.description');
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
     /**
      * @private
      */
@@ -82,9 +83,11 @@ options.registry.Map = options.Class.extend({
             $embedded.addClass('d-none');
             $info.removeClass('d-none');
         }
-    },
-});
+    }
+}
 
-export default {
-    Map: options.registry.Map,
-};
+registry.category("snippet_options").add("Map", {
+    Class: Map,
+    template: "website.s_map_options",
+    selector: ".s_map",
+});

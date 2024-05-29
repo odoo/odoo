@@ -45,9 +45,11 @@ import {
     owlRegistry,
     SnippetOption,
     UnitUserValue,
+    UserValue,
+    UserValueComponent,
     WeInput,
-} from '@web_editor/js/editor/snippets.options'; 
-const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
+    WeSelect,
+} from '@web_editor/js/editor/snippets.options';
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
 
@@ -649,34 +651,19 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
-const GPSPicker = InputUserValueWidget.extend({
-    // Explicitly not consider all InputUserValueWidget events. E.g. we actually
-    // don't want input focusout messing with the google map API. Because of
-    // this, clicking on google map autocomplete suggestion on Firefox was not
-    // working properly.
-    events: {},
+class GpsUserValue extends UserValue {
+    _gmapCacheGPSToPlace = {};
 
-    /**
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
-        this._gmapCacheGPSToPlace = {};
-
-        // The google API will be loaded inside the website iframe. Let's try
-        // not having to load it in the backend too and just using the iframe
-        // google object instead.
+    constructor() {
+        super(...arguments);
+        this._state._gmapLoaded = false;
+        this._state.gmapPlace = {};
         this.contentWindow = this.$target[0].ownerDocument.defaultView;
-
-        this.notification = this.bindService("notification");
-    },
-    /**
-     * @override
-     */
-    async willStart() {
-        await this._super(...arguments);
-        this._gmapLoaded = await new Promise(resolve => {
-            this.trigger_up('gmap_api_request', {
+    }
+    async start() {
+        super.start();
+        this._state._gmapLoaded = await new Promise(resolve => {
+            this.env.gmapApiRequest({
                 editableMode: true,
                 configureIfNecessary: true,
                 onSuccess: key => {
@@ -687,44 +674,16 @@ const GPSPicker = InputUserValueWidget.extend({
 
                     // TODO see _notifyGMapError, this tries to trigger an error
                     // early but this is not consistent with new gmap keys.
-                    this._nearbySearch('(50.854975,4.3753899)', !!key)
-                        .then(place => resolve(!!place));
+                    const startLocation = this.$target[0].dataset.mapGps || "(50.854975,4.3753899)";
+                    this._nearbySearch(startLocation, !!key)
+                        .then(place => {
+                            this._state.gmapPlace = place;
+                            resolve(!!place);
+                        });
                 },
             });
         });
-        if (!this._gmapLoaded && !this._gmapErrorNotified) {
-            this.trigger_up('user_value_widget_critical');
-            return;
-        }
-    },
-    /**
-     * @override
-     */
-    async start() {
-        await this._super(...arguments);
-        this.el.classList.add('o_we_large');
-        if (!this._gmapLoaded) {
-            return;
-        }
-
-        this._gmapAutocomplete = new this.contentWindow.google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
-        this.contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-
-        // Without this, the google library injects elements inside the backend
-        // DOM but do not remove them once the editor is left. Notice that
-        // this is also done when the widget is destroyed for another reason
-        // than leaving the editor, but if the google API needs that container
-        // again afterwards, it will simply recreate it.
-        for (const el of document.body.querySelectorAll('.pac-container')) {
-            el.remove();
-        }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -733,24 +692,26 @@ const GPSPicker = InputUserValueWidget.extend({
     /**
      * @override
      */
-    getMethodsParams: function (methodName) {
-        return Object.assign({gmapPlace: this._gmapPlace || {}}, this._super(...arguments));
-    },
+    getMethodsParams(methodName) {
+        return Object.assign({gmapPlace: this._state.gmapPlace || {}}, super.getMethodsParams(...arguments));
+    }
     /**
      * @override
      */
     async setValue() {
-        await this._super(...arguments);
-        if (!this._gmapLoaded) {
+        await super.setValue(...arguments);
+        if (!this._state._gmapLoaded) {
             return;
         }
 
-        this._gmapPlace = await this._nearbySearch(this._value);
-
-        if (this._gmapPlace) {
-            this.inputEl.value = this._gmapPlace.formatted_address;
-        }
-    },
+        this._state.gmapPlace = await this._nearbySearch(this.value);
+    }
+    get formattedAddress() {
+        return this._state.gmapPlace?.formatted_address;
+    }
+    get isGmapLoaded() {
+        return this._state._gmapLoaded;
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -808,7 +769,7 @@ const GPSPicker = InputUserValueWidget.extend({
                 }
             });
         });
-    },
+    }
     /**
      * Indicates to the user there is an error with the google map API and
      * re-opens the configuration dialog. For good measures, this also notifies
@@ -827,11 +788,11 @@ const GPSPicker = InputUserValueWidget.extend({
         }
         this._gmapErrorNotified = true;
 
-        this.notification.add(
+        this.env.services.notification.add(
             _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
             { type: 'danger', sticky: true }
         );
-        this.trigger_up('gmap_api_request', {
+        this.env.services.website.websiteRootInstance.trigger_up('gmap_api_request', {
             editableMode: true,
             reconfigure: true,
             onSuccess: () => {
@@ -839,8 +800,39 @@ const GPSPicker = InputUserValueWidget.extend({
             },
         });
 
-        setTimeout(() => this.trigger_up('user_value_widget_critical'));
-    },
+        // TODO user_value_widget_critical
+        setTimeout(() => this.env.services.website.websiteRootInstance.trigger_up('user_value_widget_critical'));
+    }
+}
+
+class WeGpsPicker extends UserValueComponent {
+    static template = "website.WeGpsPicker";
+    static StateModel = GpsUserValue;
+    setup() {
+        super.setup();
+        this.inputRef = useRef("input");
+
+        // The google API will be loaded inside the website iframe. Let's try
+        // not having to load it in the backend too and just using the iframe
+        // google object instead.
+        useEffect((gmapLoaded, inputEl) => {
+            if (gmapLoaded && inputEl) {
+                const contentWindow = this.state.$target[0].ownerDocument.defaultView;
+                this._gmapAutocomplete = new contentWindow.google.maps.places.Autocomplete(this.inputRef.el, {types: ['geocode']});
+                contentWindow.google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+            }
+        }, () => [this.state.isGmapLoaded, this.inputRef.el]);
+        onWillUnmount(() => {
+            // Without this, the google library injects elements inside the backend
+            // DOM but do not remove them once the editor is left. Notice that
+            // this is also done when the widget is destroyed for another reason
+            // than leaving the editor, but if the google API needs that container
+            // again afterwards, it will simply recreate it.
+            for (const el of document.body.querySelectorAll('.pac-container')) {
+                el.remove();
+            }
+        });
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -853,17 +845,18 @@ const GPSPicker = InputUserValueWidget.extend({
     _onPlaceChanged(ev) {
         const gmapPlace = this._gmapAutocomplete.getPlace();
         if (gmapPlace && gmapPlace.geometry) {
-            this._gmapPlace = gmapPlace;
-            const location = this._gmapPlace.geometry.location;
-            const oldValue = this._value;
-            this._value = `(${location.lat()},${location.lng()})`;
-            this._gmapCacheGPSToPlace[this._value] = gmapPlace;
-            if (oldValue !== this._value) {
+            this.state.gmapPlace = gmapPlace;
+            const location = this.state.gmapPlace.geometry.location;
+            const oldValue = this.state.value;
+            this.state.value = `(${location.lat()},${location.lng()})`;
+            this.state._gmapCacheGPSToPlace[this.state.value] = gmapPlace;
+            if (oldValue !== this.state.value) {
                 this._onUserValueChange(ev);
             }
         }
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeGpsPicker", WeGpsPicker);
 /*
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;

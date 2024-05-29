@@ -829,7 +829,7 @@ export class UserValue {
     }
 }
 
-class UserValueComponent extends Component {
+export class UserValueComponent extends Component {
 
     static props = {
         name: { type: String, optional: true },

@@ -271,6 +271,7 @@
             'website/static/src/snippets/s_media_list/options.js',
             'website/static/src/snippets/s_google_map/options.js',
             'website/static/src/snippets/s_map/options.js',
+            'website/static/src/snippets/s_map/options.xml',
             'website/static/src/snippets/s_dynamic_snippet/options.js',
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
             'website/static/src/snippets/s_website_controller_page_listing_layout/options.js',

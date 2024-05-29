@@ -42,12 +42,51 @@
         <t t-set="indent" t-value="true"/>
     </t>
 </t>
+<t t-name="website.s_google_map_option">
+    <WeGpsPicker title.translate="Address"
+        selectDataAttribute="''" attributeName="'mapGps'"
+        setFormattedAddress="''"
+        placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
+        noPreview="'true'"/>
+    <WeSelect title.translate="Marker Style" attributeName="'pinStyle'">
+        <WeButton selectDataAttribute="''">Default</WeButton>
+        <WeButton selectDataAttribute="'flat'">Flat</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Type" attributeName="'mapType'" noPreview="'true'" resetMapColor="''">
+        <WeButton name="'roadmap_opt'" selectDataAttribute="'ROADMAP'">RoadMap</WeButton>
+        <WeButton selectDataAttribute="'TERRAIN'">Terrain</WeButton>
+        <WeButton selectDataAttribute="'SATELLITE'">Satellite</WeButton>
+        <WeButton selectDataAttribute="'HYBRID'">Hybrid</WeButton>
+    </WeSelect>
+    <WeSelect class="'o_we_sublevel_1'" title.translate="Style" dependencies="'roadmap_opt'" attributeName="'mapColor'" noPreview="'true'">
+        <WeButton selectDataAttribute="''" tooltip.translate="Default" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
+        <WeButton selectDataAttribute="'lightMonoMap'" tooltip.translate="Light Mono" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg'"/>
+        <WeButton selectDataAttribute="'cupertinoMap'" tooltip.translate="Cupertino" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg'"/>
+        <WeButton selectDataAttribute="'retroMap'" tooltip.translate="Retro" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg'"/>
+        <WeButton selectDataAttribute="'cobaltMap'" tooltip.translate="Cobalt" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg'"/>
+        <WeButton selectDataAttribute="'flatMap'" tooltip.translate="Flat" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg'"/>
+        <WeButton selectDataAttribute="'blueMap'" tooltip.translate="Blue" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg'"/>
+        <WeButton selectDataAttribute="'lillaMap'" tooltip.translate="Lilla" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg'"/>
+        <WeButton selectDataAttribute="'carMap'" tooltip.translate="Caramello" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg'"/>
+        <WeButton selectDataAttribute="'bwMap'" tooltip.translate="BW" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
+    </WeSelect>
+    <WeInput title.translate="Zoom" selectDataAttribute="'12'" noPreview="'true'" attributeName="'mapZoom'" step="'1'"/>
+    <WeCheckbox title.translate="Description" showDescription="'true'" noPreview="'true'"/>
+</t>
 
 <t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
     <xpath expr="//WeRow" position="before">
         <WeRow title.translate="URL">
             <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
         </WeRow>
+        <!-- Do not annoy devs with GMap key
+        <WeRow title.translate="Address">
+            <WeGpsPicker selectDataAttribute="''" attributeName="'mapGps'"
+                setFormattedAddress="''"
+                placeholder.translate="e.g. De Brouckere, Brussels, Belgium"
+                noPreview="'true'"/>
+        </WeRow>
+        -->
     </xpath>
 </t>
 
@@ -73,6 +112,17 @@
         >
             <i class="fa fa-fw fa-external-link"/>
         </we-button>
+    </we-input>
+</t>
+<t t-name="website.WeGpsPicker">
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-att-value="this.state.formattedAddress"
+            />
+        </div>
     </we-input>
 </t>
 </templates>

@@ -7,7 +7,7 @@ import { user } from "@web/core/user";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wLegacySnippetOptions from "@website/js/editor/snippets.options.legacy";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
@@ -58,6 +58,10 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      * @override
      */
     setup() {
+        useSubEnv({
+            gmapApiRequest: (data) => this._onGMapAPIRequest.call(this, { data }),
+            gmapApiKeyRequest: (data) => this._onGMapAPIKeyRequest.call(this, { data }),
+        });
         super.setup();
         this.notification = useService("notification");
         this.dialog = useService("dialog");
@@ -352,7 +356,6 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      * @param {string} gmapRequestEventName
      */
     async _handleGMapRequest(ev, gmapRequestEventName) {
-        ev.stopPropagation();
         const reconfigured = await this._configureGMapAPI({
             alwaysReconfigure: ev.data.reconfigure,
             configureIfNecessary: ev.data.configureIfNecessary,
