@@ -82,7 +82,7 @@ import { EXCLUDE_PREFIX, setParams, urlParams } from "./url";
 
 const {
     clearTimeout,
-    console: { warn: $warn, error: $error },
+    console: { groupEnd: $groupEnd, log: $log, error: $error, table: $table, warn: $warn },
     document,
     Map,
     Math: { floor: $floor },
@@ -172,8 +172,6 @@ const getDefaultPresets = () =>
 const noop = () => {};
 
 const restoreConsole = () => {
-    logger.ignoreErrors = false;
-
     $assign(globalThis.console, ORINAL_CONSOLE_METHODS);
 };
 
@@ -202,13 +200,11 @@ const suppressConsoleErrors = (reason) => {
     const suppressedMethod = (label, color) => {
         const groupName = [`%c[${label}]%c suppressed by ${reason}`, `color: ${color}`, ""];
         return (...args) => {
-            logger.group(...groupName);
-            logger.log(...args);
-            logger.groupEnd(...groupName);
+            logger.groupCollapsed(...groupName);
+            $log(...args);
+            $groupEnd();
         };
     };
-
-    logger.ignoreErrors = true;
 
     $assign(globalThis.console, {
         error: suppressedMethod("ERROR", "#9f1239"),
@@ -808,8 +804,8 @@ export class TestRunner {
             }
         }
         logger.groupCollapsed("Configuration (click to expand)");
-        logger.table(table);
-        logger.groupEnd();
+        $table(table);
+        $groupEnd();
         logger.logRun("Starting test suites");
 
         // Adjust debug mode if more or less than 1 test will be run
