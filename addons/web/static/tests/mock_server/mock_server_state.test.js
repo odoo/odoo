@@ -10,6 +10,10 @@ test("default state", () => {
     expect(odoo.debug).toBe("");
     expect(serverState).toEqual({
         companies: [{ id: 1, name: "Hermit" }],
+        currencies: [
+            { id: 1, name: "USD", position: "before", symbol: "$" },
+            { id: 2, name: "EUR", position: "after", symbol: "€" },
+        ],
         db: "test",
         debug: "",
         groupId: 11,

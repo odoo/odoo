@@ -30,7 +30,26 @@ const DEFAULT_LUXON_SETTINGS = {
     defaultWeekSettings: Settings.defaultWeekSettings,
 };
 const SERVER_STATE_VALUES = {
-    companies: [{ id: 1, name: "Hermit" }],
+    companies: [
+        {
+            id: 1,
+            name: "Hermit",
+        },
+    ],
+    currencies: [
+        {
+            id: 1,
+            name: "USD",
+            position: "before",
+            symbol: "$",
+        },
+        {
+            id: 2,
+            name: "EUR",
+            position: "after",
+            symbol: "€",
+        },
+    ],
     db: "test",
     debug: "",
     groupId: 11,

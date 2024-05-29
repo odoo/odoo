@@ -8,6 +8,7 @@ import { IrRule } from "./_framework/mock_server/mock_models/ir_rule";
 import { IrUiView } from "./_framework/mock_server/mock_models/ir_ui_view";
 import { ResCompany } from "./_framework/mock_server/mock_models/res_company";
 import { ResCountry } from "./_framework/mock_server/mock_models/res_country";
+import { ResCurrency } from "./_framework/mock_server/mock_models/res_currency";
 import { ResGroups } from "./_framework/mock_server/mock_models/res_groups";
 import { ResPartner } from "./_framework/mock_server/mock_models/res_partner";
 import { ResUsers } from "./_framework/mock_server/mock_models/res_users";
@@ -153,6 +154,7 @@ export const webModels = {
     IrUiView,
     ResCompany,
     ResCountry,
+    ResCurrency,
     ResGroups,
     ResPartner,
     ResUsers,
