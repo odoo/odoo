@@ -36,7 +36,7 @@
                             <field name="sub_type_code" invisible="1"/>
                             <field name="type_id" widget="selection" readonly="state != 'pending'" domain="[
                                         ('allowed_supply_type', 'in', (picking_type_code == 'incoming' and 'in' or 'out', 'both')), ('code','=','CHL')]"/>
-                            <field name="type_description" invisible="sub_type_code != '8'"/>
+                            <field name="type_description" invisible="sub_type_code != '8'" required="sub_type_code == '8'"/>
                         </group>
                         <group>
                             <field name="ewaybill_date" invisible="not ewaybill_date"/>
