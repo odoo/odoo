@@ -15,7 +15,6 @@
                             <div invisible="payment_method != 'paypal'">
                                 <group>
                                     <field name="paypal_email_account" required="payment_method == 'paypal'" string="Email"/>
-                                    <field name="paypal_pdt_token" password="True" required="payment_method == 'paypal'" />
                                 </group>
                                 <widget name="documentation_link" path="/applications/finance/payment_providers/paypal.html" label=" How to configure your PayPal account" icon="oi oi-arrow-right"/>
                             </div>
