@@ -34,7 +34,7 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
 
     displaySubmit() {
         const records = this.model.root.selection;
-        return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet && !this.onMobile;
+        return records.length && records.every(record => record.data.state === 'draft') && this.isExpenseSheet;
     }
 
     displayCreateReport() {
@@ -45,17 +45,17 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
 
     displayApprove() {
         const records = this.model.root.selection;
-        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet && !this.onMobile;
+        return this.userIsExpenseTeamApprover && records.length && records.every(record => record.data.state === 'submit') && this.isExpenseSheet;
     }
 
     displayPost() {
         const records = this.model.root.selection;
-        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet && !this.onMobile;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approve') && this.isExpenseSheet;
     }
 
     displayPayment() {
         const records = this.model.root.selection;
-        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'post' && record.data.payment_state === 'not_paid') && this.isExpenseSheet && !this.onMobile;
+        return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'post' && record.data.payment_state === 'not_paid') && this.isExpenseSheet;
     }
 
     async onClick (action) {
