@@ -8,27 +8,24 @@ as well as render a few fields differently.
 Also, adds methods to convert values back to Odoo models.
 """
 
-import babel
 import base64
 import io
 import json
 import logging
 import os
 import re
+from datetime import datetime
 
+import babel
 import pytz
 import requests
-from datetime import datetime
 from lxml import etree, html
 from PIL import Image as I
 from werkzeug import urls
 
-import odoo.modules
-
 from odoo import _, api, models, fields
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import ustr, posix_to_ldml, pycompat
-from odoo.tools import html_escape as escape
+from odoo.tools import posix_to_ldml, html_escape as escape, pycompat
 from odoo.tools.misc import file_open, get_lang, babel_locale_parse
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -393,8 +390,6 @@ class Selection(models.AbstractModel):
         value = element.text_content().strip()
         selection = field.get_description(self.env)['selection']
         for k, v in selection:
-            if isinstance(v, str):
-                v = ustr(v)
             if value == v:
                 return k
 

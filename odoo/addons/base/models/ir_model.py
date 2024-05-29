@@ -1780,20 +1780,20 @@ class IrModelConstraint(models.Model):
         self.check_access_rule('unlink')
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
-            name = tools.ustr(data.name)
+            name = data.name
             if data.model.model in self.env:
                 table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
-            typ = data.type
 
             # double-check we are really going to delete all the owners of this schema element
-            self._cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
+            self._cr.execute("""SELECT id from ir_model_constraint where name=%s""", [name])
             external_ids = set(x[0] for x in self._cr.fetchall())
             if external_ids - ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
+            typ = data.type
             if typ == 'f':
                 # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
                 self._cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
@@ -1927,12 +1927,12 @@ class IrModelRelation(models.Model):
         ids_set = set(self.ids)
         to_drop = tools.OrderedSet()
         for data in self.sorted(key='id', reverse=True):
-            name = tools.ustr(data.name)
+            name = data.name
 
             # double-check we are really going to delete all the owners of this schema element
-            self._cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
-            external_ids = set(x[0] for x in self._cr.fetchall())
-            if external_ids - ids_set:
+            self._cr.execute("""SELECT id from ir_model_relation where name = %s""", [name])
+            external_ids = {x[0] for x in self._cr.fetchall()}
+            if not external_ids.issubset(ids_set):
                 # as installed modules have defined this element we must not delete it!
                 continue
 

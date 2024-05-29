@@ -498,17 +498,16 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         :param str container_tag: tag to wrap the content into, defaults to `div`.
         :rtype: markupsafe.Markup
     """
-    html = ustr(html)
     if plaintext and preserve:
-        content = u'\n<pre>%s</pre>\n' % misc.html_escape(ustr(content))
+        content = '\n<pre>%s</pre>\n' % misc.html_escape(content)
     elif plaintext:
         content = '\n%s\n' % plaintext2html(content, container_tag)
     else:
         content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
-        content = u'\n%s\n' % ustr(content)
+        content = '\n%s\n' % content
     # Force all tags to lowercase
     html = re.sub(r'(</?)(\w+)([ >])',
-        lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
+        lambda m: '%s%s%s' % (m[1], m[2].lower(), m[3]), html)
     insert_location = html.find('</body>')
     if insert_location == -1:
         insert_location = html.find('</html>')

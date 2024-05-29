@@ -1,18 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import datetime
 import logging
+from ast import literal_eval
 
 import requests
-
-from ast import literal_eval
 
 from odoo import api, fields, release, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
-from odoo.tools import config, ustr
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -68,7 +66,7 @@ class PublisherWarrantyContract(AbstractModel):
         Utility method to send a publisher warranty get logs messages.
         """
         msg = self._get_message()
-        arguments = {'arg0': ustr(msg), "action": "update"}
+        arguments = {'arg0': str(msg), "action": "update"}
 
         url = config.get("publisher_warranty_url")
 
