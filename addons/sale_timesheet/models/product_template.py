@@ -45,32 +45,10 @@ class ProductTemplate(models.Model):
                 product_template.visible_expense_policy = visibility
         return super()._compute_visible_expense_policy()
 
-    @api.depends('service_tracking', 'service_policy', 'type', 'sale_ok')
-    def _compute_product_tooltip(self):
-        super()._compute_product_tooltip()
-        for record in self.filtered(lambda record: record.type == 'service' and record.sale_ok):
-            if record.service_policy == 'delivered_timesheet':
-                if record.service_tracking == 'no':
-                    record.product_tooltip = _(
-                        "Invoice based on timesheets (delivered quantity) on projects or tasks "
-                        "you'll create later on."
-                    )
-                elif record.service_tracking == 'task_global_project':
-                    record.product_tooltip = _(
-                        "Invoice based on timesheets (delivered quantity), and create a task in "
-                        "an existing project to track the time spent."
-                    )
-                elif record.service_tracking == 'task_in_project':
-                    record.product_tooltip = _(
-                        "Invoice based on timesheets (delivered quantity), and create a project "
-                        "for the order with a task for each sales order line to track the time "
-                        "spent."
-                    )
-                elif record.service_tracking == 'project_only':
-                    record.product_tooltip = _(
-                        "Invoice based on timesheets (delivered quantity), and create an empty "
-                        "project for the order to track the time spent."
-                    )
+    def _prepare_invoicing_tooltip(self):
+        if self.service_policy == 'delivered_timesheet':
+            return _("Invoice based on timesheets (delivered quantity).")
+        return super()._prepare_invoicing_tooltip()
 
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):

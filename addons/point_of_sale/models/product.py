@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
     pos_categ_ids = fields.Many2many(
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
-    combo_ids = fields.Many2many('pos.combo', string='Combinations')
+    combo_ids = fields.Many2many('pos.combo', string='Combo Choices')
     type = fields.Selection(selection_add=[
         ('combo', 'Combo')
     ], ondelete={'combo': 'set consu'})
@@ -29,6 +29,14 @@ class ProductTemplate(models.Model):
                 raise UserError(_("To delete a product, make sure all point of sale sessions are closed.\n\n"
                     "Deleting a product available in a session would be like attempting to snatch a"
                     "hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"))
+
+    def _prepare_tooltip(self):
+        tooltip = super()._prepare_tooltip()
+        if self.type == 'combo':
+            tooltip = _(
+                "Combos allows to choose one product amongst a selection of choices per category."
+            )
+        return tooltip
 
     @api.onchange('sale_ok')
     def _onchange_sale_ok(self):

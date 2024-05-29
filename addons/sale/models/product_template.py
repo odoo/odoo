@@ -70,6 +70,37 @@ class ProductTemplate(models.Model):
              "e.g. for computers: warranty, software, etc.).",
         check_company=True)
 
+    @api.depends('invoice_policy', 'sale_ok', 'service_tracking')
+    def _compute_product_tooltip(self):
+        super()._compute_product_tooltip()
+
+    def _prepare_tooltip(self):
+        tooltip = super()._prepare_tooltip()
+        if not self.sale_ok:
+            return tooltip
+
+        invoicing_tooltip = self._prepare_invoicing_tooltip()
+
+        tooltip = f'{tooltip} {invoicing_tooltip}' if tooltip else invoicing_tooltip
+
+        if self.type == 'service':
+            additional_tooltip = self._prepare_service_tracking_tooltip()
+            tooltip = f'{tooltip} {additional_tooltip}' if additional_tooltip else tooltip
+
+        return tooltip
+
+    def _prepare_invoicing_tooltip(self):
+        if self.invoice_policy == 'delivery':
+            return _("Invoice after delivery, based on quantities delivered, not ordered.")
+        elif self.invoice_policy == 'order':
+            if self.type == 'consu':
+                return _("You can invoice goods before they are delivered.")
+            elif self.type == 'service':
+                return _("Invoice ordered quantities as soon as this service is sold.")
+
+    def _prepare_service_tracking_tooltip(self):
+        return ""
+
     @api.depends('type', 'sale_ok')
     def _compute_service_tracking(self):
         non_service_products = self.filtered(

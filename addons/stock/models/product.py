@@ -844,20 +844,6 @@ class ProductTemplate(models.Model):
             template.reordering_min_qty = res[template.id]['reordering_min_qty']
             template.reordering_max_qty = res[template.id]['reordering_max_qty']
 
-    @api.depends('is_storable')
-    def _compute_product_tooltip(self):
-        super()._compute_product_tooltip()
-        for record in self:
-            if record.type == 'consu':
-                if record.is_storable:
-                    record.product_tooltip += _(
-                        " You manage the inventory level."
-                    )
-                else:
-                    record.product_tooltip += _(
-                        " They are always available."
-                    )
-
     @api.onchange('tracking')
     def _onchange_tracking(self):
         return self.mapped('product_variant_ids')._onchange_tracking()

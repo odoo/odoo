@@ -22,13 +22,6 @@ class ProductProduct(models.Model):
 
                 product.invoice_policy, product.service_type = self.product_tmpl_id._get_service_to_general(product.service_policy)
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        res = super()._onchange_type()
-        if self.type != 'service':
-            self.service_tracking = 'no'
-        return res
-
     def write(self, vals):
         if 'type' in vals and vals['type'] != 'service':
             vals.update({
