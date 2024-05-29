@@ -31,8 +31,18 @@
                     <t t-call="evaluaciones.mensaje"/>
                 </div>
                 <div class="o_survey_result">
-                    <t t-call="evaluaciones.portada_reporte_template"/>
-                    <t t-call="evaluaciones.encuestas_reporte_generico_inner" />
+                <div class="page container-fluid row gap-5 justify-content-between g-2">
+                        <t t-call="evaluaciones.portada_reporte_template"/>
+                        <div class="d-flex flex-row justify-content-between">
+                            <h1>
+                                <span t-field="evaluacion.nombre"/>
+                            </h1>
+                            <button class="btn btn-primary d-none d-print-none d-md-inline-block o_survey_results_print" aria-label="Print" title="Print">
+                                <i class="fa fa-print"></i> Exportar
+                            </button>
+                        </div>
+                        <t t-call="evaluaciones.encuestas_reporte_generico_inner" />
+                    </div>
                 </div>
             </t>
         </template>
