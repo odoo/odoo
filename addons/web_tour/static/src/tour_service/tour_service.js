@@ -50,7 +50,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {string} [consumeEvent] Only in manual mode (onboarding tour). It's the event we want the customer to do.
  * @property {boolean} [mobile] When true, step will only trigger in mobile view.
  * @property {string} [title]
- * @property {string|false|undefined} [shadow_dom] By default, trigger nodes are selected in the main document node 
+ * @property {string|false|undefined} [shadow_dom] By default, trigger nodes are selected in the main document node
  * but this property forces to search in a shadowRoot document.
 
  * @typedef {"manual" | "auto"} TourMode
@@ -334,7 +334,7 @@ export const tourService = {
             const macro = convertToMacro(tour, pointer, options);
             const willUnload = callWithUnloadCheck(() => {
                 if (tour.url && tour.url !== options.startUrl && options.redirect) {
-                    window.location.href = window.location.origin + tour.url;
+                    browser.location.href = browser.location.origin + tour.url;
                 }
             });
             if (!willUnload) {
