@@ -97,6 +97,43 @@ export class ImageCrop extends Component {
         }
     }
 
+    /**
+     * Crops image into 1:1 before application of shape if shape has attribute
+     * "data-unstretch=true".
+     *
+     *  @param {boolean} isCropRequired
+     *  @param {boolean} [preview=false]
+     */
+    async cropSquare(isCropRequired, preview = false) {
+        const ratio = isCropRequired ? "1/1" : "0/0";
+        if (this.$cropperImage) {
+            this.$cropperImage.cropper("reset");
+            if (this.aspectRatio !== ratio) {
+                this.aspectRatio = preview ? this.aspectRatio : ratio;
+                this.$cropperImage.cropper("setAspectRatio", this.aspectRatios[ratio].value);
+            }
+            await this._save(isCropRequired);
+        }
+    }
+
+    /**
+     * Undo the preview of shape.
+     */
+    async resetCropSquare() {
+        if (this.media.classList.contains("o_we_image_cropped_preview")) {
+            if (this.$cropperImage) {
+                this.$cropperImage.cropper("reset");
+                this.$cropperImage.cropper(
+                    "setAspectRatio",
+                    this.aspectRatios[this.aspectRatio].value
+                );
+                this.aspectRatio !== "0/0" ? await this._save(true) : await this._save(false);
+            }
+        } else {
+            this._closeCropper();
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -207,7 +244,6 @@ export class ImageCrop extends Component {
         this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
         cropped = this.aspectRatio === "0/0" ? false : cropped;
         this.media.classList.toggle('o_we_image_cropped', cropped);
-        this.$media.trigger('image_cropped');
         this._closeCropper();
     }
     /**
