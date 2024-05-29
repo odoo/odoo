@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="payment_paypal.method_form" inherit_id="payment.method_form">
+        <input name="o_payment_radio" position="attributes">
+            <attribute name="t-att-data-paypal-inline-form-values">
+                provider_sudo._paypal_get_inline_form_values(currency)
+            </attribute>
+            <attribute name="t-att-data-paypal-color">
+                "blue"
+            </attribute>
+        </input>
+    </template>
+
+    <template id="payment_submit_button_inherit" inherit_id="payment.submit_button">
+        <button name="o_payment_submit_button" position="before">
+            <div id="o_paypal_button" class="d-none"/>
+            <div id="o_paypal_loading" class="d-flex justify-content-center d-none">
+                <div class="spinner-border"/>
+            </div>
+        </button>
+    </template>
+
+</odoo>

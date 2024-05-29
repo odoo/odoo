@@ -2,18 +2,28 @@
 
 ## Technical details
 
-API: [PayPal Payments Standard](https://developer.paypal.com/api/nvp-soap/paypal-payments-standard/integration-guide/formbasics/)
+API: [PayPal Standard Checkout](https://developer.paypal.com/studio/checkout/standard)
 
-This module integrates PayPal using the generic payment with redirection flow based on form
-submission provided by the `payment` module.
+SDK: [JavaScript SDK](https://developer.paypal.com/sdk/js/reference/)
+
+This module relies on the "Javascript" SDK to render the PayPal payment button in place of the
+generic payment form's submit button. The assets of the SDK are loaded dynamically when a payment
+method is selected.
+
+When the PayPal button is clicked, a server-to-server API call is made to create the order on PayPal
+side and a PayPal modal is opened. When the order is confirmed within the modal, another call is
+made to finalize the payment.
 
 ## Supported features
 
-- Payment with redirection flow
+- Direct payment flow
 - Webhook notifications
 
 ## Module history
 
+- `18.0`
+  - The NVP/SOAP API that allowed for redirect payments is replaced by a combination of the
+    JavaScript SDK and the Standard Checkout API. odoo/odoo#167402
 - `17.0`
   - The support for customer fees is removed as it is no longer supported by the `payment` module.
     odoo/odoo#132104
