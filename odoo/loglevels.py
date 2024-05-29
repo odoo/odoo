@@ -105,8 +105,8 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
 def exception_to_unicode(e):
     if getattr(e, 'args', ()):
-        return "\n".join((ustr(a) for a in e.args))
+        return "\n".join(map(str, e.args))
     try:
         return str(e)
     except Exception:
-        return u"Unknown message"
+        return "Unknown message"

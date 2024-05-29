@@ -409,16 +409,15 @@ def list_dbs(force=False):
         return res
 
     chosen_template = odoo.tools.config['db_template']
-    templates_list = tuple(set(['postgres', chosen_template]))
+    templates_list = tuple({'postgres', chosen_template})
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
             cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=current_user) and not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
-            res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
+            return [name for (name,) in cr.fetchall()]
         except Exception:
             _logger.exception('Listing databases failed:')
-            res = []
-    return res
+            return []
 
 def list_db_incompatible(databases):
     """"Check a list of databases if they are compatible with this version of Odoo

@@ -324,7 +324,7 @@ class Export(http.Controller):
             fields['id'] = parent_field
 
         fields_sequence = sorted(fields.items(),
-            key=lambda field: odoo.tools.ustr(field[1].get('string', '').lower()))
+            key=lambda field: field[1]['string'].lower())
 
         records = []
         for field_name, field in fields_sequence:

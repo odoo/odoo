@@ -1487,6 +1487,7 @@ class MassMailing(models.Model):
         :param str email: recipient email, used to unsubscribe / blacklist;
         """
         self.ensure_one()
+        assert isinstance(email, str)
         secret = self.env["ir.config_parameter"].sudo().get_param("database.secret")
-        token = (self.env.cr.dbname, self.id, int(document_id), tools.ustr(email))
+        token = (self.env.cr.dbname, self.id, int(document_id), email)
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()

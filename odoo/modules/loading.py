@@ -586,7 +586,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                 try:
                     View._validate_custom_views(model)
                 except Exception as e:
-                    _logger.warning('invalid custom view(s) for model %s: %s', model, tools.ustr(e))
+                    _logger.warning('invalid custom view(s) for model %s: %s', model, e)
 
         if report.wasSuccessful():
             _logger.info('Modules loaded.')
