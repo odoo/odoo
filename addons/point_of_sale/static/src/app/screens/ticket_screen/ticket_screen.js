@@ -152,9 +152,16 @@ export class TicketScreen extends Component {
             if (order === this.pos.get_order()) {
                 this._selectNextOrder(order);
             }
-            const deleted = this.pos.removeOrder(order, true);
+            const cancelled = this.pos.removeOrder(order, true);
 
-            if (!deleted) {
+            const idToCancel = [...this.pos.pendingOrder.delete];
+
+            if (idToCancel.length > 0) {
+                this.pos.pendingOrder.delete.clear();
+                await this.pos.data.call("pos.order", "action_pos_order_cancel", idToCancel);
+            }
+
+            if (!cancelled) {
                 order.uiState.displayed = true;
             }
 

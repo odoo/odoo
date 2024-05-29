@@ -832,13 +832,7 @@ export class PosStore extends Reactive {
             const orders = [...orderToCreate, ...orderToUpdate, ...paidOrdersNotSent];
 
             this.preSyncAllOrders(orders);
-            const idsToDelete = [...this.pendingOrder.delete];
             const context = this.getSyncAllOrdersContext(orders);
-
-            if (idsToDelete.length > 0) {
-                this.pendingOrder.delete.clear();
-                await this.data.ormDelete("pos.order", idsToDelete);
-            }
 
             // Allow us to force the sync of the orders In the case of
             // pos_restaurant is usefull to get unsynced orders
