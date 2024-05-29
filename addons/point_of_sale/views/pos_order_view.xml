@@ -11,7 +11,8 @@
                             invisible="state != 'paid'"/>
                     <button name="refund" string="Return Products" type="object"
                         invisible="state == 'draft' or not has_refundable_lines"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
+                    <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
+                    <field name="state" widget="statusbar" invisible="state != 'cancel'" statusbar_visible="draft,cancel"/>
                     <field name="has_refundable_lines" invisible="1" />
                 </header>
                 <sheet>
@@ -392,6 +393,7 @@
                 <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
                 <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
                 <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
                 <filter string="Order Date" name="order_date" date="date_order"/>
                 <group expand="0" string="Group By">

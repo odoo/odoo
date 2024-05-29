@@ -888,7 +888,6 @@ class PosOrder(models.Model):
             'res_id': moves and moves.ids[0] or False,
         }
 
-    # this method is unused, and so is the state 'cancel'
     def action_pos_order_cancel(self):
         return self.write({'state': 'cancel'})
 
