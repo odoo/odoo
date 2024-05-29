@@ -279,6 +279,8 @@ export class PosStore extends Reactive {
         const date = DateTime.now();
         let pricelistItems = this.models["product.pricelist.item"].getAll();
         let products = this.models["product.product"].getAll();
+        let pricelistItemsRaw = new Map(pricelistItems.map((item) => [item.id, item.raw]));
+        let productsRaw = new Map(products.map((product) => [product.id, product.raw]));
 
         if (data && data.length > 0) {
             if (data[0].model.modelName === "product.product") {
@@ -297,8 +299,10 @@ export class PosStore extends Reactive {
 
         for (const product of products) {
             const applicableRules = {};
+            const productRaw = productsRaw.get(product.id);
 
             for (const item of pricelistItems) {
+                const itemRaw = pricelistItemsRaw.get(item.id);
                 if (!applicableRules[item.pricelist_id.id]) {
                     applicableRules[item.pricelist_id.id] = [];
                 }
@@ -307,14 +311,14 @@ export class PosStore extends Reactive {
                     continue;
                 }
 
-                if (item.raw.product_id && product.id === item.raw.product_id) {
+                if (itemRaw.product_id && product.id === itemRaw.product_id) {
                     applicableRules[item.pricelist_id.id].push(item);
                 } else if (
-                    !item.raw.product_id && item.raw.product_tmpl_id &&
-                    product.raw?.product_tmpl_id === item.raw.product_tmpl_id
+                    !itemRaw.product_id && itemRaw.product_tmpl_id &&
+                    productRaw?.product_tmpl_id === itemRaw.product_tmpl_id
                 ) {
                     applicableRules[item.pricelist_id.id].push(item);
-                } else if (!item.raw.product_tmpl_id && !item.raw.product_id) {
+                } else if (!itemRaw.product_tmpl_id && !itemRaw.product_id) {
                     applicableRules[item.pricelist_id.id].push(item);
                 }
             }
