@@ -106,7 +106,11 @@ class AnalyticMixin(models.AbstractModel):
     def _sanitize_values(self, vals, decimal_precision):
         """ Normalize the float of the distribution """
         if 'analytic_distribution' in vals:
-            vals['analytic_distribution'] = vals.get('analytic_distribution') and {
+            if isinstance(vals['analytic_distribution'], str):
+                vals['analytic_distribution'] = vals.get('analytic_distribution') and {
+                account_id: float_round(distribution, decimal_precision) for account_id, distribution in json.loads(vals['analytic_distribution']).items()}
+            else:
+                vals['analytic_distribution'] = vals.get('analytic_distribution') and {
                 account_id: float_round(distribution, decimal_precision) for account_id, distribution in vals['analytic_distribution'].items()}
         return vals
 
