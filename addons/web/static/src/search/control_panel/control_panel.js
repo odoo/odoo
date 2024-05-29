@@ -472,7 +472,7 @@ export class ControlPanel extends Component {
         this.env.searchModel.createNewFavorite({
             description,
             isDefault: true,
-            isShared: userId,
+            isShared: newActionIsShared,
             embeddedActionId: embeddedActionId[0],
         });
         Object.assign(this.state.embeddedInfos, {

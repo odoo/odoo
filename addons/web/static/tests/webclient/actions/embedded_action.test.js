@@ -309,6 +309,7 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     onRpc("create_or_replace", ({ args }) => {
         expect(args[0].domain).toBe(`[["name", "=", "Applejack"]]`);
         expect(args[0].embedded_action_id).toBe(4);
+        expect(args[0].user_id).toBe(false);
         return 5; // Fake new filter id
     });
     await mountWithCleanup(WebClient);
@@ -337,6 +338,7 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     });
     await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
     await contains(".o_save_current_view ").click();
+    await contains("input.form-check-input").click();
     await contains(".o_save_favorite ").click();
     expect(".o_embedded_actions_buttons_wrapper > button").toHaveCount(4, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
