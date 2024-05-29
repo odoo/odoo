@@ -8,34 +8,50 @@ from odoo.addons.base_automation.models.base_automation import get_webhook_reque
 
 class PortalLoyaltyController(Controller):
 
-    @route(['/my/rewards/history/'], type='json', auth='public')
-    def my_rewards_history_modal_content(self, coupon_id, **kwargs):
-        coupon = request.env['loyalty.card'].sudo().search([('id', '=', coupon_id)])
-        history = [{
+    def get_formated_coupon_history(self, coupon):
+        return [{
+            'id': transaction.id,
             'description': transaction.description,
             'coupon_id': transaction.coupon_id,
             'company_id': transaction.company_id,
+            'sale_order_id': transaction.sale_order_id.id,
             'sale_order': transaction.sale_order_name,
             'date': transaction.date,
-            'issued': transaction.issued_display if transaction.issued else 0,
-            'used': transaction.used_display if transaction.used else 0,
-            'new_balance': transaction.new_balance,
-            # 'top_up_options': [ # NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-            #     transaction.coupon_id._format_points(value)
-            #     for value in [25, 50, 100, 200]
-            # ]
-        } for transaction in coupon.history_ids]
-        print('history:')
-        print('='*64)
-        print(history)
-        print('ALL HISTORY:')
-        print( [{
-            'sale_order': transaction.sale_order_name,
+            'issued_display': transaction.issued_display,
+            'used_display': transaction.used_display,
             'issued': transaction.issued,
             'used': transaction.used,
-        } for transaction in coupon.history_ids])
-        print('='*64)
-        return {
-            'history': history,
-            'currencyId': coupon.currency_id.id,
-        }
+            'new_balance': transaction.new_balance,
+            'new_balance_display': transaction.new_balance_display,
+        } for transaction in coupon.history_ids]
+
+    @route(['/my/rewards/history/'], type='json', auth='public')
+    def my_rewards_history_modal_content(self, coupon_id, program_id, **kwargs):
+        if coupon_id:
+            coupon = request.env['loyalty.card'].sudo().search([('id', '=', coupon_id)])
+            data = {
+                'coupons_history': [{
+                    'id': coupon.id,
+                    'description': coupon.description,
+                    'history': self.get_formated_coupon_history(coupon)
+                }],
+                'currencyId': coupon.currency_id.id,
+                'rewards': [],
+            }
+        elif program_id:
+            program = request.env['loyalty.program'].sudo().search([('id', '=', program_id)])
+            data = {
+                'coupons_history': [{
+                    'id': coupon.id,
+                    'description': coupon.description,
+                    'history': self.get_formated_coupon_history(coupon)
+                } for coupon in program.coupon_ids if coupon.partner_id == request.env.user.partner_id],
+                'currencyId': request.env.company.currency_id.id,
+                'rewards': [{
+                    'id': reward.id,
+                    'name': reward.display_name,
+                } for reward in program.reward_ids],
+            }
+        import json
+        print(json.dumps(data, indent=4, ensure_ascii=True, default=str))
+        return data

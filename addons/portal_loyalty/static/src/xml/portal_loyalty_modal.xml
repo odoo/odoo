@@ -1,45 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<templates>
+<templates xml:space="preserve">
     <t t-name="portal_loyalty_modal.LoyaltyModal">
-        <Dialog title="title" points="points" pointName="pointName">
-            <!-- <t t-call="loyalty.loyalty_history_view_tree"/> -->
-            <!-- <tree>
-                <field name="props.history.amount"/>
-            </tree>
-            <t t-out="props.history.amount"/> -->
-            <!-- <t t-foreach="props.history" t-as="so" t-key="so">
-                <t t-out="so"/>
-                <span>Amount: </span>
-                <t t-out="so.amount"/>
-                <span>SO: </span>
-                <t t-out="so.sale_order_id"/>
-                <br/>
-            </t> -->
-            <!-- <t t-out="this.state.history[0].amount"/> -->
-            <span>Last Movements</span>
-            <table class="table table-bordered">
-                <tbody>
-                    <t t-foreach="this.state.history" t-as="transaction" t-key="transaction">
-                        <tr>
-                            <td><t t-out="transaction.description"/></td>
-                            <td><t t-out="transaction.sale_order"/></td>
-                            <td><t t-out="this.formatDate(transaction.date)"/></td> 
-                            <td t-if="transaction.issued"><t t-out="transaction.issued"/></td>
-                            <td t-if="transaction.used"><t t-out="transaction.used"/></td> 
+        <Dialog title="title" footer="is_ewallet">
+            <span t-if="this.state.couponsHistory" >Last Movements</span>
+            <span t-else="">Not used</span>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th t-if="is_ewallet" scope="col">Description</th>
+                        <th t-if="is_loyalty" scope="col">Order</th>
+                        <th t-if="is_loyalty" scope="col">Date</th>
+                        <th t-if="is_loyalty" scope="col">Issued</th>
+                        <th t-if="is_loyalty" scope="col">Used</th>
+                        <th t-if="is_loyalty" scope="col">New Balance</th>
+                        <th t-else="" scope="col">Transaction</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <t t-foreach="this.state.couponsHistory" t-as="coupon" t-key="coupon.id">
+                        <tr t-if="this.state.couponsHistory.length > 1">
+                            <th scope="colgroup" colspan="100%">
+                                <p t-if="coupon.description" t-out="coupon.description"/>
+                            </th>
                         </tr>
+                        <t t-foreach="coupon.history" t-as="transaction" t-key="transaction.id">
+                            <tr>
+                                <td t-if="is_ewallet">
+                                    <t t-out="transaction.description"/>
+                                </td>
+                                <td t-if="is_loyalty">
+                                    <a
+                                        t-if="transaction.sale_order"
+                                        t-attf-href="/my/orders/{{transaction.sale_order_id}}"
+                                    >
+                                        <t t-out="transaction.sale_order"/>
+                                    </a>
+                                    <t t-else="">
+                                        Not an order.
+                                    </t>
+                                </td>
+                                <td t-if="is_loyalty">
+                                    <t t-out="this.formatDate(transaction.date)"/>
+                                </td>
+                                <td t-if="transaction.issued or is_loyalty">
+                                    <p
+                                        t-att-class="transaction.issued ? 'text-success fw-bold' : ''"
+                                        t-out="is_loyalty ? transaction.issued : transaction.issued_display"
+                                    />
+                                </td>
+                                <td t-if="transaction.used or is_loyalty">
+                                    <p
+                                        t-att-class="transaction.used ? 'text-danger fw-bold' : ''"
+                                        t-out="is_loyalty ? transaction.used : transaction.used_display"
+                                    />
+                                </td>
+                                <td t-if="is_loyalty"><t t-out="transaction.new_balance_display"/></td>
+                            </tr>
+                        </t>
                     </t>
                 </tbody>
             </table>
-
-            <!-- <t t-foreach="this.state.history" t-as="transaction" t-key="transaction">
-                <t t-out="transaction"/>
-                <span>Amount: </span>
-                <t t-out="transaction.amount"/>
-                <span>SO: </span>
-                <t t-out="transaction.sale_order"/>
+            <t t-foreach="this.state.rewards" t-as="reward" t-key="reward.id">
+                <t t-out="reward.name"/>
                 <br/>
-            </t> -->
-
+            </t>
+            <t t-set-slot="header">
+                <t t-call="portal_loyalty_modal.LoyaltyModal.header">
+                    <t t-set="fullscreen" t-value="isFullscreen"/>
+                    <t t-set="dismiss" t-value="props.close"/>
+                </t>
+            </t>
             <t t-set-slot="footer">
                 <!-- <select
                     class="btn btn-link dropdown-toggle"
@@ -83,7 +113,7 @@
                             <DropdownItem
                                 class="`d-flex align-items-center ${topUpValues[state.topUpIndex] === value ? 'active' : ''}`"
                             >
-²                                <span t-esc="value"/>
+                                <span t-esc="value"/>
                             </DropdownItem>
                         </t>
                     </t>
@@ -92,7 +122,7 @@
 
                 <div class="btn-group">
                     <button id="portal_top_up_amount" data-bs-toggle="dropdown" class="btn btn-link dropdown-toggle">
-                        <t t-out="topUpValue"/>
+                        <t t-out="formatPoints(topUpValues[state.topUpIndex])"/>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
                         <t t-foreach="topUpValues" t-as="val" t-key="val">
@@ -106,7 +136,7 @@
                     </div>
                 </div>
 
-<!-- 
+                <!--
                 <div class="btn-group" t-if='this.state.history and this.state.history[0]'>
                     <button id="portal_top_up_amount" data-bs-toggle="dropdown" class="btn btn-link dropdown-toggle">
                         <t t-out="this.state.history[0].top_up_options[state.topUpIndex]"/>
@@ -122,7 +152,6 @@
                         </t>
                     </div>
                 </div> -->
-                
                 <button class="btn btn-primary" t-on-click="topUpNow">
                     Top Up Now !!
                 </button>
@@ -131,27 +160,28 @@
     </t>
 
     <t
-        t-name="web.Dialog.LoyaltyModal.header"
+        t-name="portal_loyalty_modal.LoyaltyModal.header"
         t-inherit="web.Dialog.header"
-        t-inherit-mode="extension"
+        t-inherit-mode="primary"
     >
         <xpath expr="//h4[hasclass('modal-title')]" position="before">
-            <img src="https://cdn-icons-png.freepik.com/512/3757/3757881.png" class="" style="max-height: 3rem"/>
+            <img
+                t-if="props.type == 'ewallet'"
+                src="https://cdn-icons-png.freepik.com/512/3757/3757881.png"
+                style="max-height: 3rem"
+            />
+            <img
+                t-if="props.type == 'loyalty'"
+                src="https://cdn3.vectorstock.com/i/1000x1000/14/77/loyalty-card-icon-flat-style-vector-29221477.jpg"
+                style="max-height: 3rem"
+            />
         </xpath>
         <xpath expr="//h4[hasclass('modal-title')]" position="attributes">
             <attribute name="class" add="d-flex w-100 ps-3" separator=" "/>
         </xpath>
-        <!-- <xpath expr="//h4[hasclass('modal-title')]" position="after">
-            <div style="font-size: 3rem; right: 0; left: auto ;text-align: right">
-                <t t-out="props.points"/>
-            </div>
-        </xpath> -->
-        <xpath expr="//button[hasclass('btn-close')]" position="replace">
-            <div class="d-flex flex-row">
-                <h3 class="pe-3" t-out="props.points"/>
-                <button type="button" class="btn-close" style="margin: 0;" aria-label="Close" tabindex="-1" t-on-click="dismiss"></button>
-            </div>
-        </xpath>
+        <t t-if="!fullscreen" position="before">
+            <h3 class="pe-3" t-out="props.points"/>
+        </t>
     </t>
     <t
         t-name="web.Dialog.LoyaltyModal"

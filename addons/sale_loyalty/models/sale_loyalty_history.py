@@ -18,42 +18,41 @@ class SaleLoyaltyHistory(models.Model):
     )
     sale_order_name = fields.Char(related='sale_order_id.name')
     description = fields.Char(default="\(*-*)/")
-    date = fields.Datetime(related='sale_order_id.date_order')
+    # date = fields.Datetime(related='sale_order_id.date_order')
     issued = fields.Float(default=0)
     issued_display = fields.Char(compute='_compute_issued_display')
     used = fields.Float(default=0)
     used_display = fields.Char(compute='_compute_used_display')
     new_balance = fields.Float(default=lambda self: self.coupon_id.points, store=True)
+    new_balance_display = fields.Char(compute='_compute_new_balance_display')
+    reward_id = fields.Many2one(comodel_name='loyalty.reward')
+    reward_type = fields.Selection(related='reward_id.reward_type')
 
-
-    def _get_top_up_options(self):
-        values = [25, 50, 100, 200]
-        return [
-            (str(index), self.coupon_id._format_points(value))
-            for index, value in enumerate([25, 50, 100, 200])
-        ]
-
-    top_up_options = fields.Selection(
-        selection=_get_top_up_options,
-        default='0'
-    )
+    def _float_to_display(self, value):
+        for transaction in self:
+            transaction[f'{value}_display'] = transaction.coupon_id._format_points(
+                transaction[value]
+            )
 
     @api.depends('issued')
     def _compute_issued_display(self):
-        for transaction in self:
-            transaction.issued_display = transaction.coupon_id._format_points(transaction.issued)
+        self._float_to_display('issued')
 
     @api.depends('used')
     def _compute_used_display(self):
-        for transaction in self:
-            transaction.used_display = transaction.coupon_id._format_points(transaction.used)
+        self._float_to_display('used')
+
+    @api.depends('new_balance')
+    def _compute_new_balance_display(self):
+        self._float_to_display('new_balance')
+
 
     # TODO ASK: ADD a line in the history for creation
-    # date = fields.Datetime(compute='_compute_date', store=True)
-    # @api.depends('sale_order_id')
-    # def _compute_date(self):
-    #     for transaction in self:
-    #         if transaction.sale_order_id:
-    #             transaction.date = transaction.sale_order_id.date_order
-    #         else:
-    #             transaction.date = fields.Datetime.now()
+    date = fields.Datetime(compute='_compute_date', store=True)
+    @api.depends('sale_order_id')
+    def _compute_date(self):
+        for transaction in self:
+            if transaction.sale_order_id:
+                transaction.date = transaction.sale_order_id.date_order
+            else:
+                transaction.date = fields.Datetime.now()

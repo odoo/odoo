@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import os
+
 from odoo import api, fields, models
 
 
@@ -18,19 +20,26 @@ class LoyaltyCard(models.Model):
         inverse_name='coupon_id',
     )
 
-    # TODO ASK: ADD a line in the history for creation
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     coupon = super().create(vals_list)
-    #     coupon.history_ids = self.env['sale.loyalty.history'].create({
-    #         'description': 'FIRST !',
-    #         'coupon_id': coupon.id,
-    #         'sale_order_id': coupon.order_id,
-    #         'sale_order_name': coupon.order_id.name,
-    #         'issued': coupon.points,
-    #         'new_balance': coupon.points,
-    #     })
-    #     return coupon
+    # TODO: MATP Not use and probably not the best way :/ => check STOCK APP
+    barcode = fields.Char(
+        string='Barcode',
+        default=lambda self: str(int.from_bytes(os.urandom(8), 'little')),
+        readonly=True,
+        copy=False
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        coupon = super().create(vals_list)
+        coupon.history_ids = self.env['sale.loyalty.history'].create({
+            'description': "Created",
+            'coupon_id': coupon.id,
+            'sale_order_id': coupon.order_id.id,
+            'sale_order_name': coupon.order_id.name,
+            'issued': coupon.points,
+            'new_balance': coupon.points,
+        })
+        return coupon
 
     def _get_default_template(self):
         default_template = super()._get_default_template()

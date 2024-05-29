@@ -6,6 +6,15 @@
         <field name="model">loyalty.card</field>
         <field name="inherit_id" ref="loyalty.loyalty_card_view_form"/>
         <field name="arch" type="xml">
+            <field name="points" position="replace">
+                <button
+                    name="%(sale_loyalty_update_balance_wizard_action)d"
+                    class="w-auto oe_inline me-1"
+                    type="action"
+                >
+                    <field name="points" class="w-auto oe_inline me-1"/>
+                </button>
+            </field>
             <field name="partner_id"  position="after">
                 <field name="order_id" invisible="not order_id"/>
             </field>
