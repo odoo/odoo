@@ -352,7 +352,7 @@ class TestEmbeddedFilters(FiltersCase):
         Filters.create_or_replace({
             'name': 'b',
             'model_id': 'ir.filters',
-            'user_id': False,
+            'user_id': self.USER_ID,
             'is_default': False,
             'embedded_action_id': self.embedded_action_2.id,
             'embedded_parent_res_id': 1
@@ -365,6 +365,10 @@ class TestEmbeddedFilters(FiltersCase):
         # Check that the filter is correctly linked to one embedded_parent_res_id and is not returned if another one is set
         filters = self.env['ir.filters'].with_user(self.USER_ID).get_filters('ir.filters', embedded_action_id=self.embedded_action_1.id, embedded_parent_res_id=2)
         self.assertItemsEqual(noid(filters), [])
+
+        # Check that a shared filter can be fetched with another user
+        filters = self.env['ir.filters'].with_user(ADMIN_USER_ID).get_filters('ir.filters', embedded_action_id=self.embedded_action_1.id, embedded_parent_res_id=1)
+        self.assertItemsEqual(noid(filters), [dict(name='a', is_default=True, user_id=False, domain='[]', context='{}', sort='[]')])
 
         # If embedded_action_id and embedded_parent_res_id are not set, should return no filters
         filters = self.env['ir.filters'].with_user(self.USER_ID).get_filters('ir.filters')
