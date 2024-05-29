@@ -52,11 +52,43 @@ class LoyaltyProgram(models.Model):
                 program.pos_config_ids = False
 
     def _compute_pos_order_count(self):
-        read_group_res = self.env['pos.order.line']._read_group(
-            [('reward_id', 'in', self.reward_ids.ids)], ['reward_id:array_agg'], ['order_id'])
-        for program in self:
-            program_reward_ids = program.reward_ids.ids
-            program.pos_order_count = sum(1 if any(id in group['reward_id'] for id in program_reward_ids) else 0 for group in read_group_res)
+        query = f"""
+                WITH reward_pos_order_matching AS (
+
+                    SELECT
+                    count(DISTINCT po.id) as po_ids,
+                    lr.id as lr_id
+                    FROM pos_order_line poline
+                    JOIN pos_order po ON
+                        poline.order_id = po.id
+                    JOIN loyalty_reward lr ON
+                        poline.reward_id IS NOT NULL
+                        AND poline.reward_id = lr.id
+                    GROUP BY lr_id
+
+                    ),
+
+                program_reward_matching AS (
+                    SELECT
+                    lr.id as lr_id,
+                    lp.id as lp_id
+                    FROM loyalty_program lp
+                    JOIN loyalty_reward lr ON
+                    lr.program_id = lp.id
+                    WHERE lp.id  = ANY(%s)
+                )
+
+                SELECT prm.lp_id,
+                SUM(rpom.po_ids)
+                FROM program_reward_matching prm
+                LEFT JOIN reward_pos_order_matching rpom ON
+                    prm.lr_id = rpom.lr_id
+                GROUP BY prm.lp_id
+                """
+        self._cr.execute(query, (self.ids,))
+        res = self._cr.dictfetchall()
+        for vals in res:
+            self.filtered(lambda s: s.id == vals['lp_id']).pos_order_count = vals['sum'] or 0
 
     def _compute_total_order_count(self):
         super()._compute_total_order_count()
