@@ -73,10 +73,15 @@ class TestEditor extends Component {
 export async function setupEditor(content, options = {}) {
     const wysiwygProps = Object.assign({}, options.props);
     wysiwygProps.config = options.config || {};
-    let editor;
-    wysiwygProps.onLoad = (wysiwygEditor) => {
-        editor = wysiwygEditor;
-    };
+    const attachedEditor = new Promise((resolve) => {
+        wysiwygProps.onLoad = (editor) => {
+            const oldAttachTo = editor.attachTo;
+            editor.attachTo = function (el) {
+                oldAttachTo.call(this, el);
+                resolve(editor);
+            };
+        };
+    });
     const styleContent = options.styleContent || "";
     await mountWithCleanup(TestEditor, {
         props: {
@@ -87,6 +92,10 @@ export async function setupEditor(content, options = {}) {
         },
         env: options.env,
     });
+
+    // awaiting for mountWithCleanup is not enough when mounted in an iframe,
+    // @see Wysiwyg.onMounted
+    const editor = await attachedEditor;
 
     // @todo: return editor, tests can destructure const { editable } = ... if they want
     return {
