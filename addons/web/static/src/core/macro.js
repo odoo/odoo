@@ -9,6 +9,10 @@ import { Mutex } from "@web/core/utils/concurrency";
  * - Current step index won't be incremented.
  * @property {string | (el: Element, step: MacroStep) => undefined | string} [action]
  * @property {*} [*] - any payload to the step.
+ *
+ * @typedef MacroDescriptor
+ * @property {() => Element | undefined} trigger
+ * @property {() => {}} action
  */
 
 export const ACTION_HELPERS = {
