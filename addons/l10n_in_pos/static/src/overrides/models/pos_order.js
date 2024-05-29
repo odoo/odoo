@@ -48,7 +48,7 @@ patch(PosOrder.prototype, {
                     priceUnit,
                     1,
                     line.product_id,
-                    this.session._product_default_values,
+                    this.config._product_default_values,
                     this.company,
                     this.currency
                 ),
