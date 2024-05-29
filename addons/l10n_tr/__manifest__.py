@@ -18,6 +18,9 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'depends': [
         'account',
     ],
+    'data': [
+        'data/account_tax_report_data.xml',
+    ],
     'demo': [
         'demo/demo_company.xml',
     ],
