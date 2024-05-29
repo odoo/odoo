@@ -151,7 +151,7 @@ class MergePartnerAutomatic(models.TransientModel):
                     self._cr.execute(query, (dst_partner.id, partner.id, dst_partner.id))
             else:
                 try:
-                    with mute_logger('odoo.sql_db'), self._cr.savepoint():
+                    with mute_logger('odoo.sql_db'), self._cr.savepoint():  # TODO savepoint in loop
                         query = 'UPDATE "%(table)s" SET "%(column)s" = %%s WHERE "%(column)s" IN %%s' % query_dic
                         self._cr.execute(query, (dst_partner.id, tuple(src_partners.ids),))
                 except psycopg2.Error:

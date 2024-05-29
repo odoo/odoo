@@ -3494,7 +3494,7 @@ class AccountMove(models.Model):
             decoder = (current_invoice or current_invoice.new(self.default_get(['move_type', 'journal_id'])))._get_edi_decoder(file_data, new=new)
             if decoder:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint(): # TODO savepoint in a loop
                         with current_invoice._get_edi_creation() as invoice:
                             # pylint: disable=not-callable
                             success = decoder(invoice, file_data, new)
@@ -4260,10 +4260,16 @@ class AccountMove(models.Model):
                 purchase_amls = invoice.line_ids.filtered(lambda line: line.partner_id and line.account_id.account_type == 'liability_payable')
                 for partner in purchase_amls.mapped('partner_id'):
                     supplier_count[partner] += 1
+        # Group partner by count to minimize the call to _increase_rank in order to minimize the number of savepoint
+        count_per_customer, count_per_supplier = defaultdict(self.env['res.partner'].browse), defaultdict(self.env['res.partner'].browse)
         for partner, count in customer_count.items():
-            (partner | partner.commercial_partner_id)._increase_rank('customer_rank', count)
+            count_per_customer[count] |= partner
         for partner, count in supplier_count.items():
-            (partner | partner.commercial_partner_id)._increase_rank('supplier_rank', count)
+            count_per_supplier[count] |= partner
+        for count, partners in count_per_customer.items():
+            (partners | partners.commercial_partner_id)._increase_rank('customer_rank', count)
+        for count, partners in count_per_supplier.items():
+            (partners | partners.commercial_partner_id)._increase_rank('supplier_rank', count)
 
         # Trigger action for paid invoices if amount is zero
         to_post.filtered(
@@ -4583,7 +4589,7 @@ class AccountMove(models.Model):
         except UserError:  # if at least one move cannot be posted, handle moves one by one
             for move in moves:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.cr.savepoint():  # TODO savepoint in a loop
                         move._post()
                 except UserError as e:
                     move.to_check = True
@@ -4629,7 +4635,7 @@ class AccountMove(models.Model):
         for _company, moves in all_moves.grouped('company_id').items():
             try:
                 # Lock moves
-                with self.env.cr.savepoint(flush=False):
+                with self.env.cr.savepoint(flush=False): # TODO Savepoint in a loop
                     self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(moves.ids)])
 
             except psycopg2.errors.LockNotAvailable:
