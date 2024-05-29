@@ -11,6 +11,16 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_count', groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
+<<<<<<< HEAD
+||||||| parent of a05f75e784e9 (temp)
+
+    # override domain
+    project_id = fields.Many2one(domain="[('pricing_type', '!=', 'employee_rate'), ('analytic_account_id', '!=', False), ('company_id', '=', company_id)]")
+=======
+
+    # override domain
+    project_id = fields.Many2one(domain="[('pricing_type', '!=', 'employee_rate'), ('analytic_account_id', '!=', False)]", check_company=True)
+>>>>>>> a05f75e784e9 (temp)
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id', export_string_translation=False)
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration',
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
