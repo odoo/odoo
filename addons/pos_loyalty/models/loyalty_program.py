@@ -68,11 +68,25 @@ class LoyaltyProgram(models.Model):
                 program.pos_config_ids = False
 
     def _compute_pos_order_count(self):
-        read_group_res = self.env['pos.order.line']._read_group(
-            [('reward_id', 'in', self.reward_ids.ids)], ['order_id'], ['reward_id:array_agg'])
-        for program in self:
-            program_reward_ids = program.reward_ids.ids
-            program.pos_order_count = sum(1 if any(id in reward_ids for id in program_reward_ids) else 0 for __, reward_ids in read_group_res)
+        query = """
+            SELECT program.id, SUM(orders_count)
+            FROM loyalty_program program
+                JOIN loyalty_reward reward ON reward.program_id = program.id
+                JOIN LATERAL (
+                    SELECT COUNT(DISTINCT orders.id) AS orders_count
+                    FROM pos_order orders
+                        JOIN pos_order_line order_lines ON order_lines.order_id = orders.id
+                        WHERE order_lines.reward_id = reward.id
+                ) agg ON TRUE
+                WHERE program.id = ANY(%s)
+                    GROUP BY program.id
+                """
+        self._cr.execute(query, (self.ids,))
+        res = self._cr.dictfetchall()
+        res = {k['id']: k['sum'] for k in res}
+
+        for rec in self:
+            rec.pos_order_count = res.get(rec.id) or 0
 
     def _compute_total_order_count(self):
         super()._compute_total_order_count()
