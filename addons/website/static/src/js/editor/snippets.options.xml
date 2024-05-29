@@ -51,6 +51,13 @@
             <t t-set-slot="title">URL</t>
             <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
         </WeRow>
+        <WeRow>
+            <t t-set-slot="title">Address</t>
+            <WeGpsPicker selectDataAttribute="''" attributeName="'mapGps'"
+                setFormattedAddress="''"
+                placeholder="'e.g. De Brouckere, Brussels, Belgium'"
+                noPreview="'true'"/>
+        </WeRow>
     </xpath>
 </t>
 
@@ -74,6 +81,17 @@
         >
             <i class="fa fa-fw fa-external-link"/>
         </we-button>
+    </we-input>
+</t>
+<t t-name="website.WeGpsPicker">
+    <we-input class="o_we_user_value_widget o_we_large w-100">
+        <div>
+            <input t-ref="input" type="text" class="text-start"
+                autocomplete="chrome-off"
+                t-att-placeholder="this.props.placeholder"
+                t-att-value="this.state.formattedAddress"
+            />
+        </div>
     </we-input>
 </t>
 </templates>

@@ -8,7 +8,7 @@ import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";
 import wLegacySnippetOptions from "@website/js/editor/snippets.options.legacy";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { switchTextHighlight } from "@website/js/text_processing";
 import { registry } from "@web/core/registry";
@@ -59,6 +59,10 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
      * @override
      */
     setup() {
+        useSubEnv({
+            gmapApiRequest: this._onGMapAPIRequest.bind(this),
+            gmapApiKeyRequest: this._onGMapAPIKeyRequest.bind(this),
+        });
         super.setup();
         this.notification = useService("notification");
         this.dialog = useService("dialog");
