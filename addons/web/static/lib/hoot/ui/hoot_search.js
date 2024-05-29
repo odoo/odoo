@@ -27,7 +27,6 @@ import { HootTagButton } from "./hoot_tag_button";
 
 const {
     Boolean,
-    console: { warn: $warn },
     localStorage,
     Object: { entries: $entries, keys: $keys, values: $values },
 } = globalThis;
@@ -761,7 +760,7 @@ export class HootSearch extends Component {
                 }
             }
             this.__owl__.app.root.render(true);
-            $warn("Secret sequence activated: all tests pass!");
+            console.warn("Secret sequence activated: all tests pass!");
         }
     }
 }

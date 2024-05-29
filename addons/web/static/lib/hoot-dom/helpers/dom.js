@@ -79,7 +79,6 @@ const {
     Boolean,
     cancelAnimationFrame,
     clearTimeout,
-    console: { warn: $warn },
     document,
     DOMParser,
     Map,
@@ -923,7 +922,7 @@ export function cleanupDOM() {
     // Observers
     const remainingObservers = observers.size;
     if (remainingObservers) {
-        $warn(`${remainingObservers} observers still running`);
+        console.warn(`${remainingObservers} observers still running`);
         for (const { observer } of observers.values()) {
             observer.disconnect();
         }
@@ -2002,7 +2001,7 @@ export function watchKeys(target, whiteList) {
                     delete target[key];
                 }
             } else {
-                $warn(
+                console.warn(
                     `${target.constructor.name} has`,
                     keysDiff.length,
                     `unexpected keys:`,
