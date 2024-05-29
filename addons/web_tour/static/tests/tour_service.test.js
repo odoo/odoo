@@ -194,7 +194,10 @@ test("points to next step", async () => {
 test("next step with new anchor at same position", async () => {
     tourRegistry.add("tour1", {
         sequence: 10,
-        steps: () => [{ trigger: "button.foo", run: "click" }, { trigger: "button.bar", run: "click"}],
+        steps: () => [
+            { trigger: "button.foo", run: "click" },
+            { trigger: "button.bar", run: "click" },
+        ],
     });
     await makeMockEnv();
 
@@ -499,7 +502,10 @@ test("check tour with inactive steps", async () => {
 test("pointer is added on top of overlay's stack", async () => {
     registry.category("web_tour.tours").add("tour1", {
         sequence: 10,
-        steps: () => [{ trigger: ".modal .a", run: "click" }, { trigger: ".open", run: "click"}],
+        steps: () => [
+            { trigger: ".modal .a", run: "click" },
+            { trigger: ".open", run: "click" },
+        ],
     });
     await makeMockEnv({});
     class DummyDialog extends Component {
@@ -723,6 +729,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
             {
                 trigger: "button.inc",
                 content: stepContent,
+                run: "click",
             },
         ],
     });
@@ -795,7 +802,7 @@ test("scroller pointer to reach next step", async () => {
 
     registry.category("web_tour.tours").add("tour_des_flandres", {
         sequence: 10,
-        steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click"}],
+        steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click" }],
     });
     await makeMockEnv();
     class Root extends Component {
@@ -866,17 +873,17 @@ test("manual tour with inactive steps", async () => {
             {
                 isActive: ["auto"],
                 trigger: ".interval input",
-                run: "click",
+                run: "edit 5",
             },
             {
                 isActive: ["auto"],
                 trigger: ".interval input",
-                run: "click",
+                run: "edit 5",
             },
             {
                 isActive: ["manual"],
                 trigger: ".interval input",
-                run: "click",
+                run: "edit 5",
             },
             {
                 isActive: ["auto"],
@@ -921,6 +928,6 @@ test("manual tour with inactive steps", async () => {
     expect(".o_tour_pointer").toHaveCount(1);
     await contains("button.inc").click();
     expect(".o_tour_pointer").toHaveCount(0);
-    await expect(".counter .value").toHaveText("5");
+    expect(".counter .value").toHaveText("5");
     await advanceTime(10000);
 });
