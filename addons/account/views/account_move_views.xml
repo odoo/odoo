@@ -1072,7 +1072,6 @@
                                                domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
                                                context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain, 'active_test': True}"
                                                options="{'no_create': True}"
-                                               width="92px"
                                                optional="show"/>
                                         <field name="price_subtotal"
                                                string="Tax excl."/>
