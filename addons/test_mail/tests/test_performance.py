@@ -225,19 +225,19 @@ class TestBaseMailPerformance(BaseMailPerformance):
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(admin=9, demo=9):
+        with self.assertQueryCount(admin=9, demo=10):
             self.env['mail.performance.thread'].create({'name': 'X'})
 
     @users('admin', 'employee')
     @warmup
     def test_create_mail_simple(self):
-        with self.assertQueryCount(admin=8, employee=8):
+        with self.assertQueryCount(admin=8, employee=9):
             self.env['mail.test.simple'].create({'name': 'Test'})
 
     @users('admin', 'employee')
     @warmup
     def test_create_mail_simple_multi(self):
-        with self.assertQueryCount(admin=8, employee=8):
+        with self.assertQueryCount(admin=8, employee=9):
             self.env['mail.test.simple'].create([{'name': 'Test'}] * 5)
 
     @users('admin', 'employee')
@@ -266,7 +266,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
 
-        with self.assertQueryCount(admin=8, employee=8):
+        with self.assertQueryCount(admin=8, employee=9):
             model.create({'name': 'Test'})
 
     @users('admin', 'employee')
@@ -420,7 +420,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=55, employee=55):  # tm+com 54/54
+        with self.assertQueryCount(admin=55, employee=56):  # tm+com 54/54
             composer._action_send_mail()
 
         # notifications
@@ -538,7 +538,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=51, employee=51):
+        with self.assertQueryCount(admin=51, employee=52):
             composer._action_send_mail()
 
         # notifications
@@ -568,7 +568,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=70, employee=70):  # com 62/62
+        with self.assertQueryCount(admin=70, employee=71):  # com 62/62
             composer._action_send_mail()
 
         # notifications
@@ -883,7 +883,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=60, employee=59):
+        with self.assertQueryCount(admin=60, employee=60):
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -991,7 +991,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         })
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id)
-        with self.assertQueryCount(admin=43, employee=43):
+        with self.assertQueryCount(admin=43, employee=44):
             rec.write({'user_id': self.user_portal.id})
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
         # write tracking message
@@ -1011,7 +1011,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=101, employee=101):
+        with self.assertQueryCount(admin=101, employee=102):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
@@ -1388,7 +1388,7 @@ class TestPerformance(BaseMailPerformance):
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
         # enable_logging = self.cr._enable_logging() if self.warm else nullcontext()
         # with self.assertQueryCount(employee=63), enable_logging:
-        with self.assertQueryCount(employee=68):
+        with self.assertQueryCount(employee=69):
             record_container.with_context({}).message_post(
                 body=Markup('<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>'),
                 subject='Test Subject',

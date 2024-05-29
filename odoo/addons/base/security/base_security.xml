@@ -121,7 +121,7 @@
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[Command.set([ref('base.group_user')])]"/>
-            <field name="domain_force">[('id','in', company_ids)]</field>
+            <field name="domain_force">[('id','parent_of', company_ids)]</field>
         </record>
         <record id="res_company_rule_public" model="ir.rule">
             <field name="name">company rule public</field>
