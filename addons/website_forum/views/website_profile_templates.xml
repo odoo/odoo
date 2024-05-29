@@ -11,12 +11,25 @@
 
     <template id="user_profile_sub_nav" inherit_id="website_profile.user_profile_sub_nav">
         <xpath expr="//nav" position="before">
-            <div t-if="request.params.get('forum_origin')" class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0">
+            <div t-if="request.params.get('forum_origin') and not request.params.get('forum_id')"
+                 class="o_wprofile_all_users_nav_btn_container col pe-0 flex-grow-0">
                 <a t-att-href="(request.website.domain or '') + '/' + request.params.get('forum_origin').lstrip('/')"
                     class="o_wprofile_all_users_nav_btn btn text-nowrap">
                     <i class="oi oi-chevron-left small"/> Back
                 </a>
             </div>
+        </xpath>
+        <xpath expr="//nav[hasclass('o_wprofile_user_profile_sub_nav_desktop_nav')]//ol/li[1]" position="before">
+            <li t-if="request.params.get('forum_origin') and request.params.get('forum_id')" class="breadcrumb-item ">
+                <a t-att-href="(request.website.domain or '') + '/' + request.params.get('forum_origin').lstrip('/')"
+                   t-out="request.env['forum.forum'].browse([int(request.params.get('forum_id'))]).display_name"/>
+            </li>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wprofile_user_profile_sub_nav_mobile_col')]//ul/a[1]" position="after">
+            <a t-if="request.params.get('forum_origin') and request.params.get('forum_id')" class="dropdown-item"
+               t-att-href="(request.website.domain or '') + '/' + request.params.get('forum_origin').lstrip('/')">
+                &#9492; <t t-out="request.env['forum.forum'].browse([int(request.params.get('forum_id'))]).display_name"/>
+            </a>
         </xpath>
     </template>
 
