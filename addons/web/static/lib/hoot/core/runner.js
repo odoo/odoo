@@ -1,5 +1,4 @@
 /** @odoo-module */
-/* eslint-disable no-restricted-syntax */
 
 import { markRaw, reactive, toRaw, whenReady } from "@odoo/owl";
 import { cleanupDOM, watchKeys } from "@web/../lib/hoot-dom/helpers/dom";
@@ -305,37 +304,37 @@ export class TestRunner {
      * @type {boolean}
      */
     get hasFilter() {
-        return this.#hasExcludeFilter || this.#hasIncludeFilter;
+        return this._hasExcludeFilter || this._hasIncludeFilter;
     }
 
     // Private properties
-    #callbacks = makeCallbacks();
+    _callbacks = makeCallbacks();
     /** @type {Job[]} */
-    #currentJobs = [];
-    #dry = false;
-    #failed = 0;
-    #hasExcludeFilter = false;
-    #hasIncludeFilter = false;
+    _currentJobs = [];
+    _dry = false;
+    _failed = 0;
+    _hasExcludeFilter = false;
+    _hasIncludeFilter = false;
     /** @type {(() => MaybePromise<void>)[]} */
-    #missedCallbacks = [];
-    #prepared = false;
+    _missedCallbacks = [];
+    _prepared = false;
     /** @type {Suite[]} */
-    #suiteStack = [];
-    #startTime = 0;
+    _suiteStack = [];
+    _startTime = 0;
 
     /** @type {(reason?: any) => any} */
-    #rejectCurrent = noop;
+    _rejectCurrent = noop;
     /** @type {(value?: any) => any} */
-    #resolveCurrent = noop;
+    _resolveCurrent = noop;
 
     /**
      * @param {typeof DEFAULT_CONFIG} [config]
      */
     constructor(config) {
         // Main test methods
-        this.describe = this.#addConfigurators(this.addSuite, () => this.#suiteStack.at(-1));
+        this.describe = this._addConfigurators(this.addSuite, () => this._suiteStack.at(-1));
         this.fixture = makeFixtureManager(this);
-        this.test = this.#addConfigurators(this.addTest, false);
+        this.test = this._addConfigurators(this.addTest, false);
 
         const initialConfig = { ...DEFAULT_CONFIG, ...config };
         const reactiveConfig = reactive({ ...initialConfig, ...urlParams }, () => {
@@ -362,23 +361,23 @@ export class TestRunner {
 
         // Text filter
         if (this.config.filter) {
-            this.#hasIncludeFilter = true;
+            this._hasIncludeFilter = true;
             this.textFilter = parseRegExp(normalize(this.config.filter), { safe: true });
         }
 
         // Suites
         if (this.config.suite?.length) {
-            this.#include("suites", this.config.suite);
+            this._include("suites", this.config.suite);
         }
 
         // Tags
         if (this.config.tag?.length) {
-            this.#include("tags", this.config.tag);
+            this._include("tags", this.config.tag);
         }
 
         // Tests
         if (this.config.test?.length) {
-            this.#include("tests", this.config.test);
+            this._include("tests", this.config.test);
         }
 
         // Random seed
@@ -403,7 +402,7 @@ export class TestRunner {
             this.addSuite([], suiteName, () => this.addSuite(config, otherNames, fn));
             return;
         }
-        const parentSuite = this.#suiteStack.at(-1);
+        const parentSuite = this._suiteStack.at(-1);
         if (typeof fn !== "function") {
             throw suiteError(
                 { name: suiteName, parent: parentSuite },
@@ -430,15 +429,15 @@ export class TestRunner {
                 suite.reporting = createReporting(this.reporting);
             }
         }
-        this.#suiteStack.push(suite);
+        this._suiteStack.push(suite);
 
-        this.#applyTagModifiers(suite);
+        this._applyTagModifiers(suite);
 
         let result;
         try {
             result = fn();
         } finally {
-            this.#suiteStack.pop();
+            this._suiteStack.pop();
         }
         if (result !== undefined) {
             throw suiteError(
@@ -457,7 +456,7 @@ export class TestRunner {
         if (!name) {
             throw new HootError(`a test name must not be empty, got ${name}`);
         }
-        const parentSuite = this.#suiteStack.at(-1);
+        const parentSuite = this._suiteStack.at(-1);
         if (!parentSuite) {
             throw testError({ name, parent: null }, `cannot register a test outside of a suite.`);
         }
@@ -473,7 +472,7 @@ export class TestRunner {
                 `cannot add a test after the test runner started.`
             );
         }
-        if (this.#dry) {
+        if (this._dry) {
             fn = null;
         }
         let test = markRaw(new Test(parentSuite, name, config, fn));
@@ -494,7 +493,7 @@ export class TestRunner {
             this.tests.set(test.id, test);
         }
 
-        this.#applyTagModifiers(test);
+        this._applyTagModifiers(test);
     }
 
     /**
@@ -513,7 +512,7 @@ export class TestRunner {
      * @param {...Callback<Job>} callbacks
      */
     after(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__after(...callbacks);
@@ -526,7 +525,7 @@ export class TestRunner {
      * @param {...Callback<never>} callbacks
      */
     afterAll(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__afterAll(...callbacks);
@@ -543,7 +542,7 @@ export class TestRunner {
      * @param {...Callback<Test>} callbacks
      */
     afterEach(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__afterEach(...callbacks);
@@ -565,7 +564,7 @@ export class TestRunner {
      * @param {...Callback<Job>} callbacks
      */
     before(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__before(...callbacks);
@@ -578,7 +577,7 @@ export class TestRunner {
      * @param {...Callback<never>} callbacks
      */
     beforeAll(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__beforeAll(...callbacks);
@@ -595,7 +594,7 @@ export class TestRunner {
      * @param {...Callback<Test>} callbacks
      */
     beforeEach(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__beforeEach(...callbacks);
@@ -611,7 +610,7 @@ export class TestRunner {
     createJobScopedGetter(instanceGetter, afterCallback) {
         /** @type {F} */
         const getInstance = () => {
-            const currentJob = this.state.currentTest || this.#suiteStack.at(-1) || this;
+            const currentJob = this.state.currentTest || this._suiteStack.at(-1) || this;
             if (!instances.has(currentJob)) {
                 const parentInstance = [...instances.values()].at(-1);
                 instances.set(currentJob, instanceGetter(parentInstance));
@@ -646,13 +645,13 @@ export class TestRunner {
             throw new HootError("cannot run a dry run after the test runner started");
         }
 
-        this.#dry = true;
+        this._dry = true;
 
         await callback();
 
-        this.#prepareRunner();
+        this._prepareRunner();
 
-        this.#dry = false;
+        this._dry = false;
 
         return {
             suites: this.state.suites,
@@ -677,7 +676,7 @@ export class TestRunner {
      */
     getCurrent() {
         return {
-            suite: this.#suiteStack.at(-1) || null,
+            suite: this._suiteStack.at(-1) || null,
             test: this.state.currentTest,
         };
     }
@@ -691,7 +690,7 @@ export class TestRunner {
      * @param {...Callback<ErrorEvent | PromiseRejectionEvent>} callbacks
      */
     onError(...callbacks) {
-        if (this.#dry) {
+        if (this._dry) {
             return;
         }
         this.__onError(...callbacks);
@@ -702,7 +701,7 @@ export class TestRunner {
      * @param {boolean} [implicitInclude] fallback include value for sub-jobs
      * @returns {Job[]}
      */
-    prepareJobs(jobs = this.rootSuites, implicitInclude = !this.#hasIncludeFilter) {
+    prepareJobs(jobs = this.rootSuites, implicitInclude = !this._hasIncludeFilter) {
         if (typeof this.debug !== "boolean") {
             // Special case: test (or suite with 1 test) with "debug" tag
             let debugTest = this.debug;
@@ -728,18 +727,18 @@ export class TestRunner {
 
         const filteredJobs = jobs.filter((job) => {
             // Priority 1: explicit include or exclude (URL or special tag)
-            const [explicitInclude, explicitExclude] = this.#getExplicitIncludeStatus(job);
+            const [explicitInclude, explicitExclude] = this._getExplicitIncludeStatus(job);
             if (explicitExclude) {
                 return false;
             }
 
             // Priority 2: implicit exclude
-            if (!explicitInclude && this.#isImplicitlyExcluded(job)) {
+            if (!explicitInclude && this.isImplicitlyExcluded(job)) {
                 return false;
             }
 
             // Priority 3: implicit include
-            let included = explicitInclude || implicitInclude || this.#isImplicitlyIncluded(job);
+            let included = explicitInclude || implicitInclude || this._isImplicitlyIncluded(job);
             if (job instanceof Suite) {
                 // For suites: included if at least 1 included job
                 job.currentJobs = this.prepareJobs(job.jobs, included);
@@ -798,8 +797,8 @@ export class TestRunner {
         }
         this.state.status = "running";
 
-        this.#prepareRunner();
-        this.#startTime = $now();
+        this._prepareRunner();
+        this._startTime = $now();
 
         // Config log
         const table = { ...toRaw(this.config) };
@@ -832,8 +831,8 @@ export class TestRunner {
         this.__afterAll(
             flushTestDone,
             // Catch errors
-            on(window, "error", (ev) => this.#onError(ev)),
-            on(window, "unhandledrejection", (ev) => this.#onError(ev)),
+            on(window, "error", (ev) => this._onError(ev)),
+            on(window, "unhandledrejection", (ev) => this._onError(ev)),
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
@@ -860,16 +859,16 @@ export class TestRunner {
         enableEventLogs(this.debug);
         setFrameRate(fps);
 
-        await this.#callbacks.call("before-all");
+        await this._callbacks.call("before-all");
 
         const nextJob = () => {
             this.state.currentTest = null;
-            job = job.currentJobs?.[job.visited++] || job.parent || this.#currentJobs.shift();
+            job = job.currentJobs?.[job.visited++] || job.parent || this._currentJobs.shift();
         };
 
-        let job = this.#currentJobs.shift();
+        let job = this._currentJobs.shift();
         while (job && this.state.status === "running") {
-            const callbackChain = this.#getCallbackChain(job);
+            const callbackChain = this._getCallbackChain(job);
             if (job instanceof Suite) {
                 // Case: suite
                 // -----------
@@ -879,7 +878,7 @@ export class TestRunner {
                 if (suite.canRun()) {
                     if (suite.visited === 0) {
                         // before suite code
-                        this.#suiteStack.push(suite);
+                        this._suiteStack.push(suite);
 
                         for (const callbackRegistry of [...callbackChain].reverse()) {
                             await callbackRegistry.call("before-suite", suite);
@@ -887,9 +886,9 @@ export class TestRunner {
                     }
                     if (suite.visited === suite.currentJobs.length) {
                         // after suite code
-                        this.#suiteStack.pop();
+                        this._suiteStack.pop();
 
-                        await this.#execAfterCallback(async () => {
+                        await this._execAfterCallback(async () => {
                             for (const callbackRegistry of callbackChain) {
                                 await callbackRegistry.call("after-suite", suite);
                             }
@@ -943,8 +942,8 @@ export class TestRunner {
             const timeout = $floor(test.config.timeout || this.config.timeout);
             const timeoutPromise = new Promise((resolve, reject) => {
                 // Set abort signal
-                this.#rejectCurrent = reject;
-                this.#resolveCurrent = resolve;
+                this._rejectCurrent = reject;
+                this._resolveCurrent = resolve;
 
                 if (timeout && !this.debug) {
                     // Set timeout
@@ -961,13 +960,13 @@ export class TestRunner {
             // Run test
             await Promise.race([testPromise, timeoutPromise])
                 .catch((error) => {
-                    this.#rejectCurrent = noop; // prevents loop
+                    this._rejectCurrent = noop; // prevents loop
 
-                    return this.#onError(error);
+                    return this._onError(error);
                 })
                 .finally(() => {
-                    this.#rejectCurrent = noop;
-                    this.#resolveCurrent = noop;
+                    this._rejectCurrent = noop;
+                    this._resolveCurrent = noop;
 
                     if (timeoutId) {
                         clearTimeout(timeoutId);
@@ -976,7 +975,7 @@ export class TestRunner {
 
             // After test
             const { lastResults } = test;
-            await this.#execAfterCallback(async () => {
+            await this._execAfterCallback(async () => {
                 for (const callbackRegistry of callbackChain) {
                     await callbackRegistry.call("after-test", test);
                 }
@@ -1002,13 +1001,13 @@ export class TestRunner {
                 logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
             }
 
-            await this.#callbacks.call("after-post-test", test);
+            await this._callbacks.call("after-post-test", test);
 
             if (this.config.bail) {
                 if (!test.config.skip && !lastResults.pass) {
-                    this.#failed++;
+                    this._failed++;
                 }
-                if (this.#failed >= this.config.bail) {
+                if (this._failed >= this.config.bail) {
                     return this.stop();
                 }
             }
@@ -1031,19 +1030,19 @@ export class TestRunner {
     }
 
     async stop() {
-        this.#currentJobs = [];
+        this._currentJobs = [];
         this.state.status = "done";
-        this.totalTime = formatTime($now() - this.#startTime);
+        this.totalTime = formatTime($now() - this._startTime);
 
-        if (this.#resolveCurrent !== noop) {
-            return this.#resolveCurrent();
+        if (this._resolveCurrent !== noop) {
+            return this._resolveCurrent();
         }
 
-        while (this.#missedCallbacks.length) {
-            await this.#missedCallbacks.shift()();
+        while (this._missedCallbacks.length) {
+            await this._missedCallbacks.shift()();
         }
 
-        await this.#callbacks.call("after-all");
+        await this._callbacks.call("after-all");
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
@@ -1073,7 +1072,7 @@ export class TestRunner {
                 suite.callbacks.add("after-test", callback, true);
             }
         } else {
-            const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+            const callbackRegistry = suite ? suite.callbacks : this._callbacks;
             for (const callback of callbacks) {
                 callbackRegistry.add("after-suite", callback);
             }
@@ -1085,7 +1084,7 @@ export class TestRunner {
      */
     __afterAll(...callbacks) {
         for (const callback of callbacks) {
-            this.#callbacks.add("after-all", callback);
+            this._callbacks.add("after-all", callback);
         }
     }
 
@@ -1097,7 +1096,7 @@ export class TestRunner {
         if (test) {
             throw testError(test, `cannot call hook "afterEach" inside of a test`);
         }
-        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
         for (const callback of callbacks) {
             callbackRegistry.add("after-test", callback);
         }
@@ -1108,7 +1107,7 @@ export class TestRunner {
      */
     __afterPostTest(...callbacks) {
         for (const callback of callbacks) {
-            this.#callbacks.add("after-post-test", callback);
+            this._callbacks.add("after-post-test", callback);
         }
     }
 
@@ -1122,7 +1121,7 @@ export class TestRunner {
                 suite.callbacks.add("after-test", callback(test), true);
             }
         } else {
-            const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+            const callbackRegistry = suite ? suite.callbacks : this._callbacks;
             for (const callback of callbacks) {
                 callbackRegistry.add("before-suite", callback);
             }
@@ -1134,7 +1133,7 @@ export class TestRunner {
      */
     __beforeAll(...callbacks) {
         for (const callback of callbacks) {
-            this.#callbacks.add("before-all", callback);
+            this._callbacks.add("before-all", callback);
         }
     }
 
@@ -1146,7 +1145,7 @@ export class TestRunner {
         if (test) {
             throw testError(test, `cannot call hook "beforeEach" inside of a test`);
         }
-        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
         for (const callback of callbacks) {
             callbackRegistry.add("before-test", callback);
         }
@@ -1157,7 +1156,7 @@ export class TestRunner {
      */
     __onError(...callbacks) {
         const { suite, test } = this.getCurrent();
-        const callbackRegistry = suite ? suite.callbacks : this.#callbacks;
+        const callbackRegistry = suite ? suite.callbacks : this._callbacks;
         for (const callback of callbacks) {
             callbackRegistry.add("error", callback, Boolean(test));
         }
@@ -1177,7 +1176,7 @@ export class TestRunner {
      * @param {C} getCurrent
      * @returns {typeof taggedFn}
      */
-    #addConfigurators(fn, getCurrent) {
+    _addConfigurators(fn, getCurrent) {
         /**
          * @typedef {((...args: DropFirst<Parameters<T>>) => ConfigurableFunction) & {
          *  readonly config: typeof configure;
@@ -1258,7 +1257,7 @@ export class TestRunner {
 
         if (getCurrent) {
             $defineProperties(taggedFn, {
-                current: { get: () => this.#createCurrentConfigurators(getCurrent) },
+                current: { get: () => this._createCurrentConfigurators(getCurrent) },
             });
         }
 
@@ -1268,7 +1267,7 @@ export class TestRunner {
     /**
      * @param {Job} job
      */
-    #applyTagModifiers(job) {
+    _applyTagModifiers(job) {
         let skip = false;
         let ignoreSkip = false;
         for (const tag of job.tags) {
@@ -1283,12 +1282,12 @@ export class TestRunner {
                     this.debug = job;
                 // Falls through
                 case Tag.ONLY:
-                    if (!this.#dry) {
+                    if (!this._dry) {
                         logger.warn(
                             `"${job.fullName}" is marked as "${tag.name}". This is not suitable for CI`
                         );
                     }
-                    this.#include(job instanceof Suite ? "suites" : "tests", [job.id], 2);
+                    this._include(job instanceof Suite ? "suites" : "tests", [job.id], 2);
                     ignoreSkip = true;
                     break;
                 case Tag.SKIP:
@@ -1314,7 +1313,7 @@ export class TestRunner {
     /**
      * @param {() => Job} getCurrent
      */
-    #createCurrentConfigurators(getCurrent) {
+    _createCurrentConfigurators(getCurrent) {
         /**
          * @param {JobConfig} config
          */
@@ -1330,7 +1329,7 @@ export class TestRunner {
         const addTagsToCurrent = (...tags) => {
             const current = getCurrent();
             current.configure({ tags });
-            this.#applyTagModifiers(current);
+            this._applyTagModifiers(current);
 
             return currentConfigurators;
         };
@@ -1354,11 +1353,11 @@ export class TestRunner {
      * Executes a given callback when not in debug mode.
      * @param {() => Promise<void>} callback
      */
-    async #execAfterCallback(callback) {
+    async _execAfterCallback(callback) {
         if (this.debug) {
-            this.#missedCallbacks.push(callback);
+            this._missedCallbacks.push(callback);
             if (this.state.currentTest) {
-                await this.#callbacks.call("after-debug-test", this.state.currentTest);
+                await this._callbacks.call("after-debug-test", this.state.currentTest);
             }
         } else {
             await callback();
@@ -1369,7 +1368,7 @@ export class TestRunner {
      * @param {Job} job
      * @returns {ReturnType<typeof makeCallbacks>[]}
      */
-    #getCallbackChain(job) {
+    _getCallbackChain(job) {
         const chain = [];
         while (job) {
             if (job instanceof Suite) {
@@ -1377,14 +1376,14 @@ export class TestRunner {
             }
             job = job.parent;
         }
-        chain.push(this.#callbacks);
+        chain.push(this._callbacks);
         return chain;
     }
 
     /**
      * @param {Job} job
      */
-    #getExplicitIncludeStatus(job) {
+    _getExplicitIncludeStatus(job) {
         const includeSpec =
             job instanceof Suite ? this.state.includeSpecs.suites : this.state.includeSpecs.tests;
         const explicitInclude = includeSpec[job.id] || 0;
@@ -1396,15 +1395,15 @@ export class TestRunner {
      * @param {Iterable<string>} ids
      * @param {number} [priority=1]
      */
-    #include(type, ids, priority = 1) {
+    _include(type, ids, priority = 1) {
         const values = this.state.includeSpecs[type];
         for (const id of ids) {
             const nId = normalize(id);
             if (id.startsWith(EXCLUDE_PREFIX)) {
-                this.#hasExcludeFilter = true;
+                this._hasExcludeFilter = true;
                 values[nId.slice(EXCLUDE_PREFIX.length)] = Math.abs(priority) * -1;
             } else if ((values[nId]?.[0] || 0) >= 0) {
-                this.#hasIncludeFilter = true;
+                this._hasIncludeFilter = true;
                 values[nId] = Math.abs(priority);
             }
         }
@@ -1414,7 +1413,7 @@ export class TestRunner {
      * @param {Job} job
      * @returns {boolean | null}
      */
-    #isImplicitlyExcluded(job) {
+    isImplicitlyExcluded(job) {
         // By tag name
         for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
             if (status < 0 && job.tags.some((tag) => tag.name === tagName)) {
@@ -1435,7 +1434,7 @@ export class TestRunner {
      * @param {Job} job
      * @returns {boolean | null}
      */
-    #isImplicitlyIncluded(job) {
+    _isImplicitlyIncluded(job) {
         // By tag name
         for (const [tagName, status] of $entries(this.state.includeSpecs.tags)) {
             if (status > 0 && job.tags.some((tag) => tag.name === tagName)) {
@@ -1455,11 +1454,11 @@ export class TestRunner {
         return false;
     }
 
-    #prepareRunner() {
-        if (this.#prepared) {
+    _prepareRunner() {
+        if (this._prepared) {
             return;
         }
-        this.#prepared = true;
+        this._prepared = true;
 
         if (this.config.preset) {
             const preset = this.presets.get(this.config.preset);
@@ -1467,7 +1466,7 @@ export class TestRunner {
                 throw new HootError(`unknown preset: "${this.config.preset}"`);
             }
             if (preset.tags?.length) {
-                this.#include("tags", preset.tags, 3);
+                this._include("tags", preset.tags, 3);
             }
             if (preset.platform) {
                 mockUserAgent(preset.platform);
@@ -1478,20 +1477,20 @@ export class TestRunner {
             }
         }
 
-        this.#currentJobs = this.prepareJobs();
+        this._currentJobs = this.prepareJobs();
     }
 
     /**
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
-    async #onError(ev) {
+    async _onError(ev) {
         const error = ensureError(ev);
         if (!(ev instanceof Event)) {
             ev = new ErrorEvent("error", { error });
         }
 
         if (this.state.currentTest) {
-            for (const callbackRegistry of this.#getCallbackChain(this.state.currentTest)) {
+            for (const callbackRegistry of this._getCallbackChain(this.state.currentTest)) {
                 callbackRegistry.callSync("error", ev);
                 if (ev.defaultPrevented) {
                     return;
@@ -1511,7 +1510,7 @@ export class TestRunner {
                 return;
             }
 
-            this.#rejectCurrent(error);
+            this._rejectCurrent(error);
         }
 
         if (this.config.notrycatch) {
