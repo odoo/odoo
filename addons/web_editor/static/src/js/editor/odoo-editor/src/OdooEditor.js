@@ -4533,6 +4533,55 @@ export class OdooEditor extends EventTarget {
 
         sanitize(element);
 
+<<<<<<< HEAD
+||||||| parent of 1efcd4abee9a (temp)
+        // Remove o_link_in_selection class
+        for (const link of element.querySelectorAll('.o_link_in_selection')) {
+            link.classList.remove('o_link_in_selection');
+        }
+
+        // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+        // nodes visible if needed.
+        for (const node of descendants(element)) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.textContent = node.textContent.replaceAll('\uFEFF', '');
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+        // Remove now empty links
+        for (const link of element.querySelectorAll('a')) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length) {
+                link.remove();
+            }
+        }
+
+=======
+        // Remove o_link_in_selection class
+        for (const link of element.querySelectorAll('.o_link_in_selection')) {
+            link.classList.remove('o_link_in_selection');
+        }
+
+        // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
+        // nodes visible if needed.
+        for (const node of descendants(element)) {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('\uFEFF')) {
+                const restore = prepareUpdate(...leftPos(node));
+                node.textContent = node.textContent.replaceAll('\uFEFF', '');
+                restore(); // Make sure to make <br>s visible if needed.
+            }
+        }
+
+        const tAttrs = ['t-elif', 't-else', 't-esc', 't-foreach', 't-if', 't-out', 't-raw', 't-value'];
+        // Remove now empty links
+        for (const link of element.querySelectorAll('a')) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length
+                && !tAttrs.some(attr => link.hasAttribute(attr))) {
+                link.remove();
+            }
+        }
+
+>>>>>>> 1efcd4abee9a (temp)
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
             if (!el.hasAttribute('data-oe-keep-contenteditable')) {
