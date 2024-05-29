@@ -50,16 +50,20 @@ patch(FormRenderer.prototype, {
         const hasChatter = !!this.mailStore;
         const hasExternalWindow = !!this.mailPopoutService.externalWindow;
         if (hasExternalWindow && hasFile && hasAttachmentContainer) {
-            if (xxl) return "EXTERNAL_COMBO_XXL";  //  chatter on the side, attachment in separate tab
-            return "EXTERNAL_COMBO"  // chatter on the bottom, attachment in separate tab
+            if (xxl) {
+                return "EXTERNAL_COMBO_XXL"; // chatter on the side, attachment in separate tab
+            }
+            return "EXTERNAL_COMBO"; // chatter on the bottom, attachment in separate tab
         }
         if (hasChatter) {
             if (xxl) {
-                if (hasAttachmentContainer && hasFile) return "COMBO";  // chatter on the bottom, attachment on the side
-                return "SIDE_CHATTER";  // chatter on the side, no attachment
+                if (hasAttachmentContainer && hasFile) {
+                    return "COMBO"; // chatter on the bottom, attachment on the side
+                }
+                return "SIDE_CHATTER"; // chatter on the side, no attachment
             }
-            return "BOTTOM_CHATTER";  // chatter on the bottom, no attachment
+            return "BOTTOM_CHATTER"; // chatter on the bottom, no attachment
         }
         return "NONE";
-    }
+    },
 });
