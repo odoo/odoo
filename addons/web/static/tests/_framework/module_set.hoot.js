@@ -5,6 +5,7 @@ import { Deferred, watchKeys, watchListeners } from "@odoo/hoot-mock";
 import { whenReady } from "@odoo/owl";
 
 import { mockBrowserFactory } from "./mock_browser.hoot";
+import { mockCurrencyFactory } from "./mock_currency.hoot";
 import { TEST_SUFFIX } from "./mock_module_loader";
 import { mockSessionFactory } from "./mock_session.hoot";
 import { makeTemplateFactory } from "./mock_templates.hoot";
@@ -448,6 +449,7 @@ const MODULE_MOCKS_BY_NAME = new Map([
     ["@web/core/template_inheritance", makeFixedFactory],
     // Other mocks
     ["@web/core/browser/browser", mockBrowserFactory],
+    ["@web/core/currency", mockCurrencyFactory],
     ["@web/core/templates", makeTemplateFactory],
     ["@web/core/user", mockUserFactory],
     ["@web/session", mockSessionFactory],
