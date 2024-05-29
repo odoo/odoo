@@ -21,6 +21,7 @@ class ProductProduct(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     # price_extra: catalog extra value only, sum of variant extra attributes
+    gelato_reference = fields.Char(name='Gelato Reference')
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
         digits='Product Price',

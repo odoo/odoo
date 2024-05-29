@@ -12,4 +12,7 @@
     'depends': ['sale'],
     'auto_install': True,
     'license': 'LGPL-3',
+    'data': [
+        'views/product_views.xml'
+    ]
 }

@@ -1,0 +1,1 @@
+HANDLED_GELATO_EVENTS = ('order_status_updated','order_delivery_estimate_updated')
