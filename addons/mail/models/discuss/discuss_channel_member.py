@@ -83,24 +83,30 @@ class ChannelMember(models.Model):
         if self.ids:
             self.env['mail.message'].flush_model()
             self.flush_recordset(['channel_id', 'seen_message_id'])
-            self.env.cr.execute("""
-                     SELECT count(mail_message.id) AS count,
-                            discuss_channel_member.id
-                       FROM mail_message
-                 INNER JOIN discuss_channel_member
-                         ON discuss_channel_member.channel_id = mail_message.res_id
-                      WHERE mail_message.model = 'discuss.channel'
-                        AND mail_message.message_type NOT IN ('notification', 'user_notification')
-                        AND (
-                            mail_message.id > discuss_channel_member.seen_message_id
-                         OR discuss_channel_member.seen_message_id IS NULL
-                        )
-                        AND discuss_channel_member.id IN %(ids)s
-                   GROUP BY discuss_channel_member.id
-            """, {'ids': tuple(self.ids)})
-            unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
+            self.env.cr.execute(
+                """
+                         SELECT ARRAY_AGG(discuss_channel_member.id),
+                                ARRAY_AGG(counter)
+                           FROM discuss_channel_member
+              LEFT JOIN LATERAL (
+                                 SELECT count(*)
+                                   FROM mail_message
+                                  WHERE mail_message.model = 'discuss.channel'
+                                    AND mail_message.res_id = discuss_channel_member.channel_id
+                                    AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                                    AND (
+                                        mail_message.id > discuss_channel_member.seen_message_id
+                                     OR discuss_channel_member.seen_message_id IS NULL
+                                    )
+                                ) AS t(counter) ON TRUE
+                          WHERE discuss_channel_member.id IN %(ids)s
+                """,
+                {"ids": tuple(self.ids)},
+            )
+            member_ids, counter = self.env.cr.fetchone()
+            unread_counter_by_member_id = dict(zip(member_ids, counter))
             for member in self:
-                member.message_unread_counter = unread_counter_by_member.get(member.id)
+                member.message_unread_counter = unread_counter_by_member_id.get(member.id)
         else:
             self.message_unread_counter = 0
 
