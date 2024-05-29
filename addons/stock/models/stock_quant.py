@@ -184,7 +184,7 @@ class StockQuant(models.Model):
         ]
         return super()._search(domain, *args, **kwargs)
 
-    @api.depends('inventory_quantity')
+    @api.depends('inventory_quantity', 'inventory_quantity_set')
     def _compute_inventory_diff_quantity(self):
         for quant in self:
             quant.inventory_diff_quantity = quant.inventory_quantity - quant.quantity
