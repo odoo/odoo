@@ -1070,7 +1070,6 @@ export class PosStore extends Reactive {
         if (!this.selectedOrderUuid) {
             return undefined;
         }
-
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
     get selectedOrder() {

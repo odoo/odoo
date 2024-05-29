@@ -106,7 +106,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         cls.tip = env.ref('point_of_sale.product_product_tip')
 
-        pos_desk_misc_test = env['pos.category'].create({
+        cls.pos_desk_misc_test = env['pos.category'].create({
             'name': 'Misc test',
         })
         pos_cat_chair_test = env['pos.category'].create({
@@ -124,7 +124,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
-            'pos_categ_ids': [(4, pos_desk_misc_test.id)],
+            'pos_categ_ids': [(4, cls.pos_desk_misc_test.id)],
         })
         cls.wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
@@ -1261,6 +1261,19 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
+
+    # This test is meant to only be run manually
+    # def test_large_db(self):
+    #     NUM_OF_PRODUCTS = 10000
+    #     self.env['product.product'].create([{
+    #         "name": f"Product {i}",
+    #         "available_in_pos": True,
+    #         'pos_categ_ids': [(4, self.pos_desk_misc_test.id)],
+    #     } for i in range(NUM_OF_PRODUCTS)])
+    #     self.main_pos_config.with_user(self.pos_user).open_ui()
+    #     self.start_pos_tour('LargeDBTour')
+
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

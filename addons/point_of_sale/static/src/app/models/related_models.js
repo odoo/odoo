@@ -250,33 +250,12 @@ export class Base {
     }
 }
 
-export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) {
+export function createRelatedModels(modelDefs, modelClasses = {}) {
     const [inverseMap, processedModelDefs] = processModelDefs(modelDefs);
     const records = reactive(mapObj(processedModelDefs, () => reactive({})));
     const orderedRecords = reactive(mapObj(processedModelDefs, () => reactive([])));
     const callbacks = mapObj(processedModelDefs, () => []);
     const baseData = {};
-
-    // object: model -> key -> keyval -> record
-    const indexedRecords = reactive(
-        mapObj(processedModelDefs, (model) => {
-            const container = reactive({});
-
-            // We always want an index by id
-            if (!indexes[model]) {
-                indexes[model] = ["id"];
-            } else {
-                indexes[model].push("id");
-            }
-
-            for (const key of indexes[model] || []) {
-                container[key] = reactive({});
-            }
-
-            baseData[model] = {};
-            return container;
-        })
-    );
 
     function getFields(model) {
         return processedModelDefs[model];
@@ -553,15 +532,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 disconnect(field, record, record[name]);
             }
         }
-
-        for (const key of indexes[model] || []) {
-            const keyVal = record[key];
-            const finds = orderedRecords[model].find((rec) => rec[key] === keyVal);
-
-            if (finds === -1) {
-                delete indexedRecords[model][key][keyVal];
-            }
-        }
         orderedRecords[model] = orderedRecords[model].filter((rec) => rec.id !== record.id);
         delete records[model][id];
         models[model].triggerEvents("delete", id);
@@ -577,12 +547,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             },
             get orderedRecords() {
                 return orderedRecords;
-            },
-            get indexedRecords() {
-                return indexedRecords;
-            },
-            get indexes() {
-                return indexes;
             },
             get modelName() {
                 return model;
@@ -630,20 +594,8 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 }
                 return this.orderedRecords[model][0];
             },
-            readBy(key, val) {
-                if (!indexes[model].includes(key)) {
-                    throw new Error(`Unable to get record by '${key}'`);
-                }
-                return this.indexedRecords[model][key][val];
-            },
             readAll() {
                 return this.orderedRecords[model];
-            },
-            readAllBy(key) {
-                if (!this.indexes[model].includes(key)) {
-                    throw new Error(`Unable to get record by '${key}'`);
-                }
-                return this.indexedRecords[model][key];
             },
             readMany(ids) {
                 if (!(model in records)) {
@@ -676,15 +628,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 }
                 return result;
             },
-            // aliases
-            getAllBy() {
-                return this.readAllBy(...arguments);
-            },
             getAll() {
                 return this.readAll(...arguments);
             },
-            getBy() {
-                return this.readBy(...arguments);
+            getBy(key, value) {
+                return this.getAll().find((item) => item[key] == value);
             },
             get() {
                 return this.read(...arguments);
@@ -886,39 +834,11 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     }
 
     function makeRecordsAvailable(results, rawData) {
-        const indexRecord = (model, records) => {
-            for (const key of indexes[model] || []) {
-                for (const record of records) {
-                    const keyVal = record[key];
-
-                    if (!keyVal) {
-                        continue;
-                    }
-
-                    if (Array.isArray(keyVal)) {
-                        for (const keyV of keyVal) {
-                            if (!indexedRecords[model][key][keyV.id]) {
-                                indexedRecords[model][key][keyV.id] = [];
-                            }
-                            const idx = indexedRecords[model][key][keyV.id].findIndex(
-                                (rec) => rec.id === record.id
-                            );
-
-                            if (idx === -1) {
-                                indexedRecords[model][key][keyV.id].push(record);
-                            } else {
-                                indexedRecords[model][key][keyV.id][idx] = record;
-                            }
-                        }
-                    } else {
-                        indexedRecords[model][key][keyVal] = record;
-                    }
-                }
-            }
-        };
-
         for (const [models, values] of Object.entries(rawData)) {
             for (const value of values) {
+                if (!baseData[models]) {
+                    baseData[models] = {};
+                }
                 baseData[models][value.id] = value;
             }
         }
@@ -931,7 +851,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 continue;
             }
 
-            indexRecord(model, values);
             if (orderedRecords[model].length === 0) {
                 orderedRecords[model] = values;
             } else {
@@ -959,5 +878,5 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     models.loadData = loadData;
     models.replaceDataByKey = replaceDataByKey;
 
-    return { models, records, indexedRecords, orderedRecords };
+    return { models, records, orderedRecords };
 }
