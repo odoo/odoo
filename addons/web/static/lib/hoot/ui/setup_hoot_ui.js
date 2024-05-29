@@ -83,7 +83,7 @@ customElements.define("hoot-container", HootContainer);
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("../core/runner").TestRunner} runner
+ * @param {import("../core/runner").Runner} runner
  */
 export function setupHootUI(runner) {
     // - Patch window before code from other modules is executed
