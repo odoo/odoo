@@ -16,3 +16,4 @@ from . import objetivo
 from . import pregunta_escala
 from . import reporte_resumen
 from . import usuario_externo
+from . import objetivo_avances

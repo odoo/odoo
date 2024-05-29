@@ -42,6 +42,7 @@
         <field name="arch" type="xml">
             <form string="Objetivo">
                 <header>
+                    <button name="registrar_avance_action" string="Registrar Avance" type="object" class="btn-primary" context="{'actual_objetivo_id': active_id}"/>
                     <field name="estado" widget="statusbar" statusbar_visible="rojo, amarillo, verde, azul"/>
                 </header>
                 <sheet>
@@ -60,7 +61,30 @@
                                 <field name="tipo" readonly="1"/>
                                 <field name="piso_minimo" readonly="1"/>
                                 <field name="piso_maximo" readonly="1"/>
+                                <field name="resultado" string="Progreso" readonly="1"/>
                             </group>
+                        </page>
+                        <page string="Avances">
+                            <field name="avances">
+                                <tree string="Avances" create="false" delete="false" duplicate="false">
+                                    <field name="fecha"/>
+                                    <field name="avance"/>
+                                    <field name="comentarios"/>
+                                    <field name="archivos" widget="many2many_tags"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="fecha"/>
+                                        <field name="avance"/>
+                                        <field name="archivos">
+                                            <tree create="false" editable="bottom" edit="false">
+                                                <field name="name" string="Nombre del archivo"/>
+                                                <field name="datas" filename="name" widget="binary" string="Descargar Archivo" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </sheet>
