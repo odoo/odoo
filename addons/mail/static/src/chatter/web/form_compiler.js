@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import { append, createElement, setAttributes } from "@web/core/utils/xml";
+import { append, createElement, extractAttributes, setAttributes } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
 function compileChatter(node, params) {
@@ -97,8 +97,11 @@ patch(FormCompiler.prototype, {
             isInFormSheetBg: `["COMBO", "BOTTOM_CHATTER"].includes(__comp__.mailLayout(${hasPreview}))`,
             isChatterAside: `["SIDE_CHATTER", "EXTERNAL_COMBO_XXL", "EXTERNAL_COMBO"].includes(__comp__.mailLayout(${hasPreview}))`,
         });
+        const { ["t-if"]: tIf } = extractAttributes(chatterContainerHookXml, ["t-if"]);
         setAttributes(chatterContainerHookXml, {
-            "t-if": `!["COMBO", "NONE"].includes(__comp__.mailLayout(${hasPreview}))`,  // opposite of sheetBgChatterContainerHookXml
+            "t-if": `${
+                tIf ? tIf : "true"
+            } and (!["COMBO", "NONE"].includes(__comp__.mailLayout(${hasPreview})))`, // opposite of sheetBgChatterContainerHookXml
             "t-attf-class": `{{ ["SIDE_CHATTER", "EXTERNAL_COMBO_XXL"].includes(__comp__.mailLayout(${hasPreview})) ? "o-aside" : "mt-4 mt-md-0" }}`,
         });
         append(parentXml, chatterContainerHookXml);
