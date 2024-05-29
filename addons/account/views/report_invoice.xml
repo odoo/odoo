@@ -365,7 +365,7 @@
                         <td>
                             <span class="text-nowrap">
                                 <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
-                                on
+                                <span> on </span>
                                 <span t-out="amount_by_group['formatted_tax_group_base_amount']">27.00</span>
                             </span>
                         </td>
@@ -407,7 +407,7 @@
                                     <td>
                                         <span class="text-nowrap">
                                             <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
-                                            on
+                                            <span> on </span>
                                             <span t-out="amount_by_group['tax_group_base_amount_company_currency']"
                                                   t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>
                                                 27.00
