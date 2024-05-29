@@ -75,7 +75,7 @@ export const CONFIG_SCHEMA = {
     },
     /**
      * Same as the {@link FILTER_SCHEMA.test} filter, while also putting the test
-     * runner in "debug" mode. See {@link TestRunner.debug} for more info.
+     * runner in "debug" mode. See {@link Runner.debug} for more info.
      * @default false
      */
     debugTest: {
