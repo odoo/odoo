@@ -23,18 +23,18 @@ class RegistrarAvance(models.TransientModel):
 
     archivos = fields.Many2many(
         required=True,
-        comodel_name='ir.attachment',
-        string='Subir Archivo',
-        help='Evidencias que sustenten el porqué del avance registrado. Solo se permiten archivos con extensión pdf, xlsx, csv, txt, png, jpeg'
+        comodel_name="ir.attachment",
+        string="Subir Archivo",
+        help="Evidencias que sustenten el porqué del avance registrado. Solo se permiten archivos con extensión pdf, xlsx, csv, txt, png, jpeg"
     )
 
-    nombres_archivos = fields.Char(string='Nombres de Archivos')
+    nombres_archivos = fields.Char(string="Nombres de Archivos")
     comentarios = fields.Text(
         required=True,
         help="Comentarios que sustentan el avance que se está registrando."
     )
 
-    @api.constrains('avance')
+    @api.constrains("avance")
     def _validar_avance(self):
         """
         Método para validar que el avance no sea negativo y que no sea 0
@@ -44,10 +44,10 @@ class RegistrarAvance(models.TransientModel):
 
         for registro in self:
             if registro.avance == 0:
-                raise exceptions.ValidationError(_('Por favor registra el avance del objetivo'))
+                raise exceptions.ValidationError(_("Por favor registra el avance del objetivo"))
             
             elif registro.avance < 0:
-                raise exceptions.ValidationError(_('El avance no puede ser menor a 0'))
+                raise exceptions.ValidationError(_("El avance no puede ser menor a 0"))
             
     @api.constrains("archivos")
     def _validar_no_archivos(self):
@@ -59,9 +59,9 @@ class RegistrarAvance(models.TransientModel):
 
         for registro in self:
             if not registro.archivos:
-                raise exceptions.ValidationError(_('Por favor sube al menos un archivo'))
+                raise exceptions.ValidationError(_("Por favor sube al menos un archivo"))
 
-    @api.constrains('archivos')
+    @api.constrains("archivos")
     def _validar_peso_archivo(self):
         """
         Método para validar que el peso del archivo no supere los 100 MB
@@ -74,9 +74,9 @@ class RegistrarAvance(models.TransientModel):
         for registro in self:
             for archivo in registro.archivos:
                 if archivo.file_size > maximo:
-                    raise exceptions.ValidationError(_('El archivo no debe ser mayor a 100 MB'))
+                    raise exceptions.ValidationError(_("El archivo no debe ser mayor a 100 MB"))
     
-    @api.constrains('archivos')
+    @api.constrains("archivos")
     def _validar_tipo_archivo(self):
         """
         Método para validar que los archivos cargados sean de tipo pdf, xlsx, 
@@ -85,16 +85,16 @@ class RegistrarAvance(models.TransientModel):
         Si un archivo no es del tipo permitido, se levanta una excepción
         """
 
-        archivos_permitidos = ['csv', 'xlsx', 'txt', 'pdf', 'png', 'jpeg', 'jpg']
+        archivos_permitidos = ["csv", "xlsx", "txt", "pdf", "png", "jpeg", "jpg"]
 
         for archivo in self.archivos:
             if '.' not in archivo.name:
-                raise exceptions.ValidationError(_('No se pueden subir archivos sin extensión'))
+                raise exceptions.ValidationError(_("No se pueden subir archivos sin extensión"))
             nombre, tipo_archivo = archivo.name.rsplit('.', 1)
             if tipo_archivo.lower() not in archivos_permitidos:
-                    raise exceptions.ValidationError(_('Solo se pueden subir archivos con extensión pdf, xlsx, csv, txt, png, jpeg'))
+                    raise exceptions.ValidationError(_("Solo se pueden subir archivos con extensión pdf, xlsx, csv, txt, png, jpeg"))
     
-    @api.constrains('comentarios')
+    @api.constrains("comentarios")
     def _validar_comentarios(self):
         """
         Método para validar que los comentarios no excedan las 200 palabras
@@ -106,11 +106,11 @@ class RegistrarAvance(models.TransientModel):
             if registro.comentarios:
                 palabras = len(registro.comentarios.split())
                 if palabras > 200:
-                    raise exceptions.ValidationError(_('Los comentarios no deben exceder las 200 palabras'))
+                    raise exceptions.ValidationError(_("Los comentarios no deben exceder las 200 palabras"))
                 if len(registro.comentarios) > 600:
-                    raise exceptions.ValidationError(_('Los comentarios no deben exceder los 600 caracteres'))
+                    raise exceptions.ValidationError(_("Los comentarios no deben exceder los 600 caracteres"))
     
-    @api.constrains('archivos')
+    @api.constrains("archivos")
     def _validar_numero_archivos(self):
         """
         Método para validar que no se suban más de 10 archivos
@@ -120,9 +120,9 @@ class RegistrarAvance(models.TransientModel):
 
         for registro in self:
             if len(registro.archivos) > 10:
-                raise exceptions.ValidationError(_('Solo se puede subir un máximo de 10 archivos'))
+                raise exceptions.ValidationError(_("Solo se puede subir un máximo de 10 archivos"))
 
-    @api.constrains('archivos') 
+    @api.constrains("archivos") 
     def _validar_contenido_archivos(self):
         """
         Método para validar que los archivos no estén vacíos
@@ -133,11 +133,11 @@ class RegistrarAvance(models.TransientModel):
         for registro in self:
             for archivo in registro.archivos:
                 if archivo.type == 'url':
-                    raise exceptions.ValidationError(_('No se pueden subir URL, solo archivos. Por favor descarga el archivo y sube el archivo en lugar de la URL'))
+                    raise exceptions.ValidationError(_("No se pueden subir URL, solo archivos. Por favor descarga el archivo y sube el archivo en lugar de la URL"))
                 if not archivo.datas:
-                    raise exceptions.ValidationError(_('El archivo no debe estar vacío'))   
+                    raise exceptions.ValidationError(_("El archivo no debe estar vacío"))   
 
-    def action_confirmar(self):
+    def confirmar_action(self):
         """
         Método para registrar un avance en un objetivo de desempeño
         

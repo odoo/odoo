@@ -204,7 +204,7 @@ class Objetivo(models.Model):
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
             
-    def action_registrar_avance(self):
+    def registrar_avance_action(self):
         """
         Método para llamar la funcionalidad de registro de avances.
         """
