@@ -1135,9 +1135,10 @@ export class DeletePlugin extends Plugin {
     // --------------------------------------------------------------------------
 
     onBeforeInput(e) {
-        if (Object.hasOwnProperty.call(beforeInputHandlers, e.inputType)) {
+        const command = beforeInputHandlers[e.inputType];
+        if (command) {
             e.preventDefault();
-            this.dispatch(beforeInputHandlers[e.inputType]);
+            this.dispatch(command);
         }
     }
     /**
