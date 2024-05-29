@@ -200,7 +200,7 @@ export class LinkPlugin extends Plugin {
 
             const props = {
                 linkEl,
-                onApply: (url, label) => {
+                onApply: (url, label, classes) => {
                     this.linkElement.href = url;
                     if (this.linkElement.innerText === label) {
                         this.overlay.close();
@@ -209,6 +209,11 @@ export class LinkPlugin extends Plugin {
                         this.linkElement.innerText = label;
                         this.overlay.close();
                         this.shared.setCursorEnd(this.linkElement);
+                    }
+                    if (classes) {
+                        this.linkElement.className = classes;
+                    } else {
+                        this.linkElement.removeAttribute("class");
                     }
                     this.dispatch("ADD_STEP");
                     this.removeCurrentLinkIfEmtpy();

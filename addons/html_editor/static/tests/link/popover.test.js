@@ -141,7 +141,7 @@ describe("popover should edit,copy,remove the link", () => {
         click(".o_we_edit_link");
         await animationFrame();
         queryOne(".o_we_label_link").focus();
-        const linkEl = queryOne("a");
+        const linkEl = queryOne("a:not(#link-preview)");
         // mimic the link input behavior
         for (let i = 0; i < linkEl.textContent.length; i++) {
             press("Backspace");
@@ -164,7 +164,7 @@ describe("Incorrect URL should be corrected", () => {
         click(".o_we_edit_link");
         await animationFrame();
         queryOne(".o_we_label_link").focus();
-        const linkEl = queryOne("a");
+        const linkEl = queryOne("a:not(#link-preview)");
 
         queryOne(".o_we_href_input_link").focus();
         // mimic the link input behavior

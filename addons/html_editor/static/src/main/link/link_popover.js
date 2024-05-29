@@ -13,6 +13,30 @@ export class LinkPopover extends Component {
         onRemove: Function,
         onCopy: Function,
     };
+    colorsData = [
+        { type: "", label: _t("Link"), btnPreview: "link" },
+        { type: "primary", label: _t("Button Primary"), btnPreview: "primary" },
+        { type: "secondary", label: _t("Button Secondary"), btnPreview: "secondary" },
+        { type: "custom", label: _t("Custom"), btnPreview: "custom" },
+        // Note: by compatibility the dialog should be able to remove old
+        // colors that were suggested like the BS status colors or the
+        // alpha -> epsilon classes. This is currently done by removing
+        // all btn-* classes anyway.
+    ];
+    buttonSizesData = [
+        { size: "sm", label: _t("Small") },
+        { size: "", label: _t("Medium") },
+        { size: "lg", label: _t("Large") },
+    ];
+    buttonStylesData = [
+        { style: "", label: _t("Default") },
+        { style: "rounded-circle", label: _t("Default + Rounded") },
+        { style: "outline", label: _t("Outline") },
+        { style: "outline,rounded-circle", label: _t("Outline + Rounded") },
+        { style: "fill", label: _t("Fill") },
+        { style: "fill,rounded-circle", label: _t("Fill + Rounded") },
+        { style: "flat", label: _t("Flat") },
+    ];
     setup() {
         this.state = useState({
             editing: this.props.linkEl.href ? false : true,
@@ -23,6 +47,12 @@ export class LinkPopover extends Component {
             faIcon: "fa-globe",
             urlTitle: "",
             imgSrc: "",
+            classes: this.props.linkEl.className || "",
+            type:
+                this.props.linkEl.className.match(/btn(-[a-z0-9_-]*)(primary|secondary)/)?.pop() ||
+                "",
+            buttonSize: this.props.linkEl.className.match(/btn-(sm|lg)/)?.[1] || "",
+            buttonStyle: this.initButtonStyle(this.props.linkEl.className),
         });
         this.notificationService = useService("notification");
 
@@ -34,6 +64,15 @@ export class LinkPopover extends Component {
             }
         });
     }
+    initButtonStyle(className) {
+        const styleArray = [
+            className.match(/btn-([a-z0-9_]+)-(primary|secondary)/)?.[1],
+            className.match(/rounded-circle/)?.pop(),
+        ];
+        return styleArray.every(Boolean)
+            ? styleArray.join(",")
+            : styleArray.join("") || className.match(/flat/)?.pop() || "";
+    }
     onClickApply() {
         this.state.editing = false;
         if (this.state.label === "") {
@@ -43,7 +82,7 @@ export class LinkPopover extends Component {
         this.state.url = deducedUrl
             ? this.correctLink(deducedUrl)
             : this.correctLink(this.state.url);
-        this.props.onApply(this.state.url, this.state.label);
+        this.props.onApply(this.state.url, this.state.label, this.state.classes);
     }
     onClickEdit() {
         this.state.editing = true;
@@ -89,6 +128,9 @@ export class LinkPopover extends Component {
             return deduceURLfromText(text, this.props.linkEl) || "";
         }
     }
+    /**
+     * link preview in the popover
+     */
     resetPreview() {
         this.state.faIcon = "fa-globe";
         this.state.previewImg = false;
@@ -156,12 +198,25 @@ export class LinkPopover extends Component {
                     this.state.showFullUrl = true;
                 })
                 .catch((error) => {
-                    // HTML error codes should not prevent to edit the links, so we
+                    // HTTP error codes should not prevent to edit the links, so we
                     // only check for proper instances of Error.
                     if (error instanceof Error) {
                         return Promise.reject(error);
                     }
                 });
         }
+    }
+
+    /**
+     * link style preview in editing mode
+     */
+    onChangeClasses() {
+        const shapes = this.state.buttonStyle ? this.state.buttonStyle.split(",") : [];
+        const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "";
+        const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
+        this.state.classes =
+            (this.state.type ? ` btn btn-${style}${this.state.type}` : "") +
+            (this.state.type && shapeClasses ? ` ${shapeClasses}` : "") +
+            (this.state.type && this.state.buttonSize ? " btn-" + this.state.buttonSize : "");
     }
 }
