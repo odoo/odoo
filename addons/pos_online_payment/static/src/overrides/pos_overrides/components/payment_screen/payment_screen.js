@@ -235,9 +235,7 @@ patch(PaymentScreen.prototype, {
                     body: _t("The invoice could not be generated."),
                 });
             } else {
-                await this.report.doAction("account.account_invoices", [
-                    this.currentOrder.account_move,
-                ]);
+                await this.invoiceService.downloadPdf(this.currentOrder.account_move);
             }
         }
 
