@@ -51,7 +51,7 @@ customElements.define("hoot-fixture", class HootFixture extends HTMLElement {});
 //-----------------------------------------------------------------------------
 
 /**
- * @param {import("./runner").TestRunner} runner
+ * @param {import("./runner").Runner} runner
  */
 export function makeFixtureManager(runner) {
     const cleanupFixture = () => {
