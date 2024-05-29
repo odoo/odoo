@@ -24,6 +24,7 @@ export class PosKanbanController extends KanbanController {
             has_chart_template: true,
             is_restaurant_installed: true,
             show_predefined_scenarios: true,
+            is_main_company: true,
         };
         onWillStart(() => updatePosKanbanViewState(this.orm, this.initialPosState));
     }
@@ -45,7 +46,10 @@ export class PosKanbanRenderer extends KanbanRenderer {
                     const result = await this.orm.call("pos.config", "install_pos_restaurant");
                     isInstalledWithDemo = result.installed_with_demo;
                 }
-                if (!isInstalledWithDemo) {
+                if (
+                    !isInstalledWithDemo ||
+                    (isInstalledWithDemo && !this.posState.is_main_company)
+                ) {
                     await this.orm.call("pos.config", functionName);
                     await this.orm.call("pos.config", "hide_predefined_scenarios");
                 }

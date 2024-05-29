@@ -996,11 +996,13 @@ class PosConfig(models.Model):
             self._check_company_domain(self.env.company)
         ))
         has_chart_template = bool(self.env.company.chart_template)
+        main_company = self.env.ref('base.main_company', raise_if_not_found=False)
         return {
             "has_pos_config": has_pos_config,
             "has_chart_template": has_chart_template,
             "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
             "show_predefined_scenarios": self.env.company.point_of_sale_show_predefined_scenarios,
+            "is_main_company": main_company and self.env.company.id == main_company.id or False
         }
 
     @api.model
