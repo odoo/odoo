@@ -392,13 +392,13 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def _compute_product_tooltip(self):
-        for record in self:
-            if record.type == 'consu':
-                record.product_tooltip = _(
-                    "Goods are physical products."
-                )
-            else:
-                record.product_tooltip = ""
+        self.product_tooltip = False
+        for template in self:
+            template.product_tooltip = template._prepare_tooltip()
+
+    def _prepare_tooltip(self):
+        self.ensure_one()
+        return ""
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):

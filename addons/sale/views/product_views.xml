@@ -13,27 +13,13 @@
                 <field name="service_type" widget="radio" invisible="True"/>
                 <field name="visible_expense_policy" invisible="1"/>
             </field>
-            <field name="type" position="after">
-                <field name="invoice_policy" required="1"/>
+            <field name="product_tooltip" position="before">
+                <field name="invoice_policy" required="1" invisible="not sale_ok"/>
                 <field name="service_tracking" invisible="1 or type != 'service' or not sale_ok"/>
             </field>
             <group name="tags" position="inside">
                 <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>
             </group>
-            <field name="product_tooltip" position="after">
-                <label for="product_tooltip" string=""
-                    invisible="type != 'consu' or invoice_policy != 'order'"/>
-                <div invisible="type != 'consu' or invoice_policy != 'order'"
-                    class="fst-italic text-muted">
-                    You can invoice them before they are delivered.
-                </div>
-                <label for="product_tooltip" string=""
-                    invisible="type != 'consu' or invoice_policy != 'delivery'"/>
-                <div invisible="type != 'consu' or invoice_policy != 'delivery'"
-                    class="fst-italic text-muted">
-                    Invoice after delivery, based on quantities delivered, not ordered.
-                </div>
-            </field>
             <group name="description" position="after">
                 <t groups="sales_team.group_sale_salesman">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
