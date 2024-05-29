@@ -1,5 +1,4 @@
 /** @odoo-module */
-/* eslint-disable no-restricted-syntax */
 
 import { createMock, makePublicListeners } from "../hoot_utils";
 
@@ -156,7 +155,7 @@ let currentSendBeacon = () => {};
 
 export class MockClipboard {
     /** @type {unknown} */
-    #value = null;
+    _value = null;
 
     async read() {
         return this.readSync();
@@ -181,28 +180,28 @@ export class MockClipboard {
      * @returns {unknown}
      */
     readSync() {
-        return this.#value;
+        return this._value;
     }
 
     /**
      * @returns {string}
      */
     readTextSync() {
-        return String(this.#value ?? "");
+        return String(this._value ?? "");
     }
 
     /**
      * @param {unknown} value
      */
     writeSync(value) {
-        this.#value = value;
+        this._value = value;
     }
 
     /**
      * @param {string} value
      */
     writeTextSync(value) {
-        this.#value = String(value ?? "");
+        this._value = String(value ?? "");
     }
 }
 
@@ -232,7 +231,7 @@ export class MockPermissions {
 
 export class MockPermissionStatus extends EventTarget {
     /** @type {typeof currentPermissions[PermissionName]} */
-    #permission;
+    _permission;
 
     /**
      * @param {PermissionName} name
@@ -243,16 +242,16 @@ export class MockPermissionStatus extends EventTarget {
 
         makePublicListeners(this, ["change"]);
 
-        this.#permission = currentPermissions[name];
+        this._permission = currentPermissions[name];
         permissionStatuses.add(this);
     }
 
     get name() {
-        return this.#permission.name;
+        return this._permission.name;
     }
 
     get state() {
-        return this.#permission.state;
+        return this._permission.state;
     }
 }
 
