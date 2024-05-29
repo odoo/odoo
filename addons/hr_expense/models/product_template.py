@@ -17,7 +17,6 @@ class ProductTemplate(models.Model):
 
     can_be_expensed = fields.Boolean(string="Expenses", compute='_compute_can_be_expensed',
         store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
-    purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
 
     def _auto_init(self):
         if not column_exists(self.env.cr, "product_template", "can_be_expensed"):
