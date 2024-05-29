@@ -757,8 +757,6 @@ class AccountMoveSend(models.TransientModel):
             for move, move_data in to_download.items():
                 attachment_ids += self._get_invoice_extra_attachments(move).ids or move_data.get('proforma_pdf_attachment').ids
             if attachment_ids:
-                if kwargs.get('bypass_download'):
-                    return attachment_ids
                 return self._download(attachment_ids, to_download)
 
         return {'type': 'ir.actions.act_window_close'}

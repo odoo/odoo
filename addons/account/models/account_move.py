@@ -4952,16 +4952,15 @@ class AccountMove(models.Model):
             **kwargs,
         }
 
-    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, bypass_download=False, **kwargs):
+    def _generate_pdf_and_send_invoice(self, template, force_synchronous=True, allow_fallback_pdf=True, **kwargs):
         """ Generate the pdf for the current invoices and send them by mail using the send & print wizard.
         :param force_synchronous:   Flag indicating if the method should be done synchronously.
         :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
                                     proforma PDF report instead.
-        :param bypass_download: Don't trigger the action from action_send_and_print and get generated attachments_ids instead.
         """
         composer_vals = self._get_pdf_and_send_invoice_vals(template, **kwargs)
         composer = self.env['account.move.send'].create(composer_vals)
-        return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf, bypass_download=bypass_download)
+        return composer.action_send_and_print(force_synchronous=force_synchronous, allow_fallback_pdf=allow_fallback_pdf)
 
     def _get_invoice_legal_documents(self):
         """ Return existing attachments or a temporary Pro Forma pdf. """
