@@ -10,8 +10,8 @@ patch(PosStore.prototype, {
             // Therefore, no sensitive information is sent through it, only a
             // notification to invite the local browser to do a safe RPC to
             // the server to check the new state of the order.
-            if (this.get_order()?.server_id === id) {
-                this.pos.update_online_payments_data_with_server(this.pos.get_order(), false);
+            if (this.get_order()?.id === id) {
+                this.update_online_payments_data_with_server(this.get_order(), false);
             }
         });
     },
@@ -40,7 +40,7 @@ patch(PosStore.prototype, {
         if ("paid_order" in opData) {
             opData.is_paid = true;
             // only one line will have the `online_payment_resolver` method
-            order.paymentlines.forEach((line) => line.onlinePaymentResolver?.(true));
+            order.payment_ids.forEach((line) => line.onlinePaymentResolver?.(true));
             return opData;
         } else {
             opData.is_paid = false;
