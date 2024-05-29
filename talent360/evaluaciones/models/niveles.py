@@ -3,6 +3,16 @@ from odoo.exceptions import ValidationError
 
 
 class Niveles(models.Model):
+    """
+    Modelo para representar los niveles de semaforización de las evaluaciones.
+
+    :param _name (str): Nombre del modelo en Odoo.
+    :param _description (str): Descripción del modelo en Odoo.
+    :param evaluacion_id (Many2one): Relación con el modelo de evaluación.
+    :param descripcion_nivel (Char): Descripción del nivel.
+    :param techo (Integer): Ponderación del nivel.
+    :param color (Char): Color del nivel.
+    """
 
     _name = "niveles"
     _description = "Niveles de semaforización"

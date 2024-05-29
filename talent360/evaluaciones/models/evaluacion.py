@@ -1209,7 +1209,11 @@ class Evaluacion(models.Model):
         }
     
     @api.constrains("niveles")
-    def _check_techo(self):
+    def checar_techo(self):
+        """
+        Verifica que los valores de la ponderación sean válidos.
+
+        """
         for nivel in self.niveles:
             # Verificar que el valor de la ponderación sea mayor que 0
             if nivel.techo <= 0:
