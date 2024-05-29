@@ -52,11 +52,34 @@ class LoyaltyProgram(models.Model):
                 program.pos_config_ids = False
 
     def _compute_pos_order_count(self):
-        read_group_res = self.env['pos.order.line']._read_group(
-            [('reward_id', 'in', self.reward_ids.ids)], ['order_id'], ['reward_id:array_agg'])
-        for program in self:
-            program_reward_ids = program.reward_ids.ids
-            program.pos_order_count = sum(1 if any(id in reward_ids for id in program_reward_ids) else 0 for __, reward_ids in read_group_res)
+        query = """
+                WITH reward_to_orders_count AS (
+                 SELECT reward.id                    AS lr_id,
+                        COUNT(DISTINCT pos_order.id) AS orders_count
+                   FROM pos_order_line line
+                   JOIN pos_order ON line.order_id = pos_order.id
+                   JOIN loyalty_reward reward ON line.reward_id = reward.id
+               GROUP BY lr_id
+              ),
+              program_to_reward AS (
+                 SELECT reward.id  AS reward_id,
+                        program.id AS program_id
+                   FROM loyalty_program program
+                   JOIN loyalty_reward reward ON reward.program_id = program.id
+                  WHERE program.id = ANY (%s)
+              )
+       SELECT program_to_reward.program_id,
+              SUM(reward_to_orders_count.orders_count)
+         FROM program_to_reward
+    LEFT JOIN reward_to_orders_count ON reward_to_orders_count.lr_id = program_to_reward.reward_id
+     GROUP BY program_to_reward.program_id
+                """
+        self._cr.execute(query, (self.ids,))
+        res = self._cr.dictfetchall()
+        res = {k['program_id']: k['sum'] for k in res}
+
+        for rec in self:
+            rec.pos_order_count = res.get(rec.id) or 0
 
     def _compute_total_order_count(self):
         super()._compute_total_order_count()
