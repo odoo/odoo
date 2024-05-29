@@ -10,7 +10,8 @@ declare module "@spreadsheet" {
         | "last_year"
         | "last_three_years"
         | "year_to_date";
-    export type DateFilterTimePeriod = RelativePeriod | "this_month" | "this_quarter" | "this_year";
+    export type DateFilterAutomaticPeriod = "this_month" | "this_quarter" | "this_year";
+    export type DateFilterTimePeriod = RelativePeriod | DateFilterAutomaticPeriod;
 
     export interface FieldMatching {
         chain: string;
@@ -38,17 +39,18 @@ declare module "@spreadsheet" {
 
     export interface FromToDateGlobalFilter extends DateGlobalFilterCommon {
         rangeType: "from_to";
-        defaultValue?: number[];
+        defaultValue?: { from?: string; to?: string };
     }
 
     export interface RelativeDateGlobalFilter extends DateGlobalFilterCommon {
         rangeType: "relative";
-        defaultValue?: DateFilterTimePeriod;
+        defaultValue?: RelativePeriod;
     }
 
     export interface FixedPeriodDateGlobalFilter extends DateGlobalFilterCommon {
         rangeType: "fixedPeriod";
-        defaultValue?: { period?: string; yearOffset?: number };
+        defaultValue?: { period?: string; yearOffset?: number } | DateFilterAutomaticPeriod;
+        disabledPeriods?: FixedPeriods[];
     }
 
     export type DateGlobalFilter =
@@ -63,8 +65,11 @@ declare module "@spreadsheet" {
         modelName: string;
         includeChildren: boolean;
         defaultValue?: "current_user" | number[];
+        defaultValueDisplayNames: string[];
     }
 
     export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter;
     export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter;
+
+    export type FixedPeriods = "quarter" | "month";
 }

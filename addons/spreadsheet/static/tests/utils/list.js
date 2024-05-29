@@ -4,12 +4,12 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { generateListDefinition } from "./data";
 import { createModelWithDataSource } from "./model";
 
-/** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
+/** @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel */
 
 /**
  * Insert a list in a spreadsheet model.
  *
- * @param {Model} model
+ * @param {OdooSpreadsheetModel} model
  * @param {Object} params
  * @param {string} params.model
  * @param {Array<string>} params.columns
@@ -43,7 +43,7 @@ export function insertListInSpreadsheet(model, params) {
  * @param {[number, number]} [params.position]
  * @param {string} [params.sheetId]
  *
- * @returns { Promise<{ model: Model, env: Object }>}
+ * @returns { Promise<{ model: OdooSpreadsheetModel, env: Object }>}
  */
 export async function createSpreadsheetWithList(params = {}) {
     const model = await createModelWithDataSource({

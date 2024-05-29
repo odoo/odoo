@@ -8,9 +8,9 @@ declare module "@spreadsheet" {
 
     export interface OdooSpreadsheetModelConstructor {
         new (
-            data: object,
-            config: Partial<Model["config"]>,
-            revisions: object[]
+            data?: object,
+            config?: Partial<Model["config"]>,
+            revisions?: object[]
         ): OdooSpreadsheetModel;
     }
 }

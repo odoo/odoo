@@ -41,6 +41,7 @@
                 <DateFilterValue t-else=""
                     period="filterValue?.period"
                     yearOffset="filterValue?.yearOffset"
+                    disabledPeriods="filter.disabledPeriods"
                     onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)"/>
             </div>
             <i t-if="getters.isGlobalFilterActive(filter.id)"

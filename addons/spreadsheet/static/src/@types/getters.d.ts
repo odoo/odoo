@@ -7,6 +7,7 @@ import { ListCorePlugin, ListUIPlugin } from "@spreadsheet/list";
 import { IrMenuPlugin } from "@spreadsheet/ir_ui_menu/ir_ui_menu_plugin";
 import { PivotOdooCorePlugin } from "@spreadsheet/pivot";
 import { PivotCoreGlobalFilterPlugin } from "@spreadsheet/pivot/plugins/pivot_core_global_filter_plugin";
+import { PivotUIGlobalFilterPlugin } from "@spreadsheet/pivot/plugins/pivot_ui_global_filter_plugin";
 
 type Getters = Model["getters"];
 type CoreGetters = CorePlugin["getters"];
@@ -71,4 +72,5 @@ declare module "@spreadsheet" {
     interface OdooGetters extends PluginGetters<typeof OdooChartUIPlugin> {}
     interface OdooGetters extends PluginGetters<typeof CurrencyPlugin> {}
     interface OdooGetters extends PluginGetters<typeof AccountingPlugin> {}
+    interface OdooGetters extends PluginGetters<typeof PivotUIGlobalFilterPlugin> {}
 }
