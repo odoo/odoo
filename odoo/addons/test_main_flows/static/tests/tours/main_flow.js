@@ -63,11 +63,6 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
     position: 'right',
     run: "click",
 }, {
-    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Buy")',
-    content: _t('Uncheck Buy'),
-    position: 'right',
-    run: "click",
-}, {
     trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Replenish on Order (MTO)")',
     content: _t('Uncheck  Replenish on Order (MTO)'),
     position: 'right',

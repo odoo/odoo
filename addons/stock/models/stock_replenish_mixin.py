@@ -25,7 +25,9 @@ class ProductReplenishMixin(models.AbstractModel):
     def _get_allowed_route_domain(self):
         stock_location_inter_company_id = self.env.ref('stock.stock_location_inter_company').id
         return [
+            '|',
             ('product_selectable', '=', True),
+            ('warehouse_selectable', '=', True),
             ('rule_ids.location_src_id', '!=', stock_location_inter_company_id),
             ('rule_ids.location_dest_id', '!=', stock_location_inter_company_id)
         ]

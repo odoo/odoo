@@ -12,5 +12,10 @@ def _create_buy_rules(env):
     necessary if the purchase_stock module is installed after some warehouses
     were already created.
     """
-    warehouse_ids = env['stock.warehouse'].search([('buy_pull_id', '=', False)])
+    all_warehouses = env['stock.warehouse'].search([])
+    buy_route = env['stock.route'].search([]).filtered(lambda r: set(r.rule_ids.mapped('action')) == {'buy'})
+    if buy_route:
+        buy_route.warehouse_ids |= all_warehouses
+
+    warehouse_ids = all_warehouses.filtered(lambda w: not w.buy_pull_id)
     warehouse_ids.write({'buy_to_resupply': True})

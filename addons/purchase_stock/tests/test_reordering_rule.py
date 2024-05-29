@@ -28,7 +28,6 @@ class TestReorderingRule(TransactionCase):
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
-        product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
         cls.product_01 = product_form.save()
 
     def test_reordering_rule_1(self):
@@ -325,7 +324,6 @@ class TestReorderingRule(TransactionCase):
         partner = self.env['res.partner'].create({
             'name': 'Tintin'
         })
-        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 
         product_form = Form(self.env['product.product'])
@@ -338,7 +336,6 @@ class TestReorderingRule(TransactionCase):
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
         product_form.is_storable = True
-        product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
@@ -423,7 +420,6 @@ class TestReorderingRule(TransactionCase):
         })
         for wh in self.env['stock.warehouse'].search([]):
             wh.write({'reception_steps': 'two_steps'})
-        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
 
         product_form = Form(self.env['product.product'])
@@ -436,7 +432,6 @@ class TestReorderingRule(TransactionCase):
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
         product_form.is_storable = True
-        product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
             s.partner_id = partner

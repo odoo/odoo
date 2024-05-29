@@ -21,6 +21,13 @@ class StockWarehouse(models.Model):
                                      help="When products are bought, they can be delivered to this warehouse")
     buy_pull_id = fields.Many2one('stock.rule', 'Buy rule', copy=False)
 
+    def create(self, vals_list):
+        warehouses = super().create(vals_list)
+        buy_route = self.env['stock.route'].search([]).filtered(lambda r: set(r.rule_ids.mapped('action')) == {'buy'})
+        if buy_route:
+            buy_route.warehouse_ids |= warehouses
+        return warehouses
+
     def _generate_global_route_rules_values(self):
         rules = super()._generate_global_route_rules_values()
         location_id = self.lot_stock_id
