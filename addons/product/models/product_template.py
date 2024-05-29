@@ -88,7 +88,7 @@ class ProductTemplate(models.Model):
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
 
     sale_ok = fields.Boolean('Sales', default=True)
-    purchase_ok = fields.Boolean('Purchase', default=True)
+    purchase_ok = fields.Boolean('Purchase', default=True, compute='_compute_purchase_ok', store=True, readonly=False)
     uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
@@ -150,6 +150,9 @@ class ProductTemplate(models.Model):
     )
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
+
+    def _compute_purchase_ok(self):
+        pass
 
     def _compute_item_count(self):
         for template in self:

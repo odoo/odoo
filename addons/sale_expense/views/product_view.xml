@@ -15,7 +15,7 @@
                     </div>
                 </group>
             </xpath>
-            <xpath expr="//field[@name='standard_price']" position="before">
+            <xpath expr="//label[@for='standard_price']" position="before">
                 <field name="list_price" invisible="expense_policy != 'sales_price'"/>
             </xpath>
             <xpath expr="//field[@name='supplier_taxes_id']" position="after">
