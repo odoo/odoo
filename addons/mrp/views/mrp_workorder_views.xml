@@ -197,7 +197,7 @@
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
                             <tree editable="bottom">
                                 <field name="user_id"/>
-                                <field name="duration" widget="float_time" sum="Total duration" readonly="id"/>
+                                <field name="duration" widget="float_time" readonly="id"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="workcenter_id" column_invisible="True"/>
@@ -221,6 +221,11 @@
                                 </group>
                             </form>
                         </field>
+                        <div>
+                            <label for="duration" class="pe-2"/>
+                            <field name="duration" widget="float_time" readonly="1"/>
+                            <span>&amp;nbsp;(minutes)</span>
+                        </div>
                 </page>
                 <page string="Components" name="components">
                     <field name="move_raw_ids" readonly="1">
