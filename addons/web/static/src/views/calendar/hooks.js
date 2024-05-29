@@ -1,4 +1,4 @@
-import { loadJS } from "@web/core/assets";
+import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -89,21 +89,7 @@ export function useFullCalendar(refName, params) {
         return newParams;
     }
 
-    async function loadJsFiles() {
-        const files = [
-            "/web/static/lib/fullcalendar/core/index.global.js",
-            "/web/static/lib/fullcalendar/interaction/index.global.js",
-            "/web/static/lib/fullcalendar/daygrid/index.global.js",
-            "/web/static/lib/fullcalendar/timegrid/index.global.js",
-            "/web/static/lib/fullcalendar/list/index.global.js",
-            "/web/static/lib/fullcalendar/luxon3/index.global.js",
-        ];
-        for (const file of files) {
-            await loadJS(file);
-        }
-    }
-
-    onWillStart(() => loadJsFiles());
+    onWillStart(async () => await loadBundle("web.fullcalendar_lib"));
 
     onMounted(() => {
         try {
