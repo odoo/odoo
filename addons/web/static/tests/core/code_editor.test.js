@@ -80,7 +80,9 @@ test("Can be rendered", async () => {
 test("CodeEditor shouldn't accepts markup values", async () => {
     expect.errors(1);
 
-    console.warn = (msg) => expect.step(msg);
+    patchWithCleanup(console, {
+        warn: (msg) => expect.step(msg),
+    });
 
     class Parent extends Component {
         static components = { CodeEditor };
