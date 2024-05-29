@@ -31,8 +31,7 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
             'zip': '431122'
         })
 
-    @freeze_time('2024-04-26')
-    def test_ewaybill_stock(self):
+    def _create_stock_picking(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
         delivery_picking = self.env['stock.picking'].create({
             'partner_id': self.partner_a.id,
@@ -47,6 +46,11 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
             })]
         })
         delivery_picking.button_validate()
+        return delivery_picking
+
+    @freeze_time('2024-04-26')
+    def test_ewaybill_stock(self):
+        delivery_picking = self._create_stock_picking()
         ewaybill = self.env['l10n.in.ewaybill'].create({
             'picking_id': delivery_picking.id,
             'mode': False,
@@ -100,5 +104,65 @@ class TestStockEwaybill(AccountTestInvoicingCommon):
             'cessNonAdvolValue': 0.0,
             'otherValue': 0.0,
             'totInvValue': 2625.0
+        }
+        self.assertDictEqual(ewaybill._ewaybill_generate_direct_json(), expected_json)
+
+    @freeze_time('2024-04-26')
+    def test_ewaybill_stock_sub_type_other(self):
+        delivery_picking = self._create_stock_picking()
+        ewaybill = self.env['l10n.in.ewaybill'].create({
+            'picking_id': delivery_picking.id,
+            'transporter_id': self.partner_a.id,
+            'mode': False,
+            'type_id': self.env.ref('l10n_in_ewaybill_stock.type_delivery_challan_sub_others').id,
+            'type_description': "Other reasons"
+        })
+        expected_json = {
+          'supplyType': 'O',
+          'subSupplyType': '8',
+          'subSupplyDesc': 'Other reasons',
+          'docType': 'CHL',
+          'transactionType': 1,
+          'transDistance': '0',
+          'docNo': 'compa/OUT/00002',
+          'docDate': '26/04/2024',
+          'fromGstin': 'URP',
+          'toGstin': '27DJMPM8965E1ZE',
+          'fromTrdName': 'company_1_data',
+          'toTrdName': 'partner_a',
+          'fromStateCode': 24,
+          'toStateCode': 27,
+          'fromAddr1': '',
+          'toAddr1': '',
+          'fromAddr2': '',
+          'toAddr2': '',
+          'fromPlace': '',
+          'toPlace': '',
+          'fromPincode': 380004,
+          'toPincode': 431122,
+          'actToStateCode': 27,
+          'actFromStateCode': 24,
+          'transporterId': '27DJMPM8965E1ZE',
+          'transporterName': 'partner_a',
+          'itemList': [
+            {
+              'productName': 'product_a',
+              'hsnCode': '01111',
+              'productDesc': 'product_a',
+              'quantity': 5.0,
+              'qtyUnit': 'UNT',
+              'taxableAmount': 2500.0,
+              'sgstRate': 2.5,
+              'cgstRate': 2.5
+            }
+          ],
+          'totalValue': 2500.0,
+          'cgstValue': 62.5,
+          'sgstValue': 62.5,
+          'igstValue': 0.0,
+          'cessValue': 0.0,
+          'cessNonAdvolValue': 0.0,
+          'otherValue': 0.0,
+          'totInvValue': 2625.0
         }
         self.assertDictEqual(ewaybill._ewaybill_generate_direct_json(), expected_json)
