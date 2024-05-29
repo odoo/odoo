@@ -13,6 +13,7 @@ from odoo.http import request
 from odoo.tools import html_escape
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_paypal import const
 
 
 _logger = logging.getLogger(__name__)
@@ -22,6 +23,29 @@ class PaypalController(http.Controller):
     _return_url = '/payment/paypal/return/'
     _cancel_url = '/payment/paypal/cancel/'
     _webhook_url = '/payment/paypal/webhook/'
+    _create_url = '/payment/paypal/create_order'
+    
+    @http.route(
+        _create_url, type='http', auth='public', methods=['POST'], csrf=False,
+        save_session=False
+    )
+    def paypal_return_from_checkout(self, **pdt_data):
+        """ 
+         Creates an order and returns it as a JSON response.
+        """
+        _logger.info("Handling redirection from PayPal with data:\n%s", pprint.pformat(pdt_data))
+
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'paypal', pdt_data
+        )
+        try:
+            notification_data = self._verify_pdt_notification_origin(pdt_data, tx_sudo)
+        except Forbidden:
+            _logger.exception("Could not verify the origin of the PDT; discarding it.")
+        else:
+            tx_sudo._handle_notification_data('paypal', notification_data)
+
+        return request.redirect('/payment/status')
 
     @http.route(
         _return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,

@@ -33,7 +33,7 @@ class PaymentTransaction(models.Model):
         res = super()._get_specific_rendering_values(processing_values)
         if self.provider_code != 'paypal':
             return res
-
+        self.provider_id._get_access_token()
         base_url = self.provider_id.get_base_url()
         cancel_url = urls.url_join(base_url, PaypalController._cancel_url)
         cancel_url_params = {
