@@ -125,7 +125,12 @@ class AccountJournal(models.Model):
         help="Company related to this journal")
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
-    refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
+    refund_sequence = fields.Boolean(
+        string="Dedicated Credit Note Sequence",
+        compute="_compute_refund_sequence",
+        readonly=False, store=True,
+        help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal",
+    )
     payment_sequence = fields.Boolean(
         string='Dedicated Payment Sequence',
         compute='_compute_payment_sequence', readonly=False, store=True, precompute=True,
@@ -552,9 +557,10 @@ class AccountJournal(models.Model):
                                         "2/ then filter on 'Draft' entries\n"
                                         "3/ select them all and post or delete them through the action menu"))
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        self.refund_sequence = self.type in ('sale', 'purchase')
+    @api.depends('type')
+    def _compute_refund_sequence(self):
+        for journal in self:
+            journal.refund_sequence = journal.type in ('sale', 'purchase')
 
     @api.depends('type')
     def _compute_payment_sequence(self):
