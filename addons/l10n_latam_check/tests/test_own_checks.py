@@ -17,13 +17,13 @@ class TestOwnChecks(L10nLatamCheckTest):
             payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
                 'outbound').filtered(lambda x: x.code == 'own_checks')[0]
             payment_form.ref = 'Deferred check'
-            with payment_form.l10n_latam_new_check_ids.new() as check1:
+            with payment_form.l10n_latam_check_ids.new() as check1:
                 check1.name = '00000001'
                 check1.payment_date = fields.Date.add(fields.Date.today(), months=1)
                 check1.issuer_vat = '30714295698'
                 check1.amount = 25
 
-            with payment_form.l10n_latam_new_check_ids.new() as check2:
+            with payment_form.l10n_latam_check_ids.new() as check2:
                 check2.name = '00000002'
                 check2.payment_date = fields.Date.add(fields.Date.today(), months=1)
                 check2.issuer_vat = '30714295698'
@@ -32,11 +32,11 @@ class TestOwnChecks(L10nLatamCheckTest):
         payment = payment_form.save()
         payment.action_post()
         self.assertEqual(payment.amount, 50)
-        split_move_line_ids = payment.l10n_latam_new_check_ids.mapped('split_move_line_id')
+        split_move_line_ids = payment.l10n_latam_check_ids.mapped('split_move_line_id')
         self.assertEqual(len(split_move_line_ids), 2, "There should be a split line per check. (2)")
-        all_handed = any(s == 'handed' for s in payment.l10n_latam_new_check_ids.mapped('issue_state'))
+        all_handed = any(s == 'handed' for s in payment.l10n_latam_check_ids.mapped('issue_state'))
         self.assertTrue(all_handed, "All checks should be in handed status.")
-        first_check = payment.l10n_latam_new_check_ids[0]
+        first_check = payment.l10n_latam_check_ids[0]
         first_check.action_void()
         self.assertTrue(first_check.issue_state == 'voided', "First checks should be in voided status.")
 
@@ -50,7 +50,7 @@ class TestOwnChecks(L10nLatamCheckTest):
                 'outbound').filtered(lambda x: x.code == 'own_checks')[0]
 
             payment_form.ref = 'Deferred check'
-            with payment_form.l10n_latam_new_check_ids.new() as check1:
+            with payment_form.l10n_latam_check_ids.new() as check1:
                 check1.name = '00000003'
                 check1.payment_date = fields.Date.add(fields.Date.today(), months=1)
                 check1.issuer_vat = '30714295698'
@@ -60,7 +60,7 @@ class TestOwnChecks(L10nLatamCheckTest):
         payment.action_post()
         self.assertEqual(payment.amount, 50)
         payment.action_cancel()
-        self.assertFalse(payment.l10n_latam_new_check_ids.issue_state,
+        self.assertFalse(payment.l10n_latam_check_ids.issue_state,
                          "Canceled payment checks must not have issue state")
-        self.assertEqual(len(payment.l10n_latam_new_check_ids.split_move_line_id), 0,
+        self.assertEqual(len(payment.l10n_latam_check_ids.split_move_line_id), 0,
                          "Canceled payment checks must not have split move")

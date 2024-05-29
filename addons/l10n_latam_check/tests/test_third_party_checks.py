@@ -16,7 +16,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             'partner_id': self.partner_a.id,
             'payment_type': 'inbound',
             'journal_id': journal.id,
-            'l10n_latam_new_check_ids': [
+            'l10n_latam_check_ids': [
                 Command.create({'name': check_numbers[0], 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
                 Command.create({'name': check_numbers[1], 'payment_date': fields.Date.add(fields.Date.today(), months=1), 'amount': 1}),
             ],
@@ -33,15 +33,15 @@ class TestThirdChecks(L10nLatamCheckTest):
         is properly working. """
         payment = self.create_third_party_check()
 
-        self.assertEqual(len(payment.l10n_latam_new_check_ids), 2, 'Checks where not created properly')
-        self.assertRecordValues(payment.l10n_latam_new_check_ids, [{
+        self.assertEqual(len(payment.l10n_latam_check_ids), 2, 'Checks where not created properly')
+        self.assertRecordValues(payment.l10n_latam_check_ids, [{
             'current_journal_id': self.third_party_check_journal.id,
         }]*2)
 
     # delivery (assert) dd un cheque tmb un return (assert) y un claim (assert)
     def test_02_third_party_check_delivery(self):
         payment = self.create_third_party_check()
-        check = payment.l10n_latam_new_check_ids[0]
+        check = payment.l10n_latam_check_ids[0]
         # Check Delivery
         vals = {
             'l10n_latam_check_ids': [Command.set([check.id])],
@@ -94,7 +94,7 @@ class TestThirdChecks(L10nLatamCheckTest):
 
     def test_03_check_deposit(self):
         payment = self.create_third_party_check()
-        check = payment.l10n_latam_new_check_ids[0]
+        check = payment.l10n_latam_check_ids[0]
         bank_journal = self.company_data_3['default_journal_bank']
 
         # Check Deposit
@@ -148,7 +148,7 @@ class TestThirdChecks(L10nLatamCheckTest):
     def test_04_check_transfer(self):
         """ Test transfer between third party checks journals """
         payment = self.create_third_party_check()
-        check = payment.l10n_latam_new_check_ids[0]
+        check = payment.l10n_latam_check_ids[0]
 
         # Transfer to rejected checks journal (usually is to another third party checks journal, but for test purpose is the same)
         self.env['l10n_latam.payment.mass.transfer'].with_context(
@@ -157,6 +157,6 @@ class TestThirdChecks(L10nLatamCheckTest):
 
         # test that checks created on different journals but that are on same current journal, can be transfered together
         payment2 = self.create_third_party_check(journal=self.rejected_check_journal)
-        check2 = payment2.l10n_latam_new_check_ids[0]
+        check2 = payment2.l10n_latam_check_ids[0]
         self.env['l10n_latam.payment.mass.transfer'].with_context(
             active_model='l10n_latam.check', active_ids=[check.id, check2.id]).create({'destination_journal_id': self.third_party_check_journal.id})._create_payments()
