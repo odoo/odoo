@@ -20,7 +20,13 @@ import {
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal/chatter";
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
-import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import {
+    defineActions,
+    getService,
+    mockService,
+    onRpc,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -679,4 +685,21 @@ test("Mentions in composer should still work when using pager", async () => {
     await insertText(".o-mail-Composer-input", "@");
     // all records in DB: Mitchell Admin | Hermit | Public user except OdooBot
     await contains(".o-mail-Composer-suggestion", { count: 3 });
+});
+
+test("form views in dialogs do not have chatter", async () => {
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "res.partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            target: "new",
+        },
+    ]);
+    await start();
+    await getService("action").doAction(1);
+    await contains(".o_dialog .o_form_view");
+    await contains(".o-mail-Form-Chatter", { count: 0 });
 });
