@@ -862,8 +862,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
         # Register serial number for each finished product
         for lot in finished_lots:
-            action = picking_receipt.move_ids.action_show_details()
-            self.assertEqual(action['name'], 'Subcontract', "It should open the subcontract record components wizard instead.")
+            action = picking_receipt.action_record_components()
             mo = self.env['mrp.production'].browse(action['res_id'])
             with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
                 mo_form.qty_producing = 1
@@ -909,7 +908,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         move = picking_receipt.move_ids_without_package
 
         # Register the five first finished products
-        action = move.action_show_details()
+        action = picking_receipt.action_record_components()
         mo = self.env['mrp.production'].browse(action['res_id'])
         with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
             mo_form.qty_producing = 5
@@ -918,7 +917,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(move.quantity, 5)
 
         # Register two other finished products
-        action = move.action_show_details()
+        action = picking_receipt.action_record_components()
         mo = self.env['mrp.production'].browse(action['res_id'])
         with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
             mo_form.qty_producing = 2
@@ -1449,6 +1448,26 @@ class TestSubcontractingTracking(TransactionCase):
         # Validate the picking
         picking_receipt.button_validate()
         self.assertEqual(picking_receipt.state, 'done')
+
+    def test_move_show_details(self):
+        # Create a receipt picking from the subcontractor
+        self.bom_tracked.consumption = 'flexible'
+        self.finished_product.tracking = 'serial'
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished_product
+            move.quantity = 5
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        action = picking_receipt.move_ids.action_show_details()
+        self.assertEqual(action['name'], 'Subcontract', "Tracked components must be recorded")
+
+        self.comp1_sn.tracking = 'none'
+        action = picking_receipt.move_ids.action_show_details()
+        self.assertEqual(action['name'], 'Detailed Operations', "Open finished move detials")
 
 
 @tagged('post_install', '-at_install')
