@@ -4,21 +4,25 @@
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
     'icon': '/account/static/description/l10n.png',
     'countries': ['tr'],
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
-==========================================================
+    Turkish charts of accounts
+    ========================================
+        * Defines the default chart of accounts
+        * Defines the default taxes
+        * Defines default tax report
 
-Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
-    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap
-      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.
+    This was done in collaboration with Broadmax Partner in Turkey.
     """,
     'author': 'Odoo',
     'depends': [
         'account',
     ],
     'auto_install': ['account'],
+    'data': [
+        'data/account_tax_report_data.xml',
+    ],
     'demo': [
         'demo/demo_company.xml',
     ],
