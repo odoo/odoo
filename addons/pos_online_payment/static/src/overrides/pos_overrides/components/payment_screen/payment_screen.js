@@ -211,8 +211,7 @@ patch(PaymentScreen.prototype, {
         // Without that update, the payment lines printed on the receipt ticket would
         // be invalid.
         const isInvoiceRequested = this.currentOrder.is_to_invoice();
-        const updatedOrder = this.pos.createNewOrder(orderJSON);
-        if (!updatedOrder || this.currentOrder.id !== updatedOrder.id) {
+        if (!orderJSON[0] || this.currentOrder.id !== orderJSON[0].id) {
             this.dialog.add(AlertDialog, {
                 title: _t("Order saving issue"),
                 body: _t("The order has not been saved correctly on the server."),
