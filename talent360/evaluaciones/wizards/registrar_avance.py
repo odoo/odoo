@@ -48,6 +48,18 @@ class RegistrarAvance(models.TransientModel):
             
             elif registro.avance < 0:
                 raise exceptions.ValidationError(_('El avance no puede ser menor a 0'))
+            
+    @api.constrains("archivos")
+    def _validar_no_archivos(self):
+        """
+        Método para validar que se suban archivos
+
+        Si no se suben archivos, se levanta una excepción
+        """
+
+        for registro in self:
+            if not registro.archivos:
+                raise exceptions.ValidationError(_('Por favor sube al menos un archivo'))
 
     @api.constrains('archivos')
     def _validar_peso_archivo(self):
