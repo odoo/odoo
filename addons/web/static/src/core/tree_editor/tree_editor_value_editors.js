@@ -12,7 +12,7 @@ import {
     DomainSelectorSingleAutocomplete,
 } from "@web/core/tree_editor/tree_editor_autocomplete";
 import { unique } from "@web/core/utils/arrays";
-import { Input, Select, List, Range } from "@web/core/tree_editor/tree_editor_components";
+import { Input, Select, List, Range, Within } from "@web/core/tree_editor/tree_editor_components";
 import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
 import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
 
@@ -125,6 +125,24 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 defaultValue: () => {
                     const { defaultValue } = editorInfo;
                     return [defaultValue(), defaultValue()];
+                },
+            };
+        }
+        case "within": {
+            return {
+                component: Within,
+                extractProps: ({ value, update }) => ({
+                    value,
+                    update,
+                }),
+                isSupported: (value) =>
+                    Array.isArray(value) &&
+                    value.length === 3 &&
+                    Number.isInteger(value[0]) &&
+                    Within.options.some((o) => o[0] === value[1]) &&
+                    value[2] === fieldDef.type,
+                defaultValue: () => {
+                    return [-1, "months", fieldDef.type];
                 },
             };
         }

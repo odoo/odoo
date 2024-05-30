@@ -36,6 +36,7 @@ const OPERATOR_DESCRIPTIONS = {
 
     // virtual operator (equivalent to a couple (>=,<=))
     between: _t("is between"),
+    within: _t("is within"),
 
     any: (fieldDefType) => {
         switch (fieldDefType) {

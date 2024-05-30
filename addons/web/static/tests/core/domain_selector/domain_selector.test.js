@@ -695,7 +695,6 @@ test("expressions in between operator", async () => {
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentOperator()).toBe("is between");
     expect(SELECTORS.valueEditor).toHaveCount(1);
-    expect(SELECTORS.valueEditor).toHaveCount(1);
     expect(SELECTORS.valueEditor + " " + SELECTORS.editor).toHaveCount(2);
     expect(SELECTORS.clearNotSupported).toHaveCount(1);
     expect(`${SELECTORS.editor} .o_datetime_input`).toHaveCount(1);
@@ -1051,7 +1050,18 @@ test("support properties", async () => {
         {
             name: "xphone_prop_5",
             domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
-            options: ["=", "!=", ">", ">=", "<", "<=", "is between", "is set", "is not set"],
+            options: [
+                "=",
+                "!=",
+                ">",
+                ">=",
+                "<",
+                "<=",
+                "is between",
+                "is within",
+                "is set",
+                "is not set",
+            ],
         },
         {
             name: "xphone_prop_6",

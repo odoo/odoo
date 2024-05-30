@@ -9,7 +9,6 @@ import {
     domainFromExpression,
     domainFromTree,
     expression,
-    Expression,
     expressionFromDomain,
     expressionFromTree,
     treeFromDomain,
@@ -43,6 +42,26 @@ test("domainFromTree", () => {
         {
             tree: condition("foo", "between", [1, expression("uid")], true),
             result: `["!", "&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
+        },
+        {
+            tree: condition("foo", "within", [1, "weeks", "date"]),
+            result: `["&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
+        },
+        {
+            tree: condition("foo", "within", [-1, "months", "date"]),
+            result: `["&", ("foo", ">=", (context_today() + relativedelta(months = -1)).strftime("%Y-%m-%d")), ("foo", "<=", context_today().strftime("%Y-%m-%d"))]`,
+        },
+        {
+            tree: condition("foo", "within", [1, "weeks", "datetime"]),
+            result: `["&", ("foo", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("foo", "<=", datetime.datetime.combine(context_today() + relativedelta(weeks = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        },
+        {
+            tree: condition("foo", "within", [-1, "months", "datetime"]),
+            result: `["&", ("foo", ">=", datetime.datetime.combine(context_today() + relativedelta(months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("foo", "<=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        },
+        {
+            tree: condition("foo", "within", [1, "weeks", "date"], true),
+            result: `["!", "&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         },
     ];
     for (const { tree, result } of toTest) {
@@ -79,6 +98,14 @@ test("domainFromTree . treeFromDomain", () => {
         {
             domain: `["&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
             result: `["&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
+        },
+        {
+            domain: `["&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
+            result: `["&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
+        },
+        {
+            domain: `["&", ("foo", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("foo", "<=", datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+            result: `["&", ("foo", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("foo", "<=", datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
         },
     ];
     for (const { domain, result } of toTest) {
@@ -285,6 +312,22 @@ test("expressionFromTree", () => {
             result: `not ( foo >= 1 and foo <= uid )`,
         },
         {
+            expressionTree: condition("foo", "within", [1, "weeks", "date"]),
+            result: `foo >= context_today().strftime("%Y-%m-%d") and foo <= (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d")`,
+        },
+        {
+            expressionTree: condition("foo", "within", [-1, "weeks", "date"]),
+            result: `foo >= (context_today() + relativedelta(weeks = -1)).strftime("%Y-%m-%d") and foo <= context_today().strftime("%Y-%m-%d")`,
+        },
+        {
+            expressionTree: condition("foo", "within", [1, "months", "datetime"]),
+            result: `foo >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and foo <= datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+        },
+        {
+            expressionTree: condition("foo", "within", [-1, "months", "datetime"]),
+            result: `foo >= datetime.datetime.combine(context_today() + relativedelta(months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and foo <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+        },
+        {
             expressionTree: complexCondition("uid"),
             result: `uid`,
         },
@@ -388,6 +431,12 @@ test("treeFromExpression", () => {
             if (["foo_ids", "bar_ids"].includes(name)) {
                 return { type: "many2many" };
             }
+            if (name === "date_field") {
+                return { type: "date" };
+            }
+            if (name === "datetime_field") {
+                return { type: "datetime" };
+            }
             return null;
         },
     };
@@ -429,12 +478,66 @@ test("treeFromExpression", () => {
             result: condition("foo", "between", [1, expression("uid")]),
         },
         {
+            expression: `date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")`,
+            result: condition("date_field", "within", [1, "years", "date"]),
+        },
+        {
+            expression: `datetime_field >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime_field <= datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+            result: condition("datetime_field", "within", [1, "years", "datetime"]),
+        },
+        {
+            // Case where the <= is first: this is not changed to a between, and so not changed to a within either
+            expression: `datetime_field <= datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime_field >= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+            result: connector("&", [
+                condition(
+                    "datetime_field",
+                    "<=",
+                    expression(
+                        `datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                    )
+                ),
+                condition(
+                    "datetime_field",
+                    ">=",
+                    expression(
+                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                    )
+                ),
+            ]),
+        },
+        {
+            // Case where the within doesn't have the period amount with the right sign, so this invalid within becomes a between
+            expression: `datetime_field >= datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime_field <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+            result: condition("datetime_field", "between", [
+                expression(
+                    "datetime.datetime.combine(context_today() + relativedelta(years = 1), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S')"
+                ),
+                expression(
+                    "datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime('%Y-%m-%d %H:%M:%S')"
+                ),
+            ]),
+        },
+        {
+            expression: `(date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")) and (date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 2)).strftime("%Y-%m-%d"))`,
+            result: connector("&", [
+                condition("date_field", "within", [1, "years", "date"]),
+                condition("date_field", "within", [2, "years", "date"]),
+            ]),
+        },
+        {
+            expression: `(date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")) or (date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 2)).strftime("%Y-%m-%d"))`,
+            result: connector("|", [
+                condition("date_field", "within", [1, "years", "date"]),
+                condition("date_field", "within", [2, "years", "date"]),
+            ]),
+        },
+        {
             expression: `foo >= 1 if bar else foo <= uid`,
             result: connector("|", [
                 connector("&", [condition("bar", "set", false), condition("foo", ">=", 1)]),
                 connector("&", [
                     condition("bar", "not_set", false),
-                    condition("foo", "<=", new Expression("uid")),
+                    condition("foo", "<=", expression("uid")),
                 ]),
             ]),
         },
@@ -840,11 +943,25 @@ test("evaluation . expressionFromTree = contains . domainFromTree", () => {
             if (name === "foo_ids") {
                 return { type: "many2many" };
             }
+            if (name === "date_field") {
+                return { type: "date" };
+            }
+            if (name === "datetime_field") {
+                return { type: "datetime" };
+            }
             return null;
         },
     };
 
-    const record = { foo: 1, foo_ids: [1, 2], uid: 7, expr: "abc", expr2: [1] };
+    const record = {
+        foo: 1,
+        foo_ids: [1, 2],
+        uid: 7,
+        expr: "abc",
+        expr2: [1],
+        datefield: "2024-02-05 00:00:00",
+        datetimefield: "2024-02-05",
+    };
 
     const toTest = [
         condition("foo", "=", false),
@@ -854,6 +971,8 @@ test("evaluation . expressionFromTree = contains . domainFromTree", () => {
         condition("y", "=", false),
         condition("foo", "between", [1, 3]),
         condition("foo", "between", [1, expression("uid")], true),
+        condition("datefield", "within", [1, "weeks", "date"]),
+        condition("datetimefield", "within", [-1, "years", "datetime"]),
         condition("foo_ids", "in", []),
         condition("foo_ids", "in", [1]),
         condition("foo_ids", "in", 1),
