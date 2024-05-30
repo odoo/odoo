@@ -9,6 +9,12 @@
                 <field name="l10n_dk_show_currency_rate" invisible="1"/>
                 <field name="l10n_dk_currency_rate_at_transaction" invisible="not l10n_dk_show_currency_rate" digits="[12,12]"/>
             </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='currency_id']"
+                position="after"
+            >
+                <field name="currency_rate" string="Rate" digits="[12,12]" optional="hide"/>
+            </xpath>
         </field>
     </record>
 
@@ -22,4 +28,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>
