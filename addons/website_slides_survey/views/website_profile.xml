@@ -35,7 +35,7 @@
                 <t t-if="not user_inputs">
                     <p t-if="certification_search_terms">No certification found for the given search term.</p>
                     <p t-else="">You have not taken any certification yet.</p>
-                    <a href="/slides/all?slide_category=certification">
+                    <a href="/slides?my=0&amp;slide_category=certification">
                         <i class="oi oi-arrow-right"/> See Certifications
                     </a>
                 </t>
@@ -96,7 +96,7 @@
          <t t-elif="my_profile">
             <div class="text-muted d-inline-block">
                 Certifications are exams that you successfully passed. <br />
-                <a href="/slides/all?slide_type=certification" class="btn-link">
+                <a href="/slides?my=0&amp;slide_type=certification" class="btn-link">
                     <i class="fa fa-arrow-right"></i> Get Certified
                 </a>
             </div>
@@ -104,7 +104,7 @@
         <t t-else="">
             <div class="text-muted d-inline-block">No certifications yet!</div>
             <div class="text-end d-inline-block pull-right">
-                <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
+                <a href="/slides?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
             </div>
         </t>
     </template>

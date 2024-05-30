@@ -59,7 +59,7 @@ var buyCertificationSteps = [{
     run: "click",
 }, {
     content: 'eLearning: go into bought course',
-    trigger: 'a:contains("DIY Furniture")',
+    trigger: 'a:contains("DIY Furniture - TEST")',
     run: "click",
 }, {
     content: 'eLearning: user should be enrolled',
@@ -153,7 +153,7 @@ var certificationCompletionSteps = [{
     run: "click",
 }, {
     content: 'eLearning: course should be completed',
-    trigger: '.o_wslides_course_card:contains("DIY Furniture") .badge:contains("Completed")',
+    trigger: '.o_wslides_course_card:contains("DIY Furniture - TEST") .badge:contains("Completed")',
 }];
 
 var profileSteps = [{

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="courses_home_inherit_survey" inherit_id="website_slides.courses_home">
-            <xpath expr="//a[hasclass('o_wslides_home_all_slides')]" position="after">
-                <a class="nav-link nav-link d-flex" href="/slides/all?slide_category=certification">
+        <template id="courses_search_bar_inherit_survey" inherit_id="website_slides.courses_search_bar">
+            <xpath expr="//div[@id='navbarTagGroups']" position="before">
+                <a t-if="search_slide_category != 'certification'" class="nav-link nav-link d-flex mx-3" href="/slides?my=0&amp;slide_category=certification">
                     <t t-call="website_slides_survey.o_wss_certification_icon"/>
                     <span class="ms-1">Certifications</span>
                 </a>
