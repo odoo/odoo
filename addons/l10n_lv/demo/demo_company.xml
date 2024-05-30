@@ -5,7 +5,7 @@
         <field name="street">Mana iela</field>
         <field name="city">Rīga</field>
         <field name="country_id" ref="base.lv"/>
-        
+
         <field name="zip">LV-1010</field>
         <field name="phone">+371 20 00 00 00</field>
         <field name="email">info@uznemums.lv</field>
@@ -36,5 +36,6 @@
         <value eval="[]"/>
         <value>lv</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_lv')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

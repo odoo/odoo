@@ -6,7 +6,7 @@
         <field name="street">Išvykimas</field>
         <field name="city">Vilnius</field>
         <field name="country_id" ref="base.lt"/>
-        
+
         <field name="zip">02188</field>
         <field name="phone">+370 612 34567</field>
         <field name="email">info@company.ltexample.com</field>
@@ -37,5 +37,6 @@
         <value eval="[]"/>
         <value>lt</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_lt')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

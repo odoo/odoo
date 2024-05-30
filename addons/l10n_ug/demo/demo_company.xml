@@ -6,7 +6,7 @@
         <field name="street">Mutesa 1 Road</field>
         <field name="city">Kampala</field>
         <field name="country_id" ref="base.ug"/>
-        
+
         <field name="zip">10101</field>
         <field name="phone">+256 77 403614</field>
         <field name="email">info@company.ugexample.com</field>
@@ -31,5 +31,6 @@
         <value eval="[]"/>
         <value>ug</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_ug')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

@@ -6,7 +6,7 @@
         <field name="street"/>
         <field name="city">Ängelholms kommun</field>
         <field name="country_id" ref="base.se"/>
-        
+
         <field name="zip">262 64</field>
         <field name="phone">+46 70 123 45 67</field>
         <field name="email">info@company.seexample.com</field>
@@ -38,5 +38,6 @@
         <value eval="[]"/>
         <value>se</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_se')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>
