@@ -234,6 +234,8 @@ class SyncCollector(Collector):
     name = 'traces_sync'
 
     def start(self):
+        if sys.gettrace() is not None:
+            _logger.error("Cannot start SyncCollector, settrace already set: %s", sys.gettrace())
         assert not self._processed, "You cannot start SyncCollector after accessing entries."
         sys.settrace(self.hook)  # todo test setprofile, but maybe not multithread safe
 
