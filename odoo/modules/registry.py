@@ -883,13 +883,8 @@ class Registry(Mapping):
 
     def signal_changes(self):
         """ Notifies other processes if registry or cache has been invalidated. """
-        if self.in_test_mode():
-            if self.registry_invalidated:
-                self.registry_sequence += 1
-            for cache_name in self.cache_invalidated or ():
-                self.cache_sequences[cache_name] += 1
-            self.registry_invalidated = False
-            self.cache_invalidated.clear()
+        if not self.ready:
+            _logger.warning('Calling signal_changes when registry is not ready is not suported')
             return
 
         if self.registry_invalidated:
