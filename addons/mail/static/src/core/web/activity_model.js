@@ -136,11 +136,11 @@ export class Activity extends Record {
     write_uid;
 
     get dateDeadlineFormatted() {
-        return this.date_deadline.toLocaleString(luxon.DateTime.DATE_SHORT);
+        return this.date_deadline?.toLocaleString(luxon.DateTime.DATE_SHORT);
     }
 
     get dateDoneFormatted() {
-        return this.date_done.toLocaleString(luxon.DateTime.DATE_SHORT);
+        return this.date_done?.toLocaleString(luxon.DateTime.DATE_SHORT);
     }
 
     get dateCreateFormatted() {
