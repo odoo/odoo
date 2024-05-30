@@ -821,7 +821,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         }).action_post()
 
         receipt = po.picking_ids
-        receipt.move_line_ids.qty_done = 1
+        receipt.move_ids.picked = True
         receipt.button_validate()
 
         product_aml = po.invoice_ids.line_ids.filtered('product_id')
