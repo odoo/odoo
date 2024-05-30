@@ -1477,6 +1477,16 @@ export function makeActionManager(env, router = _router) {
                 // When restoring, we want to use the last exported ID of the controller
                 props.resId = exportedState.resId;
             }
+            const currentEmbeddedActions =
+                controllerStack[controllerStack.length - 1].embeddedActions;
+            // If the action restored is the parent_action of the current embedded actions, we have to refresh the
+            // embedded_action_ids of the action, as some new ones could have been added or deleted.
+            if (
+                currentEmbeddedActions &&
+                currentEmbeddedActions[0]?.parent_action_id[0] === action.id
+            ) {
+                action.embedded_action_ids = currentEmbeddedActions;
+            }
             Object.assign(controller, _getViewInfo(view, action, views, props));
         }
         return _updateUI(controller, { index });

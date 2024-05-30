@@ -936,7 +936,7 @@ export class MockServer {
         }
         if (action.type === "ir.actions.act_window") {
             action["embedded_action_ids"] = this.embedded_actions.filter(
-                (el) => el && el.parent_action_id === params.action_id
+                (el) => el && el.parent_action_id[0] === params.action_id
             );
         }
         return action;

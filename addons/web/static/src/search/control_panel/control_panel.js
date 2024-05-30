@@ -66,7 +66,11 @@ export class ControlPanel extends Component {
         this.newActionNameRef = useRef("newActionNameRef");
         this.isEmbeddedActionsOrderModifiable = false;
         this.defaultEmbeddedActions = this.env.config.embeddedActions;
-        if (this.env.config.embeddedActions?.length > 0 && !this.env.config.parentActionId) {
+        if (
+            this.env.config.embeddedActions?.length > 0 &&
+            !!this.env.config.embeddedActions[0].id &&
+            !this.env.config.parentActionId
+        ) {
             const { parent_res_model, parent_action_id } = this.env.config.embeddedActions[0];
             this.defaultEmbeddedActions = [
                 {
@@ -485,6 +489,11 @@ export class ControlPanel extends Component {
             action_id,
             id: embeddedActionId[0],
         };
+        this.env.config.setCurrentEmbeddedAction(embeddedActionId);
+        this.env.config.setEmbeddedActions([
+            ...this.state.embeddedInfos.embeddedActions,
+            enrichedNewEmbeddedAction,
+        ]);
         this.state.embeddedInfos.embeddedActions.push(enrichedNewEmbeddedAction);
         const embeddedActionIdStr = embeddedActionId[0].toString();
         visibleEmbeddedActions[embeddedActionIdStr] = true;
@@ -494,7 +503,6 @@ export class ControlPanel extends Component {
             JSON.stringify(visibleEmbeddedActions)
         );
         browser.localStorage.setItem(this.embeddedOrderKey, JSON.stringify(order));
-        this.env.config.setCurrentEmbeddedAction(embeddedActionId);
         this.state.embeddedInfos.currentEmbeddedAction = enrichedNewEmbeddedAction;
         this.state.embeddedInfos.newActionName = `${newActionName} Custom`;
     }
@@ -529,9 +537,9 @@ export class ControlPanel extends Component {
             this.embeddedActionsVisibilityKey,
             JSON.stringify(visibleEmbeddedActions)
         );
-        this.state.embeddedInfos.embeddedActions = embeddedActions.filter(
-            ({ id }) => id !== action.id
-        );
+        const newEmbeddedActions = embeddedActions.filter(({ id }) => id !== action.id);
+        this.env.config.setEmbeddedActions(newEmbeddedActions);
+        this.state.embeddedInfos.embeddedActions = newEmbeddedActions;
         await this.orm.unlink("ir.embedded.actions", [action.id]);
         if (action.id === currentEmbeddedAction?.id) {
             const { active_id, active_model } = this.env.searchModel.globalContext;

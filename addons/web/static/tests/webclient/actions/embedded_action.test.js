@@ -149,15 +149,15 @@ defineEmbeddedActions([
         name: "Embedded Action 2",
         parent_res_model: "partner",
         type: "ir.embedded.actions",
-        parent_action_id: 1,
-        action_id: 3,
+        parent_action_id: [1, "Partners Action 1"],
+        action_id: [3, "Favorite Ponies"],
     },
     {
         id: 3,
         name: "Embedded Action 3",
         parent_res_model: "partner",
         type: "ir.embedded.actions",
-        parent_action_id: 1,
+        parent_action_id: [1, "Partners Action 1"],
         python_method: "do_python_method",
     },
 ]);
@@ -339,6 +339,35 @@ test("a view coming from a embedded can be saved in the embedded actions", async
     await contains(".o_save_current_view ").click();
     await contains(".o_save_favorite ").click();
     expect(".o_embedded_actions_buttons_wrapper > button").toHaveCount(4, {
+        message: "Should have 3 embedded actions in the embedded + the dropdown button",
+    });
+});
+
+test("check that a restore click on the breadcrumb keeps the correct embedded actions, with newly created ones", async () => {
+    onRpc("create", ({ args }) => {
+        expect(args[0][0].name).toBe("Custom Partners Action 1");
+        return [4, args[0][0].name]; // Fake new embedded action id
+    });
+    onRpc("create_or_replace", ({ args }) => {
+        expect(args[0].embedded_action_id).toBe(4);
+        return 5; // Fake new filter id
+    });
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    browser.localStorage.clear();
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await contains(
+        ".o_embedded_actions_buttons_wrapper > button > span:contains('Partners Action 1')"
+    ).click();
+    await runAllTimers();
+    await contains(".o_embedded_actions_buttons_wrapper .dropdown").click();
+    await contains(".o_save_current_view ").click();
+    await contains(".o_save_favorite ").click();
+    expect(".o_embedded_actions_buttons_wrapper > button").toHaveCount(3, {
+        message: "Should have 2 embedded actions in the embedded + the dropdown button",
+    });
+    await contains("ol.breadcrumb > li > a:contains('Partners Action 1')").click();
+    expect(".o_embedded_actions_buttons_wrapper > button").toHaveCount(3, {
         message: "Should have 2 embedded actions in the embedded + the dropdown button",
     });
 });
