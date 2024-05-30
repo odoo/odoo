@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- 
+    Descripcion: Este archivo define la configuración del cron job para actualizar los estados de las evaluaciones.
+    Dependencias: Requiere el modelo 'evaluacion' definido en el sistema.
+    -->
+
+    <data noupdate="1">
+        <!-- 
+        Sección de Configuración del Cron Job 
+        -->
+
+        <!-- 
+        Elemento que define el cron job para actualizar los estados de las evaluaciones.
+        - name: Nombre.
+        - model_id: Referencia al modelo.
+        - state: Define el estado para ejecutar un código Python.
+        - code: Código Python actualizar_estados_eval().
+        - user_id: Usuario que ejecutará el cron job.
+        - interval_number: Número de intervalos entre ejecuciones.
+        - interval_type: Tipo de intervalo (en este caso, minutos).
+        - numbercall: Número de veces que se ejecutará el cron job (-1 = infinito).
+        - doall: Define si el cron job debe ejecutarse inmediatamente al ser programado.
+        -->
+
+        <record id="ir_cron_actualizar_estados_eval" model="ir.cron">
+            <field name="name">Actualizar Estados de Evaluaciones</field>
+            <field name="model_id" ref="model_evaluacion"/>
+            <field name="state">code</field>
+            <field name="code">model.actualizar_estados_eval()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
+    </data>
+</odoo>
