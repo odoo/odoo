@@ -22,6 +22,7 @@ export class TimeOffCardPopover extends Component {
         "allows_negative",
         "max_allowed_negative",
         "onClickNewAllocationRequest?",
+        "errorLeaves",
     ];
 
     setup() {
