@@ -16,19 +16,6 @@
                         <field name="community_menu"/>
                     </span>
             </xpath>
-            <page name="event_type_communication" position="after">
-                <page string="Questions" name="page_questions">
-                    <field name="question_ids" class="w-100">
-                        <tree sample="1">
-                            <field name="title"/>
-                            <field name="is_mandatory_answer" string="Mandatory"/>
-                            <field name="once_per_order" string="Once per Order"/>
-                            <field name="question_type" />
-                            <field name="answer_ids" widget="many2many_tags"/>
-                        </tree>
-                    </field>
-                </page>
-            </page>
         </field>
     </record>
 

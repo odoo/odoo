@@ -28,8 +28,6 @@
         'views/event_templates_widgets.xml',
         'views/event_event_views.xml',
         'views/event_registration_views.xml',
-        'views/event_question_views.xml',
-        'views/event_registration_answer_views.xml',
         'views/event_tag_category_views.xml',
         'views/event_tag_views.xml',
         'views/event_type_views.xml',
