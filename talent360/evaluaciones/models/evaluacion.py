@@ -632,9 +632,7 @@ class Evaluacion(models.Model):
                         else "Sin departamento"
                     )
                 elif respuesta.usuario_externo_id:
-                    usuario_externo = self.env["usuario.externo"].browse(
-                        respuesta.usuario_externo_id
-                    )
+                    usuario_externo = respuesta.usuario_externo_id
                     nombre_departamento = (
                         usuario_externo.direccion
                         if usuario_externo.direccion
@@ -723,9 +721,7 @@ class Evaluacion(models.Model):
                     respuesta.usuario_id
                 )
             elif respuesta.usuario_externo_id:
-                usuario_externo = self.env["usuario.externo"].browse(
-                    respuesta.usuario_externo_id
-                )
+                usuario_externo = respuesta.usuario_externo_id
                 datos_demograficos = self.obtener_datos_demograficos_externos(
                     usuario_externo
                 )
@@ -1172,7 +1168,7 @@ class Evaluacion(models.Model):
             if usuarios_eliminados:
                 respuestas = self.env["respuesta"].search(
                     [
-                        ("usuario_externo_id", "in", usuarios_eliminados),
+                        ("usuario_externo_id.id", "in", usuarios_eliminados),
                         ("evaluacion_id.id", "=", self.id),
                     ]
                 )
