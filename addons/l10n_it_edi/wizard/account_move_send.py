@@ -166,9 +166,16 @@ class AccountMoveSend(models.TransientModel):
         moves._l10n_it_edi_send(attachments_vals)
 
     @api.model
-    def _link_invoice_documents(self, invoice, invoice_data):
+    def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
-        super()._link_invoice_documents(invoice, invoice_data)
-        if attachment_vals := invoice_data.get('l10n_it_edi_values'):
-            self.env['ir.attachment'].sudo().create(attachment_vals)
-            invoice.invalidate_recordset(fnames=['l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'])
+        super()._link_invoice_documents(invoices_data)
+
+        attachments_vals = [
+            invoice_data.get('l10n_it_edi_values')
+            for invoice_data in invoices_data.values()
+            if invoice_data.get('l10n_it_edi_values')
+        ]
+        if attachments_vals:
+            attachments = self.env['ir.attachment'].sudo().create(attachments_vals)
+            res_ids = [attachment.res_id for attachment in attachments]
+            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'])
