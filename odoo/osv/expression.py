@@ -862,7 +862,7 @@ class expression(object):
                 return list({
                     rid
                     for name in names
-                    for rid in comodel._name_search(name, [], 'ilike')
+                    for rid in comodel.with_context(active_test=False)._name_search(name, [], 'ilike')
                 })
             return list(value)
 

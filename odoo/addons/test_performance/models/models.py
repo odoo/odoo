@@ -93,3 +93,13 @@ class Mozzarella(models.Model):
     def _value_plus_one(self):
         for record in self:
             record.value_plus_one = record.value + 1
+
+
+class SimpleMinded(models.Model):
+    _name = _description = 'test_performance.simple.minded'
+
+    name = fields.Char()
+    active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('test_performance.simple.minded')
+
+    child_ids = fields.One2many('test_performance.simple.minded', 'parent_id')
