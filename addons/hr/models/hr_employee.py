@@ -317,7 +317,10 @@ class HrEmployeePrivate(models.Model):
         for fname in field_names:
             field = self._fields[fname]
             public_field = public._fields[fname]
-            values = public_field._get_cache_values(public)
+            context_key = public.env.cache_key(public_field)
+            values = [value for value in public.env.cache.get_values(self, context_key, public._ids) if value is not api.NOTHING]
+            if not values:
+                continue
             if field.translate:
                 values = [copy(value) for value in values]
             field.update_cache(self, values)
