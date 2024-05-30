@@ -60,7 +60,10 @@ export class WithSearch extends Component {
             this.props.searchModelArgs
         );
 
-        useSubEnv({ searchModel: this.searchModel });
+        const searchPanelState = this.props.globalState?.searchPanel
+            ? JSON.parse(this.props.globalState?.searchPanel)
+            : null;
+        useSubEnv({ searchModel: this.searchModel, searchPanelState });
 
         useBus(this.searchModel, "update", this.render);
         useSetupAction({

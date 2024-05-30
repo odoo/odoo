@@ -2884,6 +2884,25 @@ test("search panel can be collapsed/expanded", async () => {
     expect(`.o_search_panel_sidebar`).toHaveText("asusteksilver");
 });
 
+test("search panel can be collapsed by default", async () => {
+    Partner._views = {
+        search: /* xml */ `
+            <search>
+                <searchpanel fold="true">
+                    <field name="company_id" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        `,
+    };
+    await mountWithSearch(TestComponent, {
+        resModel: "partner",
+        searchViewId: false,
+    });
+    expect(`.o_search_panel`).toHaveCount(0);
+    expect(`.o_search_panel_sidebar`).toHaveCount(1);
+    expect(`.o_search_panel_sidebar`).toHaveText("All");
+});
+
 test("search panel collapse with multiple filter categories selected", async () => {
     Partner._views = {
         search: /* xml */ `
@@ -2913,6 +2932,24 @@ test("search panel collapse with multiple filter categories selected", async () 
     expect(`.o_search_panel_sidebar`).toHaveText("asusteksilverABC");
 });
 
+test("expand/collapse state is kept when switching between controllers", async () => {
+    onRpc("has_group", () => true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    await contains(`.o_search_panel button`).click();
+    expect(`.o_search_panel`).toHaveCount(0);
+    expect(`.o_search_panel_sidebar`).toHaveCount(1);
+    await getService("action").switchView("list");
+    expect(`.o_search_panel`).toHaveCount(0);
+    expect(`.o_search_panel_sidebar`).toHaveCount(1);
+    await contains(`.o_search_panel_sidebar button`).click();
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_sidebar`).toHaveCount(0);
+    await getService("action").switchView("kanban");
+    expect(`.o_search_panel`).toHaveCount(1);
+    expect(`.o_search_panel_sidebar`).toHaveCount(0);
+});
+
 test("search panel should be resizable", async () => {
     await mountWithSearch(TestComponent, {
         resModel: "partner",
@@ -2925,5 +2962,23 @@ test("search panel should be resizable", async () => {
 
     const { drop } = drag(resizeHandle);
     drop(resizeHandle, { position: { x: 500 } });
-    expect(searchPanel.offsetWidth - originalWidth).toBeGreaterThan(0);
+    expect(searchPanel.offsetWidth).toBeGreaterThan(originalWidth);
+});
+
+test("search panel width is kept when switching between controllers", async () => {
+    onRpc("has_group", () => true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    const searchPanel = queryFirst(".o_search_panel");
+    const resizeHandle = queryFirst(".o_search_panel_resize");
+    const originalWidth = searchPanel.offsetWidth;
+
+    const { drop } = drag(resizeHandle);
+    drop(resizeHandle, { position: { x: 500 } });
+    const newWidth = searchPanel.offsetWidth;
+    expect(newWidth).toBeGreaterThan(originalWidth);
+    await getService("action").switchView("list");
+    expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
+    await getService("action").switchView("kanban");
+    expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
 });
