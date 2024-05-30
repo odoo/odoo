@@ -80,7 +80,7 @@ QUnit.module('Product Pricelist Report', {
                 'active_model': 'product.product'
             }
         });
-        const selectElement = findElement(target, 'select');
+        const selectElement = findElement(target, 'select#pricelists');
         const badgesElement = findElement(target, '.o_badges_list');
         const inputElement = findElement(target, '.add-quantity-input');
         const addQtyButton = findElement(target, '.o_add_qty');
