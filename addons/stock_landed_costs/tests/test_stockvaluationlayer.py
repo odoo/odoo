@@ -171,6 +171,14 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.value_svl, 0)
         self.assertEqual(self.product1.quantity_svl, 0)
 
+    def test_alreadyout_1_alt(self):
+        move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        move1.move_line_ids.qty_done = 0
+        self._make_lc(move1, 100)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+
     def test_alreadyout_2(self):
         move1 = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
         move2 = self._make_in_move(self.product1, 10, unit_cost=20)
