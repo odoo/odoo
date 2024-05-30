@@ -6,6 +6,7 @@
             <field name="model">base.language.export</field>
             <field name="arch" type="xml">
                 <form string="Export Translations">
+                    <field name="name" invisible="1"/> <!-- The name is needed in the BinaryField component used to download the file -->
                     <group invisible="state != 'choose'" string="Export Settings">
                         <field name="lang"/>
                         <field name="format"/>
