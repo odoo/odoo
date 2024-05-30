@@ -92,7 +92,7 @@ class EventCrmCase(TestCrmCommon, EventCase):
 
         # event information
         self.assertEqual(lead.event_id, event)
-        self.assertEqual(lead.referred, event.name)
+        self.assertEqual(lead.utm_reference, event)
 
         # registration information
         registration_phone = registrations._find_first_notnull('phone')

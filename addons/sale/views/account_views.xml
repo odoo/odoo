@@ -42,6 +42,8 @@
                     <field name="campaign_id" options="{'create_name_field': 'title'}"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
+                    <field name="utm_reference" string="Reference" options="{'hide_model': True}"
+                        invisible="not utm_reference" readonly="True"/>
                 </group>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">

@@ -16,6 +16,15 @@ class SaleReport(models.Model):
     def _get_done_states(self):
         return ['sale']
 
+    @api.model
+    def _selection_target_model(self):
+        return [
+            (model.model, model.name)
+            for model
+            in self.env['ir.model'].sudo().search([])
+            if not model.is_transient()
+        ]
+
     # sale.order fields
     name = fields.Char(string="Order Reference", readonly=True)
     date = fields.Datetime(string="Order Date", readonly=True)
@@ -36,6 +45,7 @@ class SaleReport(models.Model):
     campaign_id = fields.Many2one(comodel_name='utm.campaign', string="Campaign", readonly=True)
     medium_id = fields.Many2one(comodel_name='utm.medium', string="Medium", readonly=True)
     source_id = fields.Many2one(comodel_name='utm.source', string="Source", readonly=True)
+    utm_reference = fields.Reference(string='UTM Reference', selection='_selection_target_model')
 
     # res.partner fields
     commercial_partner_id = fields.Many2one(
@@ -139,6 +149,7 @@ class SaleReport(models.Model):
             s.campaign_id AS campaign_id,
             s.medium_id AS medium_id,
             s.source_id AS source_id,
+            s.utm_reference AS utm_reference,
             t.categ_id AS categ_id,
             s.pricelist_id AS pricelist_id,
             s.team_id AS team_id,
@@ -214,6 +225,7 @@ class SaleReport(models.Model):
             s.campaign_id,
             s.medium_id,
             s.source_id,
+            s.utm_reference,
             s.pricelist_id,
             s.team_id,
             p.product_tmpl_id,

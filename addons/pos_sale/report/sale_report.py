@@ -65,6 +65,7 @@ class SaleReport(models.Model):
             NULL AS campaign_id,
             NULL AS medium_id,
             NULL AS source_id,
+            NULL AS utm_reference,
             t.categ_id AS categ_id,
             pos.pricelist_id AS pricelist_id,
             pos.crm_team_id AS team_id,
