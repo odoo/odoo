@@ -717,7 +717,7 @@ export const stepUtils = {
     waitIframeIsReady() {
         return {
             content: "Wait until the iframe is ready",
-            trigger: `:has([is-ready="true"]):iframe html`,
+            trigger: `iframe[is-ready=true]:iframe html`,
             isCheck: true,
         };
     },
