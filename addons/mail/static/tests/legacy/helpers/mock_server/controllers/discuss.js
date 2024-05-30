@@ -187,10 +187,22 @@ patch(MockServer.prototype, {
                 limit
             );
         }
+        if (route === "/mail/thread/message/markdown") {
+            const { message_id } = args;
+            return this._mockRouteMailThreadMessageMarkdown(message_id);
+        }
         if (route === "/discuss/gif/favorites") {
             return [[]];
         }
         return super._performRPC(route, args);
+    },
+    /**
+     * Simulates the `/mail/thread/message/markdown` route.
+     */
+    _mockRouteMailThreadMessageMarkdown(message_id) {
+        return this.pyEnv["mail.message"].searchRead([["id", "=", message_id]], {
+            fields: ["markdown"],
+        });
     },
     /**
      * Simulates the `/discuss/channel/pinned_messages` route.

@@ -51,7 +51,7 @@ class LivechatChatbotScriptController(http.Controller):
             user_answer = request.env['mail.message'].sudo()
             if user_messages:
                 user_answer = user_messages.sorted(lambda message: message.id)[-1]
-            next_step = current_step._process_answer(discuss_channel, user_answer.body)
+            next_step = current_step._process_answer(discuss_channel, user_answer.get_body())
         elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
             if chatbot.exists():
@@ -95,7 +95,7 @@ class LivechatChatbotScriptController(http.Controller):
 
         if user_messages:
             user_answer = user_messages.sorted(lambda message: message.id)[-1]
-            result = chatbot._validate_email(user_answer.body, discuss_channel)
+            result = chatbot._validate_email(user_answer.get_body(), discuss_channel)
 
             if result['posted_message']:
                 result['posted_message'] = result['posted_message']._message_format(for_current_user=True)[0]

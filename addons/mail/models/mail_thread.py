@@ -2065,7 +2065,7 @@ class MailThread(models.AbstractModel):
                      email_from=None, author_id=None, parent_id=False,
                      subtype_xmlid=None, subtype_id=False, partner_ids=None,
                      attachments=None, attachment_ids=None, body_is_html=False,
-                     **kwargs):
+                     body_is_markdown=False, **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
         :param str|Markup body: body of the message, str content will be escaped, Markup
@@ -2184,7 +2184,6 @@ class MailThread(models.AbstractModel):
             'model': self._name,
             'res_id': self.id,
             # content
-            'body': escape(body),  # escape if text, keep if markup
             'message_type': message_type,
             'parent_id': self._message_compute_parent_id(parent_id),
             'subject': subject or False,
@@ -2192,6 +2191,11 @@ class MailThread(models.AbstractModel):
             # recipients
             'partner_ids': partner_ids,
         })
+        if body_is_markdown:
+            msg_values.update({"markdown": body})
+        else:
+            msg_values.update({"body": escape(body)})
+
         # add default-like values afterwards, to avoid useless queries
         if 'record_alias_domain_id' not in msg_values:
             msg_values['record_alias_domain_id'] = self.sudo()._mail_get_alias_domains(default_company=self.env.company)[self.id].id
@@ -2898,6 +2902,7 @@ class MailThread(models.AbstractModel):
             'author_guest_id',
             'author_id',
             'body',
+            'markdown',
             'create_date',  # anyway limited to admins
             'date',
             'email_add_signature',
@@ -3543,7 +3548,7 @@ class MailThread(models.AbstractModel):
         )
         if not mail_body:
             _logger.warning('QWeb template %s not found or is empty when sending notification emails. Sending without layouting.', template_xmlid)
-            mail_body = message.body
+            mail_body = message.get_body()
         return mail_body
 
     def _notify_by_email_get_base_mail_values(self, message, additional_values=None):
@@ -3710,7 +3715,7 @@ class MailThread(models.AbstractModel):
             model = message.model
             title = message.record_name or message.subject
             res_id = message.res_id
-            body = message.body
+            body = message.get_body()
 
         icon = '/web/static/img/odoo-icon-192x192.png'
 
@@ -4426,8 +4431,7 @@ class MailThread(models.AbstractModel):
         msg_not_comment.write(msg_vals)
         return True
 
-    def _message_update_content(self, message, body, attachment_ids=None, partner_ids=None,
-                                strict=True, **kwargs):
+    def _message_update_content(self, message, body=None, attachment_ids=None, partner_ids=None, strict=True, markdown=None, **kwargs):
         """ Update message content. Currently does not support attachments
         specific code (see ``_process_attachments_for_post``), to be added
         when necessary.
@@ -4454,9 +4458,13 @@ class MailThread(models.AbstractModel):
         if strict:
             self._check_can_update_message_content(message.sudo())
 
-        msg_values = {
-            'body': escape(body),  # keep html if already Markup, otherwise escape
-        } if body is not None else {}
+        msg_values = {}
+        if body is not None:
+            msg_values.update({
+                'body': escape(body),  # keep html if already Markup, otherwise escape
+            })
+        if markdown is not None:
+            msg_values.update({'markdown': markdown})
         if attachment_ids:
             msg_values.update(
                 self._process_attachments_for_post([], attachment_ids, {
@@ -4492,7 +4500,7 @@ class MailThread(models.AbstractModel):
         payload = {
             'Message': {
                 'id': message.id,
-                'body': message.body,
+                'body': message.get_body(),
                 'attachments': message.attachment_ids.sorted("id")._attachment_format(),
                 'pinned_at': message.pinned_at,
                 'recipients': [{'id': p.id, 'name': p.name, 'type': "partner"} for p in message.partner_ids],
