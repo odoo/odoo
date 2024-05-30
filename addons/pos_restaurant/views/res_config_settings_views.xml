@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <div id="warning_text_pos_restaurant" position="replace"/>
             <block id="restaurant_section" position="inside">
-                <setting id="floor_and_table_map" string="Floors &amp; Tables Map" help="Design floors and assign orders to tables" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
+                <setting id="floor_and_table_map" string="Floors &amp; Tables Map" help="Design floors and assign orders to tables" documentation="/applications/sales/point_of_sale/restaurant/floors_tables.html" invisible="is_kiosk_mode or not pos_module_pos_restaurant">
                     <div class="content-group">
                         <div class="mt16">
                             <label string="Floors" for="pos_floor_ids" class="o_light_label me-2"/>
@@ -31,7 +31,7 @@
                 <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
                     <field name="pos_iface_printbill"/>
                 </setting>
-                <setting help="Split total or order lines" id="iface_splitbill"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
+                <setting help="Split total or order lines" id="iface_splitbill"  documentation="/applications/sales/point_of_sale/restaurant/bill_printing.html" invisible="not pos_module_pos_restaurant or is_kiosk_mode">
                     <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
                 </setting>
                 <setting help="Online reservation for restaurant"  invisible="not pos_module_pos_restaurant or is_kiosk_mode">
