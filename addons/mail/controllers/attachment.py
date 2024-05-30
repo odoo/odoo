@@ -81,6 +81,12 @@ class AttachmentController(http.Controller):
             attachmentData = {"error": _("You are not allowed to upload an attachment here.")}
         return request.make_json_response(attachmentData)
 
+    @http.route("/mail/attachments/delete", methods=["POST"], type="json", auth="public")
+    @add_guest_to_context
+    def mail_attachments_delete(self, attachment_ids):
+        for attachment_id in attachment_ids:
+            self.mail_attachment_delete(attachment_id)
+
     @http.route("/mail/attachment/delete", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
     def mail_attachment_delete(self, attachment_id, access_token=None):

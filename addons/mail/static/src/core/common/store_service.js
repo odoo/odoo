@@ -719,6 +719,15 @@ export class Store extends BaseStore {
         this.discuss.starred.messages = [];
         await this.env.services.orm.call("mail.message", "unstar_all");
     }
+
+    attachmentIdSelected = [];
+
+    deleteSelectedAttachment() {
+        rpc("/mail/attachments/delete", {
+            attachment_ids: this.attachmentIdSelected,
+        });
+        this.attachmentIdSelected = [];
+    }
 }
 Store.register();
 

@@ -97,6 +97,15 @@ messageActionsRegistry
         title: (component) => (component.state.showTranslation ? _t("Revert") : _t("Translate")),
         onClick: (component) => component.onClickToggleTranslation(),
         sequence: 100,
+    })
+    .add("toggle-attachment-selection", {
+        condition: (component) => component.message.attachments.length > 1,
+        icon: "fa-check-square-o",
+        title: _t("Select attachment"),
+        onClick: (component) => {
+            component.toggleAttachmentSelection();
+        },
+        sequence: 60,
     });
 
 function transformAction(component, id, action) {

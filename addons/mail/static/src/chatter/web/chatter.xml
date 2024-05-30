@@ -112,15 +112,32 @@
                             attachments="attachments"
                             unlinkAttachment.bind="unlinkAttachment"
                             imagesHeight="100"
+                            selectionMode="state.attachmentSelection"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
-                            <t t-set-slot="toggler">
-                                <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
-                                    <i class="fa fa-plus-square"/>
-                                    Attach files
+                        <div class="d-flex flex-row justify-content-center">
+                            <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                                <t t-set-slot="toggler">
+                                    <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
+                                        <i class="fa fa-plus-square"/>
+                                        Attach files
+                                    </button>
+                                </t>
+                            </FileUploader>
+                            <div class="btn-group">
+                                <button class="btn btn-link" t-on-click="toggleAttachmentSelection">
+                                    <i class="fa fa-check-square-o"/>
+                                    Select files
                                 </button>
-                            </t>
-                        </FileUploader>
+                                <button t-if="state.attachmentSelection" class="btn btn-link" t-on-click="selectAll">
+                                    <i class="fa fa-check-square"/>
+                                    Select all
+                                </button>
+                                <button t-if="state.attachmentSelection" class="btn btn-link btn-danger" t-on-click="() => this.store.deleteSelectedAttachment()" t-att-disabled="store.attachmentIdSelected.length === 0">
+                                    <i class="fa fa-trash"/>
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <Thread t-if="!state.isSearchOpen" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>

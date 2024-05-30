@@ -107,6 +107,7 @@ export class Message extends Component {
             expandOptions: false,
             emailHeaderOpen: false,
             showTranslation: false,
+            attachmentSelection: false,
         });
         /** @type {ShadowRoot} */
         this.shadowRoot;
@@ -187,6 +188,14 @@ export class Message extends Component {
                 this.props.messageSearch?.searchTerm,
                 this.message.body,
             ]
+        );
+        useEffect(
+            () => {
+                if (this.state.attachmentSelection) {
+                    this.toggleAttachmentSelection();
+                }
+            },
+            () => [this.message.attachments]
         );
     }
 
@@ -533,5 +542,16 @@ export class Message extends Component {
         }
         this.state.showTranslation =
             !this.state.showTranslation && Boolean(message.translationValue);
+    }
+
+    selectAll() {
+        const attachmentIds = this.message.attachments.map((a) => a.id);
+        this.store.attachmentIdSelected.length !== attachmentIds.length
+            ? (this.store.attachmentIdSelected = attachmentIds)
+            : (this.store.attachmentIdSelected = []);
+    }
+
+    toggleAttachmentSelection() {
+        this.state.attachmentSelection = !this.state.attachmentSelection;
     }
 }
