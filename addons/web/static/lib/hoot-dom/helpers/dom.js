@@ -862,15 +862,10 @@ customPseudoClasses
     .set("iframe", () => {
         return function iframe(node) {
             if (getTag(node) !== "iframe") {
-                const iframeNode = node.querySelector("iframe");
-                if (iframeNode) {
-                    node = iframeNode;
-                } else {
-                    return false;
-                }
+                return false;
             }
             const doc = node.contentDocument;
-            return doc?.readyState !== "loading" ? doc : false;
+            return doc && doc.readyState !== "loading" ? doc : false;
         };
     })
     .set("last", () => {
