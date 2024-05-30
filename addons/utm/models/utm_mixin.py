@@ -124,12 +124,17 @@ class UtmMixin(models.AbstractModel):
                 result.append(False)
                 continue
 
-            name_without_counter = self._split_name_and_count(name)[0]
-            # keep going until the count is not already used
-            for count in current_counter_per_name[name_without_counter]:
-                if count not in used_counters_per_name.get(name_without_counter, set()):
-                    break
-            result.append(f'{name_without_counter} [{count}]' if count > 1 else name)
+            name_without_counter, asked_counter = self._split_name_and_count(name)
+            existing = used_counters_per_name.get(name_without_counter, set())
+            if asked_counter and asked_counter not in existing:
+                count = asked_counter
+            else:
+                # keep going until the count is not already used
+                for count in current_counter_per_name[name_without_counter]:
+                    if count not in existing:
+                        break
+            existing.add(count)
+            result.append(f'{name_without_counter} [{count}]' if count > 1 else name_without_counter)
 
         return result
 
