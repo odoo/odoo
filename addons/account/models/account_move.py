@@ -17,10 +17,10 @@ from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.osv import expression
 from odoo.tools import (
+    create_index,
     date_utils,
     email_re,
     email_split,
-    flatten,
     float_compare,
     float_is_zero,
     float_repr,
@@ -32,8 +32,8 @@ from odoo.tools import (
     groupby,
     index_exists,
     is_html_empty,
-    create_index,
     OrderedSet,
+    SQL,
 )
 
 _logger = logging.getLogger(__name__)
@@ -821,7 +821,12 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_query_made_hole(self, ids=None):
-        return f"""
+        ids_domain = SQL()
+        if ids:
+            ids_domain = SQL("AND this.id = ANY(%s)", ids)
+        elif irregular_domain := self.env.context.get('irregular_sequence_domain'):
+            ids_domain = SQL("AND this.id IN %s", self._where_calc(irregular_domain).subselect())
+        return SQL("""
                 SELECT this.id
                   FROM account_move this
                   JOIN res_company company ON company.id = this.company_id
@@ -831,8 +836,8 @@ class AccountMove(models.Model):
                  WHERE other.id IS NULL
                    AND this.sequence_number != 1
                    AND this.name != '/'
-                  {"AND this.id = ANY(%(move_ids)s)" if ids is not None else ""}
-        """, {'move_ids': ids} if ids is not None else {}
+                   %s
+        """, ids_domain)
 
     @api.depends('name', 'journal_id')
     def _compute_made_sequence_hole(self):
