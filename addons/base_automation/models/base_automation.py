@@ -895,8 +895,8 @@ class BaseAutomation(models.Model):
 
     @api.model
     def _check_delay(self, automation, record, record_dt):
-        if automation.trg_date_calendar_id and automation.trg_date_range_type == 'day':
-            return automation.trg_date_calendar_id.plan_days(
+        if self._get_calendar(automation, record) and automation.trg_date_range_type == 'day':
+            return self._get_calendar(automation, record).plan_days(
                 automation.trg_date_range,
                 fields.Datetime.from_string(record_dt),
                 compute_leaves=True,
@@ -904,6 +904,10 @@ class BaseAutomation(models.Model):
         else:
             delay = DATE_RANGE_FUNCTION[automation.trg_date_range_type](automation.trg_date_range)
             return fields.Datetime.from_string(record_dt) + delay
+
+    @api.model
+    def _get_calendar(self, automation, record):
+        return automation.trg_date_calendar_id
 
     @api.model
     def _check(self, automatic=False, use_new_cursor=False):
@@ -933,12 +937,29 @@ class BaseAutomation(models.Model):
 
             # process action on the records that should be executed
             now = datetime.datetime.now()
+            past_now = {}
+            past_last_run = {}
             for record in records:
                 record_dt = get_record_dt(record)
                 if not record_dt:
                     continue
-                action_dt = self._check_delay(automation, record, record_dt)
-                if last_run <= action_dt < now:
+                if automation.trg_date_calendar_id and automation.trg_date_range_type == 'day':
+                    calendar = self._get_calendar(automation, record)
+                    if calendar.id not in past_now:
+                        past_now[calendar.id] = calendar.plan_days(
+                            - automation.trg_date_range,
+                            now,
+                            compute_leaves=True,
+                        )
+                        past_last_run[calendar.id] = calendar.plan_days(
+                            - automation.trg_date_range,
+                            last_run,
+                            compute_leaves=True,
+                        )
+                    is_process_to_run = past_last_run[calendar.id] <= fields.Datetime.to_datetime(record_dt) < past_now[calendar.id]
+                else:
+                    is_process_to_run = last_run <= self._check_delay(automation, record, record_dt) < now
+                if is_process_to_run:
                     try:
                         automation._process(record)
                     except Exception:
