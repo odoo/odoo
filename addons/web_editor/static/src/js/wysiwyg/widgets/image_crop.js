@@ -12,6 +12,7 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { scrollTo } from "@web_editor/js/common/scrolling";
+import { preserveCursor } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 export class ImageCrop extends Component {
     static template = 'web_editor.ImageCrop';
@@ -80,6 +81,7 @@ export class ImageCrop extends Component {
         this.media.setAttribute('src', this.initialSrc);
         this.$media.trigger('image_cropper_destroyed');
         this.state.active = false;
+        this.restoreCursor();
     }
 
     /**
@@ -136,6 +138,7 @@ export class ImageCrop extends Component {
         this.$media = $(this.media);
         // Needed for editors in iframes.
         this.document = this.media.ownerDocument;
+        this.restoreCursor = preserveCursor(this.media.ownerDocument);
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         const src = this.media.getAttribute('src');
         const data = {...this.media.dataset};
