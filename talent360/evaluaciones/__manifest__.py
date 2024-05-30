@@ -18,6 +18,7 @@
         "views/importar_preguntas_wizard_views.xml",
         "views/evaluaciones_responder.xml",
         "views/wizards_views.xml",
+        "views/registrar_avance_wizard.xml",
         "data/pregunta.csv",
         "data/competencia.csv",
         "data/opcion.csv",
