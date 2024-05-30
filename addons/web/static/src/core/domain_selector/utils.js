@@ -5,7 +5,7 @@ import { domainFromTree, condition } from "@web/core/tree_editor/condition_tree"
 import { getDefaultPath } from "@web/core/tree_editor/utils";
 
 export function getDefaultCondition(fieldDefs) {
-    const defaultPath = getDefaultPath(fieldDefs);
+    const defaultPath = "create_date" // getDefaultPath(fieldDefs);
     const fieldDef = fieldDefs[defaultPath];
     const operator = getDomainDisplayedOperators(fieldDef)[0];
     const value = getDefaultValue(fieldDef, operator);
