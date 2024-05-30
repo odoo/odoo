@@ -59,7 +59,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
         self.assertEqual(len(lead.message_ids), 3, 'Should have logged a tracking message for lost lead with reason')
         update_message = lead.message_ids[0]
         self.assertEqual(update_message.subtype_id, self.env.ref('crm.mt_lead_lost'))
-        self.assertEqual(len(update_message.tracking_value_ids), 2, 'Tracking: active, lost reason')
+        self.assertEqual(len(update_message.tracking_value_ids), 2, 'Tracking: active, lost reason, is_lost')
         self.assertTracking(
             update_message,
             [('active', 'boolean', True, False),
