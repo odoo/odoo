@@ -1,7 +1,8 @@
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { clamp } from "@web/core/utils/numbers";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { DEFAULT_INTERVAL, toGeneratorId } from "@web/search/utils/dates";
 
@@ -46,6 +47,7 @@ export class SearchArchParser {
         this.preSearchItems = [];
         this.searchPanelInfo = {
             className: "",
+            fold: false,
             viewTypes: DEFAULT_VIEWS_WITH_SEARCH_PANEL,
         };
         this.sections = [];
@@ -313,6 +315,9 @@ export class SearchArchParser {
 
         if (searchPanelNode.hasAttribute("class")) {
             this.searchPanelInfo.className = searchPanelNode.getAttribute("class");
+        }
+        if (searchPanelNode.hasAttribute("fold")) {
+            this.searchPanelInfo.fold = exprToBoolean(searchPanelNode.getAttribute("fold"));
         }
         if (searchPanelNode.hasAttribute("view_types")) {
             this.searchPanelInfo.viewTypes = searchPanelNode.getAttribute("view_types").split(",");

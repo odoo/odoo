@@ -74,35 +74,8 @@ export function useSetupAction(params = {}) {
             if (getGlobalState) {
                 Object.assign(state, getGlobalState());
             }
-            if (rootRef) {
-                const searchPanelEl = rootRef.el.querySelector(".o_content .o_search_panel");
-                if (searchPanelEl) {
-                    state[scrollSymbol] = {
-                        searchPanel: {
-                            left: searchPanelEl.scrollLeft,
-                            top: searchPanelEl.scrollTop,
-                        },
-                    };
-                }
-            }
             return state;
         });
-
-        if (rootRef) {
-            onMounted(() => {
-                const { globalState } = component.props;
-                const scrolling = globalState && globalState[scrollSymbol];
-                if (scrolling) {
-                    const searchPanelEl = rootRef.el.querySelector(".o_content .o_search_panel");
-                    if (searchPanelEl) {
-                        searchPanelEl.scrollLeft =
-                            (scrolling.searchPanel && scrolling.searchPanel.left) || 0;
-                        searchPanelEl.scrollTop =
-                            (scrolling.searchPanel && scrolling.searchPanel.top) || 0;
-                    }
-                }
-            });
-        }
     }
     if (__getLocalState__ && (getLocalState || rootRef)) {
         useCallbackRecorder(__getLocalState__, () => {
@@ -116,8 +89,11 @@ export function useSetupAction(params = {}) {
                         root: { left: rootRef.el.scrollLeft, top: rootRef.el.scrollTop },
                     };
                 } else {
-                    const contentEl = rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer_with_searchpanel," 
-                    + ".o_component_with_search_panel > .o_renderer") || rootRef.el.querySelector(".o_content");
+                    const contentEl =
+                        rootRef.el.querySelector(
+                            ".o_component_with_search_panel > .o_renderer_with_searchpanel," +
+                                ".o_component_with_search_panel > .o_renderer"
+                        ) || rootRef.el.querySelector(".o_content");
                     if (contentEl) {
                         state[scrollSymbol] = {
                             content: { left: contentEl.scrollLeft, top: contentEl.scrollTop },
@@ -137,8 +113,11 @@ export function useSetupAction(params = {}) {
                         rootRef.el.scrollTop = (scrolling.root && scrolling.root.top) || 0;
                         rootRef.el.scrollLeft = (scrolling.root && scrolling.root.left) || 0;
                     } else if (scrolling.content) {
-                        const contentEl = rootRef.el.querySelector(".o_component_with_search_panel > .o_renderer_with_searchpanel," 
-                    + ".o_component_with_search_panel > .o_renderer") || rootRef.el.querySelector(".o_content");
+                        const contentEl =
+                            rootRef.el.querySelector(
+                                ".o_component_with_search_panel > .o_renderer_with_searchpanel," +
+                                    ".o_component_with_search_panel > .o_renderer"
+                            ) || rootRef.el.querySelector(".o_content");
                         if (contentEl) {
                             contentEl.scrollTop = scrolling.content.top || 0;
                             contentEl.scrollLeft = scrolling.content.left || 0;

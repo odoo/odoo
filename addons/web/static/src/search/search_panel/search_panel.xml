@@ -30,7 +30,7 @@
                                 t-attf-class="o_search_panel_section_icon fa {{ category.icon }} fa-rotate-90 mb-2"
                                 t-att-style="category.color and ('color: ' + category.color)"
                             />
-                            <t t-esc="category.values.join('/')" />
+                            <t t-esc="category.values.join(' / ')" />
                         </span>
                     </t>
                     <t t-foreach="filters" t-as="filter" t-key="filter_index">
@@ -57,7 +57,7 @@
             <i class="fa fa-fw fa-angle-double-left"/>
         </button>
         <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">
-            <button class="btn w-100 overflow-visible">
+            <button class="btn mt-2 w-100 overflow-visible">
                 <div class="d-flex align-items-center me-2 ms-auto">All</div>
             </button>
         </div>
