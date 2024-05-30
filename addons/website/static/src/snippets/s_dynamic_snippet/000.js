@@ -82,11 +82,11 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _clearContent: function () {
-        const $templateArea = this.$el.find('.dynamic_snippet_template');
+        const templateAreaEl = this.el.querySelector('.dynamic_snippet_template');
         this.trigger_up('widgets_stop_request', {
-            $target: $templateArea,
+            target: templateAreaEl,
         });
-        $templateArea.html('');
+        templateAreaEl.html('');
     },
     /**
      * Method to be overridden in child components if additional configuration elements
@@ -180,7 +180,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         }
         this._renderContent();
         this.trigger_up('widgets_start_request', {
-            $target: this.$el.children(),
+            target: this.el.children,
             options: {parent: this},
             editableMode: this.editableMode,
         });
@@ -189,16 +189,16 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _renderContent: function () {
-        const $templateArea = this.$el.find('.dynamic_snippet_template');
+        const templateAreaEl = this.el.querySelector('.dynamic_snippet_template');
         this.trigger_up('widgets_stop_request', {
-            $target: $templateArea,
+            target: templateAreaEl,
         });
-        $templateArea.html(this.renderedContent);
+        templateAreaEl.html(this.renderedContent);
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
         this.trigger_up('widgets_start_request', {
-            $target: $templateArea,
+            target: templateAreaEl,
             editableMode: this.editableMode,
         });
     },

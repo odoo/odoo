@@ -26,3 +26,15 @@ export function markEventHandled(ev, markName) {
     }
     eventHandledWeakMap.get(ev).push(markName);
 }
+
+/**
+ * This method aims to check whether jquery is available in window or not.
+ *
+ * @returns {jQuery|null}
+ */
+export function getjQuery() {
+    if (window.jQuery) {
+        return window.jQuery;
+    }
+    return null;
+}

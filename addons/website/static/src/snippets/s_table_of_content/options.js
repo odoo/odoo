@@ -60,7 +60,7 @@ options.registry.TableOfContent = options.Class.extend({
                 continue;
             }
             this.trigger_up('widgets_start_request', {
-                $target: $(tocEl),
+                target: tocEl,
                 editableMode: true,
             });
         }

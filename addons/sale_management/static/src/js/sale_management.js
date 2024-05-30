@@ -92,10 +92,8 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
         ev.preventDefault();
         let self = this,
             $target = $(ev.currentTarget);
-
         // to avoid double click on link with href.
         $target.css('pointer-events', 'none');
-
         rpc(
             "/my/orders/" + self.orderDetail.orderId + "/add_option/" + $target.data('optionId'),
             {access_token: self.orderDetail.token}

@@ -571,7 +571,7 @@
                     $wpContainer.html(slide.htmlContent);
                     $content.append($wpContainer);
                     this.trigger_up('widgets_start_request', {
-                        $target: $content,
+                        target: $content[0],
                     });
                     this.websiteAnimateWidget.attachTo($wpContainer);
                 }

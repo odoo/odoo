@@ -4,7 +4,7 @@ import { clamp } from "@web/core/utils/numbers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService, useBus } from "@web/core/utils/hooks";
 import dom from "@web/legacy/js/core/dom";
-import Widget from "@web/legacy/js/core/widget";
+import { PublicWidget } from "@web/legacy/js/public/public_widget";
 import { useDragAndDrop } from "@web_editor/js/editor/drag_and_drop";
 import options from "@web_editor/js/editor/snippets.options";
 import weUtils from "@web_editor/js/common/utils";
@@ -46,7 +46,7 @@ var globalSelector = {
 /**
  * Management of the overlay and option list for a snippet.
  */
-var SnippetEditor = Widget.extend({
+var SnippetEditor = PublicWidget.extend({
     template: 'web_editor.snippet_overlay',
     events: {
         'click .oe_snippet_remove': '_onRemoveClick',
@@ -66,7 +66,7 @@ var SnippetEditor = Widget.extend({
 
     /**
      * @constructor
-     * @param {Widget} parent
+     * @param {PublicWidget} parent
      * @param {Element} target
      * @param {Object} templateOptions
      * @param {jQuery} $editable
@@ -3925,7 +3925,7 @@ class SnippetsMenu extends Component {
         if (this.options.wysiwyg.isSaving()) {
             return;
         }
-
+        // TO-remove-shsa - do we need ev.originalEvent now ?
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
         if (!srcElement || this.lastElement === srcElement) {
             return;

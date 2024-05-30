@@ -34,7 +34,7 @@ const ForumShare = publicWidget.Widget.extend({
             $('body').append(el);
             this.trigger_up('widgets_start_request', {
                 editableMode: false,
-                $target: $(el.querySelector(".s_share")),
+                target: el.querySelector(".s_share"),
             });
             $('#oe_social_share_modal').modal('show');
         }
