@@ -18,6 +18,14 @@
                             </div>
                     </button>
                 </xpath>
+
+                <xpath expr="//sheet" position="before">
+                    <field name="show_commercial_partner_warning" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not show_commercial_partner_warning">
+                        Do you really want to invoice your own company? Remove the "Company Name" from the partner to fix the configuration. Cancel this invoice and start again.
+                    </div>
+                </xpath>
             </field>
         </record>
     </data>
