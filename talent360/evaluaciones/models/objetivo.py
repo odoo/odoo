@@ -192,7 +192,7 @@ class Objetivo(models.Model):
                 continue
 
             if registro.orden == "ascendente":
-                ratio = registro.resultado / registro.piso_maximo if registro.piso_maximo != 0 else 0
+                ratio = (registro.resultado - registro.piso_minimo) / (registro.piso_maximo - registro.piso_minimo) if registro.piso_maximo != 0 else 0
                 if 0 <= ratio <= 0.6:
                     registro.estado = "rojo"
                 elif 0.61 <= ratio <= 0.85:
@@ -202,7 +202,7 @@ class Objetivo(models.Model):
                 elif ratio > 1:
                     registro.estado = "azul"
             else:
-                ratio = registro.resultado / registro.piso_minimo if registro.piso_minimo != 0 else 0
+                ratio = 1 - ((registro.resultado - registro.piso_maximo) / (registro.piso_minimo - registro.piso_maximo))
                 if 0 <= ratio <= 0.6:
                     registro.estado = "rojo"
                 elif 0.61 <= ratio <= 0.85:
@@ -262,3 +262,8 @@ class Objetivo(models.Model):
             if record.metrica == "otro" and (not record.nueva_metrica or record.nueva_metrica.strip() == ''):
                 raise ValidationError(("El campo 'Métrica Personalizada' no puede estar vacío."))
                 
+    @api.model
+    def create(self, vals):
+        if vals.get("orden") == "descendente":
+            vals["resultado"] = vals.get("piso_minimo")
+        return super(Objetivo, self).create(vals)

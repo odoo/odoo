@@ -161,6 +161,13 @@ class RegistrarAvance(models.TransientModel):
             "archivos": [(6, 0, archivos.ids)],
         })
         
-        nuevo_resultado = usuario_objetivo.resultado + avance
+        orden = usuario_objetivo.orden
+        if orden == "ascendente":
+            nuevo_resultado = usuario_objetivo.resultado + avance
+        else:
+            nuevo_resultado = usuario_objetivo.resultado - avance
+            if nuevo_resultado <= 0:
+                nuevo_resultado = 0
+
         usuario_objetivo.sudo().write({"resultado": nuevo_resultado})
         
