@@ -1,4 +1,4 @@
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { Component, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -9,7 +9,10 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class HtmlField extends Component {
     static template = "html_editor.HtmlField";
-    static props = { ...standardFieldProps };
+    static props = {
+        ...standardFieldProps,
+        isCollaborative: { type: Boolean, optional: true },
+    };
     static components = {
         Wysiwyg,
     };
@@ -20,6 +23,7 @@ export class HtmlField extends Component {
         useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
             detail.proms.push(this.commitChanges())
         );
+        this.busService = this.env.services.bus_service;
 
         this.isDirty = false;
         this.state = useState({ key: 0 });
@@ -67,12 +71,27 @@ export class HtmlField extends Component {
     }
 
     getConfig() {
-        return {
+        const config = {
             content: this.props.record.data[this.props.name],
-            Plugins: MAIN_PLUGINS,
+            Plugins: [
+                ...MAIN_PLUGINS,
+                ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
+            ],
             classList: this.classList,
             onChange: this.onChange.bind(this),
+            busService: this.busService,
+            collaborationChannel: this.props.isCollaborative && {
+                collaborationModelName: this.props.record.resModel,
+                collaborationFieldName: this.props.name,
+                collaborationResId: parseInt(this.props.record.resId),
+            },
+            peerId: this.generateId(),
         };
+        return config;
+    }
+    generateId() {
+        // No need for secure random number.
+        return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     }
 }
 
@@ -80,6 +99,11 @@ export const htmlField = {
     component: HtmlField,
     displayName: _t("Html"),
     supportedTypes: ["html"],
+    extractProps({ attrs, options }, dynamicInfo) {
+        return {
+            isCollaborative: options.collaborative,
+        };
+    },
 };
 
 registry.category("fields").add("html", htmlField, { force: true });

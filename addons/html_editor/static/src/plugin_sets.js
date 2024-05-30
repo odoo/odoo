@@ -90,11 +90,15 @@ export const MAIN_PLUGINS = [
     TableResizePlugin,
 ];
 
-export const EXTRA_PLUGINS = [
+export const COLLABORATION_PLUGINS = [
     CollaborationPlugin,
     CollaborationOdooPlugin,
     CollaborationSelectionPlugin,
     CollaborationSelectionAvatarPlugin,
+];
+
+export const EXTRA_PLUGINS = [
+    ...COLLABORATION_PLUGINS,
     ...MAIN_PLUGINS,
     QWebPlugin,
     OwlComponentPlugin,
