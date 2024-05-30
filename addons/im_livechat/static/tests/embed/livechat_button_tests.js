@@ -6,6 +6,7 @@ import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/tes
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
+import { assertSteps, step } from "@web/../tests/legacy/utils";
 
 test("open/close temporary channel", async () => {
     await startServer();
@@ -22,10 +23,19 @@ test("open/close temporary channel", async () => {
 test("open/close persisted channel", async () => {
     await startServer();
     await loadDefaultConfig();
-    start();
+    await start({
+        mockRPC(route, args, originalRPC) {
+            const res = originalRPC(...arguments);
+            if (route === "/im_livechat/get_session" && args.persisted) {
+                step("persisted");
+            }
+            return res;
+        },
+    });
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
-    triggerHotkey("Enter");
+    await triggerHotkey("Enter");
+    await assertSteps(["persisted"]);
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { text: "Did we correctly answer your question?" });
