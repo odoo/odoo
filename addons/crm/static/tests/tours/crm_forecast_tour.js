@@ -67,9 +67,8 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "complete expected closing",
         run: `edit ${today.plus({ months: 5 }).startOf("month").minus({ days: 1 }).toFormat("MM/dd/yyyy")} && press Escape`,
     }, {
-        trigger: ".o_field_widget[name=probability] input",
-        content: "max out probability",
-        run: "edit 100",
+        trigger: "button[name=action_set_won_rainbowman]",
+        content: "win the lead",
     }, {
         trigger: '.o_back_button',
         content: 'navigate back to the kanban view',
