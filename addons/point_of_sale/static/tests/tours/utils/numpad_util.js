@@ -1,6 +1,6 @@
 import { queryAll } from "@odoo/hoot-dom";
 
-const buttonTriger = (buttonValue) => `div.numpad.row button.col:contains("${buttonValue}")`;
+const buttonTriger = (buttonValue) => `div.numpad.row button[value="${buttonValue}"]`;
 export const click = (buttonValue) => ({
     content: `click numpad button: ${buttonValue}`,
     trigger: buttonTriger(buttonValue),
@@ -9,7 +9,7 @@ export const click = (buttonValue) => ({
     // button with the value "1". Here we need to match the exact value.
     run: () => {
         queryAll(buttonTriger(buttonValue))
-            .filter((el) => el.innerHTML == buttonValue)
+            .filter((el) => el.innerText === buttonValue)
             .at(0)
             ?.click();
     },
