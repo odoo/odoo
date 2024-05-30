@@ -6,7 +6,7 @@
         <field name="street">CA-1</field>
         <field name="city">Nacaome</field>
         <field name="country_id" ref="base.hn"/>
-        
+
         <field name="zip"/>
         <field name="phone">+504 9123-4567</field>
         <field name="email">info@company.hnexample.com</field>
@@ -31,5 +31,6 @@
         <value eval="[]"/>
         <value>hn</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_hn')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

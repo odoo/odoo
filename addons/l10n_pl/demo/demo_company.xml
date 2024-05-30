@@ -6,7 +6,7 @@
         <field name="street"/>
         <field name="city">Racibórz</field>
         <field name="country_id" ref="base.pl"/>
-        
+
         <field name="zip">47-400</field>
         <field name="phone">+48 512 345 678</field>
         <field name="email">info@company.plexample.com</field>
@@ -37,5 +37,6 @@
         <value eval="[]"/>
         <value>pl</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_pl')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>
