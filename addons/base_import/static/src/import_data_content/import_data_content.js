@@ -47,6 +47,7 @@ export class ImportDataContent extends Component {
         return fields.map((field) => ({
             label: field.label,
             value: field.fieldPath,
+            iconClass: `o_import_field_icon_${field.type}`,
         }));
     }
 
