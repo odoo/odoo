@@ -214,3 +214,29 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             ProductScreen.checkFirstLotNumber("123456789"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("RefundFewQuantities", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Sugar"),
+            ProductScreen.clickNumpad("0", "."),
+            ProductScreen.selectedOrderlineHas("Sugar", "0.00", "0.00"),
+            ProductScreen.clickNumpad("0", "2"),
+            ProductScreen.selectedOrderlineHas("Sugar", "0.02", "0.06"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("-0001"),
+            ProductScreen.clickNumpad("0", "."),
+            ProductScreen.clickNumpad("0", "2"),
+            TicketScreen.toRefundTextContains("To Refund: 0.02"),
+            TicketScreen.confirmRefund(),
+            ProductScreen.isShown(),
+            Order.hasLine("Sugar", "-0.02", "-0.06"),
+        ].flat(),
+});
