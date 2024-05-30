@@ -3,6 +3,7 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { rpc } from "@web/core/network/rpc";
 import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
+import { redirect } from "@web/core/utils/urls";
 
 publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
     selector: '.o_wprofile_email_validation_container',
@@ -25,7 +26,7 @@ publicWidget.registry.websiteProfile = publicWidget.Widget.extend({
             redirect_url: element.dataset["redirect_url"],
         }).then(function (data) {
             if (data) {
-                window.location = element.dataset["redirect_url"];
+                redirect(element.dataset["redirect_url"]);
             }
         });
     },
@@ -57,7 +58,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             return def;
         }
 
-        const textarea = document.querySelector("textarea.o_wysiwyg_loader");
+        const textareaEl = document.querySelector("textarea.o_wysiwyg_loader");
 
         const options = {
             recordInfo: {
@@ -69,11 +70,11 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             userGeneratedContent: true,
         };
 
-        if (textarea.attributes.placeholder) {
-            options.placeholder = textarea.attributes.placeholder.value;
+        if (textareaEl.attributes.placeholder) {
+            options.placeholder = textareaEl.attributes.placeholder.value;
         }
 
-        this._wysiwyg = await loadWysiwygFromTextarea(this, textarea, options);
+        this._wysiwyg = await loadWysiwygFromTextarea(this, textareaEl, options);
 
         return Promise.all([def]);
     },
@@ -88,7 +89,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      */
     _onEditProfilePicClick: function (ev) {
         ev.preventDefault();
-        ev.currentTarget.closest('form').querySelector('.o_forum_file_upload').click();
+        ev.currentTarget.closest("form").querySelector(".o_forum_file_upload").click();
     },
     /**
      * @private
@@ -98,26 +99,26 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         if (!ev.currentTarget.files.length) {
             return;
         }
-        const form = ev.currentTarget.closest("form");
-        const reader = new window.FileReader();
+        const formEl = ev.currentTarget.closest("form");
+        var reader = new window.FileReader();
         reader.readAsDataURL(ev.currentTarget.files[0]);
         reader.onload = function (ev) {
-            form.querySelector(".o_wforum_avatar_img").src = ev.target.result;
+            formEl.querySelector(".o_wforum_avatar_img").src = ev.target.result;
         };
-        form.querySelector("#forum_clear_image")?.remove();
+        formEl.querySelector("#forum_clear_image")?.remove();
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onProfilePicClearClick: function (ev) {
-        const form = ev.currentTarget.closest("form");
-        form.querySelector(".o_wforum_avatar_img").src = "/web/static/img/placeholder.png";
+        const formEl = ev.currentTarget.closest("form");
+        formEl.querySelector(".o_wforum_avatar_img").src = "/web/static/img/placeholder.png";
         const inputElement = document.createElement("input");
         inputElement.setAttribute("name", "clear_image");
         inputElement.setAttribute("id", "forum_clear_image");
         inputElement.setAttribute("type", "hidden");
-        form.append(inputElement);
+        formEl.append(inputElement);
     },
 
     /**
