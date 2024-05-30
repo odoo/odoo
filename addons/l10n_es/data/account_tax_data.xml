@@ -4925,4 +4925,301 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_s_irpfnrnue24" model="account.tax.template">
+        <field name="description">IRPF 24%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF No residentes no-UE 24%</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_p_irpfnrnue24p" model="account.tax.template">
+        <field name="description">IRPF 24%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF No residentes no-UE 24%</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_s_irpfnrue19" model="account.tax.template">
+        <field name="description">IRPF 19%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF No residentes UE 19%</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-19"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_p_irpfnrue19p" model="account.tax.template">
+        <field name="description">IRPF 19%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF No residentes UE 19%</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-19"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_s_irpfnrnue0" model="account.tax.template">
+        <field name="description">IRPF no-UE exento</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF No residentes no-UE exento por convenio</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_p_irpfnrnue0p" model="account.tax.template">
+        <field name="description">IRPF no-UE exento</field>
+        <field name="type_tax_use">purchase</field>
+        <field
+            name="name"
+        >Retenciones IRPF No residentes no-UE exento por convenio</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_s_irpfnrue0" model="account.tax.template">
+        <field name="description">IRPF UE exento</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF No residentes UE exento por convenio</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"
+        />
+    </record>
+    <record id="account_tax_template_p_irpfnrue0p" model="account.tax.template">
+        <field name="description">IRPF UE exento</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF No residentes UE exento por convenio</field>
+        <field name="active">False</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+
+        ]"
+        />
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"
+        />
+    </record>
 </odoo>
