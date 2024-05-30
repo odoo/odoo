@@ -790,17 +790,34 @@ class TransactionCase(BaseCase):
 
         cls.addClassCleanup(cls._gc_filestore)
         cls.registry = odoo.registry(get_db_name())
+        cls.registry_start_invalidated = cls.registry.registry_invalidated
         cls.registry_start_sequence = cls.registry.registry_sequence
+
         def reset_changes():
             if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
                 with cls.registry.cursor() as cr:
                     cls.registry.setup_models(cr)
-            cls.registry.registry_invalidated = False
+            cls.registry.registry_invalidated = cls.registry_start_invalidated
             cls.registry.registry_sequence = cls.registry_start_sequence
             with cls.muted_registry_logger:
                 cls.registry.clear_all_caches()
             cls.registry.cache_invalidated.clear()
         cls.addClassCleanup(reset_changes)
+
+        def signal_changes():
+            if not cls.registry.ready:
+                _logger.info('Skipping signal changes during tests')
+                return
+            _logger.info('Simulating signal changes during tests')
+            if cls.registry.registry_invalidated:
+                cls.registry.registry_sequence += 1
+            for cache_name in cls.registry.cache_invalidated or ():
+                cls.registry.cache_sequences[cache_name] += 1
+            cls.registry.registry_invalidated = False
+            cls.registry.cache_invalidated.clear()
+
+        cls._signal_changes_patcher = patch.object(cls.registry, 'signal_changes', signal_changes)
+        cls.startClassPatcher(cls._signal_changes_patcher)
 
         cls.cr = cls.registry.cursor()
         cls.addClassCleanup(cls.cr.close)
