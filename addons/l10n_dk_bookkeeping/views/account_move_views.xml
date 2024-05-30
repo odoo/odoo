@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='journal_div']" position="after">
                 <field name="l10n_dk_show_currency_rate" invisible="1"/>
-                <field name="l10n_dk_currency_rate_at_transaction" invisible="not l10n_dk_show_currency_rate"/>
+                <field name="l10n_dk_currency_rate_at_transaction" invisible="not l10n_dk_show_currency_rate" digits="[12,12]"/>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="account.view_move_line_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='credit']" position="after">
-                <field name="currency_rate" string="Rate" optional="hide"/>
+                <field name="currency_rate" string="Rate" digits="[12,12]" optional="hide"/>
             </xpath>
         </field>
     </record>
