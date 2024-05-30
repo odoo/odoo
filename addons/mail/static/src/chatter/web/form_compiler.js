@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
-import { append, createElement, setAttributes } from "@web/core/utils/xml";
+import { append, createElement, extractAttributes, setAttributes } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
 function compileChatter(node, params) {
@@ -94,8 +94,11 @@ patch(FormCompiler.prototype, {
         }
         // after sheet bg (standard position, either aside or below)
         if (webClientViewAttachmentViewHookXml) {
+            const { ["t-if"]: tIf } = extractAttributes(chatterContainerHookXml, ["t-if"]);
             setAttributes(chatterContainerHookXml, {
-                "t-if": `!(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
+                "t-if": `${
+                    tIf ? tIf : "true"
+                } and (!(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}))`,
                 "t-attf-class": `{{ __comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}) ? "o-aside" : "" }}`,
             });
             setAttributes(chatterContainerXml, {
