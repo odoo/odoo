@@ -1200,6 +1200,42 @@ class Evaluacion(models.Model):
             "target": "new",
         }
     
+    def actualizar_estados_eval(self):
+        """
+        Actualiza el estado de las evaluaciones según la fecha actual.
+
+        - Si la fecha actual está dentro del rango de fechas de inicio y finalización,
+        se cambia el estado a 'publicado' (Abierta).
+        - De lo contrario, pasa a 'finalizado' (Cerrada).
+
+        :return: None
+        """
+
+        hoy = fields.Date.today()
+        hora = fields.Datetime.now().strftime("%H:%M:%S")
+
+        # asignar 11:59pm como hora de cierre de evaluaciones
+        hora_cierre = "23:59:55"
+
+        # Asignar la hora de apertura de las evaluaciones 12:01am
+        hora_apertura = "00:00:55"
+
+        evaluaciones = self.search([])
+
+        # Actualizar el estado de las evaluaciones según la fecha y hora actual
+        for evaluacion in evaluaciones:
+            if evaluacion.fecha_inicio <= hoy <= evaluacion.fecha_final:
+                if hoy == evaluacion.fecha_inicio and hora < hora_apertura:
+                    evaluacion.estado = "borrador"
+                elif hoy == evaluacion.fecha_final and hora > hora_cierre:
+                    evaluacion.estado = "finalizado"
+                else:
+                    evaluacion.estado = "publicado"
+            elif evaluacion.fecha_final < hoy:
+                evaluacion.estado = "finalizado"
+            elif evaluacion.fecha_inicio > hoy:
+                evaluacion.estado = "borrador"
+                
     def evaluacion_general_action_form(self):
         """
         Ejecuta la acción de redireccionar a la evaluación general y devuelve un diccionario
@@ -1238,7 +1274,7 @@ class Evaluacion(models.Model):
         :return: El formato escalar seleccionado para la evaluación.
         """
         return self.escalar_format
-    
+
     def generar_reporte(self):
         """
         Devuelve las fechas de inicio y final que el usuario acordo al realizar la evaluación.
