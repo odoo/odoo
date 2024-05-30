@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <odoo>
     <!-- Vista en árbol para usuario.objetivo.rel -->
-    <record id="usuario_objetivo_rel_view_tree" model="ir.ui.view">
+    <record id="objetivo_view_tree" model="ir.ui.view">
         <field name="name">objetivo</field>
         <field name="model">objetivo</field>
         <field name="arch" type="xml">
-            <tree string="Objetivos de Usuarios">
+            <tree string="Objetivos de Usuarios" import="False">
                 <field name="titulo" string="Nombre del Objetivo"/>
                 <field name="fecha_fin" string="Fecha Fin"/>
                 <field name="tipo" string="Tipo"/>
                 <field name="estado" string="Estado"/>
                 <field name="peso" string="Peso"/>
-                <field name="metrica_mostrar" string="Métrica"/>
+                <field name="orden" string="Orden"/>
                 <field name="piso_minimo" string="Piso Mínimo"/>
                 <field name="piso_maximo" string="Piso Máximo"/>
             </tree>
