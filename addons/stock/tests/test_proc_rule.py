@@ -312,6 +312,12 @@ class TestProcRule(TransactionCase):
             'qty_multiple': 10,
         })
         self.assertEqual(orderpoint.qty_to_order, 10.0)  # 15.0 < 14.5 + 10 <= 30.0
+        # Test search on computed field
+        rr = self.env['stock.warehouse.orderpoint'].search([
+            ('qty_to_order', '>', 0),
+            ('product_id', '=', self.productA.id),
+        ])
+        self.assertTrue(rr)
         orderpoint.write({
             'qty_multiple': 1,
         })
