@@ -155,9 +155,11 @@ class Evaluacion(models.Model):
 
         if not self:
 
+            ultimo_id = self.env["evaluacion"].search([], order="id desc", limit=1)
+
             new_evaluation = self.env["evaluacion"].create(
                 {
-                    "nombre": "Evaluación Clima",
+                    "nombre": "Evaluación Clima " + str(ultimo_id.id + 1),
                     "descripcion": "La evaluación Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
                     "tipo": "CLIMA",
                     "fecha_inicio": fields.Date.today(),
@@ -193,9 +195,12 @@ class Evaluacion(models.Model):
         """
 
         if not self:
+
+            ultimo_id = self.env["evaluacion"].search([], order="id desc", limit=1)
+
             new_evaluation = self.env["evaluacion"].create(
                 {
-                    "nombre": "Evaluación NOM 035",
+                    "nombre": "Evaluación NOM 035 " + str(ultimo_id.id + 1),
                     "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
                     "tipo": "NOM_035",
                     "fecha_inicio": fields.Date.today(),
@@ -1210,10 +1215,12 @@ class Evaluacion(models.Model):
         a una vista de la evaluación general.
 
         """
+
+        ultimo_id = self.env["evaluacion"].search([], order="id desc", limit=1)
         
         nueva_evaluacion = self.env["evaluacion"].create(
             {
-                "nombre": "Evaluación Genérica",
+                "nombre": "Evaluación Genérica " + str(ultimo_id.id + 1),
                 "tipo": "generico",
                 "fecha_inicio": fields.Date.today(),
                 "fecha_final": fields.Date.today(),
