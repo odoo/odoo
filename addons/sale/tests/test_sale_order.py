@@ -722,10 +722,12 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(order.amount_total, 300)
         self.assertEqual(order.amount_tax, 100)
         order.fiscal_position_id = mapping_a
+        order._recompute_prices()
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 270)
         self.assertEqual(order.amount_tax, 70)
         order.fiscal_position_id = mapping_b
+        order._recompute_prices()
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
