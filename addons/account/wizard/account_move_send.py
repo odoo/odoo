@@ -378,24 +378,23 @@ class AccountMoveSend(models.TransientModel):
         return
 
     @api.model
-    def _prepare_invoice_pdf_report(self, invoice, invoice_data):
+    def _prepare_invoice_pdf_report(self, invoices_data):
         """ Prepare the pdf report for the invoice passed as parameter.
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        if invoice.invoice_pdf_report_id:
-            return
+        ids = [inv.id for inv in invoices_data]
+        content, _report_type = self.env['ir.actions.report']._pre_render_qweb_pdf('account.account_invoices', res_ids=ids)
 
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
-
-        invoice_data['pdf_attachment_values'] = {
-            'raw': content,
-            'name': invoice._get_invoice_report_filename(),
-            'mimetype': 'application/pdf',
-            'res_model': invoice._name,
-            'res_id': invoice.id,
-            'res_field': 'invoice_pdf_report_file', # Binary field
-        }
+        for invoice, invoice_data in invoices_data.items():
+            invoice_data['pdf_attachment_values'] = {
+                'name': invoice._get_invoice_report_filename(),
+                'raw': content[invoice.id],
+                'mimetype': 'application/pdf',
+                'res_model': invoice._name,
+                'res_id': invoice.id,
+                'res_field': 'invoice_pdf_report_file',  # Binary field
+            }
 
     @api.model
     def _prepare_invoice_proforma_pdf_report(self, invoice, invoice_data):
@@ -406,7 +405,7 @@ class AccountMoveSend(models.TransientModel):
         content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
-            'raw': content,
+            'raw': content[invoice.id],
             'name': invoice._get_invoice_proforma_pdf_report_filename(),
             'mimetype': 'application/pdf',
             'res_model': invoice._name,
@@ -423,16 +422,21 @@ class AccountMoveSend(models.TransientModel):
         return
 
     @api.model
-    def _link_invoice_documents(self, invoice, invoice_data):
+    def _link_invoice_documents(self, invoices_data):
         """ Create the attachments containing the pdf/electronic documents for the invoice passed as parameter.
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
-        invoice.message_main_attachment_id = self.env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
-        invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-        invoice.is_move_sent = True
+        attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values()]
+        attachments = self.env['ir.attachment'].create(attachment_to_create)
+        res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
+
+        for invoice, invoice_date in invoices_data.items():
+            invoice.message_main_attachment_id = res_id_to_attachment[invoice.id]
+            invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+            invoice.is_move_sent = True
 
     @api.model
     def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
@@ -593,9 +597,27 @@ class AccountMoveSend(models.TransientModel):
             for invoice, invoice_data in invoices_data.items()
             if not invoice_data.get('error') or invoice_data.get('error_but_continue')
         }
+
+        # Use batch to avoid memory error
+        batch_size = self.env['ir.config_parameter'].sudo().get_param('account.pdf_generation_batch', '80')
+        batches = []
+        pdf_to_generate = {}
+        for invoice, invoice_data in invoices_data_pdf.items():
+            if self._need_invoice_document(invoice) and not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
+                pdf_to_generate[invoice] = invoice_data
+
+                if (len(pdf_to_generate) > int(batch_size)):
+                    batches.append(pdf_to_generate)
+                    pdf_to_generate = {}
+
+        if pdf_to_generate:
+            batches.append(pdf_to_generate)
+
+        for batch in batches:
+            self._prepare_invoice_pdf_report(batch)
+
         for invoice, invoice_data in invoices_data_pdf.items():
             if self._need_invoice_document(invoice) and not invoice_data.get('error'):
-                self._prepare_invoice_pdf_report(invoice, invoice_data)
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.
@@ -618,9 +640,12 @@ class AccountMoveSend(models.TransientModel):
             self._call_web_service_after_invoice_pdf_render(invoices_data_web_service)
 
         # Create and link the generated documents to the invoice if the web-service didn't failed.
-        for invoice, invoice_data in invoices_data_web_service.items():
-            if self._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf):
-                self._link_invoice_documents(invoice, invoice_data)
+        invoices_to_link = {
+            invoice: invoice_data
+            for invoice, invoice_data in invoices_data_web_service.items()
+            if self._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf)
+        }
+        self._link_invoice_documents(invoices_to_link)
 
     @api.model
     def _generate_invoice_fallback_documents(self, invoices_data):
