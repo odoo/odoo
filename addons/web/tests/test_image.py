@@ -102,6 +102,11 @@ class TestImage(HttpCase):
             'mimetype': 'image/gif',
         })
 
+        def remove_prefix(text, prefix):
+            if text.startswith(prefix):
+                return text[len(prefix):]
+            return text
+
         def assert_filenames(
                 url,
                 expected_filename,
@@ -116,8 +121,8 @@ class TestImage(HttpCase):
                 inline, filename = res.headers['Content-Disposition'].split('; ')
                 filename_star = ''
 
-            filename = filename.removeprefix("filename=").strip('"')
-            filename_star = url_unquote_plus(filename_star.removeprefix("filename*=UTF-8''").strip('"'))
+            filename = remove_prefix(filename, "filename=").strip('"')
+            filename_star = url_unquote_plus(remove_prefix(filename_star, "filename*=UTF-8''").strip('"'))
 
             self.assertEqual(inline, 'inline')
             self.assertEqual(filename, expected_filename, message)
