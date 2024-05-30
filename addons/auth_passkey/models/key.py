@@ -2,7 +2,6 @@ import base64
 from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessDenied
 from odoo.tools import sql
 from odoo.addons.base.models.res_users import check_identity
 

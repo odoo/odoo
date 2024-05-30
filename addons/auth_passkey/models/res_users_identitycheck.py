@@ -1,6 +1,5 @@
 from odoo import api, fields, _
 from odoo.exceptions import UserError
-from odoo.http import request
 from odoo.addons.base.models.res_users import CheckIdentity
 
 
@@ -15,7 +14,7 @@ class CheckIdentityPasskeys(CheckIdentity):
             return 'webauthn'
         else:
             return super()._get_default_auth_method()
-    
+
     def _check_identity(self):
         try:
             super()._check_identity()

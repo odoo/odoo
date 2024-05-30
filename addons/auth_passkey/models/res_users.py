@@ -1,11 +1,12 @@
 import base64
 import json
-import contextlib
 
 from odoo import fields, models, registry, _
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied
 from odoo.http import request
+
+from ..lib.duo_labs.webauthn.helpers.exceptions import InvalidAuthenticationResponse
 
 
 class UsersPasskey(models.Model):
@@ -65,7 +66,7 @@ class UsersPasskey(models.Model):
                     passkey.public_key,
                     passkey.sign_count,
                 )
-            except Exception as e:
+            except InvalidAuthenticationResponse as e:
                 raise AccessDenied(e.args[0])
             passkey.sign_count = new_sign_count
             request.session['skip_totp'] = True

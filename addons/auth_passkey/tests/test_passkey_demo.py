@@ -1,4 +1,5 @@
 import json
+import random
 import time
 
 from odoo.exceptions import UserError
@@ -14,7 +15,7 @@ class PasskeyTest(TransactionCase):
     def setUpClass(self):
         super().setUpClass()
 
-        # needs a fake request in order to call methods protected with check_identity
+        # Needs a fake request in order to call methods protected with check_identity
         fake_req = DotDict({
             'httprequest': DotDict({
                 'environ': {'REMOTE_ADDR': 'localhost'},
@@ -92,12 +93,23 @@ class PasskeyTest(TransactionCase):
             idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'webauthn'})
             idcheck.password = json.dumps(auth)
             idcheck._check_identity()
-            # Due to lack of support of sign_count, replay attacks are possible
-            # This is an accepted risk in order to increase compatbility with passkey implementations
+            # Due to lack of support of sign_count, we can replay the same request if we set the webauthn_challenge.
+            # This increases compatibility with more authenticators and due to the random challenge, replay attacks are not possible.
             request.session['webauthn_challenge'] = webauthn_challenge
             idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'webauthn'})
             idcheck.password = json.dumps(auth)
             idcheck._check_identity()
+        with self.assertRaises(KeyError):
+            with MockRequest(self.env) as request:
+                idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'webauthn'})
+                idcheck.password = json.dumps(auth)
+                idcheck._check_identity()
+        with self.assertRaises(UserError):
+            with MockRequest(self.env) as request:
+                request.session['webauthn_challenge'] = random.randbytes(64)
+                idcheck = self.env['res.users.identitycheck'].with_user(self.demo_user).create({'auth_method': 'webauthn'})
+                idcheck.password = json.dumps(auth)
+                idcheck._check_identity()
 
     def test_verification_only_self(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')

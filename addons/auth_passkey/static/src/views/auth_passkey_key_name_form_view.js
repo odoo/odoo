@@ -22,7 +22,7 @@ export class PassKeyNameFormController extends FormController {
             if(name.length > 0) {
                 const serverOptions = await this.rpc("/auth/passkey/start-registration");
                 const registration = await startRegistration(serverOptions).catch(e => console.error(e));
-                // In case the user cancel the passkey browser check, just interrupt.
+                // In case the user cancelled the passkey browser check, just interrupt.
                 if(!registration) return false;
                 const verification = await this.rpc("/auth/passkey/verify-registration", { registration });
                 clickParams.args = JSON.stringify([verification.credentialId, verification.credentialPublicKey]);
