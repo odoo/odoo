@@ -112,10 +112,10 @@
                             domain="[('active', '=', True)]"/>
                     <filter string="Inactive" name="filter_inactive"
                             domain="[('active', '=', False)]"/>
-                    <filter string="Won" name="won"
-                            domain="[('probability', '=', 100)]"/>
-                    <filter string="Lost" name="lost"
-                            domain="[('probability', '=', 0), ('active', '=', False)]"/>
+                    <filter string="Won" name="filter_won_status_won"
+                            domain="[('won_status', '=', 'won')]"/>
+                    <filter string="Lost" name="filter_won_status_lost"
+                            domain="[('won_status', '=', 'lost')]"/>
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="user_id" string="Salesperson"/>
                     <separator/>

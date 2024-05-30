@@ -11,7 +11,7 @@ from odoo import api, fields, models, modules, tools
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import date_utils, email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
@@ -120,7 +120,7 @@ class CrmLead(models.Model):
         compute='_compute_company_id', readonly=False, store=True)
     referred = fields.Char('Referred By')
     description = fields.Html('Notes')
-    active = fields.Boolean('Active', default=True, tracking=True)
+    active = fields.Boolean('Active', default=True, tracking=72)
     type = fields.Selection([
         ('lead', 'Lead'), ('opportunity', 'Opportunity')], required=True, tracking=15, index=True,
         default=lambda self: 'lead' if self.env.user.has_group('crm.group_use_lead') else 'opportunity')
@@ -223,10 +223,10 @@ class CrmLead(models.Model):
             ('won', 'Won'),
             ('lost', 'Lost'),
             ('pending', 'Pending'),
-        ], string='Is Won', compute='_compute_won_status', store=True)
+        ], string='Won/Lost', compute='_compute_won_status', store=True, tracking=70)
     lost_reason_id = fields.Many2one(
         'crm.lost.reason', string='Lost Reason',
-        index=True, ondelete='restrict', tracking=True)
+        index=True, ondelete='restrict', tracking=71)
     # Statistics
     calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})
@@ -248,6 +248,12 @@ class CrmLead(models.Model):
     )
     _user_id_team_id_type_index = models.Index("(user_id, team_id, type)")
     _create_date_team_id_idx = models.Index("(create_date, team_id)")
+
+    @api.constrains('probability', 'stage_id')
+    def _check_won_validity(self):
+        for lead in self:
+            if lead.stage_id.is_won and lead.probability != 100:
+                raise ValidationError(_("A lead in a Won stage cannot be lost. Move it to another stage first."))
 
     @api.depends('company_id')
     def _compute_user_company_ids(self):
@@ -533,10 +539,10 @@ class CrmLead(models.Model):
                 lead.meeting_display_date = lead_meeting_info['last_meeting_date']
                 lead.meeting_display_label = _('Last Meeting')
 
-    @api.depends('active', 'probability')
+    @api.depends('active', 'probability', 'stage_id')
     def _compute_won_status(self):
         for lead in self:
-            if lead.active and lead.probability == 100:
+            if lead.probability == 100 and lead.stage_id.is_won:
                 lead.won_status = 'won'
             elif not lead.active and lead.probability == 0:
                 lead.won_status = 'lost'
@@ -723,9 +729,12 @@ class CrmLead(models.Model):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super().create(vals_list)
 
-        for lead, values in zip(leads, vals_list):
-            if any(field in ['active', 'stage_id'] for field in values):
-                lead._handle_won_lost(values)
+        leads._handle_won_lost({}, {
+            lead.id: {
+                'is_lost': lead.won_status == 'lost',
+                'is_won': lead.won_status == 'won',
+            } for lead in leads
+        })
 
         return leads
 
@@ -763,20 +772,34 @@ class CrmLead(models.Model):
         elif stage_updated and not stage_is_won and not 'probability' in vals:
             vals['date_closed'] = False
 
-        if any(field in ['active', 'stage_id'] for field in vals):
-            self._handle_won_lost(vals)
+        update_frequencies = any(field in ['active', 'stage_id', 'probability'] for field in vals)
+        old_status_by_lead = {
+            lead.id: {
+                'is_lost': lead.won_status == 'lost',
+                'is_won': lead.won_status == 'won',
+            } for lead in self
+        } if update_frequencies else {}
 
         if not stage_is_won:
-            return super().write(vals)
+            result = super().write(vals)
+        else:
+            # stage change between two won stages: does not change the date_closed
+            leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
+            remaining = self - leads_already_won
+            if remaining:
+                result = super(CrmLead, remaining).write(vals)
+            if leads_already_won:
+                vals.pop('date_closed', False)
+                result = super(CrmLead, leads_already_won).write(vals)
 
-        # stage change between two won stages: does not change the date_closed
-        leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
-        remaining = self - leads_already_won
-        if remaining:
-            result = super(CrmLead, remaining).write(vals)
-        if leads_already_won:
-            vals.pop('date_closed', False)
-            result = super(CrmLead, leads_already_won).write(vals)
+        if update_frequencies:
+            self._handle_won_lost(old_status_by_lead, {
+                lead.id: {
+                    'is_lost': lead.won_status == 'lost',
+                    'is_won': lead.won_status == 'won',
+                } for lead in self
+            })
+
         return result
 
     @api.model
@@ -859,40 +882,54 @@ class CrmLead(models.Model):
         )
         return self.browse(my_lead_ids_keep) + other_lead_res
 
-    def _handle_won_lost(self, vals):
-        """ This method handle the state changes :
-        - To lost : We need to increment corresponding lost count in scoring frequency table
-        - To won : We need to increment corresponding won count in scoring frequency table
-        - From lost to Won : We need to decrement corresponding lost count + increment corresponding won count
-        in scoring frequency table.
-        - From won to lost : We need to decrement corresponding won count + increment corresponding lost count
-        in scoring frequency table."""
-        CrmLead = self.env['crm.lead']
-        leads_reach_won = CrmLead
-        leads_leave_won = CrmLead
-        leads_reach_lost = CrmLead
-        leads_leave_lost = CrmLead
-        won_stage_ids = self.env['crm.stage'].search([('is_won', '=', True)]).ids
-        for lead in self:
-            if 'stage_id' in vals:
-                if vals['stage_id'] in won_stage_ids:
-                    if lead.probability == 0:
-                        leads_leave_lost += lead
-                    leads_reach_won += lead
-                elif lead.stage_id.id in won_stage_ids and lead.active:  # a lead can be lost at won_stage
-                    leads_leave_won += lead
-            if 'active' in vals:
-                if not vals['active'] and lead.active:  # archive lead
-                    if lead.stage_id.id in won_stage_ids and lead not in leads_leave_won:
-                        leads_leave_won += lead
-                    leads_reach_lost += lead
-                elif vals['active'] and not lead.active:  # restore lead
-                    leads_leave_lost += lead
+    def _handle_won_lost(self, old_status_by_lead, new_status_by_lead):
+        """ This method handles all changes of won / lost status of leads on creation / writing,
+        and update the scoring frequency table accordingly:
+        - To lost : Increment corresponding lost count
+        - To won : Increment corresponding won count
+        - Leaving lost : Decrement corresponding lost count
+        - Leaving won : Decrement corresponding won count
+        More than one operation can happen simultaneously, for instance, going from lost to won:
+        Decrement corresponding lost count + increment corresponding won count.
 
-        leads_reach_won._pls_increment_frequencies(to_state='won')
-        leads_leave_won._pls_increment_frequencies(from_state='won')
-        leads_reach_lost._pls_increment_frequencies(to_state='lost')
-        leads_leave_lost._pls_increment_frequencies(from_state='lost')
+        A lead is WON when in won stage (and probability = 100% but that is implied and constrained)
+        A lead is LOST when active = False AND probability = 0
+        In every other case, the lead is not won nor lost.
+
+        :param old_status_by_lead: dict of old status by lead: {lead.id: {'is_lost': ..., 'is_won': ...}}
+        :param new_status_by_lead: dict of new status by lead: {lead.id: {'is_lost': ..., 'is_won': ...}}
+        """
+        leads_reach_won_ids = self.env['crm.lead']
+        leads_leave_won_ids = self.env['crm.lead']
+        leads_reach_lost_ids = self.env['crm.lead']
+        leads_leave_lost_ids = self.env['crm.lead']
+
+        for lead in self:
+            new_status = new_status_by_lead.get(
+                lead.id, {'is_lost': False, 'is_won': False}
+            )
+            old_status = old_status_by_lead.get(
+                lead.id, {'is_lost': False, 'is_won': False}
+            )
+            if new_status['is_lost'] and new_status['is_won']:
+                raise ValidationError(_("The lead %s cannot be won and lost at the same time.", lead))
+
+            if new_status['is_lost'] and not old_status['is_lost']:
+                leads_reach_lost_ids += lead
+            elif not new_status['is_lost'] and old_status['is_lost']:
+                leads_leave_lost_ids += lead
+
+            if new_status['is_won'] and not old_status['is_won']:
+                leads_reach_won_ids += lead
+            elif not new_status['is_won'] and old_status['is_won']:
+                leads_leave_won_ids += lead
+
+        leads_reach_won_ids._pls_increment_frequencies(to_state='won')
+        leads_leave_won_ids._pls_increment_frequencies(from_state='won')
+        leads_reach_lost_ids._pls_increment_frequencies(to_state='lost')
+        leads_leave_lost_ids._pls_increment_frequencies(from_state='lost')
+
+        return True
 
     def copy_data(self, default=None):
         # set default value in context, if not already set (Put stage to 'new' stage)
@@ -971,14 +1008,10 @@ class CrmLead(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
-    def action_archive(self):
-        """ When archiving: mark probability as 0."""
-        res = super().action_archive()
-        self.write({'probability': 0, 'automated_probability': 0})
-        return res
-
     def action_unarchive(self):
-        """ When re-activating update probability again, for leads and opportunities. """
+        """ When re-activating, force update probability for both leads and
+        opportunities. Note that archiving triggers nothing more, as a lead
+        can be archived and not lost. """
         activated = self.filtered(lambda rec: not rec.active)
         res = super().action_unarchive()
         if activated:
@@ -986,15 +1019,23 @@ class CrmLead(models.Model):
             activated._compute_probabilities()
         return res
 
+    def action_restore(self):
+        """ Restoring a lost lead means that it should go back to its normal life cycle.
+        This should reactivate the lead but also force the recompute of its probability, for the stage where the lead
+        is currently at. During toggle_active, when reactivating a lost lead,only the automated probability will be
+        recomputed, because the probability is not automated anymore. Restore will reset this automation."""
+        self.action_unarchive()
+        for lead in self:
+            lead.probability = lead.automated_probability
+
     def action_set_lost(self, **additional_values):
-        """ Lost semantic: probability = 0 or active = False """
+        """ Lost semantic: probability = 0 AND active = False """
         res = self.action_archive()
-        if additional_values:
-            self.write(dict(additional_values))
+        self.write({**additional_values, 'probability': 0, 'automated_probability': 0})
         return res
 
     def action_set_won(self):
-        """ Won semantic: probability = 100 (active untouched) """
+        """ Won semantic: stage.is_won (AND probability = 100 but implied) """
         self.action_unarchive()
         # group the leads by team_id, in order to write once by values couple (each write leads to frequency increment)
         leads_by_won_stage = {}
@@ -1054,7 +1095,7 @@ class CrmLead(models.Model):
             user_won_leads_count = self.search_count([
                 ('type', '=', 'opportunity'),
                 ('user_id', '=', self.user_id.id),
-                ('probability', '=', 100),
+                ('won_status', '=', 'won'),
                 ('date_closed', '>=', date_utils.start_of(today, 'year')),
                 ('date_closed', '<', date_utils.end_of(today, 'year')),
             ])
@@ -1677,7 +1718,7 @@ class CrmLead(models.Model):
     def convert_opportunity(self, partner, user_ids=False, team_id=False):
         customer = partner if partner else self.env['res.partner']
         for lead in self:
-            if not lead.active or lead.probability == 100:
+            if not lead.active or lead.won_status == 'won':
                 continue
             vals = lead._convert_opportunity_data(customer, team_id)
             lead.write(vals)
@@ -1760,7 +1801,7 @@ class CrmLead(models.Model):
         if include_lost:
             domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            domain += ['&', ('active', '=', True), '|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
+            domain += [('active', '=', True), ('won_status', '!=', 'won')]
 
         return self.with_context(active_test=False).search(domain)
 
@@ -1909,15 +1950,15 @@ class CrmLead(models.Model):
 
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.probability == 100 and self.stage_id:
+        if 'stage_id' in init_values and self.won_status == 'won':
             return self.env.ref('crm.mt_lead_won')
         elif 'lost_reason_id' in init_values and self.lost_reason_id:
             return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values:
             return self.env.ref('crm.mt_lead_stage')
-        elif 'active' in init_values and self.active:
+        elif 'won_status' in init_values and self.won_status != 'lost':
             return self.env.ref('crm.mt_lead_restored')
-        elif 'active' in init_values and not self.active:
+        elif 'won_status' in init_values and self.won_status == 'lost':
             return self.env.ref('crm.mt_lead_lost')
         return super()._track_subtype(init_values)
 
@@ -2051,12 +2092,9 @@ class CrmLead(models.Model):
         domain = []
         if batch_mode:
             domain = [
-                '&',
-                    ('active', '=', True), ('id', 'in', self.ids),
-                    '|',
-                        ('probability', '=', None),
-                        '&',
-                            ('probability', '<', 100), ('probability', '>', 0)
+                ('active', '=', True),
+                ('id', 'in', self.ids),
+                ('won_status', '=', 'pending'),
             ]
         leads_values_dict = self._pls_get_lead_pls_values(domain=domain)
 
@@ -2229,16 +2267,10 @@ class CrmLead(models.Model):
             return
 
         # 1. Get all the leads to recompute created after pls_start_date that are nor won nor lost
-        # (Won : probability = 100 | Lost : probability = 0 or inactive. Here, inactive won't be returned anyway)
-        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
         pending_lead_domain = [
-            '&',
-                '&',
-                    ('stage_id', '!=', False), ('create_date', '>=', pls_start_date),
-                '|',
-                    ('probability', '=', False),
-                    '&',
-                        ('probability', '<', 100), ('probability', '>', 0)
+            ('stage_id', '!=', False),
+            ('create_date', '>=', pls_start_date),
+            ('won_status', '=', 'pending'),
         ]
         leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
         leads_to_update_count = len(leads_to_update)
@@ -2329,12 +2361,8 @@ class CrmLead(models.Model):
         # Extract target leads values
         if rebuild:  # rebuild is ok
             domain = [
-                '&',
-                    ('create_date', '>=', pls_start_date),
-                    '|',
-                        ('probability', '=', 100),
-                        '&',
-                            ('probability', '=', 0), ('active', '=', False)
+                ('create_date', '>=', pls_start_date),
+                ('won_status', 'in', ['lost', 'won']),
               ]
             team_ids = self.env['crm.team'].with_context(active_test=False).search([]).ids + [0]  # If team_id is unset, consider it as team 0
         else:  # increment
@@ -2531,7 +2559,7 @@ class CrmLead(models.Model):
 
     # Common PLS Tools
     # ----------------
-    def _pls_get_lead_pls_values(self, domain=[]):
+    def _pls_get_lead_pls_values(self, domain=None):
         """
         This methods builds a dict where, for each lead in self or matching the given domain,
         we will get a list of field/value couple.
