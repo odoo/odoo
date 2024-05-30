@@ -1,6 +1,7 @@
 import { Domain } from "@web/core/domain";
 import { formatAST, parseExpr } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
+const { DateTime } = luxon;
 
 /** @typedef { import("@web/core/py_js/py_parser").AST } AST */
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -773,6 +774,34 @@ export function removeBetweenOperators(tree) {
     return newTree;
 }
 
+export function removeWithinOperators(tree) {
+    if (tree.type === "complex_condition") {
+        return tree;
+    }
+    if (tree.type === "condition") {
+        if (tree.operator !== "within") {
+            return tree;
+        }
+        const { negate, path, value } = tree;
+
+        return connector(
+            "&",
+            [condition(path, ">=", DateTime.local().toFormat("yyyy-MM-dd")), condition(path, "<=", DateTime.local().plus({ [value[1]]: value[0] }).toFormat("yyyy-MM-dd"))],
+            negate
+        );
+    }
+    const processedChildren = tree.children.map(removeWithinOperators);
+    if (tree.value === "|") {
+        return { ...tree, children: processedChildren };
+    }
+    const newTree = { ...tree, children: [] };
+    // after processing a child might have become a connector "&" --> normalize
+    for (let i = 0; i < processedChildren.length; i++) {
+        addChild(newTree, processedChildren[i]);
+    }
+    return newTree;
+}
+
 /**
  * @param {Tree} tree
  * @param {options} [options={}]
@@ -891,19 +920,18 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = createComplexConditions(
-        removeBetweenOperators(removeVirtualOperators(tree))
-    );
+        removeWithinOperators(removeBetweenOperators(removeVirtualOperators(tree))
+    ));
     return _expressionFromTree(simplifiedTree, options, true);
 }
-
 /**
  * @param {Tree} tree
  * @returns {string} a string representation of a domain
  */
 export function domainFromTree(tree) {
-    const simplifiedTree = removeBetweenOperators(
+    const simplifiedTree = removeWithinOperators(removeBetweenOperators(
         removeVirtualOperators(removeComplexConditions(tree))
-    );
+    ));
     const domainAST = {
         type: 4,
         value: getASTs(simplifiedTree),
