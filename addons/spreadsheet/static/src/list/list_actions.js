@@ -21,7 +21,7 @@ export const SEE_RECORD_LIST = async (position, env) => {
         .map(astToFormula)
         .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
     const listId = env.model.getters.getListIdFromPosition(position);
-    const { model, actionXmlId } = env.model.getters.getListDefinition(listId);
+    const { model, actionXmlId, context } = env.model.getters.getListDefinition(listId);
     const dataSource = await env.model.getters.getAsyncListDataSource(listId);
     const index = evaluatedArgs[1];
     if (typeof index !== "number") {
@@ -39,6 +39,7 @@ export const SEE_RECORD_LIST = async (position, env) => {
             res_model: model,
             res_id: recordId,
             views: [[false, "form"]],
+            context,
         },
         { viewType: "form" }
     );

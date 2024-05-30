@@ -13,8 +13,8 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     const pivot = env.model.getters.getPivot(pivotId);
     await pivot.load();
     const { model } = pivot.definition;
-    const { actionXmlId } = env.model.getters.getPivotDefinition(pivotId);
     const argsDomain = env.model.getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
+    const { actionXmlId, context } = env.model.getters.getPivotDefinition(pivotId);
     const domain = pivot.getPivotCellDomain(argsDomain);
     const name = await pivot.getModelLabel();
     await navigateTo(
@@ -30,6 +30,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
             ],
             target: "current",
             domain,
+            context,
         },
         { viewType: "list" }
     );
@@ -49,7 +50,7 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, env) => {
         return false;
     }
     const dataSource = env.model.getters.getPivot(pivotId);
-    const loadingError = dataSource.assertIsValid({ throwOnError: false })
+    const loadingError = dataSource.assertIsValid({ throwOnError: false });
     return (
         !loadingError &&
         evaluatedCell.type !== "empty" &&

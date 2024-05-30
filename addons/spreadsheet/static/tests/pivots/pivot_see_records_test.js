@@ -24,6 +24,7 @@ const basicListAction = {
     ],
     target: "current",
     domain: [],
+    context: {},
 };
 
 QUnit.test("Can open see records on headers col", async function (assert) {
@@ -188,7 +189,10 @@ QUnit.test("Can see records on ODOO.PIVOT.TABLE cells", async function (assert) 
 
 QUnit.test("Cannot see records of pivot formula without value", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();
-    assert.strictEqual(getCellFormula(model, "B3"), `=ODOO.PIVOT(1,"probability","bar","false","foo",1)`);
+    assert.strictEqual(
+        getCellFormula(model, "B3"),
+        `=ODOO.PIVOT(1,"probability","bar","false","foo",1)`
+    );
     assert.strictEqual(getCellValue(model, "B3"), "", "B3 is empty");
     selectCell(model, "B3");
     const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
