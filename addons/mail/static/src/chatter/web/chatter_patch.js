@@ -39,6 +39,7 @@ Chatter.props.push(
     "close?",
     "compactHeight?",
     "has_activities?",
+    "hasAttachmentPreview?",
     "hasParentReloadOnAttachmentsChanged?",
     "hasParentReloadOnFollowersUpdate?",
     "hasParentReloadOnMessagePosted?",
@@ -52,6 +53,7 @@ Chatter.props.push(
 Object.assign(Chatter.defaultProps, {
     compactHeight: false,
     has_activities: true,
+    hasAttachmentPreview: false,
     hasParentReloadOnAttachmentsChanged: false,
     hasParentReloadOnFollowersUpdate: false,
     hasParentReloadOnMessagePosted: false,
