@@ -6,7 +6,7 @@
         <field name="street">Vukasi</field>
         <field name="city">Ježdovec</field>
         <field name="country_id" ref="base.hr"/>
-        
+
         <field name="zip">10250</field>
         <field name="phone">+385 92 123 4567</field>
         <field name="email">info@company.hrexample.com</field>
@@ -31,5 +31,6 @@
         <value eval="[]"/>
         <value>hr_kuna</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_hr_kuna')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

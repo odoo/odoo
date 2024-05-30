@@ -6,7 +6,7 @@
         <field name="street">A</field>
         <field name="city">Clervaux</field>
         <field name="country_id" ref="base.lu"/>
-        
+
         <field name="zip">9839</field>
         <field name="phone">+352 628 123 456</field>
         <field name="email">info@company.luexample.com</field>
@@ -37,5 +37,6 @@
         <value eval="[]"/>
         <value>lu</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_lu')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>
