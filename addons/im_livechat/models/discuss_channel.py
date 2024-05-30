@@ -37,12 +37,6 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _compute_is_chat(self):
-        super()._compute_is_chat()
-        for record in self:
-            if record.channel_type == 'livechat':
-                record.is_chat = True
-
     def _channel_info(self):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)

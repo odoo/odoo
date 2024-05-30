@@ -194,6 +194,8 @@ class TestDiscussFullPerformance(HttpCase):
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
                 "settings": {
+                    "channel_notifications": False,
+                    "mute_until_dt": False,
                     "id": self.env["res.users.settings"]._find_or_create_for_user(self.users[0]).id,
                     "is_discuss_sidebar_category_channel_open": True,
                     "is_discuss_sidebar_category_chat_open": True,
