@@ -315,7 +315,6 @@ class ProjectCustomerPortal(CustomerPortal):
         values = {
             'create_date desc': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 10},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 20},
-            'user_ids': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 40},
             'stage_id, project_id': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 50},
             'state': {'label': _('Status'), 'order': 'state', 'sequence': 60},
             'priority desc': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 80},
@@ -396,7 +395,7 @@ class ProjectCustomerPortal(CustomerPortal):
         searchbar_groupby = dict(sorted(self._task_get_searchbar_groupby(milestones_allowed, project).items(), key=lambda item: item[1]['sequence']))
 
         # default sort by value
-        if not sortby or (sortby == 'milestone_id' and not milestones_allowed):
+        if not sortby or sortby not in searchbar_sortings or (sortby == 'milestone_id' and not milestones_allowed):
             sortby = 'create_date desc'
 
         # default group by value
