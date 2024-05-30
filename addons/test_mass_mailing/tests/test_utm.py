@@ -26,25 +26,24 @@ class TestUTM(common.TestMassMailCommon):
     @users("employee")
     def test_utm_source_mixin_name_brackets(self):
         """ Test with brackets """
-        with self.subTest(test="Brackets should not prevent numbering"):
-            false_dupes = self.env["utm.test.source.mixin"].create([
-                {
-                    'name': 'NewTest [2]',
-                    'title': 'NewTest',
-                }
-                for idx in range(3)] + [
-                {
-                    'name': 'NewTest [3]',
-                    'title': 'NewTest',
-                }, {
-                    'name': 'NewTest',
-                    'title': 'NewTest',
-                }]
-            )
-            self.assertListEqual(
-                false_dupes.mapped('name'),
-                ["NewTest", "NewTest [2]", "NewTest [3]", "NewTest [4]", "NewTest [5]"]
-            )
+        false_dupes = self.env["utm.test.source.mixin"].create([
+            {
+                'name': 'NewTest [2]',
+                'title': 'NewTest',
+            }
+            for idx in range(3)] + [
+            {
+                'name': 'NewTest [3]',
+                'title': 'NewTest',
+            }, {
+                'name': 'NewTest',
+                'title': 'NewTest',
+            }]
+        )
+        self.assertListEqual(
+            false_dupes.mapped('name'),
+            ["NewTest [2]", "NewTest", "NewTest [3]", "NewTest [4]", "NewTest [5]"]
+        )
 
         new_source = self.env["utm.test.source.mixin"].create({
             "name": "OtherTest [2]",
