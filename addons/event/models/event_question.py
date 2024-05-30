@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
@@ -44,7 +43,7 @@ class EventQuestion(models.Model):
                 answer_count = self.env['event.registration.answer'].search_count([('question_id', 'in', questions_new_type.ids)])
                 if answer_count > 0:
                     raise UserError(_("You cannot change the question type of a question that already has answers!"))
-        return super(EventQuestion, self).write(vals)
+        return super().write(vals)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_answered_question(self):
@@ -57,7 +56,7 @@ class EventQuestion(models.Model):
           (Along with secondary pivot and tree views)
         - A tree view showing textual answers values for text_box questions. """
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("website_event.action_event_registration_report")
+        action = self.env["ir.actions.actions"]._for_xml_id("event.action_event_registration_report")
         action['domain'] = [('question_id', '=', self.id)]
         if self.question_type == 'simple_choice':
             action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'tree')]

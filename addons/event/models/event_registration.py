@@ -72,6 +72,10 @@ class EventRegistration(models.Model):
              'Registered: registrations considered taken by a client\n'
              'Attended: registrations for which the attendee attended the event\n'
              'Cancelled: registrations cancelled manually')
+    # questions
+    registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
+    registration_answer_choice_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Selection Answers',
+        domain=[('question_type', '=', 'simple_choice')])
     # properties
     registration_properties = fields.Properties(
         'Properties', definition='event_id.registration_properties_definition', copy=True)
@@ -411,5 +415,6 @@ class EventRegistration(models.Model):
             'ticket_name': self.event_ticket_id.name or _('None'),
             'event_id': self.event_id.id,
             'event_display_name': self.event_id.display_name,
+            'registration_answers': self.registration_answer_ids.filtered('value_answer_id').mapped('display_name'),
             'company_name': self.event_id.company_id and self.event_id.company_id.name or False,
         }

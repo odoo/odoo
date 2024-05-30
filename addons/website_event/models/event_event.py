@@ -36,9 +36,6 @@ class Event(models.Model):
         })
         return res
 
-    def _default_question_ids(self):
-        return self.env['event.type']._default_question_ids()
-
     # description
     subtitle = fields.Char('Event Subtitle', translate=True)
     # registration
@@ -97,14 +94,6 @@ class Event(models.Model):
     start_remaining = fields.Integer(
         'Remaining before start', compute='_compute_time_data',
         help="Remaining time before event starts (minutes)")
-    # questions
-    question_ids = fields.One2many(
-        'event.question', 'event_id', 'Questions', copy=True,
-        compute='_compute_question_ids', readonly=False, store=True)
-    general_question_ids = fields.One2many('event.question', 'event_id', 'General Questions',
-                                           domain=[('once_per_order', '=', True)])
-    specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
-                                            domain=[('once_per_order', '=', False)])
 
     @api.depends('registration_ids')
     @api.depends_context('uid')
@@ -245,42 +234,6 @@ class Event(models.Model):
         for event in self:
             if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 event.website_url = '/event/%s' % slug(event)
-
-    @api.depends('event_type_id')
-    def _compute_question_ids(self):
-        """ Update event questions from its event type. Depends are set only on
-        event_type_id itself to emulate an onchange. Changing event type content
-        itself should not trigger this method.
-
-        When synchronizing questions:
-
-          * lines with no registered answers are removed;
-          * type lines are added;
-        """
-        if self._origin.question_ids:
-            # lines to keep: those with already given answers
-            questions_tokeep_ids = self.env['event.registration.answer'].search(
-                [('question_id', 'in', self._origin.question_ids.ids)]
-            ).question_id.ids
-        else:
-            questions_tokeep_ids = []
-        for event in self:
-            if not event.event_type_id and not event.question_ids:
-                event.question_ids = self._default_question_ids()
-                continue
-
-            if questions_tokeep_ids:
-                questions_toremove = event._origin.question_ids.filtered(
-                    lambda question: question.id not in questions_tokeep_ids)
-                command = [(3, question.id) for question in questions_toremove]
-            else:
-                command = [(5, 0)]
-            event.question_ids = command
-
-            # copy questions so changes in the event don't affect the event type
-            event.question_ids += event.event_type_id.question_ids.copy({
-                'event_type_id': False,
-            })
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
