@@ -888,7 +888,7 @@ class IrActionsReport(models.Model):
             })
         return attachment_vals_list
 
-    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
+    def _pre_render_qweb_pdf(self, report_ref, res_ids=None, data=None):
         if not data:
             data = {}
         if isinstance(res_ids, int):
@@ -900,6 +900,19 @@ class IrActionsReport(models.Model):
             return self._render_qweb_html(report_ref, res_ids, data=data)
 
         self = self.with_context(webp_as_jpg=True)
+        return self._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids), 'pdf'
+
+    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
+        if not data:
+            data = {}
+        if isinstance(res_ids, int):
+            res_ids = [res_ids]
+        data.setdefault('report_type', 'pdf')
+
+        collected_streams, report_type = self._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
+        if report_type != 'pdf':
+            return collected_streams, report_type
+
         collected_streams = self._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
         has_duplicated_ids = res_ids and len(res_ids) != len(set(res_ids))
 
