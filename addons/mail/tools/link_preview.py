@@ -3,6 +3,7 @@
 
 from lxml import html
 import requests
+from urllib3.exceptions import LocationParseError
 
 
 def get_link_preview_from_url(url, request_session=None):
@@ -27,6 +28,8 @@ def get_link_preview_from_url(url, request_session=None):
         else:
             response = requests.get(url, timeout=3, headers=user_agent, allow_redirects=True, stream=True)
     except requests.exceptions.RequestException:
+        return False
+    except LocationParseError:
         return False
     if not response.ok or not response.headers.get('Content-Type'):
         return False
