@@ -23,6 +23,7 @@ class Objetivo(models.Model):
     :param estado(fields.Selection): Seleccionar el estado actual del objetivo
     :param usuario_ids(fields.Many2Many): Arreglo de usuarios asignado a un objetivo
     :param evaluador(fields.Char): Nombre del evaluador del objetivo
+    :param avances(fields.One2Many): Avances del objetivo
     """
 
     _name = "objetivo"
@@ -107,6 +108,8 @@ class Objetivo(models.Model):
     )
 
     evaluador = fields.Char()
+
+    avances = fields.One2many("objetivo.avances", "objetivo_id", string="Avances")
 
     @api.constrains("piso_minimo", "piso_maximo")
     def _checar_pisos(self):
@@ -201,6 +204,18 @@ class Objetivo(models.Model):
             if not registro.usuario_ids:
                 raise ValidationError(_("Debe asignar al menos un usuario al objetivo"))
             
+    def registrar_avance_action(self):
+        """
+        Método para llamar la funcionalidad de registro de avances.
+        """
+        return {
+            "name": "Registrar Avance",
+            "type": "ir.actions.act_window",
+            "res_model": "registrar.avance.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }
+    
     @api.onchange("metrica")
     def _onchange_metrica(self):
         if self.metrica != "otro":

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Vista para el wizard de registrar avance -->
+    <record id="view_registrar_avance_wizard" model="ir.ui.view">
+        <field name="name">registrar.avance.wizard.form</field>
+        <field name="model">registrar.avance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Registrar Avance">
+                <h4>Registra el progreso de tu objetivo, adjunta archivos que respalden tu avance y añade comentarios para ofrecer aclaraciones adicionales.</h4>
+                <group>
+                    <group>
+                        <label for="avance" string="Avance: " />
+                        <field name="avance" nolabel="1" />
+                    </group>
+                    <group>
+                        <label for="archivos" string="Evidencias: " />
+                        <field name="archivos" nolabel="1" widget="many2one_binary" />
+                    </group>
+                    <group>
+                        <label for="comentarios" string="Comentarios: " />
+                        <field name="comentarios" nolabel="1" />
+                    </group>
+                    <footer>
+                        <button string="Confirmar" type="object" class="btn-primary" name="confirmar_action" context="{'objetivo_id': context.get('actual_objetivo_id')}"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>
