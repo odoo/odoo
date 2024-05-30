@@ -1212,16 +1212,19 @@ class Evaluacion(models.Model):
     def checar_techo(self):
         """
         Verifica que los valores de la ponderación sean válidos.
+        Validación 1: Verifica que el valor de la ponderación no sea menor o igual a 0.
+        Validación 2: Verifica que no haya valores duplicados en la ponderación para la misma evaluación.
+        Validación 3: Verifica que no haya más de 10 techos.
+        Validación 4: Verifica que los valores de la ponderación estén en orden ascendente.
+        Validación 5: Verifica que el valor de las ponderaciones no sean mayores a 100 y que el último sea 100.
 
         """
         for nivel in self.niveles:
-            # Verificar que el valor de la ponderación sea mayor que 0
             if nivel.techo <= 0:
                 raise ValidationError(
-                    "El valor de la ponderación debe ser mayor que 0."
+                    "El valor de la ponderación no debe ser menor o igual a 0."
                 )
 
-            # Verificar que no haya valores duplicados en la ponderación para la misma evaluación
             techos = self.niveles.filtered(lambda n: n.id != nivel.id).mapped("techo")
             if nivel.techo in techos:
                 raise ValidationError(
@@ -1229,20 +1232,16 @@ class Evaluacion(models.Model):
                 )
 
         todos_techos = self.niveles.mapped("techo")
-        # Verificar que no haya más de 10 techos
         if len(todos_techos) > 10:
             raise ValidationError(
                 "No puede haber más de 10 valores de ponderación."
             )
-        
-        # Verificar que los valores de la ponderación estén en orden ascendente
         
         if todos_techos != sorted(todos_techos):
             raise ValidationError(
                 "Los valores de la ponderación deben estar en orden ascendente."
             )
 
-        # Verificar que el valor de los 'techos' no sean mayores a 100 y que el último sea 100
         if todos_techos[-1] > 100:
             raise ValidationError(
                 "El valor de la ponderación no puede ser mayor a 100."
