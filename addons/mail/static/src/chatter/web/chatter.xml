@@ -28,7 +28,7 @@
                     <button class="btn btn-link text-action" t-att-class="{ 'o-active': state.isSearchOpen }" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
                         <i class="oi oi-search" role="img"/>
                     </button>
-                    <button t-if="state.thread.attachmentsInWebClientView" class="btn btn-link text-action" t-on-click="popoutAttachment">
+                    <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
                         <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                     </button>
                     <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">

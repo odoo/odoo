@@ -3,11 +3,15 @@ import { patch } from "@web/core/utils/patch";
 import { append, createElement, extractAttributes, setAttributes } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
+/** @this {FormCompiler} */
 function compileChatter(node, params) {
     const chatterContainerXml = createElement("t");
     setAttributes(chatterContainerXml, {
         "t-component": "__comp__.mailComponents.Chatter",
         has_activities: "__comp__.props.archInfo.has_activities",
+        hasAttachmentPreview: Boolean(
+            this.templates.FormRenderer.querySelector(".o_attachment_preview")
+        ),
         hasParentReloadOnAttachmentsChanged: Boolean(node.getAttribute("reload_on_attachment")),
         hasParentReloadOnFollowersUpdate: Boolean(node.getAttribute("reload_on_follower")),
         hasParentReloadOnMessagePosted: Boolean(node.getAttribute("reload_on_post")),
