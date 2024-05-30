@@ -93,10 +93,8 @@ class ProductTemplate(models.Model):
 
     @api.depends('sale_ok')
     def _compute_service_tracking(self):
-        non_service_products = self.filtered(
-            lambda pt: not pt.sale_ok or pt.type != 'service'
-        )
-        non_service_products.service_tracking = 'no'
+        super()._compute_service_tracking()
+        self.filtered(lambda pt: not pt.sale_ok).service_tracking = 'no'
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
