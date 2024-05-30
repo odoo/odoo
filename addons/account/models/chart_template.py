@@ -131,7 +131,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=True):
+    def try_loading(self, template_code, company, install_demo=False):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
