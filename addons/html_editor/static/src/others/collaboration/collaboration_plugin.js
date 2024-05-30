@@ -20,6 +20,14 @@ export class CollaborationPlugin extends Plugin {
         process_history_step: p.processHistoryStep.bind(p),
         is_revertable_step: p.isRevertableStep.bind(p),
     });
+    static shared = [
+        //
+        "onExternalHistorySteps",
+        "historyGetMissingSteps",
+        "getBranchIds",
+        "getSnapshotSteps",
+        "resetFromSteps",
+    ];
     handleCommand(commandName, payload) {
         switch (commandName) {
             case "STEP_ADDED": {
@@ -149,19 +157,18 @@ export class CollaborationPlugin extends Plugin {
             this.shared.setSelection(selection);
         }
 
-        // this.historyResetLatestComputedSelection();
-        // @todo @phoenix: test that the hint are proprely handeled?
-        // this._handleCommandHint();
-        // @todo @phoenix: make the multiselection
-        // this.multiselectionRefresh();
-        // @todo @phoenix: send a signal for the html_field to inform that the
-        // field is probably dirty?
-        // this.dispatchEvent(new Event("onExternalHistorySteps"));
+        this.resources.onExternalHistorySteps?.forEach((cb) => cb());
+
+        // todo: ensure that if the selection was not in the editable before the
+        // reset, it remains where it was after applying the snapshot.
+
+        // todo: send a signal for the html_field to inform that the
+        // field is probably dirty
     }
 
     /**
-     * @param {import("../core/history_plugin").HistoryStep[]} steps
-     * @param {import("../core/history_plugin").HistoryStep} newStep
+     * @param {import("../../core/history_plugin").HistoryStep[]} steps
+     * @param {import("../../core/history_plugin").HistoryStep} newStep
      */
     getInsertStepIndex(steps, newStep) {
         let index = steps.length - 1;
@@ -176,7 +183,7 @@ export class CollaborationPlugin extends Plugin {
         // When the previousStepId is not present in the steps it
         // could be either:
         // - the previousStepId is before a snapshot of the same history
-        // - the previousStepId has not been received because clients were
+        // - the previousStepId has not been received because peers were
         //   disconnected at that time
         // - the previousStepId is in another history (in case two totally
         //   differents `steps` (but it should not arise)).
@@ -184,7 +191,7 @@ export class CollaborationPlugin extends Plugin {
             const historySteps = steps;
             let index = historySteps.length - 1;
             // Get the last known step that we are sure the missing step
-            // client has. It could either be a step that has the same
+            // peer has. It could either be a step that has the same
             // peerId or the first step.
             while (index !== 0) {
                 if (historySteps[index].peerId === newStep.peerId) {
@@ -222,6 +229,11 @@ export class CollaborationPlugin extends Plugin {
         return index;
     }
 
+    /**
+     * @param {Object} params
+     * @param {string} params.fromStepId
+     * @param {string} [params.toStepId]
+     */
     historyGetMissingSteps({ fromStepId, toStepId }) {
         const steps = this.shared.getHistorySteps();
         const fromIndex = steps.findIndex((x) => x.id === fromStepId);
@@ -261,7 +273,7 @@ export class CollaborationPlugin extends Plugin {
     }
     resetFromSteps(steps, branchStepIds) {
         this.shared.resetSelection();
-        this.shared.resetFromSteps(steps);
+        this.shared.historyResetFromSteps(steps);
         this.branchStepIds = branchStepIds;
         this.postProcessExternalSteps();
         this.shared.enableObserver();
@@ -296,7 +308,7 @@ export class CollaborationPlugin extends Plugin {
     }
 
     /**
-     * @param {import("../core/history_plugin").HistoryStep} step
+     * @param {import("../../core/history_plugin").HistoryStep} step
      */
     onStepAdded(step) {
         step.peerId = this.peerId;
@@ -313,7 +325,7 @@ export class CollaborationPlugin extends Plugin {
         return sanitizedNode;
     }
     /**
-     * @param {import("../core/history_plugin").HistoryStep} step
+     * @param {import("../../core/history_plugin").HistoryStep} step
      */
     processHistoryStep(step) {
         step.peerId = this.peerId;

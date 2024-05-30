@@ -1,5 +1,5 @@
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
-import { CollaborationPlugin } from "@html_editor/others/collaboration_plugin";
+import { CollaborationPlugin } from "@html_editor/others/collaboration/collaboration_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { createDOMPathGenerator } from "@html_editor/utils/dom_traversal";

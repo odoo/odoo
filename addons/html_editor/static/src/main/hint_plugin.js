@@ -17,6 +17,7 @@ export class HintPlugin extends Plugin {
         history_rendering_classes: ["o-we-hint"],
         is_mutation_record_savable: isMutationRecordSavable,
         onSelectionChange: p.updateTempHint.bind(p),
+        onExternalHistorySteps: p.updateHints.bind(p),
     });
 
     setup() {
@@ -41,7 +42,10 @@ export class HintPlugin extends Plugin {
         }
     }
 
-    updateHints(root) {
+    /**
+     * @param {HTMLElement} [root]
+     */
+    updateHints(root = this.editable) {
         this.clearHints(root);
         this.makeEmptyBlockHints(root);
         this.updateTempHint(this.shared.getEditableSelection());

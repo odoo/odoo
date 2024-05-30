@@ -12,6 +12,8 @@
  * @typedef { import("./main/link/link_plugin").LinkPlugin } LinkPlugin
  * @typedef { import("./core/sanitize_plugin").SanitizePlugin } SanitizePlugin
  * @typedef { import("./core/format_plugin").FormatPlugin } FormatPlugin
+ * @typedef { import("./others/collaboration/collaboration_plugin").CollaborationPlugin } CollaborationPlugin
+ * @typedef { import("./others/collaboration/collaboration_odoo_plugin").CollaborationOdooPlugin } CollaborationOdooPlugin
  *
  * @typedef { Object } SharedMethods
  *
@@ -21,7 +23,9 @@
  * @property { HistoryPlugin['enableObserver'] } enableObserver
  * @property { HistoryPlugin['addExternalStep'] } addExternalStep
  * @property { HistoryPlugin['getHistorySteps'] } getHistorySteps
- * @property { HistoryPlugin['resetFromSteps'] } resetFromSteps
+ * @property { HistoryPlugin['historyResetFromSteps'] } historyResetFromSteps
+ * @property { HistoryPlugin['serializeSelection'] } serializeSelection
+ * @property { HistoryPlugin['getNodeById'] } getNodeById
  * @property { SelectionPlugin['getEditableSelection'] } getEditableSelection
  * @property { SelectionPlugin['getSelectedNodes'] } getSelectedNodes
  * @property { SelectionPlugin['getTraversedNodes'] } getTraversedNodes
@@ -55,6 +59,12 @@
  * @property { SplitPlugin['splitTextNode'] } splitTextNode
  * @property { SplitPlugin['splitSelection'] } splitSelection
  * @property { OverlayPlugin['createOverlay'] } createOverlay
+ * @property { CollaborationPlugin['onExternalHistorySteps'] } onExternalHistorySteps
+ * @property { CollaborationPlugin['historyGetMissingSteps'] } historyGetMissingSteps
+ * @property { CollaborationPlugin['getBranchIds'] } getBranchIds
+ * @property { CollaborationPlugin['getSnapshotSteps'] } getSnapshotSteps
+ * @property { CollaborationPlugin['resetFromSteps'] } resetFromSteps
+ * @property { CollaborationOdooPlugin['getPeerMetadata'] } getPeerMetadata
  */
 
 export class Plugin {

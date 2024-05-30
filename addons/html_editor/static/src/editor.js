@@ -20,7 +20,13 @@ import { MAIN_PLUGINS } from "./plugin_sets";
  * @property { string } [direction="ltr"]
  * @property { Function } [onChange]
  * @property { boolean } [dropImageAsAttachment]
- *
+ * @property { string } [peerId]
+ * @property { Object } [busService]
+ * @property { Object } [collaborationChannel]
+ * @property { String } [collaborationChannel.collaborationModelName]
+ * @property { String } [collaborationChannel.collaborationFieldName]
+ * @property { Number } [collaborationChannel.collaborationResId]
+ * @property { 'start' | 'focus' } [collaborativeTrigger]
  */
 
 function sortPlugins(plugins) {

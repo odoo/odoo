@@ -12,6 +12,15 @@ const ALLOWED_ELEMENTS =
 export class MoveNodePlugin extends Plugin {
     static name = "movenode";
     static dependencies = ["selection", "local-overlay"];
+    /** @type { (p: MoveNodePlugin) => Record<string, any> } */
+    static resources = (p) => ({
+        refreshOverlay: () => {
+            if (p.currentMovableElement) {
+                p.setMovableElement(p.currentMovableElement);
+            }
+            p.updateHooks();
+        },
+    });
 
     setup() {
         this.intersectionObserver = new IntersectionObserver(
@@ -65,10 +74,6 @@ export class MoveNodePlugin extends Plugin {
             characterData: true,
             characterDataOldValue: true,
         });
-        this.addDomListener(window, "resize", this.updateHooks);
-        if (this.document.defaultView !== window) {
-            this.addDomListener(this.document.defaultView, "resize", this.updateHooks);
-        }
     }
     destroy() {
         super.destroy();
@@ -200,8 +205,7 @@ export class MoveNodePlugin extends Plugin {
     setMovableElement(movableElement) {
         this.removeMoveWidget();
         this.currentMovableElement = movableElement;
-        // @todo @phoenix check with the collaborative avatar plugin how to handle this.
-        // this._editor.disableAvatarForElement(movableElement);
+        this.resources.setMovableElement?.forEach((cb) => cb(movableElement));
 
         const containerRect = this.widgetContainer.getBoundingClientRect();
         const anchorBlockRect = this.currentMovableElement.getBoundingClientRect();
@@ -251,8 +255,7 @@ export class MoveNodePlugin extends Plugin {
         }
     }
     removeMoveWidget() {
-        // @todo @phoenix check with the collaborative avatar plugin how to handle this.
-        // this._editor.enableAvatars();
+        this.resources.unsetMovableElement?.forEach((cb) => cb());
         this.moveWidget?.remove();
         this.moveWidget = undefined;
         this.currentMovableElement = undefined;

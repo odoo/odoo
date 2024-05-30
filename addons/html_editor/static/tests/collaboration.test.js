@@ -13,6 +13,7 @@ import {
     validateContent,
     renderTextualSelection,
 } from "./_helpers/collaboration";
+import { animationFrame } from "@odoo/hoot-mock";
 
 /**
  * @param {Editor} editor
@@ -432,8 +433,8 @@ describe("sanitize", () => {
                 );
                 addStep(editor1);
                 mergePeersSteps(peerInfos);
-                // client 1:
-                // did not receive the secret code doing secret stuff from client 2 because
+                // peer 1:
+                // did not receive the secret code doing secret stuff from peer 2 because
                 // it was protected
                 // still has its own onclick attribute doing bad stuff, because he wrote it
                 // himself
@@ -446,10 +447,10 @@ describe("sanitize", () => {
                         <p>sanitycheckc2</p>
                     `)
                 );
-                // client 2:
-                // did not receive the onclick attribute doing bad stuff from client 1 (was
+                // peer 2:
+                // did not receive the onclick attribute doing bad stuff from peer 1 (was
                 // sanitized)
-                // received the `data-info="43"` from client 1, and doing so did not sanitize
+                // received the `data-info="43"` from peer 1, and doing so did not sanitize
                 // the custom script doing secret stuff
                 expect(peerInfos.c2.editor.editable.innerHTML).toBe(
                     unformat(`
@@ -504,7 +505,8 @@ describe("data-oe-protected", () => {
                 );
                 validateSameHistory(peerInfos);
             },
-            afterCursorInserted: (peerInfos) => {
+            afterCursorInserted: async (peerInfos) => {
+                await animationFrame();
                 expect(peerInfos.c1.editor.editable.innerHTML).toBe(
                     unformat(`
                         <div data-oe-protected="true">
@@ -553,13 +555,14 @@ describe("data-oe-transient-content", () => {
                 );
                 validateSameHistory(peerInfos);
             },
-            afterCursorInserted: (peerInfos) => {
+            afterCursorInserted: async (peerInfos) => {
+                await animationFrame();
                 expect(peerInfos.c1.editor.editable.innerHTML).toBe(
                     unformat(`
                         <div data-oe-transient-content="true">
                             <p>secret</p>
                         </div>
-                        <p placeholder="Type &quot;/&quot; for commands" class="o-we-hint">[c1}{c1][c2}{c2]</p>
+                        <p>[c1}{c1][c2}{c2]</p>
                     `)
                 );
                 expect(peerInfos.c2.editor.editable.innerHTML).toBe(

@@ -99,6 +99,7 @@ export class Playground extends Component {
             inIframe: false,
             pluginSet: "base",
         });
+        this.busService = this.env.services.bus_service;
     }
 
     setEditor(editor) {
@@ -116,6 +117,10 @@ export class Playground extends Component {
         this.updateContent();
     }
 
+
+    /**
+     * @returns {import("@html_editor/plugin").EditorConfig}
+     */
     getConfig() {
         return {
             content: testHtml,
@@ -125,7 +130,18 @@ export class Playground extends Component {
                 inlineComponents: [counter, card],
             },
             onChange: this.updateContent.bind(this),
+            busService: this.busService,
+            collaborationChannel: {
+                collaborationModelName: 'res.users',
+                collaborationFieldName: 'help',
+                collaborationResId: 1,
+            },
+            peerId: this.generateId(),
         };
+    }
+    generateId() {
+        // No need for secure random number.
+        return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     }
 
     get classList() {

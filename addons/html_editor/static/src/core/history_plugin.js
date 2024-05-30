@@ -88,7 +88,9 @@ export class HistoryPlugin extends Plugin {
         "enableObserver",
         "addExternalStep",
         "getHistorySteps",
-        "resetFromSteps",
+        "historyResetFromSteps",
+        "serializeSelection",
+        "getNodeById",
     ];
     static resources = () => ({
         shortcuts: [
@@ -149,6 +151,9 @@ export class HistoryPlugin extends Plugin {
         this.setNodeId(this.editable);
         this.dispatch("HISTORY_CLEAN");
     }
+    getNodeById(id) {
+        return this.idToNodeMap.get(id);
+    }
     /**
      * Reset the history.
      */
@@ -160,17 +165,17 @@ export class HistoryPlugin extends Plugin {
     /**
      * @param { HistoryStep[] } steps
      */
-    resetFromSteps(steps) {
+    historyResetFromSteps(steps) {
         this.disableObserver();
-        for (const node of this.editable.childNodes) {
-            node.remove();
-        }
+        this.editable.replaceChildren();
         this.clean();
         for (const step of steps) {
             this.applyMutations(step.mutations);
         }
         this.snapshots = [{ step: steps[0] }];
         this.steps = steps;
+        // todo: to test
+        this.resources.historyResetFromSteps?.forEach((cb) => cb());
 
         this.enableObserver();
     }
@@ -462,6 +467,7 @@ export class HistoryPlugin extends Plugin {
         });
         this.stageSelection();
         this.config.onChange?.();
+        this.dispatch("HISTORY_STEP_ADDED", currentStep);
         return currentStep;
     }
     undo() {

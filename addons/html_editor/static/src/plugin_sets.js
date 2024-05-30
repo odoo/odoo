@@ -40,6 +40,10 @@ import { OwlComponentPlugin } from "./others/owl_component_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { ChatGPTPlugin } from "./others/chatgpt/chatgpt_plugin";
 import { TableResizePlugin } from "./main/table/table_resize_plugin";
+import { CollaborationPlugin } from "./others/collaboration/collaboration_plugin";
+import { CollaborationOdooPlugin } from "./others/collaboration/collaboration_odoo_plugin";
+import { CollaborationSelectionPlugin } from "./others/collaboration/collaboration_selection_plugin";
+import { CollaborationSelectionAvatarPlugin } from "./others/collaboration/collaboration_selection_avatar_plugin";
 
 export const CORE_PLUGINS = [
     ClipboardPlugin,
@@ -87,6 +91,10 @@ export const MAIN_PLUGINS = [
 ];
 
 export const EXTRA_PLUGINS = [
+    CollaborationPlugin,
+    CollaborationOdooPlugin,
+    CollaborationSelectionPlugin,
+    CollaborationSelectionAvatarPlugin,
     ...MAIN_PLUGINS,
     QWebPlugin,
     OwlComponentPlugin,
