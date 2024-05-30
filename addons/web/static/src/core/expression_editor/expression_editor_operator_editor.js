@@ -6,6 +6,7 @@ const EXPRESSION_VALID_OPERATORS = [
     ">",
     ">=",
     "between",
+    "within",
     "in",
     "not in",
     "=",

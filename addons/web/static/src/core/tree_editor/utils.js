@@ -16,6 +16,7 @@ import {
     formatDateTime,
 } from "@web/core/l10n/dates";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
+import { Within } from "./tree_editor_components";
 
 /**
  * @param {import("@web/core/tree_editor/condition_tree").Value} val
@@ -177,14 +178,21 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
 
     const coModeldisplayNames = displayNames[getResModel(fieldDef)];
     const dis = disambiguate(value, coModeldisplayNames);
-    const values = (Array.isArray(value) ? value : [value]).map((val) =>
-        formatValue(val, dis, fieldDef, coModeldisplayNames)
-    );
+    const values =
+        operator == "within"
+            ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
+            : (Array.isArray(value) ? value : [value]).map((val) =>
+                  formatValue(val, dis, fieldDef, coModeldisplayNames)
+              );
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {
         case "between":
             join = _t("and");
+            addParenthesis = false;
+            break;
+        case "within":
+            join = " ";
             addParenthesis = false;
             break;
         case "in":
