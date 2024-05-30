@@ -864,3 +864,8 @@ Paragraph /with/ *bold*
 table element 1
 table element 2
 0 < 10 & \N{NO-BREAK SPACE} 10 > 0""")
+        self.assertEqual(html2plaintext('<p><img src="/web/image/428-c064ab1b/test-image.jpg?access_token=f72b5ec5-a363-45fb-b9ad-81fc794d6d7b" class="img img-fluid o_we_custom_image"><br></p>'),
+                         """test-image [1]
+
+
+[1] /web/image/428-c064ab1b/test-image.jpg?access_token=f72b5ec5-a363-45fb-b9ad-81fc794d6d7b""")
