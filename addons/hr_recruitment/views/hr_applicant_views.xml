@@ -47,9 +47,9 @@
                 <field name="activity_ids" widget="list_activity" optional="hide"/>
                 <field name="activity_date_deadline" optional="hide"/>
                 <field name="interviewer_ids" widget="many2many_avatar_user" optional="hide"/>
-                <field name="source_id" optional="hide"/>
-                <field name="medium_id" optional="hide"/>
                 <field name="campaign_id" optional="hide"/>
+                <field name="medium_id" optional="hide"/>
+                <field name="source_id" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
@@ -205,9 +205,11 @@
                                 </div>
                             </group>
                             <group string="Sourcing">
-                                <field name="source_id" placeholder="Select where the applicant comes from"/>
-                                <field name="medium_id" placeholder="Select the way applicant found the offer"/>
                                 <field name="campaign_id" placeholder="Select the campaign the applicant was part of"/>
+                                <field name="medium_id" placeholder="Select the way applicant found the offer"/>
+                                <field name="source_id" placeholder="Select where the applicant comes from"/>
+                                <field name="utm_reference" string="Reference" options="{'hide_model': True}"
+                                    invisible="not utm_reference" readonly="True"/>
                             </group>
                         </group>
                     </page>

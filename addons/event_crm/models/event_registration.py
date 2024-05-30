@@ -200,11 +200,11 @@ class EventRegistration(models.Model):
             'event_lead_rule_id': rule.id,
             # event and registration
             'event_id': self.event_id.id,
-            'referred': self.event_id.name,
             'registration_ids': self.ids,
             'campaign_id': sorted_self._find_first_notnull('utm_campaign_id'),
             'source_id': sorted_self._find_first_notnull('utm_source_id'),
             'medium_id': sorted_self._find_first_notnull('utm_medium_id'),
+            'utm_reference': f'{self.event_id._name},{self.event_id.id}',
         }
         lead_values.update(sorted_self._get_lead_contact_values())
         lead_values['description'] = sorted_self._get_lead_description(_("Participants"), line_counter=True)

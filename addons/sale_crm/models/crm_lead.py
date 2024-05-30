@@ -84,6 +84,7 @@ class CrmLead(models.Model):
             'default_medium_id': self.medium_id.id,
             'default_origin': self.name,
             'default_source_id': self.source_id.id,
+            'default_utm_reference': f'{self.utm_reference._name},{self.utm_reference.id}' if self.utm_reference else False,
             'default_company_id': self.company_id.id or self.env.company.id,
             'default_tag_ids': [(6, 0, self.tag_ids.ids)]
         }

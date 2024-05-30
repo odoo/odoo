@@ -12,7 +12,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools.mail import validate_url
 
-LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'label')
+LINK_TRACKER_UNIQUE_FIELDS = ('url', 'campaign_id', 'medium_id', 'source_id', 'utm_reference', 'label')
 
 _logger = logging.getLogger(__name__)
 
@@ -119,6 +119,8 @@ class LinkTracker(models.Model):
                 attr = tracker[field_name]
                 if field.type == 'many2one':
                     attr = attr.name
+                elif field.type == 'reference' and attr:
+                    attr = f'{attr._name},{attr.id}'
                 if attr:
                     query[key] = attr
 
@@ -151,6 +153,9 @@ class LinkTracker(models.Model):
                 [('campaign_id', '=', tracker.campaign_id.id)],
                 [('medium_id', '=', tracker.medium_id.id)],
                 [('source_id', '=', tracker.source_id.id)],
+                [('utm_reference',
+                  '=',
+                  f'{tracker.utm_reference._name},{tracker.utm_reference.id}' if tracker.utm_reference else False)],
                 [('label', '=', tracker.label) if tracker.label else ('label', 'in', (False, ''))],
             ])
             for tracker in self
@@ -166,11 +171,11 @@ class LinkTracker(models.Model):
                 duplicates += tracker
         if duplicates:
             error_lines = '\n- '.join(
-                str((tracker.url, tracker.campaign_id.name, tracker.medium_id.name, tracker.source_id.name, tracker.label or '""'))
+                str((tracker.url, tracker.campaign_id.name, tracker.medium_id.name, tracker.source_id.name, tracker.utm_reference, tracker.label or '""'))
                 for tracker in duplicates
             )
             raise UserError(
-                _('Combinations of Link Tracker values (URL, campaign, medium, source, and label) must be unique.\n'
+                _('Combinations of Link Tracker values (URL, campaign, medium, source, reference, and label) must be unique.\n'
                   'The following combinations are already used: \n- %(error_lines)s', error_lines=error_lines))
 
     @api.model_create_multi
@@ -214,10 +219,24 @@ class LinkTracker(models.Model):
 
         def _format_key(obj):
             """Generate unique 'key' of trackers, allowing to find duplicates."""
-            return tuple(
-                (field_name, obj[field_name].id if isinstance(obj[field_name], models.BaseModel) else obj[field_name])
-                for field_name in LINK_TRACKER_UNIQUE_FIELDS
-            )
+            key_value_pairs = []
+            for field_name in LINK_TRACKER_UNIQUE_FIELDS:
+                if isinstance(obj[field_name], models.BaseModel):
+                    if field_name == 'utm_reference':
+                        if obj[field_name]:
+                            # to be able to compare with create vals, we re-format to 'model,id'
+                            field_value = f'{obj[field_name]._name},{obj[field_name].id}'
+                        else:
+                            field_value = False
+                    else:
+                        field_value = obj[field_name].id
+                elif obj[field_name]:
+                    field_value = obj[field_name]
+                else:
+                    field_value = False
+                key_value_pairs.append((field_name, field_value))
+
+            return tuple(key_value_pairs)
 
         def _format_key_domain(field_values):
             """Handle "label" being False / '' and be defensive."""

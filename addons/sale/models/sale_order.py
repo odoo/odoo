@@ -1543,6 +1543,7 @@ class SaleOrder(models.Model):
             'campaign_id': self.campaign_id.id,
             'medium_id': self.medium_id.id,
             'source_id': self.source_id.id,
+            'utm_reference': f'{self.utm_reference._name},{self.utm_reference.id}' if self.utm_reference else False,
             'team_id': self.team_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
