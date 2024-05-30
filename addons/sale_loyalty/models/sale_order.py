@@ -61,47 +61,6 @@ class SaleOrder(models.Model):
         return new_orders
 
     def action_confirm(self):
-        import json
-        points = {}
-        # points_per_line = defaultdict(lambda: 0)
-        # transaction.sale_order_id.order_line.filtered(lambda line: line.coupon_id == transaction.coupon_id).price_total
-        # TODO: MATP clean...
-        for line in self.order_line.filtered(lambda line: line.coupon_id.id != False): # TODO: is_reward_line
-            self.loyalty_used += line.points_cost
-            if not points.get(line.coupon_id.id, False):
-                self.loyalty_points += line.coupon_id.points
-                points[line.coupon_id.id] = line.coupon_id.points
-                print(f"Les points à l'initialisation : {line.coupon_id.points}")
-            points[line.coupon_id.id] -= line.points_cost
-            qty = int(line.reward_id.reward_product_qty * line.product_uom_qty)
-            line.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
-                'coupon_id': line.coupon_id.id,
-                'sale_order_id': self.id,
-                'sale_order_name': self.name,
-                'description': f"{qty} X Free {line.product_id.name}"
-                    if line.reward_id.reward_product_ids
-                    else f"{qty} X {line.reward_id.description}"
-                    if qty > 1 else line.reward_id.description,
-                'reward_id': line.reward_id.id,
-                'used': -line.points_cost,
-                'new_balance': points[line.coupon_id.id],
-            })
-            print(f"""
-            {':'*64}
-            {json.dumps({
-                'coupon_id': line.coupon_id.id,
-                'sale_order_id': self.id,
-                'sale_order_name': self.name,
-                'description': f"{qty} X Free {line.product_id.name}"
-                    if line.reward_id.reward_product_ids
-                    else f"{qty} X {line.reward_id.description}"
-                    if qty > 1 else line.reward_id.description,
-                'reward_id': line.reward_id.id,
-                'used': -line.points_cost,
-                'new_balance': points[line.coupon_id.id],
-            }, indent=4)}
-            {':'*64}
-            """)
         for order in self:
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
@@ -116,30 +75,16 @@ class SaleOrder(models.Model):
             lambda pe: pe.coupon_id.program_id.applies_on == 'current' and pe.coupon_id not in reward_coupons
         ).coupon_id.sudo().unlink()
         # Add/remove the points to our coupons
-        for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
-            coupon.points += change
+        self._update_loyalty_points()
         res = super().action_confirm()
         self._send_reward_coupon_mail()
 
-        # TODO: MATP clean...
-        points = {}
-        # transaction.sale_order_id.order_line.filtered(lambda line: line.coupon_id == transaction.coupon_id).price_total
-        for line in self.order_line.filtered(lambda line: line.coupon_id.id != False):
-            if not points.get(line.coupon_id.id, False):
-                self.loyalty_new_points += line.coupon_id.points
-                points[line.coupon_id.id] = line.coupon_id.points
-                print(f"Les points After : {line.coupon_id.points}")
-        self.loyalty_issued = self.loyalty_new_points - (self.loyalty_points - self.loyalty_used)
         return res
 
     def _action_cancel(self):
-        previously_confirmed = self.filtered(lambda s: s.state == 'sale')
         res = super()._action_cancel()
         # Add/remove the points to our coupons
-        for coupon, changes in previously_confirmed.filtered(
-            lambda s: s.state != 'sale'
-        )._get_point_changes().items():
-            coupon.points -= changes
+        self._cancel_loyalty_points()
         # Remove any rewards
         self.order_line.filtered(lambda l: l.is_reward_line).unlink()
         self.coupon_point_ids.coupon_id.sudo().filtered(
@@ -568,41 +513,70 @@ class SaleOrder(models.Model):
         if any(line.is_reward_line for line in self.order_line):
             self._update_programs_and_rewards()
 
-
-    # TODO: MATP re-coder ...
-    def _get_point_changes(self):
+    def _cancel_loyalty_points(self):
         """
-        Returns the changes in points per coupon as a dict.
+        Recover the point used and delete the one earned during this transaction.
+        And delete the loyalty transactions passed during this SO.
 
-        Used when validating/cancelling an order
+        Used when cancelling an order
         """
-        points_per_coupon = defaultdict(lambda: 0)
-        for coupon_point in self.coupon_point_ids:
-            points_per_coupon[coupon_point.coupon_id] += coupon_point.points
+        history = self.env['sale.loyalty.history'].search([
+            ('sale_order_id.id', '=', self.id)
+        ])
+        for transaction in history:
+            # Reset coupon points before using for rewards/discounts and issuing this SO.
+            transaction.coupon_id.points -= transaction.issued + transaction.used
+            # Delete this change from the coupon history.
+            transaction.unlink()
 
-        for coupon, points in points_per_coupon.items():
-            coupon.history_ids += self.env['sale.loyalty.history'].create({
+    def _update_loyalty_points(self):
+        """
+        Delete the point used for rewards and add the earned points during this SO.
+        And create/add the loyalty transaction in the coupon history.
+
+        Used when validating an order
+        """
+        for coupon_point_id in self.coupon_point_ids:
+            if coupon_point_id.coupon_id in self.order_line.coupon_id:
+                self.loyalty_points += coupon_point_id.coupon_id.points
+            # Update points of the coupon issued.
+            coupon_point_id.coupon_id.points += coupon_point_id.points
+            # Create/add issued points in coupon history.
+            coupon_point_id.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
                 'description': f"Points issued with {self.name}",
-                'coupon_id': coupon.id,
+                'coupon_id': coupon_point_id.coupon_id.id,
                 'sale_order_id': self.id,
                 'sale_order_name': self.name,
-                'issued': points,
-                'new_balance': coupon.points + points,
+                'issued': coupon_point_id.points,
+                'new_balance': coupon_point_id.coupon_id.points,
             })
+            # Compute all loyalty points issued by the SO (for summary)
+            self.loyalty_issued += coupon_point_id.points
 
         for line in self.order_line:
             if not line.reward_id or not line.coupon_id:
                 continue
-            points_per_coupon[line.coupon_id] -= line.points_cost
+            # Compute all loyalty points used in the SO (for summary)
+            self.loyalty_used += line.points_cost
+            # Update points of the coupon used.
+            line.coupon_id.points -= line.points_cost
+            # TODO: MATP Ask for the formation of the description :/
+            # Create/add used points in coupon history.
+            qty = int(line.reward_id.reward_product_qty * line.product_uom_qty)
             line.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
-                'description': f"Points used for {self.name}",
                 'coupon_id': line.coupon_id.id,
                 'sale_order_id': self.id,
                 'sale_order_name': self.name,
-                'used': line.points_cost,
-                'new_balance': line.coupon_id.points + points_per_coupon[line.coupon_id],
+                'description': f"{qty} X Free {line.product_id.name}"
+                    if line.reward_id.reward_product_ids
+                    else f"{qty} X {line.reward_id.description}"
+                    if qty > 1 else line.reward_id.description,
+                'reward_id': line.reward_id.id,
+                'used': -line.points_cost,
+                'new_balance': line.coupon_id.points,
             })
-        return points_per_coupon
+        # Compute final loyalty points after application of programs (for summary).
+        self.loyalty_new_points = self.loyalty_points - self.loyalty_used + self.loyalty_issued
 
     def _get_real_points_for_coupon(self, coupon, post_confirm=False):
         """
@@ -638,6 +612,7 @@ class SaleOrder(models.Model):
                     'points': points,
                 }) for coupon, points in coupon_points.items()]
             })
+        # TODO: MATP =< Check to maybe handle coupon point there...
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()

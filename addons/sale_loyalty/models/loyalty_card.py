@@ -18,6 +18,7 @@ class LoyaltyCard(models.Model):
     history_ids = fields.One2many(
         comodel_name='sale.loyalty.history',
         inverse_name='coupon_id',
+        ondelete='cascade',
     )
 
     # TODO: MATP Not use and probably not the best way :/ => check STOCK APP
