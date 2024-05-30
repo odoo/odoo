@@ -6,7 +6,7 @@
         <field name="street"/>
         <field name="city">Åmot</field>
         <field name="country_id" ref="base.no"/>
-        
+
         <field name="zip"/>
         <field name="phone">+47 406 12 345</field>
         <field name="email">info@company.noexample.com</field>
@@ -38,5 +38,6 @@
         <value eval="[]"/>
         <value>no</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_no')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

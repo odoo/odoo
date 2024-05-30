@@ -6,7 +6,7 @@
         <field name="street">692 Eileen Knoll</field>
         <field name="city">Niassa Province</field>
         <field name="country_id" ref="base.mz"/>
-        
+
         <field name="zip">6343</field>
         <field name="phone">+258 78 123 45 67</field>
         <field name="email">info@example.mz</field>
@@ -31,5 +31,6 @@
         <value eval="[]"/>
         <value>mz</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_mz')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>

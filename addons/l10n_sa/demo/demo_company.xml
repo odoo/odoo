@@ -6,7 +6,7 @@
         <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
         <field name="city">المدينة المنورة</field>
         <field name="country_id" ref="base.sa"/>
-        
+
         <field name="zip">42317</field>
         <field name="phone">+966 51 234 5678</field>
         <field name="email">info@company.saexample.com</field>
@@ -32,5 +32,6 @@
         <value eval="[]"/>
         <value>sa</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_sa')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>
