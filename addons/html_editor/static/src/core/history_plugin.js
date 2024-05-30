@@ -81,6 +81,8 @@ export class HistoryPlugin extends Plugin {
     static name = "history";
     static dependencies = ["dom", "selection"];
     static shared = [
+        "canUndo",
+        "canRedo",
         "makeSavePoint",
         "makePreviewableOperation",
         "makeSnapshotStep",
@@ -102,7 +104,7 @@ export class HistoryPlugin extends Plugin {
 
     setup() {
         this.renderingClasses = new Set(this.resources["history_rendering_classes"]);
-        this.addDomListener(this.editable, "input", this.addStep);
+        this.addDomListener(this.editable, "input", () => this.addStep());
         this.addDomListener(this.editable, "pointerup", () => {
             this.stageSelection();
             this.stageNextSelection = true;
@@ -145,6 +147,7 @@ export class HistoryPlugin extends Plugin {
             mutations: [],
             id: this.generateId(),
         });
+        /** @type { Map<string, "consumed"|"undo"|"redo"> } */
         this.stepsStates = new Map();
         this.nodeToIdMap = new WeakMap();
         this.idToNodeMap = new Map();
@@ -436,7 +439,11 @@ export class HistoryPlugin extends Plugin {
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     }
 
-    addStep() {
+    /**
+     * @param { Object } [params]
+     * @param { "consumed"|"undo"|"redo" } [params.stepState]
+     */
+    addStep({ stepState } = {}) {
         // @todo @phoenix should we allow to pause the making of a step?
         // if (!this.stepsActive) {
         //     return;
@@ -465,10 +472,23 @@ export class HistoryPlugin extends Plugin {
             selection: {},
             mutations: [],
         });
+        // Set the state of the step here.
+        // That way, the state of undo and redo is truly accessible
+        // when executing the onChange callback.
+        // It is useful for external components if they execute shared.can[Undo|Redo]
+        if (stepState) {
+            this.stepsStates.set(currentStep.id, stepState);
+        }
         this.stageSelection();
         this.config.onChange?.();
         this.dispatch("HISTORY_STEP_ADDED", currentStep);
         return currentStep;
+    }
+    canUndo() {
+        return this.getNextUndoIndex() > 0;
+    }
+    canRedo() {
+        return this.getNextRedoIndex() > 0;
     }
     undo() {
         if (this.steps.length === 1) {
@@ -488,9 +508,8 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(this.steps[pos].id, "consumed");
             this.revertMutations(this.steps[pos].mutations);
             this.setSerializedSelection(this.steps[pos].selection);
-            const step = this.addStep();
+            this.addStep({ stepState: "undo" });
             // Consider the last position of the history as an undo.
-            this.stepsStates.set(step.id, "undo");
         }
     }
     redo() {
@@ -506,8 +525,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(this.steps[pos].id, "consumed");
             this.revertMutations(this.steps[pos].mutations);
             this.setSerializedSelection(this.steps[pos].selection);
-            const step = this.addStep();
-            this.stepsStates.set(step.id, "redo");
+            this.addStep({ stepState: "redo" });
         }
     }
     /**

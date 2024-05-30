@@ -381,4 +381,27 @@ describe("shortcut", () => {
         press(["cmd", "shift", "z"]);
         expect(getContent(el)).toBe("<p>abc[]</p>");
     });
+
+    test("canUndo canRedo", async () => {
+        const state = {};
+        const onChange = () => {
+            state.canUndo = editor.shared.canUndo();
+            state.canRedo = editor.shared.canRedo();
+        };
+        const { editor, el } = await setupEditor(`<p>[]</p>`, {
+            config: { onChange },
+        });
+        expect(state).toEqual({});
+        insertText(editor, "a");
+        expect(state).toEqual({ canUndo: true, canRedo: false });
+        editor.dispatch("HISTORY_UNDO");
+        expect(state).toEqual({ canUndo: false, canRedo: true });
+        editor.dispatch("HISTORY_REDO");
+        expect(state).toEqual({ canUndo: true, canRedo: false });
+        editor.dispatch("HISTORY_UNDO");
+        expect(state).toEqual({ canUndo: false, canRedo: true });
+        insertText(editor, "b");
+        expect(state).toEqual({ canUndo: true, canRedo: false });
+        expect(getContent(el)).toBe("<p>b[]</p>");
+    });
 });
