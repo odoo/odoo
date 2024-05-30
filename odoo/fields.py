@@ -2773,10 +2773,9 @@ class Image(Binary):
             return
         # the inverse has been applied with the original image; now we fix the
         # cache with the resized value
-        for record in records:
-            value = self._process_related(record[self.name], record.env)
-            context_key = record.env.cache_key(self)
-            record.env.cache.set(self, context_key, record._ids[0], value, dirty=(self.store and self.column_type))
+        self.update_cache(records, [
+            self._process_related(record[self.name], record.env) for record in records
+        ], dirty=(self.store and self.column_type))
 
     def _image_process(self, value, env):
         if self.readonly and not self.max_width and not self.max_height:
