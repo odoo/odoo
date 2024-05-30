@@ -7,6 +7,10 @@ import { _t } from "@web/core/l10n/translation";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
 import { ReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/receipt_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import {
+    getTaxesAfterFiscalPosition,
+    getTaxesValues,
+} from "@point_of_sale/app/models/utils/tax_utils";
 
 const NON_IDLE_EVENTS = [
     "mousemove",
@@ -366,5 +370,37 @@ patch(PosStore.prototype, {
     },
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.config.module_pos_restaurant;
+    },
+    getProductPrice(product, p = false) {
+        // Override this method for takeaway functionality to ensure tax-inclusive pricing is shown same on both product cards and orderlines.
+        if (
+            this.get_order() &&
+            this.get_order().fiscal_position_id &&
+            this.config.takeaway &&
+            this.config.takeaway_fp_id &&
+            this.config.takeaway_fp_id?.id === this.get_order().fiscal_position_id?.id
+        ) {
+            const price = p === false ? product.get_price(this.getDefaultPricelist(), 1) : p;
+            const taxes = getTaxesAfterFiscalPosition(
+                product.taxes_id,
+                this.get_order().fiscal_position_id,
+                this.models
+            );
+            const taxesData = getTaxesValues(
+                taxes,
+                price,
+                1,
+                product,
+                this.config._product_default_values,
+                this.company,
+                this.currency
+            );
+            if (this.config.iface_tax_included === "total") {
+                return taxesData.total_included;
+            } else {
+                return taxesData.total_excluded;
+            }
+        }
+        return super.getProductPrice(...arguments);
     },
 });

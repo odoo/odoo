@@ -33,4 +33,16 @@ patch(PosOrderline.prototype, {
                 this.skip_change && this.config.module_pos_restaurant,
         };
     },
+    compute_fixed_price(price) {
+        if (
+            this.order_id &&
+            this.config.takeaway &&
+            this.config.takeaway_fp_id?.id === this.order_id.fiscal_position_id?.id &&
+            this.order_id.takeaway
+        ) {
+            price = this.product_id.get_price(this.config.pricelist_id, 1, this.price_extra);
+            return price;
+        }
+        return super.compute_fixed_price(...arguments);
+    },
 });

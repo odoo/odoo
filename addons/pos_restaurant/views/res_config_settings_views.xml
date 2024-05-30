@@ -20,6 +20,7 @@
                 </setting>
                 <setting string="Eat in / Take out" help="Adjust the tax rate based on whether customers are dining in or opting for takeout."  invisible="not pos_module_pos_restaurant">
                     <field name="pos_takeaway"/>
+                    <div class="text-warning mb16" invisible="not pos_takeaway">Taxes must be included in price.</div>
                     <div class="content-group" invisible="not pos_takeaway">
                         <label string="" for="pos_takeaway_fp_id" class="me-2"/>
                         <field name="pos_takeaway_fp_id" placeholder="Alternative Fiscal Position"/>
