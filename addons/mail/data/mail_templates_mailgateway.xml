@@ -36,7 +36,7 @@
     <div t-foreach="attachments" t-as="attachment">
         <a t-attf-href="{{attachment.get_base_url()}}/web/content/{{attachment.id}}?download=1&amp;access_token={{attachment.access_token}}"
            style="font-size: 12px; color: #875A7B; text-decoration:none !important; text-decoration:none; font-weight: 400;">
-            📥 <t t-out="attachment.name"/>
+            &amp;#128229; <t t-out="attachment.name"/>
         </a>
     </div>
 </div>
