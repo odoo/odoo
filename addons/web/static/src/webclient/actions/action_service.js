@@ -939,7 +939,7 @@ export function makeActionManager(env, router = _router) {
             if (size) {
                 actionDialogProps.size = size;
             }
-
+            actionDialogProps.footer = action.context.footer ?? actionDialogProps.footer;
             const onClose = _removeDialog();
             removeDialogFn = env.services.dialog.add(ActionDialog, actionDialogProps, {
                 onClose: () => {

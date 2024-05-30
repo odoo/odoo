@@ -311,7 +311,12 @@ export class Thread extends Record {
     });
     /** @type {Boolean} */
     is_editable;
-    /** @type {false|'mentions'|'no_notif'} */
+    /**
+     * This field is used for channels only.
+     * false means using the custom_notifications from user settings.
+     *
+     * @type {false|"all"|"mentions"|"no_notif"}
+     */
     custom_notifications = false;
     /** @type {luxon.DateTime} */
     mute_until_dt = Record.attr(undefined, { type: "datetime" });
@@ -929,20 +934,20 @@ export class Thread extends Record {
      * @param {import("models").Message} message
      */
     notifyMessageToUser(message) {
-        let notify = this.channel_type !== "channel";
-        if (this.channel_type === "channel" && message.recipients?.includes(this.store.self)) {
-            notify = true;
-        }
-        if (
-            this.isCorrespondentOdooBot ||
-            this.mute_until_dt ||
-            this.custom_notifications === "no_notif" ||
-            (this.custom_notifications === "mentions" &&
-                !message.recipients?.includes(this.store.self))
-        ) {
+        if (this.isCorrespondentOdooBot) {
             return;
         }
-        if (notify) {
+        const channel_notifications =
+            this.custom_notifications || this.store.settings.channel_notifications;
+        if (
+            !this.mute_until_dt &&
+            !this.store.settings.mute_until_dt &&
+            (this.channel_type !== "channel" ||
+                (this.channel_type === "channel" &&
+                    (channel_notifications === "all" ||
+                        (channel_notifications === "mentions" &&
+                            message.recipients?.includes(this.store.self)))))
+        ) {
             this.store.ChatWindow.insert({ thread: this });
             this.store.env.services["mail.out_of_focus"].notify(message, this);
         }

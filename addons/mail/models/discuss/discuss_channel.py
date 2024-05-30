@@ -51,7 +51,6 @@ class Channel(models.Model):
         ('channel', 'Channel'),
         ('group', 'Group')],
         string='Channel Type', required=True, default='channel', readonly=True, help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
-    is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     is_editable = fields.Boolean('Is Editable', compute='_compute_is_editable')
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
@@ -105,11 +104,6 @@ class Channel(models.Model):
             raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
 
     # COMPUTE / INVERSE
-
-    @api.depends('channel_type')
-    def _compute_is_chat(self):
-        for record in self:
-            record.is_chat = record.channel_type == 'chat'
 
     @api.depends('channel_type', 'is_member')
     def _compute_is_editable(self):
@@ -514,9 +508,9 @@ class Channel(models.Model):
             return []
 
         recipients_data = []
+        author_id = msg_vals.get("author_id") or message.author_id.id
         if pids:
             email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
-            author_id = msg_vals.get('author_id') or message.author_id.id
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = """
@@ -549,28 +543,50 @@ class Channel(models.Model):
                     'ushare': ushare,
                 })
 
-        if self.is_chat or self.channel_type == "group":
-            already_in_ids = [r['id'] for r in recipients_data]
-            recipients_data += [
-                {
-                    'active': partner.active,
-                    'id': partner.id,
-                    'is_follower': False,
-                    'groups': [],
-                    'lang': partner.lang,
-                    'notif': 'web_push',
-                    'share': partner.partner_share,
-                    'type': 'customer',
-                    'uid': False,
-                    'ushare': False,
-                } for partner in self.sudo().channel_member_ids.filtered(
-                    lambda member: (
-                        not member.mute_until_dt and
-                        member.partner_id.id not in already_in_ids
-                    )
-                ).partner_id
-            ]
-
+        domain = expression.AND([
+            [("channel_id", "=", self.id)],
+            [("partner_id", "!=", author_id)],
+            [("partner_id.active", "=", True)],
+            [("mute_until_dt", "=", False)],
+            [("partner_id.user_ids.res_users_settings_ids.mute_until_dt", "=", False)],
+            expression.OR([
+                [("channel_id.channel_type", "!=", "channel")],
+                expression.AND([
+                    [("channel_id.channel_type", "=", "channel")],
+                    expression.OR([
+                        [("custom_notifications", "=", "all")],
+                        expression.AND([
+                            [("custom_notifications", "=", False)],
+                            [("partner_id.user_ids.res_users_settings_ids.channel_notifications", "=", "all")],
+                        ]),
+                        expression.AND([
+                            [("custom_notifications", "=", "mentions")],
+                            [("partner_id", "in", pids)],
+                        ]),
+                        expression.AND([
+                            [("custom_notifications", "=", False)],
+                            [("partner_id.user_ids.res_users_settings_ids.channel_notifications", "=", False)],
+                            [("partner_id", "in", pids)],
+                        ]),
+                    ]),
+                ]),
+            ]),
+        ])
+        # sudo: discuss.channel.member - read to get the members of the channel and res.users.settings of the partners
+        members = self.env["discuss.channel.member"].sudo().search(domain)
+        for member in members:
+            recipients_data.append({
+                "active": True,
+                "id": member.partner_id.id,
+                "is_follower": False,
+                "groups": [],
+                "lang": member.partner_id.lang,
+                "notif": "web_push",
+                "share": member.partner_id.partner_share,
+                "type": "customer",
+                "uid": False,
+                "ushare": False,
+            })
         return recipients_data
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
@@ -616,6 +632,12 @@ class Channel(models.Model):
         else:
             payload['title'] = "#%s" % (record_name)
         return payload
+
+    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
+        # only notify "web_push" recipients in discuss channels.
+        # exclude "inbox" recipients in discuss channels as inbox and web push can be mutually exclusive.
+        # the user can turn off the web push but receive notifs via inbox if they want to.
+        super()._notify_thread_by_web_push(message, [r for r in recipients_data if r["notif"] == "web_push"], msg_vals=msg_vals, **kwargs)
 
     def _message_receive_bounce(self, email, partner):
         """ Override bounce management to unsubscribe bouncing addresses """

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussNotificationSettings">
+        <div class="o-mail-DiscussNotificationSettings d-flex flex-column">
+            <div class="d-flex flex-column my-1">
+                <label class="cursor-pointer d-flex align-items-center">
+                    <h5>Mute</h5>
+                    <div class="flex-grow-1"/>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" t-att-checked="store.settings.mute_until_dt" t-on-change="onChangeDisplayMuteDetails"/>
+                    </div>
+                </label>
+                <span class="mt-1">Muting a server prevents unread indicators and notifications from appearing.</span>
+            </div>
+            <label t-if="store.settings.mute_until_dt" class="d-flex align-items-baseline my-2">
+                <h6 class="flex-shrink-0">
+                    <t t-esc="store.settings.getMuteUntilText(store.settings.mute_until_dt)"/>
+                </h6>
+                <div class="flex-grow-1"/>
+                <select class="form-select w-auto d-flex" t-on-change="onChangeMuteDuration">
+                    <option value="default">Select duration</option>
+                    <t t-foreach="store.settings.MUTES" t-as="item" t-key="item.id">
+                        <option t-att-value="item.value" t-esc="item.name" t-att-selected="item.value === state.selectedDuration"/>
+                    </t>
+                </select>
+            </label>
+            <hr class="o-discuss-separator my-1"/>
+            <div class="d-flex flex-column my-1">
+                <h5>Channel notification settings</h5>
+                <span class="mb-1">This setting will be applied to all channels using the default category.</span>
+                <t t-foreach="store.settings.NOTIFICATIONS" t-as="item" t-key="item.id">
+                    <button class="btn d-flex align-baselin my-1" t-att-class="{'bg-300' : item.id === store.settings.channel_notifications}" t-on-click="()=> this.onChangeCustomNotifications(item.id)">
+                        <input class="form-check-input" type="radio" t-att-checked="item.id === store.settings.channel_notifications"/>
+                        <div class="d-flex flex-column text-start flex-grow-1 mx-3">
+                            <span t-esc="item.name"/>
+                        </div>
+                    </button>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>
