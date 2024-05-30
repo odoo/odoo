@@ -1158,7 +1158,7 @@ export class PosStore extends Reactive {
         const dp = this.models["decimal.precision"].find(
             (dp) => dp.name === "Product Unit of Measure"
         );
-        return floatIsZero(qty, dp);
+        return floatIsZero(qty, dp.digits);
     }
 
     disallowLineQuantityChange() {
