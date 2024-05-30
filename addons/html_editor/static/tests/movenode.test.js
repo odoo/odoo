@@ -48,6 +48,7 @@ describe("drag", () => {
         const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
             styleContent: styles,
         });
+        await animationFrame();
         const firstP = el.querySelector("p");
         hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
@@ -66,6 +67,7 @@ describe("drag", () => {
         const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
             styleContent: styles,
         });
+        await animationFrame();
         const firstP = el.querySelector("p");
         hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
@@ -84,6 +86,7 @@ describe("drag", () => {
         const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
             styleContent: styles,
         });
+        await animationFrame();
         const firstP = el.querySelector("p");
         hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
@@ -102,6 +105,7 @@ describe("drag", () => {
         const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
             styleContent: styles,
         });
+        await animationFrame();
         const firstP = el.querySelector("p");
         hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
@@ -120,6 +124,7 @@ describe("drag", () => {
         const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
             styleContent: styles,
         });
+        await animationFrame();
         const firstP = el.querySelector("p");
         hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
@@ -140,6 +145,7 @@ describe("drag", () => {
         const { el } = await setupEditor("<p>a[]</p><div><br></div><p>b</p><p>c</p>", {
             styleContent: styles,
         });
+        await animationFrame();
         const firstP = el.querySelector("p");
         hover(firstP);
         const moveElement = document.querySelector(".oe-sidewidget-move");
