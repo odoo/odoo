@@ -2,37 +2,11 @@
 /* global PaypalCheckout */
 
 import paymentForm from '@payment/js/payment_form';
-// Helper / Utility functions
-let url_to_head = (url) => {
-    return new Promise(function (resolve, reject) {
-        var script = document.createElement('script');
-        script.src = url;
-        script.onload = function () {
-            resolve();
-        };
-        script.onerror = function () {
-            reject('Error loading script.');
-        };
-        document.head.appendChild(script);
-    });
-}
-let handle_close = (event) => {
-    event.target.closest(".ms-alert").remove();
-}
-let handle_click = (event) => {
-    if (event.target.classList.contains("ms-close")) {
-        handle_close(event);
-    }
-}
-document.addEventListener("click", handle_click);
-const paypal_sdk_url = "https://www.paypal.com/sdk/js";
-const client_id = "AWfClPjf6ZGUf9vpa06Un6RT4e0v4PA4m_6VzXHaGY_rZqeL8QtI5vcvZCrcyicnI7nMXiq0jVfofSGJ";
-const currency = "USD";
-const intent = "capture";
-console.log("HERE")
+import { rpc, RPCError } from '@web/core/network/rpc';
+
 paymentForm.include({
-    adyenCheckout: undefined,
-    adyenComponents: undefined,
+    paypalCheckout: undefined,
+    paypalComponents: undefined,
 
     // #=== DOM MANIPULATION ===#
 
@@ -56,40 +30,81 @@ paymentForm.include({
             return;
         }
         this._setPaymentFlow('direct');
-        //PayPal Code
+        // PayPal Code
+        // Helper / Utility functions
+        let url_to_head = (url) => {
+            return new Promise(function (resolve, reject) {
+                var script = document.createElement('script');
+                script.src = url;
+                script.onload = function () {
+                    resolve();
+                };
+                script.onerror = function () {
+                    reject('Error loading script.');
+                };
+                document.head.appendChild(script);
+            });
+        }
+        let handle_close = (event) => {
+            event.target.closest(".ms-alert").remove();
+        }
+        let handle_click = (event) => {
+            if (event.target.classList.contains("ms-close")) {
+                handle_close(event);
+            }
+        }
+        document.addEventListener("click", handle_click);
+        const paypal_sdk_url = "https://www.paypal.com/sdk/js";
+        const client_id = "AWfClPjf6ZGUf9vpa06Un6RT4e0v4PA4m_6VzXHaGY_rZqeL8QtI5vcvZCrcyicnI7nMXiq0jVfofSGJ";
+        const currency = "USD";
+        const intent = "capture";
+        const amount = 100;
         //https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-        url_to_head(paypal_sdk_url + "?client-id=" + client_id + "&enable-funding=venmo&currency=" + currency + "&intent=" + intent)
+        url_to_head(
+            paypal_sdk_url + "?client-id=" + client_id +
+            "&components=buttons,funding-eligibility" +
+            "&currency=" + currency +
+            "&intent=" + intent
+        )
             .then(() => {
                 //Handle loading spinner
                 // document.getElementById("loading").classList.add("hide");
                 // document.getElementById("content").classList.remove("hide");
                 let alerts = document.getElementById("alerts");
                 let paypal_buttons = paypal.Buttons({ // https://developer.paypal.com/sdk/js/reference
+                    fundingSource: paypal.FUNDING.PAYPAL,
                     onClick: (data) => { // https://developer.paypal.com/sdk/js/reference/#link-oninitonclick
                         //Custom JS here
                     },
                     style: { //https://developer.paypal.com/sdk/js/reference/#link-style
                         shape: 'rect',
-                        color: 'gold',
-                        layout: 'vertical',
-                        label: 'paypal'
+                        color: 'blue',
+                        layout: 'horizontal',
+                        label: 'pay',
                     },
 
                     createOrder: function (data, actions) { //https://developer.paypal.com/docs/api/orders/v2/#orders_create
-                        rpc('/payment/paypal/create_order', {"intent": intent})
-                        .then((response) => response.json())
-                            .then((order) => { return order.id; }).catch(error => {
-                            if (error instanceof RPCError) {
-                                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
-                            } else {
-                                return Promise.reject(error);
-                            }
-                        });
+                        return rpc('/payment/paypal/create_order', { 
+                            intent: intent,
+                            currency: currency,
+                            amount: amount,
+                         })
+                            .then((order_id) => { 
+                                console.log("Succsees created",order_id)
+                                return order_id; 
+                            }).catch(error => {
+                                if (error instanceof RPCError) {
+                                    this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                                } else {
+                                    return Promise.reject(error);
+                                }
+                            });
                     },
 
                     onApprove: function (data, actions) {
                         let order_id = data.orderID;
-                        return fetch("http://localhost:3000/complete_order", {
+                        console.log("onApprove", data)
+                        return rpc("/complete_order", {
                             method: "post", headers: { "Content-Type": "application/json; charset=utf-8" },
                             body: JSON.stringify({
                                 "intent": intent,
@@ -107,7 +122,7 @@ paymentForm.include({
                                 paypal_buttons.close();
                             })
                             .catch((error) => {
-                                console.log(error);
+                                console.log("errpr o n approve",error);
                                 alerts.innerHTML = `<div class="ms-alert ms-action2 ms-small"><span class="ms-close"></span><p>An Error Ocurred!</p>  </div>`;
                             });
                     },
@@ -117,14 +132,16 @@ paymentForm.include({
                     },
 
                     onError: function (err) {
-                        console.log(err);
+                        console.log("onError",err);
                     }
                 });
-                const inlineForm = this._getInlineForm(radio);
-                const adyenContainer = inlineForm.querySelector('[name="o_adyen_component_container"]');
-                this.adyenComponents[paymentOptionId] = this.adyenCheckout.create(
-                    inlineFormValues['adyen_pm_code'], componentConfiguration
-                ).mount(adyenContainer);
+                // const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+                // const inlineForm = this._getInlineForm(radio);
+                // const inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
+                // const paypalContainer = inlineForm.querySelector('[name="o_paypal_component_container"]');
+                // this.paypalComponents[paymentOptionId] = this.paypalCheckout.create(
+                //     inlineFormValues['adyen_pm_code'], componentConfiguration
+                // ).mount(paypalContainer);
                 paypal_buttons.render('#payment_options');
             })
             .catch((error) => {

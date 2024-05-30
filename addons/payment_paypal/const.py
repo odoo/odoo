@@ -44,9 +44,3 @@ PAYMENT_STATUS_MAPPING = {
     'done': ('Processed', 'Completed', 'Cleared'),  # cleared status is required fo echeck
     'cancel': ('Voided', 'Expired'),
 }
-
-# PAYPAL_CLIENT_ID='ATR-C4I_pBxt_sBRoIf-Fycy4xSN8byPdujgzeYiFi8xza3bBug83xHRhTzoNeN6BW9ewCRNbOT_yfbz'
-# PAYPAL_CLIENT_SECRET='EDV7Ft605Mt-adZfBc5AetlsyV8HcUVilNcHgi7Mg7gqCnvXp3Bf8mtzSQ85pAloFgOFvbRgZsyscBeN'
-
-PAYPAL_CLIENT_ID='AWfClPjf6ZGUf9vpa06Un6RT4e0v4PA4m_6VzXHaGY_rZqeL8QtI5vcvZCrcyicnI7nMXiq0jVfofSGJ'
-PAYPAL_CLIENT_SECRET='EOhwGOoQEglBaWER7Y-JrcAGIKRfRlbieSgbNt_IJfcvHVpNAUIsmzq-P6kCm52ycpeEjlaXYMnwL-5k'

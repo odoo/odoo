@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="inline_form">
-        <div id="payment_options"/>
+        <div id="payment_options" name="o_paypal_component_container"/>
     </template>
     <!-- https://developer.paypal.com/docs/paypal-payments-standard/integration-guide/formbasics -->
-    <template id="redirect_form">
+    <!-- <template id="redirect_form">
         <form t-att-action="api_url" method="post">
             <input type="hidden" name="address1" t-att-value="address1"/>
             <input type="hidden" name="amount" t-att-value="amount"/>
@@ -27,6 +27,6 @@
                    type="hidden" name="state" t-att-value="state"/>
             <input type="hidden" name="zip" t-att-value="zip_code"/>
         </form>
-    </template>
+    </template> -->
 
 </odoo>
