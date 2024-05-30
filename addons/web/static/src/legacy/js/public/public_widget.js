@@ -9,6 +9,9 @@ import ServicesMixin from "@web/legacy/js/core/service_mixins";
 import { loadBundle, loadCSS, loadJS } from '@web/core/assets';
 import { renderToElement } from "@web/core/utils/render";
 import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal_dom";
+import { getjQuery } from "@web/core/utils/misc";
+
+// TODO: MSH: Need to convert dom methods in core/dom.js to convert it in vanillaJS
 
 /**
  * Base class for all visual components. Provides a lot of functions helpful
@@ -39,7 +42,7 @@ import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal
  *         },
  *         start: function() {
  *             // stuff you want to make after the rendering, `this.$el` holds a correct value
- *             this.$(".my_button").click(/* an example of event binding * /);
+ *             this.el.querySelector(".my_button").click(/* an example of event binding * /);
  *
  *             // if you have some asynchronous operations, it's a good idea to return
  *             // a promise in start(). Note that this is quite rare, and if you
@@ -53,7 +56,7 @@ import { makeAsyncHandler, makeButtonHandler } from "@web/legacy/js/core/minimal
  * Now this class can simply be used with the following syntax::
  *
  *     var myWidget = new MyWidget(this);
- *     myWidget.appendTo($(".some-div"));
+ *     myWidget.appendTo(document.querySelector(".some-div"));
  *
  * With these two lines, the MyWidget instance was initialized, rendered,
  * inserted into the DOM inside the ``.some-div`` div and its events were
@@ -131,12 +134,12 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      *   'click .hello .world': 'async _onHelloWorldClick',
      *     _^_      _^_           _^_        _^_
      *      |        |             |          |
-     *      |  (Optional) jQuery   |  Handler method name
+     *      |  (Optional) HTML   |  Handler method name
      *      |  delegate selector   |
      *      |                      |_ (Optional) space separated options
      *      |                          * async: use the automatic system
      *      |_ Event name with           making handlers promise-ready (see
-     *         potential jQuery          makeButtonHandler, makeAsyncHandler)
+     *         potential HTML          makeButtonHandler, makeAsyncHandler)
      *         namespaces
      *
      * Note: the values may be replaced by a function declaration. This is
@@ -213,8 +216,8 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
         this._undelegateEvents();
         // If not done with a selector, then
         // remove the elements added to the DOM.
-        if (!this.selector && this.$el) {
-            this.$el.remove();
+        if (!this.selector && this.el) {
+            this.el.remove();
         }
     },
 
@@ -231,7 +234,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     appendTo: function (target) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.appendTo(t);
+            t.append(self.el);
         }, target);
     },
     /**
@@ -242,7 +245,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      */
     attachTo: function (target) {
         var self = this;
-        this.setElement(target.$el || target);
+        this.setElement(target.el || target);
         return this.willStart().then(function () {
             if (self.__parentedDestroyed) {
                 return;
@@ -260,7 +263,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     insertAfter: function (target) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.insertAfter(t);
+            self.el.insertBefore(self.el, t.nextSibling);
         }, target);
     },
     /**
@@ -273,7 +276,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     insertBefore: function (target) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.insertBefore(t);
+            t.insertBefore(self.el);
         }, target);
     },
     /**
@@ -285,7 +288,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     prependTo: function (target) {
         var self = this;
         return this._widgetRenderAndInsert(function (t) {
-            self.$el.prependTo(t);
+            t.prepend(self.el);
         }, target);
     },
     /**
@@ -294,13 +297,13 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * the "widget" key that references `this`.
      */
     renderElement: function () {
-        var $el;
+        let el;
         if (this.template) {
-            $el = $(renderToElement(this.template, {widget: this}));
+            el = renderToElement(this.template, { widget: this });
         } else {
-            $el = this._makeDescriptive();
+            el = this._makeDescriptive();
         }
-        this._replaceElement($el);
+        this._replaceElement(el);
     },
     /**
      * Renders the current widget and replaces the given jQuery object.
@@ -310,7 +313,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      */
     replace: function (target) {
         return this._widgetRenderAndInsert((t) => {
-            this.$el.replaceAll(t);
+            t.replaceWith(this.el);
         }, target);
     },
     /**
@@ -327,16 +330,18 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @return {Widget} this
      */
     setElement: function (element) {
-        if (this.$el) {
+        if (this.el) {
             this._undelegateEvents();
         }
 
+        // Note: Kept for backward compatibility, we will remove it in future
         this.$el = (element instanceof $) ? element : $(element);
-        this.el = this.$el[0];
+        this.el = (element instanceof $) ? element[0] : element;
 
         this._delegateEvents();
 
         if (this.selector) {
+            // Note: Kept for backward compatibility, we will remove it in future
             this.$target = this.$el;
             this.target = this.el;
         }
@@ -348,6 +353,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
     // Private
     //--------------------------------------------------------------------------
 
+    // Note: Kept for backward compatibility, we will remove it in future when all public Widget uses this.el
     /**
      * Helper method, for ``this.$el.find(selector)``
      *
@@ -375,9 +381,9 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
 
             event += '.widget_events';
             if (!selector) {
-                self.$el.on(event, method);
+                self.el.on(event, method);
             } else {
-                self.$el.on(event, selector, method);
+                self.el.on(event, selector, method);
             }
         };
         Object.entries(this.events || {}).forEach(([event, method]) => {
@@ -447,11 +453,13 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
         if (this.className) {
             attrs['class'] = this.className;
         }
-        var $el = $(document.createElement(this.tagName));
+        const el = document.createElement(this.tagName);
         if (Object.keys(attrs || {}).length > 0) {
-            $el.attr(attrs);
+            for (const key in attrs) {
+                el.setAttribute(key, attrs[key]);
+            }
         }
-        return $el;
+        return el;
     },
     /**
      * Re-sets the widget's root element and replaces the old root element
@@ -461,15 +469,16 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @param {HTMLElement | jQuery} $el
      * @returns {Widget} this instance, so it can be chained
      */
-    _replaceElement: function ($el) {
-        var $oldel = this.$el;
-        this.setElement($el);
-        if ($oldel && !$oldel.is(this.$el)) {
-            if ($oldel.length > 1) {
-                $oldel.wrapAll('<div/>');
-                $oldel.parent().replaceWith(this.$el);
+    _replaceElement: function (el) {
+        var oldel = this.el;
+        this.setElement(el);
+        if (oldel && !(oldel === this.el)) {
+            if (oldel) {
+                const divEl = document.createElement('div');
+                divEl.append(oldel);
+                oldel.parentNode.replaceWith(this.el);
             } else {
-                $oldel.replaceWith(this.$el);
+                oldel.replaceWith(this.el);
             }
         }
         return this;
@@ -480,7 +489,7 @@ export const PublicWidget = Class.extend(mixins.PropertiesMixin, ServicesMixin, 
      * @private
      */
     _undelegateEvents: function () {
-        this.$el.off('.widget_events');
+        this.el.off(".widget_events");
     },
     /**
      * Render the widget.  This is a private method, and should really never be
@@ -559,6 +568,7 @@ var RootWidget = PublicWidget.extend({
      * @returns {Deferred}
      */
     _attachComponent: function (childInfo, $from) {
+        // TODO: MSH: Need to convert to VanillaJS
         var self = this;
         var $elements = dom.cssFind($from || this.$el, childInfo.selector);
         var defs = Array.from($elements).map((element) => {
@@ -578,6 +588,7 @@ var RootWidget = PublicWidget.extend({
      * @returns {Deferred}
      */
     _attachComponents: function ($from) {
+        // TODO: MSH: Need to convert to VanillaJS
         var self = this;
         var childInfos = this._getRegistry().getAll();
         var defs = childInfos.map((childInfo) => {
