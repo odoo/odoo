@@ -32,6 +32,13 @@
         </div>
     </t>
 
+    <t t-name="web.TreeEditor.Within">
+        <div class="d-flex align-items-center">
+            <Input value="props.value[0]" update="(val) => this.update(0, val)"/>
+            <Select value="props.value[1]" options="options" update="(val) => this.update(1, val)"/>
+        </div>
+    </t>
+
     <t t-name="web.TreeEditor.List">
         <div class="o_input d-flex flex-wrap gap-1">
             <TagsList tags="tags"/>
