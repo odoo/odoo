@@ -7,7 +7,7 @@
         <field name="street">Av. de las Americas 505</field>
         <field name="city">Quito</field>
         <field name="country_id" ref="base.ec"/>
-        
+
         <field name="zip">170112</field>
         <field name="phone">+593 99 123 4567</field>
         <field name="email">info@company.ecexample.com</field>
@@ -32,5 +32,6 @@
         <value eval="[]"/>
         <value>ec</value>
         <value model="res.company" eval="obj().env.ref('base.demo_company_ec')"/>
+        <value name="install_demo" eval="True"/>
     </function>
 </odoo>
