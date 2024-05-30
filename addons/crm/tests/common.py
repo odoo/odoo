@@ -159,13 +159,18 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         })
         cls.lead_team_1_won.action_set_won()
         cls.lead_team_1_lost = cls.env['crm.lead'].create({
-            'name': 'Already Won',
+            'name': 'Already Lost',
             'type': 'lead',
             'user_id': cls.user_sales_leads.id,
             'team_id': cls.sales_team_1.id,
         })
         cls.lead_team_1_lost.action_set_lost()
         (cls.lead_team_1_won + cls.lead_team_1_lost).flush_recordset()
+
+        # make lead 1 take team history into account for its automated proba.
+        # it should now be 50% as auto proba. (1 lost 1 won for team 1)
+        cls.lead_1._compute_probabilities()
+        cls.lead_1.flush_recordset()
 
         # email / phone data
         cls.test_email_data = [

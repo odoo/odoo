@@ -8,21 +8,20 @@
                     <header>
                         <button name="action_set_won_rainbowman" string="Won"
                             type="object" class="oe_highlight" data-hotkey="w" title="Mark as won"
-                            invisible="not active or probability == 100 or type == 'lead'"/>
-                        <button name="%(crm.crm_lead_lost_action)d" string="Lost" data-hotkey="l" title="Mark as lost"
-                            type="action" invisible="type == 'lead' or not active and probability &lt; 100"/>
+                            invisible="won_status == 'won' or type == 'lead' or not active"/>
                         <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             class="oe_highlight" invisible="type == 'opportunity' or not active" data-hotkey="v"/>
-                        <button name="action_unarchive" string="Restore" type="object" data-hotkey="x"
-                            invisible="probability &gt; 0 or active"/>
-                        <button name="%(crm.crm_lead_lost_action)d" string="Lost" type="action"  data-hotkey="l" title="Mark as lost"
-                            invisible="type == 'opportunity' or probability == 0 and not active"/>
+                        <button name="action_restore" string="Restore" type="object" data-hotkey="x"
+                            invisible="won_status != 'lost'"/>
+                        <button name="%(crm.crm_lead_lost_action)d" string="Lost" type="action" data-hotkey="l" title="Mark as lost"
+                            invisible="won_status != 'pending' or not active"/>
                         <field name="stage_id" widget="statusbar_duration"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
                             domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
-                            invisible="not active or type == 'lead'"/>
+                            invisible="type == 'lead'" readonly="won_status == 'lost'"/>
                     </header>
                     <sheet>
+                        <field name="won_status" invisible="1"/>
                         <field name="active" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
@@ -45,8 +44,9 @@
                                 </div>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="probability &gt; 0 or active"/>
-                        <widget name="web_ribbon" title="Won" invisible="probability &lt; 100" />
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
+                        <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
+                        <widget name="web_ribbon" title="Won" invisible="won_status != 'won'"/>
                         <div class="oe_title">
                             <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="row g-0 pb-3 pb-sm-4">
@@ -77,7 +77,7 @@
                                     </small>
                                     <div id="probability" class="d-flex align-items-baseline">
                                         <field name="is_automated_probability" invisible="1"/>
-                                        <field name="probability" widget="float" class="oe_inline o_input_6ch"/>
+                                        <field name="probability" widget="float" class="oe_inline o_input_6ch" readonly="won_status != 'pending'"/>
                                         <span class="opacity-50 p-2"> %</span>
                                     </div>
                                 </div>
@@ -175,7 +175,7 @@
                                         title="By saving this change, the customer phone number will also be updated."
                                         invisible="not partner_phone_update"/>
                                 </div>
-                                <field name="lost_reason_id" invisible="active"/>
+                                <field name="lost_reason_id" invisible="won_status != 'lost'"/>
                                 <field name="date_conversion" invisible="1"/>
                                 <field name="user_company_ids" invisible="1"/>
                             </group>
@@ -500,6 +500,7 @@
                     <field name="company_currency"/>
                     <field name="recurring_revenue_monthly"/>
                     <field name="team_id"/>
+                    <field name="won_status"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'
                         sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"
                         help="This bar allows to filter the opportunities based on scheduled activities."/>
@@ -510,8 +511,7 @@
                             <field name="color" widget="kanban_color_picker"/>
                         </t>
                         <t t-name="card">
-                            <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
-                            <widget name="web_ribbon" title="lost" bg_color="text-bg-danger" invisible="probability &gt; 0 or active"/>
+                            <widget name="web_ribbon" id="lost_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                             <field class="fw-bold fs-5" name="name"/>
                             <div>
                                 <t t-if="record.expected_revenue.raw_value">
@@ -564,12 +564,8 @@
                     <attribute name="sum_field">prorated_revenue</attribute>
                     <attribute name="recurring_revenue_sum_field">recurring_revenue_monthly_prorated</attribute>
                 </xpath>
-                <xpath expr="//t[@t-set='lost_ribbon']" position="after">
-                    <t t-set="won_ribbon" t-value="record.active.raw_value and record.probability and record.probability.raw_value == 100"/>
-                </xpath>
-                <xpath expr="//widget" position="replace">
-                    <widget t-if="won_ribbon" name="web_ribbon" title="Won" bg_color="text-bg-success" invisible="(probability &gt; 0 or active) and (probability &lt; 100 or not active)"/>
-                    <widget t-if="lost_ribbon" name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="(probability &gt; 0 or active) and (probability &lt; 100 or not active)"/>
+                <xpath expr="//widget[@id='lost_ribbon']" position="after">
+                    <widget name="web_ribbon" id="won_ribbon" title="Won" bg_color="text-bg-success" invisible="won_status != 'won'"/>
                 </xpath>
                 <xpath expr="//div" position="replace">
                     <div>
@@ -932,9 +928,9 @@
                     <filter string="Creation Date" name="creation_date" date="create_date"/>
                     <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <separator/>
-                    <filter string="Won" name="filter_won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
-                    <filter string="Ongoing" name="filter_ongoing" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', False)]"/>
-                    <filter string="Lost" name="filter_lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
+                    <filter string="Won" name="filter_won_status_won" domain="[('won_status', '=', 'won')]"/>
+                    <filter string="Ongoing" name="filter_won_status_pending" domain="[('won_status', '=', 'pending')]"/>
+                    <filter string="Lost" name="filter_won_status_lost" context="{'active_test': False}" domain="[('won_status', '=', 'lost')]"/>
                     <separator/>
                     <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="['&amp;', ('date_closed', '=', False), ('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
