@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import Command, fields
@@ -410,6 +410,121 @@ class TestChannelInternals(MailCommon, HttpCase):
             }]
         ):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
+
+    def test_channel_notification(self):
+        all_test_user = mail_new_test_user(
+            self.env,
+            login="all",
+            name="all",
+            email="all@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        mentions_test_user = mail_new_test_user(
+            self.env,
+            login="mentions",
+            name="mentions",
+            email="mentions@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        nothing_test_user = mail_new_test_user(
+            self.env,
+            login="nothing",
+            name="nothing",
+            email="nothing@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        all_test_user.res_users_settings_id.write({"channel_notifications": "all"})
+        nothing_test_user.res_users_settings_id.write({"channel_notifications": "no_notif"})
+
+        channel = self.env["discuss.channel"].channel_create(name="Channel", group_id=None)
+        channel.add_members((self.partner_employee | all_test_user.partner_id | mentions_test_user.partner_id | nothing_test_user.partner_id).ids)
+
+        # sending normal message
+        with self.with_user("employee"):
+            channel_msg = channel.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
+        all_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", all_test_user.partner_id.id)
+        ])
+        mentions_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+        ])
+        nothing_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+        ])
+        self.assertEqual(len(all_notif), 0, "all + normal message = no needaction")
+        self.assertEqual(len(mentions_notif), 0, "mentions + normal message = no needaction")
+        self.assertEqual(len(nothing_notif), 0, "nothing + normal message = no needaction")
+
+        # sending mention message
+        with self.with_user("employee"):
+            channel_msg = channel.message_post(body="Test @mentions", partner_ids=(all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids, message_type="comment", subtype_xmlid="mail.mt_comment")
+        all_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", all_test_user.partner_id.id)
+        ])
+        mentions_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+        ])
+        nothing_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+        ])
+        self.assertEqual(len(all_notif), 1, "all + mention message = needaction")
+        self.assertEqual(len(mentions_notif), 1, "mentions + mention message = needaction")
+        self.assertEqual(len(nothing_notif), 1, "nothing + mention message = no needaction")
+
+        # mute the channel
+        now = datetime.now()
+        self.env["discuss.channel.member"].search([
+            ("partner_id", "in", (all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids),
+        ]).write({
+            "mute_until_dt": now + timedelta(days=5),
+        })
+
+        # sending normal message
+        with self.with_user("employee"):
+            channel_msg = channel.message_post(body="Test", message_type="comment", subtype_xmlid="mail.mt_comment")
+        all_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", all_test_user.partner_id.id)
+        ])
+        mentions_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+        ])
+        nothing_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+        ])
+        self.assertEqual(len(all_notif), 0, "mute + all + normal message = no needaction")
+        self.assertEqual(len(mentions_notif), 0, "mute + mentions + normal message = no needaction")
+        self.assertEqual(len(nothing_notif), 0, "mute + nothing + normal message = needaction")
+
+        # sending mention message
+        with self.with_user("employee"):
+            channel_msg = channel.message_post(body="Test @mentions", partner_ids=(all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids, message_type="comment", subtype_xmlid="mail.mt_comment")
+        all_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", all_test_user.partner_id.id)
+        ])
+        mentions_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", mentions_test_user.partner_id.id)
+        ])
+        nothing_notif = self.env["mail.notification"].search([
+            ("mail_message_id", "=", channel_msg.id),
+            ("res_partner_id", "=", nothing_test_user.partner_id.id)
+        ])
+        self.assertEqual(len(all_notif), 1, "mute + all + mention message = needaction")
+        self.assertEqual(len(mentions_notif), 1, "mute + mentions + mention message = needaction")
+        self.assertEqual(len(nothing_notif), 1, "mute + nothing + mention message = needaction")
 
     def test_mail_message_starred_group(self):
         """ Test starred message computation for a group. A starred

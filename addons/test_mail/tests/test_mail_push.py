@@ -140,6 +140,13 @@ class TestWebPushNotification(SMSCommon):
         push_to_end_point.assert_not_called()
         push_to_end_point.reset_mock()
 
+        self.env["discuss.channel.member"].search([
+            ("partner_id", "in", (self.user_email.partner_id + self.user_inbox.partner_id).ids),
+            ("channel_id", "in", (chat_channel + channel_channel + group_channel).ids),
+        ]).write({
+            "mute_until_dt": False,
+        })
+
         # Test Channel Message
         group_channel.with_user(self.user_email).message_post(
             body='Test',
@@ -148,6 +155,118 @@ class TestWebPushNotification(SMSCommon):
             subtype_xmlid='mail.mt_comment',
         )
         push_to_end_point.assert_called_once()
+
+    @patch.object(odoo.addons.mail.models.mail_thread, "push_to_end_point")
+    def test_notify_by_push_channel_with_channel_notifications_settings(self, push_to_end_point):
+        """ Test various use case with the channel notification settings."""
+        all_test_user = mail_new_test_user(
+            self.env,
+            login="all",
+            name="all",
+            email="all@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        mentions_test_user = mail_new_test_user(
+            self.env,
+            login="mentions",
+            name="mentions",
+            email="mentions@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        nothing_test_user = mail_new_test_user(
+            self.env,
+            login="nothing",
+            name="nothing",
+            email="nothing@example.com",
+            notification_type="inbox",
+            groups="base.group_user",
+        )
+        all_test_user.res_users_settings_ids.write({"channel_notifications": "all"})
+        nothing_test_user.res_users_settings_ids.write({"channel_notifications": "no_notif"})
+
+        # generate devices
+        self.env["mail.push.device"].sudo().create(
+            [
+                {
+                    "endpoint": f"https://test.odoo.com/webpush/user{(idx + 20)}",
+                    "expiration_time": None,
+                    "keys": json.dumps(
+                        {
+                            "p256dh": "BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A",
+                            "auth": "DJFdtAgZwrT6yYkUMgUqow",
+                        }
+                    ),
+                    "partner_id": user.partner_id.id,
+                }
+                for idx, user in enumerate(all_test_user + mentions_test_user + nothing_test_user)
+            ]
+        )
+
+        channel_channel = self.env["discuss.channel"].with_user(self.user_email).create(
+            [
+                {
+                    "channel_partner_ids": [
+                        (4, self.user_email.partner_id.id),
+                        (4, all_test_user.partner_id.id),
+                        (4, mentions_test_user.partner_id.id),
+                        (4, nothing_test_user.partner_id.id),
+                    ],
+                    "channel_type": "channel",
+                    "name": "channel",
+                }
+            ]
+        )
+        # normal messages in channel
+        channel_channel.with_user(self.user_email).message_post(
+            body="Test Push",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        push_to_end_point.assert_called_once()
+        # all_test_user should be notified
+        self.assertEqual(push_to_end_point.call_args.kwargs["device"]["endpoint"], "https://test.odoo.com/webpush/user20")
+        push_to_end_point.reset_mock()
+
+        # mention messages in channel
+        channel_channel.with_user(self.user_email).message_post(
+            body="Test Push @mentions",
+            message_type="comment",
+            partner_ids=(all_test_user + mentions_test_user + nothing_test_user).partner_id.ids,
+            subtype_xmlid="mail.mt_comment",
+        )
+        self.assertEqual(push_to_end_point.call_count, 2)
+        # all_test_user and mentions_test_user should be notified
+        self.assertEqual(push_to_end_point.call_args_list[0].kwargs["device"]["endpoint"], "https://test.odoo.com/webpush/user20")
+        self.assertEqual(push_to_end_point.call_args_list[1].kwargs["device"]["endpoint"], "https://test.odoo.com/webpush/user21")
+        push_to_end_point.reset_mock()
+
+        # muted channel
+        now = datetime.now()
+        self.env["discuss.channel.member"].search(
+            [
+                ("partner_id", "in", (all_test_user.partner_id + mentions_test_user.partner_id + nothing_test_user.partner_id).ids),
+            ]
+        ).write(
+            {
+                "mute_until_dt": now + timedelta(days=5),
+            }
+        )
+        # normal messages in channel
+        channel_channel.with_user(self.user_email).message_post(
+            body="Test Push",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        push_to_end_point.assert_not_called()
+        # mention messages in channel
+        channel_channel.with_user(self.user_email).message_post(
+            body="Test Push",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        push_to_end_point.assert_not_called()
 
     @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
     @mute_logger('odoo.addons.mail.models.mail_thread')
