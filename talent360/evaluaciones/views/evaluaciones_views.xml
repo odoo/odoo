@@ -109,6 +109,7 @@
                     <button class="btn btn-primary" name="filtros_reporte_action" string="Reporte Personalizado" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
                     <button invisible="tipo != 'CLIMA'" class=" btn btn-primary" name="action_importar_preguntas_clima" string="Agregar catálogo de preguntas" type="object" />
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador, publicado, finalizado" />
                 </header>
                 <sheet string="Evaluacion de personal">
                     <h1 invisible="tipo != 'CLIMA'">Editar evaluación Clima Laboral</h1>
@@ -450,6 +451,7 @@
             <form string="NOM035" create="false" duplicate="0">
                 <header>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador, publicado, finalizado" />
                 </header>
                 <sheet>
                     <h1>Crear evaluación NOM 035</h1>
@@ -546,6 +548,7 @@
             <form string="Evaluación genérica" create="false" duplicate="0">
                 <header>
                     <button class="btn btn-primary" name="action_asignar_usuarios_externos" string="Asignar usuarios externos" type="object" groups="evaluaciones.evaluaciones_cliente_cr_group_user"/>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador, publicado, finalizado" />
                 </header>
                 <sheet>
                     <h1>Crear evaluación genérica</h1>
