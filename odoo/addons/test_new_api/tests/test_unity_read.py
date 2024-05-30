@@ -388,6 +388,32 @@ class TestUnityRead(TransactionCase):
                         ],
                 }])
 
+    def test_read_many2many_gives_id_name_even_if_you_dont_have_access(self):
+        internal_user = new_test_user(self.env, 'internal user', 'base.group_user')
+
+        parent = self.env['test_new_api.parent'].create({'name': 'parent'})
+        tag, invisible = self.env['test_new_api.tag'].create([
+            {'name': 'tag', 'hidden': False},
+            {'name': 'invisible tag', 'hidden': True},
+        ])
+        parent.tag_ids = tag | invisible
+
+        # record rule don't apply if you only read display name
+        read = parent.with_user(internal_user).web_read({'tag_ids': {'fields': {'display_name': {}}}})
+        self.assertEqual(read, [
+            {
+                'id': parent.id,
+                'tag_ids':
+                    [
+                        {'id': tag.id, 'display_name': 'tag'},
+                        {'id': invisible.id, 'display_name': 'invisible tag'},
+                    ]
+            }])
+
+        # record rule apply if you read another field
+        with self.assertRaisesRegex(AccessError, 'top-secret records'):
+            parent.with_user(internal_user).web_read({'tag_ids': {'fields': {'name': {}}}})
+
     def test_specify_fields_many2many(self):
         read = self.course.web_read({'display_name': {},
                                      'lesson_ids': {

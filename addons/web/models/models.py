@@ -158,10 +158,16 @@ class Base(models.AbstractModel):
                         )
                         co_records = co_records.browse(ids_to_read)
 
+                    extra_fields = dict(field_spec['fields'])
+                    extra_fields.pop('display_name', None)
+
                     x2many_data = {
                         vals['id']: vals
-                        for vals in co_records.web_read(field_spec['fields'])
+                        for vals in co_records.web_read(extra_fields)
                     }
+                    if 'display_name' in field_spec['fields']:
+                        for rec in co_records.sudo():
+                            x2many_data[rec.id]['display_name'] = rec.display_name
 
                     for values in values_list:
                         values[field_name] = [x2many_data.get(id_) or {'id': id_} for id_ in values[field_name]]
