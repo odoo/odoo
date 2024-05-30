@@ -50,6 +50,8 @@ class TestUtm(TestUTMCommon):
         source_4_2 = self.env['utm.mixin']._find_or_create_record('utm.source', 'Source 4 [2]')
         self.assertNotIn(source_4_2, source_1 | source_2 | source_3 | source_3_2)
         self.assertEqual(source_4_2.name, 'Source 4 [2]')
+        source_4_2_bis = self.env['utm.mixin']._find_or_create_record('utm.source', 'Source 4 [2]')
+        self.assertEqual(source_4_2_bis, source_4_2)
         # ... then basic without duplicate mark
         source_4 = self.env['utm.mixin']._find_or_create_record('utm.source', 'Source 4')
         self.assertNotIn(source_4, source_1 | source_2 | source_3 | source_3_2 | source_4_2)
