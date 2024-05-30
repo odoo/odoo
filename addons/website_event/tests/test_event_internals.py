@@ -8,10 +8,10 @@ from odoo.tests.common import users
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_event.controllers.main import WebsiteEventController
-from odoo.addons.website_event.tests.common import TestEventQuestionCommon
+from odoo.addons.event.tests.common import EventCase
 
 
-class TestEventData(TestEventQuestionCommon, MockVisitor):
+class TestEventData(EventCase, MockVisitor):
 
     @classmethod
     def setUpClass(cls):
@@ -22,54 +22,6 @@ class TestEventData(TestEventQuestionCommon, MockVisitor):
             'website_published': True,
         } for website_visibility in ['public', 'link', 'logged_users']])
         cls.events_visibility_test = cls.event_public | cls.event_link_only | cls.event_logged_users
-
-    @users('user_eventmanager')
-    def test_event_type_configuration_from_type(self):
-        """ Enure configuration & translations are copied from Event Type on Event creation """
-        self.env['res.lang'].sudo()._activate_lang('nl_NL')
-
-        event_type = self.event_type_questions.with_user(self.env.user)
-        event_type_question_nl = self.event_question_1.with_context(lang='nl_NL')
-        event_type_question_nl.title = "Vraag1"
-        event_type_question_nl.answer_ids[0].name = "V1-Antwoord1"
-
-        event = self.env['event.event'].create({
-            'name': 'Event Update Type',
-            'event_type_id': event_type.id,
-            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
-        })
-
-        self.assertEqual(
-            event.question_ids.mapped('question_type'),
-            ['name', 'email', 'phone', 'simple_choice', 'simple_choice', 'text_box'])
-        self.assertEqual(event.specific_question_ids.filtered(
-            lambda q: q.question_type in ['simple_choice', 'text_box']).title, 'Question1')
-        self.assertEqual(event.specific_question_ids.filtered(
-            lambda q: q.question_type in ['name', 'email', 'phone', 'company_name'])
-                         .mapped('title'), ['Name', 'Email', 'Phone'])
-        self.assertEqual(
-            set(event.specific_question_ids.filtered(
-            lambda q: q.question_type in ['simple_choice', 'text_box']).mapped('answer_ids.name')),
-            set(['Q1-Answer1', 'Q1-Answer2']))
-        self.assertEqual(len(event.general_question_ids), 2)
-        self.assertEqual(event.general_question_ids[0].title, 'Question2')
-        self.assertEqual(event.general_question_ids[1].title, 'Question3')
-        self.assertEqual(
-            set(event.general_question_ids[0].mapped('answer_ids.name')),
-            set(['Q2-Answer1', 'Q2-Answer2']))
-        # verify translations
-        event_question_nl = event.specific_question_ids.filtered_domain([
-            ('title', '=', self.event_question_1.title),
-        ]).with_context(lang='nl_NL')
-        self.assertNotEqual(event_question_nl.title, self.event_question_1.title,
-            "Translated title should differ from untranslated title.")
-        self.assertEqual(event_question_nl.title, event_type_question_nl.title,
-            "Translated title should be copied.")
-        self.assertEqual(
-            set(event_question_nl.answer_ids.mapped('name')),
-            set(event_type_question_nl.answer_ids.mapped('name')),
-            "Translated answer names should be copied.")
 
     def test_process_attendees_form(self):
         event = self.env['event.event'].create({

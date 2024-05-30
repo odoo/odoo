@@ -20,47 +20,6 @@
             <xpath expr="//field[@name='phone']" position="after">
                 <field name="visitor_id" groups="base.group_no_one"/>
             </xpath>
-            <sheet position="inside">
-                <notebook>
-                    <page string="Questions" name="questions">
-                        <field name="registration_answer_ids" widget="one2many">
-                            <tree editable="bottom">
-                                <field name="event_id" column_invisible="True" />
-                                <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
-                                <field name="question_type" string="Type" />
-                                <field name="value_answer_id"
-                                    invisible="question_type != 'simple_choice'"
-                                    domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
-                                <field name="value_text_box" invisible="question_type == 'simple_choice'" />
-                            </tree>
-                            <kanban class="o_kanban_mobile" create="false" delete="false">
-                                <field name="event_id"/>
-                                <field name="question_id"/>
-                                <field name="question_type"/>
-                                <field name="value_answer_id"/>
-                                <field name="value_text_box"/>
-
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div class="d-flex flex-column justify-content-between">
-                                            <div class="o_kanban_record_title oe_kanban_details">
-                                                <strong>
-                                                    <field name="question_id" domain="[('event_id', '=', event_id)]"/>
-                                                </strong>
-                                            </div>
-                                            <field name="value_answer_id"
-                                                invisible="question_type != 'simple_choice'"
-                                                domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
-                                            <field name="value_text_box"
-                                                invisible="question_type == 'simple_choice'"/>
-                                        </div>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
-                    </page>
-                </notebook>
-            </sheet>
         </field>
     </record>
 
