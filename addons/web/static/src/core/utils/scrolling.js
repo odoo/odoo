@@ -103,3 +103,99 @@ export function closestScrollable(el) {
         return closestScrollable(el.parentElement);
     }
 }
+
+/**
+ * This method will return the scrolling element of the document.
+ *
+ * @returns {HTMLElement} the scrolling element
+ */
+export function getScrollingElement(document = window.document) {
+    const baseScrollingElement = document.scrollingElement;
+    const isScrollable = (el) => {
+        const style = window.getComputedStyle(el).overflowY;
+        return (
+            style === "scroll" ||
+            style === "auto" ||
+            (style === "visible" && el === el.ownerDocument.scrollingElement)
+        );
+    };
+    if (
+        isScrollable(baseScrollingElement) &&
+        baseScrollingElement.scrollHeight > baseScrollingElement.clientHeight
+    ) {
+        return baseScrollingElement;
+    }
+
+    const bodyHeight = document.body.clientHeight;
+
+    for (const el of document.body.children) {
+        if (bodyHeight - el.scrollHeight > 1.5) {
+            continue;
+        }
+
+        if (isScrollable(el)) {
+            return el;
+        }
+    }
+
+    return baseScrollingElement;
+}
+
+/**
+ *
+ * This method returns the scrolling target of a given element.
+ *
+ * @returns {Window | HTMLElement} the scrolling target
+ *
+ */
+export function getScrollingTarget(contextItem = window.document) {
+    const scrollingElement =
+        contextItem instanceof Element
+            ? contextItem
+            : contextItem instanceof jQuery
+            ? contextItem[0]
+            : getScrollingElement(contextItem);
+    const document = scrollingElement.ownerDocument;
+    return scrollingElement === document.scrollingElement ? document.defaultView : scrollingElement;
+}
+
+/**
+ * Adapt the given css property by adding the size of a scrollbar if any.
+ * Limitation: only works if the given css property is not already used as
+ * inline style for another reason.
+ *
+ * @param {boolean} [add=true]
+ * @param {boolean} [isScrollElement=true]
+ * @param {string} [cssProperty='padding-right']
+ */
+export function compensateScrollbar(
+    elements,
+    add = true,
+    isScrollElement = true,
+    cssProperty = "padding-right"
+) {
+    for (const el of elements.children) {
+        // Compensate scrollbar
+        const scrollableEl = isScrollElement ? el : closestScrollable(el.parentElement);
+        const isRTL = scrollableEl?.classList.contains("o_rtl");
+        if (isRTL) {
+            cssProperty = cssProperty.replace("right", "left");
+        }
+        el.style.removeProperty(cssProperty);
+        if (!add) {
+            return;
+        }
+        const style = window.getComputedStyle(el);
+        // Round up to the nearest integer to be as close as possible to
+        // the correct value in case of browser zoom.
+        const borderLeftWidth = Math.ceil(parseFloat(style.borderLeftWidth.replace("px", "")));
+        const borderRightWidth = Math.ceil(parseFloat(style.borderRightWidth.replace("px", "")));
+        const bordersWidth = borderLeftWidth + borderRightWidth;
+        const newValue =
+            parseInt(style[cssProperty]) +
+            scrollableEl?.offsetWidth -
+            scrollableEl?.clientWidth -
+            bordersWidth;
+        el.style.setProperty(cssProperty, `${newValue}px`, "important");
+    }
+}

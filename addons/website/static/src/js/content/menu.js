@@ -4,7 +4,7 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import animations from "@website/js/content/snippets.animation";
 export const extraMenuUpdateCallbacks = [];
 import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-import { compensateScrollbar } from "@web/core/utils/ui";
+import { compensateScrollbar, getScrollingElement } from "@web/core/utils/scrolling";
 
 // The header height may vary with sections hidden on scroll (see the class
 // `o_header_hide_on_scroll`). To avoid scroll jumps, we cache the value.
@@ -30,14 +30,16 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.hasScrolled = false;
         this.closeOpenedMenus = false;
         this.scrollHeightTooShort = false;
-        this.scrollableEl = document.scrollingElement;
+        this.scrollableEl = getScrollingElement();
     },
     /**
      * @override
      */
     start: function () {
-        this.main = this.el.nextElementSibling;
-        this.isOverlayHeader = !!this.el.closest('.o_header_overlay, .o_header_overlay_theme');
+        this.mainEl = this.el.nextElementSibling;
+        this.isOverlayHeader = !!(
+            this.el.closest(".o_header_overlay") || this.el.closest(".o_header_overlay_theme")
+        );
         this.hiddenOnScrollEl = this.el.querySelector(".o_header_hide_on_scroll");
 
         // While scrolling through navbar menus on medium devices, body should
@@ -58,7 +60,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
         // Compatibility: can probably be removed, there is no such elements in
         // default navbars... although it could be used by custo.
-        this.navbarCollapseEls = this.el.querySelectorAll('.navbar-collapse');
+        this.navbarCollapseEls = this.el.querySelectorAll(".navbar-collapse");
         this.navbarCollapseEls.forEach((navCollapseEl) => {
             navCollapseEl.addEventListener("show.bs.collapse.BaseAnimatedHeader", disableScroll);
             navCollapseEl.addEventListener("hide.bs.collapse.BaseAnimatedHeader", enableScroll);
@@ -211,7 +213,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         if (this.isOverlayHeader) {
             return;
         }
-        this.main.style.paddingTop = this.fixedHeader ? headerHeight : "";
+        this.mainEl.style.paddingTop = this.fixedHeader ? headerHeight : "";
     },
     /**
      * Checks if the size of the header will decrease by adding the
@@ -270,15 +272,14 @@ const BaseAnimatedHeader = animations.Animation.extend({
             this.scrollHeightTooShort = headerIsScrolled && this._scrollHeightTooShort();
             if (!this.scrollHeightTooShort) {
                 this.el.classList.toggle('o_header_is_scrolled', headerIsScrolled);
-                //TODO: VISP remove when the widget get converted
-                this.$el.trigger('odoo-transitionstart');
+                this.el.dispatchEvent(new CustomEvent("odoo-transitionstart.BaseAnimatedHeader", { bubbles: true }));
                 this.headerIsScrolled = headerIsScrolled;
             }
         }
 
         if (this.closeOpenedMenus) {
             // Hide only the open dropdowns.
-            this.el.querySelectorAll(".dropdown-toggle.show").forEach(dropdownToggleEl => {
+            this.el.querySelectorAll(".dropdown-toggle.show").forEach((dropdownToggleEl) => {
                 Dropdown.getOrCreateInstance(dropdownToggleEl).hide();
             });
         }
@@ -540,7 +541,7 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
      */
     _hideHeader: function () {
         // TODO: VISP remove when the widget get converted
-        this.$el.trigger('odoo-transitionstart');
+        this.el.dispatchEvent(new CustomEvent("odoo-transitionstart.BaseAnimatedHeader", { bubbles: true }));
     },
     /**
      * @override
@@ -553,7 +554,7 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
      */
     _showHeader: function () {
         // TODO: VISP remove when the widget get converted
-        this.$el.trigger('odoo-transitionstart');
+        this.el.dispatchEvent(new CustomEvent("odoo-transitionstart.BaseAnimatedHeader", { bubbles: true }));
     },
 
     //--------------------------------------------------------------------------
@@ -696,7 +697,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @private
      */
     _dropdownHover: function () {
-        this.dropdownMenus.forEach(menuEl => {
+        this.dropdownMenus.forEach((menuEl) => {
             menuEl.setAttribute("data-bs-popper", "none");
             if (uiUtils.getSize() >= SIZES.LG) {
                 menuEl.style.marginTop = "0";
@@ -713,7 +714,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @private
      */
     _hideDropdowns() {
-        for (const toggleEl of this.el.querySelectorAll('.dropdown-toggle.show')) {
+        for (const toggleEl of this.el.querySelectorAll(".dropdown-toggle.show")) {
             Dropdown.getOrCreateInstance(toggleEl).hide();
         }
     },

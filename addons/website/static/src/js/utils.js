@@ -19,14 +19,21 @@ function loadAnchors(url, body) {
         if (url === window.location.pathname || url[0] === '#') {
             resolve(body ? body : document.body.outerHTML);
         } else if (url.length && !url.startsWith("http")) {
-            fetch(window.location.origin + url).then(resolve, reject);
+            // TODO discuss $.get replacment with msh
+            $.get(window.location.origin + url).then(resolve, reject);
         } else { // avoid useless query
             resolve();
         }
     }).then(function (response) {
-        const anchors = [...response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']")].map((el) => {
-            return '#' + el.id;
-        });
+            if (typeof(response) === "string") {
+                const parser = new DOMParser();
+                response = parser.parseFromString(response, "text/html").body;
+            }
+            const anchors = [
+                ...response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']"),
+            ].map((el) => {
+                return "#" + el.id;
+            });
         // Always suggest the top and the bottom of the page as internal link
         // anchor even if the header and the footer are not in the DOM. Indeed,
         // the "scrollTo" function handles the scroll towards those elements
@@ -172,7 +179,7 @@ function prompt(options, _qweb) {
             dialog.querySelectorAll(".btn-primary").addEventListener("click", function () {
                 const backdrop = document.querySelector(".modal-backdrop");
                 resolve({ val: field.value, field: field, dialog: dialog });
-                dialog.classList.remove("show");
+                Modal.getOrCreateInstance(dialog).hide();
                 dialog.parentNode.removeChild(dialog);
                 backdrop.parentNode.removeChild(backdrop);
             });
@@ -187,7 +194,9 @@ function prompt(options, _qweb) {
             field.keypress(function (e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
-                    dialog.querySelector(".btn-primary").click();
+                    dialog
+                        .querySelector(".btn-primary")
+                        ?.dispatchEvent(new Event("click", { bubbles: true }));
                 }
             });
         }
