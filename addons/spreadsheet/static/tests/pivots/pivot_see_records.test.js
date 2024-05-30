@@ -40,6 +40,7 @@ const basicListAction = {
     ],
     target: "current",
     domain: [],
+    context: {},
 };
 
 test("Can open see records on headers col", async function () {

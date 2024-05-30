@@ -170,3 +170,34 @@ test("Can open link when some views are absent from the referred action", async 
     await animationFrame();
     expect.verifySteps(["do-action"]);
 });
+
+test("Context is passed correctly to the action service", async () => {
+    const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
+    env.services.action = {
+        ...env.services.action,
+        loadAction(_, context) {
+            expect.step("load-action");
+            expect(context).toEqual({ search_default_partner: 1 });
+        },
+    };
+
+    const view = {
+        name: "My Action Name",
+        viewType: "list",
+        action: {
+            modelName: "ir.ui.menu",
+            views: [[false, "list"]],
+            domain: [(1, "=", 1)],
+            xmlId: "spreadsheet.action1",
+            context: { search_default_partner: 1 },
+        },
+    };
+
+    const model = new Model({}, { custom: { env } });
+    setCellContent(model, "A1", `[an action link](odoo://view/${JSON.stringify(view)})`);
+    const cell = getEvaluatedCell(model, "A1");
+    expect(urlRepresentation(cell.link, model.getters)).toBe("My Action Name");
+    await openLink(cell.link, env);
+    await animationFrame();
+    expect.verifySteps(["load-action"]);
+});

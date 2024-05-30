@@ -14,7 +14,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
     const pivot = env.model.getters.getPivot(pivotId);
     await pivot.load();
     const { model } = pivot.definition;
-    const { actionXmlId } = env.model.getters.getPivotCoreDefinition(pivotId);
+    const { actionXmlId, context } = env.model.getters.getPivotCoreDefinition(pivotId);
     const pivotCell = env.model.getters.getPivotCellFromPosition(position);
     const domain = pivot.getPivotCellDomain(pivotCell.domain);
     const name = await pivot.getModelLabel();
@@ -31,6 +31,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
             ],
             target: "current",
             domain,
+            context,
         },
         { viewType: "list" }
     );
