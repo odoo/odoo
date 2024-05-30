@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.website</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <page name="event_type_communication" position="after">
+                <page string="Questions" name="page_questions">
+                    <field name="question_ids" class="w-100">
+                        <tree sample="1">
+                            <field name="title"/>
+                            <field name="is_mandatory_answer" string="Mandatory"/>
+                            <field name="once_per_order" string="Once per Order"/>
+                            <field name="question_type" />
+                            <field name="answer_ids" widget="many2many_tags"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>
