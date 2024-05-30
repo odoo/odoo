@@ -768,18 +768,22 @@ class TestCRMLead(TestCrmCommon):
 
         user_team_leads, team_leads, user_team_opport, team_opport = self.env['crm.team'].create([{
             'name': 'UserTeamLeads',
+            'company_id': self.env.company.id,
             'use_leads': True,
             'member_ids': [(6, 0, [self.env.user.id])],
         }, {
             'name': 'TeamLeads',
+            'company_id': self.env.company.id,
             'use_leads': True,
             'member_ids': [],
         }, {
             'name': 'UserTeamOpportunities',
+            'company_id': self.env.company.id,
             'use_leads': False,
             'member_ids': [(6, 0, [self.env.user.id])],
         }, {
             'name': 'TeamOpportunities',
+            'company_id': self.env.company.id,
             'use_leads': False,
             'member_ids': [],
         }])
