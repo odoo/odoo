@@ -5,16 +5,16 @@ import json
 import math
 import time
 from ast import literal_eval
-from datetime import date, timedelta
+from datetime import date
 from collections import defaultdict
 
-from odoo import SUPERUSER_ID, _, api, Command, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, groupby
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class PickingType(models.Model):
@@ -798,6 +798,20 @@ class Picking(models.Model):
                     'title': ("Warning for %s") % partner.name,
                     'message': partner.picking_warn_msg
                 }}
+
+    @api.onchange('location_id')
+    def _onchange_location_id(self):
+        for move in self.move_ids.filtered(lambda m: m.move_orig_ids):
+            for ml in move.move_line_ids:
+                parent_path = [int(loc_id) for loc_id in ml.location_id.parent_path.split('/')[:-1]]
+                if self.location_id.id not in parent_path:
+                    return {'warning': {
+                            'title': _("Warning: change source location"),
+                            'message': _("Updating the location of this transfer will result in unreservation of the currently assigned items. "
+                                         "An attempt to reserve items at the new location will be made and the link with preceding transfers will be discarded.\n\n"
+                                         "To avoid this, please discard the source location change before saving.")
+                        }
+                    }
 
     @api.model_create_multi
     def create(self, vals_list):
