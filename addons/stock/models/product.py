@@ -307,11 +307,9 @@ class Product(models.Model):
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
-        for location in locations:
-            loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
-            dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
+        paths_domain = expression.OR([[('parent_path', '=like', loc.parent_path + '%')] for loc in locations])
+        loc_domain = [('location_id', 'any', paths_domain)]
+        dest_loc_domain = [('location_dest_id', 'any', paths_domain)]
 
         return (
             loc_domain,
