@@ -7,5 +7,6 @@ declare module "models" {
         onlineMembers: ChannelMember[],
         offlineMembers: ChannelMember[],
         readonly hasMemberList: boolean,
+        private _computeOfflineMembers(): ChannelMember[],
     }
 }

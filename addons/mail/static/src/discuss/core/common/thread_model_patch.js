@@ -27,14 +27,12 @@ const threadPatch = {
             },
         });
         this.offlineMembers = Record.many("ChannelMember", {
-            /** @this {import("models").Thread} */
-            compute() {
-                return this.channelMembers.filter(
-                    (member) => member.persona?.im_status !== "online"
-                );
-            },
+            compute: this._computeOfflineMembers,
             sort: (m1, m2) => (m1.persona?.name < m2.persona?.name ? -1 : 1),
         });
+    },
+    _computeOfflineMembers() {
+        return this.channelMembers.filter((member) => member.persona?.im_status !== "online");
     },
     get avatarUrl() {
         if (this.channel_type === "channel" || this.channel_type === "group") {
