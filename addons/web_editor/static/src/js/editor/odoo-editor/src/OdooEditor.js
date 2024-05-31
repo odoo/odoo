@@ -845,6 +845,11 @@ export class OdooEditor extends EventTarget {
     computeFontSizeSelectorValues(fontSizeDropdownEl) {
         fontSizeDropdownEl = fontSizeDropdownEl || this.toolbar.querySelector("#font-size");
 
+        // In case of firefox browser and community version of website module "this.toolbar.querySelector('#font-size')" 
+        // will always be null because El with id "font-size" is not present in toolbar in mobileView.
+        if(!fontSizeDropdownEl) {
+            return;
+        }
         let previousItem = null;
         let previousValue = -1;
         const style = this.document.defaultView.getComputedStyle(this.document.body);
