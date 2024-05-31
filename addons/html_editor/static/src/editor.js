@@ -64,6 +64,7 @@ export class Editor {
         this.isDestroyed = false;
         this.config = config;
         this.services = services;
+        this.resources = null;
         this.plugins = [];
         /** @type { HTMLElement } **/
         this.editable = null;
@@ -82,6 +83,12 @@ export class Editor {
         if (this.config.content) {
             editable.innerHTML = this.config.content;
         }
+        this.preparePlugins();
+        // apply preprocessing, if necessary
+        for (const cb of this.resources.preprocessDom || []) {
+            cb(editable);
+        }
+
         editable.setAttribute("contenteditable", true);
         initElementForEdition(editable, { allowInlineAtRoot: !!this.config.allowInlineAtRoot });
         editable.classList.add("odoo-editor-editable");
@@ -91,7 +98,7 @@ export class Editor {
         this.startPlugins();
     }
 
-    startPlugins() {
+    preparePlugins() {
         const Plugins = sortPlugins(this.config.Plugins || MAIN_PLUGINS);
         const plugins = new Map();
         const dispatch = this.dispatch.bind(this);
@@ -135,6 +142,12 @@ export class Editor {
         const resources = this.createResources();
         for (const plugin of this.plugins) {
             plugin.resources = resources;
+        }
+        this.resources = resources;
+    }
+
+    startPlugins() {
+        for (const plugin of this.plugins) {
             plugin.setup();
         }
         this.dispatch("NORMALIZE", { node: this.editable });
