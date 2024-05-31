@@ -94,7 +94,10 @@ class Action(Controller):
                 elif action.get('model'):
                     Model = request.env[action.get('model')]
                     if record_id:
-                        display_names.append(Model.browse(record_id).display_name)
+                        if record_id == 'new':
+                            display_names.append(_("New"))
+                        else:
+                            display_names.append(Model.browse(record_id).display_name)
                     else:
                         # This case cannot be produced by the web client
                         raise BadRequest('Actions with a model should also have a resId')
