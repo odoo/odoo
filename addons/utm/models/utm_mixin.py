@@ -243,6 +243,7 @@ class UtmMixin(models.AbstractModel):
             'utm.utm_source_facebook': ('Facebook', 'utm.source'),
             'utm.utm_source_instagram': ('Instagram', 'utm.source'),
             'utm.utm_source_linkedin': ('LinkedIn', 'utm.source'),
+            'utm.utm_source_livechat': ('Livechat', 'utm.source'),
             'utm.utm_source_mailing': ('Mass Mailing', 'utm.source'),
             'utm.utm_source_referral': ('Referral', 'utm.source'),
             'utm.utm_source_survey': ('Survey', 'utm.source'),

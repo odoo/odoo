@@ -28,7 +28,8 @@ class ChatbotScriptStep(models.Model):
             'description': description + discuss_channel._get_channel_history(),
             "name": name,
             "origin_channel_id": discuss_channel.id,
-            'source_id': self.chatbot_script_id.source_id.id,
+            'source_id': self.env.ref("im_livechat.utm_source_chatbot").id,
+            'utm_reference': f'{self.chatbot_script_id._name},{self.chatbot_script_id.id}',
             "team_id": team.id,
             'user_id': False,
         }
