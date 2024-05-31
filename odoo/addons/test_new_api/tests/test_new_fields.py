@@ -3248,8 +3248,8 @@ class TestX2many(TransactionCase):
         self.assertIn(parent, Model.search([('relatives_ids', '=', 'A')]))
         self.assertNotIn(parent, Model.search([('relatives_ids', '=', 'B')]))
         # Same result with the child_of operator
-        self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', child_a.id)]))  # incorrect
-        self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', 'A')]))  # incorrect
+        self.assertIn(parent, Model.search([('relatives_ids', 'child_of', child_a.id)]))
+        self.assertIn(parent, Model.search([('relatives_ids', 'child_of', 'A')]))
         self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', child_b.id)]))
         self.assertNotIn(parent, Model.search([('relatives_ids', 'child_of', 'B')]))
 
@@ -3260,8 +3260,8 @@ class TestX2many(TransactionCase):
         self.assertIn(parent, Model.search([('all_relatives_ids', '=', 'A')]))
         self.assertNotIn(parent, Model.search([('all_relatives_ids', '=', 'B')]))  # incorrect
         # Same result with the child_of operator
-        self.assertNotIn(parent, Model.search([('all_relatives_ids', 'child_of', child_a.id)]))  # incorrect
-        self.assertNotIn(parent, Model.search([('all_relatives_ids', 'child_of', 'A')]))  # incorrect
+        self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', child_a.id)]))
+        self.assertIn(parent, Model.search([('all_relatives_ids', 'child_of', 'A')]))
         self.assertNotIn(parent, Model.search([('all_relatives_ids', 'child_of', child_b.id)]))  # incorrect
         self.assertNotIn(parent, Model.search([('all_relatives_ids', 'child_of', 'B')]))  # incorrect
 
