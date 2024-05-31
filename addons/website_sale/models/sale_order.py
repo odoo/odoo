@@ -6,7 +6,7 @@ from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -370,7 +370,7 @@ class SaleOrder(models.Model):
         return {
             'line_id': order_line.id,
             'quantity': quantity,
-            'option_ids': list(set(order_line.option_line_ids.filtered(
+            'option_ids': list(set(order_line.linked_line_ids.filtered(
                 lambda sol: sol.order_id == order_line.order_id).ids)
             ),
             'warning': warning,
