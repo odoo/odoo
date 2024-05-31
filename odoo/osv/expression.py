@@ -984,19 +984,11 @@ class expression(object):
             left, operator, right = leaf
             path = left.split('.', 1)
 
-            field = model._fields.get(path[0])
-            comodel = model.env.get(getattr(field, 'comodel_name', None))
-
-            # ----------------------------------------
-            # FIELD NOT FOUND
-            # -> from inherits'd fields -> work on the related model, and add
-            #    a join condition
-            # -> ('id', 'child_of', '..') -> use a 'to_ids'
-            # -> but is one on the _log_access special fields, add directly to
-            #    result
-            #    TODO: make these fields explicitly available in self.columns instead!
-            # -> else: crash
-            # ----------------------------------------
+            field = model._fields[path[0]]
+            if field.type == 'many2one':
+                comodel = model.env[field.comodel_name].with_context(active_test=False)
+            elif field.type in ('one2many', 'many2many'):
+                comodel = model.env[field.comodel_name].with_context(**field.context)
 
             if field.inherited:
                 parent_model = model.env[field.related_field.model_name]
@@ -1125,7 +1117,7 @@ class expression(object):
             elif operator in ('any', 'not any') and field.store and field.type == 'one2many' and field.auto_join:
                 # use a subquery bypassing access rules and business logic
                 domain = right + field.get_domain_list(model)
-                query = comodel.with_context(**field.context)._where_calc(domain)
+                query = comodel._where_calc(domain)
                 sql = query.subselect(
                     comodel._field_to_sql(comodel._table, field.inverse_name, query),
                 )
@@ -1135,7 +1127,7 @@ class expression(object):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif operator in ('any', 'not any') and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False)._search(right)
+                right_ids = comodel._search(right)
                 if operator == 'any':
                     push((left, 'in', right_ids), model, alias)
                 else:
@@ -1144,7 +1136,7 @@ class expression(object):
 
             # Making search easier when there is a left operand as one2many or many2many
             elif operator in ('any', 'not any') and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.with_context(**field.context)._search(right)
+                right_ids = comodel._search(right)
                 push((left, ANY_IN[operator], right_ids), model, alias)
 
             elif not field.store:
@@ -1176,7 +1168,7 @@ class expression(object):
                 if field.comodel_name != model._name:
                     dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
                 else:
-                    dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
+                    dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel, parent=left)
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
 
@@ -1229,7 +1221,7 @@ class expression(object):
                         # rewrite condition to match records with/without lines
                         sub_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
                         comodel_domain = [(inverse_field.name, '!=', False)]
-                        query = comodel.with_context(active_test=False)._where_calc(comodel_domain)
+                        query = comodel._where_calc(comodel_domain)
                         sql_inverse = comodel._field_to_sql(query.table, inverse_field.name, query)
                         sql = query.subselect(sql_inverse)
                         push(('id', sub_op, sql), model, alias)
@@ -1321,7 +1313,7 @@ class expression(object):
                     if field.comodel_name != model._name:
                         dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
                     else:
-                        dom = HIERARCHY_FUNCS[operator]('id', ids2, model, parent=left)
+                        dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel, parent=left)
                     for dom_leaf in dom:
                         push(dom_leaf, model, alias)
 
@@ -1340,7 +1332,7 @@ class expression(object):
                         operator = dict_op[operator]
                     elif isinstance(right, list) and operator in ('!=', '='):  # for domain (FIELD,'=',['value1','value2'])
                         operator = dict_op[operator]
-                    res_ids = comodel.with_context(active_test=False)._name_search(right, [], operator)
+                    res_ids = comodel._name_search(right, [], operator)
                     if operator in NEGATIVE_TERM_OPERATORS:
                         for dom_leaf in ('|', (left, 'in', res_ids), (left, '=', False)):
                             push(dom_leaf, model, alias)
