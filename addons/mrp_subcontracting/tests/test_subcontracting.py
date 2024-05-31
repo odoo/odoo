@@ -169,6 +169,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
+            move.product_uom_qty = 1
             move.quantity = 1
             move.picked = True
         picking_receipt = picking_form.save()
@@ -238,6 +239,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
+            move.product_uom_qty = 1
             move.quantity = 1
             move.picked = True
         picking_receipt = picking_form.save()
@@ -306,6 +308,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
+            move.product_uom_qty = 1
             move.quantity = 1
             move.picked = True
         picking_receipt = picking_form.save()
@@ -375,6 +378,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
+            move.product_uom_qty = 1
             move.quantity = 1
             move.picked = True
         picking_receipt1 = picking_form.save()
@@ -385,6 +389,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = subcontractor_partner2
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
+            move.product_uom_qty = 1
             move.quantity = 1
             move.picked = True
         picking_receipt2 = picking_form.save()
@@ -506,6 +511,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished
+            move.product_uom_qty = 5
             move.quantity = 5
             move.picked = True
         picking_receipt = picking_form.save()
@@ -872,6 +878,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             picking_form.partner_id = self.subcontractor_partner1
             with picking_form.move_ids_without_package.new() as move:
                 move.product_id = self.finished
+                move.product_uom_qty = 3
                 move.quantity = 3
             picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
@@ -1225,6 +1232,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
+            move.product_uom_qty = 1
             move.quantity = 1
             move.picked = True
         picking_receipt = picking_form.save()
@@ -1350,6 +1358,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = self.finished_product
+            move.product_uom_qty = todo_nb
             move.quantity = todo_nb
         picking_receipt = picking_form.save()
         picking_receipt.action_confirm()
@@ -1521,6 +1530,7 @@ class TestSubcontractingTracking(TransactionCase):
         picking_form.partner_id = self.subcontractor_partner1
         with picking_form.move_ids_without_package.new() as move:
             move.product_id = finished_product
+            move.product_uom_qty = todo_nb
             move.quantity = todo_nb
             move.picked = True
         picking_receipt = picking_form.save()
