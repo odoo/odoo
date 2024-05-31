@@ -306,18 +306,13 @@ class Product(models.Model):
         # this optimizes [('location_id', 'child_of', locations.ids)]
         # by avoiding the ORM to search for children locations and injecting a
         # lot of location ids into the main query
-        loc_domain = expression.OR([
-            [('location_id.parent_path', '=like', location.parent_path + '%')]
-            for location in locations
-        ])
-        dest_loc_domain = expression.OR([
-            [
-                '|',
-                '&', ('location_final_id', '!=', False), ('location_final_id.parent_path', '=like', location.parent_path + '%'),
-                '&', ('location_final_id', '=', False), ('location_dest_id.parent_path', '=like', location.parent_path + '%'),
-            ]
-            for location in locations
-        ])
+        paths_domain = expression.OR([[('parent_path', '=like', loc.parent_path + '%')] for loc in locations])
+        loc_domain = [('location_id', 'any', paths_domain)]
+        dest_loc_domain = [
+            '|',
+            '&', ('location_final_id', '!=', False), ('location_final_id', 'any', paths_domain),
+            '&', ('location_final_id', '=', False), ('location_dest_id', 'any', paths_domain),
+        ]
 
         # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
         return (
