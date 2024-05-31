@@ -22,6 +22,7 @@ class ProductProduct(models.Model):
 
     # price_extra: catalog extra value only, sum of variant extra attributes
     gelato_reference = fields.Char(name='Gelato Reference')
+    photo_url = fields.Char(name='Gelato photo')
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
         digits='Product Price',
