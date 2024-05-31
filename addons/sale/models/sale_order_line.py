@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import re
 
 from collections import defaultdict
 from datetime import timedelta
-import re
 
 from markupsafe import Markup
 
@@ -134,6 +134,17 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_uom',
         store=True, readonly=False, precompute=True, ondelete='restrict',
         domain="[('category_id', '=', product_uom_category_id)]")
+    linked_line_id = fields.Many2one(
+        string="Linked Order Line",
+        comodel_name='sale.order.line',
+        ondelete='cascade',
+        domain="[('order_id', '=', order_id)]",
+        copy=False,
+        index=True,
+    )
+    linked_line_ids = fields.One2many(
+        string="Linked Order Lines", comodel_name='sale.order.line', inverse_name='linked_line_id',
+    )
 
     # Pricing fields
     tax_id = fields.Many2many(
@@ -327,7 +338,7 @@ class SaleOrderLine(models.Model):
                 if ptav._origin not in valid_values:
                     line.product_no_variant_attribute_value_ids -= ptav
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'linked_line_id', 'linked_line_ids')
     def _compute_name(self):
         for line in self:
             if not line.product_id and not line.is_downpayment:
@@ -355,7 +366,18 @@ class SaleOrderLine(models.Model):
           the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
         """
         self.ensure_one()
-        return self.product_id.get_product_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
+        description = (
+            self.product_id.get_product_multiline_description_sale()
+            + self._get_sale_order_line_multiline_description_variants()
+        )
+        if self.linked_line_id:
+            description += "\n" + _("Option for: %s", self.linked_line_id.product_id.display_name)
+        if self.linked_line_ids:
+            description += "\n" + "\n".join([
+                _("Option: %s", linked_line.product_id.display_name)
+                for linked_line in self.linked_line_ids
+            ])
+        return description
 
     def _get_sale_order_line_multiline_description_variants(self):
         """When using no_variant attributes or is_custom values, the product
