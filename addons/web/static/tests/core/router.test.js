@@ -1670,6 +1670,45 @@ describe("internal links", () => {
         expect(defaultPrevented).toBe(true);
     });
 
+    test("click on internal link with different protocol does a loadState", async () => {
+        redirect("/odoo");
+        createRouter({ onPushState: () => expect.step("pushState") });
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        link.href = "http://" + browser.location.host + "/odoo/some-action/2";
+        fixture.appendChild(link);
+
+        expect(router.current).toEqual({});
+        expect(browser.location.protocol).not.toBe(link.protocol, {
+            message:
+                "should have different protocols between the current location and the clicked link",
+        });
+
+        let defaultPrevented;
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            defaultPrevented = ev.defaultPrevented;
+            ev.preventDefault();
+        });
+        click("a");
+        await tick();
+        expect(["click"]).toVerifySteps();
+        expect(router.current).toEqual({
+            action: "some-action",
+            actionStack: [
+                {
+                    action: "some-action",
+                },
+                {
+                    action: "some-action",
+                    resId: 2,
+                },
+            ],
+            resId: 2,
+        });
+        expect(defaultPrevented).toBe(true);
+    });
+
     test("click on internal link with hash (key/values)", async () => {
         redirect("/odoo");
         createRouter({
