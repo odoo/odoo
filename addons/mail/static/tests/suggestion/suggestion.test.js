@@ -1,4 +1,4 @@
-import { describe, beforeEach, test } from "@odoo/hoot";
+import { describe, beforeEach, test, expect } from "@odoo/hoot";
 
 import { Composer } from "@mail/core/common/composer";
 import {
@@ -15,6 +15,7 @@ import {
 } from "../mail_test_helpers";
 import { Command, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { Deferred, tick } from "@odoo/hoot-mock";
+import { extractSuggestions } from "@mail/core/common/extract_suggestions";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -329,4 +330,79 @@ test("Mention with @everyone", async () => {
     await insertText(".o-mail-Composer-input", "@ever");
     await click(".o-mail-Composer-suggestion");
     await contains(".o-mail-Composer-input", { value: "@everyone " });
+});
+
+test("Suggestion delimiter starting and ending with specific character", async () => {
+    const delimiter = {
+        id: "h*o",
+        pattern: "/h\\w*o",
+    };
+    let [match] = extractSuggestions("/hello world", [delimiter]);
+    expect(match).toEqual({
+        delimiter: "h*o",
+        start: 0,
+        end: 12,
+        term: " world",
+    });
+    [match] = extractSuggestions("/halo world", [delimiter]);
+    expect(match).toEqual({
+        delimiter: "h*o",
+        start: 0,
+        end: 11,
+        term: " world",
+    });
+});
+
+test("Suggestion delimiter after a specific word", async () => {
+    const delimiter = {
+        id: "please",
+        pattern: "(?<=OdooBot.*)please",
+    };
+    let [match] = extractSuggestions("You have to say please", [delimiter]);
+    expect(match).toBe(undefined);
+    [match] = extractSuggestions("OdooBot, please send this email", [delimiter]);
+    expect(match).toEqual({
+        delimiter: "please",
+        start: 9,
+        end: 31,
+        term: " send this email",
+    });
+});
+
+test("Suggestion delimiter before a specific word", async () => {
+    const delimiter = {
+        id: "please",
+        pattern: "(?=.*OdooBot.*)please",
+    };
+    let [match] = extractSuggestions("please send this email", [delimiter]);
+    expect(match).toBe(undefined);
+    [match] = extractSuggestions("please send this email OdooBot", [delimiter]);
+    expect(match).toEqual({
+        delimiter: "please",
+        start: 0,
+        end: 30,
+        term: " send this email OdooBot",
+    });
+});
+
+test("Suggestion ending after a specific character", async () => {
+    const delimiter = {
+        id: "hello",
+        pattern: "hello",
+        endPattern: "!",
+    };
+    let [match] = extractSuggestions("hello dear visitor! See you next time.", [delimiter]);
+    expect(match).toEqual({
+        delimiter: "hello",
+        start: 0,
+        end: 18,
+        term: " dear visitor",
+    });
+    [match] = extractSuggestions("hello dear visitor, See you next time.", [delimiter]);
+    expect(match).toEqual({
+        delimiter: "hello",
+        start: 0,
+        end: 38,
+        term: " dear visitor, See you next time.",
+    });
 });

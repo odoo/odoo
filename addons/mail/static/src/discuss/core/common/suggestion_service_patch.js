@@ -7,9 +7,12 @@ import { patch } from "@web/core/utils/patch";
 const commandRegistry = registry.category("discuss.channel_commands");
 
 patch(SuggestionService.prototype, {
-    getSupportedDelimiters(thread) {
-        const res = super.getSupportedDelimiters(thread);
-        return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
+    getTriggers(thread) {
+        const res = super.getTriggers(thread);
+        if (thread?.model === "discuss.channel") {
+            res.push({ id: "/", pattern: "/", startIndex: 0 });
+        }
+        return res;
     },
     /**
      * @override

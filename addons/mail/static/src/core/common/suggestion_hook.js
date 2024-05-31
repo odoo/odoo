@@ -2,6 +2,7 @@ import { useSequential } from "@mail/utils/common/hooks";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { extractSuggestions } from "./extract_suggestions";
 
 class UseSuggestion {
     constructor(comp) {
@@ -81,60 +82,28 @@ class UseSuggestion {
     }
     detect() {
         const { start, end } = this.composer.selection;
-        const text = this.composer.text;
         if (start !== end) {
             // avoid interfering with multi-char selection
             this.clearSearch();
             return;
         }
-        const candidatePositions = [];
-        // consider the chars before the current cursor position
-        let numberOfSpaces = 0;
-        for (let index = start - 1; index >= 0; --index) {
-            if (/\s/.test(text[index])) {
-                numberOfSpaces++;
-                if (numberOfSpaces === 2) {
-                    // The consideration stops after the second space since
-                    // a majority of partners have a two-word name. This
-                    // removes the need to check for mentions following a
-                    // delimiter used earlier in the content.
-                    break;
-                }
-            }
-            candidatePositions.push(index);
-        }
-        // keep the current delimiter if it is still valid
-        if (this.search.position !== undefined && this.search.position < start) {
-            candidatePositions.push(this.search.position);
-        }
-        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(this.thread);
-        for (const candidatePosition of candidatePositions) {
-            if (candidatePosition < 0 || candidatePosition >= text.length) {
-                continue;
-            }
-            const candidateChar = text[candidatePosition];
-            if (
-                !supportedDelimiters.find(
-                    ([delimiter, allowedPosition]) =>
-                        delimiter === candidateChar &&
-                        (allowedPosition === undefined || allowedPosition === candidatePosition)
-                )
-            ) {
-                continue;
-            }
-            const charBeforeCandidate = text[candidatePosition - 1];
-            if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
-                continue;
-            }
-            Object.assign(this.search, {
-                delimiter: candidateChar,
-                position: candidatePosition,
-                term: text.substring(candidatePosition + 1, start),
-            });
-            this.state.count++;
+        const suggestions = extractSuggestions(
+            this.composer.text.substring(0, end),
+            this.suggestionService.getTriggers(this.thread)
+        );
+        const currentMatch = suggestions.findLast(
+            (mention) => mention.start <= start && mention.end >= start
+        );
+        if (!currentMatch) {
+            this.clearSearch();
             return;
         }
-        this.clearSearch();
+        Object.assign(this.search, {
+            delimiter: currentMatch.delimiter,
+            position: currentMatch.start,
+            term: currentMatch.term,
+        });
+        this.state.count++;
     }
     get thread() {
         return this.composer.thread || this.composer.message.thread;
