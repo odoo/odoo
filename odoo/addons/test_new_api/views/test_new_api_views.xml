@@ -449,5 +449,46 @@
             </field>
         </record>
 
+        <record id="view_model_model_active_field_tree" model="ir.ui.view">
+            <field name="name">Test Active List</field>
+            <field name="model">test_new_api.model_active_field</field>
+            <field name="arch" type="xml">
+                <tree editable='bottom' decoration-muted="not active">
+                    <field name="active"/>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="children_ids" widget="many2many_tags"/>
+                    <field name="all_children_ids" widget="many2many_tags"/>
+                    <field name="relatives_ids" widget="many2many_tags"/>
+                    <field name="all_relatives_ids" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_model_model_active_field_search" model="ir.ui.view">
+            <field name="name">Test Active Search</field>
+            <field name="model">test_new_api.model_active_field</field>
+            <field name="arch" type="xml">
+                <search string="Search Active Test">
+                    <field name="name" string="By name" filter_domain="[('name', 'ilike', self)]"/>
+                    <field name="parent_id" string="On parent (child_of)" filter_domain="[('parent_id', 'child_of', self)]"/>
+                    <separator/>
+                    <field name="children_ids" string="Children (one2many)"/>
+                    <field name="all_children_ids" string="All Children (one2many)"/>
+                    <separator/>
+                    <field name="relatives_ids" string="Relatives (many2many)"/>
+                    <field name="all_relatives_ids" string="All Relatives (many2many)"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_tests_active" model="ir.actions.act_window">
+            <field name="name">Active Tests</field>
+            <field name="res_model">test_new_api.model_active_field</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_model_model_active_field_search"/>
+        </record>
+        <menuitem id="menu_active" name="Active Test" action="action_tests_active" parent="menu_main" sequence="12"/>
+
     </data>
 </odoo>

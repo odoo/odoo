@@ -1204,6 +1204,15 @@ class ModelActiveField(models.Model):
                                        context={'active_test': False})
     active_children_ids = fields.One2many('test_new_api.model_active_field', 'parent_id',
                                           context={'active_test': True})
+    relatives_ids = fields.Many2many(
+        'test_new_api.model_active_field',
+        'model_active_field_relatives_rel', 'source_id', 'dest_id',
+    )
+    all_relatives_ids = fields.Many2many(
+        'test_new_api.model_active_field',
+        'model_active_field_relatives_rel', 'source_id', 'dest_id',
+        context={'active_test': False},
+    )
     parent_active = fields.Boolean(string='Active Parent', related='parent_id.active', store=True)
 
 
