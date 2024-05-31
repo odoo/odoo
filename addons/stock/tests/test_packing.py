@@ -1641,6 +1641,31 @@ class TestPacking(TestPackingCommon):
             {'package_id': pack2.id, 'state': 'assigned', 'is_done': False},
         ])
 
+    def test_should_print_delivery_address_with_package(self):
+        """Test that should_print_delivery_address in stock_picking returns true if a delivery contains only a package."""
+        pack = self.env['stock.quant.package'].create({'name': 'New Package'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pack)
+
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+        })
+
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'company_id': picking.company_id.id,
+        })
+
+        picking.action_confirm()
+        package_level.is_done = True
+        picking.button_validate()
+
+        self.assertTrue(picking.should_print_delivery_address())
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
