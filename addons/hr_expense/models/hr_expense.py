@@ -162,7 +162,7 @@ class HrExpense(models.Model):
         string="Is currency_id different from the company_currency_id",
         compute='_compute_is_multiple_currency',
     )
-    currency_rate = fields.Float(compute='_compute_currency_rate', digits=(12, 6), readonly=True, tracking=True)
+    currency_rate = fields.Float(compute='_compute_currency_rate', digits=(16, 9), readonly=True, tracking=True)
     label_currency_rate = fields.Char(compute='_compute_currency_rate', readonly=True)
 
     # Account fields
