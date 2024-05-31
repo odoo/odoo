@@ -138,6 +138,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     test: true,
     steps: () => [].concat(accessSurveysteps, [{
     trigger: 'button[name="action_open_session_manager"]',
+    run: "click",
 }, {
     trigger: 'h1:contains("Nickname")',
     isCheck: true // check nickname question is displayed
@@ -343,6 +344,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     isCheck: true // Final Leaderboard is displayed
 }, {
     trigger:".o_survey_session_close:has(i.fa-close)",
+    run: "click",
 }, {
     trigger: 'button[name="action_start_session"]',
     isCheck: true // check that we can start another session

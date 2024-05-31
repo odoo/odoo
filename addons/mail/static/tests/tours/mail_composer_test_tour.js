@@ -20,6 +20,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Click on Send Message",
             trigger: "button:contains(Send message)",
+            run: "click",
         },
         {
             content: "Write something in composer",
@@ -29,6 +30,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Mention a partner",
             trigger: ".o-mail-Composer-suggestion:contains(Not A Demo User)",
+            run: "click",
         },
         {
             content: "Add one file in composer",
@@ -47,6 +49,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Open full composer",
             trigger: "button[aria-label='Full composer']",
             extra_trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+            run: "click",
         },
         {
             content: "Check composer keeps open after pushing Escape",
@@ -98,7 +101,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             run(helpers) {
                 this.anchor.value = "test";
                 this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
-            }
+            },
         },
         {
             content: "Check a template is listed",
@@ -109,10 +112,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Send message",
             trigger: ".o_mail_send",
+            run: "click",
         },
         {
             content: "Check message is shown",
             trigger: '.o-mail-Message-body:contains("blahblah @Not A Demo User")',
+            run: "click",
         },
         {
             content: "Check message contains the attachment",
@@ -123,6 +128,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Open full composer",
             trigger: "button[aria-label='Full composer']",
+            run: "click",
         },
         {
             content: "Write something in full composer",
@@ -132,6 +138,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Close full composer",
             trigger: ".btn-close",
+            run: "click",
         },
         {
             content: "Check full composer text is kept",

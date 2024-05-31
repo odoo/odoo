@@ -6,15 +6,19 @@ const commonSteps = [
     stepUtils.showAppsMenuItem(),
     {
         trigger: '.o_app[data-menu-xmlid="im_livechat.menu_livechat_root"]',
+        run: "click",
     },
     {
         trigger: 'button[data-menu-xmlid="im_livechat.livechat_config"]',
+        run: "click",
     },
     {
         trigger: 'a[data-menu-xmlid="im_livechat.chatbot_config"]',
+        run: "click",
     },
     {
         trigger: ".o_list_button_add",
+        run: "click",
     },
     {
         trigger: 'input[id="title_0"]',
@@ -22,6 +26,7 @@ const commonSteps = [
     },
     {
         trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
+        run: "click",
     },
     {
         trigger: "textarea#message_0",
@@ -29,6 +34,7 @@ const commonSteps = [
     },
     {
         trigger: 'button:contains("Save & New")',
+        run: "click",
     },
     {
         trigger: 'tr:contains("Step 1")',
@@ -41,6 +47,7 @@ const commonSteps = [
     },
     {
         trigger: 'button:contains("Save & New")',
+        run: "click",
     },
     {
         trigger: 'tr:contains("Step 2")',
@@ -63,6 +70,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour
         ...commonSteps,
         {
             trigger: 'button:contains("Save & Close")',
+            run: "click",
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",
@@ -82,6 +90,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         ...commonSteps,
         {
             trigger: 'button:contains("Save & New")',
+            run: "click",
         },
         {
             trigger: 'tr:contains("Step 3")',
@@ -94,6 +103,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'button:contains("Save & New")',
+            run: "click",
         },
         {
             trigger: 'tr:contains("Step 4")',
@@ -106,6 +116,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'button:contains("Save & Close")',
+            run: "click",
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",
@@ -117,6 +128,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',
+            run: "click",
         },
         {
             trigger: "textarea#message_0",
@@ -124,6 +136,7 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: 'button:contains("Save & Close")',
+            run: "click",
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",

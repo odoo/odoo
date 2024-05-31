@@ -22,6 +22,7 @@ export function clickReview() {
         content: "click review button",
         trigger: ".btn-switchpane.review-button",
         mobile: true,
+        run: "click",
     };
 }
 /**
@@ -59,6 +60,7 @@ export function clickDisplayedProduct(
         {
             content: `click product '${name}'`,
             trigger: `article.product .product-content .product-name:contains("${name}")`,
+            run: "click",
         },
     ];
 
@@ -83,6 +85,7 @@ export function clickSubcategory(name) {
         {
             content: `selecting '${name}' subcategory`,
             trigger: `.product-screen .rightpane .category-button:contains("${name}")`,
+            run: "click",
         },
         {
             content: `'${name}' subcategory selected`,
@@ -108,11 +111,13 @@ export function clickPayButton(shouldCheck = true) {
             content: "click pay button",
             trigger: ".product-screen .pay-order-button",
             mobile: false,
+            run: "click",
         },
         {
             content: "click pay button",
             trigger: ".btn-switchpane:contains('Pay')",
             mobile: true,
+            run: "click",
         },
     ];
     if (shouldCheck) {
@@ -130,6 +135,7 @@ export function clickPartnerButton() {
         {
             content: "click customer button",
             trigger: ".product-screen .set-partner",
+            run: "click",
         },
         {
             content: "partner screen is shown",
@@ -149,6 +155,7 @@ export function customerIsSelected(name) {
             content: `customer '${name}' is selected`,
             trigger: `.product-screen .set-partner:contains("${name}")`,
             isCheck: true,
+            run: "click",
         },
     ];
 }
@@ -162,6 +169,7 @@ export function clickControlButton(name) {
     return {
         content: `click ${name} button`,
         trigger: controlButtonTrigger(name),
+        run: "click",
     };
 }
 
@@ -171,11 +179,13 @@ export function clickControlButtonMore() {
             content: "click more button",
             trigger: ".mobile-more-button",
             mobile: true,
+            run: "click",
         },
         {
             content: "click more button",
             trigger: controlButtonTrigger("More..."),
             mobile: false,
+            run: "click",
         },
     ];
 }
@@ -203,7 +213,13 @@ export function clickControlButtonMore() {
  * clickPriceList("Discount Rate", true);
  */
 export function clickPriceList(name, isCheckNeedSelectedBeforeClick = false, nameToCheck = null) {
-    const step = [...clickControlButtonMore(), { trigger: ".o_pricelist_button" }];
+    const step = [
+        ...clickControlButtonMore(),
+        {
+            trigger: ".o_pricelist_button",
+            run: "click",
+        },
+    ];
 
     if (isCheckNeedSelectedBeforeClick) {
         const triggerName = nameToCheck || name;
@@ -217,6 +233,7 @@ export function clickPriceList(name, isCheckNeedSelectedBeforeClick = false, nam
     step.push({
         content: `select price list '${name}'`,
         trigger: `.selection-item:contains("${name}")`,
+        run: "click",
     });
 
     return inLeftSide(step);
@@ -251,10 +268,12 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
         {
             content: "click fiscal position button",
             trigger: ".o_fiscal_position_button",
+            run: "click",
         },
         {
             content: "fiscal position screen is shown",
             trigger: `.selection-item:contains("${name}")`,
+            run: "click",
         },
     ];
 
@@ -314,6 +333,7 @@ export function clickLotIcon() {
         {
             content: "click lot icon",
             trigger: ".line-lot-icon",
+            run: "click",
         },
     ];
 }
@@ -369,6 +389,7 @@ export function noDiscountApplied(originalPrice) {
     return inLeftSide({
         content: "no discount is applied",
         trigger: `.orderline .info-list:not(:contains(${originalPrice}))`,
+        run: "click",
     });
 }
 export function cashDifferenceIs(val) {
@@ -487,11 +508,13 @@ export function finishOrder() {
             content: "validate the order",
             trigger: ".payment-screen .button.next.highlight:visible",
             mobile: false,
+            run: "click",
         },
         {
             content: "validate the order",
             trigger: ".payment-screen .btn-switchpane:contains('Validate')",
             mobile: true,
+            run: "click",
         },
         {
             content: "verify that the order has been successfully sent to the backend",
@@ -502,11 +525,13 @@ export function finishOrder() {
             content: "click Next Order",
             trigger: ".receipt-screen .button.next.highlight:visible",
             mobile: false,
+            run: "click",
         },
         {
             content: "Click Next Order",
             trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
             mobile: true,
+            run: "click",
         },
         {
             content: "check if we left the receipt screen",

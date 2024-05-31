@@ -394,9 +394,11 @@ QUnit.module("Tour service", (hooks) => {
             steps: () => [
                 {
                     trigger: ".interval input",
+                    run: "click",
                 },
                 {
                     trigger: "button.inc",
+                    run: "click",
                 },
             ],
         });
@@ -523,6 +525,7 @@ QUnit.module("Tour service", (hooks) => {
                 {
                     content: "content",
                     trigger: "button.inc",
+                    run: "click",
                 },
             ],
         });
@@ -587,6 +590,7 @@ QUnit.module("Tour service", (hooks) => {
                     {
                         content: "content",
                         trigger: "button.inc",
+                        run: "click",
                     },
                 ],
             });
@@ -625,6 +629,7 @@ QUnit.module("Tour service", (hooks) => {
                     {
                         content: "content",
                         trigger: "button.inc",
+                        run: "click",
                     },
                 ],
             });
@@ -671,38 +676,47 @@ QUnit.module("Tour service", (hooks) => {
                 {
                     content: "content",
                     trigger: ".button0",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button1",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button2",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button3",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".wrong_selector",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button4",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button5",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button6",
+                    run: "click",
                 },
                 {
                     content: "content",
                     trigger: ".button7",
+                    run: "click",
                 },
             ],
         });
@@ -721,33 +735,40 @@ QUnit.module("Tour service", (hooks) => {
         const expectedWarning = `warn: Tour tour1 failed at step content (trigger: .wrong_selector)
 {
   "content": "content",
-  "trigger": ".button1"
+  "trigger": ".button1",
+  "run": "click"
 },
 {
   "content": "content",
-  "trigger": ".button2"
+  "trigger": ".button2",
+  "run": "click"
 },
 {
   "content": "content",
-  "trigger": ".button3"
+  "trigger": ".button3",
+  "run": "click"
 },
 ---------- FAILING STEP (5/9) ----------
 {
   "content": "content",
-  "trigger": ".wrong_selector"
+  "trigger": ".wrong_selector",
+  "run": "click"
 },
 ----------------------------------------
 {
   "content": "content",
-  "trigger": ".button4"
+  "trigger": ".button4",
+  "run": "click"
 },
 {
   "content": "content",
-  "trigger": ".button5"
+  "trigger": ".button5",
+  "run": "click"
 },
 {
   "content": "content",
-  "trigger": ".button6"
+  "trigger": ".button6",
+  "run": "click"
 },`;
         const expectedError = [
             `error: Tour tour1 failed at step content (trigger: .wrong_selector). The error appears to be that one or more elements in the following list cannot be found in DOM.\n {"trigger":".wrong_selector"}`,
@@ -786,6 +807,7 @@ QUnit.module("Tour service", (hooks) => {
             steps: () => [
                 {
                     trigger: ".button0",
+                    run: "click",
                 },
                 {
                     trigger: ".button1",
@@ -842,12 +864,15 @@ QUnit.module("Tour service", (hooks) => {
             steps: () => [
                 {
                     trigger: ".button0",
+                    run: "click",
                 },
                 {
                     trigger: ".button1",
+                    run: "click",
                 },
                 {
                     trigger: ".button2",
+                    run: "click",
                 },
             ],
         });

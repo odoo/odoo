@@ -30,10 +30,12 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
     run: "edit add more",
 }, {
     content: 'Click on the first result',
-    trigger: '.js_autocomplete_result'
+    trigger: '.js_autocomplete_result',
+    run: "click",
 }, {
     content: 'Verify the autocomplete box disappeared',
-    trigger: 'body:not(:has(.js_autocomplete_result))'
+    trigger: 'body:not(:has(.js_autocomplete_result))',
+    run: "click",
 }, { // Verify test data has been input
     content: 'Check Street & number have been set',
     trigger: 'input[name="street"]',

@@ -187,6 +187,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     {
         content: "Select a new icon",
         trigger: '.o_select_media_dialog .fa-heart',
+        run: "click",
     },
     {
         content: "Check if the result is correct after setting the icon",

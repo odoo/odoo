@@ -302,6 +302,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour10", {
             {
                 content: `click on reward item`,
                 trigger: `.selection-item:contains("Free Product B")`,
+                run: "click",
             },
             PosLoyalty.hasRewardLine("Free Product B", "-1.00"),
             ProductScreen.totalAmountIs("1.00"),

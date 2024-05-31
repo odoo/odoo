@@ -4,32 +4,39 @@ const openProductAttribute = (product_attribute) => [
     {
         content: 'Open sale app',
         trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+        run: "click",
     },
     {
         content: 'Open configuration menu',
         trigger: '.o-dropdown[data-menu-xmlid="sale.menu_sale_config"]',
+        run: "click",
     },
     {
         content: 'Navigate to product attribute list view',
         trigger: '.o-dropdown-item[data-menu-xmlid="sale.menu_product_attribute_action"]',
+        run: "click",
     },
     {
         content: `Navigate to ${product_attribute}`,
         trigger: `.o_data_cell[data-tooltip=${product_attribute}]`,
+        run: "click",
     },
 ];
 const deletePAV = (product_attribute_value, message) => [
     {
         content: 'Click delete button',
         trigger: `.o_data_cell[data-tooltip=${product_attribute_value}] ~ .o_list_record_remove`,
+        run: "click",
     },
     {
         content: 'Check correct message in modal',
         trigger: message || '.modal-title:contains("Bye-bye, record!")',
+        run: "click",
     },
     {
         content: 'Close modal',
         trigger: '.btn-close',
+        run: "click",
     }
 ]
 

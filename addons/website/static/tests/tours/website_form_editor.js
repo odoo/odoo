@@ -40,6 +40,7 @@
         return [{
             content: `Select field "${label}"`,
             trigger: ":iframe " + triggerFieldByLabel(label),
+            run: "click",
         }];
     };
     const selectButtonByText = function (text) {

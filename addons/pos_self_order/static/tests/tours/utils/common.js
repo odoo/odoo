@@ -2,6 +2,7 @@ export function clickBtn(buttonName) {
     return {
         content: `Click on button '${buttonName}'`,
         trigger: `.btn.btn-lg:contains('${buttonName}')`,
+        run: "click",
     };
 }
 

@@ -9,12 +9,15 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
     steps: () => [
         {
             trigger: ".o-livechat-LivechatButton",
+            run: "click",
         },
         {
             trigger: ".o-mail-Message:contains(Hello, were do you want to go?)",
+            run: "click",
         },
         {
             trigger: "li:contains(Go to the #chatbot-redirect anchor)",
+            run: "click",
         },
         {
             trigger: ".o-mail-Message:contains(Tadam, we are on the page you asked for!)",
@@ -29,9 +32,11 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
         },
         {
             trigger: "button[title='Restart Conversation']",
+            run: "click",
         },
         {
             trigger: "li:contains(Go to the /chatbot-redirect page)",
+            run: "click",
         },
         {
             trigger:

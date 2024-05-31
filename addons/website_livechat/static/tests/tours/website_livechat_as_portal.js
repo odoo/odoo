@@ -6,6 +6,7 @@ registry.category("web_tour.tours").add("website_livechat_as_portal_tour", {
     steps: () => [
         {
             trigger: ".o-livechat-LivechatButton",
+            run: "click",
         },
         {
             trigger: ".o-mail-Composer-input",

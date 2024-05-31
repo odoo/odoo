@@ -6,6 +6,7 @@ export function clickOrderButton() {
         {
             content: "click order button",
             trigger: ".actionpad .submit-order",
+            run: "click",
         },
     ];
 }

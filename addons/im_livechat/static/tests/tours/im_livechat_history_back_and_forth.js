@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
     steps: () => [
         {
             trigger: "body",
-            run: "press ctrl+k"
+            run: "press ctrl+k",
         },
         {
             trigger: ".o_command_palette_search input",
@@ -17,9 +17,11 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger: ".o_command:contains(Sessions History)",
+            run: "click",
         },
         {
             trigger: ".o_data_cell:contains(Visitor operator)",
+            run: "click",
         },
         {
             trigger: ".o-mail-DiscussSidebar-item:contains(Visitor).o-active",
@@ -35,6 +37,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger: ".o-mail-DiscussSidebar-item:contains(Visitor).o-active",
+            run: "click",
         },
         {
             trigger: ".o-mail-DiscussSidebar-item:contains(Visitor).o-active",

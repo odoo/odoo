@@ -32,6 +32,7 @@ export function clickPaymentMethod(name, isCheckNeeded = false, options = {}) {
         {
             content: `click '${name}' payment method`,
             trigger: `.paymentmethods .button.paymentmethod:contains("${name}")`,
+            run: "click",
         },
     ];
 
@@ -59,6 +60,7 @@ export function clickPaymentlineDelButton(name, amount, mobile = false) {
         {
             content: `delete ${name} paymentline with ${amount} amount`,
             trigger: `.paymentlines .paymentline .payment-infos:contains("${name}"):has(.payment-amount:contains("${amount}")) ~ .delete-button`,
+            run: "click",
         },
     ];
 }
@@ -72,11 +74,18 @@ export function clickPaymentline(name, amount) {
         {
             content: `click ${name} paymentline with ${amount} amount`,
             trigger: `.paymentlines .paymentline .payment-infos:contains("${name}"):has(.payment-amount:contains("${amount}"))`,
+            run: "click",
         },
     ];
 }
 export function clickInvoiceButton() {
-    return [{ content: "click invoice button", trigger: ".payment-buttons .js_invoice" }];
+    return [
+        {
+            content: "click invoice button",
+            trigger: ".payment-buttons .js_invoice",
+            run: "click",
+        },
+    ];
 }
 export function clickValidate() {
     return [
@@ -84,11 +93,13 @@ export function clickValidate() {
             content: "validate payment",
             trigger: `.payment-screen .button.next.highlight`,
             mobile: false,
+            run: "click",
         },
         {
             content: "validate payment",
             trigger: `.payment-screen .btn-switchpane:contains('Validate')`,
             mobile: true,
+            run: "click",
         },
     ];
 }
@@ -118,14 +129,16 @@ export function clickBack() {
             content: "click back button",
             trigger: ".payment-screen .button.back",
             mobile: false,
+            run: "click",
         },
-        { ...back(), mobile: true },
+        { ...back(), mobile: true, run: "click" },
     ];
 }
 export function clickTipButton() {
     return [
         {
             trigger: ".payment-screen .button.js_tip",
+            run: "click",
         },
     ];
 }
@@ -177,14 +190,17 @@ export function fillPaymentLineAmountMobile(lineName, keys) {
             content: "click payment line",
             trigger: `.paymentlines .paymentline .payment-infos:contains("${lineName}")`,
             mobile: true,
+            run: "click",
         },
         ...NumberPopup.enterValue(keys).map((step) => ({
             ...step,
             mobile: true,
+            run: "click",
         })),
         {
             ...Dialog.confirm(),
             mobile: true,
+            run: "click",
         },
     ];
 }
@@ -338,10 +354,12 @@ export function clickShipLaterButton() {
         {
             content: "click ship later button",
             trigger: ".button:contains('Ship Later')",
+            run: "click",
         },
         {
             content: "click confirm button",
             trigger: ".btn:contains('Confirm')",
+            run: "click",
         },
     ];
 }
@@ -351,6 +369,7 @@ export function clickPartnerButton() {
         {
             content: "click customer button",
             trigger: "button.partner-button",
+            run: "click",
         },
         {
             content: "partner screen is shown",
