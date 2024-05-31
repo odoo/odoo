@@ -142,9 +142,9 @@ class Employee(models.AbstractModel):
 
         template = self.env.ref('hr_presence.sms_template_presence', False)
         if not template:
-            context['default_body'] = _("""Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.
-Please, take appropriate measures in order to carry out this work absence.
-Do not hesitate to contact your manager or the human resource department.""")
+            context['default_body'] = _("""We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.
+Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.
+Thank you for your prompt attention to this matter.""")
         else:
             context['default_template_id'] = template.id
 
