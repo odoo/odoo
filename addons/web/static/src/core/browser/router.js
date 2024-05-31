@@ -170,8 +170,6 @@ export function urlToState(urlObj) {
         }
         Object.assign(state, sanitizedHash);
         const url = browser.location.origin + router.stateToUrl(state);
-        // Change the url of the current history entry to the canonical url
-        browser.history.replaceState(browser.history.state, null, url);
         urlObj.href = url;
     }
 
@@ -232,7 +230,15 @@ let pushArgs;
 let _lockedKeys;
 
 export function startRouter() {
-    state = router.urlToState(new URL(browser.location));
+    const url = new URL(browser.location);
+    state = router.urlToState(url);
+    // ** url-retrocompatibility **
+    if (browser.location.pathname === "/web") {
+        // Change the url of the current history entry to the canonical url.
+        // This change should be done only at the first load, and not when clicking on old style internal urls.
+        // Or when clicking back/forward on the browser.
+        browser.history.replaceState(browser.history.state, null, url.href);
+    }
     pushTimeout = null;
     pushArgs = {
         replace: false,
