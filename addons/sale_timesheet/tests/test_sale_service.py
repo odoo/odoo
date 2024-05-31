@@ -768,3 +768,44 @@ class TestSaleService(TestCommonSaleTimesheet):
         invoice_line = self.sale_order.invoice_ids.line_ids.filtered(lambda line: line.product_id == product_add)
         self.assertEqual(invoice_line.analytic_account_id, self.project_global.analytic_account_id,
              "SOL's analytic account should be the same as the project's")
+
+    def test_timesheet_hours_delivered_rounding(self):
+        """
+        Ensure hours are rounded consistently on SO & invoice.
+        """
+        self.env.company.project_time_mode_id.rounding = 1.0
+        self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
+
+        for amount in (8.1, 8.5, 8.9):
+            order = self.sale_order.copy()
+            sol = order.order_line
+            order.action_confirm()
+
+            self.env['account.analytic.line'].create([{
+                'name': 'Test Line',
+                'project_id': sol.project_id.id,
+                'task_id': sol.task_id.id,
+                'unit_amount': amount,
+                'employee_id': self.employee_manager.id,
+            }])
+
+            invoice = order._create_invoices()
+            hours_delivered = sol._get_delivered_quantity_by_analytic([])[sol.id]
+
+            self.assertEqual(
+                order.timesheet_total_duration,
+                hours_delivered,
+                f"{amount} hours delivered should round the same for SO & timesheet",
+            )
+            self.assertEqual(
+                invoice.timesheet_total_duration,
+                hours_delivered,
+                f"{amount} hours delivered should round the same for invoice & timesheet",
+            )
