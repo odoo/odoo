@@ -152,7 +152,7 @@
                             </group>
                             <group name="packaging" string="Packaging"
                                 colspan="4"
-                                invisible="(type not in ['product', 'consu'] or product_variant_count &gt; 1) and not is_product_variant"
+                                invisible="(type != 'consu' or product_variant_count &gt; 1) and not is_product_variant"
                                 groups="product.group_stock_packaging">
                                 <field colspan="2" name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
