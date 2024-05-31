@@ -27,7 +27,7 @@ test("Messages are received cross-tab", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await insertText(".o-mail-Composer-input", "Hello World!", { target: env1 });
-    await click("button:enabled", { target: env1, text: "Send" });
+    await click("button[aria-label='Send']:enabled", { target: env1 });
     await contains(".o-mail-Message-content", { target: env1, text: "Hello World!" });
     await contains(".o-mail-Message-content", { target: env2, text: "Hello World!" });
 });

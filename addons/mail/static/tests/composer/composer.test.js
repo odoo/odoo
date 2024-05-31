@@ -262,14 +262,6 @@ test("send message only once when button send is clicked twice quickly", async (
     await contains(".o-mail-Message");
 });
 
-test('send button on discuss.channel should have "Send" as label', async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Composer-send:disabled", { text: "Send" });
-});
-
 test("Show send button in mobile", async () => {
     const pyEnv = await startServer();
     patchUiSize({ size: SIZES.SM });

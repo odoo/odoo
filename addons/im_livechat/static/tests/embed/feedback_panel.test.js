@@ -80,7 +80,7 @@ test("Feedback with rating and comment", async () => {
     await assertSteps(["/im_livechat/visitor_leave_session"]);
     await click(`img[data-alt="${RATING.GOOD}"]`);
     await insertText("textarea[placeholder='Explain your note']", "Good job!");
-    await click("button:enabled", { text: "Send" });
+    await click("button:contains(Send):enabled");
     await contains("p", { text: "Thank you for your feedback" });
     await assertSteps(["/im_livechat/feedback"]);
 });

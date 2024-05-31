@@ -1,5 +1,6 @@
 .o-mail-DiscussSidebar {
-    width: 300px;
+    width: $o-mail-Discuss-inspector;
+    box-shadow: 1px 0px 6px -3px rgba(50, 50, 50, 0.15);
 }
 
 .o-mail-DiscussSidebar-badge {
@@ -7,7 +8,10 @@
 }
 
 .o-mail-DiscussSidebar-item {
-    &:hover, &.o-active {
-        background-color: $o-gray-200;
+    &:hover {
+        background-color: mix($o-gray-100, $o-gray-200);
+    }
+    &.o-active {
+        background-color: mix($o-gray-100, $o-gray-200);
     }
 }
