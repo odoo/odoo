@@ -87,6 +87,7 @@ class Objetivo(models.Model):
         help="Fecha en la que se debe cumplir el objetivo",
     )
     resultado = fields.Integer(store=True)
+    porcentaje = fields.Float(store=True)
     estado = fields.Selection(
         [
             ("rojo", "No cumple con las expectativas"),
@@ -201,6 +202,7 @@ class Objetivo(models.Model):
                     registro.estado = "verde"
                 elif ratio > 1:
                     registro.estado = "azul"
+                registro.porcentaje = ratio
             else:
                 ratio = 1 - ((registro.resultado - registro.piso_maximo) / (registro.piso_minimo - registro.piso_maximo))
                 if 0 <= ratio <= 0.6:
@@ -211,6 +213,7 @@ class Objetivo(models.Model):
                     registro.estado = "verde"
                 elif ratio > 1:
                     registro.estado = "azul"
+                registro.porcentaje = ratio
 
     @api.constrains("usuario_ids")
     def _checar_usuario_ids(self):

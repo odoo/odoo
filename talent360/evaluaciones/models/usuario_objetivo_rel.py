@@ -26,7 +26,7 @@ class UsuarioObjetivoRel(models.Model):
     titulo_corto = fields.Char(compute="_compute_kanban")
     descripcion = fields.Text(related="objetivo_id.descripcion")
     descripcion_corta = fields.Char(compute="_compute_kanban")
-    resultado = fields.Integer(related="objetivo_id.resultado", string="Resultado")
+    resultado = fields.Float(related="objetivo_id.porcentaje", string="Resultado")
     
     def abrir_objetivo_form(self):
         """

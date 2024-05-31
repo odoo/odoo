@@ -10,10 +10,8 @@
                 <field name="fecha_fin" string="Fecha Fin"/>
                 <field name="tipo" string="Tipo"/>
                 <field name="estado" string="Estado"/>
+                <field name="porcentaje" string="Progreso" widget="percentage"/>
                 <field name="peso" string="Peso"/>
-                <field name="orden" string="Orden"/>
-                <field name="piso_minimo" string="Piso Mínimo"/>
-                <field name="piso_maximo" string="Piso Máximo"/>
             </tree>
         </field>
     </record>
@@ -38,7 +36,7 @@
                                     </div>
                                     <div>
                                         <strong>
-                                            <field name="resultado"/>%
+                                            <field name="resultado" widget="percentage"/>
                                         </strong>
                                     </div>
                                 </div>
@@ -97,6 +95,10 @@
                         <br />
                         <label for="descripcion" string="Descripción" />
                         <field placeholder="¿Qué es lo que se espera lograr con este objetivo?" name="descripcion" />
+                        <br />
+                        <group>
+                           <field name="porcentaje" readonly="True" string="Progreso" widget="percentage"/>
+                        </group>
                     </div>
                     <notebook>
                         <page string="Detalles">
