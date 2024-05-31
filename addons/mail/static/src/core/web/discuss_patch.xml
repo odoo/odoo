@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='mobileTopbar']" position="after">
+        <xpath expr="//*[@t-ref='core']" position="before">
             <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
             <DiscussSidebar t-else=""/>
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="inside">
             <MessagingMenu t-if="ui.isSmall"/>
-            <t t-else="" t-call="mail.Discuss.loading"/>
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="replace">
             <div class="h-100 d-flex flex-column">
@@ -17,6 +16,21 @@
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="attributes">
             <attribute name="class" add="h-0" remove="h-100" separator=" "/>
+        </xpath>
+        <xpath expr="//*[@t-ref='main']" position="inside">
+            <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
+        </xpath>
+        <xpath expr="//*[@name='thread']" position="inside">
+            <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
+        </xpath>
+        <xpath expr="//*[@t-ref='header']" position="replace">
+            <div t-if="!ui.isSmall" class="d-flex w-100">
+                <span class="o-mail-Discuss-headerStartMeeting d-flex justify-content-center flex-shrink-0 p-2 border-end o-mail-discussSidebarBgColor">
+                    <button class="btn btn-primary rounded" t-on-click="store.startMeeting" data-hotkey="m">Start a meeting</button>
+                </span>
+                <t>$0</t>
+            </div>
+            <t t-else="">$0</t>
         </xpath>
     </t>
 

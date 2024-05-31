@@ -64,7 +64,7 @@ export const feedback = [
     },
     {
         content: "Send the feedback",
-        trigger: ".o-livechat-root:shadow button:contains(Send):not(:disabled)",
+        trigger: ".o-livechat-root:shadow button:contains(Send):enabled",
         run: "click",
     },
     {

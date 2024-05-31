@@ -10,7 +10,7 @@
                     <ChannelSelector category="category" autofocus="true"/>
                 </div>
             </t>
-            <button t-if="!ui.isSmall and !store.discuss.isActive" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+            <button t-if="!ui.isSmall and !store.discuss.isActive" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link px-2 py-1'" t-on-click.stop="onClickNewMessage">
                 New Message
             </button>
             <t t-if="ui.isSmall">

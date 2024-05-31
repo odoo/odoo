@@ -76,7 +76,7 @@ test('post a first message then display partner mention suggestions on typing "@
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input");
     await insertText(".o-mail-Composer-input", "first message");
-    await click("button:enabled", { text: "Send" });
+    await click("button[aria-label='Send']:enabled");
     await contains(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion strong", { count: 3 });
