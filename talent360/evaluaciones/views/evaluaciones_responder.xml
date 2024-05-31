@@ -26,7 +26,6 @@
         <t t-call="evaluaciones.diseño">
             <div class="wrap o_survey_wrap d-flex">
                 <div class="container o_survey_form d-flex flex-column mb-5">
-                    <!-- <t t-call="evaluaciones.evaluacion_header" /> -->
                     <t t-call="evaluaciones.evaluacion_responder_form" />
                 </div>
             </div>
@@ -187,7 +186,86 @@
                 <div  class="col-lg-10">
                     <div t-field='evaluacion.descripcion' class="oe_no_empty pb-5 text-break"/>
                 </div>
-            </div> 
+            </div>
+            <div class="row">
+                <div class="col-lg-10">
+                    <t t-if="evaluacion.escalar_format == 'numericas'">
+                        <p>El formato seleccionado para las preguntas escalares es Numérico.</p>
+                    </t>
+                    <t t-elif="evaluacion.escalar_format == 'textuales'">
+                        <p>El formato seleccionado para las preguntas escalares es Textual.</p>
+                    </t>
+                    <t t-elif="evaluacion.escalar_format == 'caritas'">
+                        <p>El formato seleccionado para las preguntas escalares es "LIKERT", estas son las ponderaciones: </p>
+                        <div class="caritas-rating">
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/muy_enojado.png" alt="Muy enojado" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Nunca</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/casi_enojado.png" alt="Casi enojado" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Casi nunca</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/medio.png" alt="Medio" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>A veces</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/normal.png" alt="Normal" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Casi siempre</span>
+                            </div>
+                            <div class="carita">
+                                <img src="/evaluaciones/static/src/img/contento.png" alt="Contento" style="width: 25px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Siempre</span>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-elif="evaluacion.escalar_format == 'estrellas'">
+                        <p>El formato seleccionado para las preguntas escalares es "Estrellas", estas son las ponderaciones: </p>
+                        <div class="star-rating">
+                            <div class="star">
+                                <img src="/evaluaciones/static/src/img/una_estrella.png" alt="1 estrella" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Nunca</span>
+                            </div>
+                            <div class="star">
+                                <img src="/evaluaciones/static/src/img/dos_estrellas.png" alt="2 estrellas" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Casi nunca</span>
+                            </div>
+                            <div class="star">
+                                <img src="/evaluaciones/static/src/img/tres_estrellas.png" alt="3 estrellas" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>A veces</span>
+                            </div>
+                            <div class="star">
+                                <img src="/evaluaciones/static/src/img/cuatro_estrellas.png" alt="4 estrellas" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Casi siempre</span>
+                            </div>
+                            <div class="star">
+                                <img src="/evaluaciones/static/src/img/cinco_estrellas.png" alt="5 estrellas" style="width: 120px; height: 25px; background: transparent;" class="mx-4"/>
+                                <span>Siempre</span>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <style>
+                .star-rating, .caritas-rating {
+                    display: flex;
+                    gap: 10px;
+                }
+                .star, .carita {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .star img, .carita img {
+                    width: 50px;
+                    height: 50px;
+                }
+                .star span, .carita span {
+                    margin-top: 5px;
+                    margin-bottom: 20px;
+                }
+            </style>
             <div t-attf-class="js_question-wrapper pb-4">
                 <t t-set="numero_pregunta" t-value="0"/>
                 <t t-foreach="pregunta" t-as="p">
@@ -207,9 +285,7 @@
                         </t>
                     </div>
                 </t>
-
                 <t t-call="evaluaciones.evaluacion_responder_form_enviar"/>
-
             </div>
         </div>
     </template>

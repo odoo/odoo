@@ -32,7 +32,7 @@ class Evaluacion(models.Model):
     escalar_format = fields.Selection([
         ("numericas", "Numéricas"),
         ("textuales", "Textuales"),
-        ("caritas", "Caritas"),
+        ("caritas", "LIKERT"),
         ("estrellas", "Estrellas")
     ], string="Formato para las preguntas escalares", required=True, default="numericas")
 
