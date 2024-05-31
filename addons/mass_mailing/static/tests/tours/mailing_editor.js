@@ -48,6 +48,7 @@ registry.category("web_tour.tours").add('mailing_editor', {
     run: () => {},
 }, {
     trigger: 'button.o_form_button_save',
+    run: "click",
 }, {
     content: 'verify that the save failed (since the field "subject" was not set and it is required)',
     trigger: 'label.o_field_invalid',

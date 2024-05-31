@@ -160,6 +160,7 @@
     {
         content: "click on compare button to reload",
         trigger: '.o_comparelist_button a',
+        run: "click",
     },
     {
         content: "check product 'Warranty' is removed",

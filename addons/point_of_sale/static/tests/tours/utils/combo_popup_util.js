@@ -10,6 +10,7 @@ export function select(productName) {
         content: `Select combo item ${productName}`,
         trigger: productTrigger(productName),
         in_modal: true,
+        run: "click",
     };
 }
 export function isSelected(productName) {
@@ -18,6 +19,7 @@ export function isSelected(productName) {
         trigger: isComboSelectedTrigger(productName),
         isCheck: true,
         in_modal: true,
+        run: "click",
     };
 }
 export function isNotSelected(productName) {
@@ -26,6 +28,7 @@ export function isNotSelected(productName) {
         trigger: negate(isComboSelectedTrigger(productName), ".modal-body"),
         isCheck: true,
         in_modal: true,
+        run: "click",
     };
 }
 export function isConfirmationButtonDisabled() {
@@ -34,5 +37,6 @@ export function isConfirmationButtonDisabled() {
         trigger: `${confirmationButtonTrigger}[disabled]`,
         isCheck: true,
         in_modal: true,
+        run: "click",
     };
 }

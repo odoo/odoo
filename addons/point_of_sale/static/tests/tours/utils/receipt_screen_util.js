@@ -4,11 +4,13 @@ export function clickNextOrder() {
             content: "go to next screen",
             trigger: ".receipt-screen .button.next.highlight[name='done']",
             mobile: false,
+            run: "click",
         },
         {
             content: "go to next screen",
             trigger: ".receipt-screen .btn-switchpane.validation-button.highlight[name='done']",
             mobile: true,
+            run: "click",
         },
     ];
 }
@@ -17,6 +19,7 @@ export function clickContinueOrder() {
         {
             content: "go to next screen",
             trigger: ".receipt-screen .button.next.highlight[name='resume']",
+            run: "click",
         },
     ];
 }
@@ -32,6 +35,7 @@ export function clickSend() {
     return [
         {
             trigger: `.receipt-screen .input-group button`,
+            run: "click",
         },
     ];
 }
@@ -39,6 +43,7 @@ export function clickBack() {
     return [
         {
             trigger: ".receipt-screen .button.back",
+            run: "click",
         },
     ];
 }
@@ -97,6 +102,7 @@ export function shippingDateExists() {
         {
             content: "Shipping date must be printed",
             trigger: ".pos-receipt-order-data:contains('Expected delivery:')",
+            run: "click",
         },
     ];
 }

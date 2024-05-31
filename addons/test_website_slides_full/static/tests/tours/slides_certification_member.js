@@ -178,7 +178,10 @@ registry.category("web_tour.tours").add('certification_member', {
         failCertificationSteps,
         retrySteps,
         failCertificationSteps,
-        [{trigger: 'a:contains("Go back to course")'}],
+        [{
+            trigger: 'a:contains("Go back to course")',
+            run: "click",
+        }],
         buyCertificationSteps,
         succeedCertificationSteps,
         certificationCompletionSteps,

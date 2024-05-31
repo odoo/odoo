@@ -16,6 +16,7 @@ const chatRequest = [
     {
         content: "Verify your message has been typed",
         trigger: ".o-mail-Message:contains('Hi ! What a coincidence! I need your help indeed.')",
+        run: "click",
     },
     {
         content: "Verify there is no duplicates",

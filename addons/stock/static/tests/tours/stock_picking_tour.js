@@ -71,7 +71,10 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
 ]});
 
 registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, steps: () => [
-    {trigger: '.o_field_x2many_list_row_add > a'},
+    {
+        trigger: '.o_field_x2many_list_row_add > a',
+        run: "click",
+    },
     {
         trigger: ".o_field_widget[name=product_id] input",
         run: "edit Serial",

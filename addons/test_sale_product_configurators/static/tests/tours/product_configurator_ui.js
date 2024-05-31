@@ -12,6 +12,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     test: true,
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    run: "click",
 }, {
     trigger: '.o_list_button_add',
     extra_trigger: '.o_sale_order',

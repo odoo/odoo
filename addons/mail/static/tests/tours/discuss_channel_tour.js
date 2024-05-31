@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                 )
             ),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: ".o-discuss-ChannelSelector input",
@@ -47,16 +48,19 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             trigger: ".o-mail-Composer-send:enabled",
             content: _t("Post your message on the thread"),
             position: "top",
+            run: "click",
         },
         {
             trigger: ".o-mail-Message",
             content: _t("Click on your message"),
             position: "top",
+            run: "click",
         },
         {
             trigger: ".o-mail-Message [title='Expand']",
             content: _t("Expand options"),
             position: "top",
+            run: "click",
         },
         {
             trigger: ".o-mail-Message [title='Mark as Todo']",
@@ -64,6 +68,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                 _t("Messages can be <b>starred</b> to remind you to check back later.")
             ),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: "button:contains(Starred)",
@@ -71,6 +76,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                 "Once a message has been starred, you can come back and review it at any time here."
             ),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: ".o-mail-DiscussSidebarCategory-chat .o-mail-DiscussSidebarCategory-add",
@@ -80,6 +86,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                 )
             ),
             position: "bottom",
+            run: "click",
         },
         {
             trigger: ".o-discuss-ChannelSelector",

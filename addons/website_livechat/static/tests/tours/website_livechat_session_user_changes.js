@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
         },
         {
             trigger: ".o-mail-Message-content:contains('Hello!')",
+            run: "click",
         },
         {
             trigger: "a:contains(Sign in)",
@@ -75,6 +76,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
         },
         {
             trigger: ".o-mail-Message-content:contains('Hello!')",
+            run: "click",
         },
         {
             trigger: "header#top a:contains(Mitchell Admin)",
@@ -84,6 +86,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
         {
             trigger: "a:contains(Logout)",
             shadow_dom: false,
+            run: "click",
         },
         {
             content:

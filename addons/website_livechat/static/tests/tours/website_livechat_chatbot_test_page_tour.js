@@ -19,9 +19,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
         },
         {
             trigger: messagesContain("I help lost visitors find their way."),
+            run: "click",
         },
         {
             trigger: messagesContain("How can I help you?"),
+            run: "click",
         },
         {
             trigger: 'li:contains("I want to buy the software")',

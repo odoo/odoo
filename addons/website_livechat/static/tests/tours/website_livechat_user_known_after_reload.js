@@ -6,6 +6,7 @@ registry.category("web_tour.tours").add("website_livechat_user_known_after_reloa
     steps: () => [
         {
             trigger: ".o-livechat-LivechatButton",
+            run: "click",
         },
         {
             trigger: ".o-mail-Composer-input",

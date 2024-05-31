@@ -13,6 +13,7 @@ export function mergeTableHelpers(childName, parentName) {
         {
             content: `click the merge button`,
             trigger: 'i[aria-label="Merge"]',
+            run: "click",
         },
         FloorScreen.clickTable(parentName),
         ProductScreen.back(),

@@ -27,7 +27,7 @@ export function enterCode(code) {
     ];
 }
 export function clickEWalletButton(text = "eWallet") {
-    return [{ trigger: ProductScreen.controlButtonTrigger(text) }];
+    return [{ trigger: ProductScreen.controlButtonTrigger(text), run: "click" }];
 }
 export function claimReward(rewardName) {
     return [
@@ -37,17 +37,19 @@ export function claimReward(rewardName) {
             // There should be description because a program always has a name.
             extra_trigger: ".selection-item span:nth-child(2)",
             trigger: `.selection-item:contains("${rewardName}")`,
+            run: "click",
         },
     ];
 }
 export function unselectPartner() {
-    return [{ trigger: ".unselect-tag" }];
+    return [{ trigger: ".unselect-tag", run: "click" }];
 }
 export function clickDiscountButton() {
     return [
         {
             content: "click discount button",
             trigger: ".js_discount",
+            run: "click",
         },
     ];
 }

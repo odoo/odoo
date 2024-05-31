@@ -179,6 +179,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("Ok bye!"),
+            run: "click",
         },
         {
             // wait for chatbot script to finish.

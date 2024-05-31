@@ -39,6 +39,7 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Open the Cookies Bar.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry",
+        run: "click",
     },
     {
         content: "Scroll to top",

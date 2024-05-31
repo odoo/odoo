@@ -9,6 +9,7 @@ export function confirm(confirmationText, button = ".btn-primary") {
         content: "confirm dialog",
         in_modal: true,
         trigger,
+        run: "click",
     };
 }
 export function cancel() {
@@ -16,6 +17,7 @@ export function cancel() {
         content: "cancel dialog",
         trigger: `.modal-header button[aria-label="Close"]`,
         in_modal: true,
+        run: "click",
     };
 }
 export function is({ title } = {}) {
