@@ -307,6 +307,10 @@ class ir_cron(models.Model):
             raise
 
         job = cr.dictfetchone()
+
+        if not job:     # Job is already taken
+            return None
+
         for field_name in ('done', 'remaining', 'timed_out_counter'):
             job[field_name] = job[field_name] or 0
         return job
