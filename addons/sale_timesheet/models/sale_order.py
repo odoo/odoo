@@ -51,7 +51,11 @@ class SaleOrder(models.Model):
         timesheet_unit_amount_dict = defaultdict(float)
         timesheet_unit_amount_dict.update({data['order_id'][0]: data['unit_amount'] for data in group_data})
         for sale_order in self:
-            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(timesheet_unit_amount_dict[sale_order.id], sale_order.timesheet_encode_uom_id)
+            total_time = sale_order.company_id.project_time_mode_id._compute_quantity(
+                timesheet_unit_amount_dict[sale_order.id],
+                sale_order.timesheet_encode_uom_id,
+                rounding_method='HALF-UP',
+            )
             sale_order.timesheet_total_duration = round(total_time)
 
     def _compute_field_value(self, field):
