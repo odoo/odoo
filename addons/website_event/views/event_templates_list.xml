@@ -349,10 +349,22 @@
                             </small>
                         </div>
                         <!-- Location -->
-                        <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
-                        <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
+                        <t t-set="has_city" t-value="event.address_id.sudo().city"/>
+                        <t t-set="has_state" t-value="event.address_id.sudo().state_id and event.address_id.sudo().country_id.state_required"/>
+                        <t t-set="has_country" t-value="event.address_id.sudo().country_id"/>
+                        <div t-if="not event.address_id or has_city or has_state or has_country" class="d-flex align-items-center">
+                            <t t-set="location" t-value="[]"/>
+                            <t t-if="has_city">
+                                <t t-set="location" t-value="[event.address_id.sudo().city]"/>
+                            </t>
+                            <t t-if="has_state">
+                                <t t-set="location" t-value="location + [event.address_id.sudo().state_id.name]"/>
+                            </t>
+                            <t t-if="has_country">
+                                <t t-set="location" t-value="location + [event.address_id.sudo().country_id.name]"/>
+                            </t>
                             <i class="fa fa-map-marker me-2" title="Location"/>
-                            <small t-if="event.address_id" class="o_not_editable fw-bold" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                            <small t-if="event.address_id" class="o_not_editable fw-bold" itemprop="location" t-out="', '.join(location)"></small>
                             <small t-else="" class="o_not_editable fw-bold" itemprop="location">Online event</small>
                         </div>
                     </main>
