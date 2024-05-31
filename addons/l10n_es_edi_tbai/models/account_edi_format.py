@@ -376,8 +376,8 @@ class AccountEdiFormat(models.Model):
         export_exempts = invoice.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_exempt_reason == 'E2')
         values['regime_key'] = ['02'] if export_exempts else ['01']
 
-        if invoice.l10n_es_is_simplified:
-            values['regime_key'].append(52)  # code for simplified invoices
+        if invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
+            values['regime_key'] += ['52']  # code for simplified invoices
 
         return values
 
