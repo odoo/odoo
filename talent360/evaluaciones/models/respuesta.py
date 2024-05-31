@@ -23,9 +23,7 @@ class Respuesta(models.Model):
 
     pregunta_id = fields.Many2one("pregunta", string="Preguntas")
     usuario_id = fields.Many2one("res.users", string="Usuario")
-    usuario_externo_id = fields.Integer(
-        string="Usuario externo", compute="_compute_usuario_externo_id", store=True
-    )
+    usuario_externo_id = fields.Many2one("usuario.externo", string="Usuario externo")
     evaluacion_id = fields.Many2one("evaluacion", string="Evaluacion")
     pregunta_texto = fields.Char(related="pregunta_id.pregunta_texto")
     respuesta_texto = fields.Char("Respuesta")
@@ -93,6 +91,13 @@ class Respuesta(models.Model):
                 )
 
         else:
+            usuario_externo_id = self.env["usuario.evaluacion.rel"].search(
+                [
+                    ("token", "=", token),
+                    ("evaluacion_id", "=", evaluacion_id),
+                ]
+            ).usuario_externo_id
+
             if escala:
                 resp = self.env["respuesta"].create(
                     {
@@ -100,6 +105,7 @@ class Respuesta(models.Model):
                         "token": token,
                         "pregunta_id": pregunta_id,
                         "respuesta_texto": radios,
+                        "usuario_externo_id": usuario_externo_id.id,
                     }
                 )
 
@@ -110,6 +116,7 @@ class Respuesta(models.Model):
                         "token": token,
                         "pregunta_id": pregunta_id,
                         "respuesta_texto": texto,
+                        "usuario_externo_id": usuario_externo_id.id,
                     }
                 )
 
@@ -120,6 +127,7 @@ class Respuesta(models.Model):
                         "token": token,
                         "pregunta_id": pregunta_id,
                         "opcion_id": radios,
+                        "usuario_externo_id": usuario_externo_id.id,
                     }
                 )
 
@@ -159,24 +167,3 @@ class Respuesta(models.Model):
                 registro.valor_respuesta = registro.opcion_id.valor
             else:
                 registro.valor_respuesta = 0
-
-    def _compute_usuario_externo_id(self):
-        """
-        Método para calcular el identificador del usuario externo.
-
-        :return: Identificador del usuario externo
-        """
-
-        for registro in self:
-            usuario_evaluacion_rel = self.env["usuario.evaluacion.rel"].search(
-                [
-                    ("token", "=", registro.token),
-                    ("evaluacion_id", "=", registro.evaluacion_id.id),
-                ]
-            )
-            if usuario_evaluacion_rel.usuario_externo_id:
-                registro.usuario_externo_id = (
-                    usuario_evaluacion_rel.usuario_externo_id.id
-                )
-            else:
-                registro.usuario_externo_id = False

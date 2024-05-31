@@ -27,81 +27,34 @@
                 </div>
                 <div class="col survey_section">
                     <h4>Calificación final</h4>
-                    <t t-if="total_porcentaje &lt; evaluacion.techo_rojo" t-set="color_class" t-value="'clima_color_deficiente'"/>
-                    <t t-elif="total_porcentaje &lt; evaluacion.techo_naranja" t-set="color_class" t-value="'clima_color_regular'"/>
-                    <t t-elif="total_porcentaje &lt; evaluacion.techo_amarillo" t-set="color_class" t-value="'clima_color_marginal'"/>
-                    <t t-elif="total_porcentaje &lt;= evaluacion.techo_verde" t-set="color_class" t-value="'clima_color_suficiente'"/>
-                    <t t-elif="total_porcentaje &lt;= evaluacion.techo_azul" t-set="color_class" t-value="'clima_color_superior'"/>
-                    <t t-else="" t-set="color_class" t-value="'clima_color_nulo'"/>
-                    <span t-attf-class="{{color_class}}">
-                        <t t-esc="total_porcentaje"/>
-                    </span>
-                    <span class="fs-5 pill">
-                        <t t-if="total_porcentaje &lt; evaluacion.techo_rojo">
-                            <span t-field="evaluacion.descripcion_rojo"></span>
-                        </t>
-                        <t t-elif="evaluacion.techo_rojo &lt;= total_porcentaje &lt; evaluacion.techo_naranja">
-                            <span t-field="evaluacion.descripcion_naranja"></span>
-                        </t>
-                        <t t-elif="evaluacion.techo_naranja &lt;= total_porcentaje &lt; evaluacion.techo_amarillo">
-                            <span t-field="evaluacion.descripcion_amarillo"></span>
 
+                    <t t-set="mostrado" t-value="false" />
+                    <t t-foreach="evaluacion.niveles" t-as="nivel">
+                        <t t-if="not mostrado and total_porcentaje &lt;= nivel.techo">
+                            <span t-attf-style="color: #{nivel.color};" class="category_number">
+                                <t t-esc="total_porcentaje" /> </span>
+                                <span class="fs-5 pill">
+                                    <span t-field="nivel.descripcion_nivel"></span>
+                                </span>
+                            <t t-set="mostrado" t-value="true" />
                         </t>
-                        <t t-elif="evaluacion.techo_amarillo &lt;= total_porcentaje &lt; evaluacion.techo_verde">
-                            <span t-field="evaluacion.descripcion_verde"></span>
-
-                        </t>
-                        <t t-elif="evaluacion.techo_azul &gt;= total_porcentaje">
-                            <span t-field="evaluacion.descripcion_azul"></span>
-                        </t>
-
-                        <t t-else="true">
-                            <span>
-                                <t t-esc="evaluacion.nombre"/> - 
-                                <t t-esc="evaluacion.descripcion_azul"/>
-                            </span>
-                        </t>
-                    </span>
+                    </t>
                 </div>
 
                 <div class="col survey_section w-100" style="page-break-inside: avoid;">
                     <h4>Semáforo</h4>
                     <div class="container-fluid row gap-2 align-items-center">
-                        <!-- Nivel Azul -->
-                        <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11" cy="11" r="11" fill="#2894a7" />
-                            </svg>
-                            <span class="col" t-field="evaluacion.descripcion_azul" />
-                        </div>
-                        <!-- Nivel verde -->
-                        <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11" cy="11" r="11" fill="#5aaf2b" />
-                            </svg>
-                            <span class="col" t-field="evaluacion.descripcion_verde" />
-                        </div>
-                        <!-- Nivel amarillo -->
-                        <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11" cy="11" r="11" fill="#fcd703" />
-                            </svg>
-                            <span class="col" t-field="evaluacion.descripcion_amarillo" />
-                        </div>
-                        <!-- Nivel naranja -->
-                        <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11" cy="11" r="11" fill="#fc8803" />
-                            </svg>
-                            <span class="col" t-field="evaluacion.descripcion_naranja" />
-                        </div>
-                        <!-- Muy malo -->
-                        <div class="semaforo-item">
-                            <svg width="22" height="22" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="11" cy="11" r="11" fill="#ff4747" />
-                            </svg>
-                            <span class="col" t-field="evaluacion.descripcion_rojo" />
-                        </div>
+                        <t-foreach t-foreach="evaluacion.niveles" t-as="nivel">
+                            <div style="display: flex;">
+                                <div class="semaforo-item">
+                                    <svg width="22" height="22"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="11" cy="11" r="11" t-att-fill="nivel.color" />
+                                    </svg>
+                                    <span class="col" t-field="nivel.descripcion_nivel"></span>
+                                </div>
+                            </div>
+                        </t-foreach>
                     </div>
                 </div>
             </div>

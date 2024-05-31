@@ -2,6 +2,7 @@ from odoo import api, models, fields, _
 from collections import defaultdict, Counter
 from odoo import exceptions
 from datetime import timedelta
+from odoo.exceptions import ValidationError
 
 
 class Evaluacion(models.Model):
@@ -88,6 +89,12 @@ class Evaluacion(models.Model):
         string="Asignados Externos",
     )
 
+    niveles = fields.One2many(
+        "niveles",
+        "evaluacion_id",
+        string="Niveles",
+    )
+
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
     fecha_final = fields.Date(string="Fecha de finalización", required=True)
     mensaje_bienvenida = fields.Text(
@@ -155,13 +162,22 @@ class Evaluacion(models.Model):
 
         if not self:
 
+            ultimo_id = self.env["evaluacion"].search([], order="id desc", limit=1)
+
             new_evaluation = self.env["evaluacion"].create(
                 {
-                    "nombre": "",
+                    "nombre": str(ultimo_id.id + 1) + " Evaluación Clima",
                     "descripcion": "La evaluación Clima es una herramienta de medición de clima organizacional, cuyo objetivo es conocer la percepción que tienen las personas que laboran en los centros de trabajo, sobre aquellos aspectos sociales que conforman su entorno laboral y que facilitan o dificultan su desempeño.",
                     "tipo": "CLIMA",
                     "fecha_inicio": fields.Date.today(),
                     "fecha_final": fields.Date.today(),
+                    "niveles": [
+                        (0, 0, {"descripcion_nivel": "Muy malo", "techo": 20, "color": "#ff4747"}),
+                        (0, 0, {"descripcion_nivel": "Malo", "techo": 40, "color": "#ffa446"}),
+                        (0, 0, {"descripcion_nivel": "Regular", "techo": 60, "color": "#ebae14"}),
+                        (0, 0, {"descripcion_nivel": "Bueno", "techo": 80, "color": "#5aaf2b"}),
+                        (0, 0, {"descripcion_nivel": "Muy bueno", "techo": 100, "color": "#2894a7"}),
+                    ],
                 }
             )
             self = new_evaluation
@@ -193,9 +209,12 @@ class Evaluacion(models.Model):
         """
 
         if not self:
+
+            ultimo_id = self.env["evaluacion"].search([], order="id desc", limit=1)
+
             new_evaluation = self.env["evaluacion"].create(
                 {
-                    "nombre": "",
+                    "nombre": str(ultimo_id.id + 1) + " Evaluación NOM 035",
                     "descripcion": "La NOM 035 tiene como objetivo establecer los elementos para identificar, analizar y prevenir los factores de riesgo psicosocial, así como para promover un entorno organizacional favorable en los centros de trabajo.",
                     "tipo": "NOM_035",
                     "fecha_inicio": fields.Date.today(),
@@ -632,9 +651,7 @@ class Evaluacion(models.Model):
                         else "Sin departamento"
                     )
                 elif respuesta.usuario_externo_id:
-                    usuario_externo = self.env["usuario.externo"].browse(
-                        respuesta.usuario_externo_id
-                    )
+                    usuario_externo = respuesta.usuario_externo_id
                     nombre_departamento = (
                         usuario_externo.direccion
                         if usuario_externo.direccion
@@ -723,9 +740,7 @@ class Evaluacion(models.Model):
                     respuesta.usuario_id
                 )
             elif respuesta.usuario_externo_id:
-                usuario_externo = self.env["usuario.externo"].browse(
-                    respuesta.usuario_externo_id
-                )
+                usuario_externo = respuesta.usuario_externo_id
                 datos_demograficos = self.obtener_datos_demograficos_externos(
                     usuario_externo
                 )
@@ -986,16 +1001,10 @@ class Evaluacion(models.Model):
 
         :return: El color asignado al valor.
         """
-        if self.techo_verde <= valor <= self.techo_azul:
-            return "#2894a7"  # Azul clarito
-        elif self.techo_amarillo <= valor <= self.techo_verde:
-            return "#5aaf2b"  # Verde
-        elif self.techo_naranja <= valor <= self.techo_amarillo:
-            return "#ebae14"  # Amarillo
-        elif self.techo_rojo <= valor <= self.techo_naranja:
-            return "#ffa446"  # Naranja
-        else:
-            return "#ff4747"  # Rojo
+
+        for nivel in self.niveles:
+            if valor <= nivel.techo:
+                return nivel.color
 
     def obtener_dato(self, dato):
         """
@@ -1172,7 +1181,7 @@ class Evaluacion(models.Model):
             if usuarios_eliminados:
                 respuestas = self.env["respuesta"].search(
                     [
-                        ("usuario_externo_id", "in", usuarios_eliminados),
+                        ("usuario_externo_id.id", "in", usuarios_eliminados),
                         ("evaluacion_id.id", "=", self.id),
                     ]
                 )
@@ -1200,6 +1209,84 @@ class Evaluacion(models.Model):
             "target": "new",
         }
     
+    @api.constrains("niveles")
+    def checar_techo(self):
+        """
+        Verifica que los valores de la ponderación sean válidos.
+        Validación 1: Verifica que el valor de la ponderación no sea menor o igual a 0.
+        Validación 2: Verifica que no haya valores duplicados en la ponderación para la misma evaluación.
+        Validación 3: Verifica que no haya más de 10 techos.
+        Validación 4: Verifica que los valores de la ponderación estén en orden ascendente.
+        Validación 5: Verifica que el valor de las ponderaciones no sean mayores a 100 y que el último sea 100.
+
+        """
+        for nivel in self.niveles:
+            if nivel.techo <= 0:
+                raise ValidationError(
+                    "El valor de la ponderación no debe ser menor o igual a 0."
+                )
+
+            techos = self.niveles.filtered(lambda n: n.id != nivel.id).mapped("techo")
+            if nivel.techo in techos:
+                raise ValidationError(
+                    "No puede haber valores duplicados en la ponderación."
+                )
+
+        todos_techos = self.niveles.mapped("techo")
+        if len(todos_techos) > 10:
+            raise ValidationError(
+                "No puede haber más de 10 valores de ponderación."
+            )
+        
+        if todos_techos != sorted(todos_techos):
+            raise ValidationError(
+                "Los valores de la ponderación deben estar en orden ascendente."
+            )
+
+        if todos_techos[-1] > 100:
+            raise ValidationError(
+                "El valor de la ponderación no puede ser mayor a 100."
+            )
+        if todos_techos[-1] != 100:
+            raise ValidationError("El último valor de la ponderación debe ser 100.")
+
+
+    def actualizar_estados_eval(self):
+        """
+        Actualiza el estado de las evaluaciones según la fecha actual.
+
+        - Si la fecha actual está dentro del rango de fechas de inicio y finalización,
+        se cambia el estado a 'publicado' (Abierta).
+        - De lo contrario, pasa a 'finalizado' (Cerrada).
+
+        :return: None
+        """
+
+        hoy = fields.Date.today()
+        hora = fields.Datetime.now().strftime("%H:%M:%S")
+
+        # asignar 11:59pm como hora de cierre de evaluaciones
+        hora_cierre = "23:59:55"
+
+        # Asignar la hora de apertura de las evaluaciones 12:01am
+        hora_apertura = "00:00:55"
+
+        evaluaciones = self.search([])
+
+        # Actualizar el estado de las evaluaciones según la fecha y hora actual
+        for evaluacion in evaluaciones:
+            if evaluacion.fecha_inicio <= hoy <= evaluacion.fecha_final:
+                if hoy == evaluacion.fecha_inicio and hora < hora_apertura:
+                    evaluacion.estado = "borrador"
+                elif hoy == evaluacion.fecha_final and hora > hora_cierre:
+                    evaluacion.estado = "finalizado"
+                else:
+                    evaluacion.estado = "publicado"
+            elif evaluacion.fecha_final < hoy:
+                evaluacion.estado = "finalizado"
+            elif evaluacion.fecha_inicio > hoy:
+                evaluacion.estado = "borrador"
+                
     def evaluacion_general_action_form(self):
         """
         Ejecuta la acción de redireccionar a la evaluación general y devuelve un diccionario
@@ -1210,10 +1297,12 @@ class Evaluacion(models.Model):
         a una vista de la evaluación general.
 
         """
+
+        ultimo_id = self.env["evaluacion"].search([], order="id desc", limit=1)
         
         nueva_evaluacion = self.env["evaluacion"].create(
             {
-                "nombre": "",
+                "nombre": str(ultimo_id.id + 1) + " Evaluación Genérica",
                 "tipo": "generico",
                 "fecha_inicio": fields.Date.today(),
                 "fecha_final": fields.Date.today(),
@@ -1238,7 +1327,7 @@ class Evaluacion(models.Model):
         :return: El formato escalar seleccionado para la evaluación.
         """
         return self.escalar_format
-    
+
     def generar_reporte(self):
         """
         Devuelve las fechas de inicio y final que el usuario acordo al realizar la evaluación.
