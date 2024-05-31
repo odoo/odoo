@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { formatCurrency } from "@web/core/currency";
-import { Product } from "@product/js/product_configurator/product/product"
+import { Product } from "@product/js/product_configurator/product/product";
 
 export class SaleProduct extends Product {
     static template = 'sale_product_configurator.product';

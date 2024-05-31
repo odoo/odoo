@@ -2,8 +2,8 @@
 
 import { patch } from "@web/core/utils/patch";
 import { formatCurrency } from "@web/core/currency";
-import { BadgeExtraPrice } from "@sale_product_configurator/js/badge_extra_price/badge_extra_price";
-import { ProductTemplateAttributeLine } from "@product/js/product_configurator/product_template_attribute_line/product_template_attribute_line"
+import { BadgeExtraPrice } from "@sale/js/badge_extra_price/badge_extra_price";
+import { ProductTemplateAttributeLine } from "@product/js/product_configurator/product_template_attribute_line/product_template_attribute_line";
 
 
 ProductTemplateAttributeLine.components = { BadgeExtraPrice };

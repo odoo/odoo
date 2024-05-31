@@ -25,7 +25,7 @@ export class ProductTemplateAttributeLine extends Component {
                 shape: {
                     id: Number,
                     name: String,
-                    html_color: [Boolean, {value: false}],
+                    html_color: [String, {value: false}],
                     image: [Boolean, String], // backend sends 'false' when there is no image set
                     is_custom: Boolean,
                     excluded: { type: Boolean, optional: true },

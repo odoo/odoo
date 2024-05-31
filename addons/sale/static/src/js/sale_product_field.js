@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { productField, ProductField } from "@product/js/product_configurator/product_configurator_field";
+import { productField, ProductField, applyProduct } from "@product/js/product_configurator/product_configurator_field";
+import { SaleProductConfiguratorDialog } from "@sale/js/product_configurator_dialog/product_configurator_dialog";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 export class SaleOrderLineProductField extends ProductField {
 
@@ -28,7 +30,7 @@ export class SaleOrderLineProductField extends ProductField {
         } else {
             super.productConfiguratorDialogComponent;
         }
-    },
+    }
 
     get productUomFieldName() {
         if (this.props.record.model.config.resModel === 'sale.order') {
@@ -36,7 +38,7 @@ export class SaleOrderLineProductField extends ProductField {
         } else {
             return super.productUomFieldName;
         }
-    },
+    }
 
     get productTemplateFieldName() {
         if (this.props.record.model.config.resModel === 'sale.order') {
@@ -44,7 +46,7 @@ export class SaleOrderLineProductField extends ProductField {
         } else {
             return super.productTemplateFieldName;
         }
-    },
+    }
 
     onClick(ev) {
         // Override to get internal link to products in SOL that cannot be edited

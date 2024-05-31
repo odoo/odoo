@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useState, useSubEnv } from "@odoo/owl";
 import { ProductConfiguratorDialog } from "@product/js/product_configurator/product_configurator_dialog/product_configurator_dialog";
 import { ProductList } from "../product_list/product_list";
+import { rpc } from "@web/core/network/rpc";
 
 export class SaleProductConfiguratorDialog extends ProductConfiguratorDialog {
     static components = { ...ProductConfiguratorDialog.components, ProductList };
@@ -48,7 +49,7 @@ export class SaleProductConfiguratorDialog extends ProductConfiguratorDialog {
         if (this.env.options.showQty) {
             params['quantity'] = 1;
         }
-        return this.rpc('/product_configurator/get_optional_products', params);
+        return rpc('/product_configurator/get_optional_products', params);
     }
 
     //--------------------------------------------------------------------------

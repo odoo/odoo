@@ -34,6 +34,13 @@ class ProductConfiguratorController(Controller):
             combination = request.env['product.template.attribute.value'].browse(ptav_ids).filtered(
                 lambda ptav: ptav.product_tmpl_id.id == product_template_id
             )
+            # Set missing attributes (unsaved no_variant attributes, or new attribute on existing product)
+            unconfigured_ptals = (
+                product_template.attribute_line_ids - combination.attribute_line_id).filtered(
+                lambda ptal: ptal.attribute_id.display_type != 'multi')
+            combination += unconfigured_ptals.mapped(
+                lambda ptal: ptal.product_template_value_ids._only_active()[:1]
+            )
         if not combination:
             combination = product_template._get_first_possible_combination()
 
@@ -97,7 +104,7 @@ class ProductConfiguratorController(Controller):
             **kwargs
         )
 
-    def _get_product_information(self, product_template, combination, **kwargs):
+    def _get_product_information(self, product_template, combination, parent_combination=None, **kwargs):
         """ Return complete information about a product.
 
         :param recordset product_template: The product for which to seek information, as a
@@ -132,7 +139,10 @@ class ProductConfiguratorController(Controller):
             }
         """
         product = product_template._get_variant_for_combination(combination)
-        attribute_exclusions = product_template._get_attribute_exclusions()
+        attribute_exclusions = product_template._get_attribute_exclusions(
+            parent_combination=parent_combination,
+            combination_ids=combination.ids,
+        )
 
         return {
             'product_tmpl_id': product_template.id,
@@ -150,7 +160,7 @@ class ProductConfiguratorController(Controller):
                         **self._get_additional_attribute_values_information(ptav, **kwargs),
                     )
                     for ptav in ptal.product_template_value_ids
-                    if self._should_ptav_be_included_in_product_information(ptav, **kwargs)
+                    if self._should_ptav_be_included_in_product_information(ptav, combination, **kwargs)
                 ],
                 'selected_attribute_value_ids': combination.filtered(
                     lambda c: ptal in c.attribute_line_id
@@ -210,7 +220,7 @@ class ProductConfiguratorController(Controller):
         """
         return {}
 
-    def _should_ptav_be_included_in_product_information(self, ptav, **kwargs):
+    def _should_ptav_be_included_in_product_information(self, ptav, combination, **kwargs):
         """ Return whether the ptav should be included in the product information.
 
         To be included in the product information, a ptav must be active.
@@ -222,4 +232,4 @@ class ProductConfiguratorController(Controller):
         :return: Whether to include the ptav in the product information.
         :rtype: Boolean
         """
-        return ptav.ptav_active
+        return ptav.ptav_active or combination and ptav.id in combination.ids

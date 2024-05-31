@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('mrp_product_configurator_tour', {
         trigger: '.o_list_button_add',
     }, {
         trigger: 'input[id="product_tmpl_id_0"]',
-        run: 'text Custo',
+        run: 'edit Custo',
     }, {
         trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     }, {
@@ -39,18 +39,20 @@ registry.category("web_tour.tours").add('mrp_product_configurator_tour', {
         trigger: 'main.modal-body>table:nth-child(1)>tbody label:contains("Custom")',
     }, {
         trigger: `table.o_product_configurator_table td>div[name="ptal"]:has(div>label:contains("Custom")) input[type="text"]`,
-        run: `text custom value`,
+        run: `edit Customized Value && click .modal-body`,
     }, {
         trigger: `table.o_product_configurator_table td.o_product_configurator_qty div>button:has(i.fa-plus)`,
     }, {
+        content: "add to MO",
         trigger: 'button:contains(Confirm)',
+        run: "click",
     }, {
         trigger: 'textarea[id="product_description_0"]',
         run: () => {
-            if(document.querySelector("input[id='product_tmpl_id_0']")?.value !== "Customizable Desk (TEST)"){
+            if(document.querySelector("input[id='product_tmpl_id_0']")?.value !== "Customizable Desk (TEST)") {
                 throw new TourError("The product template name is incorrect");
             }
-            if(document.querySelector("textarea[id='product_description_0']")?.value !== "Customizable Desk (TEST) (Custom, White)\nLegs: Custom: custom value"){
+            if(document.querySelector("textarea[id='product_description_0']")?.value !== "Customizable Desk (TEST) (Custom, White)\nLegs: Custom: Customized Value"){
                 throw new TourError("The product description is incorrect");
             }
             if(document.querySelector("input[id='product_qty_0']")?.value !== "2.00"){

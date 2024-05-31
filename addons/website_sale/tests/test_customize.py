@@ -7,10 +7,10 @@ from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
-from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
+from odoo.addons.sale.tests.product_configurator_common import TestSaleProductConfiguratorCommon
 
 @tagged('post_install', '-at_install')
-class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductConfiguratorCommon):
+class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestSaleProductConfiguratorCommon):
 
     @classmethod
     def setUpClass(cls):

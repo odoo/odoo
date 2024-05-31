@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { SaleProduct } from "@sale_product_configurator/js/product/product";
+import { SaleProduct } from "@sale/js/product/product";
 import { formatCurrency } from "@web/core/currency";
 
 export class ProductList extends Component {

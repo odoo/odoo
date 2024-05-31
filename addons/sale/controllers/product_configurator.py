@@ -103,7 +103,7 @@ class SaleProductConfiguratorController(ProductConfiguratorController):
                 optional_product_template._get_first_possible_combination(
                     parent_combination=parent_combination
                 ),
-                parent_combination=parent_combination, # TODO VCR why ?
+                parent_combination=parent_combination,  # TODO VCR why ?
                 **kwargs
             ),
             'parent_product_tmpl_ids': [product_template.id],
@@ -127,7 +127,7 @@ class SaleProductConfiguratorController(ProductConfiguratorController):
                     parent_combination=combination
                 ),
                 # giving all the ptav of the parent product to get all the exclusions
-                parent_combination=product_template.attribute_line_ids.\
+                parent_combination=product_template.attribute_line_ids.
                     product_template_value_ids,
                 **kwargs,
             ),

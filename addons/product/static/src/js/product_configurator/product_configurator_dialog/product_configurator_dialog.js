@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useState, useSubEnv } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { Product } from "../product/product";
-import { useService } from "@web/core/utils/hooks";
+import { rpc } from "@web/core/network/rpc";
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, Product };
@@ -42,7 +42,6 @@ export class ProductConfiguratorDialog extends Component {
 
     setup() {
         this.title = _t("Configure your product");
-        this.rpc = useService("rpc");
         this.state = useState({
             products: [],
         });
@@ -76,18 +75,18 @@ export class ProductConfiguratorDialog extends Component {
     //--------------------------------------------------------------------------
 
     async _loadData() {
-        return this.rpc('/product_configurator/get_values', this._loadDataVals());
+        return rpc('/product_configurator/get_values', this._loadDataVals());
     }
 
     async _createProduct(product) {
-        return this.rpc('/product_configurator/create_product', {
+        return rpc('/product_configurator/create_product', {
             product_template_id: product.product_tmpl_id,
             combination: this._getCombination(product),
         });
     }
 
     async _updateCombination(product, quantity) {
-        return this.rpc('/product_configurator/update_combination', {
+        return rpc('/product_configurator/update_combination', {
             ...this._updateCombinationVals(product, quantity)
         });
     }
