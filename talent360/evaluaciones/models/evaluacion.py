@@ -2,6 +2,7 @@ from odoo import api, models, fields, _
 from collections import defaultdict, Counter
 from odoo import exceptions
 from datetime import timedelta
+from odoo.exceptions import ValidationError
 
 
 class Evaluacion(models.Model):
@@ -31,7 +32,7 @@ class Evaluacion(models.Model):
     escalar_format = fields.Selection([
         ("numericas", "Numéricas"),
         ("textuales", "Textuales"),
-        ("caritas", "Caritas"),
+        ("caritas", "LIKERT"),
         ("estrellas", "Estrellas")
     ], string="Formato para las preguntas escalares", required=True, default="numericas")
 
@@ -86,6 +87,12 @@ class Evaluacion(models.Model):
         "evaluacion_id",
         "usuario_externo_id",
         string="Asignados Externos",
+    )
+
+    niveles = fields.One2many(
+        "niveles",
+        "evaluacion_id",
+        string="Niveles",
     )
 
     fecha_inicio = fields.Date(string="Fecha de inicio", required=True)
@@ -164,6 +171,13 @@ class Evaluacion(models.Model):
                     "tipo": "CLIMA",
                     "fecha_inicio": fields.Date.today(),
                     "fecha_final": fields.Date.today(),
+                    "niveles": [
+                        (0, 0, {"descripcion_nivel": "Muy malo", "techo": 20, "color": "#ff4747"}),
+                        (0, 0, {"descripcion_nivel": "Malo", "techo": 40, "color": "#ffa446"}),
+                        (0, 0, {"descripcion_nivel": "Regular", "techo": 60, "color": "#ebae14"}),
+                        (0, 0, {"descripcion_nivel": "Bueno", "techo": 80, "color": "#5aaf2b"}),
+                        (0, 0, {"descripcion_nivel": "Muy bueno", "techo": 100, "color": "#2894a7"}),
+                    ],
                 }
             )
             self = new_evaluation
@@ -987,16 +1001,10 @@ class Evaluacion(models.Model):
 
         :return: El color asignado al valor.
         """
-        if self.techo_verde <= valor <= self.techo_azul:
-            return "#2894a7"  # Azul clarito
-        elif self.techo_amarillo <= valor <= self.techo_verde:
-            return "#5aaf2b"  # Verde
-        elif self.techo_naranja <= valor <= self.techo_amarillo:
-            return "#ebae14"  # Amarillo
-        elif self.techo_rojo <= valor <= self.techo_naranja:
-            return "#ffa446"  # Naranja
-        else:
-            return "#ff4747"  # Rojo
+
+        for nivel in self.niveles:
+            if valor <= nivel.techo:
+                return nivel.color
 
     def obtener_dato(self, dato):
         """
@@ -1201,6 +1209,48 @@ class Evaluacion(models.Model):
             "target": "new",
         }
     
+    @api.constrains("niveles")
+    def checar_techo(self):
+        """
+        Verifica que los valores de la ponderación sean válidos.
+        Validación 1: Verifica que el valor de la ponderación no sea menor o igual a 0.
+        Validación 2: Verifica que no haya valores duplicados en la ponderación para la misma evaluación.
+        Validación 3: Verifica que no haya más de 10 techos.
+        Validación 4: Verifica que los valores de la ponderación estén en orden ascendente.
+        Validación 5: Verifica que el valor de las ponderaciones no sean mayores a 100 y que el último sea 100.
+
+        """
+        for nivel in self.niveles:
+            if nivel.techo <= 0:
+                raise ValidationError(
+                    "El valor de la ponderación no debe ser menor o igual a 0."
+                )
+
+            techos = self.niveles.filtered(lambda n: n.id != nivel.id).mapped("techo")
+            if nivel.techo in techos:
+                raise ValidationError(
+                    "No puede haber valores duplicados en la ponderación."
+                )
+
+        todos_techos = self.niveles.mapped("techo")
+        if len(todos_techos) > 10:
+            raise ValidationError(
+                "No puede haber más de 10 valores de ponderación."
+            )
+        
+        if todos_techos != sorted(todos_techos):
+            raise ValidationError(
+                "Los valores de la ponderación deben estar en orden ascendente."
+            )
+
+        if todos_techos[-1] > 100:
+            raise ValidationError(
+                "El valor de la ponderación no puede ser mayor a 100."
+            )
+        if todos_techos[-1] != 100:
+            raise ValidationError("El último valor de la ponderación debe ser 100.")
+
+
     def actualizar_estados_eval(self):
         """
         Actualiza el estado de las evaluaciones según la fecha actual.
