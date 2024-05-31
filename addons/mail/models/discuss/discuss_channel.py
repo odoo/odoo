@@ -1211,15 +1211,24 @@ class Channel(models.Model):
         if not self:
             return self.env["mail.message"]
         self.env['mail.message'].flush_model()
-        self.env.cr.execute("""
-            SELECT MAX(id) AS message_id
-            FROM mail_message
-            WHERE model = 'discuss.channel' AND res_id IN %s
-            GROUP BY res_id
-            ORDER BY res_id ASC
-            """, (tuple(self.ids),))
-        message_ids = [r[0] for r in self.env.cr.fetchall()]
-        return self.env["mail.message"].browse(message_ids)
+        self.env.cr.execute(
+            """
+                   SELECT ARRAY_AGG(last_message_id)
+                     FROM discuss_channel
+        LEFT JOIN LATERAL (
+                              SELECT id
+                                FROM mail_message
+                               WHERE mail_message.model = 'discuss.channel'
+                                 AND mail_message.res_id = discuss_channel.id
+                            ORDER BY id DESC
+                               LIMIT 1
+                          ) AS t(last_message_id) ON TRUE
+                    WHERE discuss_channel.id IN %(ids)s
+            """,
+            {"ids": tuple(self.ids)},
+        )
+        message_ids, = self.env.cr.fetchone()
+        return self.env["mail.message"].browse([mid for mid in message_ids if mid])
 
     def load_more_members(self, known_member_ids):
         self.ensure_one()
