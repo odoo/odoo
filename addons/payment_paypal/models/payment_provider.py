@@ -35,6 +35,15 @@ class PaymentProvider(models.Model):
         help="Client ID found on the paypal dashboard",
         groups='base.group_system'
     )
+    # === COMPUTE METHODS === #
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'paypal').update({
+            'support_manual_capture': 'full_only',
+            'support_tokenization': True,
+        })
 
     #=== BUSINESS METHODS ===#
 
@@ -98,9 +107,10 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         inline_form_values = {
-            'paypal': self.code,
+            'client_id': self.paypal_client_id,
             'amount': amount,
             'currency': currency and currency.name,
+            'intent': "CAPTURE",
         }
         return json.dumps(inline_form_values)
 

@@ -55,21 +55,20 @@ paymentForm.include({
         }
         document.addEventListener("click", handle_click);
         const paypal_sdk_url = "https://www.paypal.com/sdk/js";
-        const client_id = "AWfClPjf6ZGUf9vpa06Un6RT4e0v4PA4m_6VzXHaGY_rZqeL8QtI5vcvZCrcyicnI7nMXiq0jVfofSGJ";
-        const currency = "USD";
-        const intent = "capture";
-        const amount = 100;
         //https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
+        const paypalColor = radio.dataset['paypalColor']
+        const { client_id, currency, intent, amount } = inlineFormValues
+        console.log('inlineFormValues', inlineFormValues)
         url_to_head(
             paypal_sdk_url + "?client-id=" + client_id +
-            "&components=buttons,funding-eligibility" +
+            "&components=buttons" +
             "&currency=" + currency +
-            "&intent=" + intent
+            "&intent=" + intent.toLowerCase()
         )
             .then(() => {
-                //Handle loading spinner
-                // document.getElementById("loading").classList.add("hide");
-                // document.getElementById("content").classList.remove("hide");
+                document.getElementById("loading").classList.add("d-none");
                 let alerts = document.getElementById("alerts");
                 let paypal_buttons = paypal.Buttons({ // https://developer.paypal.com/sdk/js/reference
                     fundingSource: paypal.FUNDING.PAYPAL,
@@ -77,21 +76,18 @@ paymentForm.include({
                         //Custom JS here
                     },
                     style: { //https://developer.paypal.com/sdk/js/reference/#link-style
-                        shape: 'rect',
-                        color: 'blue',
-                        layout: 'horizontal',
-                        label: 'pay',
+                        color: paypalColor,
                     },
 
                     createOrder: function (data, actions) { //https://developer.paypal.com/docs/api/orders/v2/#orders_create
-                        return rpc('/payment/paypal/create_order', { 
+                        return rpc('/payment/paypal/create_order', {
                             intent: intent,
                             currency: currency,
                             amount: amount,
-                         })
-                            .then((order_id) => { 
-                                console.log("Succsees created",order_id)
-                                return order_id; 
+                        })
+                            .then((order_id) => {
+                                console.log("Created order id", order_id)
+                                return order_id;
                             }).catch(error => {
                                 if (error instanceof RPCError) {
                                     this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
@@ -104,13 +100,10 @@ paymentForm.include({
                     onApprove: function (data, actions) {
                         let order_id = data.orderID;
                         console.log("onApprove", data)
-                        return rpc("/complete_order", {
-                            method: "post", headers: { "Content-Type": "application/json; charset=utf-8" },
-                            body: JSON.stringify({
-                                "intent": intent,
-                                "order_id": order_id
-                            })
-                        })
+                        return rpc("/payment/paypal/complete_order", JSON.stringify({
+                            "intent": intent,
+                            "order_id": order_id
+                        }))
                             .then((response) => response.json())
                             .then((order_details) => {
                                 console.log(order_details); //https://developer.paypal.com/docs/api/orders/v2/#orders_capture!c=201&path=create_time&t=response
@@ -122,7 +115,7 @@ paymentForm.include({
                                 paypal_buttons.close();
                             })
                             .catch((error) => {
-                                console.log("errpr o n approve",error);
+                                console.log("errpr o n approve", error);
                                 alerts.innerHTML = `<div class="ms-alert ms-action2 ms-small"><span class="ms-close"></span><p>An Error Ocurred!</p>  </div>`;
                             });
                     },
@@ -132,16 +125,9 @@ paymentForm.include({
                     },
 
                     onError: function (err) {
-                        console.log("onError",err);
+                        console.log("onError", err);
                     }
                 });
-                // const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-                // const inlineForm = this._getInlineForm(radio);
-                // const inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
-                // const paypalContainer = inlineForm.querySelector('[name="o_paypal_component_container"]');
-                // this.paypalComponents[paymentOptionId] = this.paypalCheckout.create(
-                //     inlineFormValues['adyen_pm_code'], componentConfiguration
-                // ).mount(paypalContainer);
                 paypal_buttons.render('#payment_options');
             })
             .catch((error) => {
