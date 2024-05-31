@@ -72,7 +72,7 @@ export class ChatBotService {
                 : undefined;
             this.shouldRestore = Boolean(
                 localStorage.getItem(
-                    `im_livechat.chatbot.state.uuid_${this.livechatService.sessionCookie?.uuid}`
+                    `im_livechat.chatbot.state.uuid_${this.livechatService.sessionData?.uuid}`
                 )
             );
         });
@@ -313,7 +313,7 @@ export class ChatBotService {
      * clear outdated storage.
      */
     async restore() {
-        const chatbotStorageKey = `im_livechat.chatbot.state.uuid_${this.livechatService.sessionCookie?.uuid}`;
+        const chatbotStorageKey = `im_livechat.chatbot.state.uuid_${this.livechatService.sessionData?.uuid}`;
         const { _chatbotCurrentStep, _chatbot } = JSON.parse(
             browser.localStorage.getItem(chatbotStorageKey) ?? "{}"
         );
@@ -325,8 +325,8 @@ export class ChatBotService {
      * Clear outdated storage.
      */
     async clear() {
-        const chatbotStorageKey = this.livechatService.sessionCookie
-            ? `im_livechat.chatbot.state.uuid_${this.livechatService.sessionCookie.uuid}`
+        const chatbotStorageKey = this.livechatService.sessionData
+            ? `im_livechat.chatbot.state.uuid_${this.livechatService.sessionData.uuid}`
             : "";
         for (let i = 0; i < browser.localStorage.length; i++) {
             const key = browser.localStorage.key(i);

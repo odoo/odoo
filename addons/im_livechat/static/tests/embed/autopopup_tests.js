@@ -2,7 +2,8 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { start, setCookie, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
+import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
+import { expirableStorage } from "@im_livechat/embed/core/misc";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { waitUntil } from "@mail/../tests/helpers/test_utils";
@@ -24,7 +25,7 @@ QUnit.test("persisted session", async (assert) => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    setCookie("im_livechat_session", JSON.stringify(channelInfo));
+    expirableStorage.setItem("im_livechat_session", JSON.stringify(channelInfo));
     await start();
     await waitUntil(".o-mail-ChatWindow");
     assert.containsOnce($, ".o-mail-ChatWindow");

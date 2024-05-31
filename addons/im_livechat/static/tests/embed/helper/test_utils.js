@@ -16,27 +16,9 @@ import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, makeDeferred } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { historyService } from "@im_livechat/embed/core/history_service";
-
-// =============================================================================
-// HELPERS
-// =============================================================================
-
-let cookie = {};
-QUnit.testDone(() => (cookie = {}));
-
-/**
- * Set a cookie to be used by the current test.
- *
- * @param {string} key
- * @param {string} val
- */
-export function setCookie(key, val) {
-    cookie[key] = val;
-}
 
 // =============================================================================
 // SETUP
@@ -88,20 +70,6 @@ patch(setupManager, "im_livechat", {
             "im_livechat.autopopup": autoPopupService,
             "im_livechat.chatbot": chatBotService,
             "im_livechat.history_service": historyService,
-            cookie: {
-                start() {
-                    const service = fakeCookieService.start(...arguments);
-                    return {
-                        ...service,
-                        get current() {
-                            return {
-                                ...service.current,
-                                ...cookie,
-                            };
-                        },
-                    };
-                },
-            },
             ...services,
         };
     },

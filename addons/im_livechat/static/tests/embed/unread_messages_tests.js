@@ -2,7 +2,8 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed/helper/test_utils";
+import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
+import { expirableStorage } from "@im_livechat/embed/core/misc";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { afterNextRender, waitUntil } from "@mail/../tests/helpers/test_utils";
@@ -22,7 +23,7 @@ QUnit.test("new message from operator displays unread counter", async (assert) =
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    setCookie("im_livechat_session", JSON.stringify(channelInfo));
+    expirableStorage.setItem("im_livechat_session", JSON.stringify(channelInfo));
     const env = await start();
     $(".o-mail-Composer-input").blur();
     await afterNextRender(() => {
@@ -50,7 +51,7 @@ QUnit.test("focus on unread livechat marks it as read", async (assert) => {
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    setCookie("im_livechat_session", JSON.stringify(channelInfo));
+    expirableStorage.setItem("im_livechat_session", JSON.stringify(channelInfo));
     const env = await start();
     $(".o-mail-Composer-input").blur();
     await afterNextRender(() => {

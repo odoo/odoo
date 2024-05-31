@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
+import { expirableStorage } from "./misc";
 
 /**
  * @typedef LivechatRule
@@ -28,8 +29,8 @@ export const SESSION_STATE = Object.freeze({
 });
 
 export class LivechatService {
-    SESSION_COOKIE = "im_livechat_session";
-    OPERATOR_COOKIE = "im_livechat_previous_operator_pid";
+    SESSION_STORAGE_KEY = "im_livechat_session";
+    OPERATOR_STORAGE_KEY = "im_livechat_previous_operator_pid";
     /** @type {keyof typeof SESSION_STATE} */
     state = SESSION_STATE.NONE;
     /** @type {LivechatRule} */
@@ -47,7 +48,6 @@ export class LivechatService {
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {{
-     * cookie: typeof import("@web/core/browser/cookie_service").cookieService.start,
      * bus_service: typeof import("@bus/services/bus_service").busService.start,
      * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
      * "mail.message": import("@mail/core/common/message_service").MessageService,
@@ -55,7 +55,6 @@ export class LivechatService {
      * }} services
      */
     setup(env, services) {
-        this.cookie = services.cookie;
         this.busService = services.bus_service;
         this.rpc = services.rpc;
         this.messageService = services["mail.message"];
@@ -79,8 +78,8 @@ export class LivechatService {
     }
 
     async _createSession({ persisted = false } = {}) {
-        const chatbotScriptId = this.sessionCookie
-            ? this.sessionCookie.chatbotScriptId
+        const chatbotScriptId = this.sessionData
+            ? this.sessionData.chatbotScriptId
             : this.rule.chatbot?.scriptId;
         const session = await this.rpc(
             "/im_livechat/get_session",
@@ -88,13 +87,13 @@ export class LivechatService {
                 channel_id: this.options.channel_id,
                 anonymous_name: this.userName,
                 chatbot_script_id: chatbotScriptId,
-                previous_operator_id: this.cookie.current[this.OPERATOR_COOKIE],
+                previous_operator_id: expirableStorage.getItem(this.OPERATOR_STORAGE_KEY),
                 persisted,
             },
             { shadow: true }
         );
         if (!session) {
-            this.cookie.deleteCookie(this.SESSION_COOKIE);
+            expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
             this.state = SESSION_STATE.NONE;
             return;
         }
@@ -114,20 +113,24 @@ export class LivechatService {
      * @param {Object} values
      */
     updateSession(values) {
-        const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
+        const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
         Object.assign(session, {
             visitor_uid: this.visitorUid,
             ...values,
         });
-        this.cookie.deleteCookie(this.SESSION_COOKIE);
-        this.cookie.deleteCookie(this.OPERATOR_COOKIE);
-        this.cookie.setCookie(
-            this.SESSION_COOKIE,
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
+        expirableStorage.removeItem(this.OPERATOR_STORAGE_KEY);
+        expirableStorage.setItem(
+            this.SESSION_STORAGE_KEY,
             JSON.stringify(session).replaceAll("→", " "),
-            60 * 60 * 24
-        ); // 1 day cookie.
+            60 * 60 * 24 // kept for 1 day.
+        );
         if (session?.operator_pid) {
-            this.cookie.setCookie(this.OPERATOR_COOKIE, session.operator_pid[0], 7 * 24 * 60 * 60); // 1 week cookie.
+            expirableStorage.setItem(
+                this.OPERATOR_STORAGE_KEY,
+                session.operator_pid[0],
+                7 * 24 * 60 * 60 // kept for 1 week.
+            );
         }
     }
 
@@ -138,8 +141,8 @@ export class LivechatService {
      * never be called if the session was not persisted.
      */
     async leaveSession({ notifyServer = true } = {}) {
-        const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
-        this.cookie.deleteCookie(this.SESSION_COOKIE);
+        const session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? "{}");
+        expirableStorage.removeItem(this.SESSION_STORAGE_KEY);
         this.state = SESSION_STATE.CLOSED;
         if (!session?.uuid || !notifyServer) {
             return;
@@ -149,7 +152,7 @@ export class LivechatService {
     }
 
     async getSession({ persisted = false } = {}) {
-        let session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? false);
+        let session = JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? false);
         if (session?.uuid && this.state === SESSION_STATE.NONE) {
             // Channel is already created on the server.
             session.messages = await this.rpc("/im_livechat/chat_history", {
@@ -194,19 +197,19 @@ export class LivechatService {
         return true;
     }
 
-    get sessionCookie() {
-        return JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "false");
+    get sessionData() {
+        return JSON.parse(expirableStorage.getItem(this.SESSION_STORAGE_KEY) ?? false);
     }
 
     get shouldRestoreSession() {
         if (this.state !== SESSION_STATE.NONE) {
             return false;
         }
-        return Boolean(this.cookie.current[this.SESSION_COOKIE]);
+        return Boolean(expirableStorage.getItem(this.SESSION_STORAGE_KEY));
     }
 
     get shouldDeleteSession() {
-        return this.sessionCookie && this.sessionCookie.visitor_uid !== session.user_id;
+        return this.sessionData && this.sessionData.visitor_uid !== session.user_id;
     }
 
     /**
@@ -217,15 +220,13 @@ export class LivechatService {
     }
 
     get visitorUid() {
-        const sessionCookie = this.sessionCookie;
-        return sessionCookie && "visitor_uid" in sessionCookie
-            ? sessionCookie.visitor_uid
-            : session.user_id;
+        const data = this.sessionData;
+        return data && "visitor_uid" in data ? data.visitor_uid : session.user_id;
     }
 }
 
 export const livechatService = {
-    dependencies: ["cookie", "notification", "rpc", "bus_service", "mail.message", "mail.store"],
+    dependencies: ["notification", "rpc", "bus_service", "mail.message", "mail.store"],
     start(env, services) {
         const livechat = reactive(new LivechatService(env, services));
         if (livechat.shouldDeleteSession) {

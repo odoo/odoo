@@ -2,7 +2,8 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed/helper/test_utils";
+import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
+import { expirableStorage } from "@im_livechat/embed/core/misc";
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
 
 import { Command } from "@mail/../tests/helpers/command";
@@ -25,7 +26,7 @@ QUnit.test("Unsuccessful message post shows session expired", async (assert) => 
         livechat_operator_id: pyEnv.currentPartnerId,
     });
     const [channelInfo] = pyEnv.mockServer._mockDiscussChannelChannelInfo([channelId]);
-    setCookie("im_livechat_session", JSON.stringify(channelInfo));
+    expirableStorage.setItem("im_livechat_session", JSON.stringify(channelInfo));
     await start({
         mockRPC(route) {
             if (route === "/im_livechat/chat_post") {
@@ -68,11 +69,11 @@ QUnit.test("Thread state is saved on the session", async (assert) => {
     await loadDefaultConfig();
     const env = await start();
     await click(".o-livechat-LivechatButton");
-    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
+    assert.strictEqual(env.services["im_livechat.livechat"].sessionData.state, "open");
     await click(".o-mail-ChatWindow-header");
-    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "folded");
+    assert.strictEqual(env.services["im_livechat.livechat"].sessionData.state, "folded");
     await click(".o-mail-ChatWindow-header");
-    assert.strictEqual(env.services["im_livechat.livechat"].sessionCookie.state, "open");
+    assert.strictEqual(env.services["im_livechat.livechat"].sessionData.state, "open");
 });
 
 QUnit.test("Seen message is saved on the session", async (assert) => {
@@ -80,11 +81,11 @@ QUnit.test("Seen message is saved on the session", async (assert) => {
     await loadDefaultConfig();
     const env = await start();
     await click(".o-livechat-LivechatButton");
-    assert.notOk(env.services["im_livechat.livechat"].sessionCookie.seen_message_id);
+    assert.notOk(env.services["im_livechat.livechat"].sessionData.seen_message_id);
     await insertText(".o-mail-Composer-input", "Hello World!");
     await afterNextRender(() => triggerHotkey("Enter"));
     assert.strictEqual(
-        env.services["im_livechat.livechat"].sessionCookie.seen_message_id,
+        env.services["im_livechat.livechat"].sessionData.seen_message_id,
         env.services["im_livechat.livechat"].thread.seenInfos[0].lastSeenMessage.id
     );
 });
