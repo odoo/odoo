@@ -4818,8 +4818,9 @@ registry.sizing = SnippetOptionWidget.extend({
                         // Find the first element behind the overlay.
                         const sameCoordinatesEls = self.ownerDocument
                             .elementsFromPoint(ev.pageX, ev.pageY);
+                        // Check toBeClickEl has native JS `click` function
                         const toBeClickedEl = sameCoordinatesEls
-                            .find(el => !el.closest("#oe_manipulators"));
+                            .find(el => !el.closest("#oe_manipulators") && typeof el.click === "function");
                         if (toBeClickedEl) {
                             toBeClickedEl.click();
                         }
