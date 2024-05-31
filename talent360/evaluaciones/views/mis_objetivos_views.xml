@@ -1,12 +1,29 @@
 <?xml version="1.0"?>
 <odoo>
+    <!-- Vista en árbol para objetivo.tree -->
+    <record id="mis_objetivos_tree" model="ir.ui.view">
+        <field name="name">mis_objetivos.tree</field>
+        <field name="model">objetivo</field>
+        <field name="arch" type="xml">
+            <tree string="Mis objetivos" create="false" delete="false" duplicate="false">
+                <field name="titulo" string="Nombre del Objetivo"/>
+                <field name="metrica"/>
+                <field name="fecha_fin"/>
+                <field name="tipo"/>
+                <field name="estado"/>
+                <field name="resultado" string="Progreso"/>
+            </tree>
+        </field>
+    </record>
+
     <!-- Acción para abrir la vista en tree y mis objetivos -->
     <record id="mis_objetivos_action" model="ir.actions.act_window">
         <field name="name">Mis Objetivos</field>
         <field name="res_model">objetivo</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('mis_objetivos_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_form_mis_objetivos')})]"/>
         <field name="domain">[('usuario_ids', 'in', [uid])]</field>
-        <field name="context">{'form_view_ref': 'evaluaciones.objetivo_form_mis_objetivos', 'create': False, 'edit': False, 'delete': False, 'duplicate': False}</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False, 'duplicate': False}</field>               
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 Actualmente no tienes objetivos asignados.
@@ -15,24 +32,7 @@
                 Los objetivos que se te asignen aparecerán aquí.
             </p>
         </field>
-    </record>
-
-
-    <!-- Vista en árbol para objetivo.tree -->
-    <record id="objetivo_tree" model="ir.ui.view">
-        <field name="name">objetivo.tree</field>
-        <field name="model">objetivo</field>
-        <field name="arch" type="xml">
-            <tree string="Objetivos" create="false" delete="false" duplicate="false">
-                <field name="titulo" string="Nombre"/>
-                <field name="fecha_fin"/>
-                <field name="tipo"/>
-                <field name="estado"/>
-                <field name="peso"/>
-                <field name="piso_minimo"/>
-                <field name="piso_maximo"/>
-            </tree>
-        </field>
+        <field name="view_id" ref="mis_objetivos_tree"/>
     </record>
 
     <!-- Vista para mis.objetivos.views -->
