@@ -6,7 +6,7 @@ import { OdooChart } from "./odoo_chart";
 
 const { chartRegistry } = spreadsheet.registries;
 
-const { getDefaultChartJsRuntime, chartFontColor, ChartColors } = spreadsheet.helpers;
+const { getDefaultChartJsRuntime, chartFontColor, ColorGenerator } = spreadsheet.helpers;
 
 chartRegistry.add("odoo_pie", {
     match: (type) => type === "odoo_pie",
@@ -24,7 +24,7 @@ function createOdooChartRuntime(chart, getters) {
     const { datasets, labels } = chart.dataSource.getData();
     const locale = getters.getLocale();
     const chartJsConfig = getPieConfiguration(chart, labels, locale);
-    const colors = new ChartColors();
+    const colors = new ColorGenerator();
     for (const { label, data } of datasets) {
         const backgroundColor = getPieColors(colors, datasets);
         const dataset = {
