@@ -491,9 +491,25 @@ class ProductProduct(models.Model):
             as_svls.append((vacuum_svl, svl_to_vacuum))
 
         # If some negative stock were fixed, we need to recompute the standard price.
+<<<<<<< saas-17.2
         product = self.with_company(company.id)
         if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+||||||| f23b5f24bc7e646eaf5cf3eb9012cc0d92e161a2
+        for product in self:
+            product = product.with_company(company.id)
+            if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl,
+                                                                      precision_rounding=product.uom_id.rounding):
+                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+=======
+        for product in self:
+            product = product.with_company(company.id)
+            if not svls_to_vacuum_by_product[product.id]:
+                continue
+            if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl,
+                                                                      precision_rounding=product.uom_id.rounding):
+                product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
+>>>>>>> e4b8c00b54c1c587097ecdd504c4c22ddbc4293a
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
 
