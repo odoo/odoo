@@ -38,8 +38,7 @@
                                     </div>
                                     <div>
                                         <strong>
-                                            <field name="resultado"/>
-%
+                                            <field name="resultado"/>%
                                         </strong>
                                     </div>
                                 </div>
@@ -47,6 +46,7 @@
                                     <div style="overflow: hidden; text-overflow: ellipsis; width: 100%;">
                                         <field name="descripcion_corta"/>
                                     </div>
+                                    <br></br>
                                     <div>
                                         <button class="btn btn-primary" name="abrir_objetivo_form" string="Detalles" type="object"/>
                                     </div>
@@ -152,6 +152,8 @@
         <field name="name">Objetivos</field>
         <field name="res_model">objetivo</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('objetivo_view_tree')}), (0, 0, {'view_mode': 'form', 'view_id': ref('objetivo_view_form')})]"/>
+        <field name="context">{'create': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 Actualmente no hay objetivos creados.
