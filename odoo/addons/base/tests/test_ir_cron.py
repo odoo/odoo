@@ -522,6 +522,11 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.invalidate_all()
         self.assertEqual(self.cron.failure_count, 0, 'The cron should have succeeded and reset the counter')
 
+    def test_acquire_processed_job(self):
+        # Test acquire job on already processed jobs
+        job = self.env['ir.cron']._acquire_one_job(self.cr, self.cron.id)
+        self.assertEqual(job, None, "No error should be thrown, job should just be none")
+
 
 @tagged('-standard', '-at_install', 'post_install', 'database_breaking')
 class TestIrCronConcurrent(BaseCase, CronMixinCase):
