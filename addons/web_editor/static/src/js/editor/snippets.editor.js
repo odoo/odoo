@@ -1029,6 +1029,7 @@ var SnippetEditor = Widget.extend({
         this.dragState = {};
         const rowEl = this.$target[0].parentNode;
         this.dragState.overFirstDropzone = true;
+        this.dragState.adjustedGrids = [];
 
         this.dragState.restore = this._prepareDrag();
 
@@ -1052,12 +1053,21 @@ var SnippetEditor = Widget.extend({
         // Number of grid columns and rows in the grid item (BS column).
         if (rowEl.classList.contains('row') && this.options.isWebsite) {
             if (allowGridMode) {
+                let hasToggled = false;
                 // Toggle grid mode if it is not already on.
                 if (!rowEl.classList.contains('o_grid_mode')) {
                     this.options.wysiwyg.odooEditor.observerActive('dragAndDropMoveSnippet');
                     const containerEl = rowEl.parentNode;
                     gridUtils._toggleGridMode(containerEl);
                     this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropMoveSnippet');
+                    hasToggled = true;
+                }
+
+                // Adjusting the grid (not needed if the grid mode was toggled
+                // just before, as it therefore already has the right row size).
+                if (!hasToggled) {
+                    gridUtils._adjustGrid(rowEl);
+                    this.dragState.adjustedGrids.push(rowEl);
                 }
 
                 // Computing the moving column width and height in terms of columns
@@ -1240,6 +1250,12 @@ var SnippetEditor = Widget.extend({
             // dropzone.
             const rowEl = $dropzone[0].parentNode;
 
+            // Adjusting the grid if not already done before.
+            if (!this.dragState.adjustedGrids.includes(rowEl)) {
+                gridUtils._adjustGrid(rowEl, true, this.$target[0]);
+                this.dragState.adjustedGrids.push(rowEl);
+            }
+
             // If the column doesn't come from a grid mode snippet.
             if (!this.$target[0].classList.contains('o_grid_item')) {
                 // Converting the column to grid.
@@ -1398,6 +1414,11 @@ var SnippetEditor = Widget.extend({
                 if ($el[0].classList.contains('oe_grid_zone')) {
                     // Case when a column is dropped near a grid.
                     const rowEl = $el[0].parentNode;
+
+                    // Adjusting the grid if not already done before.
+                    if (!this.dragState.adjustedGrids.includes(rowEl)) {
+                        gridUtils._adjustGrid(rowEl, true, this.$target[0]);
+                    }
 
                     // If the column doesn't come from a snippet in grid mode,
                     // convert it.

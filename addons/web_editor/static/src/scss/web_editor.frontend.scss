@@ -42,7 +42,7 @@
 @include media-breakpoint-up(lg) {
     .o_grid_mode {
         display: grid !important;
-        grid-auto-rows: 50px;
+        grid-auto-rows: minmax(50px, auto);
         grid-template-columns: repeat(12, 1fr);
         row-gap: 0px;
         column-gap: 0px;
@@ -50,6 +50,7 @@
         --gutter-x: 0px;
 
         > * {
+            position: relative;
             margin: 0 !important;
             width: 100%;
             min-width: 0;
@@ -68,9 +69,14 @@
 
     .o_grid_item_image {
         img, .media_iframe_video {
-            width: 100% !important;
-            height: 100% !important;
+            position: absolute;
+            width: calc(100% - 2 * var(--grid-item-padding-x)) !important;
+            height: calc(100% - 2 * var(--grid-item-padding-y)) !important;
             object-fit: cover !important;
+        }
+
+        .media_iframe_video { // TODO fix in 16.0.
+            min-width: 0;
         }
 
         &.o_grid_item_image_contain img,
