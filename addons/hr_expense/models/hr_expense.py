@@ -189,7 +189,8 @@ class HrExpense(models.Model):
         column2='tax_id',
         string="Included taxes",
         compute='_compute_tax_ids', precompute=True, store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]",
+        domain="[('type_tax_use', '=', 'purchase')]",
+        check_company=True,
         help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.",
     )
     accounting_date = fields.Date(  # The date used for the accounting entries or the one we'd like to use if not yet posted
