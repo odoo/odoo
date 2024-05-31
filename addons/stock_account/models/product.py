@@ -498,6 +498,9 @@ class ProductProduct(models.Model):
         # If some negative stock were fixed, we need to recompute the standard price.
         for product in self:
             product = product.with_company(company.id)
+            # Only recompute if we fixed some negative stock
+            if not svls_to_vacuum_by_product[product.id]:
+                continue
             if product.cost_method == 'average' and not float_is_zero(product.quantity_svl,
                                                                       precision_rounding=product.uom_id.rounding):
                 product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
