@@ -1252,21 +1252,16 @@ class expression(object):
                     ids2 = to_ids(right, comodel, leaf)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
                     ids2 = comodel._search(domain)
-
-                    # rewrite condition in terms of ids2
-                    if comodel == model:
-                        push(('id', 'in', ids2), model, alias)
-                    else:
-                        rel_alias = self.query.make_alias(alias, field.name)
-                        push_result(SQL(
-                            "EXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s AND %s IN %s)",
-                            SQL.identifier(rel_table),
-                            SQL.identifier(rel_alias),
-                            SQL.identifier(rel_alias, rel_id1),
-                            SQL.identifier(alias, 'id'),
-                            SQL.identifier(rel_alias, rel_id2),
-                            tuple(ids2) or (None,),
-                        ))
+                    rel_alias = self.query.make_alias(alias, field.name)
+                    push_result(SQL(
+                        "EXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s AND %s IN %s)",
+                        SQL.identifier(rel_table),
+                        SQL.identifier(rel_alias),
+                        SQL.identifier(rel_alias, rel_id1),
+                        SQL.identifier(alias, 'id'),
+                        SQL.identifier(rel_alias, rel_id2),
+                        tuple(ids2) or (None,),
+                    ))
 
                 elif right is not False:
                     # determine ids2 in comodel
