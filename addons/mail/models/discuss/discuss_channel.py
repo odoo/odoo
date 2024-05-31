@@ -13,6 +13,7 @@ from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
+from odoo.tools.sql import SQL
 from odoo.tools.misc import babel_locale_parse
 
 _logger = logging.getLogger(__name__)
@@ -1031,15 +1032,12 @@ class Channel(models.Model):
         kept only for compatibility reasons.
         """
         self.ensure_one()
-        domain = ["&", ("model", "=", "discuss.channel"), ("res_id", "in", self.ids)]
-        if last_message_id:
-            domain = expression.AND([domain, [('id', '<=', int(last_message_id))]])
-        last_message = (
-            self.env["mail.message"] if last_message_id is False
-            else self.env['mail.message'].search(domain, order="id DESC", limit=1)
-        )
-        if last_message_id is not False and not last_message:
-            return
+        if last_message_id is False:
+            last_message = self.env["mail.message"]
+        else:
+            last_message = self._get_last_message_by_channel(last_message_id=last_message_id)[self]
+            if not last_message:
+                return
         self._set_last_seen_message(last_message)
         current_member = self.env["discuss.channel.member"].search(
             [("channel_id", "=", self.id), ("is_self", "=", True)]
@@ -1094,33 +1092,33 @@ class Channel(models.Model):
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
         """
-        for channel in self:
-            if not channel.message_ids.ids:
-                return
-            # a bit not-modular but helps understanding code
-            if channel.channel_type not in {'chat', 'whatsapp'}:
-                return
-            last_message_id = channel.message_ids.ids[0] # zero is the index of the last message
-            member = self.env['discuss.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
-            if member.fetched_message_id.id == last_message_id:
-                # last message fetched by user is already up-to-date
-                return
-            # Avoid serialization error when multiple tabs are opened.
-            query = """
-                UPDATE discuss_channel_member
-                SET fetched_message_id = %s
-                WHERE id IN (
-                    SELECT id FROM discuss_channel_member WHERE id = %s
-                    FOR NO KEY UPDATE SKIP LOCKED
-                )
-            """
-            self.env.cr.execute(query, (last_message_id, member.id))
-            self.env['bus.bus']._sendone(channel, 'discuss.channel.member/fetched', {
-                'channel_id': channel.id,
-                'id': member.id,
-                'last_message_id': last_message_id,
-                'partner_id': self.env.user.partner_id.id,
-            })
+        # Avoid serialization error when multiple tabs are opened.
+        # In order to completely avoid any issues with concurrency, the very first thing we do on
+        # the cursor needs to be a SELECT FOR UPDATE
+        fetchable = self.filtered(lambda c: c.channel_type in ('chat', 'whatsapp'))
+        member_query = self.env['discuss.channel.member']._search([('channel_id', 'in', fetchable.ids), ('is_self', '=', True)]).subselect()
+        with self.env.registry.cursor() as cr:
+            cursor_self = self.with_env(self.env(cr=cr))
+            to_update = cursor_self.env.execute_query(SQL("""
+                SELECT id
+                  FROM discuss_channel_member
+                 WHERE id IN (%s)
+                   FOR NO KEY UPDATE SKIP LOCKED
+            """, member_query))
+            notifications = []  # (channel, notification_type, message)
+            members = cursor_self.env['discuss.channel.member'].browse([r[0] for r in to_update])
+            channel2message = members.channel_id._get_last_message_by_channel()
+            for member in members:
+                last_message = channel2message[member.channel_id]
+                if member.fetched_message_id != last_message:
+                    member.fetched_message_id = last_message
+                    notifications.append((member.channel_id, 'discuss.channel.member/fetched', {
+                        'channel_id': member.channel_id.id,
+                        'id': member.id,
+                        'last_message_id': last_message.id,
+                        'partner_id': cursor_self.env.user.partner_id.id,
+                    }))
+            cursor_self.env['bus.bus']._sendmany(notifications)
 
     def channel_set_custom_name(self, name):
         self.ensure_one()
@@ -1211,20 +1209,32 @@ class Channel(models.Model):
             'name': channel.name,
         } for channel in channels]
 
-    def _get_last_messages(self):
+    def _get_last_message_by_channel(self, last_message_id=False):
         """ Return the last message for each of the given channels."""
-        if not self:
-            return self.env["mail.message"]
-        self.env['mail.message'].flush_model()
-        self.env.cr.execute("""
-            SELECT MAX(id) AS message_id
-            FROM mail_message
-            WHERE model = 'discuss.channel' AND res_id IN %s
-            GROUP BY res_id
-            ORDER BY res_id ASC
-            """, (tuple(self.ids),))
-        message_ids = [r[0] for r in self.env.cr.fetchall()]
-        return self.env["mail.message"].browse(message_ids)
+        self.env['mail.message'].flush_model(['model', 'res_id'])
+        channel_ids, message_ids = self.env.execute_query(SQL(
+            """
+               SELECT ARRAY_AGG(channel.id),
+                      ARRAY_AGG(latest_message.id)
+                 FROM discuss_channel channel
+    LEFT JOIN LATERAL (
+                           SELECT id
+                             FROM mail_message
+                            WHERE model = 'discuss.channel'
+                              AND res_id = channel.id %s
+                         ORDER BY id DESC
+                            LIMIT 1
+                      ) latest_message ON TRUE
+                WHERE channel.id = ANY(%s)
+            """,
+            SQL('AND id >= %s', last_message_id) if last_message_id else SQL(),
+            self.ids,
+        ))[0]
+        return dict(zip(self.browse(channel_ids), self.env['mail.message'].browse(message_ids)))
+
+    def _get_last_messages(self):
+        channel2message = self._get_last_message_by_channel()
+        return self.env['mail.message'].browse(filter(bool, (channel2message[channel].id for channel in self)))
 
     def load_more_members(self, known_member_ids):
         self.ensure_one()
