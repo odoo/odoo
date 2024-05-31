@@ -19,12 +19,18 @@ const _urlToState = (url) => urlToState(new URL(url));
 
 function createRouter(params = {}) {
     if (params.onPushState) {
-        const onPushState = params.onPushState;
-        delete params.onPushState;
         patchWithCleanup(browser.history, {
             pushState() {
                 super.pushState(...arguments);
-                onPushState(...arguments);
+                params.onPushState(...arguments);
+            },
+        });
+    }
+    if (params.onReplaceState) {
+        patchWithCleanup(browser.history, {
+            replaceState() {
+                super.replaceState(...arguments);
+                params.onReplaceState(...arguments);
             },
         });
     }
@@ -1660,6 +1666,47 @@ describe("internal links", () => {
                 },
             ],
             resId: 2,
+        });
+        expect(defaultPrevented).toBe(true);
+    });
+
+    test("click on internal link with hash (key/values)", async () => {
+        redirect("/odoo");
+        createRouter({
+            onPushState: () => expect.step("pushState"),
+            onReplaceState: () => expect.step("replaceState"),
+        });
+        const fixture = getFixture();
+        const link = document.createElement("a");
+        link.href = "/web#action=114&active_id=1&id=22";
+        fixture.appendChild(link);
+
+        expect(router.current).toEqual({});
+
+        let defaultPrevented;
+        browser.addEventListener("click", (ev) => {
+            expect.step("click");
+            defaultPrevented = ev.defaultPrevented;
+            ev.preventDefault();
+        });
+        click("a");
+        await tick();
+        expect(["click"]).toVerifySteps();
+        expect(router.current).toEqual({
+            action: 114,
+            active_id: 1,
+            actionStack: [
+                {
+                    active_id: 1,
+                    action: 114,
+                },
+                {
+                    active_id: 1,
+                    resId: 22,
+                    action: 114,
+                },
+            ],
+            resId: 22,
         });
         expect(defaultPrevented).toBe(true);
     });
