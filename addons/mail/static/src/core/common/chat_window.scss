@@ -32,6 +32,10 @@
 .o-mail-ChatWindow-header {
     height: $o-mail-Discuss-headerHeight;
 
+    &:not(.o-folded) {
+        box-shadow: 0px 3px 12px -3px rgba(50, 50, 50, 0.15);
+    }
+
     .o-mail-ChatWindow-threadAvatar img {
         height: 28px;
         width: 28px;

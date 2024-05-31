@@ -1,6 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, useState } from "@odoo/owl";
+import { Thread } from "./thread_model";
 
 /**
  * @typedef {Object} Props
@@ -11,7 +12,11 @@ import { Component, useState } from "@odoo/owl";
  */
 export class ThreadIcon extends Component {
     static template = "mail.ThreadIcon";
-    static props = ["thread", "size?", "className?"];
+    static props = {
+        thread: { type: Thread },
+        size: { optional: true, validate: (size) => ["small", "medium", "large"].includes(size) },
+        className: { type: String, optional: true },
+    };
     static defaultProps = {
         size: "medium",
         className: "",

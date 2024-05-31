@@ -7,7 +7,7 @@
             </attribute>
         </xpath>
         <xpath expr="//*[@t-ref='emoji-button']" position="after">
-            <button t-if="hasGifPickerButton" class="btn border-0 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.GIF}" aria-label="GIFs" t-on-click="onClickAddGif" t-ref="gif-button"><i class="oi oi-gif-picker"/></button>
+            <button t-if="hasGifPickerButton" class="btn border-0 rounded-pill p-1" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.GIF}" aria-label="GIFs" t-on-click="onClickAddGif" t-ref="gif-button"><i class="oi oi-fw oi-gif-picker"/></button>
         </xpath>
     </t>
 </templates>

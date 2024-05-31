@@ -15,13 +15,13 @@
             >
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
-                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight and !props.squashed, 'align-items-center justify-content-center': props.squashed }">
+                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-start justify-content-start': !isAlignedRight  }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-att-class="getAvatarContainerAttClass()">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded" t-att-src="authorAvatarUrl" t-att-class="authorAvatarAttClass"/>
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75">
+                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 o-smaller mt-2">
                                 <t t-esc="message.dateSimple"/>
                             </small>
                             <div t-else="">
@@ -38,7 +38,7 @@
                                 <strong class="me-1 text-truncate" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75 o-smaller" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <RelativeTime t-else="" datetime="message.datetime"/>
@@ -146,8 +146,9 @@
             'o-expanded': optionsDropdown.isOpen
         }"
     >
-        <div class="d-flex rounded-1 bg-view shadow-sm overflow-hidden" t-att-class="{
+        <div class="d-flex rounded-1 overflow-hidden" t-att-class="{
                 'flex-row-reverse': env.inChatWindow and isAlignedRight,
+                'bg-view shadow-sm': env.inChatWindow,
             }"
         >
             <t t-foreach="messageActions.actions.slice(0, quickActionCount)" t-as="action" t-key="action.id">

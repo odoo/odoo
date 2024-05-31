@@ -148,7 +148,7 @@ test('"reply to" composer should send message if message replied to is not a not
     await click("[title='Reply']");
     await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer-send:enabled", { text: "Send" });
+    await click(".o-mail-Composer-send[aria-label='Send']:enabled");
     await contains(".o-mail-Composer-send", { count: 0 });
     await assertSteps(["/mail/message/post"]);
 });

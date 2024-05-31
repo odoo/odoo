@@ -4,20 +4,20 @@
     <t t-name="web.FileViewer">
         <div class="d-flex justify-content-center" t-att-class="{ 'modal fixed-top bottom-0': props.modal }">
             <div class="o-FileViewer flex-column align-items-center d-flex w-100 h-100" tabindex="0" t-ref="autofocus" t-on-keydown.stop="(ev) => this.onKeydown(ev)">
-                <div class="o-FileViewer-header position-absolute top-0 d-flex w-100 bg-black-75 text-400" t-on-click.stop="">
+                <div class="o-FileViewer-header position-absolute top-0 d-flex w-100" t-on-click.stop="">
                     <div t-if="isViewable" class="d-flex align-items-center ms-4 me-2">
                         <i t-if="state.file.isImage" class="fa fa-picture-o" role="img" title="Image"/>
                         <i t-if="state.file.isPdf" class="fa fa-file-text" role="img" title="PDF file"/>
                         <i t-if="state.file.isText" class="fa fa-file-text" role="img" title="Text file"/>
                         <i t-if="state.file.isVideo" class="fa fa-video-camera" role="img" title="Video"/>
                     </div>
-                    <div class="d-flex align-items-center mx-2 overflow-auto">
+                    <div class="d-flex align-items-center ms-4 overflow-auto">
                         <span class="text-truncate" t-out="state.file.displayName"/>
                     </div>
                     <div class="flex-grow-1"/>
                     <div class="o-FileViewer-download o-FileViewer-headerButton d-flex align-items-center px-3 cursor-pointer" role="button" title="Download" t-on-click.stop="">
-                        <a t-att-href="state.file.downloadUrl" class="text-reset" download="">
-                            <i class="fa fa-download fa-fw" role="img"/>
+                        <a t-att-href="state.file.downloadUrl" class="text-reset d-flex align-items-baseline" download="">
+                            <i class="fa fa-download fa-fw me-1" role="img"/>
                             <span>Download</span>
                         </a>
                     </div>

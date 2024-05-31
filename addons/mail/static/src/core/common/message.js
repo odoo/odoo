@@ -196,7 +196,7 @@ export class Message extends Component {
                 this.props.message
             ),
             "o-squashed": this.props.squashed,
-            "mt-2": !this.props.squashed && this.props.thread && !this.env.messageCard,
+            "mt-1": !this.props.squashed && this.props.thread && !this.env.messageCard,
             "px-2": this.props.isInChatWindow,
             "opacity-50": this.props.messageToReplyTo?.isNotSelected(
                 this.props.thread,

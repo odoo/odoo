@@ -4,6 +4,10 @@
     }
 }
 
+.o-mail-Discuss-core {
+    background-color: $body-bg;
+}
+
 .o-mail-Discuss-inspector {
     flex-basis: $o-mail-Discuss-inspector;
     flex-shrink: 0;
@@ -17,27 +21,27 @@
 .o-mail-Discuss-threadName {
     max-width: 75%;
 }
-
 .o-mail-Discuss-header {
     height: $o-mail-Discuss-headerHeight;
+    box-shadow: 0px 1px 6px -3px rgba(50, 50, 50, 0.15);
+}
 
-    button {
-        &:not(.o-isActive):hover {
-            background-color: $gray-200;
-        }
-        &.o-isActive {
-            background-color: $gray-300;
-        }
-        &.o-isActive:hover {
-            background-color: $gray-300;
-        }
+.o-mail-Discuss-headerActions button {
+    &:not(.o-isActive):hover {
+        background-color: $gray-200;
+    }
+    &.o-isActive {
+        background-color: $gray-300;
+    }
+    &.o-isActive:hover {
+        background-color: $gray-300;
     }
 }
 
 .o-mail-Discuss-threadAvatar {
     img {
-        height: 36px;
-        width: 36px;
+        height: 32px;
+        width: 32px;
     }
 
     a {

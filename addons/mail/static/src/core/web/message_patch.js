@@ -33,7 +33,10 @@ patch(Message.prototype, {
         };
     },
     getAuthorAttClass() {
-        return { ...super.getAuthorAttClass(), "cursor-pointer": this.hasAuthorClickable() };
+        return {
+            ...super.getAuthorAttClass(),
+            "cursor-pointer o-hover-text-underline": this.hasAuthorClickable(),
+        };
     },
     getAuthorText() {
         return this.hasAuthorClickable() ? _t("Open card") : undefined;

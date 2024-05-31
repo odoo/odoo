@@ -90,7 +90,7 @@ test("can post a message on a record thread", async () => {
     await contains(".o-mail-Composer");
     await insertText(".o-mail-Composer-input", "hey");
     await contains(".o-mail-Message", { count: 0 });
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Message");
     await assertSteps(["/mail/message/post"]);
 });
@@ -605,7 +605,7 @@ test("post message on draft record", async () => {
     });
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-content", { text: "Test" });
 });

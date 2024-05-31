@@ -137,7 +137,7 @@ test("Message following a notification should not be squashed", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
-    await click(".o-mail-Composer button:enabled:contains(Send)");
+    await click(".o-mail-Composer button:enabled[aria-label='Send']");
     await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer");
 });
 
@@ -176,10 +176,10 @@ test("posting a message immediately after another one is displayed in 'simple' m
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "abc");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Message", { count: 1 });
     await insertText(".o-mail-Composer-input", "def");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Message", { count: 2 });
     await contains(".o-mail-Message-header"); // just 1, because 2nd message is squashed
 });
@@ -237,7 +237,7 @@ test("Can use channel command /who", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
 });
 

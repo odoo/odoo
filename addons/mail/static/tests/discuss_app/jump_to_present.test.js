@@ -223,7 +223,7 @@ test("Post message when seeing old message should jump to present", async () => 
         text: "You're viewing older messagesJump to Present",
     });
     await insertText(".o-mail-Composer-input", "Newly posted");
-    await click(".o-mail-Composer button:enabled", { text: "Send" });
+    await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await contains(".o-mail-Thread-banner", {
         count: 0,
         text: "You're viewing older messagesJump to Present",

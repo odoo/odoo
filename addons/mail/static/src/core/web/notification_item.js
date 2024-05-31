@@ -1,5 +1,5 @@
 import { ImStatus } from "@mail/core/common/im_status";
-import { RelativeTime } from "@mail/core/common/relative_time";
+import { isToday } from "@mail/utils/common/dates";
 import { useHover } from "@mail/utils/common/hooks";
 
 import { Component, useRef, useState } from "@odoo/owl";
@@ -7,8 +7,10 @@ import { Component, useRef, useState } from "@odoo/owl";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { useService } from "@web/core/utils/hooks";
 
+const { DateTime } = luxon;
+
 export class NotificationItem extends Component {
-    static components = { ActionSwiper, RelativeTime, ImStatus };
+    static components = { ActionSwiper, ImStatus };
     static props = [
         "body?",
         "counter?",
@@ -32,9 +34,18 @@ export class NotificationItem extends Component {
 
     setup() {
         super.setup();
+        this.isToday = isToday;
+        this.DateTime = DateTime;
         this.ui = useState(useService("ui"));
         this.markAsReadRef = useRef("markAsRead");
         this.rootHover = useHover("root");
+    }
+
+    get dateText() {
+        if (isToday(this.props.datetime)) {
+            return this.props.datetime?.toLocaleString(DateTime.TIME_SIMPLE);
+        }
+        return this.props.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
     onClick(ev) {

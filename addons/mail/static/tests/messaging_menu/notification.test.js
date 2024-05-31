@@ -23,6 +23,7 @@ test("basic layout", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
+        date: "2019-01-01 10:30:00",
         message_type: "email",
         model: "discuss.channel",
         res_id: channelId,
@@ -45,7 +46,7 @@ test("basic layout", async () => {
         contains: [
             [".o-mail-NotificationItem-name", { text: "Discussion Channel" }],
             [".o-mail-NotificationItem-counter", { text: "2" }],
-            [".o-mail-NotificationItem-date", { text: "now" }],
+            [".o-mail-NotificationItem-date", { text: "Jan 1, 2019" }],
             [
                 ".o-mail-NotificationItem-text",
                 {
