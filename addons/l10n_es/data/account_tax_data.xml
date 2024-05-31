@@ -4088,7 +4088,7 @@
      <record id="account_tax_template_p_irpf19ca" model="account.tax.template">
         <field name="description"/> <!-- for resetting the value on existing DBs -->
         <field name="type_tax_use">purchase</field>
-        <field name="name">Retenciones IRPF 19% Consejeros y administradores</field>
+        <field name="name">Retenciones IRPF 19% (Compra consejero de persona física)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="-19"/>
         <field name="amount_type">percent</field>
@@ -4120,6 +4120,37 @@
                 'repartition_type': 'tax',
                 'account_id': ref('l10n_es.account_common_4751'),
                 'tag_ids': [ref('mod_111_03')],
+            }),
+        ]"/>
+    </record>
+     <record id="account_tax_template_p_irpf19cs" model="account.tax.template">
+        <field name="description"/> <!-- for resetting the value on existing DBs -->
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 19% (Compra consejero de sociedad)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-19"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_19"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
             }),
         ]"/>
     </record>
