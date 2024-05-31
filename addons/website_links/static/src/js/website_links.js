@@ -92,7 +92,11 @@ var SelectBox = publicWidget.Widget.extend({
                             // ensure that we do not display "ending matches" if
                             // we may not have loaded all "starting matches".
                             if (startingMatches.length < limit) {
-                                return startingMatches.concat(endingMatches);
+                                const startingMatchesId = startingMatches.map((value) => value.id);
+                                const extraEndingMatches = endingMatches.filter(
+                                    (value) => !startingMatchesId.includes(value.id)
+                                );
+                                return startingMatches.concat(extraEndingMatches);
                             }
                             // In that case, we made one RPC too much but this
                             // was chosen over not making them go in parallel.
