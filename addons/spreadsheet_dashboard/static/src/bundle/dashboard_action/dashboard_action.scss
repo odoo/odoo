@@ -1,5 +1,5 @@
 .o_spreadsheet_dashboard_search_panel {
-    width: fit-content;
+    //width: fit-content;
     max-width: 200px;
     align-items: center;
 
@@ -81,6 +81,14 @@
 
         .o-filter-value-double-size {
             flex-basis: 200px;
+        }
+    }
+
+    .offcanvas, .o_spreadsheet_dashboard_search_panel {
+        --#{$prefix}border-width: #{$border-width};
+
+        .o_input{
+            --#{$prefix}border-width: 0px;
         }
     }
 }
