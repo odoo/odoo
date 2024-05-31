@@ -169,6 +169,51 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         self.assertEqual(picking.state, 'done', 'Transfer should be in the DONE state')
 
+    def test_inventory_user_fifo_vacuum_svl_access(self):
+        """ Test to check if Inventory/User is able to validate a
+        transfer when the product has been invoiced already """
+
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+        avco_product.standard_price = 300
+
+        # Add a previous move to triger "run_fifo_vaccum"
+        out_move = self.env['stock.move'].create({
+            'name': 'out move',
+            'product_id': avco_product.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 10,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.quantity_done = 10
+        out_move._action_done()
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 1.0,
+                'price_unit': 750.00,
+            })]
+        })
+        purchase_order.button_confirm()
+
+        picking = purchase_order.picking_ids[0]
+        picking.action_set_quantities_to_reservation()
+
+        # clear cash to ensure access rights verification
+        self.env.invalidate_all()
+        picking.with_user(self.res_users_stock_user).button_validate()
+
+        self.assertEqual(picking.state, 'done', 'Transfer should be in the DONE state')
+
     def test_bill_before_reciept(self):
         """ Check unit price of recieved product that has been invoiced already """
 

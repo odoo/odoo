@@ -392,9 +392,9 @@ class ProductProduct(models.Model):
         """
         if company is None:
             company = self.env.company
-        ValuationLayer = self.env['stock.valuation.layer']
+        ValuationLayer = self.env['stock.valuation.layer'].sudo()
         svls_to_vacuum_by_product = defaultdict(lambda: ValuationLayer)
-        res = ValuationLayer.sudo().read_group([
+        res = ValuationLayer.read_group([
             ('product_id', 'in', self.ids),
             ('remaining_qty', '<', 0),
             ('stock_move_id', '!=', False),
@@ -405,7 +405,7 @@ class ProductProduct(models.Model):
             svls_to_vacuum_by_product[group['product_id'][0]] = ValuationLayer.browse(group['ids'])
             min_create_date = min(min_create_date, group['create_date'])
         all_candidates_by_product = defaultdict(lambda: ValuationLayer)
-        res = ValuationLayer.sudo().read_group([
+        res = ValuationLayer.read_group([
             ('product_id', 'in', self.ids),
             ('remaining_qty', '>', 0),
             ('company_id', '=', company.id),
@@ -485,8 +485,8 @@ class ProductProduct(models.Model):
                 if product.valuation == 'real_time':
                     current_real_time_svls |= svl_to_vacuum
             real_time_svls_to_vacuum |= current_real_time_svls
-        ValuationLayer.sudo().create(new_svl_vals_manual)
-        vacuum_svls = ValuationLayer.sudo().create(new_svl_vals_real_time)
+        ValuationLayer.create(new_svl_vals_manual)
+        vacuum_svls = ValuationLayer.create(new_svl_vals_real_time)
 
         # If some negative stock were fixed, we need to recompute the standard price.
         for product in self:
