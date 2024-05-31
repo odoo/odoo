@@ -3,6 +3,8 @@
 import logging
 import odoo.tests
 
+from requests import Session, PreparedRequest, Response
+
 from datetime import datetime
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from dateutil.relativedelta import relativedelta
@@ -35,6 +37,16 @@ class TestMenusDemo(HttpCaseWithUserDemo):
 @odoo.tests.tagged('post_install', '-at_install')
 class TestMenusAdminLight(odoo.tests.HttpCase):
     allow_end_on_form = True
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        # mock odoofin requests
+        if '/proxy_rpc_call/v1/get_favorite_institutions' in r.url:
+            r = Response()
+            r.status_code = 200
+            return r
+        return super()._request_handler(s, r, **kw)
+
     def test_01_click_apps_menus_as_admin(self):
         # Due to action_pos_preparation_display_kitchen_display, cliking on the "Kitchen Display"
         # menuitem could open the UI display, which will break the crawler tests as there is no
