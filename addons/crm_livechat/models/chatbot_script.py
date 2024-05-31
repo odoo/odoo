@@ -12,14 +12,16 @@ class ChatbotScript(models.Model):
 
     def _compute_lead_count(self):
         leads_data = self.env['crm.lead'].with_context(active_test=False).sudo()._read_group(
-            [('source_id', 'in', self.mapped('source_id').ids)], ['source_id'], ['__count'])
-        mapped_leads = {source.id: count for source, count in leads_data}
+            [('utm_reference', 'in', [f'{script._name},{script.id}' for script in self])],
+            ['utm_reference'], ['__count']
+        )
+        mapped_leads = dict(leads_data)
         for script in self:
-            script.lead_count = mapped_leads.get(script.source_id.id, 0)
+            script.lead_count = mapped_leads.get(f'{script._name},{script.id}', 0)
 
     def action_view_leads(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_all_leads')
-        action['domain'] = [('source_id', '=', self.source_id.id)]
+        action['domain'] = [('utm_reference', '=', f'{self._name},{self.id}')]
         action['context'] = {'create': False}
         return action
