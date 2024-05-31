@@ -16,6 +16,7 @@ wTourUtils.clickOnSnippet({
 {
     content: "Select the last paragraph",
     trigger: ":iframe .s_text_block p:last-child",
+    run: "click",
 },
 {
     content: "Show the powerbox",
@@ -34,6 +35,7 @@ wTourUtils.clickOnSnippet({
 {
     content: "Click on the alert snippet",
     trigger: ".oe-powerbox-wrapper .oe-powerbox-commandWrapper:contains('Alert')",
+    run: "click",
 },
 {
     content: "Check if s_alert snipept is inserted",

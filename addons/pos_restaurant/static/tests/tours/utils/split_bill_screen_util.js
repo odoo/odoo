@@ -8,6 +8,7 @@ export function clickBack() {
         {
             content: "click back button",
             trigger: `.splitbill-screen .button.back`,
+            run: "click",
         },
     ];
 }
@@ -16,6 +17,7 @@ export function clickPay() {
         {
             content: "click pay button",
             trigger: `.splitbill-screen .pay-button .button`,
+            run: "click",
         },
     ];
 }
@@ -31,6 +33,7 @@ export function subtotalIs(amount) {
         {
             content: `total amount of split is '${amount}'`,
             trigger: `.splitbill-screen .order-info .subtotal:contains("${amount}")`,
+            run: "click",
         },
     ];
 }

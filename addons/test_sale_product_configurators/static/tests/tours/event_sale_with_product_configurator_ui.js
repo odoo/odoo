@@ -139,5 +139,6 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     run: "click",
 }, {
     trigger: '.o_event_sale_js_event_configurator_ok',
+    run: "click",
 }, ...stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("60.00")' }),
 ]});

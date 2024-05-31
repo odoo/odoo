@@ -7,6 +7,7 @@ import wTourUtils from '@website/js/tours/tour_utils';
 const selectImageSteps = [{
     content: "select block",
     trigger: ":iframe #wrapwrap .s_text_image",
+    run: "click",
 }, {
     content: "check link popover disappeared",
     trigger: ":iframe body:not(:has(.o_edit_menu_popover))",
@@ -14,6 +15,7 @@ const selectImageSteps = [{
 }, {
     content: "select image",
     trigger: ":iframe #wrapwrap .s_text_image img",
+    run: "click",
 }];
 
 wTourUtils.registerWebsitePreviewTour('test_image_link', {
@@ -29,6 +31,7 @@ wTourUtils.registerWebsitePreviewTour('test_image_link', {
     {
         content: "enable link",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-customizeblock-option:has(we-title:contains(Media)) we-button.fa-link",
+        run: "click",
     }, {
         content: "enter site URL",
         trigger: "#oe_snippets we-customizeblock-options:has(we-title:contains('Image')) we-input:contains(Your URL) input",

@@ -103,6 +103,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'a.nav-link:contains(Timesheets)',
     extra_trigger: 'div.o_notebook_headers',
     content: 'Click on Timesheets page to log a timesheet',
+    run: "click",
 }, {
     trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add a[role="button"]',
     content: 'Click on Add a line to create a new timesheet into the task.',

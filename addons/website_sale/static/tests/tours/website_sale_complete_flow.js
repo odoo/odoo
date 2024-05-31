@@ -289,6 +289,7 @@
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
         trigger: 'a[href*="/shop/checkout"]',
+        run: "click",
     },
     ...tourUtils.assertCartAmounts({
         taxes: '23.70',

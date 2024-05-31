@@ -9,14 +9,17 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: 'Go into the Setting "app"',
             trigger: '.o_app[data-menu-xmlid="base.menu_administration"]',
+            run: "click",
         },
         {
             content: "Open email templates",
             trigger: 'button[name="open_mail_templates"]',
+            run: "click",
         },
         {
             content: "Create a new email template",
             trigger: "button.o_list_button_add",
+            run: "click",
         },
         {
             content: 'Insert # inside "Subject" input',
@@ -73,6 +76,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Click on the first entry of the dynamic placeholder",
             trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Name")',
+            run: "click",
         },
         {
             content: "Enter a default value",
@@ -83,10 +87,12 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Click on the the dynamic placeholder default value",
             trigger: "div.o_model_field_selector_popover li:first-child button",
+            run: "click",
         },
         {
             content: "Wait for the popover to disappear",
             trigger: "body:not(:has(.o_model_field_selector_popover))",
+            run: "click",
         },
         {
             content: "Check if subject value was correclty updated",
@@ -117,10 +123,12 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Click on the the dynamic placeholder commandBar options",
             trigger: "div.oe-powerbox-commandWrapper:contains(Dynamic Placeholder)",
+            run: "click",
         },
         {
             content: "Check if the dynamic placeholder popover is opened",
             trigger: "div.o_model_field_selector_popover",
+            run: "click",
         },
         {
             content: "filter the dph result",
@@ -130,6 +138,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Click on the first entry of the dynamic placeholder",
             trigger: 'div.o_model_field_selector_popover li:first-child button:contains("Name")',
+            run: "click",
         },
         {
             content: "Enter a default value",
@@ -140,15 +149,18 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Click on the the dynamic placeholder default value",
             trigger: "div.o_model_field_selector_popover li:first-child button",
+            run: "click",
         },
         {
             content: "Ensure the editable contain the dynamic placeholder t tag",
             trigger:
                 ".note-editable.odoo-editor-editable t[t-out=\"object.name or '''defValue'''\"]",
+            run: "click",
         },
         {
             content: "Discard form changes",
             trigger: "button.o_form_button_cancel",
+            run: "click",
         },
         {
             content: "Wait for the form view to disappear",

@@ -74,6 +74,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         }, {
             content: `[${fontSizeClass}] Wait to be in blocks tab`,
             trigger: ".o_we_add_snippet_btn.active",
+            run: "click",
         },
         wTourUtils.goToTheme(),
         {

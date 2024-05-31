@@ -34,6 +34,7 @@ const checkEditorSteps = [{
 }, {
     content: "exit edit mode",
     trigger: '.o_we_website_top_actions button.btn-primary:contains("Save")',
+    run: "click",
 }, {
     content: "wait for editor to close",
     trigger: ':iframe body:not(.editor_enable)',

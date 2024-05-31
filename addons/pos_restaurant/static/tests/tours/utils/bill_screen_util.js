@@ -3,6 +3,7 @@ export function closeBillPopup() {
         {
             content: `Close bill popup`,
             trigger: `.btn-close`,
+            run: "click",
         },
     ];
 }

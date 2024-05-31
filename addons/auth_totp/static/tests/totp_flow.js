@@ -80,6 +80,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_enable_wizard]',
+    run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode and input password",
     extra_trigger: 'div:contains("enter your password")',
@@ -88,6 +89,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
+    run: "click",
 }, {
     content: "Check the wizard has opened",
     trigger: 'li:contains("When requested to do so")',
@@ -128,7 +130,8 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)'
+    trigger: 'input#login, a:contains(Sign in)', 
+    run: "click",
 }, {
     content: "input login",
     trigger: 'input#login',
@@ -140,9 +143,11 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
+    run: "click",
 }, {
     content: "expect totp screen",
     trigger: 'label:contains(Authentication Code)',
+    run: "click",
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
@@ -168,7 +173,8 @@ registry.category("web_tour.tours").add('totp_login_device', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)'
+    trigger: 'input#login, a:contains(Sign in)',
+    run: "click",
 }, {
     content: "input login",
     trigger: 'input#login',
@@ -180,12 +186,15 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
+    run: "click",
 }, {
     content: "expect totp screen",
     trigger: 'label:contains(Authentication Code)',
+    run: "click",
 }, {
     content: "check remember device box",
     trigger: 'label[for=switch-remember]',
+    run: "click",
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
@@ -201,6 +210,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "click the Log out button",
     trigger: '.dropdown-item[data-menu=logout]',
+    run: "click",
 }, {
     content: "check that we're back on the login page or go to it",
     trigger: 'input#login, a:contains(Log in)', 
@@ -216,6 +226,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "click da button again",
     trigger: 'button:contains("Log in")',
+    run: "click",
 },  {
     content: "check we're logged in without 2FA",
     trigger: ".o_user_menu .dropdown-toggle",
@@ -228,6 +239,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_disable]',
+    run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode and input password",
     extra_trigger: 'div:contains("enter your password")',
@@ -236,6 +248,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
+    run: "click",
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),
@@ -250,7 +263,8 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
     url: '/',
     steps: () => [{
     content: "check that we're on the login page or go to it",
-    trigger: 'input#login, a:contains(Sign in)'
+    trigger: 'input#login, a:contains(Sign in)',
+    run: "click",
 }, {
     content: "input login",
     trigger: 'input#login',
@@ -262,6 +276,7 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
+    run: "click",
 },
 // normally we'd end the tour here as it's all we care about but there are a
 // bunch of ongoing queries from the loading of the web client which cause
@@ -278,17 +293,20 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     url: '/web',
     steps: () => [stepUtils.showAppsMenuItem(), {
     content: 'Go to settings',
-    trigger: '[data-menu-xmlid="base.menu_administration"]'
+    trigger: '[data-menu-xmlid="base.menu_administration"]',
+    run: "click",
 }, {
     content: 'Wait for page',
     trigger: '.o_menu_brand:contains("Settings")',
     run() {}
 }, {
     content: "Open Users menu",
-    trigger: '[data-menu-xmlid="base.menu_users"]'
+    trigger: '[data-menu-xmlid="base.menu_users"]',
+    run: "click",
 }, {
     content: "Open Users view",
     trigger: '[data-menu-xmlid="base.menu_action_res_users"]',
+    run: "click",
 }, {
     content: "Find Demo User",
     trigger: 'td.o_data_cell:contains("demo")',
@@ -303,10 +321,12 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     }
 }, {
     content: "Open Actions menu",
-    trigger: 'button.dropdown-toggle:contains("Action")'
+    trigger: 'button.dropdown-toggle:contains("Action")',
+    run: "click",
 }, {
     content: "Select totp remover",
-    trigger: 'span.dropdown-item:contains(Disable two-factor authentication)'
+    trigger: 'span.dropdown-item:contains(Disable two-factor authentication)',
+    run: "click",
 }, { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
     extra_trigger: 'div:contains("enter your password")',
@@ -315,12 +335,15 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
+    run: "click",
 }, {
     content: "open the user's form",
     trigger: "td.o_data_cell:contains(demo)",
+    run: "click",
 }, {
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
+    run: "click",
 }, ...closeProfileDialog({
     content: "check that demo user has been de-totp'd",
     totp_state: false,

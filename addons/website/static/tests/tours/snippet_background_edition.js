@@ -24,6 +24,7 @@ function switchTo(type, _name) {
     return {
         trigger: `.o_we_colorpicker_switch_pane_btn[data-target="${target}"]`,
         content: `Switch to ${name}`,
+        run: "click",
     };
 }
 
@@ -63,6 +64,7 @@ function checkAndUpdateBackgroundColor({
         {
             content: "Switch back to theme tab from custom tab",
             trigger: ".colorpicker button[data-target='color-combinations']", // Switch back to theme tab
+            run: "click",
         },
     ];
 

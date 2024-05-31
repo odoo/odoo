@@ -16,6 +16,7 @@ function isQRDisplayedinDialog() {
         {
             content: "Verify QR image is displayed",
             trigger: ".modal-content img[src^='data:image/png;base64,']",
+            run: "click",
         },
     ].flat();
 }
@@ -31,6 +32,7 @@ function addProductandPay() {
         {
             content: "Display QR Code Payment dialog",
             trigger: ".button.send_payment_request.highlight",
+            run: "click",
         },
     ].flat();
 }
@@ -60,12 +62,14 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPayment", {
             {
                 content: "Retry to display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",
+                run: "click",
             },
             isQRDisplayedinDialog(),
             Dialog.confirm(),
             {
                 content: "Immediately at the receipt screen.",
                 trigger: '.receipt-screen .button.next.highlight:contains("New Order")',
+                run: "click",
             },
         ].flat(),
 });
@@ -84,6 +88,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
             {
                 content: "Display QR Code Payment dialog",
                 trigger: ".button.send_payment_request.highlight",
+                run: "click",
             },
             PaymentScreen.validateButtonIsHighlighted(false),
             isQRDisplayedinDialog(),
@@ -91,6 +96,7 @@ registry.category("web_tour.tours").add("PaymentScreenWithQRPaymentSwiss", {
             {
                 content: "Immediately at the receipt screen.",
                 trigger: '.receipt-screen .button.next.highlight:contains("New Order")',
+                run: "click",
             },
         ].flat(),
 });

@@ -2,7 +2,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 
 export function clickNewTicket() {
-    return [{ trigger: ".ticket-screen .highlight" }];
+    return [{ trigger: ".ticket-screen .highlight", run: "click" }];
 }
 export function clickDiscard() {
     return [
@@ -10,6 +10,7 @@ export function clickDiscard() {
             content: "go back",
             trigger: ".ticket-screen button.discard",
             mobile: false,
+            run: "click",
         },
         { ...ProductScreen.back(), mobile: true },
     ];
@@ -18,6 +19,7 @@ export function selectOrder(orderName) {
     return [
         {
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
+            run: "click",
         },
     ];
 }
@@ -34,6 +36,7 @@ export function loadSelectedOrder() {
         ProductScreen.clickReview(),
         {
             trigger: ".ticket-screen .pads .button.validation.load-order-button",
+            run: "click",
         },
     ];
 }
@@ -42,14 +45,17 @@ export function deleteOrder(orderName) {
         {
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}")`,
             mobile: true,
+            run: "click",
         },
         {
             trigger: `.ticket-screen .order-row:has(.col:contains("${orderName}")) .delete-button`,
             mobile: true,
+            run: "click",
         },
         {
             trigger: `.ticket-screen .orders > .order-row > .col:contains("${orderName}") ~ .col[name="delete"]`,
             mobile: false,
+            run: "click",
         },
     ];
 }
@@ -57,6 +63,7 @@ export function selectFilter(name) {
     return [
         {
             trigger: `.pos-search-bar .filter`,
+            run: "click",
         },
         {
             trigger: `.pos-search-bar .filter ul`,
@@ -64,6 +71,7 @@ export function selectFilter(name) {
         },
         {
             trigger: `.pos-search-bar .filter ul li:contains("${name}")`,
+            run: "click",
         },
     ];
 }
@@ -75,6 +83,7 @@ export function search(field, searchWord) {
         },
         {
             trigger: `.pos-search-bar .search ul li:contains("${field}")`,
+            run: "click",
         },
     ];
 }
@@ -82,6 +91,7 @@ export function settleTips() {
     return [
         {
             trigger: ".ticket-screen .buttons .settle-tips",
+            run: "click",
         },
         {
             content: "verify that the order has been successfully sent to the backend",
@@ -95,6 +105,7 @@ export function clickControlButton(name) {
         ProductScreen.clickReview(),
         {
             trigger: `.ticket-screen ${ProductScreen.controlButtonTrigger(name)}`,
+            run: "click",
         },
     ];
 }
@@ -103,6 +114,7 @@ export function confirmRefund() {
         ProductScreen.clickReview(),
         {
             trigger: ".ticket-screen .button.pay-order-button",
+            run: "click",
         },
     ];
 }

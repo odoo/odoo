@@ -59,6 +59,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Send message",
             trigger: ".o-mail-Composer-send:enabled",
+            run: "click",
         },
         {
             content: "Check message is shown",
@@ -73,10 +74,12 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Click on more menu",
             trigger: ".o-mail-Message [title='Expand']",
+            run: "click",
         },
         {
             content: "Click on edit",
             trigger: ".o-mail-Message-moreMenu [title='Edit'], .o-mail-Message [title='Edit']",
+            run: "click",
         },
         {
             content: "Edit message",
@@ -106,6 +109,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Save edited message",
             trigger: ".o-mail-Message a:contains(save)",
+            run: "click",
         },
         {
             content: "Check message is edited",
@@ -131,6 +135,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Open search panel",
             trigger: "button[title='Search Messages']",
+            run: "click",
         },
         {
             content: "Search for the attachment name",
@@ -140,6 +145,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Trigger the search",
             trigger: "button[aria-label='Search button']",
+            run: "click",
         },
         {
             content: "Check that searched message contains the attachment",

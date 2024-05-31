@@ -7,6 +7,7 @@ export function clickMenuButton() {
     return {
         content: "Click on the menu button",
         trigger: ".pos-rightheader button.fa-bars",
+        run: "click",
     };
 }
 export function clickMenuOption(name) {
@@ -16,6 +17,7 @@ export function clickMenuDropdownOption(name) {
     return {
         content: `click on something in the burger menu`,
         trigger: `span.dropdown-item:contains(${name})`,
+        run: "click",
     };
 }
 export function isCashMoveButtonHidden() {

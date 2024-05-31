@@ -4,6 +4,7 @@ export function pickRadio(name) {
             content: `picking radio attribute with name ${name}`,
             trigger: `.attribute-name-cell:contains('${name}') input`,
             in_modal: true,
+            run: "click",
         },
     ];
 }
@@ -23,6 +24,7 @@ export function pickColor(name) {
             content: `picking color attribute with name ${name}`,
             trigger: `.configurator_color[data-color='${name}']`,
             in_modal: true,
+            run: "click",
         },
     ];
 }

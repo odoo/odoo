@@ -43,6 +43,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Create new rule",
             trigger: ".o_control_panel button.o-kanban-button-new",
+            run: "click",
         },
         {
             content: "Enter rule name",
@@ -58,10 +59,12 @@ registry.category("web_tour.tours").add("test_base_automation", {
             content: "Select model contact",
             extra_trigger: ".dropdown-menu:contains(Contact)",
             trigger: ".dropdown-menu li a:contains(Contact):not(:has(.fa-spin))",
+            run: "click",
         },
         {
             content: "Open select",
             trigger: ".o_form_renderer #trigger_0",
+            run: "click",
         },
         {
             content: "Select On save",
@@ -71,14 +74,17 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Add new action",
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
+            run: "click",
         },
         {
             content: "Set new action to update the record",
             trigger: ".modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            run: "click",
         },
         {
             content: "Focus on the 'update_path' field",
             trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+            run: "click",
         },
         {
             content: "Input field name",
@@ -92,6 +98,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
             in_modal: false,
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="function"] button',
+            run: "click",
         },
         {
             content: "Open update select",
@@ -101,6 +108,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
         {
             content: "Open update select",
             trigger: ".modal-content .o_form_button_save",
+            run: "click",
         },
         ...stepUtils.saveForm({
             extra_trigger: ".o-overlay-container:not(:has(.modal-content))",
@@ -114,6 +122,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         stepUtils.showAppsMenuItem(),
         {
             trigger: ".o_control_panel button.o-kanban-button-new",
+            run: "click",
         },
         {
             trigger: ".o_form_renderer .oe_title .o_input",
@@ -126,6 +135,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         {
             trigger:
                 ".dropdown-menu li a:contains(test_base_automation.project):not(:has(.fa-spin))",
+            run: "click",
         },
         {
             trigger: ".o_form_renderer #trigger_0",
@@ -166,16 +176,20 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: ".dropdown-menu li a:contains(test):not(:has(.fa-spin))",
+            run: "click",
         },
         {
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
+            run: "click",
         },
         {
             trigger: " .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            run: "click",
         },
         {
             content: "Focus on the 'update_path' field",
             trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+            run: "click",
         },
         {
             content: "Input field name",
@@ -189,6 +203,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             in_modal: false,
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="name"] button',
+            run: "click",
         },
         {
             trigger: '.modal-content .o_form_renderer div[name="value"] textarea',
@@ -196,16 +211,20 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: ".modal-content .o_form_button_save",
+            run: "click",
         },
         {
             trigger: '.o_form_renderer div[name="action_server_ids"] button',
+            run: "click",
         },
         {
             trigger: " .modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            run: "click",
         },
         {
             content: "Focus on the 'update_path' field",
             trigger: ".modal-content .o_form_renderer [name='update_path'] .o_model_field_selector",
+            run: "click",
         },
         {
             content: "Input field name",
@@ -219,6 +238,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             in_modal: false,
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_page li[data-name="priority"] button',
+            run: "click",
         },
         {
             trigger: '.modal-content .o_form_renderer div[name="selection_value"] input',
@@ -226,15 +246,18 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
         },
         {
             trigger: ".dropdown-menu li a:contains(High):not(:has(.fa-spin))",
+            run: "click",
         },
         {
             trigger: ".modal-content .o_form_button_save",
+            run: "click",
         },
         ...stepUtils.saveForm({
             extra_trigger: ".o-overlay-container:not(:has(.modal-content))",
         }),
         {
             trigger: ".breadcrumb .o_back_button a",
+            run: "click",
         },
         {
             trigger: ".o_base_automation_kanban_view .o_kanban_record",
@@ -257,12 +280,15 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
     steps: () => [
         {
             trigger: ".o_kanban_view .o_kanban_config button.dropdown-toggle",
+            run: "click",
         },
         {
             trigger: ".dropdown-menu .o_column_automations",
+            run: "click",
         },
         {
             trigger: ".o_base_automation_kanban_view .o_control_panel button.o-kanban-button-new",
+            run: "click",
         },
         {
             trigger: ".o_form_view",
@@ -421,6 +447,7 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         {
             trigger:
                 ".o_form_renderer .o_field_widget[name='action_server_ids'] .o_kanban_view .o_cp_buttons button",
+            run: "click",
         },
         {
             trigger: ".modal-content .o_form_renderer",
@@ -436,14 +463,17 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         },
         {
             trigger: ".modal-content .o_form_renderer [name='state'] span[value*='object_write']",
+            run: "click",
         },
         {
             trigger: ".modal-content .o_form_renderer [name='state'] span[value*='followers']",
+            run: "click",
         },
         {
             extra_trigger:
                 ".modal-content .o_form_renderer [name='state'] span.active[value*='followers']",
             trigger: ".modal-content .o_form_button_cancel",
+            run: "click",
         },
         {
             extra_trigger: "body:not(:has(.modal-content))",
@@ -463,6 +493,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".dropdown-menu li a:contains(Automated Rule Line Test)",
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name='trigger']",
@@ -513,6 +544,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".o_form_button_cancel",
+            run: "click",
         },
         {
             trigger: ".o_base_automation_kanban_view",
@@ -530,6 +562,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
+            run: "click",
         },
         {
             extra_trigger: "body:not(:has(.o_field_widget[name='trg_field_ref']))",
@@ -569,6 +602,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger: ".o_form_button_cancel",
+            run: "click",
         },
         {
             trigger: ".o_base_automation_kanban_view",
@@ -586,6 +620,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: ".dropdown-menu li a:contains(Automated Rule Test)",
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name='trigger'] select",
@@ -630,6 +665,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: "button.o_form_button_cancel",
+            run: "click",
         },
         {
             trigger: "body:not(:has(button.o_form_button_cancel)",
@@ -644,6 +680,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
     steps: () => [
     {
         trigger: ".o-kanban-button-new",
+        run: "click",
     }, {
         trigger: ".o_field_widget[name=name] input",
         run: "edit Test rule",
@@ -652,6 +689,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         run: "edit ir.ui.view",
     }, {
         trigger: ".ui-menu-item > a:contains(/^View$/)",
+        run: "click",
     }, {
         trigger: ".o_field_widget[name=trigger] select",
         run: `select "on_change"`,
@@ -660,6 +698,7 @@ registry.category("web_tour.tours").add('base_automation.on_change_rule_creation
         run: "edit Active",
     }, {
         trigger: ".ui-menu-item > a:contains(/^Active$/)",
+        run: "click",
     },
     ...stepUtils.saveForm(),
 ]});

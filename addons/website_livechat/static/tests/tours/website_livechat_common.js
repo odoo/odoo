@@ -8,6 +8,7 @@ export const start = [
     {
         content: "click on livechat widget",
         trigger: ".o-livechat-LivechatButton",
+        run: "click",
     },
     {
         content: "Say hello!",
@@ -22,6 +23,7 @@ export const start = [
     {
         content: "Verify your message has been typed",
         trigger: ".o-mail-Message:contains('Hello Sir!')",
+        run: "click",
     },
     {
         content: "Verify there is no duplicates",
@@ -65,6 +67,7 @@ export const feedback = [
     {
         content: "Send the feedback",
         trigger: "button:contains(Send):not(:disabled)",
+        run: "click",
     },
     {
         content: "Thanks for your feedback",
@@ -82,10 +85,12 @@ export const transcript = [
     {
         content: "Send the conversation to your email address",
         trigger: "button[data-action=sendTranscript]",
+        run: "click",
     },
     {
         content: "Check conversation is sent",
         trigger: ".form-text:contains(The conversation was sent)",
+        run: "click",
     },
 ];
 
@@ -117,6 +122,7 @@ export const goodRating = [
     {
         content: "Choose Good Rating",
         trigger: `img[src*=rating][alt="5"]`,
+        run: "click",
     },
 ];
 
@@ -124,6 +130,7 @@ export const okRating = [
     {
         content: "Choose ok Rating",
         trigger: `img[src*=rating][alt="3"]`,
+        run: "click",
     },
 ];
 
@@ -131,5 +138,6 @@ export const sadRating = [
     {
         content: "Choose bad Rating",
         trigger: `img[src*=rating][alt="1"]`,
+        run: "click",
     },
 ];

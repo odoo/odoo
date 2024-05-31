@@ -42,6 +42,7 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             {
                 content: "Check that we are now on the 'Thank you' screen",
                 trigger: "div i.fa-smile-o",
+                run: "click",
             },
             postMessage(NEW_ORDER, "new order"),
             {

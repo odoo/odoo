@@ -2,6 +2,7 @@ export function back() {
     return {
         content: "go back to the products",
         trigger: ".pos-topheader .back-button",
+        run: "click",
     };
 }
 export function inLeftSide(steps) {
@@ -10,6 +11,7 @@ export function inLeftSide(steps) {
             content: "click review button",
             trigger: ".btn-switchpane.review-button",
             mobile: true,
+            run: "click",
         },
         ...[steps].flat(),
         { ...back(), mobile: true },
@@ -53,5 +55,6 @@ export function selectButton(name) {
     return {
         content: `Select button ${name}`,
         trigger: `button:contains("${name}")`,
+        run: "click",
     };
 }

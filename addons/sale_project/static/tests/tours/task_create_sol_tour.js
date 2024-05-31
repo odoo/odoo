@@ -8,19 +8,24 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
     stepUtils.showAppsMenuItem(), {
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
         content: 'Select Project main menu.',
+        run: "click",
     }, {
         trigger: ".o_kanban_record:contains('Test History Project'):first",
         content: "Open the project dropdown of project name 'Test History Project'.",
+        run: "click",
     }, {
         trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
         content: "Open the task name 'Test History Project' from kanban view.",
+        run: "click",
     },  {
         trigger: ".o_field_widget[name='partner_id'] input",
-        content: "Add the customer for this task to select an SO and SOL."
+        content: "Add the customer for this task to select an SO and SOL.",
+        run: "click",
     }, {
         trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
         content: "Select the customer in the autocomplete dropdown",
         auto: true,
+        run: "click",
     }, {
         trigger: "div[name='sale_line_id'] input",
         content: 'Add the Sales Order Item',
@@ -28,19 +33,24 @@ registry.category("web_tour.tours").add("task_create_sol_tour", {
     }, {
         trigger: ".o_field_widget[name=sale_line_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create_edit a",
         content: "Create an Sales Order Item in the autocomplete dropdown.",
+        run: "click",
     }, {
         trigger: "div[name='product_id'] input",
         content: "Create an product in the autocomplete dropdown.",
+        run: "click",
     }, {
         trigger: ".ui-autocomplete > li > a:not(:has(i.fa))",
         content: "Select the product in the autocomplete dropdown",
+        run: "click",
     }, {
         trigger: ".o_form_button_save",
         content: "Save Sales Order Item",
         in_modal: true,
+        run: "click",
     }, {
         trigger: ".o_form_button_save",
         content: "Save task",
+        run: "click",
     }, {
         trigger: ".o_field_widget[name='sale_line_id'] input",
         content: "Check if the Sales Order Item is saved correctly.",

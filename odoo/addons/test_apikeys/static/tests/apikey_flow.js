@@ -22,6 +22,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Open API keys wizard",
     trigger: 'button:contains("New API Key")',
+    run: "click",
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: 'div:contains("enter your password")',
@@ -33,6 +34,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
+    run: "click",
 }, {
     content: "Check that we're now on the key description dialog",
     trigger: 'p:contains("Enter a description of and purpose for the key.")',
@@ -43,7 +45,8 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
     run: "edit my key",
 }, {
     content: "Confirm key creation",
-    trigger: 'button:contains("Generate key")'
+    trigger: 'button:contains("Generate key")',
+    run: "click",
 }, {
     content: "Check that we're on the last step & grab key",
     trigger: 'p:contains("Here is your new API key")',
@@ -69,8 +72,10 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     steps: () => [{
     content: 'Open preferences',
     trigger: '.o_user_menu .dropdown-toggle',
+    run: "click",
 }, {
     trigger: '[data-menu=settings]',
+    run: "click",
 }, {
     content: "Switch to security tab",
     trigger: 'a[role=tab]:contains("Account Security")',
@@ -86,11 +91,14 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
 }, {
     content: "And confirm",
     trigger: 'button:contains(Confirm Password)',
+    run: "click",
 }, {
     content: 'Re-open preferences again',
     trigger: '.o_user_menu .dropdown-toggle',
+    run: "click",
 }, {
     trigger: '[data-menu=settings]',
+    run: "click",
 }, {
     content: "Switch to security tab",
     trigger: 'a[role=tab]:contains("Account Security")',

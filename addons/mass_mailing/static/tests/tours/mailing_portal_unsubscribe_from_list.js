@@ -151,6 +151,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             content: "Feedback area is not displayed (nothing opt-out or no blocklist done, no feedback required)",
             trigger: "div#o_mailing_portal_subscription:not(textarea)",
             extra_trigger: "div#o_mailing_portal_subscription:not(fieldset)",
+            run: "click",
         }, {
             content: "Now exclude me (again)",
             trigger: "div#button_blocklist_add",
@@ -167,6 +168,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
             content: "Warning should contain reference to memberships",
             trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List2')",
             extra_trigger: "div#o_mailing_subscription_form_blocklisted li strong:contains('List3')",
+            run: "click",
         }, {
             content: "Give a reason for blocklist (first one)",
             trigger: "fieldset input.o_mailing_subscription_opt_out_reason:first",
