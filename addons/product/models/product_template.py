@@ -395,7 +395,7 @@ class ProductTemplate(models.Model):
         for record in self:
             if record.type == 'consu':
                 record.product_tooltip = _(
-                    "Goods are physical products."
+                    "Goods are physical products that you receive and deliver."
                 )
             else:
                 record.product_tooltip = ""
