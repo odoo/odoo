@@ -7,6 +7,7 @@ from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockVa
 from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
 from odoo.tests import Form
 from odoo.tests.common import tagged
+from odoo import Command
 
 
 class TestMrpValuationCommon(TestStockValuationCommon):
@@ -546,3 +547,56 @@ class TestMrpStockValuation(TestStockValuationBase):
         ], order='date, id')
         self.assertEqual(out_aml.credit, 100)
         self.assertEqual(in_aml.product_id, self.product1)
+
+    def test_mo_overview_with_time_ids(self):
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+            'standard_price': 1.02,
+        })
+        finished_product = self.env['product.product'].create({
+            'name': 'finished_product',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [(0, 0, {
+                'product_id': component.id,
+                'product_qty': 1,
+                'product_uom_id': component.uom_id.id
+            })],
+            'operation_ids': [Command.create(
+                {'sequence': 1, 'name': 'finished operation 1', 'workcenter_id': self.workcenter_1.id})],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'product_qty': 1,
+            'product_uom_id': finished_product.uom_id.id,
+        })
+        mo.action_confirm()
+                # add operation duration otherwise 0 operation cost
+        self.env['mrp.workcenter.productivity'].create({
+            'workcenter_id': self.workcenter_1.id,
+            'date_start': datetime.now() - timedelta(minutes=30),
+            'date_end': datetime.now(),
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+            'description': self.env.ref('mrp.block_reason7').name,
+            'workorder_id': mo.workorder_ids[0].id
+        })
+
+        # add operation duration otherwise 0 operation cost
+        self.env['mrp.workcenter.productivity'].create({
+            'workcenter_id': self.workcenter_1.id,
+            'date_start': datetime.now() - timedelta(minutes=30),
+            'date_end': datetime.now(),
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+            'description': self.env.ref('mrp.block_reason7').name,
+            'workorder_id': mo.workorder_ids[0].id
+        })
+        self.env.flush_all()  # flush to correctly build report
+        mo.button_mark_done()
+        report_values = self.env['report.mrp.report_mo_overview']._get_report_data(mo.id)['components'][0]['summary']
+        self.assertEqual(report_values['name'], component.name)
+        self.assertEqual(report_values['quantity'], 2)
+        self.assertEqual(report_values['mo_cost'], 160)

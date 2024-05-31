@@ -547,8 +547,7 @@ class MrpWorkorder(models.Model):
     def _cal_cost(self):
         total = 0
         for wo in self:
-            duration = sum(wo.time_ids.mapped('duration'))
-            total += (duration / 60.0) * wo.workcenter_id.costs_hour
+            total += (self.duration / 60.0) * wo.workcenter_id.costs_hour
         return total
 
     @api.model
