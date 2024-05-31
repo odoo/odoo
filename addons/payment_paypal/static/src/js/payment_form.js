@@ -29,6 +29,8 @@ paymentForm.include({
         } else if (flow === 'token') {
             return;
         }
+        document.getElementById("loading").classList.remove("d-none");
+        this._hideInputs();
         this._setPaymentFlow('direct');
         // PayPal Code
         // Helper / Utility functions
@@ -45,15 +47,6 @@ paymentForm.include({
                 document.head.appendChild(script);
             });
         }
-        let handle_close = (event) => {
-            event.target.closest(".ms-alert").remove();
-        }
-        let handle_click = (event) => {
-            if (event.target.classList.contains("ms-close")) {
-                handle_close(event);
-            }
-        }
-        document.addEventListener("click", handle_click);
         const paypal_sdk_url = "https://www.paypal.com/sdk/js";
         //https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
@@ -69,7 +62,6 @@ paymentForm.include({
         )
             .then(() => {
                 document.getElementById("loading").classList.add("d-none");
-                let alerts = document.getElementById("alerts");
                 let paypal_buttons = paypal.Buttons({ // https://developer.paypal.com/sdk/js/reference
                     fundingSource: paypal.FUNDING.PAYPAL,
                     onClick: (data) => { // https://developer.paypal.com/sdk/js/reference/#link-oninitonclick
@@ -77,6 +69,7 @@ paymentForm.include({
                     },
                     style: { //https://developer.paypal.com/sdk/js/reference/#link-style
                         color: paypalColor,
+                        label:'pay'
                     },
 
                     createOrder: function (data, actions) { //https://developer.paypal.com/docs/api/orders/v2/#orders_create
@@ -109,26 +102,30 @@ paymentForm.include({
                                 console.log(order_details); //https://developer.paypal.com/docs/api/orders/v2/#orders_capture!c=201&path=create_time&t=response
                                 let intent_object = intent === "authorize" ? "authorizations" : "captures";
                                 //Custom Successful Message
-                                alerts.innerHTML = `<div class=\'ms-alert ms-action\'>Thank you ` + order_details.payer.name.given_name + ` ` + order_details.payer.name.surname + ` for your payment of ` + order_details.purchase_units[0].payments[intent_object][0].amount.value + ` ` + order_details.purchase_units[0].payments[intent_object][0].amount.currency_code + `!</div>`;
+                                console.log(
+                                    order_details.payer.name.given_name + ` ` +
+                                    order_details.payer.name.surname + ` for your payment of ` +
+                                    order_details.purchase_units[0].payments[intent_object][0].amount.value + ` ` +
+                                    order_details.purchase_units[0].payments[intent_object][0].amount.currency_code
+                                );
 
                                 //Close out the PayPal buttons that were rendered
                                 paypal_buttons.close();
                             })
                             .catch((error) => {
-                                console.log("errpr o n approve", error);
-                                alerts.innerHTML = `<div class="ms-alert ms-action2 ms-small"><span class="ms-close"></span><p>An Error Ocurred!</p>  </div>`;
+                                console.log("error on approve", error);
                             });
                     },
 
                     onCancel: function (data) {
-                        alerts.innerHTML = `<div class="ms-alert ms-action2 ms-small"><span class="ms-close"></span><p>Order cancelled!</p>  </div>`;
+                        console.log("onCancel", data);
                     },
 
                     onError: function (err) {
                         console.log("onError", err);
                     }
                 });
-                paypal_buttons.render('#payment_options');
+                paypal_buttons.render('#o_provider_payment_submit_button');
             })
             .catch((error) => {
                 console.error(error);
