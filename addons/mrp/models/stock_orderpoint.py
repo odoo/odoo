@@ -79,7 +79,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(*bom_kit_orderpoints.keys())
         res = super(StockWarehouseOrderpoint, orderpoints_without_kit)._quantity_in_progress()
         for orderpoint in bom_kit_orderpoints:
-            dummy, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
+            _dummy, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
             ratios_qty_available = []
             # total = qty_available + in_progress
             ratios_total = []
@@ -87,7 +87,7 @@ class StockWarehouseOrderpoint(models.Model):
                 component = bom_line.product_id
                 if not component.is_storable or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
                     continue
-                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                uom_qty_per_kit = bom_line_data['qty']
                 qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
                 if not qty_per_kit:
                     continue

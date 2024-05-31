@@ -423,10 +423,10 @@ class StockMove(models.Model):
                 moves_ids_to_return.add(move.id)
                 continue
             if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
+                product_qty = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id)
             else:
-                factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
-            boms, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id)
+                product_qty = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id)
+            _boms, lines = bom.sudo().explode(move.product_id, product_qty, picking_type=bom.picking_type_id)
             for bom_line, line_data in lines:
                 if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) or self.env.context.get('is_scrap'):
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, 0, line_data['qty'])
@@ -576,8 +576,7 @@ class StockMove(models.Model):
         :return: The quantity delivered or received
         """
         qty_ratios = []
-        kit_qty = kit_qty / kit_bom.product_qty
-        boms, bom_sub_lines = kit_bom.explode(product_id, kit_qty)
+        _boms, bom_sub_lines = kit_bom.explode(product_id, kit_qty)
 
         def get_qty(move):
             if move.picked:
@@ -598,8 +597,8 @@ class StockMove(models.Model):
                 # We compute the quantities needed of each components to make one kit.
                 # Then, we collect every relevant moves related to a specific component
                 # to know how many are considered delivered.
-                uom_qty_per_kit = bom_line_data['qty'] / (bom_line_data['original_qty'])
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, bom_line.product_id.uom_id, round=False)
+                uom_qty_per_kit = bom_line_data['qty'] / kit_qty
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False)
                 if not qty_per_kit:
                     continue
                 incoming_qty = sum(bom_line_moves.filtered(filters['incoming_moves']).mapped(get_qty))
