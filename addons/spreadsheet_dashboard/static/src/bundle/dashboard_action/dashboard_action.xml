@@ -2,33 +2,48 @@
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
         <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="layout-actions">
-                <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
-                <FilterValue
-                    t-if="status === Status.Loaded"
-                    filter="filter"
-                    model="state.activeDashboard.model"
-                    t-as="filter"
-                    t-foreach="filters"
-                    t-key="filter.id"
-                />
-            </t>
             <t t-set-slot="control-panel-navigation-additional">
                 <SpreadsheetShareButton t-key="activeDashboardId" model="state.activeDashboard?.model" onSpreadsheetShared.bind="shareSpreadsheet"/>
             </t>
         </ControlPanel>
         <t t-set="dashboard" t-value="state.activeDashboard"/>
-        <div class="o_content o_component_with_search_panel" t-att-class="{ o_mobile_dashboard: env.isSmall }">
+        <div class="o_content o_component_with_search_panel position-relative" t-att-class="{ o_mobile_dashboard: env.isSmall }">
             <!-- Dashboard selection -->
             <t t-if="env.isSmall">
-                <DashboardMobileSearchPanel
-                    onDashboardSelected="(dashboardId) => this.openDashboard(dashboardId)"
-                    activeDashboard="dashboard"
-                    groups="getDashboardGroups()"/>
+                <div class="d-flex align-items-center justify-content-between p-3">
+                    <DashboardMobileSearchPanel
+                        onDashboardSelected="(dashboardId) => this.openDashboard(dashboardId)"
+                        activeDashboard="dashboard"
+                        groups="getDashboardGroups()"/>
+                    <button class="btn btn-secondary d-md-none position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#OffcanvasFilters" aria-controls="OffcanvasFilters">
+                        <i class="fa fa-filter me-1"/>
+                        <i class="fa fa-circle position-absolute top-0 start-100 translate-middle text-danger"/>
+                        Filters
+                    </button>
+                </div>
             </t>
             <t t-else="">
-                <t t-if="state.sidebarExpanded" t-call="spreadsheet_dashboard.DashboardAction.Expanded"/>
-                <t t-else="" t-call="spreadsheet_dashboard.DashboardAction.Collapsed"/>
+                <t t-if="state.sidebarExpanded" t-call="spreadsheet_dashboard.DashboardAction.Expanded">
+                    <t t-set="classes" t-value="'pe-2 pb-5 ps-4'"/>
+                    <section t-foreach="getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
+                        <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default user-select-none">
+                            <b t-esc="group.name"/>
+                        </header>
+                        <ul class="list-group d-block o_search_panel_field">
+                            <li t-foreach="group.dashboards" t-as="dashboard" t-key="dashboard.id"
+                                t-on-click="() => this.openDashboard(dashboard.id)"
+                                t-esc="dashboard.displayName"
+                                t-att-data-name="dashboard.displayName"
+                                class="o_search_panel_category_value list-group-item cursor-pointer border-0"
+                                t-att-class="{'active': dashboard.id === state.activeDashboard.id}"/>
+                        </ul>
+                    </section>
+                </t>
+                <t t-else="" t-call="spreadsheet_dashboard.DashboardAction.Collapsed">
+                    <span class="fw-bolder" t-esc="activeDashboardGroupName"/>
+                    /
+                    <t t-esc="state.activeDashboard.displayName"/>
+                </t>
             </t>
             <!-- Main content -->
             <h3 t-if="!dashboard" class="dashboard-loading-status">No available dashboard</h3>
@@ -47,6 +62,40 @@
                     </div>
                 </t>
             </t>
+            <t t-if="!env.isSmall">
+                <t t-if="state.sidebarExpanded" t-call="spreadsheet_dashboard.DashboardAction.Expanded">
+                    <t t-set="classes" t-value="'w-md-25 w-xxl-25 mw-100 p-3 pt-4'"/>
+                    <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
+                    <FilterValue
+                        t-if="status === Status.Loaded"
+                        filter="filter"
+                        model="state.activeDashboard.model"
+                        t-as="filter"
+                        t-foreach="filters"
+                        t-key="filter.id"
+                    />
+                </t>
+                <t t-else="" t-call="spreadsheet_dashboard.DashboardAction.Collapsed">
+                    <span class="fw-bolder">Filters</span>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="offcanvas offcanvas-end w-75 h-100 overflow-auto p-4 bg-view" tabindex="-1" id="OffcanvasFilters" data-bs-backdrop="true">
+                    <div class="offcanvas-header p-0">
+                        <h5 class="offcanvas-title">Filters</h5>
+                        <button type="button" class="btn-close d-md-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
+                    <FilterValue
+                        t-if="status === Status.Loaded"
+                        filter="filter"
+                        model="state.activeDashboard.model"
+                        t-as="filter"
+                        t-foreach="filters"
+                        t-key="filter.id"
+                    />
+                </div>
+            </t>
         </div>
     </div>
 
@@ -57,33 +106,19 @@
                     <i class="fa fa-angle-double-right"/>
                 </button>
                 <div class="mx-auto" t-if="state.activeDashboard">
-                    <span class="fw-bolder" t-esc="activeDashboardGroupName"/>
-                    /
-                    <t t-esc="state.activeDashboard.displayName"/>
+                    <t t-out="0"/>
                 </div>
             </div>
         </div>
     </t>
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
-        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative">
+        <div t-attf-class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 h-100 bg-view overflow-auto position-relative #{classes || ''}">
             <button t-if="!env.isSmall and state.activeDashboard" class="btn btn-light btn-sm end-0 m-1 mb-2 position-absolute px-2 py-1 top-0 z-index-1" t-on-click="toggleSidebar">
                 <i class="fa fa-fw fa-angle-double-left"/>
             </button>
             <div class="mt-2"/>
-            <section t-foreach="getDashboardGroups()" t-as="group" t-key="group.id" class="o_search_panel_section o_search_panel_category">
-                <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default user-select-none">
-                    <b t-esc="group.name"/>
-                </header>
-                <ul class="list-group d-block o_search_panel_field">
-                    <li t-foreach="group.dashboards" t-as="dashboard" t-key="dashboard.id"
-                        t-on-click="() => this.openDashboard(dashboard.id)"
-                        t-esc="dashboard.displayName"
-                        t-att-data-name="dashboard.displayName"
-                        class="o_search_panel_category_value list-group-item cursor-pointer border-0"
-                        t-att-class="{'active': dashboard.id === state.activeDashboard.id}"/>
-                </ul>
-            </section>
+            <t t-out="0"/>
         </div>
     </t>
 </templates>
