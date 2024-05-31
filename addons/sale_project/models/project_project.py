@@ -790,9 +790,13 @@ class ProjectProject(models.Model):
             'context': {
                 'default_move_type': 'in_invoice',
                 'project_id': self.id,
-            }
+            },
+            'help': "<p class='o_view_nocontent_smiling_face'>%s</p><p>%s</p>" % (
+                _("Create a vendor bill"),
+                _("Create invoices, register payments and keep track of the discussions with your vendors."),
+            ),
         }
-        if len(vendor_bill_ids) == 1:
+        if not self.env.context.get('from_embedded_action') and len(vendor_bill_ids) == 1:
             action_window['views'] = [[False, 'form']]
             action_window['res_id'] = vendor_bill_ids[0]
         return action_window
