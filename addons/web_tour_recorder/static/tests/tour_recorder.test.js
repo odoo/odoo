@@ -496,3 +496,50 @@ test("Run custom tour", async () => {
 
     expect(["Clicked on div"]).toVerifySteps();
 });
+
+test("Run a custom tour twice doesn't trigger traceback", async () => {
+    await mountWithCleanup(
+        `
+        <div class="o_parent">
+            <div class="click">Bishmillah</div>
+        </div>
+    `,
+        { noMainContainer: true }
+    );
+
+    expect(".o_tour_recorder").toHaveCount(1);
+    click(".o_button_record");
+    await animationFrame();
+    click(".click");
+    await animationFrame();
+    checkTourSteps([".o_parent > div"]);
+
+    click(".o_button_save");
+    await animationFrame();
+    await contains("input[name='name']").click();
+    edit("tour_name");
+    await animationFrame();
+    click("input[name='url']");
+    await animationFrame();
+    edit("");
+    await animationFrame();
+    click(".o_button_save_confirm");
+    await animationFrame();
+    expect(".o_notification_manager .o_notification_body").toHaveText(
+        "Custom tour 'tour_name' has been added."
+    );
+
+    click(".o_debug_manager > button");
+    await contains(".o-dropdown-item:contains('Start Tour')").click();
+
+    expect("table tr td:contains('tour_name')").toHaveCount(1);
+    click(".o_start_tour");
+    await animationFrame();
+
+    click(".o_debug_manager > button");
+    await contains(".o-dropdown-item:contains('Start Tour')").click();
+
+    expect("table tr td:contains('tour_name')").toHaveCount(2);
+    click(".o_start_tour:eq(1)");
+    await animationFrame();
+});

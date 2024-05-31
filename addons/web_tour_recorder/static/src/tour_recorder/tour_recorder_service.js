@@ -93,15 +93,17 @@ export const tourRecorderService = {
         function startCustomTour(customTourName, options) {
             const customTours = getCustomTours();
             const customTour = customTours.find((t) => t.name === customTourName);
-            registry.category("web_tour.tours").add(customTour.name, {
-                ...customTour,
-                steps: () => customTour.steps,
-            });
+            if (!registry.category("web_tour.tours").contains(customTour.name)) {
+                registry.category("web_tour.tours").add(customTour.name, {
+                    ...customTour,
+                    steps: () => customTour.steps,
+                });
+                browser.localStorage.setItem(
+                    CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY,
+                    JSON.stringify(customTour)
+                );
+            }
             tour_service.startTour(customTour.name, options);
-            browser.localStorage.setItem(
-                CUSTOM_RUNNING_TOURS_LOCAL_STORAGE_KEY,
-                JSON.stringify(customTour)
-            );
         }
 
         return {
