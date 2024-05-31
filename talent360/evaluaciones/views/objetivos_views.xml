@@ -97,7 +97,8 @@
                         <field placeholder="¿Qué es lo que se espera lograr con este objetivo?" name="descripcion" />
                         <br />
                         <group>
-                           <field name="porcentaje" readonly="True" string="Progreso" widget="percentage"/>
+                            <field name="resultado" readonly="True" string="Progreso"/>
+                           <field name="porcentaje" readonly="True" string="Porcentaje" widget="percentage"/>
                         </group>
                     </div>
                     <notebook>
@@ -111,7 +112,7 @@
 
                                         <br />
                                         <label for="orden" string="Orden" />
-                                        <field name="orden" />
+                                        <field name="orden" readonly="True"/>
                                         <br />
                                         <label for="peso" string="Peso" />
                                         <field name="peso" />
