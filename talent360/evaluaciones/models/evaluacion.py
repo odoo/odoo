@@ -1142,3 +1142,12 @@ class Evaluacion(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+    
+    def actualizar_estados_eval(self):
+        today = fields.Date.today()
+        evaluaciones = self.search([("estado", "!=", "finalizado")])
+        for evaluacion in evaluaciones:
+            if evaluacion.fecha_inicio <= today <= evaluacion.fecha_final:
+                evaluacion.estado = "publicado"
+            elif evaluacion.fecha_final < today:
+                evaluacion.estado = "finalizado"
