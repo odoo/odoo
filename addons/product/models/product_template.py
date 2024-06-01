@@ -1463,3 +1463,9 @@ class ProductTemplate(models.Model):
         This method is meant to be overriden in other standard modules.
         """
         return self.env['product.pricelist'].browse(self.env.context.get('pricelist'))
+
+    def _get_list_price(self, price):
+        """ Get the product sales price from a public price based on taxes defined on the product.
+        To be overridden in accounting module."""
+        self.ensure_one()
+        return price
