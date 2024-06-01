@@ -282,7 +282,7 @@ msgstr "<span class=\"ms-2\">Generar LdM</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Pedidos pendientes</span>"
+msgstr "<span class=\"o_stat_text\">Entregas parciales</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -292,7 +292,7 @@ msgstr "<span class=\"o_stat_text\">Vista general de LdM</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
-msgstr "<span class=\"o_stat_text\">Orden de fabricación secundaria</span>"
+msgstr "<span class=\"o_stat_text\">Orden de fabricación hija</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -313,7 +313,7 @@ msgstr "<span class=\"o_stat_text\">Fabricado</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
-msgstr "<span class=\"o_stat_text\">ETE</span>"
+msgstr "<span class=\"o_stat_text\">OEE</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -1011,39 +1011,39 @@ msgstr "Líneas de la LdM de la LdM referida"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Línea de confirmación de pedidos pendientes"
+msgstr "Línea de confirmación de entregas parciales"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Líneas de confirmación de pedidos pendientes"
+msgstr "Líneas de confirmación de entregas parciales"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO"
-msgstr "Pedidos pendientes para orden de fabricación"
+msgstr "Entregas parciales para orden de fabricación"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr "Pedidos pendientes para órdenes de fabricación"
+msgstr "Entregas parciales para órdenes de fabricación"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
 msgid "Backorder Sequence"
-msgstr "Secuencia de pedido pendiente"
+msgstr "Secuencia de entrega parcial"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
-"Secuencia de pedido pendiente, si es igual a 0 significa que no está "
-"relacionada a un pedido pendiente."
+"Secuencia de entrega parcial, si es igual a 0 significa que no está "
+"relacionada a una entrega parcial."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
@@ -1391,7 +1391,7 @@ msgstr "Elija si imprimir etiquetas de producto o de número de lote/serie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
 msgid "Cleanup Time"
-msgstr "Hora de limpieza"
+msgstr "Tiempo de limpieza"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
@@ -1676,12 +1676,12 @@ msgstr "No se pudo mostrar la hoja de cálculo seleccionada"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
-msgstr "Número de pedidos pendientes vinculados"
+msgstr "Número de entregas parciales vinculadas"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Create Backorder"
-msgstr "Crear pedido pendiente"
+msgstr "Crear entrega parcial"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
@@ -1692,7 +1692,7 @@ msgstr "Crear nuevos números de lotes/serie para componentes"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Crear un pedido pendiente"
+msgstr "Crear una entrega parcial"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1700,8 +1700,8 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
-"Cree un pedido pendiente si espera procesar los productos restantes más "
-"tarde. No cree un pedido pendiente si no procesará los productos restantes."
+"Cree una entrega parcial si espera procesar los productos restantes más "
+"tarde. No cree una entrega parcial si no procesará los productos restantes."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1732,7 +1732,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr "Crear pedido pendiente"
+msgstr "Crear entrega parcial"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2409,8 +2409,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Cantidad pronosticada (calculada como cantidad a la mano - saliente + entrante)\n"
-"En un contexto de una sola ubicación de stock, esto incluye los artículos que se almacenan en esta ubicación o cualquier ubicación secundaria.\n"
-"En un contexto de un solo almacén, esto incluye los artículos que se almacenan en la ubicación de stock de ese almacén o cualquier almacén secundario.\n"
+"En un contexto de una sola ubicación de stock, esto incluye los artículos que se almacenan en esta ubicación o cualquier ubicación hija.\n"
+"En un contexto de un solo almacén, esto incluye los artículos que se almacenan en la ubicación de stock de ese almacén o cualquier almacén hijo.\n"
 "En cualquier otro caso, esto incluye los artículos que se almacenan en cualquier ubicación de stock de tipo 'Interna'."
 
 #. module: mrp
@@ -2428,7 +2428,7 @@ msgstr "Emisión pronosticada"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr "Disponible para usar"
+msgstr "Disponible"
 
 #. module: mrp
 #. odoo-javascript
@@ -3146,7 +3146,7 @@ msgstr "Baja"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr "Pedido pendiente de la orden de fabricación"
+msgstr "Entrega parcial de la orden de fabricación"
 
 #. module: mrp
 #. odoo-javascript
@@ -3617,7 +3617,7 @@ msgstr "Tipo de la siguiente actividad"
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
-msgstr "Sin pedido pendiente"
+msgstr "Sin entrega parcial"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -3665,7 +3665,7 @@ msgstr "No se encontró ninguna orden de desmontaje"
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "No work orders to do!"
-msgstr "¡No hay órdenes de trabajo por realizar!"
+msgstr "¡No hay órdenes de trabajo a realizar!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3732,9 +3732,9 @@ msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
-"Fíjese que el/los producto/s: '%s' está/n aún enlazado/s a listas de "
-"materiales activas, lo que significa que el producto aún podría usarse en "
-"ellas."
+"Tome en cuenta que los productos: \"%s\" siguen vinculados a una lista de "
+"materiales activa, lo que significa que el producto aún se puede utilizar en"
+" ello. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3802,12 +3802,12 @@ msgstr "Número de órdenes de fabricación de origen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr "ETE"
+msgstr "OEE"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee_target
 msgid "OEE Target"
-msgstr "Objetivo de eficiencia general de los equipos"
+msgstr "Objetivo de la OEE"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -3823,7 +3823,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
 msgid "Oee"
-msgstr "ETE"
+msgstr "OEE"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3866,12 +3866,12 @@ msgstr "Operación"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
 msgid "Operation Dependencies"
-msgstr "Dependencias de operación"
+msgstr "Dependencias de operaciones"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
 msgid "Operation To Consume"
-msgstr "Operación para consumir"
+msgstr "Operación a consumir"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
@@ -4289,7 +4289,7 @@ msgstr "Defecto en el proceso"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process manufacturing orders from the barcode application"
-msgstr "Procesar órdenes de fabricación desde la aplicación Código de barras"
+msgstr "Procese órdenes de fabricación desde la aplicación Código de barras"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -5141,7 +5141,7 @@ msgstr "Mostrar aplicar"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__show_backorders
 msgid "Show Backorders"
-msgstr "Mostrar pedidos pendientes"
+msgstr "Mostrar entregas parciales"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
@@ -5184,7 +5184,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr "Mostrar líneas de pedidos pendientes"
+msgstr "Mostrar líneas de entregas parciales"
 
 #. module: mrp
 #. odoo-javascript
@@ -5679,7 +5679,7 @@ msgid ""
 "The quantity already produced awaiting allocation in the backorders chain."
 msgstr ""
 "La cantidad ya producida está en espera de asignación en la cadena de "
-"pedidos pendientes."
+"entregas parciales."
 
 #. module: mrp
 #. odoo-python
@@ -5799,9 +5799,9 @@ msgid ""
 msgstr ""
 "Este campo se utiliza para calcular la duración esperada de una orden de "
 "trabajo en este centro de trabajo. Por ejemplo, si una orden de trabajo "
-"tarda una hora y su factor de eficiencia es del 100%, entonces la duración "
+"tarda una hora y su factor de eficiencia es del 100 %, entonces la duración "
 "esperada será de una hora. Sin embargo, si el factor de eficiencia es del "
-"200%, la duración esperada será de 30 minutos."
+"200 %, la duración esperada será de 30 minutos."
 
 #. module: mrp
 #. odoo-javascript
@@ -5938,7 +5938,7 @@ msgstr "A"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
 msgid "To Backorder"
-msgstr "Para hacer pedido pendiente"
+msgstr "Para hacer entrega parcial"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -6036,7 +6036,7 @@ msgstr "Total de órdenes pendientes"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Total Qty"
-msgstr "Cant. total"
+msgstr "Ctd. total"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_qty
@@ -6323,7 +6323,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
 msgid "Use Operation Dependencies"
-msgstr "Utilizar dependencias de operación"
+msgstr "Utilizar dependencias de operaciones"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
@@ -6675,7 +6675,7 @@ msgstr "Orden de trabajo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
 msgid "Work Order Dependencies"
-msgstr "Dependencias de la orden de trabajo"
+msgstr "Dependencias de orden de trabajo"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -7028,8 +7028,8 @@ msgid ""
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
 "Ingresó menos números de serie que la cantidad a producir.<br/>\n"
-"                        Cree un pedido pendiente si espera procesar las cantidades restantes más tarde<br/>\n"
-"                        No cree un pedido pendiente si no procesará los productos restantes"
+"                        Cree una entrega parcial si espera procesar las cantidades restantes más tarde<br/>\n"
+"                        No cree una entrega parcial si no procesará los productos restantes"
 
 #. module: mrp
 #. odoo-python

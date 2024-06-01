@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Carolina Fernández, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
@@ -215,7 +214,7 @@ msgid ""
 "                    Order Again"
 msgstr ""
 "<i class=\"fa fa-rotate-right me-1\"/>\n"
-"                    Ordene de nuevo"
+"                    Pedir de nuevo"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -392,7 +391,7 @@ msgstr "<span class=\"visually-hidden\">filtros activos</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr "Pedido"
+msgstr "<span>Pedido</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
@@ -546,8 +545,8 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Una descripción del producto que quiera comunicar a sus clientes. Esta "
-"descripción se copiará a cada pedido de venta/entrega y factura/factura "
-"rectificativa del cliente."
+"descripción se copiará a cada pedido de venta, orden de entrega y "
+"factura/factura rectificativa del cliente."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -1315,7 +1314,7 @@ msgstr "Calcule los gastos de envío y envíe con bpost"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr "Calcular los gastos de envío en pedidos"
+msgstr "Calcule los gastos de envío en pedidos"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
@@ -1723,8 +1722,8 @@ msgstr ""
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"No tiene acceso, saltar esta información para el email de resumen del "
-"usuario"
+"No tiene acceso, omita esta información para el resumen del correo "
+"electrónico del usuario"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1828,7 +1827,7 @@ msgstr "Editar"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Edit the price of this product by clicking on the amount."
-msgstr "Edite el precio de este producto pulsando en el importe."
+msgstr "Haga clic en el importe para editar el precio del producto."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -1948,7 +1947,7 @@ msgstr "Rellenar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Fill in your address"
-msgstr "Completa tu dirección"
+msgstr "Complete su dirección"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
@@ -2391,7 +2390,7 @@ msgstr "Visualización de línea de impuestos subtotales"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
 msgid "Linked Order Line"
-msgstr "Línea de pedido de venta relacionada"
+msgstr "Línea de pedido relacionado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
@@ -2402,7 +2401,7 @@ msgstr "Lista"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Magnifier on hover"
-msgstr "Lupa al pasar el mouse"
+msgstr "Lupa al pasar el cursor"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2431,14 +2430,14 @@ msgid ""
 "Manage pricelists to apply specific prices per country, customer, products, "
 "etc"
 msgstr ""
-"Administre listas de precios para aplicar precios específicos por país, "
+"Gestione listas de precio para aplicar precios específicos por país, "
 "cliente, productos, etc."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__mandatory
 msgid "Mandatory (no guest checkout)"
-msgstr "Obligatorio (sin salida de invitado)"
+msgstr "Obligatorio (no se puede pagar como invitado)"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
@@ -2583,7 +2582,7 @@ msgstr "No hay productos definidos en esta categoría."
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
-msgstr "Aún no hay vistas del producto para este visitante"
+msgstr "Este visitante no ha visto ningún producto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2608,15 +2607,15 @@ msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
-"No hay un método de envío disponible para su pedido y dirección de envío. "
-"Por favor, contáctese con nosotros para más información."
+"No hay un método de envío disponible para su orden y dirección de envío. "
+"Contáctenos para recibir más información."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "No shipping method is selected."
-msgstr ""
+msgstr "No se ha seleccionado ningún método de envío."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
@@ -2627,7 +2626,7 @@ msgstr "Ninguno"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
 msgid "Not Published"
-msgstr "Sin publicar"
+msgstr "No publicado"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2820,7 +2819,7 @@ msgstr "Categoría padre"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_path
 msgid "Parent Path"
-msgstr "Ruta principal"
+msgstr "Ruta padre"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parents_and_self
@@ -2918,7 +2917,7 @@ msgstr "Retrato (4/5)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Position"
-msgstr "Cargo"
+msgstr "Posición"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
@@ -2998,7 +2997,7 @@ msgstr "Imprimir"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
-msgstr "Procesar el pedido una vez que se reciba el pago."
+msgstr "Procese el pedido una vez que se reciba el pago."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3109,7 +3108,7 @@ msgstr "Categorías publicas del producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Reference Price"
-msgstr "Precio Referencia del Producto"
+msgstr "Precio de referencia del producto"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -3291,7 +3290,7 @@ msgstr "Calificación"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Texto de calificación promedio"
+msgstr "Texto de calificación media"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
@@ -3333,7 +3332,7 @@ msgstr "Calificaciones"
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Re-Order"
-msgstr "Volver a ordenar"
+msgstr "Volver a pedir"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3345,7 +3344,7 @@ msgstr "Reordenar"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_enabled_portal_reorder_button
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_portal_reorder_button
 msgid "Re-order From Portal"
-msgstr "Reordenar desde el portal"
+msgstr "Volver a pedir del portal"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
@@ -3414,7 +3413,7 @@ msgstr "Reemplazar"
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict publishing to this website."
-msgstr "Restringir publicar a este sitio web."
+msgstr "Restrinja la publicación en este sitio web."
 
 #. module: website_sale
 #. odoo-python
@@ -3603,7 +3602,7 @@ msgstr "Enviar después"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
 msgid "Send a Cart Recovery Email"
-msgstr "Enviar un correo electrónico de recuperación de carro"
+msgstr "Enviar un correo electrónico de recuperación de cesta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_view_form_cart_recovery
@@ -4051,8 +4050,8 @@ msgid ""
 "categories."
 msgstr ""
 "El producto estará disponible en cada categoría de comercio electrónico "
-"mencionada. Vaya a Tienda > Editar Haga clic en la página y habilite "
-"'Categorías' para ver todas las categorías de comercio electrónico."
+"mencionada. Vaya a tienda > Editar, haga clic en la página y habilite "
+"\"Categorías\" para ver todas las categorías del comercio electrónico."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -4081,7 +4080,7 @@ msgstr "No hay un pedido confirmado de este sitio web."
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr "No hay un pedido sin pagar en este sitio web aún "
+msgstr "No hay un pedido no pagado en este sitio web aún "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -4228,14 +4227,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
-msgstr "Impagada"
+msgstr "No pagado"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_unpaid_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_unpaid_quotation_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 msgid "Unpaid Orders"
-msgstr "Pedidos sin pagar"
+msgstr "Pedidos no pagados"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item

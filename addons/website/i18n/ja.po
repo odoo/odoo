@@ -57,13 +57,15 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any"
 " custom page."
 msgstr ""
+"\"次へのURL\"に \"/\"を設定することはできません。ホームページの内容を変更するには、ウェブサイト設定の\"ホームページURL\" "
+"フィールド、またはカスタムページのページプロパティを使用します。"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" cannot be set to an existing page."
-msgstr ""
+msgstr "\"次へのURL\"に既存のページを設定することはできません。"
 
 #. module: website
 #. odoo-python
@@ -5906,6 +5908,13 @@ msgid "Hide For"
 msgstr "次のものに非表示: "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
 msgstr "このページを検索結果から非表示"
@@ -10246,6 +10255,13 @@ msgstr "reCaptchaポリシーを表示"
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
 msgstr "サイトマップを表示"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options

@@ -199,7 +199,7 @@ msgstr ""
 "            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
 "        por valor de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span>\n"
-"        de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>. \n"
+"        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
 "            La recepción se espera para <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
@@ -251,7 +251,7 @@ msgstr ""
 "        <t t-if=\"object.partner_ref\">\n"
 "            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        de <t t-out=\"object.company_id.name or ''\">SuEmpresa</t>.\n"
+"        de <t t-out=\"object.company_id.name or ''\">SuCompañía</t>.\n"
 "        <br><br>\n"
 "        Si tiene preguntas no dude en contactarnos.\n"
 "        <br><br>\n"
@@ -341,7 +341,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Pedido de compra #</span>\n"
+"<span class=\"d-none d-md-inline\">Pedido de compra nº </span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: purchase
@@ -468,7 +468,7 @@ msgstr "<strong>Representante de compra:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
-msgstr "<strong>Cant.</strong>"
+msgstr "<strong>Ctd.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -824,7 +824,7 @@ msgstr "Facturado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
 msgid "Billed Qty"
-msgstr "Cant. facturada"
+msgstr "Ctd. facturada"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1564,7 +1564,7 @@ msgstr "Facturas manuales"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_manual
 msgid "Manual Received Qty"
-msgstr "Cant. recibida manual"
+msgstr "Ctd. recibida manual"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
@@ -2285,7 +2285,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
 msgid "Qty Billed"
-msgstr "Cant. facturada"
+msgstr "Ctd. facturada"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
@@ -2295,12 +2295,12 @@ msgstr "Ctd. pedida"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
 msgid "Qty Received"
-msgstr "Cant. recibida"
+msgstr "Ctd. recibida"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
-msgstr "Cant. a facturar"
+msgstr "Ctd. a facturar"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2398,7 +2398,7 @@ msgstr "Recibido"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
 msgid "Received Qty"
-msgstr "Cant. recibida"
+msgstr "Ctd. recibida"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method

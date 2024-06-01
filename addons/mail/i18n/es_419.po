@@ -7,6 +7,7 @@
 # Lucia Pacheco, 2024
 # Wil Odoo, 2024
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Martin Trigaux, 2024
 # Fernanda Alvarez, 2024
 # 
 msgid ""
@@ -577,8 +578,8 @@ msgid ""
 "A valid Google API key is required to enable message translation. "
 "https://cloud.google.com/translate/docs/setup"
 msgstr ""
-"Se requiere una clave API de Google válida para habilitar la traducción de "
-"mensajes. https://cloud.google.com/translate/docs/setup"
+"Necesita una clave API de Google válida para habilitar la traducción de "
+"mensajes. https://cloud.google.com/translate/docs/setup?hl=es-419"
 
 #. module: mail
 #. odoo-javascript
@@ -1958,7 +1959,7 @@ msgstr "Chats"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Check Exclusion List"
-msgstr "Verificar lista de ejecución"
+msgstr "Verificar lista de exclusión"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -3675,11 +3676,9 @@ msgstr "Campo"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"El campo \"(field)r en el modelo %(model)r debe ser del tipo Many2one y "
-"tener tracking=True para el cálculo de la duración."
 
 #. module: mail
 #. odoo-python
@@ -4416,8 +4415,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan error de entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -4470,8 +4468,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si se establece, este contenido se enviará automáticamente a usuarios no "
-"autorizados en lugar del mensaje predeterminado."
+"Si se establece, este contenido se enviará en automático a los usuarios no "
+"autorizados en vez del mensaje predeterminado."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -6809,7 +6807,7 @@ msgstr "Abrir en Conversaciones"
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no compatible"
+msgstr "Operación incompatible"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
@@ -9368,7 +9366,7 @@ msgid ""
 msgstr ""
 "Este campo se utiliza para buscar en la dirección de correo electrónico, ya "
 "que el campo de correo electrónico principal puede contener más de una "
-"dirección de correo electrónico."
+"dirección."
 
 #. module: mail
 #. odoo-python

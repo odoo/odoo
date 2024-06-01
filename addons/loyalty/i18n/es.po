@@ -450,7 +450,7 @@ msgstr ""
 "            Enhorabuena <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br>\n"
 "        </t>\n"
 "\n"
-"        Esta es la recompensa de <t t-out=\"object.program_id.company_id.name or ''\">SuEmpresa</t>.<br>\n"
+"        Esta es la recompensa de <t t-out=\"object.program_id.company_id.name or ''\">SuCompañía</t>.<br>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
@@ -1487,7 +1487,7 @@ msgstr "Productos múltiples"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Next Order Coupon"
-msgstr "Cupón de la próxima orden "
+msgstr "Cupón del próximo pedido"
 
 #. module: loyalty
 #. odoo-python
@@ -1738,7 +1738,7 @@ msgstr "Dominio del producto de recompensa"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr "Cant. de productos de recompensa"
+msgstr "Ctd. de productos de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id

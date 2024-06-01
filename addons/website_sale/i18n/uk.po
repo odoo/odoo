@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2023
 # Wil Odoo, 2024
+# Kseina Tyshchenko, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
@@ -163,6 +164,8 @@ msgid ""
 "<i class=\"fa fa-bolt me-2\"/>\n"
 "                Buy now"
 msgstr ""
+"<i class=\"fa fa-bolt me-2\"/>\n"
+"                Купити зараз"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
@@ -199,7 +202,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-print me-2\"/>Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-2\"/>Друкувати"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_re_order_btn
@@ -1309,7 +1312,7 @@ msgstr "Підтвердити замовлення"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm order"
-msgstr ""
+msgstr "Підтвердити замовлення"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1629,7 +1632,7 @@ msgstr "Відмінити"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Discount code..."
-msgstr ""
+msgstr "Код знижки..."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1749,7 +1752,7 @@ msgstr "Додаткова інформація E-Commerce на картці т�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
 msgid "E-commerce"
-msgstr ""
+msgstr "Електронна комерція"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1865,7 +1868,7 @@ msgstr "Медіа додаткових варіантів"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "Extra info"
-msgstr ""
+msgstr "Додаткова інформація"
 
 #. module: website_sale
 #. odoo-python
@@ -1939,7 +1942,7 @@ msgstr "З веб-сайту"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Full name"
-msgstr ""
+msgstr "Повна назва"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
@@ -2377,6 +2380,8 @@ msgstr "Головне зображення"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
 msgstr ""
+"Керуйте акціями, купонами, картками лояльності, подарунковими картками та "
+"електронним гаманцем"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2565,6 +2570,13 @@ msgstr ""
 "Будь ласка, зв’яжіться з нами для отримання детальної інформації."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
@@ -2739,7 +2751,7 @@ msgstr "Рядки замовлення відображені на веб-са�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order overview"
-msgstr ""
+msgstr "Огляд замовлення"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -2795,7 +2807,7 @@ msgstr "Оплата"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Payment Information"
-msgstr ""
+msgstr "Інформація про оплату"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
@@ -3277,7 +3289,7 @@ msgstr "Оцінювання"
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Re-Order"
-msgstr ""
+msgstr "Дозамовлення"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3372,7 +3384,7 @@ msgstr "Пдсумувати замовлення"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Return to shipping"
-msgstr ""
+msgstr "Повернутися до доставки"
 
 #. module: website_sale
 #. odoo-python
@@ -3494,7 +3506,7 @@ msgstr "Зразок"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Save address"
-msgstr ""
+msgstr "Зберегти адресу"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3687,7 +3699,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
 msgid "Show on product page"
-msgstr ""
+msgstr "Показати на сторінці товару"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3838,7 +3850,7 @@ msgstr "Запропоновані аксесуари"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested accessories"
-msgstr ""
+msgstr "Запропоновані аксесуари"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -4241,7 +4253,7 @@ msgstr "Переглянути товару"
 #: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
 #, python-format
 msgid "View cart"
-msgstr ""
+msgstr "Переглянути кошик"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
@@ -4675,7 +4687,7 @@ msgstr "або"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "remove"
-msgstr ""
+msgstr "вилучити"
 
 #. module: website_sale
 #. odoo-javascript

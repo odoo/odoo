@@ -438,7 +438,7 @@ msgstr ""
 "        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
 "        Su pedido <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10,00 €</span>\n"
 "        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
-"            ha sido confirmada.<br>\n"
+"            ha sido confirmado.<br>\n"
 "            ¡Agradecemos su confianza!\n"
 "        </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
@@ -651,7 +651,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'presupuesto' if object.state in ('draft', 'sent') else 'pedido'\"></t>\n"
 "        Hola,\n"
 "        <br><br>\n"
 "        Su\n"
@@ -807,7 +807,7 @@ msgstr "<small class=\"text-muted\">Su contacto</small>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr "<small><b class=\"text-muted\">Precio original</b></small>"
+msgstr "<small><b class=\"text-muted\">Su ventaja </b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -997,7 +997,7 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
-"Se emite una factura estándar con todas las líneas de pedido listas para la "
+"Se emite una factura estándar con todas las líneas de pedido listos para la "
 "facturación, de acuerdo con su política de facturación (basada en la "
 "cantidad pedida o entregada)."
 
@@ -1065,7 +1065,7 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
-"  - Manual: la cantidad se establece de forma manual en la línea\n"
+"  - Manual: la cantidad se establece manualmente en la línea\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
 "  - Hojas de asistencia: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
@@ -1144,7 +1144,7 @@ msgstr "Agregar una sección"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr "Añadir varias variantes a un pedido desde una matriz"
+msgstr "Agregue varias variantes a un pedido desde una cuadrícula"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__allowed_so_line_ids
@@ -1801,7 +1801,7 @@ msgstr "Moneda"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr "Tasa monetaria"
+msgstr "Tipo de cambio"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
@@ -1941,7 +1941,7 @@ msgstr "Producto por defecto utilizado para los descuentos"
 #: model:ir.model.fields,help:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,help:sale.field_res_config_settings__deposit_default_product_id
 msgid "Default product used for down payments"
-msgstr "Producto por defecto utilizado para los anticipos."
+msgstr "Producto por defecto utilizado para los anticipos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2016,13 +2016,13 @@ msgstr ""
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr "Adelanto"
+msgstr "Depósito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_down_payment_product_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Producto para adelanto"
+msgstr "Producto de depósito"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -2543,7 +2543,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr "Importar órdenes de Amazon y sincronizar entregas"
+msgstr "Importa pedidos de Amazon y sincroniza entregas"
 
 #. module: sale
 #. odoo-python
@@ -2742,7 +2742,7 @@ msgstr "Política de facturación"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr "Meta de Facturación"
+msgstr "Objetivo de facturación"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3329,7 +3329,7 @@ msgstr "Confirmación del pedido"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr "Nº de pedidos"
+msgstr "Número de pedidos"
 
 #. module: sale
 #. odoo-python
@@ -3456,7 +3456,7 @@ msgstr "Creador de presupuesto en PDF"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr "Token de identidad PDT(Payment Data Transfer)"
+msgstr "Token de identidad PDT (Payment Data Transfer)"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -3476,7 +3476,7 @@ msgstr "Cantidad de empaquetado"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "Advertencia de crédito del partner"
+msgstr "Advertencia de crédito del contacto"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3593,7 +3593,7 @@ msgstr "Vista previa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Precio reducido sin IVA"
+msgstr "Precio reducido con impuestos excluidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -3760,17 +3760,17 @@ msgstr "Productos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Qty"
-msgstr "Cant."
+msgstr "Ctd."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr "Cant. entregada"
+msgstr "Ctd. entregada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "Cant. facturada"
+msgstr "Ctd. facturada"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
@@ -3780,12 +3780,12 @@ msgstr "Ctd. pedida"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Cant. a entregar"
+msgstr "Ctd. a entregar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "Cant. a facturar"
+msgstr "Ctd. a facturar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3937,7 +3937,7 @@ msgstr "Destinatarios"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr "Vuelva a calcular todos los precios según esta tarifa"
+msgstr "Volver a calcular todos los precios según esta lista de precios"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3954,8 +3954,7 @@ msgstr "Referencia"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
-"Referencia del documento que generó esta solicitud de pedido de venta."
+msgstr "Referencia del documento que generó esta solicitud de pedido de venta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -4073,7 +4072,7 @@ msgstr "Pedido de venta"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "Nº de pedidos de venta"
+msgstr "Número de pedidos de venta"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
@@ -4083,7 +4082,7 @@ msgstr "Planes de pedido de venta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr "Avisos en los pedidos de venta"
+msgstr "Advertencias en los pedidos de venta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -4093,7 +4092,7 @@ msgstr "Pedidos de venta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr "Nº de pedidos de venta"
+msgstr "Número de pedidos de venta"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
@@ -4113,7 +4112,7 @@ msgstr "Advertencias de venta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Venta incorporando método de pago seleccionado"
+msgstr "Método de pago seleccionado para incorporación de ventas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
@@ -4302,12 +4301,12 @@ msgstr "Precio de venta"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr "Ventas: Cancelación de pedido"
+msgstr "Ventas: cancelación de pedido"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr "Ventas: Confirmación de pedido"
+msgstr "Ventas: confirmación de pedido"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
@@ -4411,7 +4410,7 @@ msgstr "Venda y compre productos en diferentes unidades de medida"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr "Vender productos por múltiplo de nº de unidades por empaquetado"
+msgstr "Vender productos en múltiples unidades por paquete"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4427,13 +4426,13 @@ msgstr "Enviar factura PROFORMA"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
 msgstr ""
-"Enviar un correo electrónico específico del producto una vez que se pague la"
-" factura"
+"Enviar un correo electrónico específico para el producto una vez que se "
+"valide la factura"
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sample_quotation
 msgid "Send a quotation to test the customer portal."
-msgstr "Enviar un presupuesto para probar el portal del cliente."
+msgstr "Envíe un presupuesto para probar el portal del cliente."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -4489,7 +4488,7 @@ msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
 msgstr ""
-"Se envía a los clientes cuando se recibe un pago pero no confirma su pedido "
+"Enviado a los clientes cuando se recibe un pago pero no confirma su pedido "
 "de inmediato"
 
 #. module: sale
@@ -4590,7 +4589,7 @@ msgstr "Firmada por"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr "Firmado"
+msgstr "Firmado el"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4779,8 +4778,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
-"Cuéntenos por favor por qué rechaza este presupuesto. Nos ayudará a mejorar "
-"en un futuro."
+"Cuéntenos por qué rechaza este presupuesto. Nos ayudará a mejorar nuestro "
+"servicio."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -4905,9 +4904,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"No se pueden limitar los siguientes productos a su empresa %s porque ya se han utilizado en presupuestos o pedidos de venta en otra empresa:\n"
+"No se pueden limitar los siguientes productos a su compañía %s porque ya se han utilizado en presupuestos o pedidos de venta en otra compañía:\n"
 "%s\n"
-"Puede archivar estos productos y volver a crearlos con la especificación de limitarlos para su empresa, o dejarlos como productos compartidos."
+"Puede archivar estos productos y volver a crearlos con la especificación de limitarlos para su compañía, o dejarlos como productos compartidos."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5002,8 +5001,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"El producto usado para facturar un adelanto de pago debe de ser de tipo "
-"'Servicio'. Por favor use otro producto o actualice éste."
+"El producto usado para facturar un anticipo de pago debe de ser de tipo "
+"'Servicio'. Use otro producto o actualice este."
 
 #. module: sale
 #. odoo-python
@@ -5470,7 +5469,7 @@ msgstr "Visible en"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr "Transacción vacía"
+msgstr "Anluar transacción"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
@@ -5508,7 +5507,7 @@ msgstr "Advertencia de cambio de la empresa del presupuesto"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr "Aviso en el pedido de venta"
+msgstr "Advertencia en el pedido de venta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -5555,7 +5554,7 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
-"Puede seleccionar todos las pedidos y facturarlos juntos,<br>\n"
+"Puede seleccionar todos los pedidos y facturarlos juntos,<br>\n"
 "                o revisar cada pedido y facturar uno por uno."
 
 #. module: sale
@@ -5748,5 +5747,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.type_name }} Cancelada (Ref {{ "
+"{{ object.company_id.name }} {{ object.type_name }} Cancelado (Ref {{ "
 "object.name or 'n/a' }})"

@@ -258,7 +258,7 @@ msgstr "<span>Variante </span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "<strong>Qty: </strong>"
-msgstr "<strong>Cant.: </strong>"
+msgstr "<strong>Ctd.: </strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -276,9 +276,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
-"<strong>Advertencia</strong>: agregar o quitar atributos borrará\n"
-"                        y recreará las variantes existentes y llevará a la\n"
-"                        perdida de sus posibles personalizaciones."
+"<strong>Advertencia</strong>: agregar o quitar atributos eliminará\n"
+"                        y recreará las variantes existentes, esto hará que pierda\n"
+"                        sus personalizaciones (si tiene)."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
@@ -513,7 +513,7 @@ msgstr "Archivado"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr "Asigna la prioridad a la lista de productos de proveedor"
+msgstr "Asigna la prioridad a la lista de proveedor de productos."
 
 #. module: product
 #. odoo-javascript
@@ -723,7 +723,7 @@ msgstr "Suma de verificación/SHA1"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
-msgstr "Categorías secundarias"
+msgstr "Categorías hijas"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
@@ -852,8 +852,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
-"Los consumibles son productos físicos para los que no maneja el inventario: "
-"siempre están disponibles."
+"Los consumibles son productos físicos para los que no gestiona el "
+"inventario: siempre están disponibles."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1277,7 +1277,7 @@ msgstr "Editar"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
 msgid "End Date"
-msgstr "Fecha final"
+msgstr "Fecha de finalización"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
@@ -1317,7 +1317,7 @@ msgstr "Contenido adicional"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Extra Fee"
-msgstr "Tarifa extra"
+msgstr "Tarifa adicional"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1326,7 +1326,7 @@ msgid ""
 " price extra, 1000 + 200 = 1200."
 msgstr ""
 "Precio adicional para la variante con este valor de atributo en el precio de"
-" venta. p.ej. 200 precio extra, 1000 + 200 = 1200."
+" venta. p. ej. 200 precio extra, 1000 + 200 = 1200."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__priority
@@ -1395,12 +1395,12 @@ msgid ""
 "Expressed in the default unit of measure of the product."
 msgstr ""
 "Para que se aplique la regla, la cantidad comprada/vendida debe ser mayor o igual que la cantidad mínima especificada en este campo. \n"
-"Expresada en la Unidad de Medida por defecto del producto."
+"Expresada en la unidad de medida por defecto del producto."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
-msgstr "Formatear"
+msgstr "Formato"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
@@ -1736,7 +1736,7 @@ msgstr "Escritorio grande"
 #. module: product
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
-msgstr "Gran mesa de reuniones"
+msgstr "Mesa grande para reuniones"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -1917,7 +1917,7 @@ msgid ""
 "Multiple prices: Pricelists with fixed price rules by product,\n"
 "Advanced rules: enables advanced price rules for pricelists."
 msgstr ""
-"Múltiples precios: Listas de precios con reglas de precios fijos por producto,\n"
+"Varios precios: listas de precios con reglas de precios fijos por producto,\n"
 "Reglas avanzadas: permite reglas de precios avanzadas para las listas de precios."
 
 #. module: product
@@ -2120,12 +2120,12 @@ msgstr "Categoría padre"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
 msgid "Parent Path"
-msgstr "Ruta principal"
+msgstr "Ruta padre"
 
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
-msgstr "Cubo de pedal"
+msgstr "Cubo de basura con pedal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
@@ -2213,7 +2213,7 @@ msgstr "Cálculo del precio"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
-msgstr "Descuento precio"
+msgstr "Descuento en el precio"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
@@ -2730,7 +2730,7 @@ msgstr "Cantidad de productos contenidos en el empaquetado."
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr "Radio"
+msgstr "Opción"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
