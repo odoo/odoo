@@ -213,6 +213,11 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (HighlightOptionEl) {
             HighlightOptionEl.dataset.textSelector = HighlightOptionEl.dataset.selector;
         }
+        
+        // TODO remove in master: see snippets.xml
+        $html.find('we-checkbox[data-dependencies="!footer_copyright_opt"]')[0]?.remove();
+        $html.find('[data-name="header_language_selector_none_opt"]')[0]?.remove();
+        $html.find('we-select[data-dependencies="!header_language_selector_none_opt"]')[0]?.removeAttribute("data-dependencies");
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -269,6 +274,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
             }
             onClickSave() {
                 this.props.confirm(this.modalRef, this.state.apiKey);
+                this.props.close();
             }
         };
 

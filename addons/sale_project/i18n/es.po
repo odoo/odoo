@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Carolina Fernández, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -46,14 +48,14 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order Items"
-msgstr "Artículos de la orden de venta de %(name)s"
+msgstr "Elementos del pedido de venta de %(name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Orders"
-msgstr "Órdenes de venta de %(name)s"
+msgstr "Pedidos de venta de %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
@@ -75,7 +77,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            <span class=\"o_stat_value\">0</span> Orden de venta\n"
+"                            <span class=\"o_stat_value\">0</span> Pedido de venta\n"
 "                        </span>\n"
 "                        <span class=\"o_stat_text\">\n"
 "                            Hacer facturable\n"
@@ -89,7 +91,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            Órdenes de venta\n"
+"                            Pedidos de venta\n"
 "                        </span>"
 
 #. module: sale_project
@@ -97,7 +99,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr "<span class=\"o_stat_text\">Orden de venta</span>"
+msgstr "<span class=\"o_stat_text\">Pedido de venta</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -161,7 +163,7 @@ msgstr "Crear proyecto"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr "Crear en la orden"
+msgstr "Crear en el pedido"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
@@ -186,7 +188,7 @@ msgstr "Entregado"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr "Mostrar orden de venta"
+msgstr "Mostrar pedido de venta"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__display_sales_stat_buttons
@@ -225,12 +227,12 @@ msgstr "Tarea generada"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr "Tiene orden de venta para facturar"
+msgstr "Tiene pedido de venta para facturar"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
 msgid "Has a SO with an invoice status of No"
-msgstr "Tiene una orden de venta con un estado de nada a facturar"
+msgstr "Tiene un pedido de venta con un estado de nada a facturar"
 
 #. module: sale_project
 #. odoo-python
@@ -261,7 +263,7 @@ msgid ""
 "spent."
 msgstr ""
 "Facture las cantidades pedidas en cuanto se venda este servicio, y cree un "
-"proyecto para la orden con una tarea para cada línea de la orden de venta "
+"proyecto para el pedido con una tarea para cada línea del pedido de venta "
 "con el fin de llevar un seguimiento del tiempo dedicado."
 
 #. module: sale_project
@@ -285,8 +287,8 @@ msgid ""
 "project for the order to track the time spent."
 msgstr ""
 "Facture las cantidades pedidas en cuanto se venda este servicio, y cree un "
-"proyecto vacío para la orden con el fin de llevar un seguimiento del tiempo "
-"dedicado."
+"proyecto vacío para el pedido con el fin de llevar un seguimiento del tiempo"
+" dedicado."
 
 #. module: sale_project
 #. odoo-python
@@ -309,9 +311,9 @@ msgid ""
 "sales order line to track the time spent."
 msgstr ""
 "Facture este servicio en cuanto se entregue (establezca la cantidad de forma"
-" manual en las líneas de su pedido de venta). Cree un proyecto para la orden"
-" con una tarea para cada línea de la pedido de venta con el fin de llevar un"
-" seguimiento del tiempo dedicado."
+" manual en las líneas de su pedido de venta). Cree un proyecto para el "
+"pedido con una tarea para cada línea de la pedido de venta con el fin de "
+"llevar un seguimiento del tiempo dedicado."
 
 #. module: sale_project
 #. odoo-python
@@ -336,8 +338,8 @@ msgid ""
 "spent."
 msgstr ""
 "Facture este servicio en cuanto se entregue (establezca la cantidad de forma"
-" manual en las líneas de su pedido de venta). Cree un proyecto vacío para la"
-" orden con el fin de llevar un seguimiento del tiempo dedicado."
+" manual en las líneas de su pedido de venta). Cree un proyecto vacío para el"
+" pedido con el fin de llevar un seguimiento del tiempo dedicado."
 
 #. module: sale_project
 #. odoo-python
@@ -354,7 +356,7 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
-"Facture sus hitos cuando los alcance, y cree un proyecto para la orden con "
+"Facture sus hitos cuando los alcance, y cree un proyecto para el pedido con "
 "una tarea para cada línea del pedido de venta con el fin de llevar un "
 "seguimiento del tiempo dedicado."
 
@@ -377,8 +379,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
 msgstr ""
-"Facture sus hitos cuando los alcance, y cree un proyecto vacío para la orden"
-" con el fin de llevar un seguimiento del tiempo dedicado."
+"Facture sus hitos cuando los alcance, y cree un proyecto vacío para el "
+"pedido con el fin de llevar un seguimiento del tiempo dedicado."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
@@ -433,7 +435,7 @@ msgid ""
 msgstr ""
 "Establezca manualmente las cantidades en el pedido: la factura se basa en la cantidad ingresada manualmente, sin crear una cuenta analítica.\n"
 "Hojas de asistencia en el contrato: la factura se basa en las horas registradas en la hoja de tiempo relacionada.\n"
-"Cree una tarea y realice un seguimiento de las horas: cree una tarea en la validación de la orden de venta y realice un seguimiento de las horas de trabajo."
+"Cree una tarea y realice un seguimiento de las horas: cree una tarea en la validación del pedido de venta y realice un seguimiento de las horas de trabajo."
 
 #. module: sale_project
 #. odoo-python
@@ -466,12 +468,12 @@ msgstr "Hitos"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New Sales Order Item"
-msgstr "Nuevo artículo en la orden de venta"
+msgstr "Nuevo elemento de pedido de venta"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order"
-msgstr "Sin orden de venta"
+msgstr "Sin pedido de venta"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -502,8 +504,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
-"Desde la confirmación de la orden de venta, este producto puede crear un proyecto y/o una tarea, de los cuales puede hacer un seguimiento del servicio que está vendiendo.\n"
-"         'En el proyecto de la orden de venta': Se utilizará la configuración de la orden de venta, si se ha definido, o creará un nuevo proyecto basado en la plantilla seleccionada."
+"Desde la confirmación del pedido de venta, este producto puede crear un proyecto y/o una tarea, de los cuales puede hacer un seguimiento del servicio que está vendiendo.\n"
+"         'En el proyecto del pedido de venta': Se utilizará la configuración del pedido de venta, si se ha definido, o creará un nuevo proyecto basado en la plantilla seleccionada."
 
 #. module: sale_project
 #. odoo-python
@@ -525,7 +527,7 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
-"Porcentaje de la cantidad de la orden que se entregará automáticamente una "
+"Porcentaje de la cantidad del pedido que se entregará automáticamente una "
 "vez que se alcance el hito."
 
 #. module: sale_project
@@ -578,7 +580,7 @@ msgstr "Plantilla de proyecto"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr "Orden de venta del proyecto"
+msgstr "Pedido de venta del proyecto"
 
 #. module: sale_project
 #. odoo-python
@@ -592,7 +594,7 @@ msgstr "Proyectos"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr "Proyectos utilizados en esta orden de venta."
+msgstr "Proyectos utilizados en este pedido de venta."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
@@ -623,12 +625,12 @@ msgstr "Nombre mostrado en la línea de venta"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr "Número de órdenes de venta"
+msgstr "Nº de pedidos de venta"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_line_count
 msgid "Sale Order Line Count"
-msgstr "Número de la línea de orden de venta "
+msgstr "Nº de líneas de pedido de venta "
 
 #. module: sale_project
 #. odoo-javascript
@@ -653,7 +655,7 @@ msgstr "Ventas y facturación"
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #, python-format
 msgid "Sales Order"
-msgstr "Orden de venta"
+msgstr "Pedido de venta"
 
 #. module: sale_project
 #. odoo-python
@@ -666,13 +668,13 @@ msgstr "Orden de venta"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order Item"
-msgstr "Artículo de la orden de venta"
+msgstr "Elemento del pedido de venta"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
-"Artículo en la orden de venta que se actualizará una vez que se alcance el "
+"Elemento del pedido de venta que se actualizará una vez que se alcance el "
 "hito."
 
 #. module: sale_project
@@ -682,9 +684,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
-"Artículo de la orden de venta en el que agregará el tiempo dedicado para ser facturado al cliente.\n"
-"Por defecto, se seleccionará el artículo de la orden de venta establecido en el proyecto. Si no hay uno establecido, se utilizará el último artículo de la orden de venta prepagado que tenga tiempo restante.\n"
-"Elimine el artículo de la orden de venta para hacer que esta tarea sea no facturable. También puede cambiar o eliminar individualmente el artículo de la orden de venta de cada entrada de hoja de asistencia."
+"Elemento del pedido de venta en el que agregará el tiempo dedicado para ser facturado al cliente.\n"
+"Por defecto, se seleccionará el elemento del pedido venta establecido en el proyecto. Si no hay uno establecido, se utilizará el último elemento del pedido de venta prepagado que tenga tiempo restante.\n"
+"Elimine el elemento del pedido de venta para hacer que esta tarea sea no facturable. También puede cambiar o eliminar individualmente el elemento del pedido de venta de cada entrada de hoja de asistencia."
 
 #. module: sale_project
 #. odoo-python
@@ -694,19 +696,19 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sales Order Items"
-msgstr "Artículos de la orden de venta"
+msgstr "Elementos del pedido de venta"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Línea de orden de venta"
+msgstr "Línea de pedido de venta"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
-msgstr "Órdenes de venta"
+msgstr "Pedidos de venta"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -714,19 +716,19 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
-"Artículo de orden de venta que se seleccionará por defecto en las tareas y hojas de asistencia de este proyecto, excepto si el empleado establecido en las hojas de asistencia está explícitamente vinculado a otro artículo de orden de venta del proyecto.\n"
-"Se puede modificar en cada tarea y entrada de hoja de asistencia si es necesario."
+"Elemento del pedido de venta que se seleccionará por defecto en las tareas y partes de hora de este proyecto, excepto si el empleado establecido en los partes de hora está explícitamente vinculado a otro elemento del pedido de venta del proyecto.\n"
+"Se puede modificar en cada tarea y parte de horas si es necesario."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr "Orden de venta a la que está vinculado el proyecto."
+msgstr "Pedido de venta al que está vinculado el proyecto."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Orden de venta a la que está vinculada la tarea."
+msgstr "Pedido de venta al que está vinculado la tarea."
 
 #. module: sale_project
 #. odoo-python
@@ -740,7 +742,7 @@ msgstr "Buscar en la factura"
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr "Buscar en la orden de venta"
+msgstr "Buscar en el pedido de venta"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -853,7 +855,7 @@ msgstr ""
 #, python-format
 msgid "This Sales Order must contain at least one product of type \"Service\"."
 msgstr ""
-"Esta orden de venta debe contener al menos un producto del tipo "
+"Este pedido de venta debe contener al menos un producto del tipo "
 "\"Servicio\"."
 
 #. module: sale_project
@@ -909,7 +911,7 @@ msgstr "Facturas de proveedor"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr "Ver orden de venta "
+msgstr "Ver pedido de venta "
 
 #. module: sale_project
 #. odoo-python
@@ -919,5 +921,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
-"No puede vincular el artículo de la orden %(order_id)s - %(product_id)s a "
+"No puede vincular el elemento del pedido %(order_id)s - %(product_id)s a "
 "esta tarea porque es un gasto refacturado."

@@ -2,7 +2,7 @@
 
 import ast
 from dateutil.relativedelta import relativedelta
-
+from odoo.exceptions import ValidationError
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -276,6 +276,12 @@ class MaintenanceRequest(models.Model):
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
         # self.write({'active': True, 'stage_id': first_stage_obj.id})
         self.write({'archive': False, 'stage_id': first_stage_obj.id})
+
+    @api.constrains('repeat_interval')
+    def _check_repeat_interval(self):
+        for record in self:
+            if record.repeat_interval < 1:
+                raise ValidationError("Repeat Interval cannot be less than 1.")
 
     @api.depends('company_id', 'equipment_id')
     def _compute_maintenance_team_id(self):

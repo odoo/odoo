@@ -1599,7 +1599,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             {
                 'name': 'Free Product B',
                 'type': 'product',
-                'list_price': 1,
+                'list_price': 5,
                 'available_in_pos': True,
                 'taxes_id': False,
                 'product_tag_ids': [(4, free_product_tag.id)],

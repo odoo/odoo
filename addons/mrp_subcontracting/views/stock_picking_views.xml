@@ -15,6 +15,10 @@
                 <button name="action_show_subcontract_details" string="Subcontracting" type="object" icon="fa-pencil"
                     invisible="not show_subcontracting_details_visible"/>
             </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']//tree" position="inside">
+                <field name="is_subcontract" column_invisible="True"/>
+                <button name="action_show_details" invisible="not is_subcontract" type="object" icon="fa-list" width="0.1" title="Details"/>
+            </xpath>
         </field>
     </record>
 </odoo>

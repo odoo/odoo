@@ -948,7 +948,9 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
      */
     _onCollapseHidden() {
         this.options.wysiwyg?.odooEditor.observerUnactive("removeCollapseClass");
-        this.el.classList.remove('o_top_menu_collapse_shown');
+        if (!this.el.querySelector("#top_menu_collapse_mobile.show")) {
+            this.el.classList.remove('o_top_menu_collapse_shown');
+        }
         this.options.wysiwyg?.odooEditor.observerActive("removeCollapseClass");
     },
     /**

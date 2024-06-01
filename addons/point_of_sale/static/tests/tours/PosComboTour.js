@@ -3,7 +3,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
-import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import * as combo from "@point_of_sale/../tests/tours/helpers/ComboPopupMethods";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
@@ -43,11 +42,17 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
         ...ProductScreen.clickOrderline("Combo Product 8"),
         ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "30.00"),
 
-        // check that you cannot change the quantity of a combo product
+        // check that you can change the quantity of a combo product
         ...ProductScreen.pressNumpad("2"),
-        ...ErrorPopup.clickConfirm(),
+        ...ProductScreen.clickOrderline("Combo Product 3", "2.0"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 3", "2.0", "26.86"),
+        ...ProductScreen.clickOrderline("Combo Product 5", "2.0"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 5", "2.0", "37.34"),
+        ...ProductScreen.clickOrderline("Combo Product 8", "2.0"),
+        ...ProductScreen.selectedOrderlineHas("Combo Product 8", "2.0", "60.00"),
 
         // check that removing a combo product removes all the combo products
+        ...ProductScreen.pressNumpad("⌫"),
         ...ProductScreen.pressNumpad("⌫"),
         ...ProductScreen.orderIsEmpty(),
 

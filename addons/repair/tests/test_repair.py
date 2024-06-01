@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
-from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -685,3 +686,36 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(repair_order.name, "PT1/00002")
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+
+    def test_repair_components_lots_show_in_invoice(self):
+        """
+        Test that the lots of the components of a repair order are shown in the invoice
+        """
+        quant = self.create_quant(self.product_storable_serial, 1)
+        quant.action_apply_inventory()
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'product_uom': self.product_product_3.uom_id.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+            'partner_id': self.res_partner_12.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.product_storable_serial.id,
+                    'product_uom_qty': 1.0,
+                    'state': 'draft',
+                    'repair_line_type': 'add',
+                })
+            ],
+        })
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        repair_order.action_create_sale_order()
+        sale_order = repair_order.sale_order_id
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+        res = invoice._get_invoiced_lot_values()
+        self.assertEqual(len(res), 1, "The invoice should have one line")
+        self.assertEqual(res[0]['product_name'], self.product_storable_serial.display_name, "The product name should be the same")
+        self.assertEqual(res[0]['lot_name'], quant.lot_id.name, "The lot name should be the same")

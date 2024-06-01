@@ -211,7 +211,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
     _setupSizeChangedManagement: function (enable) {
         if (enable === true) {
             this.removeSizeListener = listenSizeChange(this._onSizeChanged.bind(this));
-        } else {
+        } else if (this.removeSizeListener) {
             this.removeSizeListener();
             delete this.removeSizeListener;
         }

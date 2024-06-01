@@ -122,7 +122,11 @@ export class Messaging {
             const partner = persona;
             // todo: need to filter out non-user partners (there was a user key)
             // also, filter out inactive partners
-            if (partner.name && cleanTerm(partner.name).includes(searchTerm)) {
+            if (
+                partner.name &&
+                cleanTerm(partner.name).includes(searchTerm) &&
+                ((partner.active && partner.user) || partner === this.store.odoobot)
+            ) {
                 partners.push(partner);
                 if (partners.length >= limit) {
                     break;

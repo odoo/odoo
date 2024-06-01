@@ -78,7 +78,7 @@ class AccountEdiXmlUBLANZ(models.AbstractModel):
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({
-            'customization_id': 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0',
+            'customization_id': self._get_customization_ids()['ubl_a_nz'],
         })
 
         return vals

@@ -10,6 +10,9 @@
                 <a class="dropdown-item py-2">Switch Floor View</a>
             </li>
         </xpath>
+        <xpath expr="//BackButton" position="before">
+            <span t-if="pos.table?.name" t-esc="pos.table.name" t-attf-style="background-color: {{pos.table.color}};border-radius: 0.25rem;" class="table-name text-white fw-bolder my-2 px-3 d-flex align-items-center" />
+        </xpath>
     </t>
 
 </templates>

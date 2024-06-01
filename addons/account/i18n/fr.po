@@ -7,6 +7,7 @@
 # Jolien De Paepe, 2024
 # Yassine KHATTABI, 2024
 # Wil Odoo, 2024
+# Rémi CAZENAVE, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rémi CAZENAVE, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -535,6 +536,8 @@ msgid ""
 "<br/>\n"
 "                            on this account:"
 msgstr ""
+"<br/>\n"
+"                            sur ce compte :"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2453,6 +2456,8 @@ msgstr "Toutes nos relations contractuelles seront exclusivement régies par "
 #, python-format
 msgid "All selected moves for reversal must belong to the same company."
 msgstr ""
+"Toutes les pièces comptables sélectionnées pour extourne doivent appartenir "
+"à la même société."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -6155,17 +6160,6 @@ msgid "Duplicated Ref"
 msgstr "Réf dupliquée"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Doublon de référence fournisseur détecté. Vous avez probablement saisi deux "
-"fois la même facture/avoir fournisseur."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Rapports dynamiques"
@@ -6282,7 +6276,7 @@ msgstr "Email par défaut"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Domaine de l'email e.g. 'example.com' dans 'odoo@example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6438,7 +6432,7 @@ msgstr "Fonds propres"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "Erreur d'import de la pièce jointe '%s' comme facture (décodeur=%s)"
 
 #. module: account
 #. odoo-python
@@ -10467,13 +10461,6 @@ msgstr "Oups"
 #, python-format
 msgid "Open"
 msgstr "Ouvert"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Ouvrir la liste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -16964,6 +16951,8 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
+"Vous ne pouvez pas enregistrer des paiements pour des pièces comptables "
+"entrantes et sortantes en même temps."
 
 #. module: account
 #. odoo-python
@@ -17088,6 +17077,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Vous ne pouvez pas supprimer cette étiquette de compte (%s), elle est "
+"utilisée dans la définition du plan comptable."
 
 #. module: account
 #. odoo-python
@@ -17109,6 +17100,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Vous ne pouvez pas supprimer ce rapport (%s), il est utilisé par le moteur "
+"de genération des PDF de comptabilité."
 
 #. module: account
 #. odoo-python
@@ -17208,6 +17201,10 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Vous ne pouvez pas importer \"openning_balance\" si la pièce comptable "
+"d'ouverture (%s) est déjà comptabilisée.                 Si vous êtes sûr de"
+" vouloir modifier la balance d'ouverture de vos comptes, remettez la pièce "
+"comptable d'ouverture en brouillon."
 
 #. module: account
 #. odoo-python

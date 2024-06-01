@@ -74,7 +74,7 @@
                                 <strong><span><t t-esc="employee.name"/></span></strong>
                             </div>
                             <ul>
-                                <li><span><t t-esc="employee.job"/></span></li>
+                                <li t-if="employee.job"><span><t t-esc="employee.job"/></span></li>
                             </ul>
                         </div>
                     </div>

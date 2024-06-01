@@ -104,3 +104,11 @@ export function orderBtnIsPresent() {
         },
     ];
 }
+export function tableNameShown(table_name) {
+    return [
+        {
+            content: "Table name is shown",
+            trigger: `.table-name:contains(${table_name})`,
+        },
+    ];
+}
