@@ -147,6 +147,21 @@ class ProductTemplate(models.Model):
         products.invalidate_recordset(['taxes_id', 'supplier_taxes_id'])
         return products
 
+    def _get_list_price(self, price):
+        """ Get the product sales price from a public price based on taxes defined on the product """
+        self.ensure_one()
+        if not self.taxes_id:
+            return self.super._get_list_price(price)
+        computed_price = self.taxes_id.compute_all(price, self.currency_id)
+        total_included = computed_price["total_included"]
+
+        if price == total_included:
+            # Tax is configured as price included
+            return total_included
+        # calculate base from tax
+        included_computed_price = self.taxes_id.with_context(force_price_include=True).compute_all(price, self.currency_id)
+        return included_computed_price['total_excluded']
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
