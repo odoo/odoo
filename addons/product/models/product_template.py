@@ -1489,3 +1489,9 @@ class ProductTemplate(models.Model):
                 'record': acoustic_bloc_screens.product_variant_ids[1],
                 'noupdate': True,
             }])
+
+    def _get_list_price(self, price):
+        """ Get the product sales price from a public price based on taxes defined on the product.
+        To be overridden in accounting module."""
+        self.ensure_one()
+        return price

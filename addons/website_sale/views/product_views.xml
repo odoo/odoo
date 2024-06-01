@@ -167,6 +167,7 @@
                        context="{'search_product_product': True}"
                        invisible="not sale_ok"
                        placeholder="Displayed in bottom of product pages"/>
+                <field name="description_ecommerce" invisible="1" />         <!-- Adding this field as we needed in product_barcodelookup module to store value in this field -->
             </group>
             <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
                 <group string="eCommerce Shop" name="shop" invisible="not sale_ok">
