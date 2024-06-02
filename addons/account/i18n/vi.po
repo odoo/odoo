@@ -51,7 +51,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Nhóm thuế: Thuế là tập hợp của các loại thuế con.\n"
+"    - Nhóm thuế: Thuế là tập hợp của các loại thuế phụ.\n"
 "    - Cố định: Số tiền thuế luôn không đổi dù giá có thay đổi.\n"
 "    - Phần trăm giá: Số tiền thuế được tính theo % giá cả:\n"
 "        VD: 100 * (1 + 10%) = 110 (chưa bao gồm trong giá)\n"
@@ -1424,7 +1424,7 @@ msgstr ""
 #: code:addons/account/models/account_report.py:0
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
-"Một dòng không được chứa cả giá trị con và giá trị theo nhóm (dòng '%s')."
+"Một dòng không được chứa cả giá trị phụ và giá trị theo nhóm (dòng '%s')."
 
 #. module: account
 #. odoo-python
@@ -1616,7 +1616,7 @@ msgstr "Đơn vị tiền tệ tài khoản"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr "Hướng dẫn Trang tổng quan kế toán"
+msgstr "Hướng dẫn Trang chủ kế toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
@@ -1943,7 +1943,7 @@ msgstr "Kế toán"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Trang tổng quan kế toán"
+msgstr "Trang chủ kế toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__accounting_date
@@ -3946,13 +3946,13 @@ msgstr "Séc"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__children_ids
 msgid "Child Lines"
-msgstr "Dòng con"
+msgstr "Dòng phụ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__children_tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Children Taxes"
-msgstr "Thuế con"
+msgstr "Thuế phụ"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_sales_tax
@@ -5116,7 +5116,7 @@ msgstr "XUỐNG"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "Trang tổng quan"
+msgstr "Trang chủ"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
@@ -6429,7 +6429,7 @@ msgstr "Biểu thức"
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_domain_engine_subformula_required
 msgid "Expressions using 'domain' engine should all have a subformula."
 msgstr ""
-"Tất cả các biểu thức sử dụng công cụ 'miền' phải có một công thức con."
+"Tất cả các biểu thức sử dụng công cụ 'miền' phải có một công thức phụ."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__external_formula
@@ -8750,12 +8750,12 @@ msgstr "Tháng 6"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr "Trang tổng quan Kanban"
+msgstr "Trang chủ Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr "Biểu đồ trang tổng quan Kanban"
+msgstr "Biểu đồ trang chủ Kanban"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
@@ -9071,7 +9071,7 @@ msgstr "Dòng"
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
-msgstr "Dòng \"%s\" là cha của chính nó."
+msgstr "Dòng \"%s\" là dòng chính của chính nó."
 
 #. module: account
 #. odoo-python
@@ -9080,8 +9080,8 @@ msgid ""
 "Line \"%s\" defines line \"%s\" as its parent, but appears before it in the "
 "report. The parent must always come first."
 msgstr ""
-"Dòng \"%s\" xác định dòng \"%s\" làm cha của chính nó, nhưng xuất hiện trước"
-" nó trong báo cáo. Cha phải luôn đứng trước."
+"Dòng \"%s\" xác định dòng \"%s\" làm dòng chính của chính nó, nhưng xuất "
+"hiện trước nó trong báo cáo. Dòng chính phải luôn đứng trước."
 
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
@@ -10190,8 +10190,8 @@ msgid ""
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
 "Sau khi cài đặt, thiết lập 'Phí ngân hàng' thành 'Nhập tệp' trong phần cài "
-"đặt tài khoản ngân hàng. Thao tác này sẽ thêm một nút để nhập từ trang tổng "
-"quan Kế toán."
+"đặt tài khoản ngân hàng. Thao tác này sẽ thêm một nút để nhập từ trang chủ "
+"Kế toán."
 
 #. module: account
 #. odoo-javascript
@@ -10642,22 +10642,22 @@ msgstr "Thanh toán chuyển khoản nội bộ kết hợp"
 #: model:ir.model.fields,field_description:account.field_account_group__parent_id
 #: model:ir.model.fields,field_description:account.field_account_root__parent_id
 msgid "Parent"
-msgstr "Cha"
+msgstr "Chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__parent_id
 msgid "Parent Line"
-msgstr "Dòng cha"
+msgstr "Dòng chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
 msgid "Parent Path"
-msgstr "Tuyến cha"
+msgstr "Tuyến chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__report_id
 msgid "Parent Report"
-msgstr "Báo cáo cha"
+msgstr "Báo cáo chính"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12972,7 +12972,7 @@ msgstr "Hiển thị ngày trả góp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Hiển thị sổ nhật ký trên trang tổng quan"
+msgstr "Hiển thị sổ nhật ký trên trang chủ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -13240,7 +13240,7 @@ msgstr "Chuỗi thành mã hash"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__subformula
 msgid "Subformula"
-msgstr "Công thức con"
+msgstr "Công thức phụ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__mail_subject
@@ -15049,7 +15049,7 @@ msgstr "Hóa đơn này đang được gửi trong nền."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
-msgstr "Đây là trang tổng quan kế toán"
+msgstr "Đây là trang chủ kế toán"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_default_credit_limit
@@ -15071,7 +15071,7 @@ msgstr "Sổ nhật ký này không bị hạn chế"
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
 msgstr ""
-"Dòng này và dòng con của nó sẽ bị ẩn khi tất cả các cột của chúng bằng 0."
+"Dòng này và dòng phụ của nó sẽ bị ẩn khi tất cả các cột của chúng bằng 0."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
@@ -15875,7 +15875,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Được sử dụng để sắp xếp sổ nhật kí trong chế độ xem trang tổng quan"
+msgstr "Được sử dụng để sắp xếp sổ nhật kí trong chế độ xem trang chủ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -16254,7 +16254,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Liệu sổ nhật ký có được hiển thị trên trang tổng quan hay không"
+msgstr "Liệu sổ nhật ký có được hiển thị trên trang chủ hay không"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
@@ -16292,7 +16292,7 @@ msgstr "Điền <b>địa chỉ email của bạn</b> vào đây để kiểm th
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "Writeoff Is Exchange Account"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit

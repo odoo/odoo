@@ -181,11 +181,11 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            has been confirmed.\n"
+"            đã được xác nhận.\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, object.amount_total) &lt; 0\">\n"
 "                <br>\n"
 "                <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ 10.00</span>\n"
-"                đã được xác nhận.\n"
+"                vẫn cần được thanh toán.\n"
 "            </t>\n"
 "        </t>\n"
 "        <br><br>\n"
@@ -1066,6 +1066,15 @@ msgstr "Chấp nhận & thanh toán báo giá"
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Sign Quotation"
 msgstr "Chấp nhận & ký báo giá"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"The company is required, please select one before making any other changes "
+"to the sale order."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

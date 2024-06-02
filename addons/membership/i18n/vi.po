@@ -319,6 +319,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Nó cho biết trạng thái thành viên.\n"
+"-Không phải thành viên: Đối tác chưa đăng ký làm thành viên.\n"
+"-Thành viên bị hủy: Thành viên đã hủy tư cách thành viên của mình.\n"
+"-Thành viên cũ: Là thành viên đã hết hạn thành viên.\n"
+"-Thành viên đang chờ: Thành viên đã đăng ký làm thành viên và hóa đơn sẽ được tạo.\n"
+"-Thành viên đã được lập hóa đơn: Là thành viên có hóa đơn đã được tạo.\n"
+"-Thành viên trả phí: Là thành viên đã thanh toán phí thành viên."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__state
@@ -331,6 +338,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Nó cho biết trạng thái thành viên.\n"
+"-Không phải thành viên: Thành viên chưa đăng ký làm thành viên.\n"
+"-Thành viên bị hủy: Thành viên đã hủy tư cách thành viên của mình.\n"
+"-Thành viên cũ: Là thành viên đã hết hạn thành viên.\n"
+"-Thành viên đang chờ: Thành viên đã đăng ký làm thành viên và hóa đơn sẽ được tạo.\n"
+"-Thành viên đã được lập hóa đơn: Là thành viên có hóa đơn đã được tạo.\n"
+"-Thành viên trả phí: Là thành viên đã thanh toán phí thành viên."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date
@@ -340,7 +354,7 @@ msgstr "Ngày tham gia"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 msgid "Join Membership"
-msgstr ""
+msgstr "Tham gia làm thành viên"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
@@ -407,7 +421,7 @@ msgstr "Quản lý thành viên"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Phí thành viên"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -491,7 +505,7 @@ msgstr "Dịch vụ thẻ thành viên"
 #. module: membership
 #: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
 msgid "Membership: update memberships"
-msgstr ""
+msgstr "Thành viên: cập nhật thành viên"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form

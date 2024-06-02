@@ -6,6 +6,7 @@
 # Xia Fajin <xia.fajin@elico-corp.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,21 @@ msgstr "\"来源网址\" 不能为空。"
 #: code:addons/website/models/website_rewrite.py:0
 msgid "\"URL to\" can not be empty."
 msgstr "“链接”不能为空"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr "不能将 “前往网址” 设置为 “/”。若要更改主页内容，请使用网站设置中的“主页网址”字段，或任何自定义页面上的页面属性。"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr "“前往网址” 不可设为现有页面。"
 
 #. module: website
 #. odoo-python
@@ -483,17 +499,17 @@ msgstr "80% 开发"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<b>2015</b>"
-msgstr ""
+msgstr "<b>2015</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<b>2018</b>"
-msgstr ""
+msgstr "<b>2018</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "<b>2019</b>"
-msgstr ""
+msgstr "<b>2019</b>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_call_to_action
@@ -510,7 +526,7 @@ msgstr "<b>添加</b> 选择的图像."
 #. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 msgid "<b>Click Edit</b> dropdown"
-msgstr ""
+msgstr "点击一下<b>编辑</b>下拉菜单"
 
 #. module: website
 #. odoo-javascript
@@ -1796,7 +1812,7 @@ msgstr "添加页面模板"
 msgid ""
 "Add this page to the \"+New\" page templates. It will be added to the "
 "\"Custom\" category."
-msgstr ""
+msgstr "将此页面添加到 “+新建” 页面模板中。它将被添加到 “自定义” 类别中。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -1994,7 +2010,7 @@ msgstr "允许向联系人进行群发邮件活动"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Allows your visitors to chat with you"
-msgstr ""
+msgstr "允许访客与您聊天"
 
 #. module: website
 #. odoo-javascript

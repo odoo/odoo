@@ -185,6 +185,11 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "No se puede cancelar un asiento que ya se envió a PEPPOL"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "No es posible recibir este formato"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Cannot register a user with a %s application"
@@ -682,6 +687,13 @@ msgstr ""
 msgid "The Peppol endpoint identification number is not correct."
 msgstr ""
 "El número de identificación del punto de conexión Peppol no es correcto."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "Es posible que el servicio Peppol que se está usando sea %s."
 
 #. module: account_peppol
 #. odoo-python

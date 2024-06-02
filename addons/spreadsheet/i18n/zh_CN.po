@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Chloe Wang, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:06+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Chloe Wang, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,6 +114,10 @@ msgid ""
 "        (1) Return next greater item if no match. \n"
 "        (2) Wildcard match."
 msgstr ""
+"（0）完全匹配。\n"
+"        （-1）若无符合项目，传回下一个较小的项目。\n"
+"        （1）若无符合项目，传回下一个较大的项目。\n"
+"        （2）万用字元配对。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -370,7 +375,7 @@ msgstr "指定字符串末尾的子字符串。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "A table can only be created on a continuous selection."
-msgstr ""
+msgstr "只能在连续选区上创建表格。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -455,7 +460,7 @@ msgstr "添加任何字符或符号"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Add filters"
-msgstr ""
+msgstr "添加筛选器"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -657,7 +662,7 @@ msgstr "全部"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "All sheets"
-msgstr ""
+msgstr "所有试算表"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -826,7 +831,7 @@ msgstr "图像传输过程中发生意外错误"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "An unexpected error occurred. Submit a support ticket at odoo.com/help."
-msgstr ""
+msgstr "发生意外错误。请在 odoo.com/help 上提交技术支持请求。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1030,7 +1035,7 @@ msgstr "自动"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Automatically autofill formulas"
-msgstr ""
+msgstr "自动填充公式"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2880,7 +2885,7 @@ msgstr "函数 [[FUNCTION_NAME]] 期望值为 %s，但得到的是 %s。"
 msgid ""
 "Function [[FUNCTION_NAME]] expects the parameter '%s' to be a single value "
 "or a single cell reference, not a range."
-msgstr ""
+msgstr "函数 [[FUNCTION_NAME]] 要求参数'%s'是单个值或单个单元格引用，而不是一个范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2888,7 +2893,7 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] invert matrix error, only square matrices are "
 "invertible"
-msgstr ""
+msgstr "函数 [[FUNCTION_NAME]] 逆矩阵错误，只有正方形矩阵可逆"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2980,7 +2985,7 @@ msgstr "获取与数字关联的字符。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gets information about a cell."
-msgstr ""
+msgstr "获取单元格的信息。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3005,7 +3010,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gray"
-msgstr ""
+msgstr "灰色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3017,7 +3022,7 @@ msgstr "大于或等于。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Gridlines"
-msgstr ""
+msgstr "网格线"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3053,7 +3058,7 @@ msgstr "分组行 %s - %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Header row(s)"
-msgstr ""
+msgstr "标题列"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5864,7 +5869,7 @@ msgstr "参数 square_matrix 的列数和行数必须相同。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The arguments array_x and array_y must contain at least one pair of numbers."
-msgstr ""
+msgstr "参数 array_x 和 array_y 必须至少包含一对数字。"
 
 #. module: spreadsheet
 #. odoo-javascript
