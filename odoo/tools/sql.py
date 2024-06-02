@@ -63,6 +63,8 @@ class SQL:
             SQL.identifier(tablename),
             SQL("%s = %s", SQL.identifier(columnname), value),
         )
+        # when the first argument is a SQL node, the result is SQL().join of arguments
+        sql = SQL(SQL("SELECT *"), SQL(" FROM table WHERE x = "), 5)
 
     The combined SQL code is given by ``sql.code``, while the corresponding
     combined parameters are given by the list ``sql.params``. This allows to
@@ -79,64 +81,86 @@ class SQL:
     its value is a field which the SQL code depends on.  The metadata of a
     wrapper and its parts can be accessed by the iterator ``sql.to_flush``.
     """
-    __slots__ = ('__code', '__args', '__to_flush')
+    __slots__ = ('__code', '__params', '__to_flush')
+    __code: str
+    __params: Iterable
+    __to_flush: Iterable[Field]
 
     # pylint: disable=keyword-arg-before-vararg
-    def __new__(cls, code: (str | SQL) = "", /, *args, to_flush: (Field | None) = None, **kwargs):
+    def __init__(self, code: (str | SQL) = "", /, *args, to_flush: (Field | None) = None, **kwargs):
         if isinstance(code, SQL):
-            return code
+            if kwargs:
+                raise TypeError("SQL() with code as SQL does not accept any named arguments")
+            if not args:
+                # just one SQL argument `code`, copy it
+                self.__code = code.__code
+                self.__params = code.__params
+                self.__to_flush = code.__to_flush
+                return
+            if code:
+                # just join everything, there are SQL nodes
+                args = (code, *args)
+            else:
+                # we just skip the first value (empty SQL), init build code properly
+                code = "%s" * len(args)
+            code_parts = [""] * (len(args) + 1)
+        else:
+            # code is a template string
+            if kwargs:
+                if args:
+                    raise TypeError("SQL() takes either positional arguments, or named arguments")
+                code, args = named_to_positional_printf(code, kwargs)
+            elif args:
+                # check formatting
+                code % (("",) * len(args))
+            code_parts = None
 
-        # validate the format of code and parameters
-        if args and kwargs:
-            raise TypeError("SQL() takes either positional arguments, or named arguments")
-        if args:
-            code % tuple("" for arg in args)
-        elif kwargs:
-            code, args = named_to_positional_printf(code, kwargs)
-
-        self = object.__new__(cls)
-        self.__code = code
-        self.__args = args
-        self.__to_flush = to_flush
-        return self
+        # combine code from args
+        if any(isinstance(arg, SQL) for arg in args):
+            if not code_parts:
+                code_parts = code.split("%s")
+            if len(code_parts) - 1 != len(args):
+                raise TypeError(
+                    "SQL() given string does not contain the right number of arguments"
+                    f"; in template {len(code_parts) - 1}, args {len(args)}"
+                )
+            new_code = []
+            new_args = []
+            flush_list = [to_flush] if to_flush else []
+            for part, arg in zip(code_parts, args):
+                new_code.append(part)
+                if isinstance(arg, SQL):
+                    new_code.append(arg.code)
+                    new_args.extend(arg.params)
+                    flush_list.extend(arg.to_flush)
+                else:
+                    new_code.append("%s")
+                    new_args.append(arg)
+            new_code.append(code_parts[-1])
+            self.__code = "".join(new_code)
+            self.__params = new_args
+            self.__to_flush = flush_list
+        else:
+            self.__code = code
+            self.__params = args
+            self.__to_flush = (to_flush,) if to_flush else ()
 
     @property
     def to_flush(self) -> Iterator[Field]:
         """ Return an iterator on the fields to flush in the metadata of
         ``self`` and all of its parts.
         """
-        for node in self.__postfix():
-            if isinstance(node, SQL) and node.__to_flush is not None:
-                yield node.__to_flush
+        return iter(self.__to_flush)
 
     @property
     def code(self) -> str:
         """ Return the combined SQL code string. """
-        stack = []  # stack of intermediate results
-        for node in self.__postfix():
-            if not isinstance(node, SQL):
-                stack.append("%s")
-            elif arity := len(node.__args):
-                stack[-arity:] = [node.__code % tuple(stack[-arity:])]
-            else:
-                stack.append(node.__code)
-        return stack[0]
+        return self.__code
 
     @property
     def params(self) -> list:
         """ Return the combined SQL code params as a list of values. """
-        return [node for node in self.__postfix() if not isinstance(node, SQL)]
-
-    def __postfix(self):
-        """ Return a postfix iterator for the SQL tree ``self``. """
-        stack = [(self, False)]
-        while stack:
-            node, ispostfix = stack.pop()
-            if ispostfix or not isinstance(node, SQL):
-                yield node
-            else:
-                stack.append((node, True))
-                stack.extend((arg, False) for arg in reversed(node.__args))
+        return list(self.__params)
 
     def __repr__(self):
         return f"SQL({', '.join(map(repr, [self.code, *self.params]))})"
@@ -146,6 +170,9 @@ class SQL:
 
     def __eq__(self, other):
         return isinstance(other, SQL) and self.code == other.code and self.params == other.params
+
+    def __hash__(self):
+        return hash(self.code) ^ sum(hash(p) for p in self.params)
 
     def __iter__(self):
         """ Yields ``self.code`` and ``self.params``. This was introduced for
@@ -160,19 +187,22 @@ class SQL:
 
     def join(self, args: Iterable) -> SQL:
         """ Join SQL objects or parameters with ``self`` as a separator. """
+        if not self:
+            return SQL(self, *args)
+        # handle no arguments and make args a list
         args = list(args)
-        # optimizations for special cases
-        if len(args) == 0:
+        size = len(args)
+        if size == 0:
             return SQL()
-        if len(args) == 1:
-            return args[0]
-        if not self.__args:
-            return SQL(self.__code.join("%s" for arg in args), *args)
-        # general case: alternate args with self
-        items = [self] * (len(args) * 2 - 1)
+        if size == 1 and isinstance(sql := args[0], SQL):
+            return sql
+        # remove the first item by replacing it with an empty item to match
+        # constructor where a list of items is joined
+        items = [self] * (len(args) * 2)
+        items[0] = SQL()
         for index, arg in enumerate(args):
-            items[index * 2] = arg
-        return SQL("%s" * len(items), *items)
+            items[index * 2 + 1] = arg
+        return SQL(*items)
 
     @classmethod
     def identifier(cls, name: str, subname: (str | None) = None, to_flush: (Field | None) = None) -> SQL:
