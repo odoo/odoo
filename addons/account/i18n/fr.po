@@ -24,10 +24,10 @@
 # Jonathan Castillo <jcs@odoo.com>, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
 # Yassine KHATTABI, 2024
 # Rémi CAZENAVE, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Rémi CAZENAVE, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1939,6 +1939,7 @@ msgstr "Activer pour créer un reçu de vente"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -4285,6 +4286,11 @@ msgid "Counterpart Entries"
 msgstr "Écritures de contrepartie"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr "Pays pour lesquels l'entreprise possède un numéro de TVA"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4655,6 +4661,7 @@ msgstr "Créé le"
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5096,6 +5103,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5782,6 +5790,12 @@ msgid "Dynamic Reports"
 msgstr "Rapports dynamiques"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr ""
+"Domaine dynamique utilisé pour l'étiquette qui peut être apposée sur la taxe"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
 msgstr "Vente à distance intracommunautaire UE"
@@ -6205,6 +6219,7 @@ msgstr "Périodes fiscales"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6373,6 +6388,11 @@ msgstr "Devise étrangère"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "Numéro d'identification fiscal étranger"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr "Pays étrangers à la TVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -8838,6 +8858,11 @@ msgid "Memo:"
 msgstr "Mémo :"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Assistant de fusion des partenaires"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
@@ -10098,6 +10123,14 @@ msgid "Partner should be set"
 msgstr "Le partenaire doit être défini"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+"Les partenaires qui sont utilisés dans les écritures hachées ne peuvent pas "
+"être fusionnés."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "Payez votre facture en un clic avec le Service Euro SEPA"
@@ -10488,16 +10521,6 @@ msgstr ""
 msgid "Please define a payment method line on your payment."
 msgstr ""
 "S'il vous plait, définissez une méthode de paiement sur votre paiement "
-
-#. module: account
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"Le mode de paiement sélectionné n'est pas disponible pour ce paiement. "
-"Veuillez à nouveau sélectionner le mode de paiement."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -12181,6 +12204,7 @@ msgstr ""
 "Mettre le champs actif à faux pour masquer le journal sans le supprimer."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -14580,6 +14604,16 @@ msgstr ""
 "la perte de tout montant en devise étrangère préexistant."
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Le mode de paiement sélectionné n'est pas disponible pour ce paiement. "
+"Veuillez à nouveau sélectionner le mode de paiement."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
@@ -16326,7 +16360,7 @@ msgstr ""
 "sociétés différentes."
 
 #. module: account
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16611,6 +16645,12 @@ msgstr ""
 "Courant\" (Comptes : %s)"
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "Vous ne pouvez pas fusionner les comptes."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16738,7 +16778,7 @@ msgstr ""
 " où des rapprochements partiels sont toujours en suspens. "
 
 #. module: account
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
 msgstr "Vous ne pouvez pas changer le type d'un document comptabilisé."
@@ -17176,6 +17216,11 @@ msgid ""
 msgstr ""
 "se réserve le droit de demander un paiement d'intérêts fixes s'élevant à 10%"
 " de la somme restant due."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr "étiquette de domaine"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

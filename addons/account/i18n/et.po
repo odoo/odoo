@@ -1805,6 +1805,7 @@ msgstr "Aktiveeri müügitšeki loomiseks"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2933,6 +2934,8 @@ msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
+"Pangatehingud postitatakse automaatselt pärast importi või sünkroniseerimist. Vastaspooleks on panga vahekonto.\n"
+"Panga sidumisel asendatakse need õigete kontodega."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
@@ -4102,6 +4105,11 @@ msgid "Counterpart Entries"
 msgstr "Vastaspoole kanded"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr "Riigid, kelle ettevõttel on käibemaksunumber"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4469,6 +4477,7 @@ msgstr "Loomise kuupäev"
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -4906,6 +4915,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5572,6 +5582,11 @@ msgid "Dynamic Reports"
 msgstr "Dünaamilised aruanded"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
 msgstr "Ühendusesisene müük "
@@ -5989,6 +6004,7 @@ msgstr "Eelarveperioodid"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6152,6 +6168,11 @@ msgstr "Välisvaluuta"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "Välisriigi maksu ID"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -6817,7 +6838,7 @@ msgstr "Makses"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "In order for it to be admissible,"
-msgstr ""
+msgstr "Selleks, et see oleks vastuvõetav, "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -8555,6 +8576,11 @@ msgid "Memo:"
 msgstr "Kirjeldus:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Partnerite ühendamise viisard"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
@@ -9786,6 +9812,12 @@ msgid "Partner should be set"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "Maksa arved ühe vajutusega kasutades Euro SEPA teenust"
@@ -10159,16 +10191,6 @@ msgstr ""
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "Määra palun maksemeetodi rida enda maksele."
-
-#. module: account
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"Valitud maksemeetod ei ole selle makse jaoks saadava. Palun vali teine "
-"maksemeetod. "
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -11119,7 +11141,7 @@ msgstr "Tagasipööramise kuupäev"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal date must be posterior to date."
-msgstr ""
+msgstr "Tühistamise kuupäev peab olema hilisem kui algne kuupäev. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
@@ -11821,6 +11843,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "Märgi aktiivseks, et peita andmik ilma seda kustutamata."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -13305,6 +13328,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
+"Valitud mõõtühik (UoM) '%s' mis on valitud sellele tootele '%s', on ebasobiv"
+" selles kategoorias : %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13468,7 +13493,7 @@ msgstr "Ettevõtte kontonumber peab olema kordumatu!"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
 msgid "The combination code/payment type already exists!"
-msgstr ""
+msgstr "Kombinatsioonikood/maksetüüp juba eksisteerib!"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13486,12 +13511,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
 msgid "The country for which this tax group is applicable."
-msgstr ""
+msgstr "Riik, millele see maksugrupp kehtib. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__country_id
 msgid "The country for which this tax is applicable."
-msgstr ""
+msgstr "Riik, millele see maks kehtib. "
 
 #. module: account
 #: code:addons/account/models/account_tax_carryover_line.py:0
@@ -13628,7 +13653,7 @@ msgstr "Väli 'Partner' on nõutud, palun lisa see, et kinnitada arve. "
 #: model:ir.model.fields,help:account.field_res_users__property_account_position_id
 msgid ""
 "The fiscal position determines the taxes/accounts used for this contact."
-msgstr ""
+msgstr "Finantspositsioon määrab kontaktil kasutatavad maksud/kontod."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13642,6 +13667,8 @@ msgid ""
 "The following error prevented '%s' QR-code to be generated though it was "
 "detected as eligible: "
 msgstr ""
+"Järgmine viga takistas '%s' QR koodi loomist, kuigi see on tuvastatud kui "
+"sobiv:"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
@@ -13725,6 +13752,8 @@ msgid ""
 "The journal entry %s reached an invalid state regarding its related statement line.\n"
 "To be consistent, the journal entry must always have exactly one journal item involving the bank/cash account."
 msgstr ""
+"Andmiku kanne %s on kehtetus olekus seoses seotud väljavõtte reaga.\n"
+"Andmik ukandel peab olema alati üks andmiku rida, mis on seotud panga/kassa kontoga."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -14034,6 +14063,8 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"Makse registreerimise viisardit tuleks kasutada ainult account.move või "
+"account.move.line kirjetele. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
@@ -14067,6 +14098,16 @@ msgid ""
 msgstr ""
 "Valitud kontol on määratud kindel valuuta. Iga tehing konverteeritakse antud valuutasse tekitades\n"
 "                        kahjumi välisvaluuta summast. "
+
+#. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Valitud maksemeetod ei ole selle makse jaoks saadava. Palun vali teine "
+"maksemeetod. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14115,6 +14156,9 @@ msgid ""
 "The year detected here is '%(year)s' and the month is '%(month)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Järjestus algab iga kuu algul 1-st.\n"
+"Siin on aasta '%(year)s' ja kuu '%(month)s'.\n"
+"Kasvav number on sellel juhul '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14124,6 +14168,9 @@ msgid ""
 "The year detected here is '%(year)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Järjestus algab iga aasta algul 1-st.\n"
+"Siin on aasta '%(year)s'.\n"
+"Kasvav number on siin '%(formatted_seq)s'."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -14192,7 +14239,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "The tax group must have the same country_id as the tax using it."
-msgstr ""
+msgstr "Maksugrupil peab olema sama country_id kui seda kasutataval maksul. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
@@ -14227,6 +14274,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
+"Andmiku vaikimisi kreedit/deebet konto tüüp ei peaks olema \"nõuded\" ega "
+"\"kohustused\". "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -14382,6 +14431,8 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
+"See lubab grupeerida maksed ühte koondmaksesse ja lihtsustab maksete sidumise protsessi.\n"
+"- See installib account_batch_payment mooduli."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__complete_tax_set
@@ -14416,6 +14467,8 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position."
 " Check the country set in fiscal position and in your tax configuration."
 msgstr ""
+"Kanne sisaldab maksusid, mis ei sobi ettevõtte finantspositsiooniga. "
+"Kontrolli finantspositsioone ja maksuseadistusi. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15705,7 +15758,7 @@ msgid ""
 msgstr "Ei saa luua makseid, mille kanded kuuluvad erinevatele ettevõtetele."
 
 #. module: account
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -15908,7 +15961,7 @@ msgstr ""
 msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
-msgstr ""
+msgstr "Andmikul aktiveeritud piirangu tõttu ei saa järgmisi välju muuta: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15955,12 +16008,18 @@ msgstr ""
 "%s)"
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "Valitud kontosid ei saa ühendada. "
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
-msgstr ""
+msgstr "Postitatud kannet selles andmikus ei saa muuta piirangu tõttu. "
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -16064,7 +16123,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
 msgstr "Postitatud dokumendil ei saa tüüpi muuta. "
@@ -16474,6 +16533,11 @@ msgid ""
 msgstr ""
 "jätab endale õiguse nõuda fikseeritud intressi summas, mis moodustab 10% "
 "koguvõlast. "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

@@ -23,7 +23,6 @@
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2021
 # Daniel Osser <danielosser@gmail.com>, 2021
 # Victor Ekström, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Daniel Löfgren, 2022
 # Simon S, 2022
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
@@ -32,9 +31,10 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Martin Trigaux, 2023
 # Kim Asplund <kim.asplund@gmail.com>, 2023
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Lasse L, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -42,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Lasse L, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1899,6 +1899,7 @@ msgstr "Aktivera för att skapa försäljningskvitto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -4216,6 +4217,11 @@ msgid "Counterpart Entries"
 msgstr "Motsvarande poster"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr "Länder för vilka företaget har ett momsregistreringsnummer"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4584,6 +4590,7 @@ msgstr "Skapad den"
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5021,6 +5028,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5690,6 +5698,11 @@ msgid "Dynamic Reports"
 msgstr "Dynamiska rapporter"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr "Dynamisk domän används för taggen som kan ställas in på skatt"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
 msgstr "EU-intern distansförsäljning inom gemenskapen"
@@ -6109,6 +6122,7 @@ msgstr "Räkenskapsperioder"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6274,6 +6288,11 @@ msgstr "Utländsk valuta"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "Utländskt skatteregistreringsnummer"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr "Utländska momsländer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -8702,6 +8721,11 @@ msgid "Memo:"
 msgstr "Memo:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Guide för att sammanfoga partners"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
@@ -9340,7 +9364,7 @@ msgstr "Äldst först"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "On the"
-msgstr ""
+msgstr "På den"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -9947,6 +9971,12 @@ msgid "Partner should be set"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "Partners som används i hashade poster kan inte slås samman."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr "Betala era fakturor med ett klick genom att använda Euro SEPA Service"
@@ -10332,16 +10362,6 @@ msgstr ""
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "Vänligen definiera en betalningsmetodslinje för din betalning."
-
-#. module: account
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"Den valda betalningsmetoden är inte tillgänglig för denna betalning, "
-"vänligen välj betalningsmetod igen."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -11988,6 +12008,7 @@ msgstr ""
 "Ställ in aktiv till falsk för att dölja Journalen utan att ta bort den."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -14243,6 +14264,16 @@ msgstr ""
 "                        the loss of any pre-existing foreign currency amount."
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Den valda betalningsmetoden är inte tillgänglig för denna betalning, "
+"vänligen välj betalningsmetod igen."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
@@ -15950,7 +15981,7 @@ msgstr ""
 "You can't create payments for entries belonging to different companies."
 
 #. module: account
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16225,6 +16256,12 @@ msgstr ""
 "type. (accounts: %s)"
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "Du kan inte slå samman konton."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16343,7 +16380,7 @@ msgstr ""
 "reconciliations are still pending."
 
 #. module: account
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
 msgstr "You cannot switch the type of a posted document."
@@ -16778,6 +16815,11 @@ msgid ""
 msgstr ""
 "förbehåller sig rätten att begära en fast räntebetalning som uppgår till 10%"
 " of det belopp som återstår att betala."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr "tagga domän"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

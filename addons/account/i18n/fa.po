@@ -1853,6 +1853,7 @@ msgstr "برای ایجاد رسید فروش فعال کنید"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -4161,6 +4162,11 @@ msgid "Counterpart Entries"
 msgstr "ثبت‌های همتا"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr "کشوری که شرکت در آن کد مالیات بر ارزش افزوده دارد"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4529,6 +4535,7 @@ msgstr "ایجاد شده در"
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -4965,6 +4972,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5632,6 +5640,11 @@ msgid "Dynamic Reports"
 msgstr "گزارشهای پویا"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr "دامنه‌ی پویای مورداستفاده برای برچسبی که می‌توان روی مالیات قرار داد"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
 msgid "EU Intra-community Distance Selling"
 msgstr "فروش از راه دور در کشورهای عضو اتحادیه‌ی اروپا"
@@ -6047,6 +6060,7 @@ msgstr "دوره‌های سال مالی"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6211,6 +6225,11 @@ msgstr "ارز خارجی"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "شناسه مالیاتی خارجی"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr "کشورهای خارجی مشمول مالیات بر ارزش افزوده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -8628,6 +8647,11 @@ msgid "Memo:"
 msgstr "یادداشت:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "ویزارد ادغام شریک"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_has_error
@@ -9869,6 +9893,12 @@ msgid "Partner should be set"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr "همکارانی که در اسناد هش شده استفاده می‌شوند قابل ادغام نیستند."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
 msgstr ""
@@ -10247,16 +10277,6 @@ msgstr "برای پرینت نتیجه‌ی ادغام هش با حسابدار 
 #, python-format
 msgid "Please define a payment method line on your payment."
 msgstr "لطفاً یک سطر روش پرداخت برای پرداخت خود تعریف کنید."
-
-#. module: account
-#: code:addons/account/models/account_payment.py:0
-#, python-format
-msgid ""
-"The selected payment method is not available for this payment, please select"
-" the payment method again."
-msgstr ""
-"روش پرداخت انتخابی برای این نوع پرداخت موجود نیست، لطفاً روش پرداخت را "
-"دوباره انتخاب کنید. "
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -11912,6 +11932,7 @@ msgid "Set active to false to hide the Journal without removing it."
 msgstr "فعال را روی false قرار دهید تا روزنامه بدون حذف آن پنهان شود."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -14211,6 +14232,16 @@ msgstr ""
 "                         و باعث از دست رفتن هر مقدار ارز خارجی از قبل موجود می شود."
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"روش پرداخت انتخابی برای این نوع پرداخت موجود نیست، لطفاً روش پرداخت را "
+"دوباره انتخاب کنید. "
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
@@ -15921,7 +15952,7 @@ msgstr ""
 "شما نمی توانید برای ورودی های متعلق به شرکت های مختلف پرداخت ایجاد کنید."
 
 #. module: account
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16197,6 +16228,12 @@ msgstr ""
 "(accounts: %s)"
 
 #. module: account
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "نمی‌توانید حساب‌ها را با یکدیگر ترکیب کنید."
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16320,7 +16357,7 @@ msgstr ""
 " حساب تغییر دهید."
 
 #. module: account
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
 msgstr "نمی‌توانید نوع سند ثبت شده را تغییر دهید."
@@ -16750,6 +16787,11 @@ msgid ""
 msgstr ""
 "این حق را برای خود محفوظ می دارد که سود ثابتی به میزان 10% از مبلغ باقی "
 "مانده را درخواست کند."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr "دامنه‌ی برچسب"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
