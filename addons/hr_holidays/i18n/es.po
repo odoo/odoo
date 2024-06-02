@@ -3086,8 +3086,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "Only a time off Manager can approve its own requests."
-msgstr ""
-"Sólo un responsable de ausencia puede aprobar sus propias solicitudes."
+msgstr "Solo un gerente de ausencias puede aprobar sus propias solicitudes."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3097,8 +3096,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-"Solo un oficial/responsable de ausencias puede aprobar o rechazar "
-"solicitudes de ausencias."
+"Solo un encargado/responsable o gerente de ausencias puede aprobar o "
+"rechazar solicitudes de tiempo ausencias."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3131,7 +3130,7 @@ msgstr "Fuera de la oficina hasta %s"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
 msgid "Overview"
-msgstr "Información general"
+msgstr "Vista general"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
@@ -3465,8 +3464,8 @@ msgid ""
 "        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer."
 msgstr ""
 "Seleccione el nivel de aprobación necesario en caso de solicitudes de empleado\n"
-"        - No se requiere validación: la solicitud del empleado se aprueba de forma automática.\n"
-"        - Aprobado por el encargado de ausencias: el encargado de ausencias debe aprobar la solicitud del empleado de forma manual."
+"        - No se requiere validación: la solicitud del empleado se aprueba automáticamente.\n"
+"        - Aprobado por el encargado de ausencias: el encargado de ausencias debe aprobar la solicitud del empleado manualmente."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3485,7 +3484,7 @@ msgid ""
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
 "Selecciona el usuario responsable de aprobar \"ausencias\" de este empleado.\n"
-"Si se queda en blanco, la aprobación la realiza un administrador o un aprobador (determinado en ajustes/usuarios)."
+"Si se queda vacío, la aprobación la realiza un administrador o un aprobador (determinado en ajustes/usuarios)."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__sep
@@ -3502,8 +3501,7 @@ msgstr "Secuencia"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__sequence
 msgid "Sequence is generated automatically by start time delta."
-msgstr ""
-"La secuencia es generada de forma automática al empezar delta de tiempo."
+msgstr "La secuencia se genera automáticamente al empezar delta de tiempo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
@@ -3810,8 +3808,8 @@ msgid ""
 "The status is 'Refused', when an allocation request is refused by manager.\n"
 "The status is 'Approved', when an allocation request is approved by manager."
 msgstr ""
-"El estado se establece en 'Para enviar', cuando se crea una solicitud de asignación.\n"
-"El estado es 'Para aprobar', cuando el usuario confirma una solicitud de asignación.\n"
+"El estado se establece en 'A enviar', cuando se crea una solicitud de asignación.\n"
+"El estado es 'A aprobar', cuando el usuario confirma una solicitud de asignación.\n"
 "El estado es 'Rechazado', cuando el gerente rechaza una solicitud de asignación.\n"
 "El estado es 'Aprobado', cuando el gerente aprueba una solicitud de asignación."
 
@@ -3827,7 +3825,7 @@ msgstr "La ausencia se ha autorizado automáticamente"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "The time off has been canceled: %s"
-msgstr "Se canceló la ausencia: %s"
+msgstr "Se ha cancelado la ausencia: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -4157,7 +4155,7 @@ msgstr "Ausencias de las personas que gestiona"
 msgid ""
 "Time off request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
-"Se debe confirmar la petición de ausencia (\"Por aprobar\") para poder "
+"La solicitud de ausencia debe ser confirmada (\"A aprobar\") para poder "
 "aprobarla."
 
 #. module: hr_holidays
@@ -4165,7 +4163,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Time off request must be confirmed in order to approve it."
-msgstr "La petición de ausencia debe confirmarse para poder ser aprobada."
+msgstr "La solicitud de ausencia debe ser confirmada para poder aprobarla."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4173,7 +4171,8 @@ msgstr "La petición de ausencia debe confirmarse para poder ser aprobada."
 #, python-format
 msgid "Time off request must be confirmed or validated in order to refuse it."
 msgstr ""
-"La petición de ausencia debe confirmarse o validarse para poder rechazarla."
+"La solicitud de ausencia debe ser confirmada o validada para poder "
+"rechazarla."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4183,7 +4182,7 @@ msgid ""
 "Time off request must be in Draft state (\"To Submit\") in order to confirm "
 "it."
 msgstr ""
-"La petición de ausencia debe estar en estado borrador (\"Por enviar\") para "
+"La petición de ausencia debe estar en estado borrador (\"A enviar\") para "
 "confirmarla."
 
 #. module: hr_holidays
@@ -4194,8 +4193,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
-"El estado de la petición de ausencia debe ser \"Rechazada\" o \"Por "
-"aprobar\" para restablecer a borrador."
+"El estado de la solicitud de ausencia debe ser \"Rechazado\" o \"A aprobar\""
+" para restablecer a borrador."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz
@@ -4720,8 +4719,8 @@ msgid ""
 "You must have manager rights to modify/validate a time off that already "
 "begun"
 msgstr ""
-"Debe tener permisos de responsable para modificar / validar una ausencia que"
-" ya comenzó."
+"Debe tener derechos de gerente para modificar/validar una ausencia ya "
+"comenzada"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4937,7 +4936,7 @@ msgstr "de"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "of the"
-msgstr "del"
+msgstr "de"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form

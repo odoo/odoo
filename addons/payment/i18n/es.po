@@ -3,7 +3,6 @@
 # 	* payment
 # 
 # Translators:
-# Daniela Cervantes <dace@odoo.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Wil Odoo, 2023
 # Larissa Manderfeld, 2024
@@ -519,12 +518,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
-msgstr "Transacciones subordinadas"
+msgstr "Transacciones hijas"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr "Transacciones subordinadas"
+msgstr "Transacciones hijas "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -980,7 +979,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Manage your payment methods"
-msgstr "Gestiona tus métodos de pago"
+msgstr "Gestione sus métodos de pago"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1365,7 +1364,7 @@ msgstr "Establezca un importe menor que %s."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
 msgid "Please switch to company"
-msgstr "Cambie a la empresa"
+msgstr "Cambie a la compañía"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
@@ -1487,7 +1486,7 @@ msgstr "Se requiere moneda"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "Debito directo SEPA"
+msgstr "Domiciliación bancaria SEPA"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1683,7 +1682,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr "Las transacciones subordinadas de la transacción."
+msgstr "Las transacciones hijas de la transacción."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1768,7 +1767,7 @@ msgstr "La lista de proveedores que son compatibles con este método de pago."
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
 msgid "The main currency of the company, used to display monetary fields."
 msgstr ""
-"La moneda principal de la empresa, utilizada para mostrar los campos "
+"La moneda principal de la compañía, utilizada para mostrar los campos "
 "monetarios."
 
 #. module: payment
@@ -1854,7 +1853,7 @@ msgstr "La ruta del usuario se redirecciona a después de la transacción"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr "La transacción origen de las transacciones secundarias relacionadas"
+msgstr "La transacción origen de las transacciones hijas relacionadas"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__code
@@ -1921,7 +1920,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been authorized "
 "(%(provider_name)s)."
 msgstr ""
-"La transacción con referencia %(ref)s por %(amount)s ha sido autorizada "
+"Se ha autorizado la transacción con referencia %(ref)s por %(amount)s "
 "(%(provider_name)s)."
 
 #. module: payment
@@ -1932,7 +1931,7 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s has been confirmed "
 "(%(provider_name)s)."
 msgstr ""
-"Se confirmó la transacción con referencia %(ref)s por %(amount)s "
+"Se ha confirmado la transacción con referencia %(ref)s por %(amount)s "
 "(%(provider_name)s)."
 
 #. module: payment
@@ -1977,7 +1976,7 @@ msgid ""
 "provider. Archiving tokens is irreversible."
 msgstr ""
 "Esta acción también archivará los tokens %s que estén registrados con este "
-"proveedor. Archivar los tokens es irreversible."
+"proveedor. Archivar los tokens es una acción irreversible."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization

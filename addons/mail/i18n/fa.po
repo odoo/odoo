@@ -3543,7 +3543,7 @@ msgstr "فیلد"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
 
@@ -4731,7 +4731,7 @@ msgstr "آیا دنبال می کند"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
 msgid "Is Member"
-msgstr ""
+msgstr "آیا عضو است"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
@@ -8925,7 +8925,7 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "سرور \"%s\" نمی تواند استفاده شود زیرا بایگانی شده است."
 
 #. module: mail
 #. odoo-javascript
@@ -9134,7 +9134,7 @@ msgstr ""
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 msgid "To-Do"
-msgstr ""
+msgstr "انجام دادن"
 
 #. module: mail
 #. odoo-javascript
@@ -9306,6 +9306,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"نوع عملکرد سرور مقادیر زیر در دسترس هستند:\n"
+"- 'به روز رسانی یک رکورد': مقادیر یک رکورد را به روز کنید\n"
+"- \"ایجاد فعالیت\": ایجاد یک فعالیت (بحث)\n"
+"- \"ارسال ایمیل\": ارسال پیام، یادداشت یا ارسال ایمیل (بحث)\n"
+"- \"ارسال پیامک\": پیامک ارسال کنید، آنها را در اسناد ثبت کنید (پیامک) - \"افزودن/حذف دنبال کنندگان\": اضافه کردن یا حذف دنبال کنندگان به یک رکورد (بحث)\n"
+"- \"ایجاد رکورد\": یک رکورد جدید با مقادیر جدید ایجاد کنید\n"
+"- \"Execute Code\": بلوکی از کد پایتون که اجرا خواهد شد\n"
+"- 'Send Webhook Notification': ارسال یک درخواست POST به یک سیستم خارجی، که به عنوان Webhook نیز شناخته می شود.\n"
+"- \"اجرای اقدامات موجود\": عملی را تعریف کنید که چندین عمل دیگر سرور را راه اندازی کند\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration

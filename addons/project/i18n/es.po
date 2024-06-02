@@ -343,12 +343,12 @@ msgstr ""
 "        </td></tr>\n"
 "        <tr><td><br>Saludos,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">SuEmpresa</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">SuCompañía</t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@suempresa.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@sucompañía.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</a>\n"
@@ -467,7 +467,7 @@ msgstr "<small class=\"text-end\">Etapa:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr "<small class=\"text-muted\">Asignados</small>"
+msgstr "<small class=\"text-muted\">Personas asignadas</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -533,7 +533,7 @@ msgstr "<span class=\"o_stat_text\">Última calificación</span>"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Parent Task</span>"
-msgstr "<span class=\"o_stat_text\">Tarea principal</span>"
+msgstr "<span class=\"o_stat_text\">Tarea padre</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -629,7 +629,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private task cannot have a parent."
-msgstr "Una tarea privada no puede tener una tarea principal."
+msgstr "Una tarea privada no puede tener una tarea padre."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
@@ -1031,7 +1031,7 @@ msgstr "Asignado a"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Assignees"
-msgstr "Asignados"
+msgstr "Personas asignadas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -1843,8 +1843,8 @@ msgid ""
 "beforehand. Are you sure you want to proceed?"
 msgstr ""
 "Si elimine esta tarea también eliminará las subtareas. Si desea preservar "
-"las subtareas, asegúrese de desvincularlas de la tarea principal antes. "
-"¿Está seguro de que quiere proceder?"
+"las subtareas, asegúrese de desvincularlas de la tarea padre antes. ¿Está "
+"seguro de que quiere proceder?"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
@@ -1975,7 +1975,7 @@ msgstr "Nombre mostrado"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
 msgid "Display Parent Task Button"
-msgstr "Mostrar el botón de tarea principal"
+msgstr "Mostrar el botón de tarea padre"
 
 #. module: project
 #. odoo-python
@@ -3412,7 +3412,7 @@ msgstr "Ideas para páginas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modelo principal"
+msgstr "Modelo padre"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
@@ -3426,7 +3426,7 @@ msgstr "ID del hilo del registro padre"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
 #, python-format
 msgid "Parent Task"
-msgstr "Tarea principal"
+msgstr "Tarea padre"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
@@ -3435,8 +3435,8 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Modelo principal que contiene el alias. El modelo que contiene la referencia"
-" del alias no es necesariamente el modelo dado por alias_model_id (example: "
+"Modelo padre que contiene el alias. El modelo que contiene la referencia del"
+" alias no es necesariamente el modelo dado por alias_model_id (example: "
 "project (parent_model) and task (model))"
 
 #. module: project
@@ -4223,7 +4223,7 @@ msgstr "Buscar en todos"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "Buscar en asignados"
+msgstr "Buscar en personas asignadas"
 
 #. module: project
 #. odoo-python
@@ -4432,7 +4432,7 @@ msgstr "Desarrollo de Software"
 #: code:addons/project/models/project_task.py:0
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
-msgstr "Lo siento. No puede establecer una tarea como tarea principal."
+msgstr "Lo siento. No puede establecer una tarea como tarea padre."
 
 #. module: project
 #. odoo-javascript
@@ -5205,8 +5205,8 @@ msgid ""
 "leave the parent task field blank to convert a sub-task into a standalone "
 "task."
 msgstr ""
-"Para transformar una tarea en una subtarea, seleccione la tarea principal. "
-"También puede dejar el campo de la tarea principal en blanco para que se "
+"Para transformar una tarea en una subtarea, seleccione la tarea padre. "
+"También puede dejar el campo de la tarea padre en blanco para que se "
 "convierta en una tarea."
 
 #. module: project
@@ -5804,7 +5804,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 msgid "assignees"
-msgstr "asignatario"
+msgstr "personas asignadas"
 
 #. module: project
 #. odoo-javascript

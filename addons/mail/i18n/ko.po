@@ -3573,11 +3573,9 @@ msgstr "필드"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"%(model)r 모델의 \"(field)r 필드는 반드시 Many2one 유형이여야 하며, 기간을 계산하기 위해서 추적값이 예로 "
-"설정되어 있어야 합니다."
 
 #. module: mail
 #. odoo-python
@@ -10314,6 +10312,15 @@ msgstr "이 서식에 파일을 첨부할 수 있습니다. 이 서식으로 작
 #, python-format
 msgid "You may not define a template on an abstract model: %s"
 msgstr "추상 모델에서 템플릿을 정의할 수 없습니다: %s"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
