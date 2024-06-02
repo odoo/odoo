@@ -620,6 +620,9 @@ msgid ""
 "                                    <span name=\"ab_test_text\">There wasn't enough recipients given to this mailing. </span>\n"
 "                                </strong>"
 msgstr ""
+"<strong class=\"d-block\" attrs=\"{'invisible': ['|', ('mailing_type', '=', 'mail'), '|', ('ab_testing_enabled', '=', False), '|', ('state', '!=', 'done'), '|', ('sent', '!=', 0), '|', ('failed', '!=', 0), ('canceled', '!=', 0)]}\">\n"
+"                                    <span name=\"ab_test_text\">No había suficientes destinatarios en este correo. </span>\n"
+"                                </strong>"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4602,6 +4605,8 @@ msgid ""
 "This will send the email to all recipients. Are you sure you want to "
 "proceed?"
 msgstr ""
+"Esto enviará el correo a todos los destinatarios. ¿Está seguro de que quiere"
+" continuar? "
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
@@ -5146,6 +5151,8 @@ msgid ""
 "You should give either list_ids, either subscription_list_ids to create new "
 "contacts."
 msgstr ""
+"Para crear nuevos contactos debería dar ya sea list_ids o "
+"subscription_list_ids."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_done
