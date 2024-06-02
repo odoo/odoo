@@ -7,8 +7,8 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Lucia Pacheco, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
 # Martin Trigaux, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2022-06-17 09:53+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1142,9 +1142,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Modificar automáticamente el estado del kanban cuando el cliente responda la encuesta de esta etapa.\n"
-"* Una valoración positiva del cliente actualizará el estado del kanban a \"listo para la nueva etapa\" (viñeta verde).\n"
-"* Una valoración media o negativa actualizará el estado del kanban a \"bloqueado\" (viñeta roja).\n"
+"Modifique el estado de kanban de forma automática cuando el cliente responda a los comentarios para esta etapa. \n"
+"* Los comentarios buenos del cliente actualizarán el kanban a \"Listo para la nueva etapa\" (viñeta verde). \n"
+"* Los comentarios neutros o malos establecerán el estado de kanban a \"Bloqueado\" (viñeta naranja).\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg
@@ -1697,9 +1697,9 @@ msgid ""
 "                solving a task or an issue."
 msgstr ""
 "Defina los pasos que se utilizarán en el proyecto, desde la\n"
-"creación de la tarea hasta su cierre o la creación de un problema.\n"
-"Se utilizarán estas etapas para hacer un seguimiento del progreso al \n"
-"resolver una tarea o un problema."
+"                creación de la tarea hasta su cierre o el de un problema.\n"
+"                Estas etapas se utilizarán para llevar seguimiento del progreso al \n"
+"                resolver una tarea o un problema."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -2397,8 +2397,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si esta opción está activada, este contenido se enviará automáticamente a "
-"usuarios no autorizados en lugar del mensaje predeterminado."
+"Si se establece, este contenido se enviará en automático a los usuarios no "
+"autorizados en vez del mensaje predeterminado."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2454,9 +2454,9 @@ msgid ""
 "Tracker module is installed)."
 msgstr ""
 "Correo electrónico interno asociado a este proyecto. Los correos "
-"electrónicos entrantes se sincronizan automáticamente con las tareas (o, si "
-"lo desea, con los problemas si cuenta con el módulo de rastreador de "
-"problemas)."
+"electrónicos entrantes se sincronizan en automático con las tareas (o, si lo"
+" desea, con los problemas si el módulo Rastreador de problemas está "
+"instalado)."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4942,8 +4942,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Esta etapa se pliega en la vista de kanban cuando no hay registros para "
-"mostrar en la misma."
+"Esta etapa está oculta en la vista de kanban cuando no tiene registros para "
+"mostrar."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -5028,8 +5028,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
-"Para ser más eficiente, utilice las actividades y estados para sus tareas.<br>\n"
-"                Comuníquese en tiempo real o por correo electrónico para colaborar de manera eficaz."
+"Use actividades y estados en las tareas que le ayudarán a organizarse con eficacia.<br>\n"
+"                 Comuníquese en tiempo real o por correo electrónico para colaborar de manera eficiente."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -5039,8 +5039,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real-time or by email to collaborate efficiently."
 msgstr ""
-"Para ser más eficiente, utilice las actividades y estados para sus tareas.<br>\n"
-"                Comuníquese en tiempo real o por correo electrónico para colaborar de manera eficaz."
+"Use actividades y estados en las tareas que le ayudarán a organizarse con eficacia.<br>\n"
+"                 Comuníquese en tiempo real o por correo electrónico para colaborar de manera eficiente."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -5048,8 +5048,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                Chat in real time or by email to collaborate efficiently."
 msgstr ""
-"Para ser más eficiente, use actividades y estados en las tareas.<br>\n"
-"                Use el chat en tiempo real o por correo electrónico para colaborar eficazmente."
+"Use actividades y estados en las tareas que le ayudarán a organizarse con eficacia.<br>\n"
+"                 Comuníquese en tiempo real o por correo electrónico para colaborar de manera eficiente."
 
 #. module: project
 #. openerp-web
@@ -5200,7 +5200,7 @@ msgstr "Actualizar"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr "Actualización realizada"
+msgstr "Actualización creada"
 
 #. module: project
 #. openerp-web
