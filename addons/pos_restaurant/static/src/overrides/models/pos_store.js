@@ -226,10 +226,10 @@ patch(PosStore.prototype, {
                     floor.table_ids.map((table) => table.id)
                 )
             );
-            return await this.syncAllOrders({ table_ids: tableIds });
-        } else {
-            return await super.getServerOrders();
+            await this.syncAllOrders({ table_ids: tableIds });
         }
+        //Need product details from backand to UI for urbanpiper
+        return await super.getServerOrders();
     },
     getDefaultSearchDetails() {
         if (this.selectedTable && this.selectedTable.id) {

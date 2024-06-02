@@ -327,8 +327,13 @@ export class TicketScreen extends Component {
         }
         await this.addAdditionalRefundInfo(order, destinationOrder);
 
+        this.postRefund(destinationOrder);
+
         this.closeTicketScreen();
     }
+
+    postRefund(destinationOrder) {}
+
     setPartnerToRefundOrder(partner, destinationOrder) {
         if (partner && !destinationOrder.get_partner()) {
             destinationOrder.set_partner(partner);

@@ -25,9 +25,9 @@
                     </div>
                     <div class="o-so-product-details-description">
                         <h2 t-esc="product.display_name"/>
-                        <small t-if="product.description_self_order"
+                        <small t-if="product.public_description"
                             class="o_self_order_main_desc d-block mb-3 text-muted"
-                            t-out="product.description_self_order"
+                            t-out="product.public_description"
                         />
                         <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(product))"/>
                     </div>

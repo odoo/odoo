@@ -25,14 +25,9 @@
             <group name="pos" position="inside">
                 <field name="self_order_available"/>
             </group>
-            <group name="pos" position="after">
-                <group string="Self Order Description" name="description_self_order" invisible="not self_order_available">
-                    <field name="description_self_order"
-                        placeholder="Information about your product for Self Order and Kiosk"
-                        nolabel="1"
-                        colspan="2"/>
-                </group>
-            </group>
+            <xpath expr="//group[@name='public_description']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
         </field>
     </record>
 
