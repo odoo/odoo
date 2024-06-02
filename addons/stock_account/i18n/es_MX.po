@@ -199,8 +199,8 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"No se pudo encontrar una cuenta de salida de existencias del producto %s. "
-"Debe definir una en la categoría de producto o en la ubicación antes de "
+"No se pudo encontrar una cuenta de salida de existencias para el producto "
+"%s. Debe definir una en la categoría de producto o en la ubicación antes de "
 "procesar esta operación."
 
 #. module: stock_account
@@ -211,13 +211,13 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
-"Cambiar el método de costo es un cambio importante que repercutirá en su "
-"valoración de inventario. ¿Está seguro que desea efectuar tal cambio?"
+"Modificar el método de costo es un cambio importante que influirá en su "
+"valoración de inventario. ¿Está seguro de que desea realizar el cambio?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr "Elija una fecha en la que se realizará la valoración"
+msgstr "Elija la fecha en la que se realizará la valoración"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
@@ -342,7 +342,7 @@ msgstr "Mostrar números de lote y de serie en las facturas"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Nombre en pantalla"
+msgstr "Mostrar nombre"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
@@ -478,7 +478,7 @@ msgstr "Valoración manual de existencias: %s."
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
-msgstr "Valoración manual de existencias: sin razón."
+msgstr "Valoración manual de existencias: sin motivo."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -490,8 +490,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"Manual: los asientos contables de valoración del inventario no se publican automáticamente.\n"
-"        Automatizado: se crea automáticamente un asiento contable para evaluar el inventario cuando un producto entra o sale de la empresa.\n"
+"Manual: los asientos contables de valoración del inventario no se registran en automático.\n"
+"        Automatizado: un asiento contable se crea en automático para evaluar el inventario cuando un producto entra o sale de la empresa.\n"
 "        "
 
 #. module: stock_account
@@ -575,7 +575,7 @@ msgstr "Cantidad"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr "Cantidad Svl"
+msgstr "Cantidad de la capa de valoración de existencias"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -585,7 +585,7 @@ msgstr "Quants"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason"
-msgstr "Razón"
+msgstr "Motivo"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -737,8 +737,9 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
-"Campo técnico para mostrar correctamente la divisa elegida de la empresa que"
-" corresponde con el valor total de las capas de valoración del producto"
+"Campo técnico para mostrar de forma correcta la divisa seleccionada de la "
+"empresa que corresponde al valor total de las capas de valoración del "
+"producto"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -769,16 +770,15 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"La acción conduce a la creación de un asiento de diario para la que no tiene"
-" derechos de acceso."
+"La acción ocasiona la creación de un asiento contable del que no tiene "
+"permisos de acceso."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
-"El valor agregado no tiene ningún impacto en la valoración de existencias"
+msgstr "El valor agregado no influye en la valoración de existencias"
 
 #. module: stock_account
 #. odoo-python
@@ -788,8 +788,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
-"Las líneas de movimiento no están en un estado consistente: algunas están "
-"entrando y otras están saliendo de la empresa."
+"Las líneas de movimiento no están en un estado consistente: algunas entran y"
+" otras salen de la empresa."
 
 #. module: stock_account
 #. odoo-python
@@ -801,8 +801,8 @@ msgid ""
 "transit location."
 msgstr ""
 "Las líneas de movimiento no están en estados consistentes: están llevando a "
-"cabo una operación interna de la empresa en un solo paso cuando deberían "
-"pasar por la ubicación de tránsito interno de la empresa."
+"cabo una operación interempresarial en un solo paso cuando deberían pasar "
+"por la ubicación de tránsito interno de la empresa."
 
 #. module: stock_account
 #. odoo-python
@@ -812,8 +812,8 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
-"Las líneas de movimiento no se encuentran en estados consistentes: no "
-"comparten la misma empresa de origen o de destino."
+"Las líneas de movimiento no están en estados consistentes: no comparten la "
+"misma empresa de origen o de destino."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -822,8 +822,8 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
-"No hay capas de valoración. Las capas de valoración se crean cuando hay "
-"movimientos de productos que impacten la valoración de las existencias."
+"No hay capas de valoración. Estas se crean cuando hay movimientos de "
+"productos que influyen en la valoración de las existencias."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -890,12 +890,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Se utiliza para una valoración en tiempo real del inventario. Cuando se "
-"establece en una ubicación virtual (no de tipo interno), esta cuenta se "
-"usará para mantener el valor de los productos que se mueven de una ubicación"
-" interna a esta ubicación, en lugar de la cuenta de salida de existencias "
-"genérica establecida en el producto. No tiene efecto para ubicaciones "
-"internas."
+"Se utiliza para la valoración de inventario en tiempo real. Al establecerla "
+"en una ubicación virtual (que no es de tipo interno), esta cuenta se usará "
+"para mantener el valor de los productos que se mueven de una ubicación "
+"interna a esta ubicación, en lugar de la cuenta de salida de existencias "
+"genérica establecida en el producto. No influye en las ubicaciones internas."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -906,12 +905,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Se utiliza para una valoración en tiempo real del inventario. Cuando se "
-"establece en una ubicación virtual (no de tipo interno), esta cuenta se "
-"usará para mantener el valor de los productos que se mueven fuera de la "
-"ubicación a una ubicación interna, en lugar de la cuenta de salida de "
-"existencias genérica establecida en el producto. No tiene efecto para "
-"ubicaciones internas."
+"Se utiliza para la valoración de inventario en tiempo real. Al establecerla "
+"en una ubicación virtual (que no es de tipo interno), esta cuenta se usará "
+"para mantener el valor de los productos que se mueven fuera de la ubicación "
+"a una ubicación interna, en lugar de la cuenta de salida de existencias "
+"genérica establecida en el producto. No influye en las ubicaciones internas."
 
 #. module: stock_account
 #: model:ir.ui.menu,name:stock_account.menu_valuation
@@ -959,7 +957,7 @@ msgstr "Valor a la mano:"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr "Valor Svl"
+msgstr "Valor de la capa de valoración de existencias"
 
 #. module: stock_account
 #. odoo-python
@@ -994,9 +992,9 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Al realizar una valoración de inventario automatizada, este es el diario "
-"contable en el que las entradas se publicarán automáticamente cuando se "
-"procesen los movimientos de existencias."
+"Al realizar una valoración de inventario automatizada, las entradas se "
+"registrarán en automático en este diario contable al procesar los "
+"movimientos de existencias."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -1029,8 +1027,7 @@ msgid ""
 "rights."
 msgstr ""
 "No puede actualizar el costo de un producto en la valoración automatizada, "
-"ya que conduce a la creación de un asiento de diario para el cual no tiene "
-"los derechos de acceso."
+"ocasionará un asiento contable del que no tendrá permisos de acceso."
 
 #. module: stock_account
 #. odoo-python
