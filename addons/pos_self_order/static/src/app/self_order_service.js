@@ -396,8 +396,8 @@ export class SelfOrder extends Reactive {
 
     markupDescriptions() {
         for (const product of this.models["product.product"].getAll()) {
-            product.description_self_order = product.description_self_order
-                ? markup(product.description_self_order)
+            product.public_description = product.public_description
+                ? markup(product.public_description)
                 : "";
         }
     }

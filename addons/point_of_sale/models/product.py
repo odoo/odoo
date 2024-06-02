@@ -16,6 +16,9 @@ class ProductTemplate(models.Model):
     pos_categ_ids = fields.Many2many(
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
+    public_description = fields.Html(
+        string="Product Description",
+    )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_session(self):

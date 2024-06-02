@@ -12,9 +12,6 @@ class ProductTemplate(models.Model):
         help="If this product is available in the Self Order screens",
         default=True,
     )
-    description_self_order = fields.Html(
-        string="Product Description for Self Order",
-    )
 
     @api.onchange('available_in_pos')
     def _on_change_available_in_pos(self):
@@ -47,7 +44,7 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config_id):
         params = super()._load_pos_self_data_fields(config_id)
-        params += ['description_self_order']
+        params += ['public_description']
         return params
 
     def _load_pos_self_data(self, data):

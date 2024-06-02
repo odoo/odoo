@@ -127,7 +127,7 @@ export class ProductCard extends Component {
 
     get isHtmlEmpty() {
         const div = Object.assign(document.createElement("div"), {
-            innerHTML: this.props.product.description_self_order,
+            innerHTML: this.props.product.public_description,
         });
         return div.innerText.trim() === "";
     }
