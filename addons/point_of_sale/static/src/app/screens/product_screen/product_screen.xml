@@ -10,13 +10,13 @@
                         <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
-                        <Numpad t-if="!currentOrder.is_empty() and pos.get_order().uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                        <Numpad t-if="!currentOrder?.is_empty() and pos.get_order()?.uiState.selected_orderline_uuid" class="'d-grid m-n1'" buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
                         <ActionpadWidget 
                             partner="currentOrder?.get_partner()" 
                             onClickMore.bind="displayAllControlPopup"
                             actionName.translate="Payment"
                             actionToTrigger="() => pos.pay()"
-                            showActionButton="!currentOrder.is_empty()"
+                            showActionButton="!currentOrder?.is_empty()"
                         />
                     </div>
                 </div>
@@ -53,7 +53,7 @@
                         <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
                     </div>
                     <div class="switchpane d-flex gap-2 mt-2">
-                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg w-50" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn btn-lg w-50" t-attf-class="{{ currentOrder?.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
                             <span class="d-block">Pay</span>
                             <span t-esc="total" />
                         </button>

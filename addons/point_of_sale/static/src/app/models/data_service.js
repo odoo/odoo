@@ -125,6 +125,10 @@ export class PosData extends Reactive {
         });
     }
 
+    async preLoadData(data) {
+        return data;
+    }
+
     async loadIndexedDBData() {
         const data = await this.indexedDB.readAll();
 
@@ -147,7 +151,9 @@ export class PosData extends Reactive {
             );
         }
 
-        const results = this.models.loadData(data, [], true);
+        const preLoadData = await this.preLoadData(data);
+
+        const results = this.models.loadData(preLoadData, [], true);
         for (const [model, data] of Object.entries(results)) {
             for (const record of data) {
                 if (record.raw.JSONuiState) {
@@ -195,7 +201,6 @@ export class PosData extends Reactive {
         const fields = {};
         const data = {};
         const response = await this.loadInitialData();
-
         for (const [model, values] of Object.entries(response)) {
             relations[model] = values.relations;
             fields[model] = values.fields;

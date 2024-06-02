@@ -6,7 +6,7 @@
             <t t-if="!pos.scanning">
                 <button
                     t-if="this.swapButton"
-                    class="btn-switchpane btn btn-lg w-50 position-relative overflow-hidden"
+                    class="btn-switchpane pay-button btn btn-lg w-50 position-relative overflow-hidden"
                     t-on-click="submitOrder"
                     t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
                     <div t-if="this.uiState.clicked and this.displayCategoryCount.length" class="h-100 w-100 position-absolute top-0 start-0 d-flex align-items-center justify-content-center" style="backdrop-filter: blur(5px);">
@@ -18,7 +18,7 @@
                 </button>
                 <t t-else="">
                     <button
-                        class="btn-switchpane btn btn-lg w-50"
+                        class="btn-switchpane pay-button btn btn-lg w-50"
                         t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}"
                         t-on-click="() => this.pos.pay()">
                         <span class="d-block">Pay</span>
