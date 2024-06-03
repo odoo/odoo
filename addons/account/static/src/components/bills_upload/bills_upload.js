@@ -15,7 +15,7 @@ import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component, useState, onWillStart, useSubEnv, reactive } from "@odoo/owl";
+import { Component, useState, onWillStart, useSubEnv, reactive, markup } from "@odoo/owl";
 
 export class AccountFileUploader extends Component {
     static template = "account.AccountFileUploader";
@@ -72,6 +72,9 @@ export class AccountFileUploader extends Component {
                     });
             }
             delete action.context.notifications;
+        }
+        if (action.help && typeof(action.help) === "string") {
+            action.help = markup(action.help);
         }
         this.action.doAction(action);
     }

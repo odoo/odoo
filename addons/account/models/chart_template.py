@@ -531,7 +531,7 @@ class AccountChartTemplate(models.AbstractModel):
             def should_delay(created_models, yet_to_be_created_models, model, field_name, field_val, parent_models=None):
                 parent_models = (parent_models or []) + [model]
                 field = self.env[model]._fields.get(field_name)
-                if not field or not field.relational or field.comodel_name in created_models:
+                if not field or not field.relational or field.comodel_name in created_models or isinstance(field_val, int):
                     return False
                 field_yet_to_be_created = field.comodel_name in parent_models + yet_to_be_created_models
                 if not isinstance(field_val, list | tuple):
@@ -551,7 +551,7 @@ class AccountChartTemplate(models.AbstractModel):
             created_models = set()
             while all_data:
                 (model, data), *all_data = all_data
-                yet_to_be_created_models = [model for model, _data in all_data]
+                yet_to_be_created_models = [model for model, _data in all_data if _data]
                 to_delay = defaultdict(dict)
                 for xml_id, vals in data.items():
                     to_be_removed = []

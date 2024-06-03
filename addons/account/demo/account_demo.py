@@ -28,6 +28,8 @@ class AccountChartTemplate(models.AbstractModel):
             'ir.attachment': self._get_demo_data_attachment(company),
             'mail.message': self._get_demo_data_mail_message(company),
             'mail.activity': self._get_demo_data_mail_activity(company),
+            'res.partner.bank': self._get_demo_data_bank(company),
+            'account.journal': self._get_demo_data_journal(company),
         }
 
     def _post_load_demo_data(self, company=False):
@@ -56,6 +58,29 @@ class AccountChartTemplate(models.AbstractModel):
                 move.action_post()
             except (UserError, ValidationError):
                 _logger.exception('Error while posting demo data')
+
+    @api.model
+    def _get_demo_data_bank(self, company=False):
+        if company.partner_id.bank_ids:
+            return {}
+        return {
+            'demo_bank_1': {
+                'acc_number': f'BANK{company.id}34567890',
+                'partner_id': company.partner_id.id,
+                'journal_id': 'bank',
+            },
+        }
+
+    @api.model
+    def _get_demo_data_journal(self, company=False):
+        if company.partner_id.bank_ids:
+            # if a bank is created in xml, link it to the journal
+            return {
+                'bank': {
+                    'bank_account_id': company.partner_id.bank_ids[0].id,
+                }
+            }
+        return {}
 
     @api.model
     def _get_demo_data_products(self, company=False):

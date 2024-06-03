@@ -74,6 +74,7 @@ export class JournalDashboardGraphField extends Component {
                 plugins: {
                     legend: { display: false },
                     tooltip: {
+                        enabled: !this.data[0].is_sample_data,
                         intersect: false,
                         position: "nearest",
                         caretSize: 0,
@@ -132,6 +133,7 @@ export class JournalDashboardGraphField extends Component {
                 plugins: {
                     legend: { display: false },
                     tooltip: {
+                        enabled: !this.data[0].is_sample_data,
                         intersect: false,
                         position: "nearest",
                         caretSize: 0,

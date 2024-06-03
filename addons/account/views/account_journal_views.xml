@@ -92,7 +92,7 @@
                                         <field name="company_partner_id" invisible="1"/>
                                         <field name="bank_account_id" string="Account Number" context="{'default_partner_id': company_partner_id}"/>
                                         <field name="bank_id" invisible="not bank_account_id"/>
-                                        <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_readonly"/>
+                                        <field name="bank_statements_source" widget="radio" required="type == 'bank'"  groups="account.group_account_basic"/>
                                     </group>
                                 </group>
                             </page>
