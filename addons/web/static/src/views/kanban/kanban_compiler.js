@@ -17,13 +17,21 @@ import { toInterpolatedStringExpression, ViewCompiler } from "@web/views/view_co
  */
 
 const ACTION_TYPES = ["action", "object"];
-const SPECIAL_TYPES = [...ACTION_TYPES, "edit", "open", "delete", "url", "set_cover", "archive", "unarchive"];
+const SPECIAL_TYPES = [
+    ...ACTION_TYPES,
+    "edit",
+    "open",
+    "delete",
+    "url",
+    "set_cover",
+    "archive",
+    "unarchive",
+];
 
 export class KanbanCompiler extends ViewCompiler {
     setup() {
         this.ctx.readonly = "read_only_mode";
         this.compilers.push(
-            { selector: ".oe_kanban_colorpicker", fn: this.compileColorPicker },
             { selector: "t[t-call]", fn: this.compileTCall },
             { selector: "img", fn: this.compileImage }
         );
@@ -102,15 +110,6 @@ export class KanbanCompiler extends ViewCompiler {
         element.setAttribute("loading", "lazy");
         return element;
     }
-    /**
-     * @returns {Element}
-     */
-    compileColorPicker() {
-        return createElement("t", {
-            "t-call": "web.KanbanColorPicker",
-            "t-call-context": "__comp__",
-        });
-    }
 
     /**
      * @override
@@ -118,7 +117,7 @@ export class KanbanCompiler extends ViewCompiler {
     compileField(el, params) {
         let compiled;
         let isSpan = false;
-        const recordExpr = params.recordExpr || '__comp__.props.record';
+        const recordExpr = params.recordExpr || "__comp__.props.record";
         const dataPointIdExpr = params.dataPointIdExpr || `${recordExpr}.id`;
         if (!el.hasAttribute("widget")) {
             isSpan = true;
@@ -138,10 +137,7 @@ export class KanbanCompiler extends ViewCompiler {
             // view dialog.
             const readonlyAttr = compiled.getAttribute("readonly");
             if (readonlyAttr) {
-                compiled.setAttribute(
-                    "readonly",
-                    `${recordExpr}.isInEdition || (${readonlyAttr})`
-                );
+                compiled.setAttribute("readonly", `${recordExpr}.isInEdition || (${readonlyAttr})`);
             } else {
                 compiled.setAttribute("readonly", `${recordExpr}.isInEdition`);
             }
