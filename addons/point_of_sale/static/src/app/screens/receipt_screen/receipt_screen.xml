@@ -20,11 +20,18 @@
                                     <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
                             </div>
-                            <div class="input-group">
-                                <input type="text" class="form-control py-3 bg-view" t-attf-placeholder="eg.: john.doe@mail.com" t-model="state.input" />
-                                <button t-att-disabled="!isValidEmail(state.input)" t-on-click="() => sendReceipt.call({action:'action_send_receipt', name:'Email'})" class="btn btn-primary px-5" >
-                                    <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
-                                </button>
+                            <div t-att-class="{'d-flex': !this.ui.isSmall}">
+                                <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
+                                    <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="eg.: john.doe@mail.com" t-model="state.input" />
+                                    <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
+                                        <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
+                                    </div>
+                                </div>
+                                <div t-att-class="{'mt-1 gap-1': this.ui.isSmall}" class="d-flex sending-receipt-management justify-content-center">
+                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary px-5 rounded-0" >
+                                        <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
+                                    </button>
+                                </div>
                             </div>
                             <div class="notice mt-2">
                                 <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
