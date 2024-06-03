@@ -462,19 +462,23 @@ test("scroll position is kept when navigating from one record to another", async
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
+    const clientHeight1 = $(".o-mail-Chatter")[0].clientHeight; // client height might change (cause: breadcrumb)
     const scrollValue1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
     await openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
+    const clientHeight2 = $(".o-mail-Chatter")[0].clientHeight;
     const scrollValue2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
     await scroll(".o-mail-Chatter", scrollValue2);
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Message", { count: 20 });
-    await contains(".o-mail-Chatter", { scroll: scrollValue1 });
+    const clientHeight3 = $(".o-mail-Chatter")[0].clientHeight;
+    await contains(".o-mail-Chatter", { scroll: scrollValue1 - (clientHeight3 - clientHeight1) });
     await openFormView("res.partner", partnerId_2);
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-Chatter", { scroll: scrollValue2 });
+    const clientHeight4 = $(".o-mail-Chatter")[0].clientHeight;
+    await contains(".o-mail-Chatter", { scroll: scrollValue2 - (clientHeight4 - clientHeight2) });
 });
 
 test("basic chatter rendering", async () => {
