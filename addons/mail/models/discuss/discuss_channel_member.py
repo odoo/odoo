@@ -420,8 +420,8 @@ class ChannelMember(models.Model):
         """
         :param message_id: id of the message above which the new message
             separator should be displayed.
-        :param sync: if True, the new message separator in the UX will be
-            updated to the `message_id` value.
+        :param sync: whether the new message separator and the unread counter
+            in the UX will sync to their server values.
 
         """
         self.ensure_one()
@@ -440,6 +440,5 @@ class ChannelMember(models.Model):
                 "model": "discuss.channel",
             },
         }
-        if sync:
-            channel_member["localNewMessageSeparator"] = self.new_message_separator
+        channel_member["syncUnread"] = sync
         self.env["bus.bus"]._sendone(target, "mail.record/insert", {"ChannelMember": channel_member})

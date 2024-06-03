@@ -426,7 +426,7 @@ export class MailMessage extends models.ServerModel {
             domain.push(["body", "ilike", search_term]);
             res.count = this.search_count(domain);
         }
-        if (around) {
+        if (around !== undefined) {
             const messagesBefore = this._filter(domain.concat([["id", "<=", around]])).sort(
                 (m1, m2) => m2.id - m1.id
             );

@@ -198,17 +198,22 @@ test("No counter if category is folded and without unread messages", async () =>
 test("Counter should have correct value of unread threads if category is folded and with unread messages", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({
-                message_unread_counter: 10,
                 partner_id: serverState.partnerId,
             }),
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,
+    });
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId,
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
     });
     await start();
     await openDiscuss();

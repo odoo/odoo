@@ -1051,7 +1051,7 @@ class Message(models.Model):
             ])])
             domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
             res["count"] = self.search_count(domain)
-        if around:
+        if around is not None:
             messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
             messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
             return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}

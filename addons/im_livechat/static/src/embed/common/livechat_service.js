@@ -217,6 +217,7 @@ export class LivechatService {
             this.leave({ notifyServer: false });
             return;
         }
+        data.Thread["scrollUnread"] = false;
         this.state = persist ? SESSION_STATE.PERSISTED : SESSION_STATE.CREATED;
         this._saveLivechatState(data.Thread, { persisted: persist });
         this.store.insert(data);
