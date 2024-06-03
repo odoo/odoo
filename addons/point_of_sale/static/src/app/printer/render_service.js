@@ -96,7 +96,7 @@ const applyWhenMounted = async ({ el, container, callback }) => {
  */
 export const htmlToCanvas = async (el, options) => {
     if (options.addClass) {
-        el.classList.add(options.addClass);
+        el.classList.add(...options.addClass.split(" "));
     }
     return await applyWhenMounted({
         el,
