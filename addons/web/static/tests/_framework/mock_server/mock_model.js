@@ -1803,9 +1803,13 @@ export class Model extends Array {
                         if (func === "array_agg") {
                             group[name] = records.map((r) => r[fieldName]);
                         } else {
-                            group[name] = 0;
-                            for (const r of records) {
-                                group[name] += r[fieldName];
+                            if (!records.length) {
+                                group[name] = false;
+                            } else {
+                                group[name] = 0;
+                                for (const r of records) {
+                                    group[name] += r[fieldName];
+                                }
                             }
                         }
                         break;
@@ -1889,7 +1893,7 @@ export class Model extends Array {
         }
 
         if (!groupBy.length) {
-            const group = { __count: records.length };
+            const group = { __count: records.length, __domain: kwargs.domain };
             aggregateFields(group, records);
             return [group];
         }

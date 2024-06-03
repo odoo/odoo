@@ -269,6 +269,20 @@ test("performRPC: search_count with archived records", async () => {
     expect(result).toBe(2);
 });
 
+test("performRPC: read_group, no group", async function (assert) {
+    await makeMockServer();
+    const result = await ormRequest({
+        model: "bar",
+        method: "read_group",
+        kwargs: {
+            fields: ["foo:count"],
+            domain: [["foo", "=", -10]],
+            groupby: [],
+        },
+    });
+    expect(result).toEqual([{ __count: 0, foo: false, __domain: [["foo", "=", -10]] }]);
+});
+
 test("performRPC: read_group, group by char", async () => {
     await makeMockServer();
     const result = await ormRequest({
@@ -1032,6 +1046,7 @@ test("performRPC: read_group with array_agg", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             aggregateLabel: aggregateValue,
         },
     ]);
@@ -1048,6 +1063,7 @@ test("performRPC: read_group with array_agg", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             partner_id: aggregateValue,
         },
     ]);
@@ -1069,6 +1085,7 @@ test("performRPC: read_group with array_agg on id", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             aggregateLabel: [1, 2, 3, 4, 5, 6],
         },
     ]);
@@ -1085,6 +1102,7 @@ test("performRPC: read_group with array_agg on id", async () => {
     ).resolves.toEqual([
         {
             __count: 3,
+            __domain: [["id", "in", [2, 3, 5]]],
             id: [2, 3, 5],
         },
     ]);
@@ -1108,6 +1126,7 @@ test("performRPC: read_group with array_agg on an integer field", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             aggregateLabel: aggregateValue,
         },
     ]);
@@ -1124,6 +1143,7 @@ test("performRPC: read_group with array_agg on an integer field", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             foo: aggregateValue,
         },
     ]);
@@ -1145,6 +1165,7 @@ test("performRPC: read_group with count_distinct", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             aggregateLabel: 2,
         },
     ]);
@@ -1161,6 +1182,7 @@ test("performRPC: read_group with count_distinct", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             partner_id: 2,
         },
     ]);
@@ -1177,6 +1199,7 @@ test("performRPC: read_group with count_distinct", async () => {
     ).resolves.toEqual([
         {
             __count: 0,
+            __domain: [[0, "=", 1]],
             partner_id: 0,
         },
     ]);
@@ -1193,6 +1216,7 @@ test("performRPC: read_group with count_distinct", async () => {
     ).resolves.toEqual([
         {
             __count: 6,
+            __domain: [],
             partner_ref: 2,
         },
     ]);
