@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable */
 
 const tldWhitelist = [
     'com', 'net', 'org', 'ac', 'ad', 'ae', 'af', 'ag', 'ai', 'al', 'am', 'an',

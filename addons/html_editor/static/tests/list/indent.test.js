@@ -1203,7 +1203,7 @@ describe("Mixed: list + paragraph", () => {
 
         keydownTab(editor);
 
-        /* eslint-disable prettier/prettier */
+        /* eslint-disable */
         const expectedContent = unformat(`
             <ul>
                 <li class="oe-nested">
@@ -1213,7 +1213,7 @@ describe("Mixed: list + paragraph", () => {
                 </li>
             </ul>`) +
             '<p><span class="oe-tabs" contenteditable="false" style="width: 40px;">\t</span>\u200bdef]</p>';
-        /* eslint-enable prettier/prettier */
+        /* eslint-enable */
         expect(getContent(el)).toBe(expectedContent);
 
         // Check that it was done as single history step.
