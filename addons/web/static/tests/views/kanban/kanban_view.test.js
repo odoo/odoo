@@ -8064,6 +8064,30 @@ test("properly evaluate more complex domains", async () => {
     });
 });
 
+test("kanban with color attribute", async () => {
+    Category._records[0].color = 5;
+    Category._records[1].color = 6;
+
+    await mountView({
+        type: "kanban",
+        resModel: "category",
+        arch: `
+            <kanban highlight_color="color">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="name"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_5");
+    expect(getKanbanRecord({ index: 1 })).toHaveClass("o_kanban_color_6");
+});
+
 test("edit the kanban color with the colorpicker", async () => {
     Category._records[0].color = 12;
 
@@ -8075,14 +8099,13 @@ test("edit the kanban color with the colorpicker", async () => {
         type: "kanban",
         resModel: "category",
         arch: `
-            <kanban>
-                <field name="color"/>
+            <kanban highlight_color="color">
                 <templates>
                     <t t-name="kanban-menu">
-                        <div class="oe_kanban_colorpicker"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="kanban-box">
-                        <div color="color">
+                        <div>
                             <field name="name"/>
                         </div>
                     </t>
@@ -8092,22 +8115,22 @@ test("edit the kanban color with the colorpicker", async () => {
 
     await toggleKanbanRecordDropdown(0);
 
-    expect(".o_kanban_record.oe_kanban_color_12").toHaveCount(0, {
+    expect(".o_kanban_record.o_kanban_color_12").toHaveCount(0, {
         message: "no record should have the color 12",
     });
     expect(
-        queryAll(".oe_kanban_colorpicker", { root: getDropdownMenu(getKanbanRecord({ index: 0 })) })
+        queryAll(".o_kanban_colorpicker", { root: getDropdownMenu(getKanbanRecord({ index: 0 })) })
     ).toHaveCount(1);
     expect(
-        queryAll(".oe_kanban_colorpicker > *", {
+        queryAll(".o_kanban_colorpicker > *", {
             root: getDropdownMenu(getKanbanRecord({ index: 0 })),
         })
     ).toHaveCount(12, { message: "the color picker should have 12 children (the colors)" });
 
-    await contains(".oe_kanban_colorpicker a.oe_kanban_color_9").click();
+    await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
 
     expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
-    expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_9");
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
 test("kanban with colorpicker and node with color attribute", async () => {
@@ -8122,25 +8145,24 @@ test("kanban with colorpicker and node with color attribute", async () => {
         type: "kanban",
         resModel: "category",
         arch: `
-            <kanban>
-                <field name="colorpickerField"/>
+            <kanban highlight_color="colorpickerField">
                 <templates>
                     <t t-name="kanban-menu">
-                        <div class="oe_kanban_colorpicker" data-field="colorpickerField"/>
+                        <field name="colorpickerField" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="kanban-box">
-                        <div color="colorpickerField">
+                        <div>
                             <field name="name"/>
                         </div>
                     </t>
                 </templates>
             </kanban>`,
     });
-    expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_3");
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_3");
     await toggleKanbanRecordDropdown(0);
-    await contains(`.oe_kanban_colorpicker li[title="Raspberry"] a.oe_kanban_color_9`).click();
+    await contains(`.o_kanban_colorpicker li[title="Raspberry"] a.o_kanban_color_9`).click();
     expect(["write-color-9"]).toVerifySteps({ message: "should write on the color field" });
-    expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_9");
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
 test("edit the kanban color with translated colors resulting in the same terms", async () => {
@@ -8156,14 +8178,13 @@ test("edit the kanban color with translated colors resulting in the same terms",
         type: "kanban",
         resModel: "category",
         arch: `
-            <kanban>
-                <field name="color"/>
+            <kanban highlight_color="color">
                 <templates>
                     <t t-name="kanban-menu">
-                        <div class="oe_kanban_colorpicker"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="kanban-box">
-                        <div color="color">
+                        <div>
                             <field name="name"/>
                         </div>
                     </t>
@@ -8172,8 +8193,8 @@ test("edit the kanban color with translated colors resulting in the same terms",
     });
 
     await toggleKanbanRecordDropdown(0);
-    await contains(".oe_kanban_colorpicker a.oe_kanban_color_9").click();
-    expect(getKanbanRecord({ index: 0 })).toHaveClass("oe_kanban_color_9");
+    await contains(".o_kanban_colorpicker a.o_kanban_color_9").click();
+    expect(getKanbanRecord({ index: 0 })).toHaveClass("o_kanban_color_9");
 });
 
 test("colorpicker doesn't appear when missing access rights", async () => {
@@ -8182,13 +8203,12 @@ test("colorpicker doesn't appear when missing access rights", async () => {
         resModel: "category",
         arch: `
             <kanban edit="0">
-                <field name="color"/>
                 <templates>
                     <t t-name="kanban-menu">
-                        <div class="oe_kanban_colorpicker"/>
+                        <field name="color" widget="kanban_color_picker"/>
                     </t>
                     <t t-name="kanban-box">
-                        <div color="color">
+                        <div>
                             <field name="name"/>
                         </div>
                     </t>
@@ -8197,10 +8217,7 @@ test("colorpicker doesn't appear when missing access rights", async () => {
     });
 
     await toggleKanbanRecordDropdown(0);
-
-    expect(".o_kanban_record:first-child .oe_kanban_colorpicker").toHaveCount(0, {
-        message: "there shouldn't be a color picker",
-    });
+    expect(".o_kanban_colorpicker").toHaveCount(0);
 });
 
 test("load more records in column", async () => {

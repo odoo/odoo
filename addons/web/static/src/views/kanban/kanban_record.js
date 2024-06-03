@@ -24,7 +24,8 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, onWillUpdateProps, useRef, useState, useEffect } from "@odoo/owl";
+import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -35,16 +36,9 @@ export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[dat
 );
 
 /**
- * Returns the class name of a record according to its color.
- */
-function getColorClass(value) {
-    return `oe_kanban_color_${getColorIndex(value)}`;
-}
-
-/**
  * Returns the index of a color determined by a given record.
  */
-function getColorIndex(value) {
+export function getColorIndex(value) {
     if (typeof value === "number") {
         return Math.round(value) % COLORS.length;
     } else if (typeof value === "string") {
@@ -53,13 +47,6 @@ function getColorIndex(value) {
     } else {
         return 0;
     }
-}
-
-/**
- * Returns the proper translated name of a record color.
- */
-function getColorName(value) {
-    return COLORS[getColorIndex(value)];
 }
 
 /**
@@ -239,18 +226,6 @@ export class KanbanRecord extends Component {
             Object.assign(this.dataState.record, getFormattedRecord(record))
         );
         this.rootRef = useRef("root");
-        useEffect(
-            (color) => {
-                if (!color) {
-                    return;
-                }
-                const classList = this.rootRef.el.firstElementChild.classList;
-                const colorClasses = [...classList].filter((c) => c.startsWith("oe_kanban_color_"));
-                colorClasses.forEach((cls) => classList.remove(cls));
-                classList.add(getColorClass(color));
-            },
-            () => [this.props.record.data[this.props.archInfo.colorField]]
-        );
     }
 
     get record() {
@@ -288,6 +263,9 @@ export class KanbanRecord extends Component {
         if (canResequence) {
             classes.push("o_draggable");
         }
+        if (forceGlobalClick || archInfo.openAction || archInfo.canOpenRecords) {
+            classes.push("cursor-pointer");
+        }
         if (progressBarState) {
             const { fieldName, colors } = progressBarState.progressAttributes;
             const value = record.data[fieldName];
@@ -296,10 +274,7 @@ export class KanbanRecord extends Component {
         }
         if (archInfo.cardColorField) {
             const value = record.data[archInfo.cardColorField];
-            classes.push(getColorClass(value));
-        }
-        if (forceGlobalClick || archInfo.openAction || archInfo.canOpenRecords) {
-            classes.push("cursor-pointer");
+            classes.push(`o_kanban_color_${getColorIndex(value)}`);
         }
         if (!this.props.list.isGrouped) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
@@ -330,11 +305,6 @@ export class KanbanRecord extends Component {
         } else if (forceGlobalClick || this.props.archInfo.canOpenRecords) {
             openRecord(record);
         }
-    }
-
-    async selectColor(colorIndex) {
-        const { archInfo, record } = this.props;
-        await record.update({ [archInfo.colorField]: colorIndex }, { save: true });
     }
 
     /**
@@ -400,9 +370,6 @@ export class KanbanRecord extends Component {
         return {
             context: this.props.record.context,
             JSON,
-            kanban_color: getColorClass,
-            kanban_getcolor: getColorIndex,
-            kanban_getcolorname: getColorName,
             kanban_image: (...args) => getImageSrcFromRecordInfo(this.props.record, ...args),
             luxon,
             read_only_mode: this.props.readonly,

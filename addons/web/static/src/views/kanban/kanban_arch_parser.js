@@ -147,13 +147,6 @@ export class KanbanArchParser {
             throw new Error(`Missing '${KANBAN_BOX_ATTRIBUTE}' template.`);
         }
 
-        // Color and color picker (first node found is taken for each)
-        const cardColorEl = cardDoc.querySelector("[color]");
-        const cardColorField = cardColorEl && cardColorEl.getAttribute("color");
-
-        const colorEl = xmlDoc.querySelector("templates .oe_kanban_colorpicker[data-field]");
-        const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
-
         if (!defaultOrder.length && handleField) {
             defaultOrder = stringToOrderBy(handleField);
         }
@@ -161,6 +154,7 @@ export class KanbanArchParser {
         return {
             activeActions,
             canOpenRecords,
+            cardColorField: xmlDoc.getAttribute("highlight_color"),
             className,
             creates,
             defaultGroupBy,
@@ -168,7 +162,6 @@ export class KanbanArchParser {
             widgetNodes,
             handleField,
             headerButtons,
-            colorField,
             defaultOrder,
             onCreate,
             openAction,
@@ -178,7 +171,6 @@ export class KanbanArchParser {
             limit: limit && parseInt(limit, 10),
             countLimit: countLimit && parseInt(countLimit, 10),
             progressAttributes,
-            cardColorField,
             templateDocs,
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
