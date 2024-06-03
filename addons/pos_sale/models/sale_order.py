@@ -10,7 +10,12 @@ class SaleOrder(models.Model):
 
     pos_order_line_ids = fields.One2many('pos.order.line', 'sale_order_origin_id', string="Order lines Transfered to Point of Sale", readonly=True, groups="point_of_sale.group_pos_user")
     pos_order_count = fields.Integer(string='Pos Order Count', compute='_count_pos_order', readonly=True, groups="point_of_sale.group_pos_user")
-    amount_unpaid = fields.Monetary(string='Unpaid Amount', compute='_compute_amount_unpaid', store=True, help="The amount due from the sale order.")
+    amount_unpaid = fields.Monetary(
+        string="Amount To Pay In POS",
+        help="Amount left to pay in POS to avoid double payment or double invoicing.",
+        compute='_compute_amount_unpaid',
+        store=True,
+    )
 
     @api.model
     def _load_pos_data_domain(self, data):
