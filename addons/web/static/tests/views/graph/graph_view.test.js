@@ -31,6 +31,7 @@ import {
     checkModeIs,
     checkTooltip,
     clickOnDataset,
+    clickOnLegend,
     clickSort,
     getChart,
     getGraphModel,
@@ -2001,6 +2002,17 @@ test("pie chart rendering (mix of positive and negative values)", async () => {
         label: "",
         stack: undefined,
     });
+});
+
+test("pie chart toggling dataset hides label", async () => {
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: `<graph type="pie"/>`,
+    });
+    checkLabels(view, ["Total"]);
+    await clickOnLegend(view, "Total");
+    expect(getChart(view).legend.legendItems[0].hidden).toBe(true);
 });
 
 test("mode props", async () => {
