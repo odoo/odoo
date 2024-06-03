@@ -1730,7 +1730,7 @@ class PosSession(models.Model):
             ('available_in_pos', '=', True),
         ])
         if product:
-            return {'product.product': product.read(product_fields, load=False)}
+            return {'product.product': product.with_context({'display_default_code': False}).read(product_fields, load=False)}
 
         domain = [('barcode', 'not in', ['', False])]
         loaded_data = self._context.get('loaded_data')
@@ -1748,7 +1748,7 @@ class PosSession(models.Model):
         packaging = self.env['product.packaging'].search(packaging_params['search_params']['domain'])
 
         if packaging and packaging.product_id:
-            return {'product.product': packaging.product_id.read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
+            return {'product.product': packaging.product_id.with_context({'display_default_code': False}).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
         else:
             return {
                 'product.product': [],
