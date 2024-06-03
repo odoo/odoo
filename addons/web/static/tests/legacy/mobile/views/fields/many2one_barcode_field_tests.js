@@ -69,7 +69,7 @@ QUnit.module("Fields", (hooks) => {
             views: {
                 "product.product,false,kanban": `
                     <kanban><templates><t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="id"/>
                             <field name="name"/>
                             <field name="barcode"/>
@@ -145,7 +145,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             modal,
-            ".o_kanban_record .oe_kanban_global_click",
+            ".o_kanban_record:not(.o_kanban_ghost)",
             2,
             "there should be 2 records displayed"
         );
@@ -184,7 +184,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             modal,
-            ".o_kanban_record .oe_kanban_global_click",
+            ".o_kanban_record:not(.o_kanban_ghost)",
             3,
             "there should be 3 records displayed"
         );

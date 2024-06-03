@@ -239,7 +239,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="name"/>
                             <div class="oe_kanban_footer">
                                 <div class="o_kanban_record_bottom">
@@ -328,7 +328,7 @@ test("widget many2many_tags_avatar add/remove tags in kanban view", async () => 
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="name"/>
                             <div class="oe_kanban_footer">
                                 <div class="o_kanban_record_bottom">
@@ -381,7 +381,7 @@ test("widget many2many_tags_avatar quick add tags and close in kanban view with 
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="name"/>
                             <div class="oe_kanban_footer">
                                 <div class="o_kanban_record_bottom">
@@ -413,7 +413,7 @@ test("widget many2many_tags_avatar in kanban view missing access rights", async 
             <kanban edit="0" create="0">
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="name"/>
                             <div class="oe_kanban_footer">
                                 <div class="o_kanban_record_bottom">

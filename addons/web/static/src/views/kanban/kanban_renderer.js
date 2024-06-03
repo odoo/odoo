@@ -167,12 +167,16 @@ export class KanbanRenderer extends Component {
                     return;
                 }
 
+                if (this.props.archInfo.canOpenRecords) {
+                    target.click();
+                    return;
+                }
+
                 // Open first link
-                const firstLink = target.querySelector(".oe_kanban_global_click, a, button");
-                if (firstLink && firstLink instanceof HTMLElement) {
+                const firstLink = target.querySelector("a, button");
+                if (firstLink) {
                     firstLink.click();
                 }
-                return;
             },
             { area: () => this.rootRef.el }
         );

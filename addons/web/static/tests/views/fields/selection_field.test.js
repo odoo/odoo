@@ -371,7 +371,7 @@ test("SelectionField don't open form view on click in kanban view", async functi
                 <kanban>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
+                            <div>
                                 <field name="color" widget="selection" />
                             </div>
                         </t>
