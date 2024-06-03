@@ -619,7 +619,7 @@ class ProjectProject(models.Model):
                     or self.env.user.has_group('account.group_account_invoice')
                     or self.env.user.has_group('account.group_account_readonly')
                 ):
-                    invoices_revenues['action'] = self._get_action_for_profitability_section(invoices_move_lines.ids, section_id)
+                    invoices_revenues['action'] = self._get_action_for_profitability_section(invoices_move_lines.move_id.ids, section_id)
                 return {
                     'data': [invoices_revenues],
                     'total': {
