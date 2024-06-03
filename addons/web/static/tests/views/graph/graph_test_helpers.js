@@ -178,3 +178,18 @@ export function getGraphRenderer(view) {
 export function selectMode(mode) {
     return contains(getModeButton(mode)).click();
 }
+
+/**
+ * @param {GraphView} view
+ * @param {string} text
+ */
+export async function clickOnLegend(view, text) {
+    const chart = getChart(view);
+    const index = chart.legend.legendItems.findIndex((e) => e.text === text);
+    const { left, top, width, height } = chart.legend.legendHitBoxes[index];
+    const point = {
+        x: left + width / 2,
+        y: top + height / 2,
+    };
+    return contains(chart.canvas).click({ position: point, relative: true });
+}
