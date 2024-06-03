@@ -44,6 +44,67 @@
         <t t-set="indent" t-value="true"/>
     </t>
 </t>
+<t t-name="website.s_google_map_option">
+    <WeRow>
+        <t t-set-slot="title">Address</t>
+        <t t-set="placeholder">e.g. De Brouckere, Brussels, Belgium</t>
+        <WeGpsPicker
+            selectDataAttribute="''" attributeName="'mapGps'"
+            setFormattedAddress="''"
+            placeHolder="placeholder"
+            noPreview="'true'"
+        />
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Marker Style</t>
+        <WeSelect attributeName="'pinStyle'">
+            <WeButton selectDataAttribute="''">Default</WeButton>
+            <WeButton selectDataAttribute="'flat'">Flat</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Type</t>
+        <WeSelect attributeName="'mapType'" noPreview="'true'" resetMapColor="''">
+            <WeButton name="'roadmap_opt'" selectDataAttribute="'ROADMAP'">RoadMap</WeButton>
+            <WeButton selectDataAttribute="'TERRAIN'">Terrain</WeButton>
+            <WeButton selectDataAttribute="'SATELLITE'">Satellite</WeButton>
+            <WeButton selectDataAttribute="'HYBRID'">Hybrid</WeButton>
+        </WeSelect>
+    </WeRow>
+    <WeRow class="'o_we_sublevel_1'">
+        <t t-set-slot="title">Style</t>
+        <WeSelect dependencies="'roadmap_opt'" attributeName="'mapColor'" noPreview="'true'">
+            <t t-set="title">Default</t>
+            <WeButton selectDataAttribute="''" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-default.jpg'"/>
+            <t t-set="title">Light Mono</t>
+            <WeButton selectDataAttribute="'lightMonoMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lightMono.jpg'"/>
+            <t t-set="title">Cupertino</t>
+            <WeButton selectDataAttribute="'cupertinoMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cupertino.jpg'"/>
+            <t t-set="title">Retro</t>
+            <WeButton selectDataAttribute="'retroMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-retro.jpg'"/>
+            <t t-set="title">Cobalt</t>
+            <WeButton selectDataAttribute="'cobaltMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-cobalt.jpg'"/>
+            <t t-set="title">Flat</t>
+            <WeButton selectDataAttribute="'flatMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-flat.jpg'"/>
+            <t t-set="title">Blue</t>
+            <WeButton selectDataAttribute="'blueMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-blue.jpg'"/>
+            <t t-set="title">Lilla</t>
+            <WeButton selectDataAttribute="'lillaMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-lilla.jpg'"/>
+            <t t-set="title">Caramello</t>
+            <WeButton selectDataAttribute="'carMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-caramello.jpg'"/>
+            <t t-set="title">BW</t>
+            <WeButton selectDataAttribute="'bwMap'" title="title" img="'/website/static/src/snippets/s_google_map/img/thumbs/map-bw.jpg'"/>
+        </WeSelect>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Zoom</t>
+        <WeInput selectDataAttribute="'12'" noPreview="'true'" attributeName="'mapZoom'" step="'1'"/>
+    </WeRow>
+    <WeRow>
+        <t t-set-slot="title">Description</t>
+        <WeCheckbox showDescription="'true'" noPreview="'true'"/>
+    </WeRow>
+</t>
 
 <t t-name="website.TestSnippetOption" t-inherit="web_editor.TestSnippetOption" t-inherit-mode="extension">
     <xpath expr="//WeRow" position="before">
@@ -51,6 +112,7 @@
             <t t-set-slot="title">URL</t>
             <WeUrlPicker selectDataAttribute="''" attributeName="'url'"/>
         </WeRow>
+        <!-- Do not annoy devs with GMap key
         <WeRow>
             <t t-set-slot="title">Address</t>
             <WeGpsPicker selectDataAttribute="''" attributeName="'mapGps'"
@@ -58,6 +120,7 @@
                 placeholder="'e.g. De Brouckere, Brussels, Belgium'"
                 noPreview="'true'"/>
         </WeRow>
+        -->
     </xpath>
 </t>
 

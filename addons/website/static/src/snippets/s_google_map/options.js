@@ -1,9 +1,25 @@
 /** @odoo-module **/
 
 import { _t } from "@web/core/l10n/translation";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import { registry } from "@web/core/registry";
+import { SnippetOption } from "@web_editor/js/editor/snippets.options";
 
-options.registry.GoogleMap = options.Class.extend({
+class GoogleMap extends SnippetOption {
+
+    /**
+     * @override
+     */
+    async onBuilt(options) {
+        this.env.gmapApiRequest({
+            data: {
+                editableMode: true,
+                configureIfNecessary: true,
+                onSuccess: (key) => key,
+            },
+            stopPropagation: () => {},
+        });
+        await super.onBuilt(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -14,13 +30,13 @@ options.registry.GoogleMap = options.Class.extend({
      */
     resetMapColor(previewMode, widgetValue, params) {
         this.$target[0].dataset.mapColor = '';
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
     setFormattedAddress(previewMode, widgetValue, params) {
         this.$target[0].dataset.pinAddress = params.gmapPlace.formatted_address;
-    },
+    }
     /**
      * @see this.selectClass for parameters
      */
@@ -36,7 +52,7 @@ options.registry.GoogleMap = options.Class.extend({
         } else if (!widgetValue && descriptionEl) {
             descriptionEl.remove();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -49,6 +65,11 @@ options.registry.GoogleMap = options.Class.extend({
         if (methodName === 'showDescription') {
             return this.$target[0].querySelector('.description') ? 'true' : '';
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+}
+registry.category("snippet_options").add("GoogleMap", {
+    Class: GoogleMap,
+    template: "website.s_google_map_option",
+    selector: ".s_google_map",
 });
