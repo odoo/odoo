@@ -1074,3 +1074,48 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(pdf_report)
         invoice.invoice_pdf_report_id.unlink()
         self.assertTrue(invoice.is_move_sent)
+
+    def test_force_regenerate(self):
+        invoice_1 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice_1)
+        wizard.action_send_and_print()
+
+        # The PDF has been successfully generated.
+        pdf_report_1 = invoice_1.invoice_pdf_report_id
+        self.assertTrue(pdf_report_1)
+
+        invoice_2 = self.init_invoice("out_invoice", amounts=[2000], post=True)
+
+        # Synchronous force regenerate
+        wizard = self.create_send_and_print(invoice_1 + invoice_2)
+        self.assertTrue(wizard.enable_force_regenerate)
+        wizard.checkbox_force_regenerate = True
+        wizard.action_send_and_print()
+
+        self.assertNotEqual(pdf_report_1, invoice_1.invoice_pdf_report_id)  # pdf of invoice_1 has been regenerated
+
+        # Asynchronous force regenerate
+        wizard = self.create_send_and_print(invoice_1 + invoice_2)
+        self.assertTrue(wizard.enable_force_regenerate)
+        wizard.checkbox_force_regenerate = True
+        wizard.checkbox_download = True
+        wizard.action_send_and_print()
+
+        self.assertNotEqual(pdf_report_1, invoice_1.invoice_pdf_report_id)  # pdf of invoice_1 has been regenerated
+
+    def test_force_regenerate_disabled(self):
+        def _is_move_restricted(self, move, force_hash=False):
+            return move
+
+        with patch(
+                'odoo.addons.account.models.account_move.AccountMove._is_move_restricted',
+                _is_move_restricted,
+        ):
+            invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+            wizard = self.create_send_and_print(invoice)
+            self.assertFalse(wizard.enable_force_regenerate)
+            wizard.action_send_and_print()
+            self.assertTrue(invoice.invoice_pdf_report_id)
+
+            wizard = self.create_send_and_print(invoice)
+            self.assertFalse(wizard.enable_force_regenerate)

@@ -97,7 +97,7 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _need_invoice_document(self, invoice):
+    def _need_invoice_document(self, invoice, invoice_data):
         # EXTENDS 'account'
         return super()._need_invoice_document(invoice) and not invoice.l10n_it_edi_attachment_id
 

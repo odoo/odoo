@@ -27,6 +27,12 @@ class AccountMoveSend(models.TransientModel):
         readonly=False,
         store=True,
     )
+    enable_force_regenerate = fields.Boolean(
+        compute='_compute_enable_force_regenerate',
+    )
+    checkbox_force_regenerate = fields.Boolean(
+        string="Force regenerate PDF",
+    )
 
     # == PRINT ==
     enable_download = fields.Boolean(compute='_compute_enable_download')
@@ -161,6 +167,7 @@ class AccountMoveSend(models.TransientModel):
             'download': self.checkbox_download,
             'send_mail': self.checkbox_send_mail,
             'pdf_report_id': self.pdf_template_id.id,
+            'force_regenerate': self.checkbox_force_regenerate,
         }
 
     @api.model
@@ -246,7 +253,7 @@ class AccountMoveSend(models.TransientModel):
         available_templates_count = self.env['ir.actions.report'].search_count([('is_invoice_report', '=', True)], limit=2)
         for wizard in self:
             # show pdf template menu if there are more than 1 template available and there is at least one move that needs a pdf
-            wizard.show_pdf_template_menu = available_templates_count > 1 and any(self._need_invoice_document(move) for move in wizard.move_ids)
+            wizard.show_pdf_template_menu = available_templates_count > 1 and any(self._need_pdf_report(move) for move in wizard.move_ids)
 
     @api.depends('move_ids')
     def _compute_company_id(self):
@@ -259,6 +266,11 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mode(self):
         for wizard in self:
             wizard.mode = 'invoice_single' if len(wizard.move_ids) == 1 else 'invoice_multi'
+
+    @api.depends('move_ids')
+    def _compute_enable_force_regenerate(self):
+        for wizard in self:
+            wizard.enable_force_regenerate = all(move._can_regenerate_pdf() for move in wizard.move_ids)
 
     @api.depends('move_ids')
     def _compute_enable_download(self):
@@ -377,17 +389,23 @@ class AccountMoveSend(models.TransientModel):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def action_open_partners_without_email(self, res_ids=None):
-        # TODO: remove this method in master
-        return self.move_ids.mapped("partner_id").filtered(lambda x: not x.email)._get_records_action(name=_("Partners without email"))
+    @api.model
+    def _can_regenerate_pdf(self, move):
+        # the only attachment related to the invoice that exists is the pdf (no xml, ...)
+        return self._get_invoice_extra_attachments(move) == move.invoice_pdf_report_id and move.show_reset_to_draft_button
 
     @api.model
-    def _need_invoice_document(self, invoice):
+    def _need_pdf_report(self, move, force_regenerate=False):
+        allow_regenerate = force_regenerate and self._can_regenerate_pdf(move)
+        return move.state == 'posted' and (not move.invoice_pdf_report_id or allow_regenerate)
+
+    @api.model
+    def _need_invoice_document(self, invoice, invoice_data):
         """ Determine if we need to generate the documents for the invoice passed as parameter.
         :param invoice:         An account.move record.
         :return: True if the PDF / electronic documents must be generated, False otherwise.
         """
-        return not invoice.invoice_pdf_report_id and invoice.state == 'posted'
+        return self._need_pdf_report(invoice, force_regenerate=invoice_data.get('force_regenerate'))
 
     @api.model
     def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
@@ -457,6 +475,14 @@ class AccountMoveSend(models.TransientModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
+        # delete the previous pdf reports
+        old_pdfs_ids = [
+            invoice.invoice_pdf_report_id.id
+            for invoice, invoice_data in invoices_data.items()
+            if invoice_data.get('force_regenerate') and invoice._can_regenerate_pdf()
+        ]
+        if old_pdfs_ids:
+            self.env['ir.attachment'].browse(old_pdfs_ids).unlink()
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
         attachment_to_create = [invoice_data['pdf_attachment_values'] for invoice_data in invoices_data.values()]
@@ -608,7 +634,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if self._need_invoice_document(invoice):
+            if self._need_invoice_document(invoice, invoice_data):
                 self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
                 invoice_data['blocking_error'] = invoice_data.get('error') \
                                                  and not (allow_fallback_pdf and invoice_data.get('error_but_continue'))
@@ -633,7 +659,7 @@ class AccountMoveSend(models.TransientModel):
         batches = []
         pdf_to_generate = {}
         for invoice, invoice_data in invoices_data_pdf.items():
-            if self._need_invoice_document(invoice) and not invoice_data.get('error') and not invoice.invoice_pdf_report_id:
+            if self._need_invoice_document(invoice, invoice_data) and not invoice_data.get('error'):
                 pdf_to_generate[invoice] = invoice_data
 
                 if (len(pdf_to_generate) > int(batch_size)):
@@ -647,7 +673,7 @@ class AccountMoveSend(models.TransientModel):
             self._prepare_invoice_pdf_report(batch)
 
         for invoice, invoice_data in invoices_data_pdf.items():
-            if self._need_invoice_document(invoice) and not invoice_data.get('error'):
+            if self._need_invoice_document(invoice, invoice_data) and not invoice_data.get('error'):
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Cleanup the error if we don't want to block the regular pdf generation.
@@ -673,7 +699,7 @@ class AccountMoveSend(models.TransientModel):
         invoices_to_link = {
             invoice: invoice_data
             for invoice, invoice_data in invoices_data_web_service.items()
-            if self._need_invoice_document(invoice) and (not invoice_data.get('error') or allow_fallback_pdf)
+            if self._need_invoice_document(invoice, invoice_data) and (not invoice_data.get('error') or allow_fallback_pdf)
         }
         self._link_invoice_documents(invoices_to_link)
 
@@ -683,7 +709,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoices_data:   The collected data for invoices so far.
         """
         for invoice, invoice_data in invoices_data.items():
-            if self._need_invoice_document(invoice) and invoice_data.get('error'):
+            if self._need_invoice_document(invoice, invoice_data) and invoice_data.get('error'):
                 invoice_data.pop('error')
                 self._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
                 self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)

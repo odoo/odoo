@@ -14,12 +14,21 @@
                 <field name="show_pdf_template_menu" invisible="1"/>
                 <field name="enable_download" invisible="1"/>
                 <field name="enable_send_mail" invisible="1"/>
+                <field name="enable_force_regenerate" invisible="1"/>
                 <field name="send_mail_readonly" invisible="1"/>
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
 
-                <div class="m-0" name="warnings" invisible="not warnings">
+                <div class="m-0" name="warnings" invisible="not warnings and not enable_force_regenerate">
                     <field name="warnings" class="o_field_html" widget="actionable_errors"/>
+                    <div class="alert alert-info"
+                         role="alert"
+                         invisible="not enable_force_regenerate">
+                        Some of the selected invoices already have associated PDFs files.
+                        If you want to generate these documents in another format, we will create new PDFs files to associate with the invoices.
+                        <br/>
+                        <b class="me-1">I understand and want to overwrite the existing PDF</b><field name="checkbox_force_regenerate" class="account_move_send_warning_checkbox"/>
+                    </div>
                 </div>
 
                 <group>
