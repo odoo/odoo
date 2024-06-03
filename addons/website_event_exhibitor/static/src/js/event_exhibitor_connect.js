@@ -2,6 +2,7 @@
 
 import { debounce } from "@web/core/utils/timing";
 import publicWidget from "@web/legacy/js/public/public_widget";
+import { redirect } from "@web/core/utils/urls";
 import { ExhibitorConnectClosedDialog } from "../components/exhibitor_connect_closed_dialog/exhibitor_connect_closed_dialog";
 
 publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
@@ -22,11 +23,11 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         return this._super(...arguments).then(function () {
-            self.eventIsOngoing = self.$el.data('eventIsOngoing') || false;
-            self.sponsorIsOngoing = self.$el.data('sponsorIsOngoing') || false;
-            self.isParticipating = self.$el.data('isParticipating') || false;
-            self.userEventManager = self.$el.data('userEventManager') || false;
-            self.$el.on('click', self._onConnectClick.bind(self));
+            self.eventIsOngoing = self.el.dataset.eventIsOngoing || false;
+            self.sponsorIsOngoing = self.el.dataset.sponsorIsOngoing || false;
+            self.isParticipating = self.el.dataset.isParticipating || false;
+            self.userEventManager = self.el.dataset.userEventManager || false;
+            self.el.addEventListener("click", self._onConnectClick.bind(self));
         });
     },
 
@@ -43,13 +44,12 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
     _onConnectClick: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-
         if (this.userEventManager) {
-            document.location = this.$el.data('sponsorUrl');
+            redirect(this.el.dataset.sponsorUrl);
         } else if (!this.eventIsOngoing || ! this.sponsorIsOngoing) {
             return this._openClosedDialog();
         } else {
-            document.location = this.$el.data('sponsorUrl');
+            redirect(this.el.dataset.sponsorUrl);
         }
     },
 
@@ -57,8 +57,8 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _openClosedDialog: function ($element) {
-        const sponsorId = this.$el.data('sponsorId');
+    _openClosedDialog: function (el) {
+        const sponsorId = parseInt(this.el.dataset.sponsorId);
         this.call("dialog", "add", ExhibitorConnectClosedDialog, { sponsorId });
     },
 

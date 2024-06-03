@@ -13,41 +13,41 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
     },
 
     start: function () {
-        this.form = this.$el.find('.o_wevent_event_tags_form');
-        this.mobileForm = this.$el.find('.o_wevent_event_tags_mobile_form');
+        this.formEl = this.el.querySelector(".o_wevent_event_tags_form");
+        this.mobileFormEl = this.el.querySelector(".o_wevent_event_tags_mobile_form");
         return this._super.apply(this, arguments);
     },
 
     _onSearch: function () {
-        const input = this.$el.find('.o_wevent_event_search_box input');
+        const inputEl = this.el.querySelector(".o_wevent_event_search_box input");
         const params = new URLSearchParams(window.location.search);
-        params.set('search', input.val());
+        params.set("search", inputEl.value);
         const url = window.location.pathname + '?' + params.toString();
-        this.form.attr('action', url);
-        this.form.submit();
+        this.formEl.action = url;
+        this.formEl.submit();
     },
 
     _onTagAdd: function () {
-        this.form.submit();
+        this.formEl.submit();
     },
 
     _onTagAddMobile: function () {
-        this.mobileForm.submit();
+        this.mobileFormEl.submit();
     },
 
     _onTagRemove: function (event) {
-        const tag = $(event.target).parent();
-        const data = tag.data();
+        const tagEl = event.target.parentNode;
+        const data = tagEl.dataset;
         const selector = 'input[name="' + data.field + '"][value="' + data.value + '"]';
         this._updateFormActionURL(data);
-        this.form.find(selector).prop('checked', false);
-        this.form.submit();
+        this.formEl.querySelector(selector).checked = false;
+        this.formEl.submit();
     },
 
     _onTagReset: function (event) {
-        const dropdown = $(event.target).parent();
-        dropdown.find('input').prop('checked', false);
-        this.form.submit();
+        const dropdownEl = event.target.parentNode;
+        dropdownEl.querySelectorAll("input").forEach((inputEl) => (inputEl.checked = false));
+        this.formEl.submit();
     },
 
     _updateFormActionURL: function (data) {
@@ -63,7 +63,7 @@ publicWidget.registry.websiteEventSearchSponsor = publicWidget.Widget.extend({
         try {
             const ids = JSON.parse(params.get(name));
             params.set(name, JSON.stringify(ids.filter(id => id !== data.value)));
-            this.form.attr('action', `${window.location.href.split('?')[0]}?${params.toString()}`);
+            this.formEl.action = `${window.location.href.split("?")[0]}?${params.toString()}`;
         } catch {
             return;
         }
