@@ -18,11 +18,13 @@ export class ReceiptScreen extends Component {
         useErrorHandlers();
         this.ui = useState(useService("ui"));
         this.renderer = useService("renderer");
+        this.notification = useService("notification");
         this.dialog = useService("dialog");
         this.currentOrder = this.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.state = useState({
             input: partner?.email || "",
+            mode: "email",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doPrint = useTrackedAsync(() => this.pos.printReceipt());
@@ -34,6 +36,22 @@ export class ReceiptScreen extends Component {
 
     _addNewOrder() {
         this.pos.add_new_order();
+    }
+    actionSendReceipt() {
+        if (this.state.mode === "email" && this.isValidEmail(this.state.input)) {
+            this.sendReceipt.call({ action: "action_send_receipt", name: "Email" });
+        } else {
+            this.notification.add(_t("Please enter a valid email address"), {
+                type: "danger",
+            });
+        }
+    }
+    changeMode(mode) {
+        this.state.mode = mode;
+        this.state.input = this.currentOrder.partner_id?.email || "";
+    }
+    get isValidInput() {
+        return this.isValidEmail(this.state.input);
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
