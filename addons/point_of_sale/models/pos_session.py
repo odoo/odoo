@@ -2009,13 +2009,14 @@ class PosSession(models.Model):
 
     def find_product_by_barcode(self, barcode):
         load_data_params = self._load_data_params(self.config_id)
+        product_context = load_data_params['product.product'].get('context', [])
         product = self.env['product.product'].search([
             ('barcode', '=', barcode),
             ('sale_ok', '=', True),
             ('available_in_pos', '=', True),
         ])
         if product:
-            return {'product.product': product.read(load_data_params['product.product']['fields'], load=False)}
+            return {'product.product': product.with_context(product_context).read(load_data_params['product.product']['fields'], load=False)}
 
         domain = [('barcode', 'not in', ['', False])]
         loaded_data = self._context.get('loaded_data')
@@ -2037,7 +2038,7 @@ class PosSession(models.Model):
                 product_fields = load_data_params['product.product']['fields']
                 packaging_fields = load_data_params['product.packaging']['fields']
 
-                return {'product.product': packaging.product_id.read(product_fields, load=False), 'product.packaging': packaging.read(packaging_fields, load=False)}
+                return {'product.product': packaging.product_id.with_context(product_context).read(product_fields, load=False), 'product.packaging': packaging.read(packaging_fields, load=False)}
         return {
             'product.product': [],
             'product.packaging': [],
