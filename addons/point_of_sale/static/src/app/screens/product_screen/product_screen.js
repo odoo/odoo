@@ -444,6 +444,7 @@ export class ProductScreen extends Component {
             domain,
             this.pos.data.fields["product.product"],
             {
+                context: { display_default_code: false },
                 offset: this.state.currentOffset,
                 limit: 30,
             }
