@@ -45,7 +45,7 @@ class BaseDocumentLayout(models.TransientModel):
         if 'company_name' not in address_format:
             address_format = '%(company_name)s\n' + address_format
             company_data['company_name'] = company_data['company_name'] or company.name
-        return Markup(nl2br(address_format)) % company_data
+        return nl2br(address_format) % company_data
 
     def _clean_address_format(self, address_format, company_data):
         missing_company_data = [k for k, v in company_data.items() if not v]

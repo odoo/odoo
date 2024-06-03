@@ -4,7 +4,6 @@ from base64 import b64encode
 from datetime import datetime
 import logging
 from lxml import etree
-from markupsafe import escape
 import uuid
 
 from odoo import _, api, Command, fields, models
@@ -42,7 +41,7 @@ def get_datetime(tree, xpath):
     """ Datetimes in FatturaPA are ISO 8601 date format, pattern '[-]CCYY-MM-DDThh:mm:ss[Z|(+|-)hh:mm]'
         Python 3.7 -> 3.11 doesn't support 'Z'.
     """
-    if (datetime_str := get_text(tree, xpath)):
+    if datetime_str := get_text(tree, xpath):
         try:
             return datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
         except (ValueError, TypeError):
@@ -1323,11 +1322,11 @@ class AccountMove(models.Model):
             if move.commercial_partner_id._l10n_it_edi_is_public_administration():
                 move.l10n_it_edi_state = 'requires_user_signature'
                 move.l10n_it_edi_transaction = False
-                move.sudo().message_post(body=nl2br(escape(_(
+                move.sudo().message_post(body=nl2br(_(
                     "Sending invoices to Public Administration partners is not supported.\n"
                     "The IT EDI XML file is generated, please sign the document and upload it "
                     "through the 'Fatture e Corrispettivi' portal of the Tax Agency."
-                ))))
+                )))
             else:
                 move.l10n_it_edi_state = 'being_sent'
                 files_to_upload.append({'filename': filename, 'xml': content})
@@ -1342,7 +1341,7 @@ class AccountMove(models.Model):
                 unsent_move = filename_move[filename]
                 unsent_move.l10n_it_edi_state = False
                 text_message = _("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=e.message)
-                html_message = nl2br(escape(text_message))
+                html_message = nl2br(text_message)
                 unsent_move.l10n_it_edi_header = text_message
                 unsent_move.sudo().message_post(body=html_message)
                 messages_to_log.append(text_message)
@@ -1354,7 +1353,7 @@ class AccountMove(models.Model):
             if 'error' in vals:
                 sent_move.l10n_it_edi_state = False
                 sent_move.l10n_it_edi_transaction = False
-                message = nl2br(escape(_("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=vals['error'])))
+                message = nl2br(_("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=vals['error']))
             else:
                 is_demo = vals['id_transaction'] == 'demo'
                 sent_move.l10n_it_edi_state = 'processing'
@@ -1570,26 +1569,26 @@ class AccountMove(models.Model):
 
         elif partner._l10n_it_edi_is_public_administration():
             pa_specific_map = {
-                'forwarded': nl2br(escape(_(
+                'forwarded': nl2br(_(
                     "The e-invoice file %(file)s was succesfully sent to the SdI.\n"
                     "%(partner)s has 15 days to accept or reject it.",
-                    file=filename, partner=partner_name))),
-                'forward_attempt': nl2br(escape(_(
+                    file=filename, partner=partner_name)),
+                'forward_attempt': nl2br(_(
                     "The e-invoice file %(file)s can't be forward to %(partner)s (Public Administration) by the SdI at the moment.\n"
                     "It will try again for 10 days, after which it will be considered accepted, but "
                     "you will still have to send it by post or e-mail.",
-                    file=filename, partner=partner_name))),
-                'accepted_by_pa_partner_after_expiry': nl2br(escape(_(
+                    file=filename, partner=partner_name)),
+                'accepted_by_pa_partner_after_expiry': nl2br(_(
                     "The e-invoice file %(file)s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
                     "The %(partner)s (Public Administration) had 15 days to either accept or refused this document,"
                     "but since they did not reply, it's now considered accepted.",
-                    file=filename, partner=partner_name))),
-                'rejected_by_pa_partner': nl2br(escape(_(
+                    file=filename, partner=partner_name)),
+                'rejected_by_pa_partner': nl2br(_(
                     "The e-invoice file %(file)s has been refused by %(partner)s (Public Administration).\n"
                     "You have 5 days from now to issue a full refund for this invoice, "
                     "then contact the PA partner to create a new one according to their "
                     "requests and submit it.",
-                    file=filename, partner=partner_name))),
+                    file=filename, partner=partner_name)),
                 'accepted_by_pa_partner': _(
                     "The e-invoice file %(file)s has been accepted by %(partner)s (Public Administration), a payment will be issued soon",
                     file=filename, partner=partner_name),
@@ -1600,22 +1599,22 @@ class AccountMove(models.Model):
         new_state_messages_map = {
             False: _(
                 "The e-invoice file %s has not been found on the EDI Proxy server.", filename),
-            'processing': nl2br(escape(_(
+            'processing': nl2br(_(
                 "The e-invoice file %s was sent to the SdI for validation.\n"
                 "It is not yet considered accepted, please wait further notifications.",
-                filename))),
+                filename)),
             'forwarded': _(
                 "The e-invoice file %(file)s was accepted and succesfully forwarded it to %(partner)s by the SdI.",
                 file=filename, partner=partner_name),
-            'forward_attempt': nl2br(escape(_(
+            'forward_attempt': nl2br(_(
                 "The e-invoice file %(file)s has been accepted by the SdI.\n"
                 "The SdI is trying to forward it to %(partner)s.\n"
                 "It will try for up to 2 days, after which you'll eventually "
                 "need to send it the invoice to the partner by post or e-mail.",
-                file=filename, partner=partner_name))),
-            'forward_failed': nl2br(escape(_(
+                file=filename, partner=partner_name)),
+            'forward_failed': nl2br(_(
                 "The e-invoice file %(file)s couldn't be forwarded to %(partner)s.\n"
                 "Please remember to send it via post or e-mail.",
-                file=filename, partner=partner_name)))
+                file=filename, partner=partner_name))
         }
         return new_state_messages_map.get(new_state)

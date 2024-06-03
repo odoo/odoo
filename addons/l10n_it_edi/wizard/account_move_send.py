@@ -72,7 +72,7 @@ class AccountMoveSend(models.TransientModel):
                                 record_ids = action['domain'][0][2]
                             records = self.env[model_id].browse(record_ids)
                             message = f"{message} - {', '.join(records.mapped('display_name'))}"
-                    messages.append(nl2br(escape(message)))
+                    messages.append(nl2br(message))
                 wizard.l10n_it_edi_warning_message = Markup("<br/>").join(messages)
 
     @api.depends('move_ids')
