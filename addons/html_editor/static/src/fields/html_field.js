@@ -57,12 +57,8 @@ export class HtmlField extends Component {
         });
         this.lastValue = this.props.record.data[this.props.name].toString();
         useRecordObserver((record) => {
-            // Reset Wysiwyg when we discard
-            if (
-                !this.isDirty &&
-                !record.dirty &&
-                this.lastValue !== record.data[this.props.name].toString()
-            ) {
+            // Reset Wysiwyg when we discard or onchange value
+            if (this.lastValue !== record.data[this.props.name].toString()) {
                 this.state.key++;
                 this.state.containsComplexHTML = computeContainsComplexHTML(
                     this.props.record.data[this.props.name]

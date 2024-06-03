@@ -24,6 +24,12 @@ class Partner extends models.Model {
         { id: 1, name: "first", txt: "<p>first</p>" },
         { id: 2, name: "second", txt: "<p>second</p>" },
     ];
+
+    _onChanges = {
+        name(record) {
+            record.txt = `<p>${record.name}</p>`;
+        },
+    };
 }
 defineModels([Partner]);
 
@@ -64,11 +70,6 @@ test("html field in readonly", async () => {
 });
 
 test("html field in readonly updated by onchange", async () => {
-    Partner._onChanges = {
-        name(record) {
-            record.txt = `<p>${record.name}</p>`;
-        },
-    };
     await mountView({
         type: "form",
         resId: 1,
@@ -170,6 +171,32 @@ test("edit and save a html field", async () => {
     expect(["web_save"]).toVerifySteps();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_save`).not.toBeVisible();
+});
+
+test("onchange update html field in edition", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect(args[1]).toEqual({
+            txt: "<p>testfirst</p>",
+        });
+        expect.step("web_save");
+    });
+
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable p").toHaveText("first");
+
+    await contains(`.o_field_widget[name=name] input`).edit("hello");
+    await animationFrame();
+    expect(".odoo-editor-editable p").toHaveText("hello");
 });
 
 test("click on next/previous page", async () => {
