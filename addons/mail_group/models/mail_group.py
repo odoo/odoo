@@ -12,7 +12,6 @@ from markupsafe import Markup
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
-from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.mail.tools.alias_error import AliasError
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv import expression
@@ -428,7 +427,7 @@ class MailGroup(models.Model):
                 email_url_encoded = urls.url_quote(email_member)
                 headers = {
                     ** self._notify_by_email_get_headers(),
-                    'List-Archive': f'<{base_url}/groups/{slug(self)}>',
+                    'List-Archive': f'<{base_url}/groups/{self.env["ir.http"]._slug(self)}>',
                     'List-Subscribe': f'<{base_url}/groups?email={email_url_encoded}>',
                     'List-Unsubscribe': f'<{base_url}/groups?unsubscribe&email={email_url_encoded}>',
                     'Precedence': 'list',
@@ -447,7 +446,7 @@ class MailGroup(models.Model):
                 # Add the footer (member specific) in the body
                 template_values = {
                     'mailto': f'{self.alias_email}',
-                    'group_url': f'{base_url}/groups/{slug(self)}',
+                    'group_url': f'{base_url}/groups/{self.env["ir.http"]._slug(self)}',
                     'unsub_label': f'{base_url}/groups?unsubscribe',
                     'unsub_url':  f'{base_url}/groups?unsubscribe&group_id={self.id}&token={access_token}&email={email_url_encoded}',
                 }

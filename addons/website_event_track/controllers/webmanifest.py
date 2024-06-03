@@ -5,7 +5,6 @@ import json
 import pytz
 
 from odoo import http
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.http import request
 from odoo.tools import ustr
 from odoo.tools.misc import file_open
@@ -25,8 +24,8 @@ class TrackManifest(http.Controller):
             'name': website.events_app_name,
             'short_name': website.events_app_name,
             'description': _('%s Online Events Application') % website.company_id.name,
-            'scope': url_for('/event'),
-            'start_url': url_for('/event'),
+            'scope': request.env['ir.http']._url_for('/event'),
+            'start_url': request.env['ir.http']._url_for('/event'),
             'display': 'standalone',
             'background_color': '#ffffff',
             'theme_color': '#875A7B',
@@ -56,7 +55,7 @@ class TrackManifest(http.Controller):
         body = body.replace('__ODOO_CDN_URL__', js_cdn_url)
         response = request.make_response(body, [
             ('Content-Type', 'text/javascript'),
-            ('Service-Worker-Allowed', url_for('/event')),
+            ('Service-Worker-Allowed', request.env['ir.http']._url_for('/event')),
         ])
         return response
 

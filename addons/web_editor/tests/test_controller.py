@@ -11,7 +11,6 @@ from odoo.tests.common import HttpCase, new_test_user, tagged
 from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.misc import file_open
 
-from odoo.addons.http_routing.models.ir_http import slug
 
 
 @tagged('-at_install', 'post_install')
@@ -81,6 +80,7 @@ class TestController(HttpCase):
             'res_id': 0,
         })
         # Shape illustration with slug.
+        slug = self.env['ir.http']._slug
         url = '/web_editor/shape/illustration/%s' % slug(attachment)
         palette = 'c1=%233AADAA&c2=%237C6576&&c3=%23F6F6F6&&c4=%23FFFFFF&&c5=%23383E45'
         attachment['url'] = '%s?%s' % (url, palette)

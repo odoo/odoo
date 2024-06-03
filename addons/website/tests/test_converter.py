@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.http_routing.models.ir_http import slugify, unslug
+import threading
+
 from odoo.tests.common import BaseCase
+from odoo.modules.registry import Registry
 
 
 class TestUnslug(BaseCase):
@@ -29,6 +31,8 @@ class TestUnslug(BaseCase):
             'foo-1#anchor': ('foo', 1),
         }
 
+        unslug = Registry(threading.current_thread().dbname)['ir.http']._unslug
+
         for slug, expected in tests.items():
             self.assertEqual(unslug(slug), expected, "%r case failed" % slug)
 
@@ -38,50 +42,54 @@ class TestTitleToSlug(BaseCase):
     See website/models/website.py slugify method
     """
 
+    def _slugify(self, value):
+        _slugify = Registry(threading.current_thread().dbname)['ir.http']._slugify
+        return _slugify(value)
+
     def test_spaces(self):
         self.assertEqual(
             "spaces",
-            slugify(u"   spaces   ")
+            self._slugify("   spaces   ")
         )
 
     def test_unicode(self):
         self.assertEqual(
             "heterogeneite",
-            slugify(u"hétérogénéité")
+            self._slugify("hétérogénéité")
         )
 
     def test_underscore(self):
         self.assertEqual(
             "one-two",
-            slugify(u"one_two")
+            self._slugify("one_two")
         )
 
     def test_caps(self):
         self.assertEqual(
             "camelcase",
-            slugify(u"CamelCase")
+            self._slugify("CamelCase")
         )
 
     def test_special_chars(self):
         self.assertEqual(
             "o-d-o-o",
-            slugify(r"o!#d{|\o/@~o&%^?")
+            self._slugify(r"o!#d{|\o/@~o&%^?")
         )
 
     def test_str_to_unicode(self):
         self.assertEqual(
             "espana",
-            slugify("España")
+            self._slugify("España")
         )
 
     def test_numbers(self):
         self.assertEqual(
             "article-1",
-            slugify(u"Article 1")
+            self._slugify("Article 1")
         )
 
     def test_all(self):
         self.assertEqual(
             "do-you-know-martine-a-la-plage",
-            slugify(u"Do YOU know 'Martine à la plage' ?")
+            self._slugify("Do YOU know 'Martine à la plage' ?")
         )
