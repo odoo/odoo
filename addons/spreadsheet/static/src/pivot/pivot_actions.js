@@ -45,7 +45,14 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
     const cell = getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = getters.getEvaluatedCell(position);
     const argsDomain = getters.getPivotDomainArgsFromPosition(position);
+    const pivotId = getters.getPivotIdFromPosition(position);
+    if (!getters.isExistingPivot(pivotId)) {
+        return false;
+    }
+    const dataSource = getters.getPivot(pivotId);
+    const isValid = dataSource.isValid()
     return (
+        !isValid &&
         evaluatedCell.type !== "empty" &&
         evaluatedCell.type !== "error" &&
         evaluatedCell.value !== "" &&
