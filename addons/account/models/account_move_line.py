@@ -1887,6 +1887,21 @@ class AccountMoveLine(models.Model):
         credit_currency = credit_aml._get_reconciliation_aml_field_value('currency_id', shadowed_aml_values)
         company_currency = debit_aml.company_currency_id
 
+        is_cross_currency_payment = debit_currency != credit_currency and debit_currency != company_currency and credit_currency != company_currency
+
+        if is_cross_currency_payment:
+            if credit_aml['payment_date']:
+                debit_currency_rate_during_payment = debit_currency._get_rates(self.company_id, credit_aml['payment_date'])
+                debit_currency_rate_during_payment = debit_currency_rate_during_payment[1]
+            else:
+                debit_currency_rate_during_payment = 1.0
+
+            if debit_aml['invoice_date']:
+                debit_currency_rate_during_creation = debit_currency._get_rates(self.company_id, debit_aml['invoice_date'])
+                debit_currency_rate_during_creation = debit_currency_rate_during_creation[1]
+            else:
+                debit_currency_rate_during_creation = 1.0
+
         remaining_debit_amount_curr = debit_values['amount_residual_currency']
         remaining_credit_amount_curr = credit_values['amount_residual_currency']
         remaining_debit_amount = debit_values['amount_residual']
@@ -1894,7 +1909,7 @@ class AccountMoveLine(models.Model):
 
         debit_available_residual_amounts = self._prepare_move_line_residual_amounts(
             debit_values,
-            credit_currency,
+            debit_currency,
             shadowed_aml_values=shadowed_aml_values,
             other_aml_values=credit_values,
         )
@@ -1930,8 +1945,22 @@ class AccountMoveLine(models.Model):
         if skip_reconciliation:
             return res
 
-        recon_debit_amount = debit_recon_values['residual']
-        recon_credit_amount = -credit_recon_values['residual']
+        # I need to write a logic where it understands that even if the credit amount is higher / lower then debit,
+        # it is equal, since there is exchange difference occured.
+        # I need to compare the debit residual currency (100$) and then converrt 81 GBP to INR and then convert that to USD(100$) again
+        # If both matches then we can say debit fully matched and credit fully matched.
+        # recon_credit amount = (GBP amount / rate per INR) * latest rate USD
+        if is_cross_currency_payment:
+            recon_debit_amount = debit_available_residual_amounts.get(debit_currency, {}).get('residual')
+            recon_credit_amount = debit_currency.round(-remaining_credit_amount * debit_currency_rate_during_payment)
+            diff = recon_credit_amount - recon_debit_amount
+            if diff > 0 and diff < 0.5:
+                recon_credit_amount -= diff
+            if diff < 0 and diff > -0.5:
+                recon_credit_amount += diff
+        else:
+            recon_debit_amount = debit_recon_values['residual']
+            recon_credit_amount = -credit_recon_values['residual']
 
         # ==== Match both lines together and compute amounts to reconcile ====
 
@@ -1948,6 +1977,7 @@ class AccountMoveLine(models.Model):
             )
 
         # Determine which line is fully matched by the other.
+
         compare_amounts = recon_currency.compare_amounts(recon_debit_amount, recon_credit_amount)
         min_recon_amount = min(recon_debit_amount, recon_credit_amount)
         debit_fully_matched = compare_amounts <= 0
@@ -1962,20 +1992,42 @@ class AccountMoveLine(models.Model):
                 debit_rate = debit_available_residual_amounts.get(debit_currency, {}).get('rate')
                 credit_rate = credit_available_residual_amounts.get(credit_currency, {}).get('rate')
 
-            # Compute the partial amount expressed in company currency.
-            partial_amount = min_recon_amount
-
-            # Compute the partial amount expressed in foreign currency.
             if debit_rate:
-                partial_debit_amount_currency = debit_currency.round(debit_rate * min_recon_amount)
-                partial_debit_amount_currency = min(partial_debit_amount_currency, remaining_debit_amount_curr)
+                if is_cross_currency_payment:
+                    partial_debit_amount_currency_new = debit_currency.round(remaining_debit_amount * debit_rate)
+                    partial_debit_amount_currency = min(partial_debit_amount_currency_new, min_recon_amount)
+                    if debit_fully_matched:
+                        partial_debit_amount = company_currency.round(min_recon_amount / debit_currency_rate_during_payment)
+                    else:
+                        partial_debit_amount = company_currency.round(min_recon_amount / debit_currency_rate_during_creation)
+                    partial_debit_amount = min(partial_debit_amount, remaining_debit_amount)
+                else:
+                    # Compute the partial amount expressed in foreign currency.
+                    partial_debit_amount_currency = debit_currency.round(debit_rate * min_recon_amount)
+                    partial_debit_amount_currency = min(partial_debit_amount_currency, remaining_debit_amount_curr)
             else:
                 partial_debit_amount_currency = 0.0
+
             if credit_rate:
-                partial_credit_amount_currency = credit_currency.round(credit_rate * min_recon_amount)
-                partial_credit_amount_currency = min(partial_credit_amount_currency, -remaining_credit_amount_curr)
+                if is_cross_currency_payment:
+                    partial_credit_amount_currency_new = credit_currency.round(-remaining_credit_amount * credit_rate)
+                    partial_credit_amount_currency = min(-remaining_credit_amount_curr, partial_credit_amount_currency_new)
+                    if debit_fully_matched:
+                        partial_credit_amount = company_currency.round(((min_recon_amount / debit_currency_rate_during_payment) * credit_rate) / credit_rate)
+                    else:
+                        partial_credit_amount = company_currency.round(min_recon_amount / debit_currency_rate_during_payment)
+                    partial_credit_amount = min(partial_credit_amount, -remaining_credit_amount)
+                else:
+                    partial_credit_amount_currency = credit_currency.round(credit_rate * -remaining_credit_amount)
+                    partial_credit_amount_currency = min(partial_credit_amount_currency, -remaining_credit_amount_curr)
             else:
                 partial_credit_amount_currency = 0.0
+
+            # Compute the partial amount expressed in company currency.
+            if debit_currency != credit_currency and debit_currency != company_currency and credit_currency != company_currency:
+                partial_amount = min(partial_debit_amount, partial_credit_amount)
+            else:
+                partial_amount = min_recon_amount
 
         else:
             # recon_currency != company_currency
@@ -2018,17 +2070,52 @@ class AccountMoveLine(models.Model):
             amounts_list = []
             if recon_currency == company_currency:
                 if debit_fully_matched:
-                    debit_exchange_amount = remaining_debit_amount_curr - partial_debit_amount_currency
-                    if not debit_currency.is_zero(debit_exchange_amount):
-                        exchange_lines_to_fix += debit_aml
-                        amounts_list.append({'amount_residual_currency': debit_exchange_amount})
-                        remaining_debit_amount_curr -= debit_exchange_amount
+                    if is_cross_currency_payment:
+                        partial_debit_amount_currency_at_creation = debit_currency.round(remaining_debit_amount * debit_rate)
+                        debit_exchange_amount = remaining_debit_amount - partial_debit_amount
+                        debit_currency_exchange_amount = remaining_debit_amount_curr - partial_debit_amount_currency_at_creation
+                        if not debit_currency.is_zero(debit_exchange_amount):
+                            if debit_exchange_amount > 0:
+                                exchange_lines_to_fix += debit_aml
+                                amounts_list.append({'amount_residual': debit_exchange_amount})
+                                remaining_debit_amount_curr -= debit_currency_exchange_amount
+                                remaining_debit_amount -= debit_exchange_amount
+                    else:
+                        debit_exchange_amount = remaining_debit_amount_curr - partial_debit_amount_currency
+                        if not debit_currency.is_zero(debit_exchange_amount):
+                            exchange_lines_to_fix += debit_aml
+                            amounts_list.append({'amount_residual': debit_exchange_amount / debit_rate})
+                            remaining_debit_amount_curr -= debit_exchange_amount
+                else:
+                    if is_cross_currency_payment:
+                        partial_debit_amount_currency_at_creation = debit_currency.round(remaining_debit_amount * debit_rate)
+                        debit_exchange_amount = partial_debit_amount - partial_amount
+                        debit_currency_exchange_amount = remaining_debit_amount_curr - partial_debit_amount_currency_at_creation
+                        if not debit_currency.is_zero(debit_exchange_amount):
+                            if debit_exchange_amount > 0:
+                                exchange_lines_to_fix += debit_aml
+                                amounts_list.append({'amount_residual': debit_exchange_amount})
+                                remaining_debit_amount_curr -= debit_currency_exchange_amount
+                                remaining_debit_amount -= debit_exchange_amount
+
                 if credit_fully_matched:
-                    credit_exchange_amount = remaining_credit_amount_curr + partial_credit_amount_currency
-                    if not credit_currency.is_zero(credit_exchange_amount):
-                        exchange_lines_to_fix += credit_aml
-                        amounts_list.append({'amount_residual_currency': credit_exchange_amount})
-                        remaining_credit_amount_curr += credit_exchange_amount
+                    if is_cross_currency_payment:
+                        partial_credit_amount_currency_at_creation = credit_currency.round(partial_debit_amount * credit_rate)
+                        credit_exchange_amount = partial_amount - partial_credit_amount
+                        credit_exchange_difference = -remaining_credit_amount - partial_credit_amount
+                        credit_currency_exchange_amount = remaining_credit_amount_curr + partial_credit_amount_currency_at_creation
+                        if not credit_currency.is_zero(credit_exchange_amount):
+                            if credit_exchange_amount < 0:
+                                exchange_lines_to_fix += credit_aml
+                                amounts_list.append({'amount_residual': credit_exchange_amount})
+                                remaining_credit_amount_curr += -credit_currency_exchange_amount
+                                remaining_credit_amount += -credit_exchange_amount
+                    else:
+                        credit_exchange_amount = remaining_credit_amount_curr + partial_credit_amount_currency
+                        if not credit_currency.is_zero(credit_exchange_amount):
+                            exchange_lines_to_fix += credit_aml
+                            amounts_list.append({'amount_residual': credit_currency.round(credit_exchange_amount / credit_rate)})
+                            remaining_credit_amount_curr += credit_exchange_amount
 
             else:
                 if debit_fully_matched:
@@ -2084,10 +2171,16 @@ class AccountMoveLine(models.Model):
 
         # ==== Create partials ====
 
-        remaining_debit_amount -= partial_amount
-        remaining_credit_amount += partial_amount
-        remaining_debit_amount_curr -= partial_debit_amount_currency
-        remaining_credit_amount_curr += partial_credit_amount_currency
+        if is_cross_currency_payment:
+            remaining_debit_amount -= partial_amount
+            remaining_credit_amount += partial_amount + credit_exchange_difference
+            remaining_debit_amount_curr -= min_recon_amount
+            remaining_credit_amount_curr += partial_credit_amount_currency_at_creation
+        else:
+            remaining_debit_amount -= partial_amount
+            remaining_credit_amount += partial_amount
+            remaining_debit_amount_curr -= partial_debit_amount_currency
+            remaining_credit_amount_curr += partial_credit_amount_currency
 
         res['partial_values'] = {
             'amount': partial_amount,
@@ -2333,6 +2426,8 @@ class AccountMoveLine(models.Model):
 
             # Check the amls to be reconciled all together.
             amls = plan_node['amls']
+            # Debit exchange difference aml is not able to reconcile. It throws error from here that
+            # Cannot reconcile the amount which is already reconciled.
             amls._check_amls_exigibility_for_reconciliation(shadowed_aml_values=shadowed_aml_values)
             plan_list.append(plan_node)
             all_aml_ids.update(plan_node['aml_ids'])
@@ -2370,6 +2465,7 @@ class AccountMoveLine(models.Model):
         """
         # ==== Prepare the reconciliation ====
         # Batch the amls all together to know what should be reconciled and when.
+        # breakpoint()
         plan_list, all_amls = self._optimize_reconciliation_plan(reconciliation_plan)
         move_container = {'records': all_amls.move_id}
         with all_amls.move_id._check_balanced(move_container),\
@@ -2439,7 +2535,7 @@ class AccountMoveLine(models.Model):
         # ==== Create entries for cash basis taxes ====
         def is_cash_basis_needed(account):
             return account.company_id.tax_exigibility \
-                and account.account_type in ('asset_receivable', 'liability_payable')
+                and account.account_type in ('asset_receivablke', 'liability_payable')
 
         if not self._context.get('move_reverse_cancel') and not self._context.get('no_cash_basis'):
             for plan in plan_list:
@@ -2742,6 +2838,7 @@ class AccountMoveLine(models.Model):
                 ))
 
         # ==== Create the move ====
+
         exchange_moves = self.env['account.move'].create(exchange_move_values_list)
         exchange_moves._post(soft=False)
 
