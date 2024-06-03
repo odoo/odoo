@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import calendar
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
@@ -87,6 +88,9 @@ class AccountMove(models.Model):
     def _sequence_fixed_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_fixed_regex
 
+    @property
+    def _sequence_year_range_monthly_regex(self):
+        return self.journal_id.sequence_override_regex or super()._sequence_year_range_monthly_regex
 
     # ==============================================================================================
     #                                          JOURNAL ENTRY
@@ -2019,6 +2023,14 @@ class AccountMove(models.Model):
                         "The financial end year detected here is '%(year_end)s'.\n"
                         "The incrementing number in this case is '%(formatted_seq)s'."
                     )
+                elif reset == 'year_range_month':
+                    detected = _(
+                        "The sequence will restart at 1 at the start of every month.\n"
+                        "The financial start year detected here is '%(year)s'.\n"
+                        "The financial end year detected here is '%(year_end)s'.\n"
+                        "The month detected here is '%(month)s'.\n"
+                        "The incrementing number in this case is '%(formatted_seq)s'."
+                    )
                 else:
                     detected = _(
                         "The sequence will never restart.\n"
@@ -3043,7 +3055,7 @@ class AccountMove(models.Model):
             if not reference_move_name:
                 reference_move_name = self.sudo().search(domain, order='date asc', limit=1).name
             sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
-            date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
+            date_start, date_end, *_ = self._get_sequence_date_range(sequence_number_reset)
             where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
             param['date_start'] = date_start
             param['date_end'] = date_end
@@ -3051,17 +3063,19 @@ class AccountMove(models.Model):
             # Some regex are catching more sequence formats than we want, so we
             # need to exclude them:
             #
-            # Move Name   |                Regex type             |
-            # Format      | Fixed | Yearly | Monthly | Year Range |
-            # ----------- | ----- | ------ | ------- | ---------- |
-            # Fixed       |   X   |        |         |            |
-            # Yearly      |   X   |   X    |         |            |
-            # Monthly     |   X   |   X    |    X    |     X      |
-            # Year Range  |   X   |   X    |         |     X      |
+            #                    |                 Regex type                                 |
+            # Move Name Format   | Fixed | Yearly | Monthly | Year Range | Year range Monthly |
+            # ------------------ | ----- | ------ | ------- | ---------- | ------------------ |
+            # Fixed              |   X   |        |         |            |                    |
+            # Yearly             |   X   |   X    |         |            |                    |
+            # Monthly            |   X   |   X    |    X    |     X      |                    |
+            # Year Range         |   X   |   X    |         |     X      |                    |
+            # Year range Monthly |   X   |   X    |    X    |     X      |          X         |
             if sequence_number_reset in ('year', 'year_range'):
                 param['anti_regex'] = self._make_regex_non_capturing(self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
             elif sequence_number_reset == 'never':
-                # Excluding yearly will also exclude monthly and year range
+                # Excluding yearly will also exclude "monthly", "year range" and
+                # "year range monthly"
                 param['anti_regex'] = self._make_regex_non_capturing(self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
 
             if param.get('anti_regex') and not self.journal_id.sequence_override_regex:
@@ -3083,12 +3097,24 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
         self.ensure_one()
+        year_part = "%04d" % self.date.year
+        last_day = int(self.company_id.fiscalyear_last_day)
+        last_month = int(self.company_id.fiscalyear_last_month)
+        is_staggered_year = last_month != 12 or last_day != 31
+        if is_staggered_year:
+            if self.date > date(self.date.year, last_month, last_day):
+                year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
+            else:
+                year_part = "%s-%s" % ((self.date + relativedelta(years=-1)).strftime('%y'), self.date.strftime('%y'))
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash']:
-            starting_sequence = "%s/%04d/00000" % (self.journal_id.code, self.date.year)
+            # We reduce short code to 4 characters (0000) in case of staggered
+            # year to avoid too long sequences (see Indian GST rule 46(b) for
+            # example). Note that it's already the case for monthly sequences.
+            starting_sequence = "%s/%s/%s" % (self.journal_id.code, year_part, '0000' if is_staggered_year else '00000')
         else:
-            starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
+            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
         if self.journal_id.payment_sequence and self.payment_id or self.env.context.get('is_payment'):
@@ -3096,10 +3122,32 @@ class AccountMove(models.Model):
         return starting_sequence
 
     def _get_sequence_date_range(self, reset):
+        if reset not in ('year_range', 'year_range_month'):
+            return super()._get_sequence_date_range(reset)
+
+        fiscalyear_last_day = self.company_id.fiscalyear_last_day
+        fiscalyear_last_month = int(self.company_id.fiscalyear_last_month)
+        date_start, date_end = date_utils.get_fiscal_year(self.date, day=fiscalyear_last_day, month=fiscalyear_last_month)
+
         if reset == 'year_range':
-            company = self.company_id
-            return date_utils.get_fiscal_year(self.date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
-        return super()._get_sequence_date_range(reset)
+            return (date_start, date_end) + (None, None)
+
+        forced_year_range = (date_start.year, date_end.year)
+        month_range = date_utils.get_month(self.date)
+        fiscalyear_last_month_max_day = calendar.monthrange(self.date.year, fiscalyear_last_month)[1]
+        # We need to truncate the month if:
+        # - the fiscal year does not end on the last day of the month
+        # - and the move date is part of that month
+        # The sequence date range will be something like 2020-11-01 to
+        # 2020-11-30. But the sequence should be 2019-2020/11/0001 (or
+        # 2020-2021/11/0001), not 2020-2020/11/0001.
+        if fiscalyear_last_day < fiscalyear_last_month_max_day and fiscalyear_last_month == self.date.month:
+            if self.date.day <= fiscalyear_last_day:
+                return (month_range[0], month_range[1].replace(day=fiscalyear_last_day)) + forced_year_range
+            else:
+                return (month_range[0].replace(day=fiscalyear_last_day + 1), month_range[1]) + forced_year_range
+        else:
+            return month_range + forced_year_range
 
     # -------------------------------------------------------------------------
     # PAYMENT REFERENCE
@@ -4932,7 +4980,7 @@ class AccountMove(models.Model):
                 elif number_reset == 'year':
                     return min(today, date_utils.end_of(invoice_date, 'year'))
         else:
-            if not highest_name or number_reset == 'month':
+            if not highest_name or number_reset in ('month', 'year_range_month'):
                 if (today.year, today.month) > (invoice_date.year, invoice_date.month):
                     return date_utils.get_month(invoice_date)[1]
                 else:
