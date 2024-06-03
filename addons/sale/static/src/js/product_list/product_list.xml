@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="sale.ProductList">
-        <h4 class="mt-4 mb-3" t-if="this.props.areProductsOptional" t-out="optionalProductsTitle"/>
-        <table class="o_sale_product_configurator_table table table-sm position-relative mb-0" t-att-class="{'o_sale_product_configurator_table_optional': this.props.areProductsOptional}">
+        <span
+            name="sale_product_configurator_list_title"
+            class="d-inline-block mt-4 mb-3 h4"
+            t-if="this.props.areProductsOptional"
+            t-out="optionalProductsTitle"/>
+        <table
+            class="o_sale_product_configurator_table table table-sm position-relative mb-0"
+            t-att-class="{'o_sale_product_configurator_table_optional': this.props.areProductsOptional}">
             <thead t-if="!this.props.areProductsOptional">
                 <tr>
                     <th class="px-0 border-bottom-0" colspan="2">Product</th>
-                    <th class="px-0 text-end border-bottom-0">Quantity</th>
+                    <th class="px-0 text-center border-bottom-0">Quantity</th>
                     <th class="px-0 text-end border-bottom-0">Price</th>
                 </tr>
             </thead>
@@ -16,7 +22,9 @@
                 </tr>
                 <tr t-if="!this.props.areProductsOptional">
                     <td colspan="4" class="border-bottom-0 text-end">
-                        <h4>Total: <span t-out="getFormattedTotal()"/></h4>
+                        <span name="sale_product_configurator_list_total" class="h4">
+                            Total: <span t-out="getFormattedTotal()"/>
+                        </span>
                     </td>
                 </tr>
             </tbody>
