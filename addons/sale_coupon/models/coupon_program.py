@@ -11,8 +11,19 @@ class CouponProgram(models.Model):
 
     # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
+        program_orders = self.env['sale.order.line'].read_group(
+            domain=[
+                ('product_id', 'in', self.discount_line_product_id.ids),
+            ],
+            fields=['order_id:count_distinct'],
+            groupby=['product_id'],
+        )
+        mapped_data = {
+            value['product_id'][0]: value['order_id']
+            for value in program_orders
+        }
         for program in self:
-            program.order_count = self.env['sale.order.line'].sudo().search_count([('product_id', '=', program.discount_line_product_id.id)])
+            program.order_count = mapped_data.get(program.discount_line_product_id.id, 0)
 
     def action_view_sales_orders(self):
         self.ensure_one()
