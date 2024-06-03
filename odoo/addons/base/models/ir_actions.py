@@ -13,6 +13,7 @@ import base64
 from collections import defaultdict
 import functools
 import logging
+import contextlib
 
 from pytz import timezone
 
@@ -757,6 +758,9 @@ class IrServerObjectLines(models.Model):
                     expr = int(line.value)
                 except Exception:
                     pass
+            elif line.col1.ttype == 'float':
+                with contextlib.suppress(Exception):
+                    expr = float(line.value)
             result[line.id] = expr
         return result
 
