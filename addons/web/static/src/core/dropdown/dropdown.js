@@ -17,7 +17,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
+import { effect } from "../utils/reactive";
 
 function getFirstElementOfNode(node) {
     if (!node) {

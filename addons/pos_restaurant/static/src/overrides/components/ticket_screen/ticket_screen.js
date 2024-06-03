@@ -93,7 +93,7 @@ patch(TicketScreen.prototype, {
                         const tipLine = await this.pos.data.create("pos.order.line", [
                             serializedTipLine,
                         ]);
-                        const state = await this.pos.data.ormWrite("pos.order", [order.id], {
+                        const state = await this.pos.data.write("pos.order", [order.id], {
                             is_tipped: true,
                             tip_amount: tipLine[0].price_unit,
                         });

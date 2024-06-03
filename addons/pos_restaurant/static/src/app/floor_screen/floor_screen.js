@@ -1,44 +1,129 @@
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
 import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Table } from "@pos_restaurant/app/floor_screen/table";
+import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onMounted, useRef, useState, onWillStart, useEffect } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/store/make_awaitable_dialog";
-import { unique } from "@web/core/utils/arrays";
 import { loadImage } from "@point_of_sale/utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { useDropzone } from "@mail/core/common/dropzone_hook";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { pick } from "@web/core/utils/objects";
+import { constrain, getLimits } from "@point_of_sale/app/utils/movable_hook";
+import { withComputedProperties } from "@web/core/utils/reactive";
 
+/**
+ * This hook exists only because safari on iOS does not support the `oncontextmenu` event
+ */
+export function useLongPress(querySelector, callback, ms = 350) {
+    let timer = null;
+    const start = (event) => {
+        const el = event.target.closest(querySelector);
+        if (el) {
+            timer = setTimeout(() => {
+                callback(el);
+                event.preventDefault();
+            }, ms);
+        }
+    };
+
+    const stop = (event) => {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        return true;
+    };
+    useEffect(
+        () => {
+            document.addEventListener("touchstart", start);
+            document.addEventListener("touchend", stop);
+            document.addEventListener("touchcancel", stop);
+
+            return () => {
+                document.removeEventListener("touchstart", start);
+                document.removeEventListener("touchend", stop);
+                document.removeEventListener("touchcancel", stop);
+            };
+        },
+        () => []
+    );
+}
+
+const getPositions = (ctx) => {
+    const element = ctx.current.element;
+    const scrollingContainer = element.parentElement.parentElement.parentElement;
+    const x = ctx.pointer.x;
+    // we want y to be relative to the floormap, not the whole screen, which includes the navbar and the floor selector
+    const y = ctx.pointer.y - scrollingContainer.getBoundingClientRect().top;
+    return {
+        position_h: x + scrollingContainer.scrollLeft - element.getBoundingClientRect().width / 2,
+        position_v: y + scrollingContainer.scrollTop - element.getBoundingClientRect().height / 2,
+    };
+};
+const useDraggable = makeDraggableHook({
+    name: "useDraggable",
+    onComputeParams({ ctx }) {
+        ctx.followCursor = false;
+    },
+    onWillStartDrag: ({ ctx }) => pick(ctx.current, "element"),
+    onDragStart: ({ ctx }) => pick(ctx.current, "element"),
+    onDrag: ({ ctx }) => ({
+        ...pick(ctx.current, "element"),
+        ...getPositions(ctx),
+    }),
+    onDragEnd: ({ ctx }) => pick(ctx.current, "element"),
+    onDrop: ({ ctx }) => ({
+        ...pick(ctx.current, "element"),
+        ...getPositions(ctx),
+    }),
+});
 export class FloorScreen extends Component {
-    static components = { Table };
+    static components = { Dropdown, DropdownItem };
     static template = "pos_restaurant.FloorScreen";
     static props = { floor: { type: true, optional: true } };
     static storeOnOrder = false;
-
     setup() {
         this.pos = usePos();
         this.dialog = useService("dialog");
-        const floor = this.pos.currentFloor;
         this.state = useState({
-            selectedFloorId: floor ? floor.id : null,
-            floorHeight: "100%",
-            floorWidth: "100%",
-            selectedTableIds: this.getTablesSelectedByDefault(),
-            isColorPicker: false,
+            floor: this.props.floor || this.pos.config.floor_ids[0],
+            resizingTable: null,
+            isMovingTable: false,
+            tableDropdownId: null,
+            floorDropdownId: null,
         });
-        this.floorMapRef = useRef("floor-map-ref");
-        this.floorScrollBox = useRef("floor-map-scroll");
-        const ui = useState(useService("ui"));
+        const getPosTable = (el) => {
+            return this.pos.models["restaurant.table"].get(
+                [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+            );
+        };
+        // TODO: only call this if we are on ios
+        useLongPress(".table", (el) => {
+            // this.onTableRightClick(getPosTable(el));
+            console.log("sadf");
+        });
+        useLongPress(".button-floor", (el) => {
+            // this.onFloorRightClick(
+            //     this.pos.models["restaurant.floor"].get(
+            //         [...el.classList].find((c) => c.includes("floorId")).split("-")[1]
+            //     )
+            // );
+            console.log("sadf2");
+        });
+
+        this.ui = useState(useService("ui"));
         const mode = localStorage.getItem("floorPlanStyle");
-        this.pos.floorPlanStyle = ui.isSmall || mode == "kanban" ? "kanban" : "default";
+        this.pos.floorPlanStyle = this.ui.isSmall || mode == "kanban" ? "kanban" : "default";
         this.map = useRef("map");
         onMounted(() => {
             this.pos.openCashControl();
@@ -46,65 +131,194 @@ export class FloorScreen extends Component {
         onWillStart(this.onWillStart);
         useEffect(
             () => {
-                this.computeFloorSize();
+                const stopResize = () => (this.state.resizingTable = null);
+                window.addEventListener("click", stopResize);
+                return () => window.removeEventListener("click", stopResize);
             },
-            () => [this.activeFloor, this.pos.floorPlanStyle]
+            () => []
         );
-        useEffect(
-            (tableL) => {
-                if (hasTouch()) {
-                    if (tableL) {
-                        this.floorScrollBox.el.classList.remove("overflow-scroll");
-                        this.floorScrollBox.el.classList.add("overflow-hidden");
-                    } else {
-                        this.floorScrollBox.el.classList.remove("overflow-hidden");
-                        this.floorScrollBox.el.classList.add("overflow-scroll");
-                    }
+        const areElementsIntersecting = (el1, el2) => {
+            const rect1 = el1.getBoundingClientRect();
+            const rect2 = el2.getBoundingClientRect();
+            return !(
+                rect1.right < rect2.left ||
+                rect1.left > rect2.right ||
+                rect1.bottom < rect2.top ||
+                rect1.top > rect2.bottom
+            );
+        };
+        const findIntersectingTable = (tableElem) => {
+            const table = getPosTable(tableElem);
+            return [...tableElem.parentElement.getElementsByClassName("table")].find(
+                (t) =>
+                    t !== tableElem &&
+                    areElementsIntersecting(t, tableElem) &&
+                    !table.isParent(getPosTable(t))
+            );
+        };
+        useDropzone(this.map, (ev) => this.uploadImage(ev.dataTransfer.files[0]));
+
+        useDraggable({
+            ref: this.map,
+            elements: ".table",
+            enable: () => !this.state.resizingTable && this.pos.floorPlanStyle !== "kanban",
+            onDragStart: (ctx) => {
+                ctx.addClass(ctx.element, "shadow");
+                const table = getPosTable(ctx.element);
+                if (table.parent_id) {
+                    this.pos.data.write("restaurant.table", [table.id], {
+                        parent_id: null,
+                    });
                 }
+                table.uiState.initialPosition = pick(table, "position_h", "position_v");
+                this.state.isMovingTable = true;
+                this.state.tableDropdownId = null;
             },
-            () => [this.state.selectedTableIds.length]
+            onDrag: (ctx) => {
+                const table = getPosTable(ctx.element);
+                table.position_h = ctx.position_h;
+                table.position_v = ctx.position_v;
+
+                // apply moving animation
+                const dx = ctx.x - this.lastX;
+                const time = Date.now();
+                const dt = time - this.lastTime;
+                const speed = dx / dt;
+                const THRESHOLD = 0.4;
+                if (speed > THRESHOLD) {
+                    ctx.addClass(ctx.element, "rotate_right");
+                    ctx.removeClass(ctx.element, "rotate_left");
+                } else if (speed < -THRESHOLD) {
+                    ctx.addClass(ctx.element, "rotate_left");
+                    ctx.removeClass(ctx.element, "rotate_right");
+                } else {
+                    ctx.removeClass(ctx.element, "rotate_left");
+                    ctx.removeClass(ctx.element, "rotate_right");
+                }
+                this.lastX = ctx.x;
+                this.lastTime = time;
+
+                // apply border to intersecting tables
+                table.isIntersecting = Boolean(findIntersectingTable(ctx.element));
+            },
+            onDrop: ({ element, position_h, position_v }) => {
+                const table = getPosTable(element);
+                setTimeout(() => {
+                    table.isIntersecting = false;
+                    const interesectingTableElem = findIntersectingTable(element);
+                    if (interesectingTableElem) {
+                        const oToTrans = this.pos.getActiveOrdersOnTable(table)[0];
+                        if (oToTrans) {
+                            this.pos.orderToTransferUuid = oToTrans.uuid;
+                            oToTrans.setBooked(true);
+                            this.pos.transferTable(table);
+                        }
+                        this.pos.data.write("restaurant.table", [table.id], {
+                            parent_id: getPosTable(interesectingTableElem).id,
+                            ...table.uiState.initialPosition,
+                        });
+                    } else {
+                        this.pos.data.write("restaurant.table", [table.id], {
+                            position_h,
+                            position_v,
+                        });
+                    }
+                }, 1.1 * parseFloat(element.style.transitionDuration));
+                this.state.isMovingTable = false;
+            },
+        });
+        useDraggable({
+            ref: this.map,
+            elements: "span.table-handle",
+            onDrag: (ctx) => {
+                // FIXME: this function runs too often so we need to debounce it, find a better way to do it
+                const time = Date.now();
+                if (time - this.lastTime < 25) {
+                    return;
+                }
+                this.lastTime = time;
+                const table = getPosTable(ctx.element.parentElement);
+                const newPosition = {
+                    minX: table.position_h,
+                    minY: table.position_v,
+                    maxX: table.position_h + table.width,
+                    maxY: table.position_v + table.height,
+                };
+                const dx =
+                    ctx.x - ctx.getRect(ctx.element).left - ctx.getRect(ctx.element).width / 2;
+                const dy =
+                    ctx.y - ctx.getRect(ctx.element).top - ctx.getRect(ctx.element).height / 2;
+
+                const limits = getLimits(ctx.element.parentElement, this.map.el);
+                const MIN_TABLE_SIZE = 30;
+                const bounds = {
+                    maxX: [table.position_h + MIN_TABLE_SIZE, limits.maxX + table.width],
+                    minX: [limits.minX, newPosition.maxX - MIN_TABLE_SIZE],
+                    maxY: [table.position_v + MIN_TABLE_SIZE, limits.maxY + table.height],
+                    minY: [limits.minY, newPosition.maxY - MIN_TABLE_SIZE],
+                };
+                const moveX = ctx.element.classList.contains("left") ? "minX" : "maxX";
+                const moveY = ctx.element.classList.contains("top") ? "minY" : "maxY";
+                newPosition[moveX] = constrain(newPosition[moveX] + dx, ...bounds[moveX]);
+                newPosition[moveY] = constrain(newPosition[moveY] + dy, ...bounds[moveY]);
+
+                table.position_h = newPosition.minX;
+                table.position_v = newPosition.minY;
+                table.width = newPosition.maxX - newPosition.minX;
+                table.height = newPosition.maxY - newPosition.minY;
+            },
+            onDrop: (ctx) => {
+                const table = getPosTable(ctx.element.parentElement);
+                this.pos.data.write(
+                    "restaurant.table",
+                    [table.id],
+                    pick(table, "position_h", "position_v", "width", "height")
+                );
+            },
+        });
+    }
+    getTableDropdownState(table) {
+        return withComputedProperties(
+            {
+                open: () => (this.state.tableDropdownId = table.id),
+                close: () => (this.state.tableDropdownId = null),
+            },
+            [this.state],
+            {
+                isOpen(state) {
+                    return state.tableDropdownId === table.id;
+                },
+            }
         );
     }
-    computeFloorSize() {
-        if (this.pos.floorPlanStyle === "kanban") {
-            this.state.floorHeight = "100%";
-            this.state.floorWidth = window.innerWidth + "px";
-            return;
-        }
-
-        if (!this.activeFloor) {
-            return;
-        }
-
-        const tables = this.activeFloor.table_ids;
-        const floorV = this.floorMapRef.el.clientHeight;
-        const floorH = this.floorMapRef.el.offsetWidth;
-        const positionH = Math.max(
-            ...tables.map((table) => table.position_h + table.width),
-            floorH
+    getFloorDropdownState(floor) {
+        return withComputedProperties(
+            {
+                open: () => (this.state.floorDropdownId = floor.id),
+                close: () => (this.state.floorDropdownId = null),
+            },
+            [this.state],
+            {
+                isOpen(state) {
+                    return state.floorDropdownId === floor.id;
+                },
+            }
         );
-        const positionV = Math.max(
-            ...tables.map((table) => table.position_v + table.height),
-            floorV
-        );
-
-        if (this.activeFloor.floor_background_image) {
-            const img = new Image();
-            img.onload = () => {
-                const height = Math.max(img.height, positionV);
-                const width = Math.max(img.width, positionH);
-                this.state.floorHeight = `${height}px`;
-                this.state.floorWidth = `${width}px`;
-            };
-            img.src = "data:image/png;base64," + this.activeFloor.floor_background_image;
-        } else {
-            this.state.floorHeight = `${positionV}px`;
-            this.state.floorWidth = `${positionH}px`;
-        }
     }
-    getTablesSelectedByDefault() {
-        const oToTrans = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
-        return oToTrans ? [oToTrans.table_id.id] : [];
+    getTableHandleOffset(table) {
+        // min(width/2, height/2) is the real border radius
+        // 0.2929 is (1 - cos(45°)) to get in the middle of the border's arc
+        return table.shape === "round"
+            ? -12 + Math.min(table.width / 2, table.height / 2) * 0.2929
+            : -12;
+    }
+    unlinkTables(table) {
+        this.pos.data.write("restaurant.table", [table.id], {
+            parent_id: null,
+        });
+        for (const t of table.getChildren()) {
+            this.unlinkTables(t);
+        }
     }
     async onWillStart() {
         this.pos.searchProductWord = "";
@@ -132,41 +346,12 @@ export class FloorScreen extends Component {
         await this.pos.unsetTable();
     }
     get floorBackround() {
-        return this.activeFloor.floor_background_image
-            ? "data:image/png;base64," + this.activeFloor.floor_background_image
+        return this.state.floor.floor_background_image
+            ? "data:image/png;base64," + this.state.floor.floor_background_image
             : "none";
     }
-    onClickFloorMap() {
-        for (const tableId of this.state.selectedTableIds) {
-            const table = this.pos.models["restaurant.table"].get(tableId);
-            this.pos.data.write("restaurant.table", [tableId], {
-                ...table.serialize({ orm: true }),
-            });
-        }
-        this.state.selectedTableIds = this.getTablesSelectedByDefault();
-        this.state.isColorPicker = false;
-    }
-    _computePinchHypo(ev, callbackFunction) {
-        const touches = ev.touches;
-        // If two pointers are down, check for pinch gestures
-        if (touches.length === 2) {
-            const deltaX = touches[0].pageX - touches[1].pageX;
-            const deltaY = touches[0].pageY - touches[1].pageY;
-            callbackFunction(Math.hypot(deltaX, deltaY));
-        }
-    }
-    _onPinchStart(ev) {
-        ev.currentTarget.style.setProperty("touch-action", "none");
-        this._computePinchHypo(ev, this.startPinch.bind(this));
-    }
-    _onPinchEnd(ev) {
-        ev.currentTarget.style.removeProperty("touch-action");
-    }
-    _onPinchMove(ev) {
-        debounce(this._computePinchHypo, 10, true)(ev, this.movePinch.bind(this));
-    }
-    async _createTableHelper(copyTable, duplicateFloor = false) {
-        const existingTable = this.activeFloor.table_ids;
+    async createTable(copyTable, duplicateFloor = false) {
+        const existingTable = this.state.floor.table_ids;
         let newTableData;
         if (copyTable) {
             newTableData = copyTable.serialize({ orm: true });
@@ -281,7 +466,7 @@ export class FloorScreen extends Component {
                 shape: "square",
                 seats: 2,
                 color: "rgb(53, 211, 116)",
-                floor_id: this.activeFloor.id,
+                floor_id: this.state.floor.id,
             };
         }
         if (!duplicateFloor) {
@@ -312,57 +497,10 @@ export class FloorScreen extends Component {
         }
         return firstNum.toString();
     }
-    get activeFloor() {
-        return this.state.selectedFloorId
-            ? this.pos.models["restaurant.floor"].get(this.state.selectedFloorId)
-            : null;
-    }
     get activeTables() {
-        return this.activeFloor?.table_ids;
-    }
-    get selectedTables() {
-        return this.state.selectedTableIds.map((id) => this.pos.models["restaurant.table"].get(id));
-    }
-    get nbrFloors() {
-        return this.pos.models["restaurant.floor"].length;
-    }
-    movePinch(hypot) {
-        const delta = hypot / this.scalehypot;
-        const value = this.initalScale * delta;
-        this.setScale(value);
-    }
-    startPinch(hypot) {
-        this.scalehypot = hypot;
-        this.initalScale = this.getScale();
-    }
-    getScale() {
-        const scale = this.map.el.style.getPropertyValue("--scale");
-        const parsedScaleValue = parseFloat(scale);
-        return isNaN(parsedScaleValue) ? 1 : parsedScaleValue;
-    }
-    setScale(value) {
-        // a scale can't be a negative number
-        if (value > 0) {
-            this.map.el.style.setProperty("--scale", value);
-        }
-    }
-    selectFloor(floor) {
-        this.pos.currentFloor = floor;
-        this.state.selectedFloorId = floor.id;
-        this.unselectTables();
+        return this.state.floor?.table_ids;
     }
     async onClickTable(table, ev) {
-        if (this.pos.isEditMode && ["mousedown", "touchstart"].includes(ev.type)) {
-            if (ev.ctrlKey || ev.metaKey) {
-                this.state.selectedTableIds.push(table.id);
-            } else {
-                this.unselectTables();
-                this.state.selectedTableIds.push(table.id);
-            }
-            return;
-        } else if (this.pos.isEditMode || ev.type !== "click") {
-            return;
-        }
         if (table.parent_id) {
             this.onClickTable(table.parent_id, ev);
             return;
@@ -394,126 +532,92 @@ export class FloorScreen extends Component {
             }
         }
     }
-    unselectTables() {
-        if (this.selectedTables.length) {
-            for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], table.serialize({ orm: true }));
-            }
-        }
-        this.state.selectedTableIds = [];
+    onFloorRightClick(floor, ev) {
+        ev?.preventDefault?.();
+        this.state.floorDropdownId = floor.id;
     }
-    closeEditMode() {
-        this.pos.isEditMode = false;
-        this.unselectTables();
+    onTableRightClick(table, ev) {
+        ev?.preventDefault?.();
+        this.state.tableDropdownId = table.id;
     }
-    async addFloor() {
-        this.dialog.add(TextInputPopup, {
-            title: _t("New Floor"),
-            placeholder: _t("Floor name"),
-            getPayload: async (newName) => {
-                const floor = await this.pos.data.create(
-                    "restaurant.floor",
-                    [
-                        {
-                            name: newName,
-                            background_color: "#FFFFFF",
-                            pos_config_ids: [this.pos.config.id],
-                        },
-                    ],
-                    false
-                );
+    async addTableOrFloor() {
+        this.dialog.add(SelectionPopup, {
+            list: [
+                {
+                    id: 1,
+                    label: _t("New Table"),
+                    item: "table",
+                },
+                {
+                    id: 2,
+                    label: _t("New Floor"),
+                    item: "floor",
+                },
+            ],
+            getPayload: async (selected) => {
+                if (selected === "table") {
+                    this.createTable();
+                    return;
+                }
+                this.dialog.add(TextInputPopup, {
+                    title: _t("New Floor"),
+                    placeholder: _t("Floor name"),
+                    getPayload: async (newName) => {
+                        const floor = await this.pos.data.create(
+                            "restaurant.floor",
+                            [
+                                {
+                                    name: newName,
+                                    background_color: "#FFFFFF",
+                                    pos_config_ids: [this.pos.config.id],
+                                },
+                            ],
+                            false
+                        );
 
-                this.selectFloor(floor[0]);
-                this.pos.isEditMode = true;
+                        this.state.floor = floor[0];
+                    },
+                });
             },
         });
     }
-    async createTable() {
-        const newTable = await this._createTableHelper();
-        if (newTable) {
-            this.state.selectedTableIds = [newTable.id];
-        }
-    }
-    async duplicateTableOrFloor() {
-        if (this.selectedTables.length == 0) {
-            const floor = this.activeFloor;
-            const tables = this.activeFloor.table_ids;
-            const newFloorName = floor.name + " (copy)";
-            const copyFloor = await this.pos.data.create("restaurant.floor", [
-                {
-                    name: newFloorName,
-                    background_color: "#ACADAD",
-                    pos_config_ids: [this.pos.config.id],
-                },
-            ]);
+    async duplicateFloor(floor) {
+        const tables = this.state.floor.table_ids;
+        const newFloorName = floor.name + " (copy)";
+        const copyFloor = await this.pos.data.create("restaurant.floor", [
+            {
+                name: newFloorName,
+                background_color: "#ACADAD",
+                pos_config_ids: [this.pos.config.id],
+            },
+        ]);
 
-            this.selectFloor(copyFloor[0]);
-            this.pos.isEditMode = true;
+        this.state.floor = copyFloor[0];
 
-            for (const table of tables) {
-                const tableSerialized = table.serialize({ orm: true });
-                tableSerialized.floor_id = copyFloor[0].id;
-                await this.createTableFromRaw(tableSerialized);
-            }
-            return;
+        for (const table of tables) {
+            const tableSerialized = table.serialize({ orm: true });
+            tableSerialized.floor_id = copyFloor[0].id;
+            await this.createTableFromRaw(tableSerialized);
         }
-        const selectedTables = this.selectedTables;
-        this.state.selectedTableIds = [];
-
-        for (const table of selectedTables) {
-            const newTable = await this._createTableHelper(table);
-            if (newTable) {
-                this.state.selectedTableIds.push(newTable.id);
-            }
-        }
+        return;
     }
-    async rename() {
-        if (this.selectedTables.length > 1) {
-            return;
-        }
-        this.dialog.add(
-            TextInputPopup,
-            this.selectedTables.length === 1
-                ? {
-                      startingValue: this.selectedTables[0].name,
-                      title: _t("Table Name ?"),
-                      getPayload: (newName) => {
-                          if (newName !== this.selectedTables[0].name) {
-                              this.pos.data.write("restaurant.table", [this.selectedTables[0].id], {
-                                  name: newName,
-                              });
-                          }
-                      },
-                  }
-                : {
-                      startingValue: this.activeFloor.name,
-                      title: _t("Floor Name ?"),
-                      getPayload: (newName) => {
-                          if (newName !== this.activeFloor.name) {
-                              this.activeFloor.name = newName;
-                              this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                                  name: newName,
-                              });
-                          }
-                      },
-                  }
-        );
+    async rename(item) {
+        this.dialog.add(TextInputPopup, {
+            startingValue: item.name,
+            title: _t("New Name ?"),
+            getPayload: (name) => {
+                if (name !== item.name) {
+                    this.pos.data.write(item.model.modelName, [item.id], { name });
+                }
+            },
+        });
     }
-    async changeSeatsNum() {
-        const selectedTables = this.selectedTables;
-        if (selectedTables.length == 0) {
-            return;
-        }
+    async changeSeatsNum(table) {
         this.dialog.add(NumberPopup, {
             title: _t("Number of Seats?"),
             getPayload: (num) => {
-                const newSeatsNum = parseInt(num, 10);
-                selectedTables.forEach((selectedTable) => {
-                    if (newSeatsNum !== selectedTable.seats) {
-                        this.pos.data.write("restaurant.table", [selectedTable.id], {
-                            seats: newSeatsNum,
-                        });
-                    }
+                this.pos.data.write("restaurant.table", [table.id], {
+                    seats: parseInt(num, 10),
                 });
             },
         });
@@ -522,51 +626,24 @@ export class FloorScreen extends Component {
         const order = this.pos.models["pos.order"].getBy("uuid", this.pos.orderToTransferUuid);
         this.pos.set_order(order);
         this.pos.showScreen("ProductScreen");
-        this.pos.isTableToMerge = false;
         this.pos.orderToTransferUuid = null;
     }
-    changeShape(form) {
-        for (const table of this.selectedTables) {
-            this.pos.data.write("restaurant.table", [table.id], { shape: form });
-        }
+    toggleShape(table) {
+        this.pos.data.write("restaurant.table", [table.id], {
+            shape: table.shape === "round" ? "square" : "round",
+        });
     }
-    unlinkTables() {
-        for (const table of this.selectedTables) {
-            this.pos.data.write("restaurant.table", [table.id], { parent_id: false });
-        }
+    setTableColor(table, color) {
+        this.state.tableDropdownId = null;
+        this.pos.data.write("restaurant.table", [table.id], { color: color });
     }
-    linkTables() {
-        const parentTable =
-            this.selectedTables.filter((t) => t.parent_id)?.[0] || this.selectedTables[0];
-        const childrenTables = this.selectedTables.filter((t) => t.id !== parentTable.id);
-        for (const table of childrenTables) {
-            table.update({ parent_id: parentTable });
-        }
-        this.pos.updateTables(...childrenTables);
-    }
-    isLinkingDisabled() {
-        return (
-            this.selectedTables.length < 2 ||
-            // all the selected tables must have the same parent or no parent
-            unique(this.selectedTables.filter((t) => t.parent_id).map((t) => t.parent_id)).length >
-                1 ||
-            // among the tables there can only be one that has children
-            this.selectedTables.filter((t) => this.getChildren(t).length).length > 1
-        );
-    }
-    setColor(color) {
-        if (this.selectedTables.length > 0) {
-            for (const table of this.selectedTables) {
-                this.pos.data.write("restaurant.table", [table.id], { color: color });
-            }
-        } else {
-            this.activeFloor.background_color = color;
-            this.pos.data.write("restaurant.floor", [this.activeFloor.id], {
-                background_color: color,
-                floor_background_image: false,
-            });
-        }
-        this.state.isColorPicker = false;
+    setFloorColor(floor, background_color) {
+        this.state.floorDropdownId = null;
+        this.pos.data.write("restaurant.floor", [floor.id], {
+            background_color,
+            floor_background_image: false,
+        });
+        this.state.floor = floor;
     }
     _getColors() {
         return {
@@ -593,56 +670,50 @@ export class FloorScreen extends Component {
     getLighterShade(color) {
         return this.formatColor([...this._getColors()[color], 0.75]);
     }
-    async deleteFloorOrTable() {
-        if (this.selectedTables.length == 0) {
-            const confirmed = await ask(this.dialog, {
-                title: `Removing floor ${this.activeFloor.name}`,
-                body: sprintf(
-                    _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
-                    this.activeFloor.name
-                ),
+    async deleteFloor(floor) {
+        const confirmed = await ask(this.dialog, {
+            title: `Removing floor ${floor.name}`,
+            body: sprintf(
+                _t("Removing a floor cannot be undone. Do you still want to remove %s?"),
+                floor.name
+            ),
+        });
+        if (!confirmed) {
+            return;
+        }
+        try {
+            await this.pos.data.call("restaurant.floor", "deactivate_floor", [
+                floor.id,
+                this.pos.session.id,
+            ]);
+        } catch {
+            this.dialog.add(AlertDialog, {
+                title: _t("Delete Error"),
+                body: _t("You cannot delete a floor with orders still in draft for this floor."),
             });
-            if (!confirmed) {
-                return;
-            }
-            const activeFloor = this.activeFloor;
-            try {
-                await this.pos.data.call("restaurant.floor", "deactivate_floor", [
-                    activeFloor.id,
-                    this.pos.session.id,
-                ]);
-            } catch {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Delete Error"),
-                    body: _t(
-                        "You cannot delete a floor with orders still in draft for this floor."
-                    ),
-                });
-                return;
-            }
-
-            const orderList = [...this.pos.get_open_orders()];
-            for (const order of orderList) {
-                if (activeFloor.table_ids.includes(order.tableId)) {
-                    this.pos.removeOrder(order, false);
-                }
-            }
-
-            for (const table_id of activeFloor.table_ids) {
-                table_id.delete();
-            }
-
-            activeFloor.delete();
-
-            if (this.pos.models["restaurant.floor"].length > 0) {
-                this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
-            } else {
-                this.pos.isEditMode = false;
-                this.pos.floorPlanStyle = "default";
-            }
             return;
         }
 
+        const orderList = [...this.pos.get_order_list()];
+        for (const order of orderList) {
+            if (floor.table_ids.includes(order.tableId)) {
+                this.pos.removeOrder(order, false);
+            }
+        }
+
+        for (const table_id of floor.table_ids) {
+            table_id.delete();
+        }
+
+        floor.delete();
+
+        if (this.pos.models["restaurant.floor"].length > 0) {
+            this.state.floor = this.pos.models["restaurant.floor"].getAll()[0];
+        } else {
+            this.pos.floorPlanStyle = "default";
+        }
+    }
+    async deleteTable(table) {
         const confirmed = await ask(this.dialog, {
             title: _t("Are you sure?"),
             body: _t("Removing a table cannot be undone"),
@@ -650,47 +721,11 @@ export class FloorScreen extends Component {
         if (!confirmed) {
             return;
         }
-        const originalSelectedTableIds = [...this.state.selectedTableIds];
-
-        try {
-            const response = await this.pos.data.call(
-                "restaurant.table",
-                "are_orders_still_in_draft",
-                [originalSelectedTableIds]
-            );
-
-            if (response) {
-                for (const id of originalSelectedTableIds) {
-                    //remove order not send to server
-                    for (const order of this.pos.get_open_orders()) {
-                        if (order.table_id == id) {
-                            this.pos.removeOrder(order, false);
-                        }
-                    }
-                    const records = this.pos.data.write("restaurant.table", [id], {
-                        active: false,
-                    });
-                    records[0].delete();
-                }
-            }
-        } catch {
-            this.dialog.add(AlertDialog, {
-                title: _t("Delete Error"),
-                body: _t("You cannot delete a table with orders still in draft for this table."),
-            });
-        }
-
-        // Value of an object can change inside async function call.
-        //   Which means that in this code block, the value of `state.selectedTableId`
-        //   before the await call can be different after the finishing the await call.
-        // Since we wanted to disable the selected table after deletion, we should be
-        //   setting the selectedTableId to null. However, we only do this if nothing
-        //   else is selected during the rpc call.
-        const equalsCheck = (a, b) => {
-            return JSON.stringify(a) === JSON.stringify(b);
-        };
-        if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
-            this.state.selectedTableIds = [];
+        const records = await this.pos.data.write("restaurant.table", [table.id], {
+            active: false,
+        });
+        if (records) {
+            records[0].delete();
         }
     }
     getFloorChangeCount(floor) {
@@ -708,32 +743,57 @@ export class FloorScreen extends Component {
     getChildren(table) {
         return this.pos.models["restaurant.table"].filter((t) => t.parent_id?.id === table.id);
     }
-    async uploadImage(event) {
-        const file = event.target.files[0];
+
+    changeImage(ev) {
+        const file = ev.target.files[0];
+        this.state.floorDropdownId = null;
+        return this.uploadImage(file);
+    }
+    async uploadImage(file) {
         if (!file.type.match(/image.*/)) {
             this.dialog.add(AlertDialog, {
                 title: _t("Unsupported File Format"),
                 body: _t("Only web-compatible Image formats such as .png or .jpeg are supported."),
             });
-        } else {
-            const imageUrl = await getDataURLFromFile(file);
-            const loadedImage = await loadImage(imageUrl);
-            if (loadedImage) {
-                this.env.services.ui.block();
-                await this.pos.data.ormWrite("restaurant.floor", [this.activeFloor.id], {
-                    floor_background_image: imageUrl.split(",")[1],
-                });
-                // A read is added to be sure that we have the same image as the one in backend
-                await this.pos.data.read("restaurant.floor", [this.activeFloor.id]);
-                this.env.services.ui.unblock();
-            } else {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Loading Image Error"),
-                    body: _t("Encountered error when loading image. Please try again."),
-                });
-            }
-            this.state.isColorPicker = false;
+            return;
         }
+        const imageUrl = await getDataURLFromFile(file);
+        const loadedImage = await loadImage(imageUrl);
+        if (loadedImage) {
+            this.env.services.ui.block();
+            await this.pos.data.write("restaurant.floor", [this.state.floor.id], {
+                floor_background_image: imageUrl.split(",")[1],
+            });
+            this.env.services.ui.unblock();
+        } else {
+            this.dialog.add(AlertDialog, {
+                title: _t("Loading Image Error"),
+                body: _t("Encountered error when loading image. Please try again."),
+            });
+        }
+    }
+    getOrderCount(table) {
+        // This information in uiState came by websocket
+        if (table.uiState.changeCount > 0) {
+            return table.uiState.changeCount;
+        }
+        if (table.uiState.skipCount > 0) {
+            return table.uiState.skipCount;
+        }
+
+        // If the table is not synced, we need to count the unsynced orders
+        const orderCount = new Set();
+        const tableOrders = this.pos.models["pos.order"].filter(
+            (o) => o.table_id?.id === table.id && !o.finalized
+        );
+
+        table.uiState.orderCount = tableOrders.length;
+        for (const order of tableOrders) {
+            const changes = getOrderChanges(order, false, this.pos.orderPreparationCategories);
+            table.uiState.changeCount += changes.nbrOfChanges;
+        }
+
+        return table.uiState.orderCount + orderCount.size || 0;
     }
 }
 

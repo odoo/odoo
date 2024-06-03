@@ -27,14 +27,11 @@ patch(PosStore.prototype, {
     async setup() {
         this.orderToTransferUuid = null; // table transfer feature
         this.floorPlanStyle = "default";
-        this.isEditMode = false;
-        this.isTableToMerge = false;
         this.tableSyncing = false;
         await super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
-            this.showScreen("FloorScreen", { floor: this.selectedTable?.floor || null });
-            this.currentFloor = this.config.floor_ids?.length > 0 ? this.config.floor_ids[0] : null;
+            this.showScreen("FloorScreen", { floor: this.selectedTable?.floor });
             // Sync the number of orders on each table with other PoS
             this.getTableOrderCount();
         }
@@ -296,10 +293,13 @@ patch(PosStore.prototype, {
         }
         this.set_order(null);
     },
+    getActiveOrdersOnTable(table) {
+        return this.models["pos.order"].filter(
+            (o) => o.table_id?.id === table.id && !o.finalized && o.lines.length
+        );
+    },
     tableHasOrders(table) {
-        return this.models["pos.order"]
-            .filter((o) => !o.finalized)
-            .some((o) => o.table_id?.id === table?.id && o.lines.length);
+        return this.getActiveOrdersOnTable(table).length > 0;
     },
     shouldShowNavbarButtons() {
         return super.shouldShowNavbarButtons(...arguments) && !this.orderToTransferUuid;
@@ -327,11 +327,6 @@ patch(PosStore.prototype, {
         }
         this.selectedTable = table;
         this.loadingOrderState = false;
-        if (this.isTableToMerge && order.table_id.id !== table.id) {
-            originalTable.update({ parent_id: table });
-            this.updateTables(originalTable);
-            this.isTableToMerge = false;
-        }
         order.update({ table_id: table });
         this.set_order(order);
         this.orderToTransferUuid = null;
@@ -354,9 +349,6 @@ patch(PosStore.prototype, {
     },
     isOpenOrderShareable() {
         return super.isOpenOrderShareable(...arguments) || this.config.module_pos_restaurant;
-    },
-    toggleEditMode() {
-        this.isEditMode = !this.isEditMode;
     },
     async addProductToCurrentOrder(product, options = {}) {
         if (this.config.module_pos_restaurant && !this.get_order().booked) {

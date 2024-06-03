@@ -9,7 +9,6 @@
         box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
         /* See o-grab-cursor mixin */
         cursor: url(/web/static/img/openhand.cur), grab;
-        transition: 150ms;
         z-index: 100;
         &:hover {
             transform: scale(1.5);
@@ -18,8 +17,8 @@
     &.floor-grid {
         background-image:
             linear-gradient(0, #D3D3D3 14%, transparent 14%),
-            linear-gradient(90deg, transparent 90%, #D3D3D3 70%);
-        background-size: 10px 10px;
+            linear-gradient(90deg, transparent 90%, #D3D3D3 70%) !important;
+        background-size: 10px 10px !important;
     }
 }
 .floor-picture {
@@ -44,4 +43,12 @@
         opacity: 0;
         cursor: pointer;
     }
+}
+.rotate_right {
+    transform: rotate(10deg);
+    transition: transform 0.6s;
+}
+.rotate_left {
+    transform: rotate(-10deg);
+    transition: transform 0.6s;
 }

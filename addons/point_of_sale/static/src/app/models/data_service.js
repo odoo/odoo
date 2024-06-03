@@ -399,9 +399,10 @@ export class PosData extends Reactive {
         this.syncInProgress = false;
     }
 
-    write(model, ids, vals) {
+    // FIXME: here we optimistically update the data, but we should have a mechanism to rollback the changes if the sync fails
+    async write(model, ids, vals) {
         const records = [];
-
+        const promises = [];
         for (const id of ids) {
             const record = this.models[model].get(id);
             delete vals.id;
@@ -415,9 +416,17 @@ export class PosData extends Reactive {
             }
 
             records.push(record);
-            this.ormWrite(model, [record.id], dataToUpdate);
+            promises.push(
+                this.execute({
+                    type: "write",
+                    model,
+                    ids: [record.id],
+                    values: dataToUpdate,
+                    queue: true,
+                })
+            );
         }
-
+        await Promise.all(promises);
         return records;
     }
 
@@ -470,10 +479,6 @@ export class PosData extends Reactive {
 
     async create(model, values, queue = true) {
         return await this.execute({ type: "create", model, values, queue });
-    }
-
-    async ormWrite(model, ids, values, queue = true) {
-        return await this.execute({ type: "write", model, ids, values, queue });
     }
 
     async ormDelete(model, ids, queue = true) {

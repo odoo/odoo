@@ -32,6 +32,7 @@ This module adds several features to the Point of Sale that are specific to rest
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_restaurant/static/src/**/*',
+            'mail/static/src/core/common/dropzone*',
             ('after', 'point_of_sale/static/src/scss/pos.scss', 'pos_restaurant/static/src/scss/restaurant.scss'),
         ],
         'web.assets_backend': [

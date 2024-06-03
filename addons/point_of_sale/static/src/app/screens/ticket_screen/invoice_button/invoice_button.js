@@ -87,7 +87,7 @@ export class InvoiceButton extends Component {
                 return;
             }
 
-            await this.pos.data.ormWrite("pos.order", [orderId], { partner_id: partner.id });
+            await this.pos.data.write("pos.order", [orderId], { partner_id: partner.id });
         }
 
         const confirmed = await this.onWillInvoiceOrder(order, partner);
