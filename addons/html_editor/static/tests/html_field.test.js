@@ -50,6 +50,16 @@ test("html field in readonly", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="txt"] .o_readonly`).toHaveCount(1);
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>first</p>");
+
+    await contains(`.o_pager_next`).click();
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>second</p>");
+
+    await contains(`.o_pager_previous`).click();
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>first</p>");
 });
 
 test("links should open on a new tab in readonly", async () => {
@@ -58,15 +68,27 @@ test("links should open on a new tab in readonly", async () => {
             id: 1,
             txt: `
             <body>
+                <p>first</p>
                 <a href="/contactus">Relative link</a>
                 <a href="${browser.location.origin}/contactus">Internal link</a>
                 <a href="https://google.com">External link</a>
+            </body>`,
+        },
+        {
+            id: 2,
+            txt: `
+            <body>
+                <p>second</p>
+                <a href="/contactus2">Relative link</a>
+                <a href="${browser.location.origin}/contactus2">Internal link</a>
+                <a href="https://google2.com">External link</a>
             </body>`,
         },
     ];
     await mountView({
         type: "form",
         resId: 1,
+        resIds: [1, 2],
         resModel: "partner",
         arch: `
             <form>
@@ -74,6 +96,14 @@ test("links should open on a new tab in readonly", async () => {
             </form>`,
     });
 
+    expect("[name='txt'] p").toHaveText("first");
+    for (const link of queryAll("a")) {
+        expect(link.getAttribute("target")).toBe("_blank");
+        expect(link.getAttribute("rel")).toBe("noreferrer");
+    }
+
+    await contains(`.o_pager_next`).click();
+    expect("[name='txt'] p").toHaveText("second");
     for (const link of queryAll("a")) {
         expect(link.getAttribute("target")).toBe("_blank");
         expect(link.getAttribute("rel")).toBe("noreferrer");
@@ -381,15 +411,28 @@ describe("sandbox", () => {
                 id: 1,
                 txt: `
                 <body>
+                    <p>first</p>
                     <a href="/contactus">Relative link</a>
                     <a href="${browser.location.origin}/contactus">Internal link</a>
                     <a href="https://google.com">External link</a>
                 </body>`,
             },
+            {
+                id: 2,
+                txt: `
+                <body>
+                    <p>second</p>
+                    <a href="/contactus2">Relative link</a>
+                    <a href="${browser.location.origin}/contactus2">Internal link</a>
+                    <a href="https://google2.com">External link</a>
+                </body>`,
+            },
         ];
+
         await mountView({
             type: "form",
             resId: 1,
+            resIds: [1, 2],
             resModel: "partner",
             arch: `
                 <form>
@@ -397,7 +440,16 @@ describe("sandbox", () => {
                 </form>`,
         });
 
-        const readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        let readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        expect(readonlyIframe.contentDocument.body.querySelector("p")).toHaveText("first");
+        for (const link of readonlyIframe.contentDocument.body.querySelectorAll("a")) {
+            expect(link.getAttribute("target")).toBe("_blank");
+            expect(link.getAttribute("rel")).toBe("noreferrer");
+        }
+
+        await contains(`.o_pager_next`).click();
+        readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        expect(readonlyIframe.contentDocument.body.querySelector("p")).toHaveText("second");
         for (const link of readonlyIframe.contentDocument.body.querySelectorAll("a")) {
             expect(link.getAttribute("target")).toBe("_blank");
             expect(link.getAttribute("rel")).toBe("noreferrer");
@@ -441,6 +493,30 @@ describe("sandbox", () => {
             `<div id="iframe_target"> <p> Hello </p> </div>`
         );
         expect(["template.assets"]).toVerifySteps();
+    });
+
+    test("click on next/previous page when readonly with cssReadonly ", async () => {
+        await mountView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            arch: `
+                <form string="Partner">
+                    <field name="txt" widget="html" readonly="1" options="{'cssReadonly': 'template.assets'}"/>
+                </form>`,
+        });
+
+        let readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        expect(readonlyIframe.contentDocument.body).toHaveInnerHTML(
+            `<div id="iframe_target"> <p> first </p> </div>`
+        );
+
+        await contains(`.o_pager_next`).click();
+        readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        expect(readonlyIframe.contentDocument.body).toHaveInnerHTML(
+            `<div id="iframe_target"> <p> second </p> </div>`
+        );
     });
 });
 

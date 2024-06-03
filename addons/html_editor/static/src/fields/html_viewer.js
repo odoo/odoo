@@ -1,4 +1,12 @@
-import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillStart,
+    onWillUpdateProps,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 
 // Ensure all links are opened in a new tab.
@@ -29,11 +37,15 @@ export class HtmlViewer extends Component {
 
         if (this.showIframe) {
             onMounted(() => {
-                const onLoadIframe = () => this.onLoadIframe();
+                const onLoadIframe = () => this.onLoadIframe(this.props.value);
                 this.iframeRef.el.addEventListener("load", onLoadIframe, { once: true });
                 // Force the iframe to call the `load` event. Without this line, the
                 // event 'load' might never trigger.
                 this.iframeRef.el.after(this.iframeRef.el);
+            });
+
+            onWillUpdateProps((nextProps) => {
+                this.updateIframeContent(nextProps.value);
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
@@ -53,7 +65,16 @@ export class HtmlViewer extends Component {
         return this.props.hasFullHtml || this.props.cssAssetId;
     }
 
-    onLoadIframe() {
+    updateIframeContent(content) {
+        const contentWindow = this.iframeRef.el.contentWindow;
+        const iframeTarget = this.props.hasFullHtml
+            ? contentWindow.document.documentElement
+            : contentWindow.document.querySelector("#iframe_target");
+        iframeTarget.innerHTML = content;
+        retargetLinks(iframeTarget);
+    }
+
+    onLoadIframe(value) {
         const contentWindow = this.iframeRef.el.contentWindow;
         if (!this.props.hasFullHtml) {
             contentWindow.document.open("text/html", "replace").write(
@@ -80,11 +101,7 @@ export class HtmlViewer extends Component {
             }
         }
 
-        const iframeTarget = this.props.hasFullHtml
-            ? contentWindow.document.documentElement
-            : contentWindow.document.querySelector("#iframe_target");
-        iframeTarget.innerHTML = this.props.value;
-        retargetLinks(iframeTarget);
+        this.updateIframeContent(this.props.value);
         this.state.iframeVisible = true;
     }
 }
