@@ -85,8 +85,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',
     events: {
         'click .karma_required': '_onKarmaRequiredClick',
-        'mouseenter .o_js_forum_tag_follow': '_onTagFollowBoxMouseEnter',
-        'mouseleave .o_js_forum_tag_follow': '_onTagFollowBoxMouseLeave',
         "click .o_js_forum_tag_follow": "_onTagFollowClick",
         'mouseenter .o_forum_user_info': '_onUserInfoMouseEnter',
         'mouseleave .o_forum_user_info': '_onUserInfoMouseLeave',
@@ -207,6 +205,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         const replyEl = this.el.querySelector("#post_reply");
         replyEl?.addEventListener("shown.bs.collapse", (ev) => {
             const scrollingElement = closestScrollableY(replyEl.parentNode);
+            // TODO: MSH: To convert
             scrollTo(replyEl, {
                 forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
             });
@@ -339,56 +338,6 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             sticky: false,
             title: _t("Karma Error"),
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onTagFollowBoxMouseEnter: function (ev) {
-        const followBox = ev.currentTarget;
-        followBox.style.display = "block";
-        followBox.style.transition = "opacity 0.5s linear 0s";
-        followBox.style.opacity = 1;
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    // TODO-shsa : check .stop()
-    /**
-     * $(ev.currentTarget): This is selecting the HTML element that triggered the current event.
-     * For example, if this code is running in response to a button click, ev.currentTarget would be the button that was clicked.
-    .find(".o_forum_tag_follow_box"):
-    This is searching within the selected element for any child elements
-    that have the class o_forum_tag_follow_box.
-    .stop(): This is stopping any animations that are currently running on the selected elements.
-    .fadeOut(): This is starting a new animation that gradually changes the selected elements"
-    opacity to 0, giving the effect of fading out.
-    .css("display", "none"): After the fade out animation,
-    this is setting the CSS display property of the selected elements to none,
-    effectively hiding them from the layout of the page.
-    */
-    _onTagFollowBoxMouseLeave: function (ev) {
-        const followBox = ev.currentTarget;
-        // The stop() function in jQuery is used to stop an animation or effect before it is finished.
-        // The stop() function is not directly available in vanilla JavaScript.
-        // However, you can achieve a similar effect by using clearInterval()
-        // to stop a running interval that's controlling an animation.
-        if (followBox.fadeEffect) {
-            clearInterval(followBox.fadeEffect);
-        }
-        followBox.style.opacity = "1";
-        followBox.fadeEffect = setInterval(function () {
-            if (!followBox.style.opacity) {
-                followBox.style.opacity = "1";
-            }
-            if (followBox.style.opacity > "0") {
-                followBox.style.opacity -= "0.1";
-            } else {
-                clearInterval(followBox.fadeEffect);
-                followBox.style.display = "none";
-            }
-        }, 20);
     },
     /**
      * @private

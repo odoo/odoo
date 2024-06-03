@@ -613,7 +613,7 @@ class WebsiteForum(WebsiteProfile):
         post.validate()
         return request.redirect(url)
 
-    @http.route('/forum/<model("forum.post"):post>/validate', type='json', auth="user", website=True)
+    @http.route('/forum/<model("forum.post"):post>/validate', type='jsonrpc', auth="user", website=True)
     def post_accept_json(self, post, **kwargs):
         return post._validate()
 
