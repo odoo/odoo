@@ -15,6 +15,7 @@ import logging
 from operator import getitem
 import requests
 import json
+import contextlib
 
 from pytz import timezone
 
@@ -1017,6 +1018,9 @@ class IrActionsServer(models.Model):
                     expr = int(action.value)
                 except Exception:
                     pass
+            elif action.update_field_id.ttype == 'float':
+                with contextlib.suppress(Exception):
+                    expr = float(action.value)
             result[action.id] = expr
         return result
 
