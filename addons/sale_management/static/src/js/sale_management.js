@@ -16,7 +16,7 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
      */
     async start() {
         await this._super(...arguments);
-        this.orderDetail = document.querySelector('table#sales_order_table').dataset;
+        this.orderDetail = document.querySelector("table#sales_order_table").dataset;
     },
 
     /**
@@ -50,12 +50,12 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
      */
     async _onChangeOptionQuantity(ev) {
         ev.preventDefault();
-        let self = this,
+        const self = this,
             target = ev.currentTarget,
             quantity = parseInt(target.value);
 
         const result = await this._callUpdateLineRoute(self.orderDetail.orderId, {
-            'line_id': target.dataset.lineId,
+            'line_id': parseInt(target.dataset.lineId),
             'input_quantity': quantity >= 0 ? quantity : false,
             'access_token': self.orderDetail.token
         });
@@ -70,11 +70,11 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
      */
     async _onClickOptionQuantityButton(ev) {
         ev.preventDefault();
-        let self = this,
+        const self = this,
             target = ev.currentTarget;
 
         const result = await this._callUpdateLineRoute(self.orderDetail.orderId, {
-            'line_id': target.dataset.lineId,
+            'line_id': parseInt(target.dataset.lineId),
             'remove': target.dataset.remove,
             'unlink': target.dataset.unlink,
             'access_token': self.orderDetail.token
@@ -90,11 +90,11 @@ publicWidget.registry.SaleUpdateLineButton = publicWidget.Widget.extend({
      */
      _onClickAddOptionalProduct(ev) {
         ev.preventDefault();
-        let self = this,
+        const self = this,
             target = ev.currentTarget;
 
         // to avoid double click on link with href.
-        target.style.pointerEvents = 'none';
+        target.style.pointerEvents = "none";
 
         rpc(
             "/my/orders/" + self.orderDetail.orderId + "/add_option/" + target.dataset.optionId,

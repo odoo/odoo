@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
+import { getElementData } from "@web/core/utils/ui";
 import dom from "@web/legacy/js/core/dom";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import portalComposer from "@portal/js/portal_composer";
@@ -165,8 +166,7 @@ var PortalChatter = publicWidget.Widget.extend({
         }
         if (this.options.display_composer) {
             this._composer = this._createComposerWidget();
-            // TODO: MSH: We need to keep following jquery code as it is as appendTo method do not support HTML Element or we need to make appendTo method handle HTML Element
-            await this._composer.appendTo(this.$('.o_portal_chatter_composer'));
+            await this._composer.appendTo(this.el.querySelector(".o_portal_chatter_composer"));
         }
     },
     /**
@@ -261,21 +261,27 @@ var PortalChatter = publicWidget.Widget.extend({
         };
     },
     _renderMessages: function () {
-        const chatterMessageParent = this.el.querySelector('.o_portal_chatter_messages');
-        chatterMessageParent.replaceChildren();
-        const chatterMessage = renderToElement("portal.chatter_messages", {widget: this})
-        chatterMessageParent.appendChild(chatterMessage);
+        const chatterMessageParentEl = this.el.querySelector(".o_portal_chatter_messages");
+        chatterMessageParentEl.replaceChildren();
+        const chatterMessage = renderToElement("portal.chatter_messages", { widget: this });
+        chatterMessageParentEl.appendChild(chatterMessage);
     },
     _renderMessageCount: function () {
-        const messageCounter = this.el.querySelector('.o_message_counter');
-        if (messageCounter) {
-            messageCounter.parentNode.replaceChild(renderToElement("portal.chatter_message_count", {widget: this}), messageCounter);
+        const messageCounterEL = this.el.querySelector(".o_message_counter");
+        if (messageCounterEL) {
+            messageCounterEL.parentNode.replaceChild(
+                renderToElement("portal.chatter_message_count", { widget: this }),
+                messageCounterEL
+            );
         }
     },
     _renderPager: function () {
-        const chatterPager = this.el.querySelector('.o_portal_chatter_pager');
-        if (chatterPager) {
-            chatterPager.parentNode.replaceChild(renderToElement("portal.pager", {widget: this}), chatterPager);
+        const chatterPagerEl = this.el.querySelector(".o_portal_chatter_pager");
+        if (chatterPagerEl) {
+            chatterPagerEl.parentNode.replaceChild(
+                renderToElement("portal.pager", { widget: this }),
+                chatterPagerEl
+            );
         }
     },
 
@@ -296,8 +302,8 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickPager: function (ev) {
         ev.preventDefault();
-        const page = ev.currentTarget.getAttribute('data-page');
-        this._changeCurrentPage(page);
+        const page = ev.currentTarget.getAttribute("data-page");
+        this._changeCurrentPage(parseInt(page));
     },
 
     /**
@@ -308,19 +314,18 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _onClickUpdateIsInternal: function (ev) {
         ev.preventDefault();
-
         const elem = ev.currentTarget;
         return rpc('/mail/update_is_internal', {
-            message_id: elem.getAttribute('data-message-id'),
-            is_internal: ! elem.getAttribute('data-is-internal'),
+            message_id: parseInt(elem.getAttribute("data-message-id")),
+            is_internal: !JSON.parse(elem.getAttribute("data-is-internal")),
         }).then(function (result) {
-            elem.setAttribute('data-is-internal', result);
+            elem.setAttribute("data-is-internal", result);
             if (result === true) {
-                elem.classList.add('o_portal_message_internal_on');
-                elem.classList.remove('o_portal_message_internal_off');
+                elem.classList.add("o_portal_message_internal_on");
+                elem.classList.remove("o_portal_message_internal_off");
             } else {
-                elem.classList.add('o_portal_message_internal_off');
-                elem.classList.remove('o_portal_message_internal_on');
+                elem.classList.add("o_portal_message_internal_off");
+                elem.classList.remove("o_portal_message_internal_on");
             }
         });
     },
@@ -334,10 +339,9 @@ publicWidget.registry.portalChatter = publicWidget.Widget.extend({
      */
     async start() {
         const proms = [this._super.apply(this, arguments)];
-        const data = Object.assign({}, this.el.dataset);
+        const data = Object.assign({}, getElementData(this.el));
         const chatter = new PortalChatter(this, data);
-        // TODO: MSH: We need to keep following jquery code as it is as appendTo method do not support HTML Element or we need to make appendTo method handle HTML Element
-        proms.push(chatter.appendTo(this.$el));
+        proms.push(chatter.appendTo(this.el));
         await Promise.all(proms);
         // scroll to the right place after chatter loaded
         if (window.location.hash === `#${this.el.id}`) {

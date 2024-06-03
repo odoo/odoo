@@ -17,16 +17,17 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        const invoiceHtml = this.el.querySelector('iframe#invoice_html');
-        const updateIframeSize = this._updateIframeSize.bind(this, invoiceHtml);
+        const invoiceHtmlElement = this.el.querySelector("iframe#invoice_html");
+        const updateIframeSize = this._updateIframeSize.bind(this, invoiceHtmlElement);
 
-        window.addEventListener('resize', updateIframeSize);
+        window.addEventListener("resize", updateIframeSize);
 
-        var iframeDoc = invoiceHtml.contentDocument || invoiceHtml.contentWindow.document;
-        if (iframeDoc.readyState === 'complete') {
+        const iframeDoc =
+            invoiceHtmlElement.contentDocument || invoiceHtmlElement.contentWindow.document;
+        if (iframeDoc.readyState === "complete") {
             updateIframeSize();
         } else {
-            invoiceHtml.addEventListener('load', updateIframeSize);
+            invoiceHtmlElement.addEventListener("load", updateIframeSize);
         }
 
         return def;
@@ -44,11 +45,11 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      * @param {object} $el: the iframe
      */
     _updateIframeSize: function (el) {
-        const wrapwrap = el.contentDocument.querySelector("div#wrapwrap");
+        const wrapwrapEl = el.contentDocument.querySelector("div#wrapwrap");
 
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
         setHeight(el, 0);
-        setHeight(el, wrapwrap.scrollHeight);
+        setHeight(el, wrapwrapEl.scrollHeight);
 
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)
@@ -67,7 +68,7 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      */
     _onPrintInvoice: function (ev) {
         ev.preventDefault();
-        const href = ev.currentTarget.getAttribute('href');
+        const href = ev.currentTarget.getAttribute("href");
         this._printIframeContent(href);
     },
 });

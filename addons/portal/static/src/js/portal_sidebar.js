@@ -26,10 +26,10 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @private
      */
     _setDelayLabel: function () {
-        const sidebarTimeago = this.el.querySelectorAll('.o_portal_sidebar_timeago');
-        sidebarTimeago.forEach((el) => {
-            const dateTime = deserializeDateTime(el.getAttribute('datetime'));
-            const today = DateTime.now().startOf('day');
+        const sidebarTimeagoEls = this.el.querySelectorAll(".o_portal_sidebar_timeago");
+        sidebarTimeagoEls.forEach((el) => {
+            const dateTime = deserializeDateTime(el.getAttribute("datetime"));
+            const today = DateTime.now().startOf("day");
             const diff = dateTime.diff(today).as("days");
             let displayStr;
 
@@ -50,15 +50,14 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @param {string} href
      */
     _printIframeContent: function (href) {
-        debugger;
         if (!this.printContent) {
-            const iframe = document.createElement('iframe');
-            iframe.setAttribute('id', 'print_iframe_content');
-            iframe.setAttribute('src', href);
-            iframe.setAttribute('style', 'display:none');
+            const iframeEl = document.createElement("iframe");
+            iframeEl.setAttribute("id", "print_iframe_content");
+            iframeEl.setAttribute("src", href);
+            iframeEl.setAttribute("style", "display:none");
             // TODO: MSH: printContent seems jquery element, need to check
             this.el.appendChild(this.printContent);
-            this.printContent.addEventListener('load', function () {
+            this.printContent.addEventListener("load", function () {
                 // TODO: MSH: To test and convert
                 $(this).get(0).contentWindow.print();
             });

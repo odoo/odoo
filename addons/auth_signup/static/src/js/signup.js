@@ -16,10 +16,10 @@ publicWidget.registry.SignUpForm = publicWidget.Widget.extend({
      * @private
      */
     _onSubmit: function () {
-        const btn = this.el.querySelector('.oe_login_buttons > button[type="submit"]');
-        btn.setAttribute('disabled', 'disabled');
-        const iTag = document.createElement('i');
-        iTag.setAttribute('class', 'fa fa-refresh fa-spin');
-        btn.parentElement.insertBefore(iTag, btn);
+        const btnEl = this.el.querySelector('.oe_login_buttons > button[type="submit"]');
+        btnEl.setAttribute("disabled", "disabled");
+        const iTagEL = document.createElement("i");
+        iTagEL.setAttribute("class", "fa fa-refresh fa-spin");
+        btnEl.prepend(iTagEL);
     },
 });

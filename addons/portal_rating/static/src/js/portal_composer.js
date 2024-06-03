@@ -48,10 +48,10 @@ PortalComposer.include({
         return this._super.apply(this, arguments).then(function () {
             // rating stars
             self.input = self.el.querySelector('input[name="rating_value"]');
-            self.star_list = self.el.querySelectorAll('.stars i');
+            self.star_list = self.el.querySelectorAll(".stars i");
             // if this is the first review, we do not use grey color contrast, even with default rating value.
             if (!self.options.default_message_id) {
-                self.star_list.forEach(star => star.classList.remove('text-black-25'));
+                self.star_list.forEach((star) => star.classList.remove("text-black-25"));
             }
 
             // set the default value to trigger the display of star widget and update the hidden input value.
@@ -85,28 +85,29 @@ PortalComposer.include({
         var index = Math.floor(val);
         var decimal = val - index;
         // reset the stars
-        this.star_list.forEach(star => {
-            star.classList.remove('fa-star fa-star-half-o');
-            star.classList.add('fa-star-o');
+        this.star_list.forEach((star) => {
+            star.classList.remove("fa-star", "fa-star-half-o");
+            star.classList.add("fa-star-o");
         });
 
-        this.el.querySelectorAll('.stars i:lt(' + index + ')').forEach(star => {
-            star.classList.remove('fa-star-o fa-star-half-o');
-            star.classList.add('fa-star');
-        });
-        if (decimal) {
-            this.el.querySelectorAll('.stars i:eq(' + index + ')').forEach(star => {
-                star.classList.remove('fa-star-o fa-star fa-star-half-o');
-                star.classList.add('fa-star-half-o');
+        Array.from(this.el.querySelectorAll(".stars i"))
+            .slice(0, index)
+            .forEach((star) => {
+                star.classList.remove("fa-star-o", "fa-star-half-o");
+                star.classList.add("fa-star");
             });
+        if (decimal) {
+            const startAtIndexEl = this.el.querySelectorAll(".stars i")[index];
+            startAtIndexEl.classList.remove("fa-star-o", "fa-star", "fa-star-half-o");
+            startAtIndexEl.classList.add("fa-star-half-o");
         }
     },
     /**
      * @private
      */
     _onClickStar: function (ev) {
-        const starElements = this.el.querySelectorAll('.stars i');
-        const index = starElements.indexOf(ev.currentTarget);
+        const starElements = this.el.querySelectorAll(".stars i");
+        const index = [...starElements].indexOf(ev.currentTarget);
         this.set("star_value", index + 1);
         this.user_click = true;
         this.input.value = this.get("star_value");
@@ -116,8 +117,8 @@ PortalComposer.include({
      * @param {MouseEvent} ev
      */
     _onMoveStar: function (ev) {
-        const starElements = this.el.querySelectorAll('.stars i');
-        const index = starElements.indexOf(ev.currentTarget);
+        const starElements = this.el.querySelectorAll(".stars i");
+        const index = [...starElements].indexOf(ev.currentTarget);
         this.set("star_value", index + 1);
     },
     /**
@@ -141,11 +142,13 @@ PortalComposer.include({
     _onSubmitButtonClick: function (ev) {
         return this._super(...arguments).then((result) => {
                 const modalEl = this.el.closest("#ratingpopupcomposer");
-                modalEl.addEventListener("hidden.bs.modal", () => {
-                    this.trigger_up("reload_rating_popup_composer", result);
-                });
-                const modal = Modal.getOrCreateInstance(modalEl);
-                modal.hide();
+                if (modalEl) {
+                    modalEl.addEventListener("hidden.bs.modal", () => {
+                        this.trigger_up("reload_rating_popup_composer", result);
+                    });
+                    const modal = Modal.getOrCreateInstance(modalEl);
+                    modal.hide();
+                }
             },
             () => {}
         );

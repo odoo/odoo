@@ -26,9 +26,9 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
         this._generateMenu();
         // After signature, automatically open the popup for payment
         const searchParams = new URLSearchParams(window.location.search.substring(1));
-        const payNowButton = this.el.querySelector('#o_sale_portal_paynow')
-        if (searchParams.get("allow_payment") === "yes" && payNowButton) {
-            payNowButton.click();
+        const payNowButtonEl = this.el.querySelector("#o_sale_portal_paynow");
+        if (searchParams.get("allow_payment") === "yes" && payNowButtonEl) {
+            payNowButtonEl.click();
         }
         return def;
     },
@@ -46,9 +46,13 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      *
      */
     _setElementId: function (prefix, el) {
-        var id = uniqueId(prefix);
-        this.spyWatched.querySelector(el).setAttribute('id', id);
-        return id;
+        if (el) {
+            var id = uniqueId(prefix);
+            [...this.spyWatched.querySelectorAll(el.tagName)]
+                .find((newel) => newel === el)
+                ?.setAttribute("id", id);
+            return id;
+        }
     },
     /**
      * generate the new spy menu
@@ -60,10 +64,16 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
         var self = this,
             lastLI = false,
             lastUL = null,
-            bsSidenav = this.el.querySelector('.bs-sidenav');
+            bsSidenav = this.el.querySelector(".bs-sidenav");
 
-        Array.from(this.spyWatched.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]")).forEach(el => el.removeAttribute("id"));
-        Array.from(this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3")).forEach((el) => {
+        Array.from(
+            this.spyWatched.querySelectorAll(
+                "#quote_content [id^=quote_header_], #quote_content [id^=quote_]"
+            )
+        ).forEach((el) => el.removeAttribute("id"));
+        Array.from(
+            this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3")
+        ).forEach((el) => {
             var id, text;
             switch (el.tagName.toLowerCase()) {
                 case "h2":
@@ -72,10 +82,10 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
                     if (!text) {
                         break;
                     }
-                    lastLI = document.createElement('li');
-                    lastLI.className = 'nav-item';
+                    lastLI = document.createElement("li");
+                    lastLI.className = "nav-item";
                     lastLI.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
-                    bsSidenav.appendChild(lastLI);
+                    bsSidenav?.appendChild(lastLI);
                     lastUL = false;
                     break;
                 case "h3":
@@ -86,20 +96,20 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
                     }
                     if (lastLI) {
                         if (!lastUL) {
-                            lastUL = document.createElement('ul');
-                            lastUL.className = 'nav flex-column';
+                            lastUL = document.createElement("ul");
+                            lastUL.className = "nav flex-column";
                             lastLI.appendChild(lastUL);
                         }
-                        let li = document.createElement('li');
-                        li.className = 'nav-item';
-                        li.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
-                        lastUL.appendChild(li);
+                        const liEl = document.createElement("li");
+                        liEl.className = "nav-item";
+                        liEl.innerHTML = `<a class="nav-link p-0" href="#${id}">${text}</a>`;
+                        lastUL.appendChild(liEl);
                     }
                     break;
             }
             el.setAttribute('data-anchor', true);
         });
-        this.trigger_up('widgets_start_request', {target: bsSidenav});
+        this.trigger_up("widgets_start_request", { $target: $(bsSidenav) });
     },
     /**
      * extract text of menu title for sidebar

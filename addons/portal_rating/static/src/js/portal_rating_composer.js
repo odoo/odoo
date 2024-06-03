@@ -58,9 +58,9 @@ const RatingPopupComposer = publicWidget.Widget.extend({
      * @param {Object} data
      */
     _reloadRatingPopupComposer: function () {
-        const popupComposerStars = this.el.querySelector('.o_rating_popup_composer_stars');
+        const popupComposerStarsEl = this.el.querySelector(".o_rating_popup_composer_stars");
         if (this.options.hide_rating_avg) {
-            popupComposerStars.innerHTML = "";
+            popupComposerStarsEl.innerHTML = "";
         } else {
             const ratingAverage = renderToElement(
                 'portal_rating.rating_stars_static', {
@@ -68,8 +68,8 @@ const RatingPopupComposer = publicWidget.Widget.extend({
                 widget: this,
                 val: this.rating_avg,
             });
-            popupComposerStars.innerHTML = "";
-            popupComposerStars.appendChild(ratingAverage);
+            popupComposerStarsEl.innerHTML = "";
+            popupComposerStarsEl.appendChild(ratingAverage);
         }
 
         // Append the modal
@@ -80,7 +80,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             val: this.rating_avg,
         }) || '';
         if (modal) {
-            const modalEl = this.el.querySelector('.o_rating_popup_composer_modal');
+            const modalEl = this.el.querySelector(".o_rating_popup_composer_modal");
             modalEl.innerHTML = "";
             modalEl.appendChild(modal);
         }
@@ -91,17 +91,21 @@ const RatingPopupComposer = publicWidget.Widget.extend({
 
         // Instantiate the "Portal Composer" widget and insert it into the modal
         this._composer = new PortalComposer(this, this.options);
-        return this._composer.appendTo(this.el.querySelector('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
+        return this._composer
+            .appendTo(
+                this.el.querySelector(".o_rating_popup_composer_modal .o_portal_chatter_composer")
+            )
+            .then(() => {
             // Change the text of the button
-            const textEl = this.el.querySelector('.o_rating_popup_composer_text');
-            if (textEl) {
-                textEl.textContent = (
-                    this.options.is_fullscreen ?
-                    _t('Review') : this.options.default_message_id ?
-                    _t('Edit Review') : _t('Add Review')
-                );
-            }
-        });
+                const textEl = this.el.querySelector(".o_rating_popup_composer_text");
+                if (textEl) {
+                    textEl.textContent = this.options.is_fullscreen
+                        ? _t("Review")
+                        : this.options.default_message_id
+                        ? _t("Edit Review")
+                        : _t("Add Review");
+                }
+            });
     },
 
     //--------------------------------------------------------------------------

@@ -39,10 +39,11 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      * @param {Object} $el
      *
      */
-    _setElementId: function (prefix, $el) {
+    _setElementId: function (prefix, el) {
         var id = uniqueId(prefix);
-        // TODO: MSH: Need to convert this code
-        $(this.spyWatched).find($el).attr("id", id);
+        [...this.spyWatched.querySelectorAll(el.tagName)]
+            .find((newel) => newel === el)
+            ?.setAttribute("id", id);
         return id;
     },
     /**
@@ -58,8 +59,11 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
             bsSidenav = this.el.querySelector(".bs-sidenav");
         let anchor;
 
-        const quotes = document.querySelectorAll("#quote_content [id^=quote_header_], #quote_content [id^=quote_]") || this.spyWatched;
-        quotes.forEach(quote => quote.setAttribute("id", ""));
+        const quoteELs =
+            document.querySelectorAll(
+                "#quote_content [id^=quote_header_], #quote_content [id^=quote_]"
+            ) || this.spyWatched;
+        quoteELs.forEach((quote) => quote.setAttribute("id", ""));
         const h2AndH3 = this.spyWatched.querySelectorAll("#quote_content h2, #quote_content h3");
         h2AndH3.forEach((el) => {
             var id, text;
@@ -70,15 +74,15 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                     if (!text) {
                         break;
                     }
-                    lastLI = document.createElement('li');
-                    lastLI.setAttribute('class', 'nav-item');
-                    anchor = document.createElement('a');
-                    anchor.setAttribute('class', 'nav-link p-0');
-                    anchor.setAttribute('style', 'max-width: 200px;');
-                    anchor.setAttribute('href', `"#${id}"`);
+                    lastLI = document.createElement("li");
+                    lastLI.setAttribute("class", "nav-item");
+                    anchor = document.createElement("a");
+                    anchor.setAttribute("class", "nav-link p-0");
+                    anchor.setAttribute("style", "max-width: 200px;");
+                    anchor.setAttribute("href", `"#${id}"`);
                     anchor.textContent = text;
                     lastLI.appendChild(anchor);
-                    bsSidenav.appendChild(lastLI);
+                    bsSidenav?.appendChild(lastLI);
                     lastUL = false;
                     break;
                 case "h3":
@@ -89,16 +93,16 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                     }
                     if (lastLI) {
                         if (!lastUL) {
-                            lastUL = document.createElement('ul');
-                            lastUL.setAttribute('class', 'nav flex-column');
+                            lastUL = document.createElement("ul");
+                            lastUL.setAttribute("class", "nav flex-column");
                             lastLI.appendChild(lastUL);
                         }
-                        const li = document.createElement('li');
-                        li.setAttribute('class', 'nav-item');
-                        anchor = document.createElement('a');
-                        anchor.setAttribute('class', 'nav-link p-0');
-                        anchor.setAttribute('style', 'max-width: 200px;');
-                        anchor.setAttribute('href', `"#${id}"`);
+                        const li = document.createElement("li");
+                        li.setAttribute("class", "nav-item");
+                        anchor = document.createElement("a");
+                        anchor.setAttribute("class", "nav-link p-0");
+                        anchor.setAttribute("style", "max-width: 200px;");
+                        anchor.setAttribute("href", `"#${id}"`);
                         anchor.textContent = text;
                         li.appendChild(anchor);
                         lastUL.appendChild(li);
@@ -114,7 +118,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
      * extract text of menu title for sidebar
      *
      * @private
-     * @param {Object} $node
+     * @param {Object} node
      *
      */
     _extractText: function (node) {
