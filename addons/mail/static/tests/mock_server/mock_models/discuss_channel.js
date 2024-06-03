@@ -418,10 +418,16 @@ export class DiscussChannel extends models.ServerModel {
             }
             const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
             if (memberOfCurrentUser) {
+                const message_unread_counter = this.env[
+                    "discuss.channel.member"
+                ]._compute_message_unread_counter([memberOfCurrentUser.id]);
+                DiscussChannelMember.write([memberOfCurrentUser.id], {
+                    message_unread_counter,
+                });
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_pinned: memberOfCurrentUser.is_pinned,
-                    message_unread_counter: memberOfCurrentUser.message_unread_counter,
+                    message_unread_counter,
                     message_unread_counter_bus_id: bus_last_id,
                     state: memberOfCurrentUser.fold_state || "closed",
                 });
@@ -950,11 +956,12 @@ export class DiscussChannel extends models.ServerModel {
      * @param {number[]} ids
      * @param {number} last_message_id
      */
-    _mark_as_read(ids, last_message_id) {
-        const kwargs = parseModelParams(arguments, "ids", "last_message_id");
+    _mark_as_read(ids, last_message_id, sync) {
+        const kwargs = parseModelParams(arguments, "ids", "last_message_id", "sync");
         ids = kwargs.ids;
         delete kwargs.ids;
         last_message_id = kwargs.last_message_id;
+        sync = kwargs.sync ?? null;
 
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
@@ -979,7 +986,8 @@ export class DiscussChannel extends models.ServerModel {
         }
         this.env["discuss.channel.member"]._set_new_message_separator(
             [member.id],
-            last_message_id + 1
+            last_message_id + 1,
+            sync
         );
     }
 

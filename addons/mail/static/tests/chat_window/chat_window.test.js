@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { mockDate } from "@odoo/hoot-mock";
+import { mockDate, tick } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     SIZES,
@@ -858,7 +858,8 @@ test("chat window: scroll conservation on toggle discuss", async () => {
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     await openDiscuss();
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -881,7 +882,8 @@ test("chat window with a thread: keep scroll position in message list on folded"
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     // fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");
@@ -907,7 +909,8 @@ test("chat window with a thread: keep scroll position in message list on toggle 
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     // fold chat window
     await click(".o-mail-ChatWindow-command[title='Fold']");

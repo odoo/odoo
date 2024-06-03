@@ -200,7 +200,9 @@ export class Thread extends Record {
             return this.store.ChatWindow.get({ thread: this })?.isOpen;
         },
         onUpdate() {
-            this.selfMember?.onChangeIsThreadDisplayed(this.isDisplayed);
+            if (this.selfMember && !this.isDisplayed) {
+                this.selfMember.syncUnread = true;
+            }
         },
     });
     isLoadingAttachments = false;
@@ -282,6 +284,7 @@ export class Thread extends Record {
     });
     /** @type {string} */
     defaultDisplayMode;
+    scrollUnread = true;
     suggestedRecipients = Record.attr([], {
         onUpdate() {
             for (const recipient of this.suggestedRecipients) {
@@ -675,7 +678,7 @@ export class Thread extends Record {
     }
 
     /** @param {{after: Number, before: Number}} */
-    async fetchMessages({ after, before } = {}) {
+    async fetchMessages({ after, around, before } = {}) {
         this.status = "loading";
         if (!["mail.box", "discuss.channel"].includes(this.model) && !this.id) {
             this.isLoaded = true;
@@ -685,8 +688,10 @@ export class Thread extends Record {
             // ordered messages received: newest to oldest
             const { messages: rawMessages } = await rpc(this.getFetchRoute(), {
                 ...this.getFetchParams(),
-                limit: this.store.FETCH_LIMIT,
+                limit:
+                    !around && around !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2,
                 after,
+                around,
                 before,
             });
             const messages = this.store.Message.insert(rawMessages.reverse(), { html: true });
@@ -839,26 +844,34 @@ export class Thread extends Record {
      * @param {import("models").Message} [messageId] if not provided, load around newest message
      */
     async loadAround(messageId) {
-        if (!this.messages.some(({ id }) => id === messageId)) {
+        if (
+            this.status === "loading" ||
+            (this.isLoaded && this.messages.some(({ id }) => id === messageId))
+        ) {
+            return;
+        }
+        try {
             this.isLoaded = false;
             this.scrollTop = undefined;
-            const { messages } = await rpc(this.getFetchRoute(), {
-                ...this.getFetchParams(),
-                around: messageId,
-            });
+            this.messages = await this.fetchMessages({ around: messageId });
             this.isLoaded = true;
-            this.messages = this.store.Message.insert(messages.reverse(), { html: true });
-            this.loadNewer = messageId ? true : false;
+            this.loadNewer = messageId !== undefined ? true : false;
             this.loadOlder = true;
-            if (messages.length < this.store.FETCH_LIMIT) {
-                const olderMessagesCount = messages.filter(({ id }) => id < messageId).length;
-                if (olderMessagesCount < this.store.FETCH_LIMIT / 2) {
+            const limit =
+                !messageId && messageId !== 0 ? this.store.FETCH_LIMIT : this.store.FETCH_LIMIT * 2;
+            if (this.messages.length < limit) {
+                const olderMessagesCount = this.messages.filter(({ id }) => id < messageId).length;
+                const newerMessagesCount = this.messages.filter(({ id }) => id > messageId).length;
+                if (olderMessagesCount < limit / 2 - 1) {
                     this.loadOlder = false;
-                } else {
+                }
+                if (newerMessagesCount < limit / 2) {
                     this.loadNewer = false;
                 }
             }
             this._enrichMessagesWithTransient();
+        } catch {
+            // handled in fetchMessages
         }
     }
 
@@ -878,19 +891,26 @@ export class Thread extends Record {
         ]);
     }
 
-    markAsRead() {
+    /**
+     * @param {Object} [options]
+     * @param {boolean} [options.sync] Whether to sync the unread message
+     * state with the server values.
+     */
+    markAsRead({ sync } = {}) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
             this.isLoadedDeferred.then(() => new Promise(setTimeout)).then(() => this.markAsRead());
         }
         const alreadyReadBySelf = newestPersistentMessage?.isReadBySelf;
         if (this.selfMember) {
+            this.selfMember.syncUnread = sync ?? this.selfMember.syncUnread;
             this.selfMember.seen_message_id = newestPersistentMessage;
         }
-        if (newestPersistentMessage && !alreadyReadBySelf && this.model === "discuss.channel") {
+        if (newestPersistentMessage && this.selfMember && !alreadyReadBySelf) {
             rpc("/discuss/channel/mark_as_read", {
                 channel_id: this.id,
                 last_message_id: newestPersistentMessage.id,
+                sync,
             }).catch((e) => {
                 if (e.code !== 404) {
                     throw e;
@@ -1085,8 +1105,9 @@ export class Thread extends Record {
             );
             this.messages.push(tmpMsg);
             if (this.selfMember) {
+                this.selfMember.syncUnread = true;
                 this.selfMember.seen_message_id = tmpMsg;
-                this.selfMember.localNewMessageSeparator = tmpMsg + 1;
+                this.selfMember.new_message_separator = tmpMsg.id + 1;
             }
         }
         const data = await this.store.doMessagePost(params, tmpMsg);
@@ -1100,7 +1121,7 @@ export class Thread extends Record {
         this.addOrReplaceMessage(message, tmpMsg);
         if (this.selfMember?.seen_message_id?.id < message.id) {
             this.selfMember.seen_message_id = message;
-            this.selfMember.localNewMessageSeparator = message.id + 1;
+            this.selfMember.new_message_separator = message.id + 1;
         }
         // Only delete the temporary message now that seen_message_id is updated
         // to avoid flickering.
