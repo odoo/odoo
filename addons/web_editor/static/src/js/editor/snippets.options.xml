@@ -8,6 +8,10 @@
 <t t-name="web_editor.TestSnippetOption">
     <WeMediapicker mediaType="'videos'"/>
     <WeButton selectClass="'test_class'">Test Class</WeButton>
+    <WeRow>
+        <t t-set-slot="title">Checkbox</t>
+        <WeCheckbox selectClass="'test_class'">Test Class</WeCheckbox>
+    </WeRow>
     <WeSelect>
         <WeButton selectClass="'test_class_1'" name="'test_class_1'">Test Class 1</WeButton>
         <WeButton selectClass="'test_class_2'">Test Class 2</WeButton>
@@ -100,6 +104,18 @@
                     <t t-out="this.svg"/>
                 </t>
                 <t t-slot="default"/>
+            </div>
+    </we-button>
+</t>
+<t t-name="web_editor.WeCheckbox">
+    <we-button t-ref="text-content"
+               t-on-mouseenter="this._onUserValuePreview"
+               t-on-mouseleave="this._onUserValueReset"
+               t-on-click="this._onButtonClick" class="o_we_user_value_widget o_we_checkbox_wrapper"
+               t-att-data-tooltip="props.title"
+               t-att-class="getAllClasses()">
+            <div>
+                <we-checkbox/>
             </div>
     </we-button>
 </t>
