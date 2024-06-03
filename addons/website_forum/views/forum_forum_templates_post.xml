@@ -168,23 +168,19 @@
             t-attf-class="badge #{'ms-1' if not question_tag_first else ''} fw-normal o_tag o_color_#{question_tag.color}"
             t-field="question_tag.name"/>
     </div>
-    <div class="ms-auto d-flex">
-        <div>
-            <span t-if="question.child_count" class="small">
-                <t t-out="question.child_count or 0"/>
-                <span class="text-muted">
-                    <t t-if="question.child_count == 1">Reply</t>
-                    <t t-else="">Replies</t>
-                </span>
+    <div class="d-flex">
+        <div t-if="question.child_count" class="ms-2">
+            <span class="small" t-out="question.child_count or 0"/>
+            <span class="text-muted small">
+                <t t-if="question.child_count == 1">Reply</t>
+                <t t-else="">Replies</t>
             </span>
         </div>
-        <div class="mx-3">
-            <span t-if="question.views" class="small">
-                <t t-out="question.views or 0"/>
-                <span class="text-muted">
-                    <t t-if="question.views == 1">View</t>
-                    <t t-else="">Views</t>
-                </span>
+        <div class="ms-2">
+            <span class="small" t-out="question.views or 0"/>
+            <span class="text-muted small">
+                <t t-if="question.views == 1">View</t>
+                <t t-else="">Views</t>
             </span>
         </div>
     </div>
