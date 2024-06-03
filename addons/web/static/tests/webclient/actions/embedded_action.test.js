@@ -66,7 +66,7 @@ class Partner extends models.Model {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                         </div>
                     </t>
@@ -91,7 +91,7 @@ class Pony extends models.Model {
         "kanban,false": `<kanban>
                             <templates>
                                 <t t-name="kanban-box">
-                                    <div class="oe_kanban_global_click">
+                                    <div>
                                         <field name="name"/>
                                     </div>
                                 </t>

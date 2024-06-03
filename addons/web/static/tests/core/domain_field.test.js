@@ -708,7 +708,7 @@ test.tags("desktop")("domain field in kanban view", async function () {
                 <field name="bar" />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo" widget="domain" options="{'model': 'partnertype'}" />
                         </div>
                     </t>

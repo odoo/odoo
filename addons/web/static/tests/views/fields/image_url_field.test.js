@@ -83,7 +83,7 @@ test("ImageUrlField in subviews are loaded correctly", async () => {
                         <field name="display_name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <span><t t-esc="record.display_name.value"/></span>
                                 </div>
                             </t>
@@ -101,12 +101,12 @@ test("ImageUrlField in subviews are loaded correctly", async () => {
     expect(`img[data-src="${FR_FLAG_URL}"]`).toHaveCount(1, {
         message: "The view's image is in the DOM",
     });
-    expect(".o_kanban_record .oe_kanban_global_click").toHaveCount(1, {
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1, {
         message: "There should be one record in the many2many",
     });
 
     // Actual flow: click on an element of the m2m to get its form view
-    click(".oe_kanban_global_click");
+    click(".o_kanban_record:not(.o_kanban_ghost)");
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "The modal should have opened" });
     expect(`img[data-src="${EN_FLAG_URL}"]`).toHaveCount(1, {
@@ -156,7 +156,7 @@ test("image url fields in kanban don't stop opening record", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo" widget="image_url"/>
                         </div>
                     </t>

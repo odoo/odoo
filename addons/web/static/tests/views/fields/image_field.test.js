@@ -493,7 +493,7 @@ test("ImageField in subviews is loaded correctly", async () => {
                         <field name="name" />
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <span>
                                         <t t-esc="record.name.value" />
                                     </span>
@@ -510,10 +510,10 @@ test("ImageField in subviews is loaded correctly", async () => {
     });
 
     expect(`img[data-src="data:image/png;base64,${MY_IMAGE}"]`).toHaveCount(1);
-    expect(".o_kanban_record .oe_kanban_global_click").toHaveCount(1);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
 
     // Actual flow: click on an element of the m2m to get its form view
-    click(".oe_kanban_global_click");
+    click(".o_kanban_record:not(.o_kanban_ghost)");
     await animationFrame();
     expect(".modal").toHaveCount(1, { message: "The modal should have opened" });
 

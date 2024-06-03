@@ -377,31 +377,8 @@
             }
         }
 
-        @mixin global-click-selector {
-            &.oe_kanban_global_click,
-            &.oe_kanban_global_click_edit,
-            .oe_kanban_global_click,
-            .oe_kanban_global_click_edit {
-                @content;
-            }
-        }
-
-        @include global-click-selector {
-            cursor: pointer;
-        }
-
-        &:focus-visible,
-        &:focus-within {
+        &:focus-visible, &:focus-within {
             z-index: 2;
-
-            @include global-click-selector {
-                outline: thin solid mix($o-main-link-color, map-get($grays, "300"));
-                outline-offset: -1px;
-
-                &:after {
-                    transform: translateX($border-width);
-                }
-            }
         }
 
         .o_attachment_image > img {

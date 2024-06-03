@@ -16719,7 +16719,7 @@ QUnit.module("Views", (hooks) => {
         serverData.views = {
             "foo,1,kanban":
                 '<kanban><templates><t t-name="kanban-box">' +
-                '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
+                '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
 
             "foo,false,list":

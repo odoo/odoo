@@ -2398,7 +2398,7 @@ test("edition of one2many field with pager", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
                                     <span><t t-esc="record.name.value"/></span>
                                 </div>
@@ -2505,7 +2505,7 @@ test("When viewing one2many records in an embedded kanban, the delete button sho
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div t-att-class="'oe_kanban_global_click'">
+                                <div>
                                     <h3>Record 1</h3>
                                 </div>
                             </t>
@@ -2539,7 +2539,7 @@ test("open a record in a one2many kanban (mode 'readonly')", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div t-att-class="'oe_kanban_global_click'">
+                                <div>
                                     <t t-esc="record.name.value"/>
                                 </div>
                             </t>
@@ -2575,7 +2575,7 @@ test("open a record in a one2many kanban (mode 'edit')", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <t t-esc="record.name.value"/>
                                 </div>
                             </t>
@@ -2661,7 +2661,7 @@ test("open a record in a one2many kanban with an x2m in the form", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <t t-esc="record.name.value"/>
                                 </div>
                             </t>
@@ -2706,7 +2706,7 @@ test("one2many in kanban: add a line custom control create editable", async () =
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <t t-esc="record.name.value"/>
                                 </div>
                             </t>
@@ -2761,7 +2761,7 @@ test("one2many in kanban: add a line custom control create editable (2)", async 
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <t t-esc="record.name.value"/>
                                 </div>
                             </t>
@@ -3288,7 +3288,7 @@ test("one2many kanban: edition", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
                                     <span><t t-esc="record.name.value"/></span>
                                     <span><t t-esc="record.color.value"/></span>
@@ -3314,7 +3314,7 @@ test("one2many kanban: edition", async () => {
     expect(".o_field_one2many .o-kanban-button-new").toHaveText("Add");
 
     // edit existing subrecord
-    await contains(".oe_kanban_global_click:eq(0)").click();
+    await contains(".o_kanban_record:eq(0)").click();
 
     await contains(".modal .o_form_view .o_field_widget:eq(0) input").edit("new name");
     await contains(".modal .modal-footer .btn-primary:eq(0)").click();
@@ -3337,7 +3337,7 @@ test("one2many kanban: edition", async () => {
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
 
     // delete subrecords
-    await contains(".oe_kanban_global_click:eq(0)").click();
+    await contains(".o_kanban_record:eq(0)").click();
     expect(".modal .modal-footer .o_btn_remove").toHaveCount(1);
     await contains(".modal .modal-footer .o_btn_remove:eq(0)").click();
     expect(".o_modal").toHaveCount(0, { message: "modal should have been closed" });
@@ -3363,9 +3363,7 @@ test("one2many kanban (editable): properly handle add-label node attribute", asy
                     <kanban>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_details">
-                                    <field name="name"/>
-                                </div>
+                                <field name="name"/>
                             </t>
                         </templates>
                     </kanban>
@@ -3393,7 +3391,7 @@ test("one2many kanban: create action disabled", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <a t-if="!read_only_mode" type="delete" class="fa fa-times float-end delete_icon"/>
                                     <span><t t-esc="record.name.value"/></span>
                                 </div>
@@ -3423,7 +3421,7 @@ test("one2many kanban: conditional create/delete actions", async () => {
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <span><t t-esc="record.name.value"/></span>
                                 </div>
                             </t>
@@ -3440,7 +3438,7 @@ test("one2many kanban: conditional create/delete actions", async () => {
     // bar is initially true -> create and delete actions are available
     expect(".o-kanban-button-new").toHaveCount(1, { message: '"Add" button should be available' });
 
-    await contains(".oe_kanban_global_click").click();
+    await contains(".o_kanban_record:first").click();
     expect(".modal .modal-footer .o_btn_remove").toHaveCount(1, {
         message: "There should be a Remove Button inside modal",
     });
@@ -3452,7 +3450,7 @@ test("one2many kanban: conditional create/delete actions", async () => {
         message: '"Add" button should not be available as bar is False',
     });
 
-    await contains(".oe_kanban_global_click").click();
+    await contains(".o_kanban_record:first").click();
     expect(".modal .modal-footer .o_btn_remove").toHaveCount(0, {
         message: "There should not be a Remove Button as bar field is False",
     });
@@ -6239,13 +6237,11 @@ test("one2many field with virtual ids", async () => {
                                     <kanban>
                                         <templates>
                                             <t t-name="kanban-box">
-                                                <div class="oe_kanban_details">
-                                                    <div class="o_test_id">
-                                                        <field name="id"/>
-                                                    </div>
-                                                    <div class="o_test_foo">
-                                                        <field name="foo"/>
-                                                    </div>
+                                                <div class="o_test_id">
+                                                    <field name="id"/>
+                                                </div>
+                                                <div class="o_test_foo">
+                                                    <field name="foo"/>
                                                 </div>
                                             </t>
                                         </templates>
@@ -11351,7 +11347,7 @@ test("one2many can delete a new record", async () => {
                         <field name="foo"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click_edit"><t t-esc="record.foo.value"/></div>
+                                <div><t t-esc="record.foo.value"/></div>
                             </t>
                         </templates>
                     </kanban>
@@ -11688,7 +11684,7 @@ test("kanban one2many in opened view form", async () => {
                     </tree>
                     <form>
                         <field name="p">
-                            <kanban class="o-custom-class">
+                            <kanban class="o-custom-class" can_open="0">
                                 <field name="name"/>
                                 <templates>
                                     <t t-name="kanban-box">
@@ -11718,7 +11714,7 @@ test("kanban one2many in opened view form", async () => {
 test("kanban one2many in opened view form (with _view_ref)", async () => {
     Partner._views = {
         [["kanban", 1234]]: /* xml */ `
-            <kanban class="o-custom-class">
+            <kanban class="o-custom-class" can_open="0">
                 <field name="name"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -11769,7 +11765,7 @@ test("kanban one2many (with widget) in opened view form", async () => {
                     <kanban>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <field name="name" widget="char"/>
                                 </div>
                             </t>
@@ -12541,7 +12537,7 @@ test("x2many kanban with float field in form (non inline) but not in kanban", as
                         <field name="name"/>
                         <templates>
                             <t t-name="kanban-box">
-                                <div class="oe_kanban_global_click">
+                                <div>
                                     <t t-esc="record.name.raw_value"/>
                                 </div>
                             </t>

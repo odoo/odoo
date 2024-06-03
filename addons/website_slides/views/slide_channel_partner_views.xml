@@ -64,7 +64,7 @@
             <field name="name">slide.channel.partner.view.kanban</field>
             <field name="model">slide.channel.partner</field>
             <field name="arch" type="xml">
-                <kanban string="Attendees" class="o_slide_attendee_kanban">
+                <kanban can_open="0" string="Attendees" class="o_slide_attendee_kanban">
                     <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">

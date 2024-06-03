@@ -94,7 +94,7 @@ class Partner extends models.Model {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                         </div>
                     </t>
@@ -278,7 +278,7 @@ test.tags("desktop")("switching into a view with mode=edit lands in edit mode", 
         <kanban on_create="quick_create" default_group_by="m2o">
             <templates>
                 <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
+                    <div>
                         <field name="foo"/>
                     </div>
                 </t>

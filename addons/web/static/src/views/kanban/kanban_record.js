@@ -24,7 +24,7 @@ import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
-import { Component, onMounted, onWillUpdateProps, useRef, useState, useEffect } from "@odoo/owl";
+import { Component, onWillUpdateProps, useRef, useState, useEffect } from "@odoo/owl";
 const { COLORS } = ColorList;
 
 const formatters = registry.category("formatters");
@@ -33,7 +33,6 @@ const formatters = registry.category("formatters");
 export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action", "[data-bs-toggle]"].join(
     ","
 );
-const ALLOW_GLOBAL_CLICK = [".oe_kanban_global_click", ".oe_kanban_global_click_edit"].join(",");
 
 /**
  * Returns the class name of a record according to its color.
@@ -240,10 +239,6 @@ export class KanbanRecord extends Component {
             Object.assign(this.dataState.record, getFormattedRecord(record))
         );
         this.rootRef = useRef("root");
-        onMounted(() => {
-            // FIXME: this needs to be changed to an attribute on the root node...
-            this.allowGlobalClick = !!this.rootRef.el.querySelector(ALLOW_GLOBAL_CLICK);
-        });
         useEffect(
             (color) => {
                 if (!color) {
@@ -293,9 +288,6 @@ export class KanbanRecord extends Component {
         if (canResequence) {
             classes.push("o_draggable");
         }
-        if (forceGlobalClick || archInfo.openAction) {
-            classes.push("oe_kanban_global_click");
-        }
         if (progressBarState) {
             const { fieldName, colors } = progressBarState.progressAttributes;
             const value = record.data[fieldName];
@@ -305,6 +297,9 @@ export class KanbanRecord extends Component {
         if (archInfo.cardColorField) {
             const value = record.data[archInfo.cardColorField];
             classes.push(getColorClass(value));
+        }
+        if (forceGlobalClick || archInfo.openAction || archInfo.canOpenRecords) {
+            classes.push("cursor-pointer");
         }
         if (!this.props.list.isGrouped) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
@@ -332,7 +327,7 @@ export class KanbanRecord extends Component {
                     await record.model.root.load();
                 },
             });
-        } else if (forceGlobalClick || this.allowGlobalClick) {
+        } else if (forceGlobalClick || this.props.archInfo.canOpenRecords) {
             openRecord(record);
         }
     }

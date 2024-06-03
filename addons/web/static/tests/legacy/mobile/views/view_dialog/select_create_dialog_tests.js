@@ -42,7 +42,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             views: {
                 "product,false,kanban": `
                     <kanban><templates><t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="id"/>
                             <field name="name"/>
                         </div>
@@ -50,7 +50,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 `,
                 "sale_order_line,false,kanban": `
                     <kanban><templates><t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="id"/>
                         </div>
                     </t></templates></kanban>

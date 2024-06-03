@@ -131,7 +131,7 @@ class Partner extends models.Model {
         kanban: /* xml */ `
             <kanban>
                 <templates>
-                    <div t-name="kanban-box" class="oe_kanban_global_click">
+                    <div t-name="kanban-box">
                         <field name="foo"/>
                     </div>
                 </templates>

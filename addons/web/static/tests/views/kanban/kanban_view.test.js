@@ -246,7 +246,7 @@ test("kanban rendering with class and style attributes", async () => {
             <kanban class="myCustomClass" style="border: 1px solid red;">
                 <templates>
                     <t t-name="kanban-box">
-                    <field name="foo"/>
+                        <field name="foo"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -277,6 +277,47 @@ test("generic tags are case insensitive", async () => {
     });
 
     expect("div.test").toHaveCount(4);
+});
+
+test("kanban records are clickable by default", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        selectRecord: (resId) => {
+            expect(resId).toBe(1, { message: "should trigger an event to open the form view" });
+        },
+    });
+
+    await contains(".o_kanban_record").click();
+});
+
+test("kanban records with global_click='0'", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban can_open="0">
+                <templates>
+                    <t t-name="kanban-box">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        selectRecord: (resId) => {
+            expect.step("select record");
+        },
+    });
+
+    await contains(".o_kanban_record").click();
+    expect([]).toVerifySteps();
 });
 
 test("float fields are formatted properly without using a widget", async () => {
@@ -1628,7 +1669,7 @@ test("prevent deletion when grouped by many2many field", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <t t-if="widget.deletable"><span class="thisisdeletable">delete</span></t>
                         </div>
@@ -4162,7 +4203,7 @@ test("many2many_tags in kanban views", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="foo"/>
                             <field name="state" widget="priority"/>
@@ -4225,7 +4266,7 @@ test("priority field should not be editable when missing access rights", async (
             <kanban edit="0">
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <field name="state" widget="priority"/>
                         </div>
@@ -4260,7 +4301,7 @@ test("Do not open record when clicking on `a` with `href`", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <div>
                                 <a class="o_test_link" href="#">test link</a>
@@ -4311,7 +4352,7 @@ test("Open record when clicking on widget field", async function (assert) {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="salary" widget="monetary"/>
                         </div>
                     </t>
@@ -4324,7 +4365,7 @@ test("Open record when clicking on widget field", async function (assert) {
 
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4);
 
-    click(queryFirst(".oe_kanban_global_click .o_field_monetary[name=salary]"));
+    click(queryFirst(".o_field_monetary[name=salary]"));
 });
 
 test("o2m loaded in only one batch", async () => {
@@ -4428,7 +4469,7 @@ test.tags("desktop")("kanban with reference field", async () => {
                 <field name="product_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
+                    <div>
                         <field name="ref_product"/>
                     </div>
                     </t>
@@ -4466,7 +4507,7 @@ test.tags("desktop")("can drag and drop a record from one column to the next", a
                 <field name="product_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <t t-if="widget.editable">
                                 <span class="thisiseditable">edit</span>
@@ -4511,7 +4552,7 @@ test.tags("desktop")(
                 <kanban>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
+                            <div>
                                 <field name="foo"/>
                             </div>
                         </t>
@@ -4547,7 +4588,7 @@ test.tags("desktop")(
                 <kanban>
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
+                            <div>
                                 <field name="foo"/>
                             </div>
                         </t>
@@ -4585,7 +4626,7 @@ test.tags("desktop")("drag and drop highlight on hover", async () => {
                 <field name="product_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click"><field name="foo"/></div>
+                        <div><field name="foo"/></div>
                     </t>
                 </templates>
             </kanban>`,
@@ -4614,7 +4655,7 @@ test("drag and drop outside of a column", async () => {
                 <field name="product_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click"><field name="foo"/></div>
+                        <div><field name="foo"/></div>
                     </t>
                 </templates>
             </kanban>`,
@@ -10377,32 +10418,32 @@ test.tags("desktop")("keynav: grouped kanban with empty columns", async () => {
 });
 
 test.tags("desktop")("keynav: no global_click, press ENTER on card with a link", async () => {
-    expect.assertions(2);
-
     await mountView({
         type: "kanban",
         resModel: "partner",
         arch: `
-            <kanban>
+            <kanban can_open="0">
                 <templates>
                     <t t-name="kanban-box">
                         <div>
-                            <a type="edit">Edit</a>
+                            <a type="archive">Archive</a>
                         </div>
                     </t>
                 </templates>
             </kanban>`,
         selectRecord: (resId) => {
-            expect(resId).toBe(1, {
-                message:
-                    "When selecting focusing a card and hitting ENTER, the first link or button is clicked",
-            });
+            expect.step("select record");
         },
     });
 
     press("ArrowDown");
     expect(queryFirst(".o_kanban_record")).toBeFocused();
     press("Enter");
+
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog main").toHaveText("Are you sure that you want to archive this record?");
+    expect([]).toVerifySteps(); // should not try to open the record
 });
 
 test.tags("desktop")("keynav: kanban with global_click", async () => {
@@ -10415,7 +10456,7 @@ test.tags("desktop")("keynav: kanban with global_click", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                         </div>
                         <a name="action_test" type="object" />
@@ -10473,7 +10514,7 @@ test.tags("desktop")("set cover image", async () => {
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <div>
                                 <field name="displayed_image_id" widget="attachment_image"/>
@@ -10569,7 +10610,7 @@ test.tags("desktop")("unset cover image", async () => {
                         <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
                     </t>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <div>
                                 <field name="displayed_image_id" widget="attachment_image"/>
@@ -10680,7 +10721,7 @@ test("ungrouped kanban without handle field", async () => {
     expect([]).toVerifySteps();
 });
 
-test("click on image field in kanban with oe_kanban_global_click", async () => {
+test("click on image field in kanban (with default global_click)", async () => {
     expect.assertions(2);
 
     Partner._fields.image = fields.Binary();
@@ -10693,7 +10734,7 @@ test("click on image field in kanban with oe_kanban_global_click", async () => {
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="image" widget="image"/>
                         </div>
                     </t>
@@ -10850,7 +10891,7 @@ test("kanban with isHtmlEmpty method", async () => {
                 <field name="description"/>
                 <templates>
                     <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click">
+                    <div>
                         <field name="display_name"/>
                         <div class="test" t-if="!widget.isHtmlEmpty(record.description.raw_value)">
                             <t t-out="record.description.value"/>
@@ -11379,7 +11420,7 @@ test.tags("desktop")("folded groups kept when leaving/coming back", async () => 
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="int_field"/>
                         </div>
                     </t>
@@ -11430,7 +11471,7 @@ test.tags("desktop")("filter groups kept when leaving/coming back", async () => 
                 <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="id" />
                         </div>
                     </t>
@@ -11490,7 +11531,7 @@ test.tags("desktop")("folded groups kept when leaving/coming back (grouped by da
             <kanban>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="int_field"/>
                         </div>
                     </t>
@@ -11539,7 +11580,7 @@ test.tags("desktop")("loaded records kept when leaving/coming back", async () =>
             <kanban limit="1">
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="int_field"/>
                         </div>
                     </t>
@@ -13409,7 +13450,7 @@ test.tags("desktop")("group by properties and drag and drop", async () => {
                 <field name="product_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
+                        <div>
                             <field name="foo"/>
                             <field name="properties"/>
                         </div>
@@ -13470,7 +13511,7 @@ test("kanbans with basic and custom compiler, same arch", async () => {
         <kanban js_class="my_kanban">
             <templates>
                 <t t-name="kanban-box">
-                    <div class="oe_kanban_global_click"><field name="foo"/></div>
+                    <div><field name="foo"/></div>
                 </t>
             </templates>
         </kanban>`;
