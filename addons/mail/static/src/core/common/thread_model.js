@@ -235,18 +235,12 @@ export class Thread extends Record {
     /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";
-    /** @type {number|'bottom'} */
-    scrollTop = Record.attr("bottom", {
-        /** @this {import("models").Thread} */
-        compute() {
-            /**
-             * Approximation: this value should also depend on the view and not
-             * only the thread type. In particular for chatter, it should depend
-             * whether it is displayed in chatter or chat window.
-             */
-            return this.type === "chatter" ? 0 : "bottom";
-        },
-    });
+    /**
+     * Stored scoll position of thread from top in ASC order.
+     *
+     * @type {number|'bottom'}
+     */
+    scrollTop = "bottom";
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
