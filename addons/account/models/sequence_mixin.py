@@ -24,11 +24,21 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
+
+    prefix = r'(?P<prefix1>.*?)'
+    prefix2 = r'(?P<prefix2>\D)'
+    prefix3 = r'(?P<prefix3>\D+?)'
+    seq = r'(?P<seq>\d*)'
+    month = r'(?P<month>(0[1-9]|1[0-2]))'
     # `(19|20|21)` is for catching 19 20 and 21 century prefixes
-    _sequence_year_range_regex = r'^(?:(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D)(?P<year_end>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix3>\D+?))?(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
+    year = r'(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))'
+    year_end = r'(?P<year_end>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))'
+    suffix = r'(?P<suffix>\D*?)'
+
+    _sequence_year_range_regex = fr'^(?:{prefix}{year}{prefix2}{year_end}{prefix3})?{seq}{suffix}$'
+    _sequence_monthly_regex = fr'^{prefix}{year}(?P<prefix2>\D*?){month}{prefix3}{seq}{suffix}$'
+    _sequence_yearly_regex = fr'^{prefix}(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{{2}}))(?P<prefix2>\D+?){seq}{suffix}$'
+    _sequence_fixed_regex = fr'^{prefix}(?P<seq>\d{{0,9}}){suffix}$'
 
     sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
     sequence_number = fields.Integer(compute='_compute_split_sequence', store=True)
