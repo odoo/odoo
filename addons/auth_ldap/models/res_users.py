@@ -10,11 +10,12 @@ class Users(models.Model):
     _inherit = "res.users"
 
     @classmethod
-    def _login(cls, db, login, credential, user_agent_env):
+    def _login(cls, db, credential, user_agent_env):
         try:
-            return super(Users, cls)._login(db, login, credential, user_agent_env=user_agent_env)
+            return super(Users, cls)._login(db, credential, user_agent_env=user_agent_env)
         except AccessDenied as e:
             with registry(db).cursor() as cr:
+                login = credential['login']
                 cr.execute("SELECT id FROM res_users WHERE lower(login)=%s", (login,))
                 res = cr.fetchone()
                 if res:
@@ -23,20 +24,20 @@ class Users(models.Model):
                 env = api.Environment(cr, SUPERUSER_ID, {})
                 Ldap = env['res.company.ldap']
                 for conf in Ldap._get_ldap_dicts():
-                    entry = Ldap._authenticate(conf, login, credential['content'])
+                    entry = Ldap._authenticate(conf, login, credential['password'])
                     if entry:
                         return Ldap._get_or_create_user(conf, login, entry)
                 raise e
 
     def _check_credentials(self, credential, env):
         try:
-            return super(Users, self)._check_credentials(credential['content'], env)
+            return super(Users, self)._check_credentials(credential, env)
         except AccessDenied:
             passwd_allowed = env['interactive'] or not self.env.user._rpc_api_keys_only()
             if passwd_allowed and self.env.user.active:
                 Ldap = self.env['res.company.ldap']
                 for conf in Ldap._get_ldap_dicts():
-                    if Ldap._authenticate(conf, self.env.user.login, credential['content']):
+                    if Ldap._authenticate(conf, self.env.user.login, credential['password']):
                         return
             raise
 

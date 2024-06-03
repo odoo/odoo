@@ -964,7 +964,7 @@ class Session(collections.abc.MutableMapping):
     #
     # Session methods
     #
-    def authenticate(self, dbname, login=None, credential=None):
+    def authenticate(self, dbname, credential=None):
         """
         Authenticate the current user with the given db, login and
         credential. If successful, store the authentication parameters in
@@ -986,7 +986,8 @@ class Session(collections.abc.MutableMapping):
         }
 
         registry = Registry(dbname)
-        pre_uid = registry['res.users'].authenticate(dbname, login, credential, wsgienv)
+        login = credential['login']
+        pre_uid = registry['res.users'].authenticate(dbname, credential, wsgienv)
 
         self.uid = None
         self.pre_login = login

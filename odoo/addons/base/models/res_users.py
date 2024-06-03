@@ -418,7 +418,7 @@ class Users(models.Model):
         )
         [hashed] = self.env.cr.fetchone()
         valid, replacement = self._crypt_context()\
-            .verify_and_update(credential['content'], hashed)
+            .verify_and_update(credential['password'], hashed)
         if replacement is not None:
             self._set_encrypted_password(self.env.user.id, replacement)
         if not valid:
@@ -811,9 +811,9 @@ class Users(models.Model):
         return self._order
 
     @classmethod
-    def _login(cls, db, login, credential, user_agent_env):
-        password = credential['content']
-        if not password:
+    def _login(cls, db, credential, user_agent_env):
+        login = credential['login']
+        if not credential['password']:
             raise AccessDenied()
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
@@ -839,7 +839,7 @@ class Users(models.Model):
         return user.id
 
     @classmethod
-    def authenticate(cls, db, login, credential, user_agent_env):
+    def authenticate(cls, db, credential, user_agent_env):
         """Verifies and returns the user ID corresponding to the given
           ``login`` and ``password`` combination, or False if there was
           no matching user.
@@ -849,7 +849,7 @@ class Users(models.Model):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = cls._login(db, login, credential, user_agent_env=user_agent_env)
+        uid = cls._login(db, credential, user_agent_env=user_agent_env)
         if user_agent_env and user_agent_env.get('base_location'):
             with cls.pool.cursor() as cr:
                 env = api.Environment(cr, uid, {})
@@ -879,7 +879,19 @@ class Users(models.Model):
             with self._assert_can_auth(user=uid):
                 if not self.env.user.active:
                     raise AccessDenied()
-                credential = {'content': passwd, 'type': 'password'}
+                print('UOUI'*30)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                print(uid)
+                credential = {'login': uid, 'password': passwd, 'type': 'password'}
                 self._check_credentials(credential, {'interactive': False})
 
     def _get_session_token_fields(self):
@@ -919,7 +931,7 @@ class Users(models.Model):
             raise AccessDenied()
 
         # alternatively: use identitycheck wizard?
-        credential = {'content': old_passwd, 'type': 'password'}
+        credential = {'login': self.env.user.login, 'password': old_passwd, 'type': 'password'}
         self._check_credentials(credential, {'interactive': True})
 
         # use self.env.user here, because it has uid=SUPERUSER_ID
@@ -2068,7 +2080,7 @@ class APIKeysUser(models.Model):
                 pass
 
         # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
-        if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=credential['content']) == self.env.uid:
+        if self.env['res.users.apikeys']._check_credentials(scope='rpc', key=credential['password']) == self.env.uid:
             return
 
         raise AccessDenied()

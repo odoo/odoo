@@ -121,8 +121,8 @@ class ResUsers(models.Model):
         return self._create_user_from_template(values)
 
     @classmethod
-    def authenticate(cls, db, login, credential, user_agent_env):
-        uid = super().authenticate(db, login, credential, user_agent_env)
+    def authenticate(cls, db, credential, user_agent_env):
+        uid = super().authenticate(db, credential, user_agent_env)
         try:
             with cls.pool.cursor() as cr:
                 env = api.Environment(cr, uid, {})

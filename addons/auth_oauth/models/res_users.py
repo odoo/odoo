@@ -136,7 +136,7 @@ class ResUsers(models.Model):
         except AccessDenied:
             passwd_allowed = env['interactive'] or not self.env.user._rpc_api_keys_only()
             if passwd_allowed and self.env.user.active:
-                res = self.sudo().search([('id', '=', self.env.uid), ('oauth_access_token', '=', credential['content'])])
+                res = self.sudo().search([('id', '=', self.env.uid), ('oauth_access_token', '=', credential['password'])])
                 if res:
                     return
             raise

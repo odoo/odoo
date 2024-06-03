@@ -32,9 +32,9 @@ class UsersPasskey(models.Model):
         }
 
     @classmethod
-    def _login(cls, db, login, credential, user_agent_env):
+    def _login(cls, db, credential, user_agent_env):
         if credential['type'] == 'webauthn':
-            webauthn = json.loads(credential['content'])
+            webauthn = json.loads(credential['webauthn_response'])
             with registry(db).cursor() as cr:
                 identifier = base64.urlsafe_b64decode(webauthn['id'] + '===').hex()
                 cr.execute("""
@@ -46,12 +46,12 @@ class UsersPasskey(models.Model):
                 res = cr.fetchone()
                 if not res:
                     raise AccessDenied(_('Unknown passkey'))
-                login = res[0]
-        return super()._login(db, login, credential, user_agent_env=user_agent_env)
+                credential['login'] = res[0]
+        return super()._login(db, credential, user_agent_env=user_agent_env)
 
     def _check_credentials(self, credential, env):
         if credential['type'] == 'webauthn':
-            webauthn = json.loads(credential['content'])
+            webauthn = json.loads(credential['webauthn_response'])
             identifier = base64.urlsafe_b64decode(webauthn['id'] + '===').hex()
             passkey = self.env['auth.passkey.key'].sudo().search([
                 ("create_uid", "=", self.env.user.id),

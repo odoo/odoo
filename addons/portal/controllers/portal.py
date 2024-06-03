@@ -276,7 +276,7 @@ class CustomerPortal(Controller):
         values = self._prepare_portal_layout_values()
         values['get_error'] = get_error
         values['open_deactivate_modal'] = True
-        credential = {'content': password, 'type': 'password'}
+        credential = {'login': request.env.user.login, 'password': password, 'type': 'password'}
 
         if validation != request.env.user.login:
             values['errors'] = {'deactivate': 'validation'}
