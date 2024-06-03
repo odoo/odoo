@@ -258,7 +258,7 @@ patch(Chatter.prototype, {
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
         if (this.state.isAttachmentBoxOpened) {
             this.rootRef.el.scrollTop = 0;
-            this.state.thread.scrollTop = 0;
+            this.state.thread.scrollTop = "bottom";
         }
     },
 
@@ -324,7 +324,7 @@ patch(Chatter.prototype, {
         }
         this.state.isAttachmentBoxOpened = true;
         this.rootRef.el.scrollTop = 0;
-        this.state.thread.scrollTop = 0;
+        this.state.thread.scrollTop = "bottom";
     },
 
     async reloadParentView() {
