@@ -282,13 +282,12 @@ export class Thread extends Record {
      * @type {ScrollPosition}
      */
     scrollPosition = new ScrollPosition();
-    /** @type {number|'bottom'} */
-    scrollTop = Record.attr("bottom", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.type === "chatter" ? 0 : "bottom";
-        },
-    });
+    /**
+     * Stored scoll position of thread from top in ASC order.
+     *
+     * @type {number|'bottom'}
+     */
+    scrollTop = "bottom";
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */

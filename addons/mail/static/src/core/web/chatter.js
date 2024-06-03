@@ -131,11 +131,13 @@ export class Chatter extends Component {
                             return;
                         }
                     }
-                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(() => {
-                        if (this.props.hasParentReloadOnAttachmentsChanged) {
-                            this.reloadParentView();
+                    Promise.all(files.map((file) => this.attachmentUploader.uploadFile(file))).then(
+                        () => {
+                            if (this.props.hasParentReloadOnAttachmentsChanged) {
+                                this.reloadParentView();
+                            }
                         }
-                    })
+                    );
                     this.state.isAttachmentBoxOpened = true;
                 }
             },
@@ -383,7 +385,7 @@ export class Chatter extends Component {
         }
         this.state.isAttachmentBoxOpened = true;
         this.rootRef.el.scrollTop = 0;
-        this.state.thread.scrollTop = 0;
+        this.state.thread.scrollTop = "bottom";
     }
 
     onClickAddAttachments() {
@@ -393,7 +395,7 @@ export class Chatter extends Component {
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
         if (this.state.isAttachmentBoxOpened) {
             this.rootRef.el.scrollTop = 0;
-            this.state.thread.scrollTop = 0;
+            this.state.thread.scrollTop = "bottom";
         }
     }
 
