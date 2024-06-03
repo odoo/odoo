@@ -733,6 +733,11 @@ class IrServerObjectLines(models.Model):
                     expr = int(line.value)
                 except Exception:
                     pass
+            elif line.col1.ttype == 'float':
+                try:
+                    expr = float(line.value)
+                except Exception:
+                    pass
             result[line.id] = expr
         return result
 
