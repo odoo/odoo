@@ -4120,9 +4120,12 @@ export class OdooEditor extends EventTarget {
                 restore(); // Make sure to make <br>s visible if needed.
             }
         }
+
+        const tAttrs = ['t-elif', 't-else', 't-esc', 't-foreach', 't-if', 't-out', 't-raw', 't-value'];
         // Remove now empty links
         for (const link of element.querySelectorAll('a')) {
-            if (![...link.childNodes].some(isVisible) && !link.classList.length) {
+            if (![...link.childNodes].some(isVisible) && !link.classList.length
+                && !tAttrs.some(attr => link.hasAttribute(attr))) {
                 link.remove();
             }
         }
