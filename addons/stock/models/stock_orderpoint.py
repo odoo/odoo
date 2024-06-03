@@ -179,6 +179,12 @@ class StockWarehouseOrderpoint(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         return super().write(vals)
 
+    @api.constrains('product_id')
+    def _check_product_type(self):
+        for orderpoint in self:
+            if orderpoint.product_id.type != 'product':
+                raise ValidationError(_('You cannot create a replenishment rule for a non-storable product.'))
+
     def action_product_forecast_report(self):
         self.ensure_one()
         action = self.product_id.action_product_forecast_report()
