@@ -399,6 +399,14 @@ test("Embed video by pasting video URL", async () => {
     ).toHaveCount(1);
 });
 
+test.todo("Ensure that urgentSave works even with modified image to save", async (assert) => {
+    throw new Error("To imp => urgentSave with Image");
+});
+
+test.todo("Pasted/dropped images are converted to attachments on save", async (assert) => {
+    throw new Error("To imp => urgentSave with Image");
+});
+
 describe("sandbox", () => {
     const recordWithComplexHTML = {
         id: 1,
@@ -474,6 +482,58 @@ describe("sandbox", () => {
         expect("#codeview-btn-group > button").toHaveCount(0, {
             message: "Codeview toggle should not be possible in readonly mode.",
         });
+    });
+
+    test.todo("sandboxed preview display and editing", async (assert) => {
+        throw new Error("To imp => showCode");
+    });
+
+    test("sanboxed preview mode not automatically enabled for regular values", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: `
+                <body>
+                    <p>Hello</p>
+                </body>
+            `,
+            },
+        ];
+
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        expect(`.o_field_html[name="txt"] iframe[sandbox]`).toHaveCount(0);
+        expect(`.o_field_html[name="txt"] iframe[sandbox]`).toHaveCount(0);
+    });
+
+    test("sandboxed preview option applies even for simple text", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: `
+                    Hello
+                `,
+            },
+        ];
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                    <form>
+                    <field name="txt" widget="html" options="{'sandboxedPreview': true}"/>
+                    </form>`,
+        });
+        expect(
+            `.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]`
+        ).toHaveCount(1);
     });
 
     test("links should open on a new tab in sandboxedPreview", async () => {
