@@ -26,6 +26,7 @@ export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {
         const fields = models[modelName].fields;
         const className = xmlDoc.getAttribute("class") || null;
+        const canOpenRecords = archParseBoolean(xmlDoc.getAttribute("can_open"), true);
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
@@ -159,6 +160,7 @@ export class KanbanArchParser {
 
         return {
             activeActions,
+            canOpenRecords,
             className,
             creates,
             defaultGroupBy,
