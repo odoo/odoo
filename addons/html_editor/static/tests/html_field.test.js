@@ -352,8 +352,14 @@ test.todo(
         // press("Enter")
 
         await tick();
+
+        // todo @phoenix to imp the full test
     }
 );
+
+test.todo("QWeb plugin select t-field", async (assert) => {
+    throw new Error("to imp, use the qweb plugin");
+});
 
 test("Embed video by pasting video URL", async () => {
     Partner._records = [
@@ -405,6 +411,36 @@ test.todo("Ensure that urgentSave works even with modified image to save", async
 
 test.todo("Pasted/dropped images are converted to attachments on save", async (assert) => {
     throw new Error("To imp => urgentSave with Image");
+});
+
+test.todo(
+    "isDirty should be false when the content is being transformed by the wysiwyg",
+    async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: "<p>a<span>b</span>c</p>",
+            },
+        ];
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+        });
+
+        expect(`[name='txt'] .odoo-editor-editable`).toHaveInnerHTML("<p>abc</p>", {
+            message: "value should be sanitized by the editor",
+        });
+        expect(`.o_form_button_save`).not.toBeVisible();
+    }
+);
+
+test.todo("media dialog: upload", async function (assert) {
+    throw new Error("To imp");
 });
 
 describe("sandbox", () => {
