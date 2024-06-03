@@ -709,6 +709,9 @@ class Lead(models.Model):
                 vals.update({'probability': 100, 'automated_probability': 100})
                 stage_is_won = True
 
+        if 'probability' in vals:
+            vals['probability'] = float(vals['probability'])
+
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
