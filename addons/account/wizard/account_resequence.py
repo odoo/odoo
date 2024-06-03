@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools.date_utils import get_month, get_fiscal_year
+from odoo.tools.date_utils import get_fiscal_year
 from odoo.tools.misc import format_date
 
-import re
 from collections import defaultdict
 import json
 
@@ -97,7 +96,7 @@ class ReSequenceWizard(models.TransientModel):
         """Compute the proposed new values.
 
         Sets a json string on new_values representing a dictionary thats maps account.move
-        ids to a disctionay containing the name if we execute the action, and information
+        ids to a dictionary containing the name if we execute the action, and information
         relative to the preview widget.
         """
         def _get_move_key(move_id):
@@ -106,7 +105,7 @@ class ReSequenceWizard(models.TransientModel):
             if self.sequence_number_reset == 'year':
                 return move_id.date.year
             elif self.sequence_number_reset == 'year_range':
-                return "%s-%s"%(date_start.year, date_end.year)
+                return "%s-%s" % (date_start.year, date_end.year)
             elif self.sequence_number_reset == 'month':
                 return (move_id.date.year, move_id.date.month)
             return 'default'
@@ -139,7 +138,7 @@ class ReSequenceWizard(models.TransientModel):
                     'month': date_start.month,
                     'year_end': date_end.year % (10 ** format_values['year_end_length']),
                     'year': date_start.year % (10 ** format_values['year_length']),
-                    'seq': i + (format_values['seq'] if j == (len(moves_by_period)-1) else 1),
+                    'seq': i + (format_values['seq'] if j == (len(moves_by_period) - 1) else 1),
                 }) for i in range(len(period_recs))]
 
                 # For all the moves of this period, assign the name by increasing initial name
