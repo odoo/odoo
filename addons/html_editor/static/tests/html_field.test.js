@@ -18,10 +18,11 @@ import { insertText, pasteText } from "./_helpers/user_actions";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
+    name = fields.Char();
 
     _records = [
-        { id: 1, txt: "<p>first</p>" },
-        { id: 2, txt: "<p>second</p>" },
+        { id: 1, name: "first", txt: "<p>first</p>" },
+        { id: 2, name: "second", txt: "<p>second</p>" },
     ];
 }
 defineModels([Partner]);
@@ -60,6 +61,33 @@ test("html field in readonly", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="txt"] .o_readonly`).toHaveCount(1);
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>first</p>");
+});
+
+test("html field in readonly updated by onchange", async () => {
+    Partner._onChanges = {
+        name(record) {
+            record.txt = `<p>${record.name}</p>`;
+        },
+    };
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html" readonly="1"/>
+            </form>`,
+    });
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>first</p>");
+
+    await contains(`.o_field_widget[name=name] input`).edit("hello");
+    expect(".odoo-editor-editable").toHaveCount(0);
+    expect(`[name="txt"] .o_readonly`).toHaveCount(1);
+    expect(`[name="txt"] .o_readonly`).toHaveInnerHTML("<p>hello</p>");
 });
 
 test("links should open on a new tab in readonly", async () => {
@@ -365,6 +393,22 @@ describe("sandbox", () => {
     </html>
     `,
     };
+
+    function getSandboxContent(content) {
+        return `
+        <!DOCTYPE HTML>
+        <html xml:lang="en" lang="en">
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                <meta name="format-detection" content="telephone=no"/>
+                <style type="text/css"></style>
+            </head>
+            <body>
+                ${content}
+            </body>
+        </html>
+        `;
+    }
     test("complex html is automatically in sandboxed preview mode", async () => {
         Partner._records = [recordWithComplexHTML];
         await mountView({
@@ -409,23 +453,23 @@ describe("sandbox", () => {
         Partner._records = [
             {
                 id: 1,
-                txt: `
-                <body>
-                    <p>first</p>
-                    <a href="/contactus">Relative link</a>
-                    <a href="${browser.location.origin}/contactus">Internal link</a>
-                    <a href="https://google.com">External link</a>
-                </body>`,
+                txt: getSandboxContent(`
+                    <div>
+                        <p>first</p>
+                        <a href="/contactus">Relative link</a>
+                        <a href="${browser.location.origin}/contactus">Internal link</a>
+                        <a href="https://google.com">External link</a>
+                    </div>`),
             },
             {
                 id: 2,
-                txt: `
-                <body>
-                    <p>second</p>
-                    <a href="/contactus2">Relative link</a>
-                    <a href="${browser.location.origin}/contactus2">Internal link</a>
-                    <a href="https://google2.com">External link</a>
-                </body>`,
+                txt: getSandboxContent(`
+                    <div>
+                        <p>second</p>
+                        <a href="/contactus2">Relative link</a>
+                        <a href="${browser.location.origin}/contactus2">Internal link</a>
+                        <a href="https://google2.com">External link</a>
+                    </div>`),
             },
         ];
 
@@ -454,6 +498,33 @@ describe("sandbox", () => {
             expect(link.getAttribute("target")).toBe("_blank");
             expect(link.getAttribute("rel")).toBe("noreferrer");
         }
+    });
+
+    test("html field in readonly updated by onchange in sandboxedPreview", async () => {
+        Partner._records = [{ id: 1, name: "first", txt: getSandboxContent("<p>first</p>") }];
+        Partner._onChanges = {
+            name(record) {
+                record.txt = getSandboxContent(`<p>${record.name}</p>`);
+            },
+        };
+        await mountView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="name"/>
+                    <field name="txt" widget="html" readonly="1"/>
+                </form>`,
+        });
+
+        let readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        expect(readonlyIframe.contentDocument.body).toHaveInnerHTML(`<p>first</p>`);
+
+        await contains(`.o_field_widget[name=name] input`).edit("hello");
+        readonlyIframe = queryOne('.o_field_html[name="txt"] iframe');
+        expect(readonlyIframe.contentDocument.body).toHaveInnerHTML(`<p>hello</p>`);
     });
 
     test("readonly with cssReadonly", async () => {
