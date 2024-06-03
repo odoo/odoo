@@ -21,9 +21,10 @@
             <div t-if="show_certification_tab" role="tabpanel" t-attf-class="tab-pane #{ 'show active' if active_tab == 'certification' else '' }" id="profile_tab_content_certification">
                 <h5 class="d-flex justify-content-between align-items-end border-bottom pb-1">
                     Certification Attempts
-                    <form method="get">
+                    <form method="post">
                         <div class="input-group" role="search">
                             <input type="text" class="form-control" name="certification_search" t-att-value="certification_search_terms or ''" placeholder="Search Attempts..."/>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="input-group-append">
                                 <button type="submit" class="btn btn-primary" aria-label="Search" title="Search">
                                     <i class="fa fa-search"/>

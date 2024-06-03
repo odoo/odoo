@@ -52,13 +52,7 @@
         <xpath expr="//ul[@id='profile_extra_info_tablist']" position="inside">
             <t t-if="forum">
                 <li class="nav-item">
-                    <a role="tab" aria-controls="questions" href="#questions" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-out="count_questions"/> Questions</a>
-                </li>
-                <li class="nav-item">
-                    <a role="tab" aria-controls="answers" href="#answers" class="nav-link o_wprofile_navlink" data-bs-toggle="tab"><t t-out="count_answers"/> Answers</a>
-                </li>
-                <li t-if="uid == user.id" class="nav-item">
-                    <a role="tab" aria-controls="activity" href="#activity" class="nav-link o_wprofile_navlink" data-bs-toggle="tab">Activity</a>
+                    <a role="tab" aria-controls="activities" href="#activities" t-attf-class="#{ 'active' if active_tab == 'activities' else '' } nav-link o_wprofile_navlink" data-bs-toggle="tab">Activities</a>
                 </li>
                 <li t-if="uid == user.id" class="nav-item">
                     <a role="tab" aria-controls="votes" href="#votes" class="nav-link o_wprofile_navlink" data-bs-toggle="tab">Votes</a>
@@ -68,100 +62,112 @@
         <xpath expr="//div[@id='profile_extra_info_tabcontent']" position="inside">
             <t t-if="forum">
                 <t t-set="is_profile" t-value="true"/>
-                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="questions">
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
-                            Questions
-                            <t t-if="count_questions &gt; 0" class="float-end" t-call="website.website_search_box_input">
-                                <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
-                                <t t-set="search_type" t-valuef="forums"/>
-                                <t t-if="forum_id" t-set="action" t-value="'/forum/%s%s' % (forum_id, ('/tag/%s/questions' % slug(tag)) if tag else '')"/>
-                                <t t-else="" t-set="action" t-value="'/forum/all%s' % (('/tag/%s/questions' % slug(tag)) if tag else '')"/>
-                                <t t-set="display_description" t-value="true"/>
-                                <t t-set="display_detail" t-valuef="false"/>
-                                <t t-set="placeholder" t-valuef="Search Questions..."/>
-                                <input type="hidden" name="create_uid" t-att-value="user.id"/>
-                                <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
-                                <input t-if="my_profile" type="hidden" name="my" t-att-value="mine"/>
-                                <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
-                            </t>
-                        </h5>
-                        <t t-call="website_forum.forum_filter_tag"/>
-                        <t t-if="questions">
-                            <div class="mb-1" t-foreach="questions" t-as="question">
-                                <t t-call="website_forum.display_post"/>
+                <t t-set="activities_active_tab" t-value="'answer' if activities_search_answer else 'question'"/>
+                <div role="tabpanel" t-attf-class="o_wforum_profile_tab tab-pane o_wprofile_forum_activities #{ 'show active' if active_tab == 'activities' else '' }" id="activities"
+                     t-att-data-active-tab="activities_active_tab">
+                    <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
+                        <div>Activities</div>
+                        <div class="d-flex">
+                            <form method="post" class="o_wprofile_forum_activities_search_question mx-1">
+                                <div class="input-group" role="search">
+                                    <input type="text" class="form-control" name="activities_search_question" t-att-value="activities_search_question" placeholder="Search Questions..."/>
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn btn-primary" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"/>
+                                    </button>
+                                </div>
+                            </form>
+                            <form method="post" class="o_wprofile_forum_activities_search_answer d-none mx-1">
+                                <div class="input-group" role="search">
+                                    <input type="text" class="form-control" name="activities_search_answer" t-att-value="activities_search_answer" placeholder="Search Answers..."/>
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <button type="submit" class="btn btn-primary" aria-label="Search" title="Search">
+                                        <i class="fa fa-search"/>
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="dropdown" id="profile_extra_info_activities_filter" role="tablist">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="profile_extra_info_activities_filter_button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-filter"/>&amp;nbsp;<span class="profile_extra_info_activities_filter_label"><t t-out="count_questions"/> Questions</span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="profile_extra_info_activities_filter_button">
+                                    <li><a role="tab" aria-controls="questions" href="#profile_extra_info_activities_tab_question" t-attf-class="#{ 'active' if activities_active_tab =='question' else '' } nav-link o_wprofile_navlink px-3" data-bs-toggle="tab" aria-selected="true"><t t-out="count_questions"/> Questions</a></li>
+                                    <li><a role="tab" aria-controls="answers" href="#profile_extra_info_activities_tab_answer" t-attf-class="#{ 'active' if activities_active_tab =='answer' else '' } nav-link o_wprofile_navlink px-3" data-bs-toggle="tab"><t t-out="count_answers"/> Answers</a></li>
+                                    <li t-if="uid == user.id"><a role="tab" aria-controls="activity" href="#profile_extra_info_activities_tab_activity" class="nav-link o_wprofile_navlink px-3" data-bs-toggle="tab">Activity</a></li>
+                                </ul>
                             </div>
-                        </t>
-                        <div t-elif="my_profile" class="text-muted">
-                            You have not posted any questions yet. <br />
-                            <a href="/forum/" class="btn btn-link px-0">
-                                <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
-                            </a>
                         </div>
-                        <t t-else="">
-                            <div class="text-muted">This user hasn't posted any questions yet.<br/>
-                                <a href="/forum/" class="btn btn-link px-0">
-                                    <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
-                                </a>
-                            </div>
-                        </t>
-                    </div>
-                    <t t-if="favourite">
-                        <div class="mb-4">
-                            <h5 class="border-bottom pb-1">Favourite Questions</h5>
-                            <div class="mb-1" t-foreach="favourite" t-as="question">
-                                <t t-call="website_forum.display_post">
-                                    <t t-set="hide_fav_icon" t-value="True"/>
+
+                    </h5>
+                    <t t-call="website_forum.forum_filter_tag"/>
+
+                    <div class="tab-content mt-2" id="profile_extra_info_tabcontent_activities">
+                        <div role="tabpanel" t-attf-class="#{ 'show active' if activities_active_tab =='question' else '' } o_wforum_profile_tab tab-pane" id="profile_extra_info_activities_tab_question">
+                            <div class="mb-4">
+                                <t t-if="questions">
+                                    <div class="mb-1" t-foreach="questions" t-as="question">
+                                        <t t-call="website_forum.display_post"/>
+                                    </div>
+                                </t>
+                                <div t-elif="my_profile" class="text-muted">
+                                    You have not posted any questions yet. <br />
+                                    <a href="/forum/" class="btn btn-link px-0">
+                                        <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
+                                    </a>
+                                </div>
+                                <t t-else="">
+                                    <div class="text-muted">This user hasn't posted any questions yet.<br/>
+                                        <a href="/forum/" class="btn btn-link px-0">
+                                            <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
+                                        </a>
+                                    </div>
                                 </t>
                             </div>
-                        </div>
-                    </t>
-                    <t t-if="followed">
-                        <div class="mb-4">
-                            <h5 class="border-bottom pb-1">Followed Questions</h5>
-                            <div class="mb-1" t-foreach="followed" t-as="question">
-                                <t t-call="website_forum.display_post"/>
-                            </div>
-                        </div>
-                    </t>
-                </div>
-                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="answers">
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between">
-                            Answers
-                            <t t-if="count_questions &gt; 0" class="float-end" t-call="website.website_search_box_input">
-                                <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
-                                <t t-set="search_type" t-valuef="forums"/>
-                                <t t-if="forum_id" t-set="action" t-value="'/forum/%s%s' % (forum_id, '/tag/%s/questions' % slug(tag)) if tag else ''"/>
-                                <t t-else="" t-set="action" t-value="'/forum/all%s' % (('/tag/%s/questions' % slug(tag)) if tag else '')"/>
-                                <t t-set="display_description" t-value="true"/>
-                                <t t-set="display_detail" t-valuef="false"/>
-                                <t t-set="placeholder" t-valuef="Search Answers..."/>
-                                <input type="hidden" name="author" t-att-value="user.id"/>
-                                <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
-                                <input t-if="my_profile" type="hidden" name="my" t-att-value="mine"/>
-                                <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
-                                <input type="hidden" name="include_answers" t-att-value="True"/>
+                            <t t-if="favourite">
+                                <div class="mb-4">
+                                    <h5 class="border-bottom pb-1">Favourite Questions</h5>
+                                    <div class="mb-1" t-foreach="favourite" t-as="question">
+                                        <t t-call="website_forum.display_post">
+                                            <t t-set="hide_fav_icon" t-value="True"/>
+                                        </t>
+                                    </div>
+                                </div>
                             </t>
-                        </h5>
-                        <t t-call="website_forum.forum_filter_tag"/>
-
-                        <t t-if="answers">
-                            <div class="mb-1" t-foreach="answers" t-as="answer">
-                                <t t-call="website_forum.display_post_answer"/>
-                            </div>
-                        </t>
-                        <div t-elif="my_profile" class="text-muted">
-                            You have not answered any questions yet. <br />
-                            <a href="/forum/" class="btn btn-link px-0">
-                                <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
-                            </a>
+                            <t t-if="followed">
+                                <div class="mb-4">
+                                    <h5 class="border-bottom pb-1">Followed Questions</h5>
+                                    <div class="mb-1" t-foreach="followed" t-as="question">
+                                        <t t-call="website_forum.display_post"/>
+                                    </div>
+                                </div>
+                            </t>
                         </div>
-                        <div t-else="" class="text-muted">
-                            This user hasn't answered any questions yet. <br/>
-                            <a href="/forum/" class="btn btn-link px-0">
-                                <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
-                            </a>
+                        <div role="tabpanel" t-attf-class="#{ 'show active' if activities_active_tab =='answer' else '' } o_wforum_profile_tab tab-pane" id="profile_extra_info_activities_tab_answer">
+                            <div class="mb-4">
+                                <t t-if="answers">
+                                    <div class="mb-1" t-foreach="answers" t-as="answer">
+                                        <t t-call="website_forum.display_post_answer"/>
+                                    </div>
+                                </t>
+                                <div t-elif="my_profile" class="text-muted">
+                                    You have not answered any questions yet. <br />
+                                    <a href="/forum/" class="btn btn-link px-0">
+                                        <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
+                                    </a>
+                                </div>
+                                <div t-else="" class="text-muted">
+                                    This user hasn't answered any questions yet. <br/>
+                                    <a href="/forum/" class="btn btn-link px-0">
+                                        <i class="oi oi-arrow-right d-inline-block"/> Go to Forums
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="uid == user.id" role="tabpanel" class="o_wforum_profile_tab tab-pane" id="profile_extra_info_activities_tab_activity">
+                            <div class="mb-4">
+                                <t t-call="website_forum.display_activities"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,15 +190,6 @@
                         </h5>
                         <t t-call="website_forum.forum_filter_tag"/>
                         <t t-call="website_forum.user_votes"/>
-                    </div>
-                </div>
-                <div role="tabpanel" class="o_wforum_profile_tab tab-pane" id="activity" t-if="uid == user.id">
-                    <div class="mb-4">
-                        <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between" style="height:43px;">
-                            Activities
-                        </h5>
-                        <t t-call="website_forum.forum_filter_tag"/>
-                        <t t-call="website_forum.display_activities"/>
                     </div>
                 </div>
             </t>
