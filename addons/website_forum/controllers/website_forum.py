@@ -676,7 +676,7 @@ class WebsiteForum(WebsiteProfile):
 
             values.update(self._prepare_user_values(forum=forums[0] if len(forums) == 1 else True, **post))
             if forums:
-                values.update(self._prepare_open_forum_user(user, forums))
+                values.update(self._prepare_open_forum_user(user, forums, **post))
         return values
 
     def _prepare_open_forum_user(self, user, forums, **kwargs):
@@ -685,12 +685,19 @@ class WebsiteForum(WebsiteProfile):
         Activity = request.env['mail.message']
         Followers = request.env['mail.followers']
         Data = request.env["ir.model.data"]
+        search_values = {}
 
         # questions and answers by user
-        user_question_ids = Post.search([
+        question_base_domain = Domain([
             ('parent_id', '=', False),
-            ('forum_id', 'in', forums.ids), ('create_uid', '=', user.id)],
-            order='create_date desc')
+            ('forum_id', 'in', forums.ids), ('create_uid', '=', user.id)])
+        question_domain = question_base_domain
+        if search_question := kwargs.get('activity_search_question'):
+            search_values['activity_search_question'] = search_question
+            question_domain &= Domain.OR([
+                [('name', 'ilike', search_question)],
+                [('plain_content', 'ilike', search_question)]])
+        user_question_ids = Post.search(question_domain, order='create_date desc')
         count_user_questions = len(user_question_ids)
         min_karma_unlink = min(forums.mapped('karma_unlink_all'))
 
@@ -701,10 +708,16 @@ class WebsiteForum(WebsiteProfile):
             post_display_limit = 20
 
         user_questions = user_question_ids[:post_display_limit]
-        user_answer_ids = Post.search([
+        answer_base_domain = Domain([
             ('parent_id', '!=', False),
-            ('forum_id', 'in', forums.ids), ('create_uid', '=', user.id)],
-            order='create_date desc')
+            ('forum_id', 'in', forums.ids), ('create_uid', '=', user.id)])
+        answer_domain = answer_base_domain
+        if search_answer := kwargs.get('activity_search_answer'):
+            search_values['activity_search_answer'] = search_answer
+            answer_domain &= Domain.OR([
+                [('name', 'ilike', search_answer)],
+                [('plain_content', 'ilike', search_answer)]])
+        user_answer_ids = Post.search(answer_domain, order='create_date desc')
         count_user_answers = len(user_answer_ids)
         user_answers = user_answer_ids[:post_display_limit]
 
@@ -734,7 +747,8 @@ class WebsiteForum(WebsiteProfile):
         # activity by user.
         comment = Data._xmlid_lookup('mail.mt_comment')[1]
         activities = Activity.search(
-            [('res_id', 'in', (user_question_ids + user_answer_ids).ids), ('model', '=', 'forum.post'),
+            [('res_id', 'in', Post._search(Domain.OR([question_base_domain, answer_base_domain]))),
+             ('model', '=', 'forum.post'),
              ('subtype_id', '!=', comment)],
             order='date DESC', limit=100)
 
@@ -747,6 +761,12 @@ class WebsiteForum(WebsiteProfile):
         if user != request.env.user:
             kwargs['users'] = True
 
+        if search_question:
+            activities_active_tab = 'question'
+        elif search_answer:
+            activities_active_tab = 'answer'
+        else:
+            activities_active_tab = 'activity' if request.env.user == user else 'question'
         values = {
             'uid': request.env.user.id,
             'user': user,
@@ -761,11 +781,15 @@ class WebsiteForum(WebsiteProfile):
             'up_votes': up_votes,
             'down_votes': down_votes,
             'activities': activities,
+            'activities_active_tab': activities_active_tab,
             'posts': posts,
             'vote_post': vote_ids,
             'is_profile_page': True,
             'badge_category': 'forum',
         }
+        values.update(search_values)
+        if search_values:
+            values['active_tab'] = 'activities'
 
         return values
 

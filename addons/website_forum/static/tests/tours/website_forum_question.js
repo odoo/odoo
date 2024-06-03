@@ -100,5 +100,112 @@ registry.category("web_tour.tours").add('forum_question', {
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '.o_wforum_validate_toggler',
-    }]
+    },
+    {
+        content: "Close modal",
+        trigger: ".modal_shown .modal-header:contains('Thanks for posting!') button.btn-close",
+        run: "click",
+    },
+    {
+        content: "Go to profile page",
+        trigger: "aside span:contains('Marc Demo')",
+        run: "click",
+        expectUnloadPage: true,
+    },
+    {
+        content: "Open activity tab",
+        trigger: ".o_wprofile_nav_tabs a[href='#activities']",
+        run: "click",
+    },
+    {
+        content: "Check that the filter is set to 'Activity' (by default)",
+        trigger: "#o_wprofile_forum_activity_filter button:contains('Activity')",
+    },
+    {
+        content: "Check activity: new question",
+        trigger:
+            "#o_wprofile_forum_activity_tab_activity div:contains('First Question Title') span:contains('New question')",
+    },
+    {
+        content: "Check activity: question edited",
+        trigger:
+            "#o_wprofile_forum_activity_tab_activity div:contains('First Question Title') span:contains('Question edited')",
+    },
+    {
+        content: "Check activity: new answer",
+        trigger:
+            "#o_wprofile_forum_activity_tab_activity div:contains('First Question Title') span:contains('New answer')",
+    },
+    {
+        content: "Open dropdown activity filter",
+        trigger: "#o_wprofile_forum_activity_filter button",
+        run: "click",
+    },
+    {
+        content: "Select activity filter: question",
+        trigger: "#o_wprofile_forum_activity_filter a:contains('Questions')",
+        run: "click",
+    },
+    {
+        content: "Check that the filter is set to 'Question'",
+        trigger: "#o_wprofile_forum_activity_filter button:contains('Questions')",
+    },
+    {
+        content: "Check that one posted question is displayed",
+        trigger:
+            "#activities #o_wprofile_forum_activity_tab_question a:contains('First Question Title')",
+    },
+    {
+        content: "Search for 'Second'",
+        trigger:
+            ".o_wprofile_forum_activity_search_question input[name='activity_search_question']",
+        run: "edit Second",
+    },
+    {
+        content: "Submit search",
+        trigger: ".o_wprofile_forum_activity_search_question button[type='submit']",
+        run: "click",
+        expectUnloadPage: true,
+    },
+    {
+        content: "Check that the posted question is not displayed anymore",
+        trigger: "a:not(:has(.modal:contains('First Question Title')))",
+    },
+    {
+        content: "Open dropdown activity filter",
+        trigger: "#o_wprofile_forum_activity_filter button",
+        run: "click",
+    },
+    {
+        content: "Select activity filter: answer",
+        trigger: "#o_wprofile_forum_activity_filter a:contains('Answers')",
+        run: "click",
+    },
+    {
+        content: "Check that the filter is set to 'Answers'",
+        trigger: "#o_wprofile_forum_activity_filter button:contains('Answers')",
+    },
+    {
+        content: "Check posted answer",
+        trigger:
+            "#activities #o_wprofile_forum_activity_tab_answer a:contains('Re: First Question Title')",
+    },
+    {
+        content: "Search for 'First'",
+        trigger:
+            ".o_wprofile_forum_activity_search_answer input[name='activity_search_answer']",
+        run: "edit First",
+    },
+    {
+        content: "Submit search",
+        trigger: ".o_wprofile_forum_activity_search_answer button[type='submit']",
+        run: "click",
+        expectUnloadPage: true,
+    },
+    {
+        content: "Check that posted answer is still displayed",
+        trigger:
+            "#activities #o_wprofile_forum_activity_tab_answer div:contains('Re: First Question Title')",
+    },
+    ],
 });
