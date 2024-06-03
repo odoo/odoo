@@ -10,21 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     _inherit = "account.chart.template"
 
     @api.model
-    def _get_demo_data(self, company=False):
-        data = super()._get_demo_data(company)
-        if company.account_fiscal_country_id.code == "CL":
-            data.setdefault('res.partner', {})
-            data['res.partner'].setdefault('base.res_partner_2', {})
-            data['res.partner']['base.res_partner_2']['l10n_cl_sii_taxpayer_type'] = '4'
-            data['res.partner'].setdefault('base.res_partner_12', {})
-            data['res.partner']['base.res_partner_12']['l10n_cl_sii_taxpayer_type'] = '4'
-
-            data.setdefault('l10n_latam.document.type', {})
-            data['l10n_latam.document.type'].setdefault('l10n_cl.dc_fe_dte', {})
-            data['l10n_latam.document.type']['l10n_cl.dc_fe_dte']['active'] = True
-        return data
-
-    @api.model
     def _get_demo_data_move(self, company=False):
         ref = self.env.ref
         move_data = super()._get_demo_data_move(company)
