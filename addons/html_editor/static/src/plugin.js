@@ -57,7 +57,6 @@
  * @property { SplitPlugin['splitSelection'] } splitSelection
  * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
  * @property { SplitPlugin['splitTextNode'] } splitTextNode
- * @property { SplitPlugin['splitSelection'] } splitSelection
  * @property { OverlayPlugin['createOverlay'] } createOverlay
  * @property { CollaborationPlugin['onExternalHistorySteps'] } onExternalHistorySteps
  * @property { CollaborationPlugin['historyGetMissingSteps'] } historyGetMissingSteps
