@@ -96,6 +96,9 @@
                 />
             </div>
             <t t-else="">
+                <t t-if="scheduledMessages.length and !state.isSearchOpen">
+                    <t t-call="mail.ScheduledMessagesList"/>
+                </t>
                 <t t-if="props.has_activities and activities.length and !state.isSearchOpen">
                     <t t-call="mail.ActivityList"/>
                 </t>
@@ -126,6 +129,25 @@
                 <Thread t-if="!state.isSearchOpen" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
             </t>
         </div>
+    </div>
+</t>
+
+<t t-name="mail.ScheduledMessagesList">
+    <div class="o-mail-ScheduledMessagesList">
+        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="toggleScheduledMessages">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Scheduled Messages
+                <span t-if="!state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="scheduledMessages.length"/></span>
+            </div>
+            <hr class="flex-grow-1 fe-3"/>
+        </div>
+        <t t-if="state.showScheduledMessages">
+            <t t-foreach="scheduledMessages" t-as="message" t-key="message.id">
+                <ScheduledMessage message="message" />
+            </t>
+        </t>
     </div>
 </t>
 

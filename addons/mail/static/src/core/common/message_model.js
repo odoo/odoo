@@ -389,6 +389,25 @@ export class Message extends Record {
         }
     }
 
+    async editFullComposer() {
+        return new Promise((resolve) =>
+            this.store.env.services.action.doAction("mail.action_email_edit_message_wizard", {
+                additionalContext: {
+                    default_partner_ids: this.recipients.map((persona) => persona.id),
+                    default_subject: this.subject,
+                    default_body: this.body,
+                    default_attachment_ids: this.attachments.map((attachment) => attachment.id),
+                    default_subtype_xmlid: this.is_note ? "mail.mt_note" : "mail.mt_comment",
+                    default_scheduled_date: this.scheduledDatetime
+                        .toUTC()
+                        .toFormat("yyyy-MM-dd HH:mm:ss"),
+                    mail_message_to_edit: this.id,
+                },
+                onClose: resolve,
+            })
+        );
+    }
+
     async react(content) {
         await rpc(
             "/mail/message/reaction",

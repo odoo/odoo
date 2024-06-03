@@ -176,7 +176,7 @@ class MailComposer(models.TransientModel):
     mail_server_id = fields.Many2one(
         'ir.mail_server', string='Outgoing mail server',
         compute='_compute_mail_server_id', readonly=False, store=True, compute_sudo=False)
-    scheduled_date = fields.Char(
+    scheduled_date = fields.Datetime(
         'Scheduled Date',
         compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False,
         help="In comment mode: if set, postpone notifications sending. "
@@ -683,6 +683,7 @@ class MailComposer(models.TransientModel):
                 mail_create_nosubscribe=True,
             )
 
+        print(post_values_all)
         messages = self.env['mail.message']
         for res_id, post_values in post_values_all.items():
             if ActiveModel._name == 'mail.thread':
@@ -789,6 +790,38 @@ class MailComposer(models.TransientModel):
         self.ensure_one()
         self.subject = self.env.context.get('mail_composer_saved_subject')
         return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
+
+    def open_scheduled_date_wizard(self):
+        """ hit schedule send: opens a wizard that prompts for the scheduled date. """
+
+        self.ensure_one()
+        self.scheduled_date = self.scheduled_date or datetime.datetime.now() + datetime.timedelta(hours=1)
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('mail.mail_compose_message_view_form_scheduled_date').id,
+            'name': _('Schedule Send'),
+            'res_model': 'mail.compose.message',
+            'context': {'dialog_size': 'medium'},
+            'target': 'new',
+            'res_id': self.id,
+        }
+
+    def cancel_scheduled_date(self):
+        """ resetting to default scheduled date on cancel. """
+        self._compute_scheduled_date()
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
+
+    def action_save_edit(self):
+        message_id = self.env.context.get('mail_message_to_edit')
+        message = self.env['mail.message'].browse([message_id])
+        message.write({
+            'partner_ids': self.partner_ids,
+            'subject': self.subject,
+            'body': self.body,
+            'attachment_ids': self.attachment_ids,
+        })
+        self.env['mail.message.schedule'].search([('mail_message_id', '=', message_id)])._update_message_scheduled_datetime(message, self.scheduled_date)
 
     # ------------------------------------------------------------
     # RENDERING / VALUES GENERATION

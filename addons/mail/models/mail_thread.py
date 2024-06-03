@@ -3111,11 +3111,12 @@ class MailThread(models.AbstractModel):
 
         msg_vals = msg_vals if msg_vals else {}
         recipients_data = self._notify_get_recipients(message, msg_vals, **kwargs)
-        if not recipients_data:
+        scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
+        # if scheduled for later: skip checking recipients
+        if not scheduled_date and not recipients_data:
             return recipients_data
 
         # if scheduled for later: add in queue instead of generating notifications
-        scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
             # send the message notifications at the scheduled date
             self.env['mail.message.schedule'].sudo().create({

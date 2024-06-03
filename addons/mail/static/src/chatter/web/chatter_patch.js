@@ -22,6 +22,7 @@ import { patch } from "@web/core/utils/patch";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { ScheduledMessage } from "@mail/core/web/scheduled_message";
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -33,6 +34,7 @@ Object.assign(Chatter.components, {
     FollowerList,
     SearchMessagesPanel,
     SuggestedRecipientsList,
+    ScheduledMessage,
 });
 
 Chatter.props.push(
@@ -76,6 +78,7 @@ patch(Chatter.prototype, {
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             isSearchOpen: false,
             showActivities: true,
+            showScheduledMessages: true,
             showAttachmentLoading: false,
         });
         this.attachmentUploader = useAttachmentUploader(
@@ -151,6 +154,16 @@ patch(Chatter.prototype, {
      */
     get activities() {
         return this.state.thread?.activities ?? [];
+    },
+
+    get scheduledMessages() {
+        return (
+            this.state.thread?.messages.filter(
+                (message) =>
+                    message.author.id == this.store.self.id &&
+                    message.scheduledDatetime > new Date()
+            ) ?? []
+        );
     },
 
     get afterPostRequestList() {
@@ -348,6 +361,10 @@ patch(Chatter.prototype, {
 
     toggleActivities() {
         this.state.showActivities = !this.state.showActivities;
+    },
+
+    toggleScheduledMessages() {
+        this.state.showScheduledMessages = !this.state.showScheduledMessages;
     },
 
     toggleComposer(mode = false) {

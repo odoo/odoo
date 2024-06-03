@@ -549,7 +549,9 @@ export class Thread extends Record {
     });
 
     get nonEmptyMessages() {
-        return this.messages.filter((message) => !message.isEmpty);
+        return this.messages.filter(
+            (message) => !message.isEmpty && message.scheduledDatetime < new Date()
+        );
     }
 
     get persistentMessages() {

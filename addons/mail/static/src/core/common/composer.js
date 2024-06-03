@@ -521,7 +521,7 @@ export class Composer extends Component {
                     args.length === 0 &&
                     document
                         .querySelector(".o_mail_composer_form_view .note-editable")
-                        .innerText.replace(/^\s*$/gm, "")
+                        ?.innerText.replace(/^\s*$/gm, "")
                 ) {
                     this.saveContent();
                     this.restoreContent();

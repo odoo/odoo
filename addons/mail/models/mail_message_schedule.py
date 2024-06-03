@@ -78,7 +78,10 @@ class MailMessageSchedule(models.Model):
                     notify_kwargs.update(schedule_notify_kwargs)
 
                 record._notify_thread(schedule.mail_message_id, msg_vals=False, **notify_kwargs)
-
+        message_copy = self.mail_message_id.copy()
+        message_copy.create_date = datetime.now()
+        message_copy.date = datetime.now()
+        self.mail_message_id.unlink()
         self.unlink()
         return True
 
