@@ -175,6 +175,8 @@ class Users(models.Model):
         for model_id in records_by_state_by_model:
             model_dic = records_by_state_by_model[model_id]
             model = self.env["ir.model"].sudo().browse(model_id).with_prefetch(tuple(records_by_state_by_model.keys()))
+            if not self.env[model.model].check_access_rights('read', raise_exception=False):
+                continue
             allowed_records = self.env[model.model].search([("id", "in", tuple(model_dic["all"]))])
             if not allowed_records:
                 continue
