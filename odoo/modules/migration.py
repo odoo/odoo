@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ Modules migration handling. """
-
-from collections import defaultdict
 import glob
 import importlib.util
+import inspect
+import itertools
 import logging
 import os
 import re
+from collections import defaultdict
 from os.path import join as opj
 
 import odoo.release as release
@@ -226,18 +227,34 @@ class MigrationManager(object):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
-                    mod = None
                     try:
                         mod = load_script(pyfile, name)
-                        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
-                        migrate = mod.migrate
-                    except ImportError:
-                        _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
-                        raise
-                    except AttributeError:
-                        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                    else:
-                        migrate(self.cr, installed_version)
-                    finally:
-                        if mod:
-                            del mod
+                    except ImportError as e:
+                        raise ImportError('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile)) from e
+
+                    if not hasattr(mod, 'migrate'):
+                        raise AttributeError(
+                            'module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function, not found in %(file)s' % dict(
+                                strfmt,
+                                file=pyfile,
+                            ))
+
+                    try:
+                        sig = inspect.signature(mod.migrate)
+                    except TypeError as e:
+                        raise TypeError("module %(addon)s: `migrate` needs to be a function, got %(migrate)r" % dict(strfmt, migrate=mod.migrate)) from e
+
+                    if not (
+                            tuple(sig.parameters.keys()) in VALID_MIGRATE_PARAMS
+                        and all(p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD) for p in sig.parameters.values())
+                    ):
+                        raise TypeError("module %(addon)s: `migrate`'s signature should be `(cr, version)`, %(func)s is %(sig)s" % dict(strfmt, func=mod.migrate, sig=sig))
+
+                    _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))  # noqa: G002
+                    mod.migrate(self.cr, installed_version)
+
+
+VALID_MIGRATE_PARAMS = list(itertools.product(
+    ['cr', '_cr'],
+    ['version', '_version'],
+))
