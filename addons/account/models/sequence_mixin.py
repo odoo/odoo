@@ -24,6 +24,7 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
+    # `(19|20|21)` is for catching 19 20 and 21 century prefixes
     _sequence_year_range_regex = r'^(?:(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D)(?P<year_end>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix3>\D+?))?(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
@@ -56,14 +57,14 @@ class SequenceMixin(models.AbstractModel):
         if reset == 'month':
             return date_utils.get_month(ref_date)
         if reset == 'never':
-            return (date(1, 1, 1), date(9999, 1, 1))
+            return (date(1, 1, 1), date(9999, 12, 31))
         raise NotImplementedError(reset)
 
     def _must_check_constrains_date_sequence(self):
         return True
 
-    def _year_match(self, format_value, date):
-        return format_value == self._truncate_year_to_length(date.year, len(str(format_value)))
+    def _year_match(self, format_value, year):
+        return format_value == self._truncate_year_to_length(year, len(str(format_value)))
 
     def _truncate_year_to_length(self, year, length):
         return year % (10 ** length)
@@ -78,10 +79,10 @@ class SequenceMixin(models.AbstractModel):
 
         format_values = self._get_sequence_format_param(sequence)[1]
         sequence_number_reset = self._deduce_sequence_number_reset(sequence)
-        year_start, year_end = self._get_sequence_date_range(sequence_number_reset)
+        date_start, date_end = self._get_sequence_date_range(sequence_number_reset)
         year_match = (
-            (not format_values["year"] or self._year_match(format_values["year"], year_start))
-            and (not format_values["year_end"] or self._year_match(format_values["year_end"], year_end))
+            (not format_values["year"] or self._year_match(format_values["year"], date_start.year))
+            and (not format_values["year_end"] or self._year_match(format_values["year_end"], date_end.year))
         )
         month_match = not format_values['month'] or format_values['month'] == date.month
         return year_match and month_match
@@ -303,7 +304,7 @@ class SequenceMixin(models.AbstractModel):
             format_values['seq'] = 0
             format_values['year'] = self._truncate_year_to_length(date_start.year, format_values['year_length'])
             format_values['year_end'] = self._truncate_year_to_length(date_end.year, format_values['year_end_length'])
-            format_values['month'] = date_start.month
+            format_values['month'] = self[self._sequence_date_field].month
 
         # before flushing inside the savepoint (which may be rolled back!), make sure everything
         # is already flushed, otherwise we could lose non-sequence fields values, as the ORM believes
