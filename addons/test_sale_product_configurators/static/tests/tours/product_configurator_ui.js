@@ -37,13 +37,13 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: "click",
 }, {
-    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) label:contains("Steel")',
+    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) label:contains("Steel")',
     run: "click",
 }, {
-    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) label:contains("Aluminium")',
+    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) label:contains("Aluminium")',
     run: "click",
 }, {
-    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) td[name="price"] h5:contains("800.40")',
+    trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) td[name="price"] span:contains("800.40")',
 }, {
     trigger: 'label[style="background-color:#000000"] input',
     run: "click",
@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
 {
     trigger: '.btn-primary:not(:disabled):contains("Confirm")',
 }, {
-    trigger: 'span:contains("Aluminium"):eq(1)',
+    trigger: '.o_sale_product_configurator_table_optional span:contains("Aluminium")',
     run: "click",
 },
     configuratorTourUtils.addOptionalProduct("Conference Chair"),

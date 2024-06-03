@@ -1,3 +1,15 @@
+.o_sale_product_configurator_table {
+    div[name="ptal"] > div {
+        @include media-breakpoint-up(lg) {
+            align-items: center;
+        }
+
+        &:has(.form-check) {
+            align-items: flex-start;
+        }
+    }
+}
+
 .o_sale_product_configurator_ptav_color {
     border: 5px solid $border-color;
     transition: $input-transition;

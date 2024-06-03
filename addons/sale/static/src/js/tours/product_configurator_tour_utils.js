@@ -6,7 +6,7 @@ function productSelector(productName) {
     return `
         table.o_sale_product_configurator_table
         tr:has(td>div[name="o_sale_product_configurator_name"]
-        h5:contains("${productName}"))
+        span:contains("${productName}"))
     `;
 }
 
@@ -14,7 +14,7 @@ function optionalProductSelector(productName) {
     return `
         table.o_sale_product_configurator_table_optional
         tr:has(td>div[name="o_sale_product_configurator_name"]
-        h5:contains("${productName}"))
+        span:contains("${productName}"))
     `;
 }
 
@@ -153,7 +153,7 @@ function assertProductPrice(productName, price) {
         trigger: `
             ${productSelector(productName)}
             td.o_sale_product_configurator_price
-            h5:contains("${price}")
+            span:contains("${price}")
         `,
     };
 }
@@ -164,7 +164,7 @@ function assertOptionalProductPrice(productName, price) {
         trigger: `
             ${optionalProductSelector(productName)}
             td.o_sale_product_configurator_qty
-            h5:contains("${price}")
+            span:contains("${price}")
         `,
     };
 }
