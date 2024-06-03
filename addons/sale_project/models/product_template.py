@@ -56,11 +56,13 @@ class ProductTemplate(models.Model):
             return _("Create a task in an existing project to track the time spent.")
         elif self.service_tracking == 'project_only':
             return _(
-                "Create a project for the order with a task for each sales order line to track the"
-                " time spent."
+                "Create an empty project for the order to track the time spent."
             )
         elif self.service_tracking == 'task_in_project':
-            return _("Create an empty project for the order to track the time spent.")
+            return _(
+                "Create a project for the order with a task for each sales order line "
+                "to track the time spent."
+            )
         elif self.service_tracking == 'no':
             return _(
                 "Create projects or tasks later, and link them to order to track the time spent."
