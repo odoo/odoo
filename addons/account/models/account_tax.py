@@ -959,6 +959,7 @@ class AccountTax(models.Model):
                     'id': tax.id,
                     'name': partner and tax.with_context(lang=partner.lang).name or tax.name,
                     'amount': sign * line_amount,
+                    'amount_type': tax.amount_type,
                     'base': float_round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,
                     'account_id': repartition_line._get_aml_target_tax_account(force_caba_exigibility=include_caba_tags).id,
@@ -1230,6 +1231,7 @@ class AccountTax(models.Model):
                     tax_details['records'].add(record)
             tax_details['tax_amount_currency'] += tax_values['tax_amount_currency']
             tax_details['tax_amount'] += tax_values['tax_amount']
+            tax_details['tax_group_amount_type'] = tax_values['amount_type']
             tax_details['group_tax_details'].append(tax_values)
 
         if self.env.company.tax_calculation_rounding_method == 'round_globally' and distribute_total_on_line:
@@ -1490,6 +1492,7 @@ class AccountTax(models.Model):
         for tax_detail in global_tax_details['tax_details'].values():
             tax_group_vals = {
                 'tax_group': tax_detail['tax_group'],
+                'tax_group_amount_type': tax_detail['tax_group_amount_type'],
                 'base_amount': tax_detail['base_amount_currency'],
                 'tax_amount': tax_detail['tax_amount_currency'],
             }
@@ -1534,6 +1537,7 @@ class AccountTax(models.Model):
                 'tax_group_name': tax_group.name,
                 'tax_group_amount': tax_group_vals['tax_amount'],
                 'tax_group_base_amount': tax_group_vals['base_amount'],
+                'tax_group_amount_type': tax_group_vals['tax_group_amount_type'],
                 'formatted_tax_group_amount': formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_group_vals['base_amount'], currency_obj=currency),
             })

@@ -482,6 +482,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                         {
                             'tax_group_amount': 90,
                             'tax_group_base_amount': 900,
+                            'tax_group_amount_type': 'percent',
                         },
                     ],
                 },
@@ -667,6 +668,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                         {
                             'tax_group_amount': 20.58,
                             'tax_group_base_amount': 98,
+                            'tax_group_amount_type': 'percent',
                         },
                     ],
                 },
