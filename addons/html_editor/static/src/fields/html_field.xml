@@ -1,12 +1,15 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.HtmlField">
-        <t t-if="props.readonly">
-            <div  t-ref="readonlyElement" class="o_readonly" t-out="props.record.data[this.props.name]" />
+        <t t-if="this.displayReadonly">
+            <HtmlViewer
+                value="props.record.data[props.name]"
+                cssAssetId="props.cssReadonlyAssetId"
+                hasFullHtml="sandboxedPreview"/>
         </t>
         <t t-else="">
             <Wysiwyg
                 config="this.getConfig()"
-                onLoad.bind="onLoad"
+                onLoad.bind="onEditorLoad"
                 contentClass="'note-editable p-1'"
                 onBlur.bind="onBlur"
                 t-key="wysiwygKey"/>

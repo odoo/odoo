@@ -6,27 +6,55 @@ import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { HtmlViewer } from "./html_viewer";
+
+/**
+ * Check whether the current value contains nodes that would break
+ * on insertion inside an existing body.
+ *
+ * @returns {boolean} true if 'this.props.value' contains a node
+ * that can only exist once per document.
+ */
+function computeContainsComplexHTML(value) {
+    const domParser = new DOMParser();
+    if (!value) {
+        return false;
+    }
+    const parsedOriginal = domParser.parseFromString(value, "text/html");
+    return !!parsedOriginal.head.innerHTML.trim();
+}
 
 export class HtmlField extends Component {
     static template = "html_editor.HtmlField";
     static props = {
         ...standardFieldProps,
         isCollaborative: { type: Boolean, optional: true },
+        cssReadonlyAssetId: { type: String, optional: true },
+        sandboxedPreview: { type: Boolean, optional: true },
     };
     static components = {
         Wysiwyg,
+        HtmlViewer,
     };
 
     setup() {
         const { model } = this.props.record;
-        useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges());
-        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
-            detail.proms.push(this.commitChanges())
-        );
+        const commitChanges = () => {
+            if (this.isDirty) {
+                return this.updateValue();
+            }
+        };
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges());
+        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => detail.proms.push(commitChanges()));
         this.busService = this.env.services.bus_service;
 
         this.isDirty = false;
-        this.state = useState({ key: 0 });
+        this.state = useState({
+            key: 0,
+            containsComplexHTML: computeContainsComplexHTML(
+                this.props.record.data[this.props.name]
+            ),
+        });
         this.lastValue = this.props.record.data[this.props.name].toString();
         useRecordObserver((record) => {
             // Reset Wysiwyg when we discard
@@ -36,12 +64,24 @@ export class HtmlField extends Component {
                 this.lastValue !== record.data[this.props.name].toString()
             ) {
                 this.state.key++;
+                this.state.containsComplexHTML = computeContainsComplexHTML(
+                    this.props.record.data[this.props.name]
+                );
             }
         });
     }
 
+    get displayReadonly() {
+        return this.props.readonly || this.sandboxedPreview;
+    }
+
     get wysiwygKey() {
         return `${this.props.record.resId}_${this.state.key}`;
+    }
+
+    get sandboxedPreview() {
+        // @todo @phoenix maybe remove containsComplexHTML and alway use sandboxedPreview options
+        return this.props.sandboxedPreview || this.state.containsComplexHTML;
     }
 
     async updateValue() {
@@ -51,23 +91,17 @@ export class HtmlField extends Component {
         this.isDirty = false;
     }
 
-    async commitChanges() {
-        if (this.isDirty) {
-            await this.updateValue();
-        }
-    }
-
-    async onBlur() {
-        await this.updateValue();
-    }
-
-    onLoad(editor) {
+    onEditorLoad(editor) {
         this.editor = editor;
     }
 
     onChange() {
         this.isDirty = true;
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
+    }
+
+    onBlur() {
+        return this.updateValue();
     }
 
     getConfig() {
@@ -89,6 +123,7 @@ export class HtmlField extends Component {
         };
         return config;
     }
+
     generateId() {
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
@@ -102,6 +137,8 @@ export const htmlField = {
     extractProps({ attrs, options }, dynamicInfo) {
         return {
             isCollaborative: options.collaborative,
+            sandboxedPreview: Boolean(options.sandboxedPreview),
+            cssReadonlyAssetId: options.cssReadonly,
         };
     },
 };
