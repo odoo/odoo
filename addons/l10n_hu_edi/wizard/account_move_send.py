@@ -55,7 +55,7 @@ class AccountMoveSend(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _need_invoice_document(self, invoice):
+    def _need_invoice_document(self, invoice, invoice_data):
         # EXTENDS 'account'
         # If the send & print triggers the NAV 3.0 flow, we want to re-generate the PDF.
         if invoice.country_code != 'HU':

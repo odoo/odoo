@@ -4392,6 +4392,14 @@ class AccountMove(models.Model):
             move._find_and_set_purchase_orders(references, move.partner_id.id, move.amount_total, timeout=timeout)
         return self
 
+    def _can_regenerate_pdf(self):
+        return self.invoice_pdf_report_id and self.show_reset_to_draft_button
+
+    def _need_pdf_report(self, allow_regenerate=False):
+        self.ensure_one()
+        can_regenerate = allow_regenerate and self._can_regenerate_pdf()
+        return self.state == 'posted' and (not self.invoice_pdf_report_id or can_regenerate)
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------
