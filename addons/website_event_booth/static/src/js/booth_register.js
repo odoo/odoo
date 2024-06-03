@@ -40,12 +40,12 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             event_booth_ids: eventBoothIds,
         }).then(function (result) {
             if (result.unavailable_booths.length) {
-                self.el.querySelectorAll('input[name="event_booth_ids"]').forEach(function (el) {
+                self.$('input[name="event_booth_ids"]').each(function (i, el) {
                     if (result.unavailable_booths.includes(parseInt(el.value))) {
-                        el.closest('.form-check').classList.add('text-danger');
+                        $(el).closest('.form-check').addClass('text-danger');
                     }
                 });
-                self.el.querySelector('.o_wbooth_unavailable_booth_alert').classList.remove('d-none');
+                self.$('.o_wbooth_unavailable_booth_alert').removeClass('d-none');
                 return Promise.resolve(false);
             }
             return Promise.resolve(true);
@@ -53,7 +53,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 
     _countSelectedBooths() {
-        return this.el.querySelectorAll('.form-check > input[type="checkbox"]:checked').length;
+        return this.$('.form-check > input[type="checkbox"]:checked').length;
     },
 
     _fillBooths() {
@@ -70,16 +70,17 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
      * Check if the confirmation form is valid by testing each of its inputs
      *
      * @private
-     * @param form
+     * @param $form
      * @return {boolean} - true if no errors else false
      */
-    _isConfirmationFormValid(form) {
+    _isConfirmationFormValid($form) {
         const formErrors = [];
 
-        form.querySelectorAll('.form-control').forEach(function (input) {
-            input.classList.remove('is-invalid');
-            if (input.length && !input.checkValidity()) {
-                input.classList.add('is-invalid');
+        $form.find('.form-control').each(function () {
+            let input = $(this);
+            input.removeClass('is-invalid');
+            if (input.length && !input[0].checkValidity()) {
+                input.addClass('is-invalid');
                 formErrors.push('invalidFormInputs');
             }
         });
@@ -89,8 +90,8 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 
     _showBoothCategoryDescription() {
-        this.el.querySelectorAll('.o_wbooth_booth_description').forEach(el => el.classList.add('d-none'));
-        this.el.querySelector('#o_wbooth_booth_description_' + this.activeBoothCategoryId).classList.remove('d-none');
+        this.$('.o_wbooth_booth_description').addClass('d-none');
+        this.$('#o_wbooth_booth_description_' + this.activeBoothCategoryId).removeClass('d-none');
     },
 
     /**
@@ -101,10 +102,10 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
      * @param errors
      */
     _updateErrorDisplay(errors) {
-        this.el.querySelector('.o_wbooth_registration_error_section').classList.toggle('d-none', !errors.length);
+        this.$('.o_wbooth_registration_error_section').toggleClass('d-none', !errors.length);
 
         let errorMessages = [];
-        let errorMessage = this.el.querySelector('.o_wbooth_registration_error_message');
+        let $errorMessage = this.$('.o_wbooth_registration_error_message');
 
         if (errors.includes('invalidFormInputs')) {
             errorMessages.push(_t("Please fill out the form correctly."));
@@ -118,8 +119,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             errorMessages.push(_t("The booth category doesn't exist."));
         }
 
-        errorMessage.textContent = errorMessages.join(' ');
-        errorMessage.dispatchEvent(new Event('change'));
+        $errorMessage.text(errorMessages.join(' ')).change();
     },
 
     _updateUiAfterBoothCategoryChange() {
@@ -129,8 +129,8 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     },
 
     _updateUiAfterBoothChange(boothCount) {
-        let button = this.el.querySelector('button.o_wbooth_registration_submit');
-        button.disabled = !boothCount;
+        let $button = this.$('button.o_wbooth_registration_submit');
+        $button.attr('disabled', !boothCount);
     },
 
     //--------------------------------------------------------------------------
@@ -138,7 +138,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     _onChangeBooth(ev) {
-        ev.currentTarget.closest('.form-check').classList.remove('text-danger');
+        $(ev.currentTarget).closest('.form-check').removeClass('text-danger');
         this._updateUiAfterBoothChange(this._countSelectedBooths());
     },
 
@@ -174,12 +174,12 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
 
     async _onSubmitBoothSelectionClick(ev) {
         ev.preventDefault();
-        let form = this.el.querySelector('.o_wbooth_registration_form');
-        let event_booth_ids = Array.from(this.el.querySelectorAll('input[name=event_booth_ids]:checked')).map(function (el) {
-            return parseInt(el.value);
-        });
+        let $form = this.$('.o_wbooth_registration_form');
+        let event_booth_ids = this.$('input[name=event_booth_ids]:checked').map(function () {
+            return parseInt($(this).val());
+        }).get();
         if (await this._check_booths_availability(event_booth_ids)) {
-            form.submit();
+            $form.submit();
         }
     },
 
@@ -196,22 +196,24 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
 
-        ev.currentTarget.classList.add('disabled');
-        ev.currentTarget.disabled = true;
+        $(ev.currentTarget).addClass('disabled').attr('disabled', 'disabled');
 
-        const form = this.el.querySelector('#o_wbooth_contact_details_form');
-        if (this._isConfirmationFormValid(form)) {
-            const formData = new FormData(form);
-            const response = await fetch(`/event/${encodeURIComponent(this.el.dataset.eventId)}/booth/confirm`, {
-                method: 'POST',
-                body: formData,
+        const $form = this.$('#o_wbooth_contact_details_form');
+        if (this._isConfirmationFormValid($form)) {
+            const formData = new FormData($form[0]);
+            const response = await $.ajax({
+                url: `/event/${encodeURIComponent(this.$el.data('eventId'))}/booth/confirm`,
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: 'POST',
             });
 
-            const jsonResponse = await response.json();
+            const jsonResponse = response && JSON.parse(response);
             if (jsonResponse.success) {
                 this.el.querySelector('.o_wevent_booth_order_progress').remove();
                 const boothCategoryId = this.el.querySelector('input[name=booth_category_id]').value;
-                form.replaceWith(renderToElement('event_booth_registration_complete', {
+                $form.replaceWith(renderToElement('event_booth_registration_complete', {
                     'booth_category_id': boothCategoryId,
                     'event_id': this.eventId,
                     'event_name': jsonResponse.event_name,
@@ -224,8 +226,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
             }
         }
 
-        ev.currentTarget.classList.remove('disabled');
-        ev.currentTarget.disabled = false;
+        $(ev.currentTarget).removeClass('disabled').removeAttr('disabled');
     },
 
 });

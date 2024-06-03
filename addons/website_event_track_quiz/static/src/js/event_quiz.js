@@ -100,12 +100,8 @@ var Quiz = publicWidget.Widget.extend({
      * Decorate the answers according to state
      */
     _disableAnswers: function () {
-        this.querySelectorAll('.o_quiz_js_quiz_question').forEach(function(question) {
-            question.classList.add('completed-disabled');
-        });
-        this.querySelectorAll('input[type=radio]').forEach(function(input) {
-            input.disabled = true;
-        });
+        this.$('.o_quiz_js_quiz_question').addClass('completed-disabled');
+        this.$('input[type=radio]').prop('disabled', true);
     },
 
     /**
@@ -113,12 +109,8 @@ var Quiz = publicWidget.Widget.extend({
      * Decorate the answers according to state
      */
     _enableAnswers: function() {
-        this.querySelectorAll('.o_quiz_js_quiz_question').forEach(function(question) {
-            question.classList.remove('completed-disabled');
-        });
-        this.querySelectorAll('input[type=radio]').forEach(function(input) {
-            input.disabled = false;
-        });
+        this.$('.o_quiz_js_quiz_question').removeClass('completed-disabled');
+        this.$('input[type=radio]').prop('disabled', false);
     },
 
     /**
@@ -127,9 +119,9 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _getQuestionsIds: function () {
-        return Array.from(this.querySelectorAll('.o_quiz_js_quiz_question')).map(function(question) {
-            return question.dataset.questionId;
-        });
+        return this.$('.o_quiz_js_quiz_question').map(function () {
+            return $(this).data('question-id');
+        }).get();
     },
 
     /**
@@ -138,9 +130,9 @@ var Quiz = publicWidget.Widget.extend({
      * @private
      */
     _getQuizAnswers: function () {
-        return Array.from(this.querySelectorAll('input[type=radio]:checked')).map(function(input) {
-            return parseInt(input.value);
-        });
+        return this.$('input[type=radio]:checked').map(function (index, element) {
+            return parseInt($(element).val());
+        }).get();
     },
 
     /**
@@ -151,29 +143,29 @@ var Quiz = publicWidget.Widget.extend({
      */
     _renderAnswersHighlightingAndComments: function () {
         var self = this;
-        this.el.querySelectorAll('.o_quiz_js_quiz_question').forEach(function () {
-            var question = this;
-            var questionId = question.dataset.questionId;
+        this.$('.o_quiz_js_quiz_question').each(function () {
+            var $question = $(this);
+            var questionId = $question.data('questionId');
             var answer = self.quiz.answers[questionId];
-            question.querySelectorAll('a.o_quiz_quiz_answer').forEach(function () {
-                var answer = this;
-                answer.querySelector('i.fa').classList.add('d-none');
-                if (answer.querySelector('input[type=radio]').classList.contains('checked')) {
+            $question.find('a.o_quiz_quiz_answer').each(function () {
+                var $answer = $(this);
+                $answer.find('i.fa').addClass('d-none');
+                if ($answer.find('input[type=radio]').is(':checked')) {
                     if (answer.is_correct) {
-                        answer.querySelector('i.fa-check-circle').classList.remove('d-none');
+                        $answer.find('i.fa-check-circle').removeClass('d-none');
                     } else {
-                        answer.querySelector('label input').checked = false;
-                        answer.querySelector('i.fa-times-circle').classList.remove('d-none');
+                        $answer.find('label input').prop('checked', false);
+                        $answer.find('i.fa-times-circle').removeClass('d-none');
                     }
                     if (answer.awarded_points > 0) {
-                        answer.insertAdjacentHTML('beforeend', renderToElement('quiz.badge', {'answer': answer}));
+                        $answer.append(renderToElement('quiz.badge', {'answer': answer}));
                     }
                 } else {
-                    answer.querySelector('i.fa-circle').classList.remove('d-none');
+                    $answer.find('i.fa-circle').removeClass('d-none');
                 }
             });
-            var list = question.querySelector('.list-group');
-            list.insertAdjacentHTML('beforeend', renderToElement('quiz.comment', {'answer': answer}));
+            var $list = $question.find('.list-group');
+            $list.append(renderToElement('quiz.comment', {'answer': answer}));
         });
     },
 
@@ -182,29 +174,27 @@ var Quiz = publicWidget.Widget.extend({
         * Update validation box (karma, buttons) according to widget state
         */
     _renderValidationInfo: function () {
-        var validationElem = this.el.querySelector('.o_quiz_js_quiz_validation');
-        validationElem.innerHTML = '';
-        validationElem.insertAdjacentHTML('beforeend', renderToElement('quiz.validation', {'widget': this}));
+        var $validationElem = this.$('.o_quiz_js_quiz_validation');
+        $validationElem.empty().append(
+            renderToElement('quiz.validation', {'widget': this})
+        );
     },
 
     /**
      * Remove the answer decorators
      */
-    _resetQuiz: function () {
-        this.querySelectorAll('.o_quiz_js_quiz_question').forEach(function (question) {
-            question.querySelectorAll('a.o_quiz_quiz_answer').forEach(function (answer) {
-                answer.querySelector('i.fa').classList.add('d-none');
-                answer.querySelector('i.fa-circle').classList.remove('d-none');
-                const badge = answer.querySelector('span.badge');
-                if (badge) {
-                    badge.parentNode.removeChild(badge);
-                }
-                answer.querySelector('input[type=radio]').checked = false;
+     _resetQuiz: function () {
+        this.$('.o_quiz_js_quiz_question').each(function () {
+            var $question = $(this);
+            $question.find('a.o_quiz_quiz_answer').each(function () {
+                var $answer = $(this);
+                $answer.find('i.fa').addClass('d-none');
+                $answer.find('i.fa-circle').removeClass('d-none');
+                $answer.find('span.badge').remove();
+                $answer.find('input[type=radio]').prop('checked', false);
             });
-            const info = question.querySelector('.o_quiz_quiz_answer_info');
-            if (info) {
-                info.parentNode.removeChild(info);
-            }
+            var $info = $question.find('.o_quiz_quiz_answer_info');
+            $info.remove();
         });
         this.track.completed = false;
         this._enableAnswers();
@@ -255,7 +245,7 @@ var Quiz = publicWidget.Widget.extend({
     _onAnswerClick: function (ev) {
         ev.preventDefault();
         if (!this.track.completed) {
-            ev.currentTarget.querySelector('input[type=radio]').checked = true;
+            $(ev.currentTarget).find('input[type=radio]').prop('checked', true);
         }
     },
 
@@ -289,8 +279,8 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
         var self = this;
         this.quizWidgets = [];
         var defs = [this._super.apply(this, arguments)];
-        this.querySelectorAll('.o_quiz_js_quiz').forEach(function (quiz) {
-            var data = quiz.dataset;
+        this.$('.o_quiz_js_quiz').each(function () {
+            var data = $(this).data();
             data.quizData = {
                 questions: self._extractQuestionsAndAnswers(),
                 sessionAnswers: data.sessionAnswers || [],
@@ -300,7 +290,7 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
                 quizPointsGained: data.quizPointsGained,
                 quizAttemptsCount: data.quizAttemptsCount,
             };
-            defs.push(new Quiz(self, data, data.quizData).attachTo(quiz));
+            defs.push(new Quiz(self, data, data.quizData).attachTo($(this)));
         });
         return Promise.all(defs);
     },
@@ -318,17 +308,19 @@ publicWidget.registry.Quiz = publicWidget.Widget.extend({
      */
     _extractQuestionsAndAnswers: function () {
         var questions = [];
-        this.querySelectorAll('.o_quiz_js_quiz_question').forEach(function (question) {
+        this.$('.o_quiz_js_quiz_question').each(function () {
+            var $question = $(this);
             var answers = [];
-            question.querySelectorAll('.o_quiz_quiz_answer').forEach(function (answer) {
+            $question.find('.o_quiz_quiz_answer').each(function () {
+                var $answer = $(this);
                 answers.push({
-                    id: answer.dataset.answerId,
-                    text: answer.dataset.text,
+                    id: $answer.data('answerId'),
+                    text: $answer.data('text'),
                 });
             });
             questions.push({
-                id: question.dataset.questionId,
-                title: question.dataset.title,
+                id: $question.data('questionId'),
+                title: $question.data('title'),
                 answer_ids: answers,
             });
         });

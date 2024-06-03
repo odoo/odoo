@@ -11,29 +11,29 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        let self = this;
+        var self = this;
         this.isUser = false;
-        let jsFollowEls = this.el.querySelectorAll('.js_follow');
+        var $jsFollowEls = this.$el.find('.js_follow');
 
-        let always = function (data) {
+        var always = function (data) {
             self.isUser = data[0].is_user;
-            const jsFollowToEnable = Array.from(jsFollowEls).filter(function (el) {
-                const model = el.dataset.object;
-                return model in data[1] && data[1][model].includes(parseInt(el.dataset.id));
+            const $jsFollowToEnable = $jsFollowEls.filter(function () {
+                const model = this.dataset.object;
+                return model in data[1] && data[1][model].includes(parseInt(this.dataset.id));
             });
-            self._toggleSubscription(true, data[0].email, jsFollowToEnable);
-            self._toggleSubscription(false, data[0].email, Array.from(jsFollowEls).filter(el => !jsFollowToEnable.includes(el)));
-            jsFollowEls.forEach(el => el.classList.remove('d-none'));
+            self._toggleSubscription(true, data[0].email, $jsFollowToEnable);
+            self._toggleSubscription(false, data[0].email, $jsFollowEls.not($jsFollowToEnable));
+            $jsFollowEls.removeClass('d-none');
         };
 
         const records = {};
-        jsFollowEls.forEach(el => {
+        for (const el of $jsFollowEls) {
             const model = el.dataset.object;
             if (!(model in records)) {
                 records[model] = [];
             }
             records[model].push(parseInt(el.dataset.id));
-        });
+        }
 
         rpc('/website_mail/is_follower', {
             records: records,
@@ -41,12 +41,10 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
 
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {
-            document.querySelectorAll('.js_follow > .d-none').forEach(el => el.classList.remove('d-none'));
-            this.el.querySelectorAll('.js_follow_btn, .js_unfollow_btn').forEach(el => {
-                el.addEventListener('click', function (event) {
-                    event.preventDefault();
-                    self._onClick(event);
-                });
+            $('.js_follow > .d-none').removeClass('d-none');
+            this.$el.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
+                event.preventDefault();
+                self._onClick(event);
             });
         }
         return this._super.apply(this, arguments);
@@ -62,16 +60,16 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
      * @private
      * @param {boolean} follow
      * @param {string} email
-     * @param {Array} jsFollowEls
+     * @param {jQuery} $jsFollowEls
      */
-    _toggleSubscription: function (follow, email, jsFollowEls) {
+    _toggleSubscription: function (follow, email, $jsFollowEls) {
         if (follow) {
-            this._updateSubscriptionDOM(follow, email, jsFollowEls);
+            this._updateSubscriptionDOM(follow, email, $jsFollowEls);
         } else {
-            jsFollowEls.forEach(el => {
+            for (const el of $jsFollowEls) {
                 const follow = !email && el.getAttribute('data-unsubscribe');
-                this._updateSubscriptionDOM(follow, email, [el]);
-            });
+                this._updateSubscriptionDOM(follow, email, $(el));
+            }
         }
     },
     /**
@@ -81,15 +79,13 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
      * @private
      * @param {boolean} follow
      * @param {string} email
-     * @param {Array} jsFollowEls
+     * @param {jQuery} $jsFollowEls
      */
-    _updateSubscriptionDOM: function (follow, email, jsFollowEls) {
-        jsFollowEls.forEach(el => {
-            let input = el.querySelector('input.js_follow_email');
-            input.value = email || "";
-            input.disabled = email && (follow || this.isUser);
-            el.setAttribute("data-follow", follow ? 'on' : 'off');
-        });
+    _updateSubscriptionDOM: function (follow, email, $jsFollowEls) {
+        $jsFollowEls.find('input.js_follow_email')
+            .val(email || "")
+            .attr("disabled", email && (follow || this.isUser) ? "disabled" : false);
+        $jsFollowEls.attr("data-follow", follow ? 'on' : 'off');
     },
 
     //--------------------------------------------------------------------------
@@ -101,27 +97,25 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClick: function (ev) {
-        let self = this;
-        let jsFollow = ev.currentTarget.closest('.js_follow');
-        let emailInput = jsFollow.querySelector(".js_follow_email");
+        var self = this;
+        var $jsFollow = $(ev.currentTarget).closest('.js_follow');
+        var $email = $jsFollow.find(".js_follow_email");
 
-        if (emailInput && !emailInput.value.match(/.+@.+/)) {
-            jsFollow.classList.add('o_has_error');
-            jsFollow.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.add('is-invalid'));
+        if ($email.length && !$email.val().match(/.+@.+/)) {
+            $jsFollow.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             return false;
         }
-        jsFollow.classList.remove('o_has_error');
-        jsFollow.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+        $jsFollow.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
 
-        let email = emailInput ? emailInput.value : false;
+        var email = $email.length ? $email.val() : false;
         if (email || this.isUser) {
             rpc('/website_mail/follow', {
-                'id': +jsFollow.dataset.id,
-                'object': jsFollow.dataset.object,
-                'message_is_follower': jsFollow.getAttribute("data-follow") || "off",
+                'id': +$jsFollow.data('id'),
+                'object': $jsFollow.data('object'),
+                'message_is_follower': $jsFollow.attr("data-follow") || "off",
                 'email': email,
             }).then(function (follow) {
-                self._toggleSubscription(follow, email, [jsFollow]);
+                self._toggleSubscription(follow, email, $jsFollow);
             });
         }
     },

@@ -17,10 +17,9 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
      */
     start: function () {
         this._super.apply(this, arguments).then(() => {
-            const popovers = this.el.querySelectorAll('[data-bs-toggle="popover"]');
-            popovers.forEach(popover => new bootstrap.Popover(popover));
+            this.$el.find('[data-bs-toggle="popover"]').popover();
 
-            const agendas = Array.from(this.el.getElementsByClassName('o_we_online_agenda'));
+            const agendas = Array.from(this.target.getElementsByClassName('o_we_online_agenda'));
 
             if (agendas.length > 0) {
                 this._checkAgendasOverflow(agendas);
@@ -77,8 +76,8 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
      */
     _onEventTrackSearchInput: function (ev) {
         ev.preventDefault();
-        var text = ev.currentTarget.value;
-        var tracks = document.querySelectorAll('.event_track');
+        var text = $(ev.currentTarget).val();
+        var $tracks = $('.event_track');
 
         //check if the user is performing a search; i.e., text is not empty
         if (text) {
@@ -86,16 +85,14 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
                 //when filtering elements only check the text content
                 return this.textContent.toLowerCase().includes(text.toLowerCase());
             }
-            var filteredTracks = Array.from(tracks).filter(filterTracks);
-            document.getElementById('search_summary').classList.remove('invisible');
-            document.getElementById('search_number').textContent = filteredTracks.length;
+            $('#search_summary').removeClass('invisible');
+            $('#search_number').text($tracks.filter(filterTracks).length);
 
-            tracks.forEach(track => track.classList.remove('invisible'));
-            Array.from(tracks).filter(track => !filterTracks(null, track)).forEach(track => track.classList.add('invisible'));
+            $tracks.removeClass('invisible').not(filterTracks).addClass('invisible');
         } else {
             //if no search is being performed; hide the result count text
-            document.getElementById('search_summary').classList.add('invisible');
-            tracks.forEach(track => track.classList.remove('invisible'));
+            $('#search_summary').addClass('invisible');
+            $tracks.removeClass('invisible')
         }
     },
 });

@@ -22,35 +22,35 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
      * @param {String} newCode
      */
     _showNewCode: function (newCode) {
-        document.querySelector('.o_website_links_code_error').innerHTML = '';
-        document.querySelector('.o_website_links_code_error').style.display = 'none';
+        $('.o_website_links_code_error').html('');
+        $('.o_website_links_code_error').hide();
 
-        document.querySelector('#o_website_links_code form').remove();
+        $('#o_website_links_code form').remove();
 
         // Show new code
-        const host = document.querySelector('#short-url-host').innerHTML;
-        document.querySelector('#o_website_links_code').innerHTML = newCode;
+        var host = $('#short-url-host').html();
+        $('#o_website_links_code').html(newCode);
 
         // Update button copy to clipboard
-        document.querySelector('.copy-to-clipboard').setAttribute('data-clipboard-text', host + newCode);
+        $('.copy-to-clipboard').attr('data-clipboard-text', host + newCode);
 
         // Show action again
-        document.querySelector('.o_website_links_edit_code').style.display = '';
-        document.querySelector('.copy-to-clipboard').style.display = '';
-        document.querySelector('.o_website_links_edit_tools').style.display = 'none';
+        $('.o_website_links_edit_code').show();
+        $('.copy-to-clipboard').show();
+        $('.o_website_links_edit_tools').hide();
     },
     /**
      * @private
      * @returns {Promise}
      */
     _submitCode: function () {
-        const initCode = document.querySelector('#edit-code-form #init_code').value;
-        const newCode = document.querySelector('#edit-code-form #new_code').value;
-        const self = this;
+        var initCode = $('#edit-code-form #init_code').val();
+        var newCode = $('#edit-code-form #new_code').val();
+        var self = this;
 
         if (newCode === '') {
-            self.el.querySelector('.o_website_links_code_error').innerHTML = _t("The code cannot be left empty");
-            self.el.querySelector('.o_website_links_code_error').style.display = '';
+            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
+            self.$('.o_website_links_code_error').show();
             return;
         }
 
@@ -65,8 +65,8 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
             }).then(function (result) {
                 self._showNewCode(result[0].code);
             }, function () {
-                document.querySelector('.o_website_links_code_error').style.display = '';
-                document.querySelector('.o_website_links_code_error').innerHTML = _t("This code is already taken");
+                $('.o_website_links_code_error').show();
+                $('.o_website_links_code_error').html(_t("This code is already taken"));
             });
         }
 
@@ -81,11 +81,11 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
      * @private
      */
     _onEditCodeClick: function () {
-        const initCode = document.querySelector('#o_website_links_code').innerHTML;
-        document.querySelector('#o_website_links_code').innerHTML = '<form style="display:inline;" id="edit-code-form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>';
-        document.querySelector('.o_website_links_edit_code').hide();
-        document.querySelector('.copy-to-clipboard').hide();
-        document.querySelector('.o_website_links_edit_tools').show();
+        var initCode = $('#o_website_links_code').html();
+        $('#o_website_links_code').html('<form style="display:inline;" id="edit-code-form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
+        $('.o_website_links_edit_code').hide();
+        $('.copy-to-clipboard').hide();
+        $('.o_website_links_edit_tools').show();
     },
     /**
      * @private
@@ -93,16 +93,16 @@ publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
      */
     _onCancelEditClick: function (ev) {
         ev.preventDefault();
-        document.querySelector('.o_website_links_edit_code').show();
-        document.querySelector('.copy-to-clipboard').show();
-        document.querySelector('.o_website_links_edit_tools').hide();
-        document.querySelector('.o_website_links_code_error').hide();
+        $('.o_website_links_edit_code').show();
+        $('.copy-to-clipboard').show();
+        $('.o_website_links_edit_tools').hide();
+        $('.o_website_links_code_error').hide();
 
-        const oldCode = document.querySelector('#edit-code-form #init_code').val();
-        document.querySelector('#o_website_links_code').innerHTML = oldCode;
+        var oldCode = $('#edit-code-form #init_code').val();
+        $('#o_website_links_code').html(oldCode);
 
-        document.querySelector('#code-error').remove();
-        document.querySelector('#o_website_links_code form').remove();
+        $('#code-error').remove();
+        $('#o_website_links_code form').remove();
     },
     /**
      * @private

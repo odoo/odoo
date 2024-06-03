@@ -21,29 +21,26 @@ MailGroup.include({
 
         if (!response) {
             // We do not access to the mail group, just remove the widget
-            this.el.removeChildren();
+            this.$el.empty();
             return;
         }
 
-        this.el.classList.remove('d-none');
+        this.$el.removeClass('d-none');
 
         const userEmail = response.email;
         this.isMember = response.is_member;
 
         if (userEmail && userEmail.length) {
-            const emailInput = this.el.querySelector('.o_mg_subscribe_email');
-            emailInput.value = userEmail;
-            emailInput.setAttribute('readonly', 1);
+            const emailInput = this.$el.find('.o_mg_subscribe_email');
+            emailInput.val(userEmail);
+            emailInput.attr('readonly', 1);
         }
 
         if (this.isMember) {
-            const subscribeBtn = this.el.querySelector('.o_mg_subscribe_btn');
-            subscribeBtn.textContent = _t('Unsubscribe');
-            subscribeBtn.classList.remove('btn-primary')
-            subscribeBtn.classList.add('btn-outline-primary');
+            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
         }
 
-        this.el.dataset['isMember'] = this.isMember;
+        this.$el.data('isMember', this.isMember);
     },
     /**
      * @override

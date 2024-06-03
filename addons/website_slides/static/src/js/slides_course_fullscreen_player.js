@@ -11,7 +11,6 @@
     import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
     import '@website_slides/js/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
-    import { typeCastDataset } from "@web/core/utils/misc";
     import { rpc } from "@web/core/network/rpc";
 
     import { markup } from "@odoo/owl";
@@ -475,7 +474,6 @@
             slidesDataList.forEach(function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
-                const domParser = new DOMParser();
                 // compute embed url
                 if (slideData.category === 'video' && slideData.videoSourceType !== 'vimeo') {
                     slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)

@@ -3,7 +3,6 @@
 import publicWidget from '@web/legacy/js/public/public_widget';
 import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
 import { browser } from '@web/core/browser/browser';
-import { typeCastDataset } from "@web/core/utils/misc";
 
 
 publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
@@ -25,7 +24,7 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
     _onClickShareSlide: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
-        const data = typeCastDataset(ev.currentTarget.dataset);
+        const data = ev.currentTarget.dataset;
         this.call("dialog", "add", SlideShareDialog, {
             category: data.category,
             documentMaxPage: data.category == 'document' && this.getDocumentMaxPage(),

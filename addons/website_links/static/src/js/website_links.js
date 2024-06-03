@@ -6,7 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 
-let SelectBox = publicWidget.Widget.extend({
+var SelectBox = publicWidget.Widget.extend({
     events: {
         'change': '_onChange',
     },
@@ -29,9 +29,8 @@ let SelectBox = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        let self = this;
-        // TODO-shsa : select2 library needs to be removed
-        this.el.select2({
+        var self = this;
+        this.$el.select2({
             placeholder: self.placeholder,
             allowClear: true,
             createSearchChoice: function (term) {
@@ -160,7 +159,7 @@ let SelectBox = publicWidget.Widget.extend({
     },
 });
 
-let RecentLinkBox = publicWidget.Widget.extend({
+var RecentLinkBox = publicWidget.Widget.extend({
     template: 'website_links.RecentLink',
     events: {
         'click .btn_shorten_url_clipboard': '_toggleCopyButton',
@@ -195,87 +194,89 @@ let RecentLinkBox = publicWidget.Widget.extend({
             return;
         }
 
-        let self = this;
+        var self = this;
         this.animating_copy = true;
-        let top = this.el.querySelector('.o_website_links_short_url').getBoundingClientRect().top;
-        let clonedElement = this.el.querySelector('.o_website_links_short_url').cloneNode(true);
-        clonedElement.style.position = 'absolute';
-        clonedElement.style.left = '15px';
-        clonedElement.style.top = `${top - 2}px`;
-        clonedElement.style.zIndex = '2';
-        clonedElement.classList.remove('o_website_links_short_url');
-        clonedElement.classList.add('animated-link');
-        this.el.querySelector('.o_website_links_short_url').insertAdjacentElement('afterend', clonedElement);
-        // TODO: Replace with appropriate animation code
-        setTimeout(() => {
-            self.el.querySelector('.animated-link').remove();
-            self.animating_copy = false;
-        }, 500);
+        var top = this.$('.o_website_links_short_url').position().top;
+        this.$('.o_website_links_short_url').clone()
+            .css('position', 'absolute')
+            .css('left', 15)
+            .css('top', top - 2)
+            .css('z-index', 2)
+            .removeClass('o_website_links_short_url')
+            .addClass('animated-link')
+            .insertAfter(this.$('.o_website_links_short_url'))
+            .animate({
+                opacity: 0,
+                top: '-=20',
+            }, 500, function () {
+                self.$('.animated-link').remove();
+                self.animating_copy = false;
+            });
     },
     /**
      * @private
      * @param {String} message
      */
     _notification: function (message) {
-        this.el.querySelector('.notification').insertAdjacentHTML('beforeend', `<strong>${message}</strong>`);
+        this.$('.notification').append('<strong>' + message + '</strong>');
     },
     /**
      * @private
      */
     _editCode: function () {
-        let initCode = this.el.querySelector('#o_website_links_code').innerHTML;
-        this.el.querySelector('#o_website_links_code').innerHTML = `<form style="display:inline;" id="o_website_links_edit_code_form"><input type="hidden" id="init_code" value="${initCode}"/><input type="text" id="new_code" value="${initCode}"/></form>`;
-        this.el.querySelector('.o_website_links_edit_code').style.display = 'none';
-        this.el.querySelector('.copy-to-clipboard').style.display = 'none';
-        this.el.querySelector('.o_website_links_edit_tools').style.display = 'block';
+        var initCode = this.$('#o_website_links_code').html();
+        this.$('#o_website_links_code').html('<form style="display:inline;" id="o_website_links_edit_code_form"><input type="hidden" id="init_code" value="' + initCode + '"/><input type="text" id="new_code" value="' + initCode + '"/></form>');
+        this.$('.o_website_links_edit_code').hide();
+        this.$('.copy-to-clipboard').hide();
+        this.$('.o_website_links_edit_tools').show();
     },
     /**
      * @private
      */
     _cancelEdit: function () {
-        this.el.querySelector('.o_website_links_edit_code').style.display = 'block';
-        this.el.querySelector('.copy-to-clipboard').style.display = 'block';
-        this.el.querySelector('.o_website_links_edit_tools').style.display = 'none';
-        this.el.querySelector('.o_website_links_code_error').style.display = 'none';
+        this.$('.o_website_links_edit_code').show();
+        this.$('.copy-to-clipboard').show();
+        this.$('.o_website_links_edit_tools').hide();
+        this.$('.o_website_links_code_error').hide();
 
-        let oldCode = this.el.querySelector('#o_website_links_edit_code_form #init_code').value;
-        this.el.querySelector('#o_website_links_code').innerHTML = oldCode;
+        var oldCode = this.$('#o_website_links_edit_code_form #init_code').val();
+        this.$('#o_website_links_code').html(oldCode);
 
-        this.el.querySelector('#code-error').remove();
-        this.el.querySelector('#o_website_links_code form').remove();
+        this.$('#code-error').remove();
+        this.$('#o_website_links_code form').remove();
     },
     /**
      * @private
      */
     _submitCode: function () {
-        let self = this;
+        var self = this;
 
-        let initCode = this.el.querySelector('#o_website_links_edit_code_form #init_code').value;
-        let newCode = this.el.querySelector('#o_website_links_edit_code_form #new_code').value;
+        var initCode = this.$('#o_website_links_edit_code_form #init_code').val();
+        var newCode = this.$('#o_website_links_edit_code_form #new_code').val();
 
         if (newCode === '') {
-            self.el.querySelector('.o_website_links_code_error').innerHTML = _t("The code cannot be left empty");
-            self.el.querySelector('.o_website_links_code_error').style.display = 'block';
+            self.$('.o_website_links_code_error').html(_t("The code cannot be left empty"));
+            self.$('.o_website_links_code_error').show();
             return;
         }
 
         function showNewCode(newCode) {
-            self.el.querySelector('.o_website_links_code_error').innerHTML = '';
-            self.el.querySelector('.o_website_links_code_error').style.display = 'none';
+            self.$('.o_website_links_code_error').html('');
+            self.$('.o_website_links_code_error').hide();
 
-            self.el.querySelector('#o_website_links_code form').remove();
+            self.$('#o_website_links_code form').remove();
 
             // Show new code
-            let host = self.el.querySelector('#o_website_links_host').innerHTML;
-            self.el.querySelector('#o_website_links_code').innerHTML = newCode;
+            var host = self.$('#o_website_links_host').html();
+            self.$('#o_website_links_code').html(newCode);
 
             // Update button copy to clipboard
-            self.el.querySelector('.btn_shorten_url_clipboard').setAttribute('data-clipboard-text', host + newCode);
+            self.$('.btn_shorten_url_clipboard').attr('data-clipboard-text', host + newCode);
 
             // Show action again
-            self.el.querySelector('.o_website_links_edit_code').style.display = 'block';
-            self.el.querySelector('.copy-to-clipboard').style.display = 'block';
-            self.el.querySelector('.o_website_links_edit_tools').style.display = 'none';
+            self.$('.o_website_links_edit_code').show();
+            self.$('.copy-to-clipboard').show();
+            self.$('.o_website_links_edit_tools').hide();
         }
 
         if (initCode === newCode) {
@@ -287,8 +288,8 @@ let RecentLinkBox = publicWidget.Widget.extend({
             }).then(function (result) {
                 showNewCode(result[0].code);
             }, function () {
-                self.el.querySelector('.o_website_links_code_error').style.display = 'block';
-                self.el.querySelector('.o_website_links_code_error').innerHTML = _t("This code is already taken");
+                self.$('.o_website_links_code_error').show();
+                self.$('.o_website_links_code_error').html(_t("This code is already taken"));
             });
         }
     },
@@ -323,7 +324,7 @@ let RecentLinkBox = publicWidget.Widget.extend({
     },
 });
 
-let RecentLinks = publicWidget.Widget.extend({
+var RecentLinks = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -332,7 +333,7 @@ let RecentLinks = publicWidget.Widget.extend({
      * @private
      */
     getRecentLinks: function (filter) {
-        let self = this;
+        var self = this;
         return rpc('/website_links/recent_links', {
             filter: filter,
             limit: 20,
@@ -342,20 +343,18 @@ let RecentLinks = publicWidget.Widget.extend({
             });
             self._updateNotification();
         }, function () {
-            let message = _t("Unable to get recent links");
-            self.el.insertAdjacentHTML('beforeend', `<div class="alert alert-danger">${message}</div>`);
+            var message = _t("Unable to get recent links");
+            self.$el.append('<div class="alert alert-danger">' + message + '</div>');
         });
     },
     /**
      * @private
      */
     _addLink: function (link) {
-        let nbLinks = this.getChildren().length;
-        let recentLinkBox = new RecentLinkBox(this, link);
-        this.el.insertAdjacentElement('afterbegin', recentLinkBox.el);
-        document.querySelectorAll('.link-tooltip').forEach((tooltip) => {
-            new Tooltip(tooltip);
-        });
+        var nbLinks = this.getChildren().length;
+        var recentLinkBox = new RecentLinkBox(this, link);
+        recentLinkBox.prependTo(this.$el);
+        $('.link-tooltip').tooltip();
 
         if (nbLinks === 0) {
             this._updateNotification();
@@ -374,10 +373,10 @@ let RecentLinks = publicWidget.Widget.extend({
      */
     _updateNotification: function () {
         if (this.getChildren().length === 0) {
-            let message = _t("You don't have any recent links.");
-            document.querySelector('.o_website_links_recent_links_notification').innerHTML = `<div class="alert alert-info">${message}</div>`;
+            var message = _t("You don't have any recent links.");
+            $('.o_website_links_recent_links_notification').html('<div class="alert alert-info">' + message + '</div>');
         } else {
-            document.querySelector('.o_website_links_recent_links_notification').innerHTML = '';
+            $('.o_website_links_recent_links_notification').empty();
         }
     },
 });

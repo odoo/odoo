@@ -10,11 +10,7 @@ publicWidget.registry.ticketDetailsWidget.include({
     _onTicketDetailsClick: function(ev) {
         this._super(...arguments);
         if (this.foldedByDefault){
-            Array.from(ev.currentTarget.parentNode.children).forEach(child => {
-                if (child !== ev.currentTarget) {
-                    child.classList.toggle('collapse');
-                }
-            });
+            $(ev.currentTarget).siblings('#o_wevent_tickets_pricelist').toggleClass('collapse');
         }
     }
 });
