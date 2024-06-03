@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import socket
+from unittest.mock import patch
 
+from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.tests import tagged
 from odoo.tests.common import users
@@ -156,4 +158,27 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                 "total_count": 1,
                 "type": "activity",
             }
+        )
+
+        test_record_no_company = self.env["mail.test.activity"].create({"name": "Test3"})
+        test_record_no_company.activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        with patch.object(MailTestMultiCompanyWithActivity, 'check_access_rights', return_value=False):
+            test_activity = [
+                a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+                if a['model'] in ['mail.test.multi.company.with.activity', 'mail.test.activity']
+            ]
+        self.assertEqual(
+            test_activity,
+            [{
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.activity",
+                "name": "Activity Model",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 1,
+                "total_count": 1,
+                "type": "activity",
+            }],
+            "Only activities related to model the user has access to are returned."
         )
