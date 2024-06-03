@@ -114,7 +114,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         expected = {
             "Version": "1.1",
             "TranDtls": {"TaxSch": "GST", "SupTyp": "B2B", "RegRev": "N", "IgstOnIntra": "N"},
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00002", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0002", "Dt": "01/01/2019"},
             "SellerDtls": {
                 "Addr1": "Khodiyar Chowk",
                 "Loc": "Amreli",
@@ -158,7 +158,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         #=================================== Full discount test =====================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_full_discount)
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00003", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0003", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 1000.0, "Discount": 1000.0, "AssAmt": 0.0,
@@ -173,7 +173,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         #=================================== Zero quantity test =============================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_zero_qty)
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00004", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0004", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 0.0,
                 "Unit": "UNT", "UnitPrice": 1000.0, "TotAmt": 0.0, "Discount": 0.0, "AssAmt": 0.0,
@@ -186,7 +186,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         #=================================== Negative unit price test =============================================
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_unit_price)
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00005", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0005", "Dt": "01/01/2019"},
             "ItemList": [
                 {
                     "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
@@ -210,16 +210,16 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price sent json value is not matched")
 
-        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/2019/00006", "Dt": "01/01/2019"}})
+        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/18-19/0006", "Dt": "01/01/2019"}})
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_qty)
         self.assertDictEqual(json_value, expected, "Indian EDI with negative quantity sent json value is not matched")
 
-        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/2019/00007", "Dt": "01/01/2019"}})
+        expected.update({"DocDtls": {"Typ": "INV", "No": "INV/18-19/0007", "Dt": "01/01/2019"}})
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_negative_unit_price_and_qty)
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
 
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00008", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0008", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 1400.0, "AssAmt": 600.0,
@@ -236,7 +236,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
         self.assertDictEqual(json_value, expected, "Indian EDI with negative unit price and quantity sent json value is not matched")
 
         expected.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00009", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0009", "Dt": "01/01/2019"},
             "ItemList": [{
                 "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "111111", "Qty": 1.0,
                 "Unit": "UNT", "UnitPrice": 2000.0, "TotAmt": 2000.0, "Discount": 2000.0, "AssAmt": 0.0,
@@ -261,7 +261,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
 
         json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_cash_rounding)
         expected_copy_rounding.update({
-            "DocDtls": {"Typ": "INV", "No": "INV/2019/00010", "Dt": "01/01/2019"},
+            "DocDtls": {"Typ": "INV", "No": "INV/18-19/0010", "Dt": "01/01/2019"},
             "ValDtls": {
                 "AssVal": 1800.0, "CgstVal": 79.3, "SgstVal": 79.3, "IgstVal": 0.0, "CesVal": 46.59,
                 "StCesVal": 0.0, "Discount": 0.0, "RndOffAmt": -0.19, "TotInvVal": 2005.00

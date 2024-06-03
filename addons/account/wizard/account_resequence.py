@@ -106,6 +106,8 @@ class ReSequenceWizard(models.TransientModel):
                 return move_id.date.year
             elif self.sequence_number_reset == 'year_range':
                 return "%s-%s" % (date_start.year, date_end.year)
+            elif self.sequence_number_reset == 'year_range_month':
+                return "%s-%s/%s" % (date_start.year, date_end.year, move_id.date.month)
             elif self.sequence_number_reset == 'month':
                 return (move_id.date.year, move_id.date.month)
             return 'default'
@@ -122,7 +124,7 @@ class ReSequenceWizard(models.TransientModel):
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
                 # compute the new values period by period
-                date_start, date_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
+                date_start, date_end, forced_year_start, forced_year_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
                 for move in period_recs:
                     new_values[move.id] = {
                         'id': move.id,
@@ -136,8 +138,8 @@ class ReSequenceWizard(models.TransientModel):
                 new_name_list = [seq_format.format(**{
                     **format_values,
                     'month': date_start.month,
-                    'year_end': date_end.year % (10 ** format_values['year_end_length']),
-                    'year': date_start.year % (10 ** format_values['year_length']),
+                    'year_end': (forced_year_end or date_end.year) % (10 ** format_values['year_end_length']),
+                    'year': (forced_year_start or date_start.year) % (10 ** format_values['year_length']),
                     'seq': i + (format_values['seq'] if j == (len(moves_by_period) - 1) else 1),
                 }) for i in range(len(period_recs))]
 
