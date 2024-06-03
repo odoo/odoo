@@ -14,8 +14,24 @@ export class SuggestionService {
         this.store = services["mail.store"];
     }
 
-    getSupportedDelimiters(thread) {
-        return [["@"], ["#"], [":"]];
+    /**
+     * @returns {import("./extract_suggestions").SuggestionTrigger[]}
+     */
+    getTriggers(thread) {
+        return [
+            {
+                id: "@",
+                pattern: "@",
+            },
+            {
+                id: "#",
+                pattern: "#",
+            },
+            {
+                id: ":",
+                pattern: ":(?=\\w)",
+            },
+        ];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {
