@@ -4,6 +4,7 @@ import {
     contains,
     defineMailModels,
     openDiscuss,
+    scroll,
     start,
     startServer,
 } from "../../mail_test_helpers";
@@ -142,6 +143,7 @@ test("Jump to message from notification", async () => {
     await click(".dropdown-item", { text: "Pin" });
     await click(".modal-footer button", { text: "Yeah, pin it!" });
     await contains(".o_mail_notification");
+    await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o_mail_notification a", { text: "message" });
     await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });

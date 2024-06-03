@@ -227,7 +227,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "message_unread_counter": 0,
                                 "message_unread_counter_bus_id": last_bus_id + 1,
                                 "model": "discuss.channel",
-                            }
+                            },
+                            "syncUnread": False,
                         },
                     },
                 },

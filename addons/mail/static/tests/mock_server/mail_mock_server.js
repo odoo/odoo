@@ -420,8 +420,8 @@ async function discuss_channel_mark_as_read(request) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
 
-    const { channel_id, last_message_id } = await parseRequestParams(request);
-    return DiscussChannel._mark_as_read([channel_id], last_message_id);
+    const { channel_id, last_message_id, sync } = await parseRequestParams(request);
+    return DiscussChannel._mark_as_read([channel_id], last_message_id, sync);
 }
 
 registerRoute("/discuss/channel/mark_as_unread", discuss_channel_mark_as_unread);
@@ -454,9 +454,9 @@ async function discuss_history_messages(request) {
     /** @type {import("mock_models").MailNotification} */
     const MailNotification = this.env["mail.notification"];
 
-    const { after, before, limit = 30, search_term } = await parseRequestParams(request);
+    const { after, around, before, limit = 30, search_term } = await parseRequestParams(request);
     const domain = [["needaction", "=", false]];
-    const res = MailMessage._message_fetch(domain, search_term, before, after, false, limit);
+    const res = MailMessage._message_fetch(domain, search_term, before, after, around, limit);
     const messagesWithNotification = res.messages.filter((message) => {
         const notifs = MailNotification.search_read([
             ["mail_message_id", "=", message.id],

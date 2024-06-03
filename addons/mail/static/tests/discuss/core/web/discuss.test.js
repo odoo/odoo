@@ -85,7 +85,11 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Discuss-content .o-mail-Message", { count: 0 });
-    const channelId = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
+    const [channelId] = pyEnv["discuss.channel"].search([["name", "=", "abc"]]);
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
     await assertSteps([
         `/web/dataset/call_kw/discuss.channel/channel_create - ${JSON.stringify({
             args: ["abc", null],
@@ -100,7 +104,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
             method: "channel_create",
             model: "discuss.channel",
         })}`,
-        `/discuss/channel/messages - {"channel_id":${channelId},"limit":30}`,
+        `/discuss/channel/messages - {"channel_id":${channelId},"limit":60,"around":${selfMember.new_message_separator}}`,
     ]);
 });
 
@@ -188,7 +192,9 @@ test("can join a chat conversation", async () => {
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-Message", { count: 0 });
     const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mitchell Admin, Mario"]]);
-    await assertSteps([`/discuss/channel/messages - {"channel_id":${channelId},"limit":30}`]);
+    await assertSteps([
+        `/discuss/channel/messages - {"channel_id":${channelId},"limit":60,"around":0}`,
+    ]);
 });
 
 test("can create a group chat conversation", async () => {

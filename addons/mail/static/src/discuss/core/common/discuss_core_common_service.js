@@ -186,10 +186,15 @@ export class DiscussCoreCommon {
             } else if (channel.status === "loading") {
                 channel.pendingNewMessages.push(message);
             }
-            if (message.isSelfAuthored) {
+            if (message.isSelfAuthored && channel.selfMember) {
+                channel.selfMember.syncUnread = true;
                 channel.selfMember.seen_message_id = message;
-                channel.selfMember.localNewMessageSeparator = message.id + 1;
+                channel.selfMember.new_message_separator = message.id + 1;
             } else {
+                if (!channel.isDisplayed && channel.selfMember) {
+                    channel.selfMember.syncUnread = true;
+                    channel.scrollUnread = true;
+                }
                 if (notifId > channel.message_unread_counter_bus_id) {
                     channel.incrementUnreadCounter();
                 }

@@ -18,7 +18,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, mockDate } from "@odoo/hoot-mock";
+import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { Command, mockService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpcWithEnv } from "@mail/utils/common/misc";
@@ -285,7 +285,7 @@ test("sidebar: chat im_status rendering", async () => {
     });
 });
 
-test("No load more when fetch below fetch limit of 30", async () => {
+test("No load more when fetch below fetch limit of 60", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({});
@@ -301,7 +301,7 @@ test("No load more when fetch below fetch limit of 30", async () => {
     }
     onRpcBefore("/discuss/channel/messages", (args) => {
         step("/discuss/channel/messages");
-        expect(args.limit).toBe(30);
+        expect(args.limit).toBe(60);
     });
     await start();
     await openDiscuss(channelId);
@@ -583,12 +583,16 @@ test("sidebar: channel rendering with needaction counter", async () => {
 
 test("sidebar: chat rendering with unread counter", async () => {
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ message_unread_counter: 100, partner_id: serverState.partnerId }), // weak test, relies on hardcoded value for message_unread_counter but the messages do not actually exist
-        ],
-        channel_type: "chat",
-    });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
+    for (let i = 0; i < 100; ++i) {
+        pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", {
@@ -1630,7 +1634,7 @@ test("failure on loading more messages should display error and prompt retry but
         channel_type: "channel",
         name: "General",
     });
-    pyEnv["mail.message"].create(
+    const messageIds = pyEnv["mail.message"].create(
         [...Array(60).keys()].map(() => {
             return {
                 body: "coucou",
@@ -1639,6 +1643,13 @@ test("failure on loading more messages should display error and prompt retry but
             };
         })
     );
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: messageIds.at(-1) + 1,
+    });
     onRpcBefore("/discuss/channel/messages", () => {
         if (messageFetchShouldFail) {
             return Promise.reject();
@@ -1664,7 +1675,7 @@ test("Retry loading more messages on failed load more messages should load more 
         channel_type: "channel",
         name: "General",
     });
-    pyEnv["mail.message"].create(
+    const messageIds = pyEnv["mail.message"].create(
         [...Array(90).keys()].map(() => {
             return {
                 body: "coucou",
@@ -1673,6 +1684,13 @@ test("Retry loading more messages on failed load more messages should load more 
             };
         })
     );
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: messageIds.at(-1) + 1,
+    });
     onRpcBefore("/discuss/channel/messages", () => {
         if (messageFetchShouldFail) {
             return Promise.reject();
@@ -1682,7 +1700,8 @@ test("Retry loading more messages on failed load more messages should load more 
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     messageFetchShouldFail = true;
-    await click("button", { text: "Load More" });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await scroll(".o-mail-Thread", 0);
     await contains("button", { text: "Click here to retry" });
     messageFetchShouldFail = false;
     await click("button", { text: "Click here to retry" });
@@ -1793,17 +1812,18 @@ test("restore thread scroll position", async () => {
     await start();
     await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 25 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-    await scroll(".o-mail-Thread", 0);
+    await contains(".o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
+    await scroll(".o-mail-Thread", "bottom");
     await click("button", { text: "Channel2" });
     await contains(".o-mail-Message", { count: 24 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: 0 });
     await click("button", { text: "Channel1" });
     await contains(".o-mail-Message", { count: 25 });
-    await contains(".o-mail-Thread", { scroll: 0 });
+    await contains(".o-mail-Thread", { scroll: "bottom" });
     await click("button", { text: "Channel2" });
     await contains(".o-mail-Message", { count: 24 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: 0 });
 });
 
 test("Message shows up even if channel data is incomplete", async () => {

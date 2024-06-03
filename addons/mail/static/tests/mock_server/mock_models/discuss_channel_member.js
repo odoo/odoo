@@ -156,7 +156,7 @@ export class DiscussChannelMember extends models.ServerModel {
         ids = kwargs.ids;
         delete kwargs.ids;
         message_id = kwargs.message_id;
-        sync = kwargs.sync;
+        sync = kwargs.sync ?? false;
         const [member] = this._filter([["id", "in", ids]]);
         if (!member) {
             return;
@@ -164,6 +164,8 @@ export class DiscussChannelMember extends models.ServerModel {
         this.env["discuss.channel.member"].write([member.id], {
             new_message_separator: message_id,
         });
+        const message_unread_counter = this._compute_message_unread_counter([member.id]);
+        this.env["discuss.channel.member"].write([member.id], { message_unread_counter });
         const [partner, guest] = this.env["res.partner"]._get_current_persona();
         const target = guest ?? partner;
         const memberData = {
@@ -171,14 +173,12 @@ export class DiscussChannelMember extends models.ServerModel {
             new_message_separator: message_id,
             thread: {
                 id: member.channel_id,
-                message_unread_counter: this._compute_message_unread_counter([member.id]),
+                message_unread_counter,
                 message_unread_counter_bus_id: this.env["discuss.channel"].bus_last_id,
                 model: "discuss.channel",
             },
         };
-        if (sync) {
-            memberData["localNewMessageSeparator"] = message_id;
-        }
+        memberData["syncUnread"] = sync;
         this.env["bus.bus"]._sendone(target, "mail.record/insert", { ChannelMember: memberData });
     }
 }

@@ -582,3 +582,18 @@ export function observeRenders() {
         return result;
     };
 }
+
+/**
+ * Determine if the child element is in the view port of the parent.
+ *
+ * @param {HTMLElement} parent
+ * @param {HTMLElement} child
+ */
+export function isInViewportOf(parent, child) {
+    const childRect = child.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+
+    return childRect.top <= parentRect.top
+        ? parentRect.top - childRect.top <= childRect.height
+        : childRect.bottom - parentRect.bottom <= childRect.height;
+}
