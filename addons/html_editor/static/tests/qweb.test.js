@@ -35,6 +35,18 @@ describe("qweb picker", () => {
         expect(getContent(el)).toBe(`<div><t t-if="test">yes</t><t t-else="">no</t></div>`);
     });
 
+    test("plugin's dom markers are not savable", async () => {
+        const resources = {
+            handleNewRecords: () => {
+                expect.step("handleNewRecords");
+            },
+        };
+        await setupEditor(`<div><t t-if="test">yes</t><t t-else="">no</t></div>`, {
+            config: { ...config, resources },
+        });
+        expect([]).toVerifySteps();
+    });
+
     test("switch selected value to the same value ", async () => {
         const { el } = await setupEditor(`<div><t t-if="test">yes</t><t t-else="">no</t></div>`, {
             config,

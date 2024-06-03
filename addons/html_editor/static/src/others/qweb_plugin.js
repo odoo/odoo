@@ -8,12 +8,28 @@ export class QWebPlugin extends Plugin {
     /** @type { (p: QWebPlugin) => Record<string, any> } */
     static resources = (p) => ({
         onSelectionChange: p.onSelectionChange.bind(p),
+        is_mutation_record_savable: p.isMutationRecordSavable.bind(p),
     });
 
     setup() {
         this.picker = this.shared.createOverlay(QWebPicker, { position: "top-start" });
         this.addDomListener(this.editable, "click", this.onClick);
         this.groupIndex = 0;
+    }
+    isMutationRecordSavable(mutationRecord) {
+        if (mutationRecord.type === "attributes") {
+            if (
+                [
+                    "data-oe-t-group",
+                    "data-oe-t-inline",
+                    "data-oe-t-selectable",
+                    "data-oe-t-group-active",
+                ].includes(mutationRecord.attributeName)
+            ) {
+                return false;
+            }
+        }
+        return true;
     }
 
     handleCommand(command, payload) {
