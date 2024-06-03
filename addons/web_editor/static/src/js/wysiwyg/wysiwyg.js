@@ -1761,6 +1761,8 @@ export class Wysiwyg extends Component {
             }
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
+            // Refocus again to save updates when calling `_onWysiwygBlur`
+            params.node.ownerDocument.defaultView.focus();
         } else {
             return this.odooEditor.execCommand('insert', element);
         }
