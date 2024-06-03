@@ -197,6 +197,12 @@ class StockWarehouseOrderpoint(models.Model):
                 raise UserError(_("You can only snooze manual orderpoints. You should rather archive 'auto-trigger' orderpoints if you do not want them to be triggered."))
         return super().write(vals)
 
+    @api.constrains('product_id')
+    def _check_product_type(self):
+        for orderpoint in self:
+            if orderpoint.product_id.type != 'product':
+                raise ValidationError(_('You cannot create a replenishment rule for a non-storable product.'))
+
     def action_product_forecast_report(self):
         self.ensure_one()
         action = self.product_id.action_product_forecast_report()
