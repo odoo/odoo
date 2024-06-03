@@ -66,6 +66,89 @@ class ProductProduct(models.Model):
             if attributes_by_ptal_id.get(id) is not None
         ]
 
+<<<<<<< HEAD
+||||||| parent of 4c9f689959ce (temp)
+    def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
+        self.ensure_one()
+
+        attributes = self.env.context.get("cached_attributes_by_ptal_id")
+
+        if attributes is None:
+            attributes = self.env["pos.session"]._get_attributes_by_ptal_id()
+            attributes = self._filter_applicable_attributes(attributes)
+        else:
+            # Performance trick to avoid unnecessary calls to _get_attributes_by_ptal_id()
+            # Needs to be deep-copied because attributes is potentially mutated
+            attributes = deepcopy(self._filter_applicable_attributes(attributes))
+
+        return self._add_price_info_to_attributes(
+            attributes,
+            pos_config_sudo,
+        )
+
+    def _add_price_info_to_attributes(
+        self, attributes: List[Dict], pos_config_sudo: PosConfig
+    ) -> List[Dict]:
+        """
+        Here we replace the price_extra of each attribute value with a price_extra
+        dictionary that includes the price with taxes included and the price with taxes excluded
+        """
+        self.ensure_one()
+        for attribute in attributes:
+            for value in attribute["values"]:
+                value.update(
+                    {
+                        "price_extra": self._get_price_info(
+                            pos_config_sudo, value.get("price_extra")
+                        )
+                    }
+                )
+        return attributes
+
+=======
+    def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
+        self.ensure_one()
+
+        attributes = self.env.context.get("cached_attributes_by_ptal_id")
+
+        if attributes is None:
+            attributes = self.env["pos.session"]._get_attributes_by_ptal_id()
+            attributes = self._filter_applicable_attributes(attributes)
+        else:
+            # Performance trick to avoid unnecessary calls to _get_attributes_by_ptal_id()
+            # Needs to be deep-copied because attributes is potentially mutated
+            attributes = deepcopy(self._filter_applicable_attributes(attributes))
+
+        # The image is not JSON serializable
+        for attribute in attributes:
+            for value in attribute["values"]:
+                del value["image"]
+
+        return self._add_price_info_to_attributes(
+            attributes,
+            pos_config_sudo,
+        )
+
+    def _add_price_info_to_attributes(
+        self, attributes: List[Dict], pos_config_sudo: PosConfig
+    ) -> List[Dict]:
+        """
+        Here we replace the price_extra of each attribute value with a price_extra
+        dictionary that includes the price with taxes included and the price with taxes excluded
+        """
+        self.ensure_one()
+        for attribute in attributes:
+            for value in attribute["values"]:
+                value.update(
+                    {
+                        "price_extra": self._get_price_info(
+                            pos_config_sudo, value.get("price_extra")
+                        )
+                    }
+                )
+        return attributes
+
+>>>>>>> 4c9f689959ce (temp)
     def _get_price_unit_after_fp(self, lst_price, currency, fiscal_position):
         self.ensure_one()
 
