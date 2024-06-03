@@ -152,6 +152,8 @@ export class MassMailingSnippetsMenu extends snippetsEditor.SnippetsMenu {
         if (!$oEditable.find('.oe_drop_zone.oe_insert:not(.oe_vertical):only-child').length) {
             $oEditable.attr('contenteditable', true);
         }
+        // Refocus again to save updates when calling `_onWysiwygBlur`
+        this.$editable.get(0).ownerDocument.defaultView.focus();
     }
     /**
      * @override
