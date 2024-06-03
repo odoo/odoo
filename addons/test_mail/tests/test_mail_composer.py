@@ -1215,7 +1215,7 @@ class TestComposerResultsMass(TestMailComposer):
             'Mail: currently setting name = email, not taking into account formatted emails'
         )
 
-        # global outgoing: one mail.mail (all customer recipients), * 2 records
+        # global outgoing: one mail.mail (all customer recipients)
         #   Note that employee is not mailed here compared to 'comment' mode as he
         #   is not in the template recipients, only a follower
         # FIXME template is sent only to partners (email_to are transformed) ->
@@ -1225,12 +1225,12 @@ class TestComposerResultsMass(TestMailComposer):
         #   there are more partners than email to notify;
         self.assertEqual(len(self._new_mails), 2, 'Should have created 2 mail.mail')
         self.assertEqual(
-            len(self._mails), (len(new_partners) + 2) * 2,
-            f'Should have sent {(len(new_partners) + 2) * 2} emails, one / recipient ({len(new_partners)} mailed partners + partner_1 + partner_2) * 2 records')
-        for record in self.test_records:
+            len(self._mails), len(new_partners) + 2,
+            f'Should have sent {len(new_partners) + 2} emails, one / recipient ({len(new_partners)} mailed partners + partner_1 + partner_2)')
+        for record, status in zip(self.test_records, ('sent', 'cancel')):
             self.assertMailMail(
                 self.partner_1 + self.partner_2 + new_partners,
-                'sent',
+                status,
                 author=self.partner_employee,
                 email_to_recipients=[
                     [self.partner_1.email_formatted],
