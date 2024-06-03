@@ -18,8 +18,10 @@ import { getVisibleElements } from "../utils/ui";
  *  adds a restricted operating area for this hotkey
  * @property {() => boolean} [isAvailable]
  *  adds a validation before calling the hotkey registration's callback
- *  @property {() => HTMLElement} [withOverlay]
+ * @property {() => HTMLElement} [withOverlay]
  *  provides the element on which the overlay should be displayed
+ *  Please note that if provided the hotkey will only work with
+ *  the overlay access key, similarly to all [data-hotkey] DOM attributes.
  *
  * @typedef {HotkeyOptions & {
  *  hotkey: string,
