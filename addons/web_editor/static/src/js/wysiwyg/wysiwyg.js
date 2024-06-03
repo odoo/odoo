@@ -1228,6 +1228,8 @@ export class Wysiwyg extends Component {
         } else {
             const odooFieldSelector = '[data-oe-model], [data-oe-translation-initial-sha]';
             const $odooFields = this.$editable.find(odooFieldSelector);
+            const renderingClassesSelector = this.odooEditor.options.renderingClasses
+                .map(className => `.${className}`).join(", ");
             this.odooFieldObservers = [];
 
             $odooFields.each((i, field) => {
@@ -1295,7 +1297,13 @@ export class Wysiwyg extends Component {
                     if ($node.hasClass('o_editable_date_field_format_changed')) {
                         $nodes.addClass('o_editable_date_field_format_changed');
                     }
-                    const html = $node.html();
+                    // Ignore the editor's rendering classes when copying field
+                    // content.
+                    const fieldNodeClone = $node[0].cloneNode(true);
+                    for (const node of fieldNodeClone.querySelectorAll(renderingClassesSelector)) {
+                        node.classList.remove(...this.odooEditor.options.renderingClasses);
+                    }
+                    const html = $(fieldNodeClone).html();
                     this.odooEditor.withoutRollback(() => {
                         for (const node of $nodes) {
                             if (node.classList.contains('o_translation_without_style')) {
