@@ -771,6 +771,27 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
+class ComputeMany2manyLine(models.Model):
+    _name = 'test_new_api.compute.many2many.line'
+    _description = 'Model to Unlink, to check a compute based on it'
+
+
+class ComputeMany2ManyMove(models.Model):
+    _name = 'test_new_api.compute.many2many.move'
+    _description = 'Model with a computed field based on a Many2many'
+
+    line_ids = fields.Many2many('test_new_api.compute.many2many.line', 'test_new_api_move_line_rel', string='Lines', copy=False)
+    state = fields.Char(compute='_compute_state', store=True)
+
+    @api.depends('line_ids')
+    def _compute_state(self):
+        for record in self:
+            if record.line_ids:
+                record.state = 'Lines'
+            else:
+                record.state = 'No Lines'
+
+
 class ComputeReadWrite(models.Model):
     _name = 'test_new_api.compute.readwrite'
     _description = 'Model with a computed non-readonly field'
