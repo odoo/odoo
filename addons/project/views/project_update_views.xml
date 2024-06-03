@@ -83,7 +83,10 @@
                         </div>
                         <div class="mr8 o_pupdate_kanban_width">
                             <b id="tasks_stats">
-                                <field name="closed_task_count"/> / <field name="task_count"/> Tasks<span invisible="not task_count"> (<field name="closed_task_percentage"/>%)</span>
+                                <span invisible="not task_count">
+                                    <field name="closed_task_count"/> / <field name="task_count"/> <field name="label_tasks"/> (<field name="closed_task_percentage"/>%)
+                                </span>
+                                <span invisible="task_count">0 <field name="label_tasks"/></span>
                             </b>
                         </div>
                         <div class="mr8 o_pupdate_kanban_width">
