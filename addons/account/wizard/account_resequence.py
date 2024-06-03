@@ -102,11 +102,11 @@ class ReSequenceWizard(models.TransientModel):
         """
         def _get_move_key(move_id):
             company = move_id.company_id
-            year_start, year_end = get_fiscal_year(move_id.date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
+            date_start, date_end = get_fiscal_year(move_id.date, day=company.fiscalyear_last_day, month=int(company.fiscalyear_last_month))
             if self.sequence_number_reset == 'year':
                 return move_id.date.year
             elif self.sequence_number_reset == 'year_range':
-                return "%s-%s"%(year_start.year, year_end.year)
+                return "%s-%s"%(date_start.year, date_end.year)
             elif self.sequence_number_reset == 'month':
                 return (move_id.date.year, move_id.date.month)
             return 'default'
@@ -123,7 +123,7 @@ class ReSequenceWizard(models.TransientModel):
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
                 # compute the new values period by period
-                year_start, year_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
+                date_start, date_end = period_recs[0]._get_sequence_date_range(sequence_number_reset)
                 for move in period_recs:
                     new_values[move.id] = {
                         'id': move.id,
@@ -131,14 +131,14 @@ class ReSequenceWizard(models.TransientModel):
                         'state': move.state,
                         'date': format_date(self.env, move.date),
                         'server-date': str(move.date),
-                        'server-year-start-date': str(year_start),
+                        'server-year-start-date': str(date_start),
                     }
 
                 new_name_list = [seq_format.format(**{
                     **format_values,
-                    'month': year_start.month,
-                    'year_end': year_end.year % (10 ** format_values['year_end_length']),
-                    'year': year_start.year % (10 ** format_values['year_length']),
+                    'month': date_start.month,
+                    'year_end': date_end.year % (10 ** format_values['year_end_length']),
+                    'year': date_start.year % (10 ** format_values['year_length']),
                     'seq': i + (format_values['seq'] if j == (len(moves_by_period)-1) else 1),
                 }) for i in range(len(period_recs))]
 

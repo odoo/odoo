@@ -3047,9 +3047,21 @@ class AccountMove(models.Model):
             where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
             param['date_start'] = date_start
             param['date_end'] = date_end
+
+            # Some regex are catching more sequence formats than we want, so we
+            # need to exclude them:
+            #
+            # Move Name   |                Regex type             |
+            # Format      | Fixed | Yearly | Monthly | Year Range |
+            # ----------- | ----- | ------ | ------- | ---------- |
+            # Fixed       |   X   |        |         |            |
+            # Yearly      |   X   |   X    |         |            |
+            # Monthly     |   X   |   X    |    X    |     X      |
+            # Year Range  |   X   |   X    |         |     X      |
             if sequence_number_reset in ('year', 'year_range'):
                 param['anti_regex'] = self._make_regex_non_capturing(self._sequence_monthly_regex.split('(?P<seq>')[0]) + '$'
             elif sequence_number_reset == 'never':
+                # Excluding yearly will also exclude monthly and year range
                 param['anti_regex'] = self._make_regex_non_capturing(self._sequence_yearly_regex.split('(?P<seq>')[0]) + '$'
 
             if param.get('anti_regex') and not self.journal_id.sequence_override_regex:
@@ -3071,6 +3083,8 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
         self.ensure_one()
+        # Arbitrarily use annual sequence for sales documents, but monthly
+        # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash']:
             starting_sequence = "%s/%04d/00000" % (self.journal_id.code, self.date.year)
         else:
