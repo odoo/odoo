@@ -597,7 +597,7 @@ class Project(models.Model):
                     'to_invoice': amount_to_invoice,
                 }
                 if with_action and self.user_has_groups('sales_team.group_sale_salesman_all_leads, account.group_account_invoice, account.group_account_readonly'):
-                    invoices_revenues['action'] = self._get_action_for_profitability_section(invoices_move_lines.ids, section_id)
+                    invoices_revenues['action'] = self._get_action_for_profitability_section(invoices_move_lines.move_id.ids, section_id)
                 return {
                     'data': [invoices_revenues],
                     'total': {
