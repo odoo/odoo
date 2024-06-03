@@ -99,6 +99,7 @@ class Registry(Mapping):
         t0 = time.time()
         registry = object.__new__(cls)
         registry.init(db_name)
+        registry.new = registry.init = registry.registries = None
 
         # Initializing a registry will call general code which will in
         # turn call Registry() to obtain the registry being initialized.
@@ -127,7 +128,6 @@ class Registry(Mapping):
         registry._init = False
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
-        registry.new = registry.init = registry.registries = None
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
