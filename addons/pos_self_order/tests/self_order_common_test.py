@@ -137,6 +137,21 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
 
     def setUp(self):
         super().setUp()
+        journal_obj = self.env['account.journal']
+        main_company = self.env.company
+        self.bank_journal = journal_obj.create({
+            'name': 'Bank Test',
+            'type': 'bank',
+            'company_id': main_company.id,
+            'code': 'BNK',
+            'sequence': 10,
+        })
+
+        self.bank_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'journal_id': self.bank_journal.id,
+        })
+
         self.pos_config = self.env["pos.config"].create(
             {
                 "name": "BarTest",
@@ -144,6 +159,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
                 "module_pos_restaurant": True,
                 "self_ordering_mode": "consultation",
                 "floor_ids": self.env["restaurant.floor"].search([]),
+                "payment_method_ids": [(4, self.bank_payment_method.id)],
             }
         )
 
