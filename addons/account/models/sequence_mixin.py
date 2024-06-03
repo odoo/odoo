@@ -117,7 +117,8 @@ class SequenceMixin(models.AbstractModel):
     def _compute_split_sequence(self):
         for record in self:
             sequence = record[record._sequence_field] or ''
-            regex = re.sub(r"\?P<\w+>", "?:", record._sequence_fixed_regex.replace(r"?P<seq>", ""))  # make the seq the only matching group
+            # make the seq the only matching group
+            regex = self._make_regex_non_capturing(record._sequence_fixed_regex.replace(r"?P<seq>", ""))
             matching = re.match(regex, sequence)
             record.sequence_prefix = sequence[:matching.start(1)]
             record.sequence_number = int(matching.group(1) or 0)
@@ -154,6 +155,22 @@ class SequenceMixin(models.AbstractModel):
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
             r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
         ))
+
+    def _make_regex_non_capturing(self, regex):
+        r""" Replace the "named capturing group" found in the regex by
+        "non-capturing group" instead.
+
+        Example:
+        `^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$` will become
+        `^(?:.*?)(?:\d{0,9})(?:\D*?)$`
+        - `(?P<name>...)` = Named capturing groups
+        - `(?:...)` = Non-capturing group
+
+        :param regex: the regex to modify
+
+        :return: the modified regex
+        """
+        return re.sub(r"\?P<\w+>", "?:", regex)
 
     def _get_last_sequence_domain(self, relaxed=False):
         """Get the sql domain to retreive the previous sequence number.
