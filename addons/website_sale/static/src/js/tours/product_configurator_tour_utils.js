@@ -8,7 +8,7 @@ function assertProductStrikethroughPrice(productName, price) {
         trigger: `
             ${configuratorTourUtils.productSelector(productName)}
             td.o_sale_product_configurator_price
-            h5.oe_striked_price:contains("${price}")
+            .oe_striked_price:contains("${price}")
         `,
     };
 }
@@ -19,7 +19,7 @@ function assertOptionalProductStrikethroughPrice(productName, price) {
         trigger: `
             ${configuratorTourUtils.optionalProductSelector(productName)}
             td.o_sale_product_configurator_qty
-            h5.oe_striked_price:contains("${price}")
+            .oe_striked_price:contains("${price}")
         `,
     };
 }
