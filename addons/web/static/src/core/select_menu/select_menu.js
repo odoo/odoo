@@ -38,6 +38,7 @@ export class SelectMenu extends Component {
                 shape: {
                     value: true,
                     label: { type: String },
+                    "*": true,
                 },
             },
         },
@@ -55,6 +56,7 @@ export class SelectMenu extends Component {
                             shape: {
                                 value: true,
                                 label: { type: String },
+                                "*": true,
                             },
                         },
                     },

@@ -521,6 +521,28 @@ QUnit.module("Web Components", (hooks) => {
         assert.strictEqual(target.querySelector(".coolClass").textContent, "Hello");
     });
 
+    QUnit.test("Can add custom data to choices", async (assert) => {
+        class Parent extends Component {
+            static props = ["*"];
+            static components = { SelectMenu };
+            static template = xml`
+                <SelectMenu choices="choices">
+                    <t t-set-slot="choice" t-slot-scope="choice">
+                        <span class="coolClass" t-esc="choice.data.custom" />
+                    </t>
+                </SelectMenu>
+            `;
+            setup() {
+                this.choices = [
+                    { label: "Hello", value: "hello", custom: "hi" },
+                ];
+            }
+        }
+        await mountInFixture(Parent, target, { env });
+        await open();
+        assert.strictEqual(target.querySelector(".coolClass").textContent, "hi");
+    });
+
     QUnit.test(
         "Custom template for the bottom area of the dropdown using a slot",
         async (assert) => {
