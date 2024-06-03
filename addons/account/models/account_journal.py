@@ -822,9 +822,6 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].with_context(default_linked_journal_id=self.id).setting_init_bank_account_action()
 
-    def action_new_transaction(self):
-        return False
-
     def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""
         if not self:
