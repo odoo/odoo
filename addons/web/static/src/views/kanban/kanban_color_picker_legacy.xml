@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanColorPicker">
+        <ul t-if="this.dataState.widget.editable" class="oe_kanban_colorpicker mb-0 ms-2">
+            <!--
+                Used in KanbanRecord
+                Note: `props` is only accessible through `this` as we call the compiled template with
+                `t-call-context` directive.
+            -->
+            <t t-foreach="this.props.colors" t-as="color" t-key="color_index">
+                <li role="menuitem" t-on-click="() => this.selectColor(color_index)" t-att-title="color" t-att-aria-label="color">
+                    <a href="#" t-attf-class="oe_kanban_color_{{ color_index }}" />
+                </li>
+            </t>
+        </ul>
+    </t>
+
+</templates>
