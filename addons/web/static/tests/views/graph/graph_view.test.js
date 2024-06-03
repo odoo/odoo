@@ -183,6 +183,21 @@ async function clickOnDataset(view) {
 
 /**
  * @param {GraphView} view
+ * @param {string} text
+ */
+async function clickOnLegend(view, text) {
+    const chart = getChart(view);
+    const index = chart.legend.legendItems.findIndex((e) => e.text === text);
+    const { left, top, width, height } = chart.legend.legendHitBoxes[index];
+    const point = {
+        x: left + width / 2,
+        y: top + height / 2,
+    };
+    return contains(chart.canvas).click({ position: point, relative: true });
+}
+
+/**
+ * @param {GraphView} view
  */
 function getGraphController(view) {
     return findComponent(view, (c) => c instanceof GraphController);
@@ -2159,6 +2174,17 @@ test("pie chart rendering (mix of positive and negative values)", async () => {
         label: "",
         stack: undefined,
     });
+});
+
+test("pie chart toggling dataset hides label", async () => {
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: `<graph type="pie"/>`,
+    });
+    checkLabels(view, ["Total"]);
+    await clickOnLegend(view, "Total");
+    expect(getChart(view).legend.legendItems[0].hidden).toBe(true);
 });
 
 test("mode props", async () => {
