@@ -42,7 +42,7 @@
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-check">
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Tasks</span>
+                                <field name="label_tasks" readonly="1"/>
                                 <span class="o_stat_value">
                                     <field name="closed_task_count"/> / <field name="task_count"/>
                                     (<field name="task_completion_percentage" widget="percentage" options="{'digits': [1, 0]}"/>)
