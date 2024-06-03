@@ -1175,15 +1175,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 new_values['parent_id'] = commercial_partner.id
         return new_values, errors, error_msg
 
-    def should_skip_delivery_step(self, delivery_methods):
-        """ Check if the delivery step should be skipped based on the available delivery methods.
+    def should_skip_delivery_step(self, order_sudo, delivery_methods):
+        """ Check if the delivery step should be skipped based on the selected delivery method and
+        available delivery methods.
 
+        A delivery method not being set on the order means that either `get_rate` failed, or no dms
+        are available; the user should not skip the delivery step.
+
+        :param sale.order order_sudo: The sales order being paid.
         :param delivery.carrier delivery_methods: The available delivery methods.
         :return: Whether the delivery step should be skipped.
         :rtype: bool
         """
-        if not delivery_methods or len(delivery_methods) > 1:
-            # The user must choose the carrier or see a warning if no available ones.
+        if not order_sudo.carrier_id or len(delivery_methods) > 1:
+            # The user must choose a delivery method or see a warning if no available ones.
             return False
         delivery_method = delivery_methods[0]
         if hasattr(delivery_method, delivery_method.delivery_type + '_use_locations'):
@@ -1553,7 +1558,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 or order_sudo.amount_delivery != rate['price']
             ):
                 order_sudo._set_delivery_method(delivery_method, rate=rate)
-            should_skip_delivery = self.should_skip_delivery_step(available_dms)
+            should_skip_delivery = self.should_skip_delivery_step(order_sudo, available_dms)
 
         if post.get('express') and should_skip_delivery:
             return request.redirect('/shop/confirm_order')
