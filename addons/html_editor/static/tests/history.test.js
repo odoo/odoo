@@ -6,6 +6,8 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { getContent, setSelection } from "./_helpers/selection";
 import { pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
+import { Editor } from "@html_editor/editor";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe("undo", () => {
     test("should undo a backspace", async () => {
@@ -403,5 +405,36 @@ describe("shortcut", () => {
         insertText(editor, "b");
         expect(state).toEqual({ canUndo: true, canRedo: false });
         expect(getContent(el)).toBe("<p>b[]</p>");
+    });
+
+    test("use handleNewRecords resource", async () => {
+        patchWithCleanup(Editor.prototype, {
+            dispatch(cmd, ...args) {
+                if (cmd === "CONTENT_UPDATED") {
+                    expect.step("CONTENT_UPDATED");
+                }
+                return super.dispatch(cmd, ...args);
+            },
+        });
+        const onChange = () => {
+            expect.step("onchange");
+        };
+        const resources = {
+            handleNewRecords: () => {
+                expect.step("handleNewRecords");
+            },
+        };
+        const { editor } = await setupEditor(`<p>[]</p>`, {
+            config: { onChange, resources },
+        });
+        expect([]).toVerifySteps();
+        insertText(editor, "a");
+        expect([
+            "handleNewRecords",
+            "CONTENT_UPDATED",
+            "handleNewRecords",
+            "CONTENT_UPDATED",
+            "onchange",
+        ]).toVerifySteps();
     });
 });

@@ -242,6 +242,7 @@ export class HistoryPlugin extends Plugin {
         if (!records.length) {
             return;
         }
+        this.resources["handleNewRecords"]?.forEach((cb) => cb(records));
         this.stageRecords(records);
         // @todo @phoenix remove this?
         // @todo @phoenix this includes previous mutations that were already
