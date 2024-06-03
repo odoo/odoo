@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patch } from "@web/core/utils/patch";
-import { SaleOrderLineProductField } from '@sale/js/sale_product_field';
+import { SaleOrderLineProductField, saleOrderLineProductField } from '@sale/js/sale_product_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
 import { useService } from "@web/core/utils/hooks";
 
@@ -72,4 +72,11 @@ patch(SaleOrderLineProductField.prototype, {
             record: this.props.record.model.root,
         });
     },
+});
+
+Object.assign(saleOrderLineProductField, {
+    fieldDependencies: [
+        ...saleOrderLineProductField.fieldDependencies,
+        { name: "product_add_mode", type:"selection"},
+    ],
 });

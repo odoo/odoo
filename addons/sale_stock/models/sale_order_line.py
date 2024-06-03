@@ -43,9 +43,9 @@ class SaleOrderLine(models.Model):
                 line.display_qty_widget = False
 
     @api.depends(
-        'product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'order_id.commitment_date',
-        'move_ids', 'move_ids.forecast_expected_date', 'move_ids.forecast_availability',
-        'warehouse_id')
+        'product_id', 'customer_lead', 'product_uom_qty', 'product_uom', 'move_ids',
+        'order_id.commitment_date', 'order_id.warehouse_id',
+    )
     def _compute_qty_at_date(self):
         """ Compute the quantity forecasted of product at delivery date. There are
         two cases:
@@ -76,7 +76,7 @@ class SaleOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state in ('draft', 'sent')):
             if not (line.product_id and line.display_qty_widget):
                 continue
-            grouped_lines[(line.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
+            grouped_lines[(line.order_id.warehouse_id.id, line.order_id.commitment_date or line._expected_date())] |= line
 
         for (warehouse, scheduled_date), lines in grouped_lines.items():
             product_qties = lines.mapped('product_id').with_context(to_date=scheduled_date, warehouse_id=warehouse).read([
