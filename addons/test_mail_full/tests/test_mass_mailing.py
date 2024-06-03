@@ -27,6 +27,10 @@ class TestMassMailing(TestMailFullCommon):
         self.env['mail.blacklist'].create({'email': recipients[4].email_normalized})
         # have a duplicate email for 9
         recipient_dup_1 = recipients[9].copy()
+        # have another duplicate for 9, but with 2 emails
+        recipient_dup_2 = recipients[9].copy()  # this one will passthrough (best-effort)
+        recipient_dup_2.email_from += '; "TestCustomer 009" <test.record.009@test.example.com>'
+        recipient_dup_3 = recipient_dup_2.copy()  # this one will be discarded (youpi)
         # have a void mail
         recipient_void_1 = self.env['mailing.test.optout'].create({'name': 'TestRecord_void_1'})
         # have a falsy mail
@@ -34,7 +38,14 @@ class TestMassMailing(TestMailFullCommon):
             'name': 'TestRecord_falsy_1',
             'email_from': 'falsymail'
         })
-        recipients_all = recipients + recipient_dup_1 + recipient_void_1 + recipient_falsy_1
+        recipients_all = (
+            recipients
+            + recipient_dup_1
+            + recipient_dup_2
+            + recipient_dup_3
+            + recipient_void_1
+            + recipient_falsy_1
+        )
 
         mailing.write({'mailing_domain': [('id', 'in', recipients_all.ids)]})
         mailing.action_put_in_queue()
@@ -55,6 +66,11 @@ class TestMassMailing(TestMailFullCommon):
                 recipient_info['failure_type'] = "mail_bl"
             # duplicates: cancel (cancel mail)
             elif recipient == recipient_dup_1:
+                recipient_info['trace_status'] = "cancel"
+                recipient_info['failure_type'] = "mail_dup"
+            elif recipient == recipient_dup_2:
+                pass
+            elif recipient == recipient_dup_3:
                 recipient_info['trace_status'] = "cancel"
                 recipient_info['failure_type'] = "mail_dup"
             # void: error (failed mail)
@@ -116,6 +132,6 @@ class TestMassMailing(TestMailFullCommon):
                 ]],
                 check_mail=True,)
 
-        # sent: 13, 2 bl, 2 opt-out, 3 invalid -> 6 remaining
-        # ignored: 2 bl + 2 optout + 2 invalid + 1 duplicate; failed: 0
-        self.assertMailingStatistics(mailing, expected=13, delivered=6, sent=6, canceled=7, failed=0)
+        # sent: 15, 2 bl, 3 opt-out, 3 invalid -> 7 remaining
+        # ignored: 2 bl + 3 optout + 2 invalid + 1 duplicate; failed: 0
+        self.assertMailingStatistics(mailing, expected=15, delivered=7, sent=7, canceled=8, failed=0)
