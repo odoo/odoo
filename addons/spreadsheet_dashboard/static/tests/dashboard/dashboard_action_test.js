@@ -243,7 +243,6 @@ QUnit.test("Can delete record tag in the filter by hitting Backspace", async fun
                 label: "Relation Filter",
                 modelName: "product",
                 defaultValue: [37],
-                automaticDefaultValue: true,
             },
         ],
     };
