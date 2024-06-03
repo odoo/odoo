@@ -21,6 +21,15 @@ class MailTemplate(models.Model):
             domain = expression.AND([[('model', '=', 'event.registration')], domain or []])
         return super()._name_search(name, domain, operator, limit, order)
 
+    @api.model
+    def default_get(self, fields):
+        result = super().default_get(fields)
+        if self._context.get('default_model', {}) == 'event.registration':
+            result['email_from'] = "{{ (object.event_id.organizer_id.email_formatted or object.event_id.user_id.email_formatted or '') }}"
+            result['email_to'] = '{{ (object.email and \'"%s" <%s>\' % (object.name, object.email) or object.partner_id.email_formatted or \'\') }}'
+            result['lang'] = '{{ object.event_id.lang or object.partner_id.lang }}'
+        return result
+
     def unlink(self):
         res = super().unlink()
         domain = ('template_ref', 'in', [f"{template._name},{template.id}" for template in self])
