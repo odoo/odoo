@@ -3,12 +3,18 @@
 
 import base64
 import socket
+from unittest.mock import patch
 
+<<<<<<< HEAD
 from itertools import product
 from unittest.mock import patch
 from werkzeug.urls import url_parse, url_decode
 
 from odoo.addons.mail.models.mail_message import Message
+||||||| parent of fa255c63aa7e (temp)
+=======
+from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
+>>>>>>> fa255c63aa7e (temp)
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users, HttpCase
@@ -294,6 +300,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
             }
         )
 
+<<<<<<< HEAD
 
 @tagged('-at_install', 'post_install', 'multi_company')
 class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
@@ -405,3 +412,28 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                     self.assertEqual(decoded_fragment['cids'], str(test_record.company_id.id))
                 else:
                     self.assertNotIn('cids', decoded_fragment)
+||||||| parent of fa255c63aa7e (temp)
+=======
+        test_record_no_company = self.env["mail.test.activity"].create({"name": "Test3"})
+        test_record_no_company.activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        with patch.object(MailTestMultiCompanyWithActivity, 'check_access_rights', return_value=False):
+            test_activity = [
+                a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+                if a['model'] in ['mail.test.multi.company.with.activity', 'mail.test.activity']
+            ]
+        self.assertEqual(
+            test_activity,
+            [{
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.activity",
+                "name": "Activity Model",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 1,
+                "total_count": 1,
+                "type": "activity",
+            }],
+            "Only activities related to model the user has access to are returned."
+        )
+>>>>>>> fa255c63aa7e (temp)

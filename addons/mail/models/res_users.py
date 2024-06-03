@@ -205,9 +205,23 @@ class Users(models.Model):
             activities_by_record_by_model_name[activity.res_model][record] += activity
         model_ids = list({self.env["ir.model"]._get(name).id for name in activities_by_record_by_model_name.keys()})
         user_activities = {}
+<<<<<<< HEAD
         for model_name, activities_by_record in activities_by_record_by_model_name.items():
             domain = [("id", "in", list({r.id for r in activities_by_record.keys()}))]
             allowed_records = self.env[model_name].search(domain)
+||||||| parent of fa255c63aa7e (temp)
+        for model_id in records_by_state_by_model:
+            model_dic = records_by_state_by_model[model_id]
+            model = self.env["ir.model"].sudo().browse(model_id).with_prefetch(tuple(records_by_state_by_model.keys()))
+            allowed_records = self.env[model.model].search([("id", "in", tuple(model_dic["all"]))])
+=======
+        for model_id in records_by_state_by_model:
+            model_dic = records_by_state_by_model[model_id]
+            model = self.env["ir.model"].sudo().browse(model_id).with_prefetch(tuple(records_by_state_by_model.keys()))
+            if not self.env[model.model].check_access_rights('read', raise_exception=False):
+                continue
+            allowed_records = self.env[model.model].search([("id", "in", tuple(model_dic["all"]))])
+>>>>>>> fa255c63aa7e (temp)
             if not allowed_records:
                 continue
             module = self.env[model_name]._original_module
