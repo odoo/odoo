@@ -3975,14 +3975,14 @@ QUnit.module('Legacy basic_fields', {
             res_id: 1,
             session: {
                 getTZOffset() {
-                    return 330;
+                    return 0;
                 },
             },
         });
 
-        assert.strictEqual(form.el.querySelector('.o_field_date_range[name="date"]').innerText, '02/03/2017 05:30:00',
+        assert.strictEqual(form.el.querySelector('.o_field_date_range[name="date"]').innerText, '02/03/2017 00:00:00',
             "the start date should show date with time when option format_type is datatime");
-        assert.strictEqual(form.el.querySelector('.o_field_date_range[name="date_end"]').innerText, '03/13/2017 05:30:00',
+        assert.strictEqual(form.el.querySelector('.o_field_date_range[name="date_end"]').innerText, '03/13/2017 00:00:00',
             "the end date should show date with time when option format_type is datatime");
 
         form.destroy();

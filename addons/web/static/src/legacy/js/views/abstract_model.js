@@ -218,10 +218,15 @@ var AbstractModel = mvc.Model.extend({
      * @returns {*} the processed value
      */
     _parseServerValue: function (field, value) {
-        if (field.type === 'date' || field.type === 'datetime') {
-            // process date(time): convert into a moment instance
+        if (field.type === 'date') {
+            // process date: convert into a moment instance
+            value = fieldUtils.parse[field.type](value, field, {isUTC: false});
+        }
+        else if(field.type === 'datetime'){
+            // process datetime: convert into a moment instance
             value = fieldUtils.parse[field.type](value, field, {isUTC: true});
-        } else if (field.type === 'selection' && value === false) {
+        }
+         else if (field.type === 'selection' && value === false) {
             // process selection: convert false to 0, if 0 is a valid key
             var hasKey0 = _.find(field.selection, function (option) {
                 return option[0] === 0;

@@ -490,6 +490,7 @@ function parseDate(value, field, options) {
     var datePattern = time.getLangDateFormat();
     var datePatternWoZero = time.getLangDateFormatWoZero();
     var date;
+    var tzOffset;
     const smartDate = parseSmartDateInput(value);
     if (smartDate) {
         date = smartDate;
@@ -497,13 +498,16 @@ function parseDate(value, field, options) {
         if (options && options.isUTC) {
             value = value.padStart(10, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
             date = moment.utc(value);
-        } else {
-            date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+        }
+        else {
+            date = moment(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+            tzOffset = session.getTZOffset(date);
+            date.add(tzOffset > 0 ? tzOffset : -tzOffset, 'minutes');
         }
     }
     if (date.isValid()) {
         if (date.year() === 0) {
-            date.year(moment.utc().year());
+            date.year(moment.year());
         }
         if (date.year() >= 1000){
             date.toJSON = function () {
