@@ -32,7 +32,7 @@
                 <tbody>
                     <t t-set="lines_to_report" t-value="o._get_order_lines_to_report()"/>
                     <t t-foreach="lines_to_report" t-as="order_line">
-                        <tr t-att-class="'bg-200 fw-bold o_line_section' if order_line.display_type == 'line_section' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
+                        <tr t-att-class="'fw-bold o_line_section' if order_line.display_type == 'line_section' else 'fst-italic o_line_note' if order_line.display_type == 'line_note' else ''">
                             <t t-if="not order_line.display_type">
                                 <td id="product">
                                     <span t-field="order_line.name"/>
