@@ -11,10 +11,8 @@
                     <block title="Modes" name="kiosk_mode_setting_container">
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
                             <field name="attendance_kiosk_mode" required="1" class="w-75"/>
-                            <div>
-                                <a href="https://www.odoo.com/documentation/master/applications/hr/attendances/hardware.html"
-                                    target="_blank"><i class="fa fa-fw fa-arrow-right"/>Installation Manual</a>
-                            </div>
+                            <br/>
+                            <widget name="documentation_link" path="/applications/hr/attendances/hardware.html" label="Installation Manual" icon="fa-fw fa-arrow-right"/>
                         </setting>
                         <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
                             <field name="attendance_from_systray" required="1"/>
