@@ -765,15 +765,15 @@ class WebsiteSale(http.Controller):
             'date': fields.Date.today(),
             'suggested_products': [],
         })
+        if post.get('type') == 'popover':
+            # force no-cache so IE11 doesn't cache this XHR
+            return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
+
         if order:
             values.update(order._get_website_sale_extra_values())
             order.order_line.filtered(lambda l: l.product_id and not l.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
-
-        if post.get('type') == 'popover':
-            # force no-cache so IE11 doesn't cache this XHR
-            return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
 
         return request.render("website_sale.cart", values)
 
