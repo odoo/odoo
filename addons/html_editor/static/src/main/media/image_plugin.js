@@ -17,6 +17,7 @@ export class ImagePlugin extends Plugin {
     static resources(p) {
         return {
             handle_paste_url: p.handlePasteUrl.bind(p),
+            onSelectionChange: p.onSelectionChange.bind(p),
 
             toolbarGroup: [
                 {
@@ -28,7 +29,7 @@ export class ImagePlugin extends Plugin {
                             id: "image_preview",
                             cmd: "PREVIEW_IMAGE",
                             icon: "fa-search-plus",
-                            name: "Preview image",
+                            name: _t("Preview image"),
                         },
                     ],
                 },
@@ -55,28 +56,28 @@ export class ImagePlugin extends Plugin {
                         {
                             id: "shape_rounded",
                             cmd: "SHAPE_ROUNDED",
-                            name: "Shape: Rounded",
+                            name: _t("Shape: Rounded"),
                             icon: "fa-square",
                             isFormatApplied: hasShape(p, "rounded"),
                         },
                         {
                             id: "shape_circle",
                             cmd: "SHAPE_CIRCLE",
-                            name: "Shape: Circle",
+                            name: _t("Shape: Circle"),
                             icon: "fa-circle-o",
                             isFormatApplied: hasShape(p, "rounded-circle"),
                         },
                         {
                             id: "shape_shadow",
                             cmd: "SHAPE_SHADOW",
-                            name: "Shape: Shadow",
+                            name: _t("Shape: Shadow"),
                             icon: "fa-sun-o",
                             isFormatApplied: hasShape(p, "shadow"),
                         },
                         {
                             id: "shape_thumbnail",
                             cmd: "SHAPE_THUMBNAIL",
-                            name: "Shape: Thumbnail",
+                            name: _t("Shape: Thumbnail"),
                             icon: "fa-picture-o",
                             isFormatApplied: hasShape(p, "img-thumbnail"),
                         },
@@ -89,7 +90,7 @@ export class ImagePlugin extends Plugin {
                     buttons: [
                         {
                             id: "image_padding",
-                            name: "Image padding",
+                            name: _t("Image padding"),
                             Component: ImagePadding,
                         },
                     ],
@@ -103,15 +104,15 @@ export class ImagePlugin extends Plugin {
                             id: "resize_default",
                             cmd: "RESIZE_IMAGE",
                             cmdPayload: "",
-                            name: "Resize Default",
-                            text: "Default",
+                            name: _t("Resize Default"),
+                            text: _t("Default"),
                             isFormatApplied: () => p.hasImageSize(""),
                         },
                         {
                             id: "resize_100",
                             cmd: "RESIZE_IMAGE",
                             cmdPayload: "100%",
-                            name: "Resize Full",
+                            name: _t("Resize Full"),
                             text: "100%",
                             isFormatApplied: () => p.hasImageSize("100%"),
                         },
@@ -119,7 +120,7 @@ export class ImagePlugin extends Plugin {
                             id: "resize_50",
                             cmd: "RESIZE_IMAGE",
                             cmdPayload: "50%",
-                            name: "Resize Half",
+                            name: _t("Resize Half"),
                             text: "50%",
                             isFormatApplied: () => p.hasImageSize("50%"),
                         },
@@ -127,9 +128,23 @@ export class ImagePlugin extends Plugin {
                             id: "resize_25",
                             cmd: "RESIZE_IMAGE",
                             cmdPayload: "25%",
-                            name: "Resize Quarter",
+                            name: _t("Resize Quarter"),
                             text: "25%",
                             isFormatApplied: () => p.hasImageSize("25%"),
+                        },
+                    ],
+                },
+                {
+                    id: "image_transform",
+                    sequence: 26,
+                    namespace: "IMG",
+                    buttons: [
+                        {
+                            id: "image_transform",
+                            cmd: "TRANSFORM_IMAGE",
+                            name: _t("Transform the picture (click twice to reset transformation)"),
+                            icon: "fa-object-ungroup",
+                            isFormatApplied: () => p.currentImageTransformation.imageEl,
                         },
                     ],
                 },
@@ -151,6 +166,11 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = createFileViewer();
+
+        this.currentImageTransformation = {
+            imageEl: undefined,
+            clean: undefined,
+        };
     }
 
     handleCommand(command, payload) {
@@ -208,7 +228,34 @@ export class ImagePlugin extends Plugin {
                 this.fileViewer.open(fileModel);
                 break;
             }
+            case "TRANSFORM_IMAGE": {
+                const selectedImg = this.getSelectedImage();
+                const $selectedImg = $(selectedImg);
+                $selectedImg.transfo(this.document);
+                this.currentImageTransformation = {
+                    clean: () => {
+                        $selectedImg.transfo("destroy");
+                        this.currentImageTransformation.clean = undefined;
+                        this.currentImageTransformation.imageEl = undefined;
+                    },
+                    imageEl: selectedImg,
+                };
+                break;
+            }
+            case "CONTENT_UPDATED": {
+                if (
+                    this.currentImageTransformation.imageEl &&
+                    payload.root === this.currentImageTransformation.imageEl
+                ) {
+                    this.dispatch("ADD_STEP");
+                }
+                break;
+            }
         }
+    }
+
+    onSelectionChange() {
+        this.currentImageTransformation.clean?.();
     }
 
     getSelectedImage() {

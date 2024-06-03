@@ -3,6 +3,7 @@ import { click, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
 import { contains } from "@web/../tests/web_test_helpers";
+import { setContent } from "./_helpers/selection";
 
 test("image can be selected", async () => {
     const { editor } = await setupEditor(`
@@ -219,4 +220,46 @@ test("Can preview an image", async () => {
     click(".o-we-toolbar button[name='image_preview']");
     await animationFrame();
     expect(".o-FileViewer").toHaveCount(1);
+});
+
+test("Can transform an image", async () => {
+    await setupEditor(`
+        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+    `);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    click(".o-we-toolbar button[name='image_transform']");
+    await animationFrame();
+    const transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers.length).toBe(1);
+    // The created transformation container is outside of the hoot fixture, clean it manually
+    for (const transfoContainer of transfoContainers) {
+        transfoContainer.remove();
+    }
+});
+
+test("Image transformation dissapear when selection change", async () => {
+    const { el } = await setupEditor(`
+        <img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <p> Hello world </p>
+    `);
+    click("img.test-image");
+    await waitFor(".o-we-toolbar");
+    click(".o-we-toolbar button[name='image_transform']");
+    await animationFrame();
+    let transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers.length).toBe(1);
+
+    setContent(
+        el,
+        `<img class="img-fluid test-image" src="/web/static/img/logo.png">
+        <p> [Hello] world </p> `
+    );
+    await animationFrame();
+    transfoContainers = document.querySelectorAll(".transfo-container");
+    expect(transfoContainers.length).toBe(0);
+    // Remove the transfoContainer element if not destroyed by the selection change
+    for (const transfoContainer of transfoContainers) {
+        transfoContainer.remove();
+    }
 });

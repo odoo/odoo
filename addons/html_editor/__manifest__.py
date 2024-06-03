@@ -27,6 +27,7 @@
         'web.assets_backend': [
             'html_editor/static/src/**/*',
             'html_editor/static/lib/DOMpurify.js',
+            'html_editor/static/lib/jQuery.transfo.js',
         ],
         'web.assets_unit_tests': [
             'html_editor/static/tests/**/*',
