@@ -160,7 +160,13 @@ export class Thread extends Component {
                 if (this.env.chatter) {
                     this.env.chatter.fetchMessages = false;
                 }
-                toRaw(this.props.thread).fetchNewMessages();
+                if (this.props.thread.selfMember && this.props.thread.scrollUnread) {
+                    toRaw(this.props.thread).loadAround(
+                        this.props.thread.selfMember.new_message_separator
+                    );
+                } else {
+                    toRaw(this.props.thread).fetchNewMessages();
+                }
             }
         });
         useEffect(
@@ -196,18 +202,21 @@ export class Thread extends Component {
     /**
      * The scroll on a message list is managed in several different ways.
      *
-     * 1. When loading older or newer messages, the messages already on screen
+     * 1. When the user first accesses a thread with unread messages, or when
+     *    the user goes back to a thread with new unread messages, it should
+     *    scroll to the position of the first unread message if there is one.
+     * 2. When loading older or newer messages, the messages already on screen
      *    should visually stay in place. When the extra messages are added at
      *    the bottom (chatter loading older, or channel loading newer) the same
      *    scroll top position should be kept, and when the extra messages are
      *    added at the top (chatter loading newer, or channel loading older),
      *    the extra height from the extra messages should be compensated in the
      *    scroll position.
-     * 2. When the scroll is at the bottom, it should stay at the bottom when
+     * 3. When the scroll is at the bottom, it should stay at the bottom when
      *    there is a change of height: new messages, images loaded, ...
-     * 3. When the user goes back and forth between threads, it should restore
+     * 4. When the user goes back and forth between threads, it should restore
      *    the last scroll position of each thread.
-     * 4. When currently highlighting a message it takes priority to allow the
+     * 5. When currently highlighting a message it takes priority to allow the
      *    highlighted message to be scrolled to.
      */
     setupScroll() {
@@ -222,7 +231,7 @@ export class Thread extends Component {
          */
         let lastSetValue;
         /**
-         * The snapshot mechanism (point 1) should only apply after the messages
+         * The snapshot mechanism (point 2) should only apply after the messages
          * have been loaded and displayed at least once. Technically this is
          * after the first patch following when `mountedAndLoaded` is true. This
          * is what this variable holds.
@@ -230,25 +239,25 @@ export class Thread extends Component {
         let loadedAndPatched = false;
         /**
          * The snapshot of current scrollTop and scrollHeight for the purpose
-         * of keeping messages in place when loading older/newer (point 1).
+         * of keeping messages in place when loading older/newer (point 2).
          */
         let snapshot;
         /**
          * The newest message that is already rendered, useful to detect
          * whether newer messages have been loaded since last render to decide
-         * when to apply the snapshot to keep messages in place (point 1).
+         * when to apply the snapshot to keep messages in place (point 2).
          */
         let newestPersistentMessage;
         /**
          * The oldest message that is already rendered, useful to detect
          * whether older messages have been loaded since last render to decide
-         * when to apply the snapshot to keep messages in place (point 1).
+         * when to apply the snapshot to keep messages in place (point 2).
          */
         let oldestPersistentMessage;
         /**
          * Whether it was possible to load newer messages in the last rendered
          * state, useful to decide when to apply the snapshot to keep messages
-         * in place (point 1).
+         * in place (point 2).
          */
         let loadNewer;
         const reset = () => {
@@ -313,7 +322,27 @@ export class Thread extends Component {
                 (this.props.order === "asc" &&
                     newerMessages &&
                     (loadNewer || thread.scrollTop !== "bottom"));
-            if (snapshot && messagesAtTop) {
+            if (thread.selfMember && thread.scrollUnread) {
+                if (thread.firstUnreadMessage) {
+                    const messageEl = this.refByMessageId.get(thread.firstUnreadMessage.id)?.el;
+                    if (!messageEl) {
+                        return;
+                    }
+                    const messageCenter =
+                        messageEl.offsetTop -
+                        this.scrollableRef.el.offsetHeight / 2 +
+                        messageEl.offsetHeight / 2;
+                    setScroll(messageCenter);
+                } else {
+                    const scrollTop =
+                        this.props.order === "asc"
+                            ? this.scrollableRef.el.scrollHeight -
+                              this.scrollableRef.el.clientHeight
+                            : 0;
+                    setScroll(scrollTop);
+                }
+                thread.scrollUnread = false;
+            } else if (snapshot && messagesAtTop) {
                 setScroll(snapshot.scrollTop + ref.el.scrollHeight - snapshot.scrollHeight);
             } else if (snapshot && messagesAtBottom) {
                 setScroll(snapshot.scrollTop);
@@ -370,6 +399,13 @@ export class Thread extends Component {
         return this.state.showJumpPresent ? PRESENT_THRESHOLD - 200 : PRESENT_THRESHOLD;
     }
 
+    get newMessageBannerText() {
+        if (this.props.thread.selfMember?.localMessageUnreadCounter > 1) {
+            return _t("%s new messages", this.props.thread.selfMember.localMessageUnreadCounter);
+        }
+        return _t("1 new message");
+    }
+
     get preferenceButtonText() {
         const [, before, inside, after] =
             _t(
@@ -422,6 +458,14 @@ export class Thread extends Component {
                 this.props.thread
             );
         }
+    }
+
+    async onClickUnreadMessagesBanner() {
+        await this.props.thread.loadAround(this.props.thread.selfMember.localNewMessageSeparator);
+        this.messageHighlight.highlightMessage(
+            this.props.thread.firstUnreadMessage,
+            this.props.thread
+        );
     }
 
     registerMessageRef(message, ref) {

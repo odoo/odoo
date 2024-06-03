@@ -598,24 +598,38 @@ test("chat - counter: should have correct value of unread threads if category is
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    pyEnv["discuss.channel"].create([
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob", user_id: bobUserId.id });
+    const channelIds = pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                Command.create({
-                    message_unread_counter: 10,
-                    partner_id: serverState.partnerId,
-                }),
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: bobPartnerId.id }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                Command.create({
-                    message_unread_counter: 20,
-                    partner_id: serverState.partnerId,
-                }),
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: bobPartnerId.id }),
             ],
             channel_type: "chat",
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: `hello channel 1`,
+            model: "discuss.channel",
+            res_id: channelIds[0],
+            message_type: "comment",
+        },
+        {
+            author_id: bobPartnerId,
+            body: "hello channel 2",
+            model: "discuss.channel",
+            res_id: channelIds[1],
+            message_type: "comment",
         },
     ]);
     await start();

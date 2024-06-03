@@ -20,4 +20,5 @@ class TestLoadMessages(HttpCaseWithUserDemo):
             "author_id": partner_admin.id,
             "message_type": "comment",
         } for n in range(1, 61)])
+        channel_id.with_user(partner_admin.user_ids[0])._mark_as_read(channel_id.message_ids[0].id)
         self.start_tour("/web#action=mail.action_discuss", "mail_message_load_order_tour", login="admin")

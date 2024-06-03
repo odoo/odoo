@@ -24,7 +24,6 @@ export class ChannelMember extends Record {
     last_interest_dt = Record.attr(undefined, { type: "datetime" });
     persona = Record.one("Persona", { inverse: "channelMembers" });
     rtcSession = Record.one("RtcSession");
-    syncNewMessageSeparator = true;
     thread = Record.one("Thread", { inverse: "channelMembers" });
     threadAsSelf = Record.one("Thread", {
         compute() {
@@ -35,6 +34,25 @@ export class ChannelMember extends Record {
     });
     fetched_message_id = Record.one("Message");
     seen_message_id = Record.one("Message");
+    syncUnread = true;
+    _syncUnread = Record.attr(false, {
+        compute() {
+            if (!this.syncUnread || !this.eq(this.thread?.selfMember)) {
+                return false;
+            }
+            return (
+                this.localNewMessageSeparator !== this.new_message_separator ||
+                this.localMessageUnreadCounter !== this.thread.message_unread_counter
+            );
+        },
+        onUpdate() {
+            if (this._syncUnread) {
+                this.localNewMessageSeparator = this.new_message_separator;
+                this.localMessageUnreadCounter = this.thread.message_unread_counter;
+            }
+        },
+    });
+    localMessageUnreadCounter = 0;
     localNewMessageSeparator = null;
     new_message_separator = null;
     threadAsTyping = Record.one("Thread", {
@@ -65,16 +83,6 @@ export class ChannelMember extends Record {
 
     get memberSince() {
         return this.create_date ? deserializeDateTime(this.create_date) : undefined;
-    }
-
-    onChangeIsThreadDisplayed(isDisplayed) {
-        if (!isDisplayed) {
-            return;
-        }
-        if (this.syncNewMessageSeparator) {
-            this.localNewMessageSeparator = this.new_message_separator;
-        }
-        this.syncNewMessageSeparator = true;
     }
 }
 
