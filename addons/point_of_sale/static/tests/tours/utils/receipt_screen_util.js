@@ -23,7 +23,7 @@ export function clickContinueOrder() {
 export function setEmail(email) {
     return [
         {
-            trigger: ".receipt-screen .input-group input",
+            trigger: ".receipt-screen .send-receipt-input input",
             run: `edit ${email}`,
         },
     ];
@@ -31,7 +31,7 @@ export function setEmail(email) {
 export function clickSend() {
     return [
         {
-            trigger: `.receipt-screen .input-group button`,
+            trigger: `.receipt-screen .send-receipt-input div`,
         },
     ];
 }
