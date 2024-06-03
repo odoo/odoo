@@ -346,15 +346,33 @@ class IrAttachment(models.Model):
                     pass
         return values
 
+    def _is_known_xml_image(self, values):
+        """ Returns True if an XML is already known as an image
+            :param values: written values
+            :return: True if XML is already stored as XML image
+        """
+        if 'datas' in values and 'mimetype' in values:
+            bin_data = base64.b64decode(values['datas'] or b'')
+            checksum = self._compute_checksum(bin_data)
+            if self.search([
+                ('mimetype', '=', values['mimetype']),
+                ('checksum', '=', checksum),
+            ], limit=1):
+                return True
+        return False
+
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
                 'xml' in mimetype and    # other xml (svg, text/xml, etc)
                 not 'openxmlformats' in mimetype)  # exception for Office formats
+        xml_image_like = xml_like and 'image' in mimetype
         user = self.env.context.get('binary_field_real_user', self.env.user)
         if not isinstance(user, self.pool['res.users']):
             raise UserError(_("binary_field_real_user should be a res.users record."))
         force_text = xml_like and (
+            # If the XML is an already known image, do not turn it into text.
+            not (xml_image_like and self._is_known_xml_image(values))) and (
             self.env.context.get('attachments_mime_plainxml') or
             not self.env['ir.ui.view'].with_user(user).check_access_rights('write', False))
         if force_text:
