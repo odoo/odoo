@@ -15,6 +15,7 @@ class LinkPreview(models.Model):
     _description = "Store link preview data"
 
     message_id = fields.Many2one('mail.message', string='Message', index=True, ondelete='cascade')
+    discuss_message_id = fields.Many2one('discuss.message', string='Message', index=True, ondelete='cascade')
     is_hidden = fields.Boolean()
     source_url = fields.Char('URL', required=True)
     og_type = fields.Char('Type')
@@ -44,7 +45,10 @@ class LinkPreview(models.Model):
                     link_previews += preview
                 continue
             if preview := link_preview.get_link_preview_from_url(url, requests_session):
-                preview['message_id'] = message.id
+                if message._name == "discuss.message":
+                    preview['discuss_message_id'] = message.id
+                else:
+                    preview['message_id'] = message.id
                 link_preview_values.append(preview)
             if len(link_preview_values) + len(link_previews) > 5:
                 break
