@@ -117,11 +117,11 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_mark_as_read(self, channel_id, last_message_id):
+    def discuss_channel_mark_as_read(self, channel_id, last_message_id, sync=False):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return channel._mark_as_read(last_message_id)
+        return channel._mark_as_read(last_message_id, sync=sync)
 
     @http.route("/discuss/channel/mark_as_unread", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

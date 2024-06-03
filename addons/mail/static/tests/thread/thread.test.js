@@ -7,6 +7,7 @@ import {
     dragenterFiles,
     focus,
     insertText,
+    isInViewportOf,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -21,6 +22,7 @@ import { Deferred, mockDate, tick } from "@odoo/hoot-mock";
 import { Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpcWithEnv } from "@mail/utils/common/misc";
+import { queryFirst } from "@odoo/hoot-dom";
 /** @type {ReturnType<import("@mail/utils/common/misc").rpcWithEnv>} */
 let rpc;
 
@@ -54,13 +56,21 @@ test("load more messages from channel (auto-load on scroll)", async () => {
         group_public_id: false,
         name: "General",
     });
+    let newestMessageId;
     for (let i = 0; i <= 60; i++) {
-        pyEnv["mail.message"].create({
+        newestMessageId = pyEnv["mail.message"].create({
             body: i.toString(),
             model: "discuss.channel",
             res_id: channelId,
         });
     }
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: newestMessageId + 1,
+    });
     await start();
     await openDiscuss(channelId);
     await contains("button", { text: "Load More", before: [".o-mail-Message", { count: 30 }] });
@@ -110,20 +120,32 @@ test("do not show message subject when subject is the same as the thread name", 
     });
 });
 
-test("auto-scroll to bottom of thread on load", async () => {
+test("auto-scroll to last read message on thread load", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    for (let i = 1; i <= 25; i++) {
-        pyEnv["mail.message"].create({
-            body: "not empty",
-            model: "discuss.channel",
-            res_id: channelId,
-        });
+    const messageIds = [];
+    for (let i = 0; i <= 200; i++) {
+        messageIds.push(
+            pyEnv["mail.message"].create({
+                body: `message ${i}`,
+                model: "discuss.channel",
+                res_id: channelId,
+            })
+        );
     }
+    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMemberId], {
+        new_message_separator: messageIds[100],
+    });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { count: 25 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 100" });
+    const thread = document.querySelector(".o-mail-Thread");
+    const message = queryFirst(".o-mail-Message:contains(message 100)");
+    expect(isInViewportOf(thread, message)).toBe(true);
 });
 
 test("display day separator before first message of the day", async () => {
@@ -199,12 +221,14 @@ test("scroll position is kept when navigating from one channel to another [CAN F
     await openDiscuss(channelId_1);
     await contains(".o-mail-Message", { count: 20 });
     const scrollValue1 = $(".o-mail-Thread")[0].scrollHeight / 2;
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue1);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-2" });
     await contains(".o-mail-Message", { count: 30 });
     const scrollValue2 = $(".o-mail-Thread")[0].scrollHeight / 3;
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", scrollValue2);
     await click(".o-mail-DiscussSidebarChannel", { text: "channel-1" });
     await contains(".o-mail-Message", { count: 20 });
@@ -230,7 +254,8 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 20 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await contains(".o-mail-Thread", { scroll: 0 });
+    await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", $(".o-mail-Thread")[0].scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
     await insertText(".o-mail-Composer-input", "123");
@@ -379,6 +404,8 @@ test("should scroll to bottom on receiving new message if the list is initially 
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
+    await tick(); // wait for the scroll to first unread to complete
+    await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     // simulate receiving a message
     withUser(userId, () =>
@@ -414,8 +441,7 @@ test("should not scroll on receiving new message if the list is initially scroll
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-Message", { count: 11 });
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-    await scroll(".o-mail-Thread", 0);
+    await contains(".o-mail-Thread", { scroll: 0 });
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -461,9 +487,20 @@ test("message list with a full page of empty messages should load more messages 
             res_id: channelId,
         });
     }
+    let newestMessageId;
     for (let i = 0; i < 50; i++) {
-        pyEnv["mail.message"].create({ model: "discuss.channel", res_id: channelId });
+        newestMessageId = pyEnv["mail.message"].create({
+            model: "discuss.channel",
+            res_id: channelId,
+        });
     }
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: newestMessageId + 1,
+    });
     await start();
     await openDiscuss(channelId);
     // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty

@@ -147,12 +147,19 @@ test("channel preview ignores messages from the past", async () => {
             res_id: channelId,
         });
     }
-    pyEnv["mail.message"].create({
+    const newestMessageId = pyEnv["mail.message"].create({
         body: "last message",
         message_type: "comment",
         model: "discuss.channel",
         parent_id: messageId,
         res_id: channelId,
+    });
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: newestMessageId + 1,
     });
     const env = await start();
     rpc = rpcWithEnv(env);
@@ -161,7 +168,7 @@ test("channel preview ignores messages from the past", async () => {
     await contains(".o-mail-Message-content", { text: "last message" });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o-mail-MessageInReply-content", { text: "first message" });
-    await contains(".o-mail-Message", { count: 16 });
+    await contains(".o-mail-Message", { count: 31 });
     await contains(".o-mail-Message-content", { text: "first message" });
     await contains(".o-mail-Message-content", { text: "last message", count: 0 });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");

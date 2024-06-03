@@ -92,7 +92,7 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
-    pyEnv["discuss.channel"].create([
+    const channelIds = pyEnv["discuss.channel"].create([
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
@@ -112,7 +112,6 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
                 Command.create({
                     partner_id: serverState.partnerId,
                     fold_state: "folded",
-                    message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
@@ -122,6 +121,12 @@ test("switching to folded chat window unfolds it [REQUIRE FOCUS]", async () => {
             name: "Livechat 2",
         },
     ]);
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId_2,
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelIds[1],
+    });
     await start();
     await contains(".o-mail-ChatWindow.o-folded", { text: "Visitor 12" });
     await focus(".o-mail-Composer-input", {
@@ -138,7 +143,7 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
     const pyEnv = await startServer();
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
-    pyEnv["discuss.channel"].create([
+    const channelIds = pyEnv["discuss.channel"].create([
         {
             anonymous_name: "Visitor 11",
             channel_member_ids: [
@@ -158,7 +163,6 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
                 Command.create({
                     partner_id: serverState.partnerId,
                     fold_state: "open",
-                    message_unread_counter: 1,
                     last_interest_dt: "2021-01-02 10:00:00",
                 }),
                 Command.create({ guest_id: guestId_2 }),
@@ -173,6 +177,12 @@ test("switching to hidden chat window unhides it [REQUIRE FOCUS]", async () => {
             ],
         },
     ]);
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId_2,
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelIds[1],
+    });
     patchUiSize({ width: 900 }); // enough for 2 chat windows
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });

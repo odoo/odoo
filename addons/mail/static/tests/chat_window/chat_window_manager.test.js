@@ -133,8 +133,8 @@ test("click on hidden chat window should fetch its messages", async () => {
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindowHiddenToggler");
     // FIXME: expected ordering: Apple, Banana, Orange
-    await contains(".o-mail-Message-content", { text: "Orange" });
     await contains(".o-mail-Message-content", { text: "Banana" });
+    await contains(".o-mail-Message-content", { text: "Orange" });
     await contains(".o-mail-Message-content", { count: 0, text: "Apple" });
     await assertSteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatWindowHiddenToggler");

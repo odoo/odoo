@@ -15,6 +15,7 @@ import {
 } from "../mail_test_helpers";
 
 import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -38,11 +39,10 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
         PRESENT_THRESHOLD,
         { message: "should have enough scroll height to trigger jump to present" }
     );
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-    await scroll(".o-mail-Thread", 0);
-    await contains(".o-mail-Thread", { text: "You're viewing older messagesJump to Present" });
-    await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread", {
+    await click(".o-mail-Thread-banner", {
+        text: "You're viewing older messagesJump to Present",
+    });
+    await contains(".o-mail-Thread-banner", {
         count: 0,
         text: "You're viewing older messagesJump to Present",
     });
@@ -71,9 +71,10 @@ test("Basic jump to present when scrolling to outdated messages (chatter, DESC)"
     );
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", "bottom");
-    await contains(".o-mail-Chatter", { text: "You're viewing older messagesJump to Present" });
-    await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread", {
+    await click(".o-mail-Thread-banner", {
+        text: "You're viewing older messagesJump to Present",
+    });
+    await contains(".o-mail-Thread-banner", {
         count: 0,
         text: "You're viewing older messagesJump to Present",
     });
@@ -103,21 +104,32 @@ test("Jump to old reply should prompt jump to present", async () => {
             res_id: channelId,
         });
     }
-    pyEnv["mail.message"].create({
+    const newestMessageId = pyEnv["mail.message"].create({
         body: "Most Recent!",
         model: "discuss.channel",
         res_id: channelId,
         parent_id: oldestMessageId,
     });
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: newestMessageId + 1,
+    });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Message", { count: 16 });
+    await contains(".o-mail-Message", { count: 30 });
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Hello world!" });
-    await contains(".o-mail-Thread-jumpPresent");
-    await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread-jumpPresent", { count: 0 });
+    await click(".o-mail-Thread-banner", {
+        text: "You're viewing older messagesJump to Present",
+    });
+    await contains(".o-mail-Thread-banner", {
+        count: 0,
+        text: "You're viewing older messagesJump to Present",
+    });
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -146,20 +158,31 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
             res_id: channelId,
         });
     }
-    pyEnv["mail.message"].create({
+    const newestMessageId = pyEnv["mail.message"].create({
         body: "Most Recent!",
         model: "discuss.channel",
         res_id: channelId,
         parent_id: oldestMessageId,
+    });
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: newestMessageId + 1,
     });
     onRpcBefore("/discuss/channel/messages", async () => await new Promise(setTimeout)); // small delay
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Thread-jumpPresent");
-    await click(".o-mail-Thread-jumpPresent");
-    await contains(".o-mail-Thread-jumpPresent", { count: 0 });
+    await click(".o-mail-Thread-banner", {
+        text: "You're viewing older messagesJump to Present",
+    });
+    await contains(".o-mail-Thread-banner", {
+        count: 0,
+        text: "You're viewing older messagesJump to Present",
+    });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
@@ -196,10 +219,15 @@ test("Post message when seeing old message should jump to present", async () => 
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
-    await contains(".o-mail-Thread-jumpPresent");
+    await contains(".o-mail-Thread-banner", {
+        text: "You're viewing older messagesJump to Present",
+    });
     await insertText(".o-mail-Composer-input", "Newly posted");
     await click(".o-mail-Composer button:enabled", { text: "Send" });
-    await contains(".o-mail-Thread-jumpPresent", { count: 0 });
+    await contains(".o-mail-Thread-banner", {
+        count: 0,
+        text: "You're viewing older messagesJump to Present",
+    });
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await contains(".o-mail-Message-content", {
         text: "Newly posted",

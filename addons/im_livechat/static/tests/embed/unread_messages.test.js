@@ -116,7 +116,7 @@ test("focus on unread livechat marks it as read", async () => {
         ],
     ]);
     // send after init_messaging because bus subscription is done after init_messaging
-    withUser(userId, () =>
+    await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "Are you there?", message_type: "comment" },
             thread_id: channelId,
@@ -124,6 +124,7 @@ test("focus on unread livechat marks it as read", async () => {
         })
     );
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
+    await contains(".o-mail-Message", { text: "Are you there?" });
     await focus(".o-mail-Composer-input");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
 });
