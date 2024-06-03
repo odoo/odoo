@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
 
@@ -14,7 +14,11 @@ class ProductTemplate(models.Model):
             ('ordered_prepaid', _('Prepaid/Fixed Price')),
             ('delivered_manual', _('Based on Delivered Quantity (Manual)')),
         ]
-        if self.env.user.has_group('project.group_project_milestone'):
+
+        user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
+        if (self.env.user.has_group('project.group_project_milestone') or
+                (self.env.user.has_group('base.group_public') and user.has_group('project.group_project_milestone'))
+        ):
             service_policies.insert(1, ('delivered_milestones', _('Based on Milestones')))
         return service_policies
 
