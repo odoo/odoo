@@ -62,6 +62,7 @@ class ProjectUpdate(models.Model):
     task_count = fields.Integer("Task Count", readonly=True, export_string_translation=False)
     closed_task_count = fields.Integer("Closed Task Count", readonly=True, export_string_translation=False)
     closed_task_percentage = fields.Integer("Closed Task Percentage", compute="_compute_closed_task_percentage", export_string_translation=False)
+    label_tasks = fields.Char(related="project_id.label_tasks")
 
     @api.depends('status')
     def _compute_color(self):
