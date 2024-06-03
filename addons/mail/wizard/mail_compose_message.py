@@ -518,12 +518,6 @@ class MailComposer(models.TransientModel):
                 mail_values['failure_type'] = 'mail_bl'
                 # Do not post the mail into the recipient's chatter
                 mail_values['is_notification'] = False
-            elif optout_emails and mail_to in optout_emails:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_optout'
-            elif done_emails and mail_to in done_emails and not mailing_document_based:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_dup'
             # void of falsy values -> error
             elif not mail_to:
                 mail_values['state'] = 'cancel'
@@ -531,6 +525,12 @@ class MailComposer(models.TransientModel):
             elif not mail_to_normalized:
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
+            elif optout_emails and mail_to in optout_emails:
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_optout'
+            elif done_emails and mail_to in done_emails and not mailing_document_based:
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_dup'
             elif done_emails is not None and not mailing_document_based:
                 done_emails.append(mail_to)
 
