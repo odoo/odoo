@@ -226,18 +226,17 @@ class MigrationManager(object):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
-                    mod = None
                     try:
                         mod = load_script(pyfile, name)
-                        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
-                        migrate = mod.migrate
                     except ImportError:
                         _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
                         raise
-                    except AttributeError:
-                        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                    else:
+
+                    if migrate := getattr(mod, 'migrate', None):
+                        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))  # noqa: G002
                         migrate(self.cr, installed_version)
-                    finally:
-                        if mod:
-                            del mod
+                    else:
+                        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function, function not found in %(file)s' % dict(  # noqa: G002
+                            strfmt,
+                            file=pyfile,
+                        ))
