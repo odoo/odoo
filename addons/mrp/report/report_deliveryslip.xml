@@ -39,7 +39,7 @@
             <t t-else="">
                 <t t-set="kit_product" t-value="bom.product_tmpl_id"/>
             </t>
-            <tr t-att-class="'bg-200 fw-bold o_line_section'">
+            <tr t-att-class="'fw-bold o_line_section'">
                 <td colspan="99">
                     <span t-esc="kit_product.display_name"/>
                 </td>
@@ -68,7 +68,7 @@
         <!-- Do another section for kit-less products if they exist -->
         <t t-set="no_kit_move_lines" t-value="o.move_line_ids.filtered(lambda l: l.move_id.bom_line_id.bom_id.type != 'phantom')"/>
         <t t-if="no_kit_move_lines">
-            <tr t-att-class="'bg-200 fw-bold o_line_section'">
+            <tr t-att-class="'fw-bold o_line_section'">
                 <td colspan="99">
                     <span>Products not associated with a kit</span>
                 </td>
