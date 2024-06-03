@@ -43,16 +43,16 @@ class AccountEdiFormat(models.Model):
 
     def _get_l10n_in_gst_tags(self):
         return (
-           self.env.ref('l10n_in.tax_tag_base_sgst').ids
-           + self.env.ref('l10n_in.tax_tag_base_cgst').ids
-           + self.env.ref('l10n_in.tax_tag_base_igst').ids
-           + self.env.ref('l10n_in.tax_tag_base_cess').ids
-        )
+           self.env.ref('l10n_in.tax_tag_base_sgst')
+           + self.env.ref('l10n_in.tax_tag_base_cgst')
+           + self.env.ref('l10n_in.tax_tag_base_igst')
+           + self.env.ref('l10n_in.tax_tag_base_cess')
+           + self.env.ref('l10n_in.tax_tag_zero_rated')
+        ).ids
 
     def _get_l10n_in_non_taxable_tags(self):
         return (
-            self.env.ref('l10n_in.tax_tag_zero_rated')
-           + self.env.ref("l10n_in.tax_tag_exempt")
+           self.env.ref("l10n_in.tax_tag_exempt")
            + self.env.ref("l10n_in.tax_tag_nil_rated")
            + self.env.ref("l10n_in.tax_tag_non_gst_supplies")
         ).ids
