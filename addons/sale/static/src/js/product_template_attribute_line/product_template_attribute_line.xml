@@ -16,7 +16,7 @@
                 <t t-if="showValuesChoice" t-call="{{getPTAVTemplate()}}"/>
             </div>
             <input
-                class="o_input w-75 mb-4 ms-lg-auto"
+                class="o_input w-lg-75 mb-4 ms-lg-auto"
                 type="text"
                 placeholder="Enter a customized value"
                 t-if="hasPTAVCustom &amp;&amp; isSelectedPTAVCustom()"
@@ -27,7 +27,7 @@
     </t>
     <!-- Attributes value templates -->
     <t t-name="sale.ptav_select">
-        <select class="o_input w-50 flex-grow-1"
+        <select class="o_input w-lg-50 flex-grow-1"
             t-on-change="updateSelectedPTAV"
             t-att-name="'ptal-' + this.props.id">
             <option
@@ -46,10 +46,10 @@
                 class="mb-2">
                 <div class="form-check">
                     <label
-                        class="form-check-label d-inline-flex align-items-center"
+                        class="form-check-label d-inline-flex align-items-center flex-wrap"
                         t-att-class="{ 'css_not_available': ptav.excluded }"
                         t-attf-for="ptav-{{ptav.id}}-input">
-                        <span t-out="ptav.name"/>
+                        <span class="me-1" t-out="ptav.name"/>
                         <BadgeExtraPrice
                             t-if="ptav.price_extra"
                             price="ptav.price_extra"

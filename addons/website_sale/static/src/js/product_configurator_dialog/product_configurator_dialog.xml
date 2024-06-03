@@ -25,4 +25,13 @@
             </t>
         </xpath>
     </t>
+
+    <t t-inherit="sale.ProductList" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('h4')]" position="attributes">
+            <attribute name="class" remove="h4" add="h5" separator=" "/>
+        </xpath>
+        <xpath expr="//span[hasclass('h4')][1]" position="attributes">
+            <attribute name="class" remove="h4" add="h5" separator=" "/>
+        </xpath>
+    </t>
 </templates>
