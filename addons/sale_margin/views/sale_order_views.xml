@@ -8,13 +8,15 @@
         <field name="priority" eval="15"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tax_totals']" position="after">
-                <label for="margin" groups="base.group_user"/>
-                <div class="text-nowrap" groups="base.group_user">
-                    <field name="margin" class="oe_inline"/>
-                    <field name="amount_untaxed" invisible="1"/>
-                    <span class="oe_inline" invisible="amount_untaxed == 0">
-                        (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
-                    </span>
+                <div class="d-flex float-end" colspan="2" groups="base.group_user">
+                    <label for="margin"/>
+                    <div>
+                        <field name="margin" class="oe_inline"/>
+                        <field name="amount_untaxed" invisible="1"/>
+                        <span class="oe_inline" invisible="amount_untaxed == 0">
+                            (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
+                        </span>
+                    </div>
                 </div>
             </xpath>
         </field>
