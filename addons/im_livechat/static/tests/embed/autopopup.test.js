@@ -1,3 +1,4 @@
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -5,7 +6,6 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { contains, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -24,7 +24,7 @@ test("persisted session", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    browser.localStorage.setItem(
+    expirableStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );

@@ -1,3 +1,4 @@
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
@@ -16,8 +17,6 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { Command, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -36,7 +35,7 @@ test("persisted session history", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    browser.localStorage.setItem(
+    expirableStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
@@ -63,7 +62,7 @@ test("previous operator prioritized", async () => {
         user_ids: [userId],
     });
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
-    cookie.set("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
+    expirableStorage.setItem("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
     await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
@@ -88,6 +87,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
+            previous_operator_id: null,
             persisted: false,
         })}`,
     ]);
@@ -100,7 +100,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
         `/im_livechat/get_session - ${JSON.stringify({
             channel_id: livechatChannelId,
             anonymous_name: "Visitor",
-            previous_operator_id: serverState.partnerId.toString(),
+            previous_operator_id: serverState.partnerId,
             temporary_id: -1,
             persisted: true,
         })}`,

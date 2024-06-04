@@ -1,4 +1,5 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
@@ -18,7 +19,6 @@ import {
     step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { browser } from "@web/core/browser/browser";
 import { withUser } from "@web/../tests/_framework/mock_server/mock_server";
 import { Command, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -42,7 +42,7 @@ test("new message from operator displays unread counter", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: serverState.partnerId,
     });
-    browser.localStorage.setItem(
+    expirableStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
