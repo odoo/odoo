@@ -3,6 +3,7 @@
 from odoo import http
 from odoo.addons.html_editor.tools import get_video_url_data
 
+
 class HTML_Editor(http.Controller):
     @http.route('/html_editor/video_url/data', type='json', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,

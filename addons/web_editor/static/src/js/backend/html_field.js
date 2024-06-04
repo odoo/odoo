@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { QWebPlugin } from '@web_editor/js/backend/QWebPlugin';
@@ -759,7 +760,7 @@ export const htmlField = {
     },
 };
 
-// registry.category("fields").add("html", htmlField, { force: true });
+registry.category("fields").add("html_legacy", htmlField, { force: true });
 
 // Ensure all links are opened in a new tab.
 const retargetLinks = (container) => {
