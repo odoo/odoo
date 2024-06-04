@@ -6509,3 +6509,33 @@ class StockMove(TransactionCase):
         ml.write({'product_uom_id': self.uom_unit.id})
         self.assertEqual(quant.reserved_quantity, 2)
         self.assertEqual(ml.quantity * self.uom_unit.ratio, 2)
+
+    def test_move_line_qty_with_quant_in_different_uom(self):
+        """
+        Check that the reserved_quantity of the quant is correctly calculated
+        when the move line is in different UOM.
+        - Quant: 100 units tracked with "Lot 1"
+        - Move: 1 dozen
+        the reserved qty should be 12 units in the quant.
+        """
+        Quant = self.env['stock.quant']
+        lot1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product_lot.id,
+        })
+        move = self.env['stock.move'].create({
+            'name': 'Test move',
+            'product_id': self.product_lot.id,
+            'product_uom_qty': 1,
+            'product_uom': self.uom_dozen.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move._action_confirm()
+        Quant._update_available_quantity(self.product_lot, self.stock_location, 100, lot_id=lot1)
+        quant = Quant._gather(self.product_lot, self.stock_location)
+        move_form = Form(move, view='stock.view_stock_move_operations')
+        with move_form.move_line_ids.new() as ml:
+            ml.quant_id = quant
+        move = move_form.save()
+        self.assertEqual(quant.reserved_quantity, 12)
