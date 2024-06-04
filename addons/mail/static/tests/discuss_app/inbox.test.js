@@ -649,3 +649,39 @@ test("Counter should be incremented by 1 when receiving a message with a mention
     );
     await contains("button", { text: "Inbox", contains: [".badge", { text: "2" }] });
 });
+
+test("Clear need action counter when opening a channel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [messageId1, messageId2] = pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "discuss.channel",
+            needaction: true,
+            res_id: channelId,
+        },
+        {
+            body: "not empty",
+            model: "discuss.channel",
+            needaction: true,
+            res_id: channelId,
+        }
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId1,
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+        {
+            mail_message_id: messageId2,
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains("button", { text: "General", contains: [".badge", { text: "2" }] });
+    await click(".o-mail-DiscussSidebarChannel", { text: "General" });
+    await contains("button", { text: "General", contains: [".badge", { count: 0 }] });
+});
