@@ -465,10 +465,19 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 'groups_by_subtotal': {
                     'Untaxed Amount': [
                         {
+<<<<<<< HEAD
                             'tax_group_name': tax.tax_group_id.name,
                             'tax_group_amount': 90.0,
                             'tax_group_base_amount': 900.0,
                             'tax_group_id': tax.tax_group_id.id,
+||||||| parent of 83b32e7eb8af (temp)
+                            'tax_group_amount': 90,
+                            'tax_group_base_amount': 900,
+=======
+                            'tax_group_amount': 90,
+                            'tax_group_base_amount': 900,
+                            'hide_base_amount': False,
+>>>>>>> 83b32e7eb8af (temp)
                         },
                     ],
                 },
@@ -657,7 +666,12 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                             'tax_group_name': tax.tax_group_id.name,
                             'tax_group_amount': 20.58,
                             'tax_group_base_amount': 98,
+<<<<<<< HEAD
                             'tax_group_id': tax.tax_group_id.id,
+||||||| parent of 83b32e7eb8af (temp)
+=======
+                            'hide_base_amount': False,
+>>>>>>> 83b32e7eb8af (temp)
                         },
                     ],
                 },

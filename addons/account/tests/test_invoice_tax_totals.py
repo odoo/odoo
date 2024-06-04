@@ -69,6 +69,52 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         })
         cls.tax_17b = cls.tax_17a.copy({'name': "tax_17b"})
 
+<<<<<<< HEAD
+||||||| parent of 83b32e7eb8af (temp)
+    def assertTaxTotals(self, document, expected_values):
+        main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
+        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+        subtotals_keys_to_ignore = {'formatted_amount'}
+
+        to_compare = document.tax_totals
+
+        for key in main_keys_to_ignore:
+            del to_compare[key]
+
+        for key in group_keys_to_ignore:
+            for groups in to_compare['groups_by_subtotal'].values():
+                for group in groups:
+                    del group[key]
+
+        for key in subtotals_keys_to_ignore:
+            for subtotal in to_compare['subtotals']:
+                del subtotal[key]
+
+        self.assertEqual(to_compare, expected_values)
+
+=======
+    def assertTaxTotals(self, document, expected_values):
+        main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
+        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount', 'hide_base_amount'}
+        subtotals_keys_to_ignore = {'formatted_amount'}
+
+        to_compare = document.tax_totals
+
+        for key in main_keys_to_ignore:
+            del to_compare[key]
+
+        for key in group_keys_to_ignore:
+            for groups in to_compare['groups_by_subtotal'].values():
+                for group in groups:
+                    del group[key]
+
+        for key in subtotals_keys_to_ignore:
+            for subtotal in to_compare['subtotals']:
+                del subtotal[key]
+
+        self.assertEqual(to_compare, expected_values)
+
+>>>>>>> 83b32e7eb8af (temp)
     def _create_document_for_tax_totals_test(self, lines_data):
         """ Creates and returns a new record of a model defining a tax_totals
         field and using the related widget.

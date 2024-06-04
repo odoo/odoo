@@ -2092,6 +2092,7 @@ class AccountTax(models.Model):
             amount_untaxed += comp_curr.round(tax_details_results['total_excluded'] / base_line['rate'])
             amount_untaxed_currency += currency.round(tax_details_results['total_excluded'])
 
+<<<<<<< HEAD
         def grouping_key_generator(base_line, tax_data):
             return {'tax_group': tax_data['tax'].tax_group_id}
 
@@ -2108,6 +2109,30 @@ class AccountTax(models.Model):
             tax_group = tax_detail['tax_group']
             subtotal_title = tax_group.preceding_subtotal or _("Untaxed Amount")
             sequence = tax_group.sequence
+||||||| parent of 83b32e7eb8af (temp)
+        tax_group_vals_list = []
+        for tax_detail in global_tax_details['tax_details'].values():
+            tax_group_vals = {
+                'tax_group': tax_detail['tax_group'],
+                'base_amount': tax_detail['base_amount_currency'],
+                'tax_amount': tax_detail['tax_amount_currency'],
+            }
+            if is_company_currency_requested:
+                tax_group_vals['base_amount_company_currency'] = tax_detail['base_amount']
+                tax_group_vals['tax_amount_company_currency'] = tax_detail['tax_amount']
+=======
+        tax_group_vals_list = []
+        for tax_detail in global_tax_details['tax_details'].values():
+            tax_group_vals = {
+                'tax_group': tax_detail['tax_group'],
+                'base_amount': tax_detail['base_amount_currency'],
+                'tax_amount': tax_detail['tax_amount_currency'],
+                'hide_base_amount': all(x['tax_repartition_line'].tax_id.amount_type == 'fixed' for x in tax_detail['group_tax_details']),
+            }
+            if is_company_currency_requested:
+                tax_group_vals['base_amount_company_currency'] = tax_detail['base_amount']
+                tax_group_vals['tax_amount_company_currency'] = tax_detail['tax_amount']
+>>>>>>> 83b32e7eb8af (temp)
 
             # Handle a manual edition of tax lines.
             if tax_lines is not None:
@@ -2129,6 +2154,7 @@ class AccountTax(models.Model):
                 'group_key': tax_group.id,
                 'tax_group_id': tax_group.id,
                 'tax_group_name': tax_group.name,
+<<<<<<< HEAD
                 'tax_group_amount': tax_detail['tax_amount_currency'],
                 'tax_group_amount_company_currency': tax_detail['tax_amount'],
                 'tax_group_base_amount': currency.round(tax_detail['display_base_amount_currency']),
@@ -2136,6 +2162,18 @@ class AccountTax(models.Model):
                 'formatted_tax_group_amount': formatLang(self.env, tax_detail['tax_amount_currency'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_detail['display_base_amount_currency'], currency_obj=currency),
                 'display_formatted_tax_group_base_amount': not all(x['amount_type'] == 'fixed' for x in tax_detail['group_tax_details']),
+||||||| parent of 83b32e7eb8af (temp)
+                'tax_group_amount': tax_group_vals['tax_amount'],
+                'tax_group_base_amount': tax_group_vals['base_amount'],
+                'formatted_tax_group_amount': formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(self.env, tax_group_vals['base_amount'], currency_obj=currency),
+=======
+                'tax_group_amount': tax_group_vals['tax_amount'],
+                'tax_group_base_amount': tax_group_vals['base_amount'],
+                'formatted_tax_group_amount': formatLang(self.env, tax_group_vals['tax_amount'], currency_obj=currency),
+                'formatted_tax_group_base_amount': formatLang(self.env, tax_group_vals['base_amount'], currency_obj=currency),
+                'hide_base_amount': tax_group_vals['hide_base_amount'],
+>>>>>>> 83b32e7eb8af (temp)
             })
             encountered_base_amounts.add(tax_detail['display_base_amount_currency'])
 
