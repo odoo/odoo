@@ -597,6 +597,7 @@ export class GraphRenderer extends Component {
      * @param {Object} legendItem
      */
     onlegendHover(ev, legendItem) {
+        ev = ev.native;
         this.canvasRef.el.style.cursor = "pointer";
         /**
          * The string legendItem.text is an initial segment of legendItem.fullText.
@@ -608,7 +609,7 @@ export class GraphRenderer extends Component {
         if (this.legendTooltip || text === fullText) {
             return;
         }
-        const viewContentTop = this.rootRef.el.getBoundingClientRect().top;
+        const viewContentTop = this.canvasRef.el.getBoundingClientRect().top;
         const legendTooltip = Object.assign(document.createElement("div"), {
             className: "o_tooltip_legend popover p-3 pe-none",
             innerText: fullText,
