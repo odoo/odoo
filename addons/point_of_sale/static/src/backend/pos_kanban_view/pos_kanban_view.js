@@ -23,7 +23,6 @@ export class PosKanbanController extends KanbanController {
             has_pos_config: true,
             has_chart_template: true,
             is_restaurant_installed: true,
-            existing_scenarios: [],
             show_predefined_scenarios: true,
         };
         onWillStart(() => updatePosKanbanViewState(this.orm, this.initialPosState));
@@ -48,11 +47,12 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 }
                 if (!isInstalledWithDemo) {
                     await this.orm.call("pos.config", functionName);
+                    await this.orm.call("pos.config", "hide_predefined_scenarios");
                 }
             });
         });
         this.hidePredefinedScenarios = useTrackedAsync(async () => {
-            return await this.callWithViewUpdate(() =>
+            return await this.callWithViewUpdate(async () =>
                 this.orm.call("pos.config", "hide_predefined_scenarios")
             );
         });
@@ -67,15 +67,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
         }
     }
 
-    get showScenarios() {
-        const hide = this.posState.has_chart_template && this.enabledScenarios.length === 0;
-        return this.posState.show_predefined_scenarios && !hide;
-    }
-
-    get enabledScenarios() {
-        return [...this.shopScenarios, ...this.restaurantScenarios].filter((s) => s.isEnabled);
-    }
-
     get shopScenarios() {
         return [
             {
@@ -83,21 +74,18 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 description: _t("Multi colors and sizes"),
                 functionName: "load_onboarding_clothes_scenario",
                 iconFile: "clothes-icon.png",
-                isEnabled: !this.posState.existing_scenarios.some((x) => x === "clothes"),
             },
             {
                 name: _t("Furnitures"),
                 description: _t("Stock, product configurator, replenishment, discounts"),
                 functionName: "load_onboarding_furniture_scenario",
                 iconFile: "furniture-icon.png",
-                isEnabled: !this.posState.existing_scenarios.some((x) => x === "furnitures"),
             },
             {
                 name: _t("Bakery"),
                 description: _t("Food, but over the counter"),
                 functionName: "load_onboarding_bakery_scenario",
                 iconFile: "bakery-icon.png",
-                isEnabled: !this.posState.existing_scenarios.some((x) => x === "bakery"),
             },
         ];
     }
@@ -110,7 +98,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 description: _t("Tables, menus, kitchen display, etc."),
                 functionName: "load_onboarding_restaurant_scenario",
                 iconFile: "restaurant-icon.png",
-                isEnabled: !this.posState.existing_scenarios.some((x) => x === "restaurant"),
             },
             {
                 name: _t("Bar"),
@@ -118,7 +105,6 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 description: _t("Floor plan, tips, self order, etc."),
                 functionName: "load_onboarding_bar_scenario",
                 iconFile: "cocktail-icon.png",
-                isEnabled: !this.posState.existing_scenarios.some((x) => x === "bar"),
             },
         ];
     }
