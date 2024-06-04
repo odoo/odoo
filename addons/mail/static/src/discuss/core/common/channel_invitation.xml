@@ -6,7 +6,7 @@
             <div t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }">
                 <t t-if="store.self.type === 'partner'">
                     <input class="o-discuss-ChannelInvitation-search border form-control" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
-                    <div class="d-flex flex-column mx-0 py-2 overflow-auto">
+                    <div class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto">
                         <t t-foreach="state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
                             <div class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-3 py-1 btn" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
                                 <div class="d-flex align-items-center p-2">
@@ -31,24 +31,24 @@
                             . Narrow your search to see more choices.
                         </div>
                     </div>
-                    <div t-if="state.selectedPartners.length > 0" class="mt-3">
-                        <h4>Selected users:</h4>
-                        <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap gap-1 overflow-auto">
-                            <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
-                                <button class="btn btn-secondary" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
-                                    <t t-esc="selectedPartner.name"/> <i class="fa fa-times"/>
-                                </button>
-                            </t>
+                </t>
+                <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-2">
+                    <t t-if="store.self.type === 'partner'" >
+                        <div t-if="state.selectedPartners.length > 0" class="mt-3">
+                            <h4>Selected users:</h4>
+                            <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap gap-1 overflow-auto">
+                                <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
+                                    <button class="btn btn-secondary" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
+                                        <t t-esc="selectedPartner.name"/> <i class="fa fa-times"/>
+                                    </button>
+                                </t>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mt-2">
-                        <button class="btn btn-primary w-100" t-att-disabled="this.state.selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                        <button class="btn btn-primary w-100 my-2" t-att-disabled="this.state.selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
                             <t t-esc="invitationButtonText"/>
                         </button>
-                    </div>
-                </t>
-                <div t-if="props.thread.invitationLink" class="mt-3">
-                    <div class="input-group">
+                    </t>
+                    <div t-if="props.thread.invitationLink" class="input-group">
                         <input class="border form-control" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
                         <button class="btn btn-primary" t-on-click="onClickCopy">
                             <i class="fa fa-copy"/>
