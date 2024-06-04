@@ -26,6 +26,9 @@ class BlogBlog(models.Model):
     def _default_sequence(self):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
+    def _editable_fields(self):
+        return ['content']
+
     sequence = fields.Integer("Sequence", default=_default_sequence)
     name = fields.Char('Blog Name', required=True, translate=True)
     subtitle = fields.Char('Blog Subtitle', translate=True)
@@ -164,6 +167,9 @@ class BlogPost(models.Model):
         'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
+
+    def _editable_fields(self):
+        return ['content']
 
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
