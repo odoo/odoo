@@ -172,16 +172,13 @@ class Menu(models.Model):
 
     def _clean_url(self):
         # clean the url with heuristic
-        if self.page_id:
-            url = self.page_id.sudo().url
-        else:
-            url = self.url
-            if url and not self.url.startswith('/'):
-                if '@' in self.url:
-                    if not self.url.startswith('mailto'):
-                        url = 'mailto:%s' % self.url
-                elif not self.url.startswith('http'):
-                    url = '/%s' % self.url
+        url = self.url
+        if url and not self.url.startswith("/"):
+            if "@" in self.url:
+                if not self.url.startswith("mailto"):
+                    url = "mailto:%s" % self.url
+            elif not self.url.startswith("http"):
+                url = "/%s" % self.url
         return url
 
     def _is_active(self):
@@ -213,13 +210,7 @@ class Menu(models.Model):
         request_url = url_parse(request.httprequest.url)
 
         if not self.child_id:
-            # Don't compare to `url` as it could be shadowed by the linked
-            # website page's URL
-            menu_url = self._clean_url()
-            if not menu_url:
-                return False
-
-            menu_url = url_parse(menu_url)
+            menu_url = url_parse(self._clean_url())
             if unslug_url(menu_url.path) == unslug_url(request_url.path):
                 if not (
                     set(menu_url.decode_query().items(multi=True))
@@ -245,19 +236,18 @@ class Menu(models.Model):
         website = self.env['website'].browse(website_id)
 
         def make_tree(node):
-            menu_url = node.page_id.url if node.page_id else node.url
             menu_node = {
                 'fields': {
                     'id': node.id,
                     'name': node.name,
-                    'url': menu_url,
+                    'url': node.url,
                     'new_window': node.new_window,
                     'is_mega_menu': node.is_mega_menu,
                     'sequence': node.sequence,
                     'parent_id': node.parent_id.id,
                 },
                 'children': [],
-                'is_homepage': menu_url == (website.homepage_url or '/'),
+                'is_homepage': node.url == (website.homepage_url or '/'),
             }
             for child in node.child_id:
                 menu_node['children'].append(make_tree(child))
@@ -287,7 +277,7 @@ class Menu(models.Model):
             menu_id = self.browse(menu['id'])
             # Check if the url match a website.page (to set the m2o relation),
             # except if the menu url contains '#', we then unset the page_id
-            if not menu['url'] or '#' in menu['url']:
+            if '#' in menu['url']:
                 # Multiple case possible
                 # 1. `#` => menu container (dropdown, ..)
                 # 2. `#anchor` => anchor on current page
@@ -295,7 +285,7 @@ class Menu(models.Model):
                 # 4. https://google.com#smth => valid external URL
                 if menu_id.page_id:
                     menu_id.page_id = None
-                if request and menu['url'] and menu['url'].startswith('#') and len(menu['url']) > 1:
+                if request and menu['url'].startswith('#') and len(menu['url']) > 1:
                     # Working on case 2.: prefix anchor with referer URL
                     referer_url = werkzeug.urls.url_parse(request.httprequest.headers.get('Referer', '')).path
                     menu['url'] = referer_url + menu['url']
