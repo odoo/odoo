@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="optional_products_modal" name="Optional Products">
+        <main class="modal-body">
+            <t t-call="website_sale_product_configurator.configure_optional_products" />
+        </main>
+    </template>
+
+    <template id="product_quantity_config">
+        <div t-if="is_view_active('website_sale.product_quantity')"
+            class="css_quantity input-group">
+            <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                <i class="fa fa-minus"></i>
+            </button>
+            <input type="text"
+                class="js_quantity form-control quantity text-center"
+                style="max-width: 4rem"
+                data-min="1"
+                name="add_qty"
+                t-att-value="add_qty or 1"/>
+            <button t-attf-href="#" class="btn btn-primary float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+        <input t-else="" type="hidden" class="d-none js_quantity form-control quantity" name="add_qty" t-att-value="add_qty or 1"/>
+    </template>
+
+    <!-- modal: full table, currenclty selected products at top -->
+    <template id="configure_optional_products">
+        <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th class="td-img">
+                    <span class="label">Product</span>
+                </th>
+                <th>
+                    <span class="label"></span>
+                </th>
+                <th class="text-center td-qty">
+                    <span t-if="is_view_active('website_sale.product_quantity')"
+                          class="label">
+                        Quantity
+                    </span>
+                </th>
+                <th class="text-center td-price">
+                    <span class="label">Price</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="js_product in_cart main_product">
+                <input type="hidden" class="product_template_id" t-att-value="product_template.id"/>
+                <input type="hidden"
+                       class="product_id"
+                       t-att-value="product.id"
+                       t-att-data-product-tracking-info="'product_tracking_info' in combination_info and json.dumps(combination_info['product_tracking_info'])"/>
+                <td class="td-img">
+                    <img class="product_detail_img" t-if="product" t-att-src="'/web/image/product.product/%s/image_128' % product_id" alt="Product Image"/>
+                    <img class="product_detail_img" t-else="" t-att-src="'/web/image/product.template/%s/image_128' % product_template_id" alt="Product Image"/>
+                </td>
+                <td class="td-product_name">
+                    <strong class="product-name product_display_name" t-out="combination_info['display_name']"/>
+                    <div class="text-muted small">
+                        <div t-field="product.description_sale"/>
+                        <div class="js_attributes"/>
+                        <div t-if="product_custom_attribute_values">
+                            <t t-foreach="product_custom_attribute_values" t-as="custom_value">
+                                <span t-esc="custom_value.get('attribute_value_name', None)"/>: <span t-esc="custom_value['custom_value']"/>
+                                <input type="hidden" class="variant_custom_value"
+                                       t-att-data-custom_product_template_attribute_value_id="custom_value['custom_product_template_attribute_value_id']"
+                                       t-att-data-attribute_value_name="custom_value.get('attribute_value_name', None)"
+                                       t-att-value="custom_value['custom_value']"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div>
+                        <t t-if="product and not combination">
+                            <t t-set="combination" t-value="product_template._get_first_possible_combination()"/>
+                        </t>
+                        <t t-if="combination and not already_configured" t-call="website_sale.variants">
+                            <t t-set="ul_class" t-valuef="flex-column" />
+                            <t t-set="product" t-value="product_template"/>
+                        </t>
+                        <t t-else="">
+                            <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
+                            <div class="d-none oe_unchanged_value_ids" t-att-data-unchanged_value_ids="variant_values" ></div>
+                            <!-- Keep the information to use it later (when leaving the modal window) -->
+                            <div class="d-none no-attribute-info" t-att-data-attribute-value="json.dumps(no_attribute)"></div>
+                            <div class="d-none custom-attribute-info" t-att-data-attribute-value="json.dumps(custom_attribute)"></div>
+                        </t>
+                    </div>
+                </td>
+                <td class="text-center td-qty">
+                    <t t-call="website_sale_product_configurator.product_quantity_config"/>
+                </td>
+                <td class="text-center td-price" name="price">
+                    <div t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                        t-out="combination_info['list_price']"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    <span class="oe_price product_id" style="white-space: nowrap;"
+                        t-att-data-product-id="product.id"
+                        t-out="combination_info['price']"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    <span class="js_raw_price d-none" t-out="combination_info['price']"/>
+                    <p class="css_not_available_msg alert alert-warning">Option not available</p>
+                </td>
+            </tr>
+            <tr class="o_total_row">
+                <td colspan="4" class="text-end">
+                    <strong>Total:</strong>
+                    <span class="js_price_total fw-bold" style="white-space: nowrap;"
+                        t-att-data-product-id="product.id"
+                        t-out="combination_info['price'] * (add_qty or 1)"
+                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                </td>
+            </tr>
+            <t t-if="product.optional_product_ids and mode != 'edit'">
+                <tr class="o_select_options"><td colspan="4"><h4>Available Options:</h4></td></tr>
+                <t t-call="website_sale_product_configurator.optional_product_items">
+                    <t t-set="parent_combination" t-value="combination"/>
+                </t>
+            </t>
+        </tbody>
+        </table>
+    </template>
+
+    <!-- modal: optional products -->
+    <template id="optional_product_items">
+        <t t-foreach="product.optional_product_ids" t-as="product">
+            <t t-if="product._is_add_to_cart_possible(parent_combination)">
+
+                <t t-set="combination" t-value="product._get_first_possible_combination(parent_combination)"/>
+                <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty)"/>
+                <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
+
+                <tr class="js_product" t-if="not combination_info.get('prevent_zero_price_sale', False)">
+                    <td class="td-img">
+                        <input type="hidden" class="product_template_id" t-att-value="product.id"/>
+                        <input type="hidden" class="product_id" t-attf-name="optional-product-#{product.id}" t-att-value="product_variant.id"/>
+                        <img t-if="product_variant" t-att-src="'/web/image/product.product/%s/image_128' % product_variant.id"  class="variant_image" alt="Product Image"/>
+                        <img t-else="" t-att-src="'/web/image/product.template/%s/image_128' % product.id"  class="variant_image" alt="Product Image"/>
+                    </td>
+                    <td class='td-product_name' colspan="2">
+                        <div class="mb-3">
+                            <strong class="product-name product_display_name" t-out="combination_info['display_name']"/>
+                            <div class="text-muted small" t-field="product.description_sale"/>
+                        </div>
+                        <t t-call="website_sale.variants"/>
+                    </td>
+                    <td class="text-center td-qty d-none">
+                        <t t-call='website_sale_product_configurator.product_quantity_config' />
+                    </td>
+                    <td class="text-center td-price">
+                        <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                            t-out="combination_info['list_price']"
+                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <div class="oe_price" style="white-space: nowrap;"
+                            t-out="combination_info['price']"
+                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="js_raw_price d-none" t-out="combination_info['price']" />
+                        <p class="css_not_available_msg alert alert-warning">Option not available</p>
+
+                        <a role="button" href="#" class="js_add btn btn-primary btn-sm"><i class="fa fa-shopping-cart add-optionnal-item"></i> Add to cart</a>
+                        <span class="js_remove d-none">
+                            <a role="button" href="#" class="js_remove"><i class="fa fa-trash-o remove-optionnal-item"></i></a>
+                        </span>
+                    </td>
+                </tr>
+            </t>
+        </t>
+    </template>
+</odoo>
