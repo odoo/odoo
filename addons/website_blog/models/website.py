@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models, _, fields
 
 
 class Website(models.Model):
     _inherit = "website"
+    robots_txt = fields.Html("Robots.txt", translate=False,
+                            groups="website.group_website_designer,website_blog.group_website_blog_manager",
+                            sanitize=False)
 
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()

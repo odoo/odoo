@@ -68,3 +68,22 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(response.headers.get('Content-Disposition', ''), r'mail_message-\d+-author_avatar\.png')
+
+    def test_blog_access_rights(self):
+        group_website_blog_manager_id = self.ref("website_blog.group_website_blog_manager")
+        group_website_designer_id = self.ref("website.group_website_designer")
+        group_employee_id = self.ref("base.group_user")
+        self.env["res.users"].with_context({"no_reset_password": True}).create({
+            "name": "Adam Blog Manager",
+            "login": "adam",
+            "email": "adam.manager@example.com",
+            "groups_id": [(6, 0, [group_website_blog_manager_id, group_employee_id])],
+        })
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_manager", login="adam")
+        self.env["res.users"].with_context({"no_reset_password": True}).create({
+            "name": "Eve Employee",
+            "login": "eve",
+            "email": "eve.employee@example.com",
+            "groups_id": [(6, 0, [group_website_designer_id, group_employee_id])],
+        })
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_no_manager", login="eve")
