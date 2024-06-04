@@ -364,10 +364,6 @@ test("A new MediaDialog after switching record in a Form view should have the co
     expect(["partner : 2"]).toVerifySteps();
 });
 
-test.todo("QWeb plugin select t-field", async (assert) => {
-    throw new Error("to imp, use the qweb plugin");
-});
-
 test("Embed video by pasting video URL", async () => {
     Partner._records = [
         {
