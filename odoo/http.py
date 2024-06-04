@@ -986,11 +986,10 @@ class Session(collections.abc.MutableMapping):
         }
 
         registry = Registry(dbname)
-        login = credential['login']
         pre_uid = registry['res.users'].authenticate(dbname, credential, wsgienv)
 
         self.uid = None
-        self.pre_login = login
+        self.pre_login = credential['login']
         self.pre_uid = pre_uid
 
         with registry.cursor() as cr:
@@ -998,10 +997,7 @@ class Session(collections.abc.MutableMapping):
 
             # if 2FA is disabled we finalize immediately
             user = env['res.users'].browse(pre_uid)
-            if not user._mfa_url():
-                self.finalize(env)
-            if request.session.get('skip_totp'):
-                request.session.pop('skip_totp')
+            if credential.get('skip_totp') or not user._mfa_url():
                 self.finalize(env)
 
         if request and request.session is self and request.db == dbname:

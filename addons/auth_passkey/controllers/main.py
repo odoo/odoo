@@ -36,5 +36,5 @@ class HomeController(Home):
     def web_login(self, redirect=None, **kw):
         webauthn = request.params.get('webauthn')
         if webauthn:
-            kw['credential'] = {'webauthn_response': request.params['webauthn'], 'type': 'webauthn'}
+            kw['credential'] = {'webauthn_response': webauthn, 'type': 'webauthn', 'skip_totp': True}
         return super().web_login(redirect, **kw)
