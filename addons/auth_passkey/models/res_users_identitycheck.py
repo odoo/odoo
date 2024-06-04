@@ -14,7 +14,7 @@ class CheckIdentityPasskeys(CheckIdentity):
             return 'webauthn'
         else:
             return super()._get_default_auth_method()
-        
+
     def _check_identity(self):
         if self.auth_method == 'webauthn':
             try:

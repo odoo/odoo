@@ -2,10 +2,11 @@ import base64
 import json
 
 from odoo import fields, models, registry, _
-from odoo.addons.base.models.res_users import check_identity
+from odoo.tools import SQL
 from odoo.exceptions import AccessDenied
 from odoo.http import request
 
+from odoo.addons.base.models.res_users import check_identity
 from ..lib.duo_labs.webauthn.helpers.exceptions import InvalidAuthenticationResponse
 
 
@@ -37,12 +38,12 @@ class UsersPasskey(models.Model):
             webauthn = json.loads(credential['webauthn_response'])
             with registry(db).cursor() as cr:
                 identifier = base64.urlsafe_b64decode(webauthn['id'] + '===').hex()
-                cr.execute("""
+                cr.execute(SQL("""
                     SELECT login
                       FROM auth_passkey_key key
                       JOIN res_users usr ON usr.id = key.create_uid
                      WHERE credential_identifier=%s
-                """, (identifier,))
+                """, identifier))
                 res = cr.fetchone()
                 if not res:
                     raise AccessDenied(_('Unknown passkey'))

@@ -2,7 +2,7 @@ import base64
 from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, _
-from odoo.tools import sql
+from odoo.tools import sql, SQL
 from odoo.addons.base.models.res_users import check_identity
 
 from ..lib.duo_labs.webauthn import base64url_to_bytes, generate_authentication_options, verify_authentication_response, generate_registration_options, verify_registration_response
@@ -26,12 +26,12 @@ class PassKey(models.Model):
     def init(self):
         super().init()
         if not sql.column_exists(self.env.cr, self._table, 'public_key'):
-            self.env.cr.execute('ALTER TABLE %s ADD COLUMN public_key varchar' % self._table)
+            self.env.cr.execute(SQL('ALTER TABLE %s ADD COLUMN public_key varchar', SQL.identifier(self._table)))
 
     def _compute_public_key(self):
-        query = 'SELECT public_key FROM %s WHERE id = %%s' % self._table
+        query = 'SELECT public_key FROM %s WHERE id = %s'
         for passkey in self:
-            self.env.cr.execute(query, [passkey.id])
+            self.env.cr.execute(SQL(query, SQL.identifier(self._table), passkey.id))
             public_key = self.env.cr.fetchone()[0]
             passkey.public_key = public_key
 
@@ -125,16 +125,19 @@ class PassKeyName(models.TransientModel):
         # We add in these fields with JS, if we didn't give them default values we would get a XML validation warning.
         if credential_identifier and public_key:
             self.ensure_one()
-            self.env.cr.execute('''
-            INSERT INTO {table} (name, credential_identifier, public_key, create_uid, write_date, create_date)
+            query = '''
+            INSERT INTO %s (name, credential_identifier, public_key, create_uid, write_date, create_date)
             VALUES (%s, %s, %s, %s, NOW() AT TIME ZONE 'UTC', NOW() AT TIME ZONE 'UTC')
-            '''.format(table=self.env['auth.passkey.key']._table), [
+            '''
+            self.env.cr.execute(SQL(
+                query,
+                SQL.identifier(self.env['auth.passkey.key']._table),
                 self.name,
                 # Base64 can have different levels of padding depending on the platform / key.
                 base64.urlsafe_b64decode(credential_identifier + '===').hex(),
                 public_key,
                 self.env.user.id,
-            ])
+            ))
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
