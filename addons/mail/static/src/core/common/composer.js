@@ -16,6 +16,7 @@ import {
     Component,
     markup,
     onMounted,
+    onWillUpdateProps,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -103,6 +104,7 @@ export class Composer extends Component {
         this.emojiButton = useRef("emoji-button");
         this.state = useState({
             active: true,
+            isNote: this.props.type === "note",
         });
         this.selection = useSelection({
             refName: "textarea",
@@ -180,6 +182,11 @@ export class Composer extends Component {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
             if (!this.props.composer.text) {
                 this.restoreContent();
+            }
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.type !== this.props.type) {
+                this.state.isNote = nextProps.type === "note";
             }
         });
     }
@@ -273,7 +280,7 @@ export class Composer extends Component {
         if (this.props.composer.message) {
             return _t("Save editing");
         }
-        return this.props.type === "note" ? _t("Log") : _t("Send");
+        return this.state.isNote ? _t("Log") : _t("Send");
     }
 
     get sendKeybind() {
@@ -458,7 +465,7 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
-        if (this.props.type !== "note") {
+        if (!this.state.isNote) {
             // auto-create partners of checked suggested partners
             const newPartners = this.thread.suggestedRecipients.filter(
                 (recipient) => recipient.checked && !recipient.persona
@@ -499,17 +506,17 @@ export class Composer extends Component {
             default_body: await prettifyMessageContent(body, validMentions),
             default_model: this.thread.model,
             default_partner_ids:
-                this.props.type === "note"
+                this.state.isNote
                     ? []
                     : this.thread.suggestedRecipients
                           .filter((recipient) => recipient.checked)
                           .map((recipient) => recipient.persona.id),
             default_res_ids: [this.thread.id],
-            default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
+            default_subtype_xmlid: this.state.isNote ? "mail.mt_note" : "mail.mt_comment",
             mail_post_autofollow: this.thread.hasWriteAccess,
         };
         const action = {
-            name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
+            name: this.state.isNote ? _t("Log note") : _t("Compose Email"),
             type: "ir.actions.act_window",
             res_model: "mail.compose.message",
             view_mode: "form",
@@ -553,6 +560,10 @@ export class Composer extends Component {
         this.env.services.notification.add(_t('Message posted on "%s"', this.thread.displayName), {
             type: "info",
         });
+    }
+
+    onClickToggleNote() {
+        this.state.isNote = !this.state.isNote;
     }
 
     onClickAddEmoji(ev) {
@@ -599,7 +610,7 @@ export class Composer extends Component {
         await this.processMessage(async (value) => {
             const postData = {
                 attachments: composer.attachments,
-                isNote: this.props.type === "note",
+                isNote: this.state.isNote,
                 mentionedChannels: composer.mentionedChannels,
                 mentionedPartners: composer.mentionedPartners,
                 cannedResponseIds: composer.cannedResponses.map((c) => c.id),
