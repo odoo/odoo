@@ -7,10 +7,10 @@ from odoo.tests import TransactionCase, tagged, Form
 
 IGNORE_MODEL_NAMES = {
     'account.report.line',  # only used as wizard, and display_name isn't compute in a wizard but Form add display_name automatically
-    'chatbot.script.step',  # only used as wizard
+    'chatbot.script.step',  # only used as wizard with default values
     'stock.warehouse',  # avoid warning "Creating a new warehouse will automatically activate the Storage Locations setting"
     'website.visitor',  # Visitors can only be created through the frontend.
-    'marketing.activity',  # only used as wizard and always used form marketing.campaign
+    'marketing.activity',  # Always used form marketing.campaign
 }
 
 

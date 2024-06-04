@@ -1179,7 +1179,8 @@ class TestHttp(common.HttpCase):
         })
         self.assertEqual(
             self.env[model_name].get_view(my_view.id)["arch"],
-            '<form><field name="active"/></form>'
+            '''<form><field name="active"/><field name="display_name" invisible="True" readonly="True" data-used-by=""/>
+</form>'''
         )
         model = self.env["ir.model"]._get(model_name)
         active_field = self.env["ir.model.fields"]._get(model_name, "active")
@@ -1189,5 +1190,6 @@ class TestHttp(common.HttpCase):
         })
         self.assertEqual(
             self.env[model_name].get_view(my_view.id)["arch"],
-            '<form><field name="active" on_change="1"/></form>'
+            '''<form><field name="active" on_change="1"/><field name="display_name" invisible="True" readonly="True" data-used-by=""/>
+</form>'''
         )

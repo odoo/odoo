@@ -82,6 +82,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         result = self.Message.onchange(values, ['discussion'], fields_spec)
         self.assertEqual(result['value'], {
             'name': f"[{discussion.name}] {USER.name}",
+            'display_name': f"[{USER.name}] {discussion.name}: ",
         })
 
         # changing 'body' should recompute 'size'
@@ -96,6 +97,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         result = self.Message.onchange(values, ['body'], fields_spec)
         self.assertEqual(result['value'], {
             'size': len(BODY),
+            'display_name': f'[{USER.name}] Stuff: What a beautiful day!',
         })
 
         # changing 'body' should not recompute 'name', even if 'discussion' and
@@ -121,6 +123,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             'root_categ': {'fields': {'display_name': {}}},
             'dummy': {},
             'color': {},
+            'display_name': {},
         })
 
         root = Category.create(dict(name='root'))
@@ -134,6 +137,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         self.env.invalidate_all()
         result = Category.onchange(values, ['parent'], fields_spec)
         self.assertEqual(result['value'], {
+            'display_name': 'root / test',
             'root_categ': {'id': root.id, 'display_name': root.name},
         })
 
@@ -267,6 +271,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
         fields_spec = multi._get_fields_spec()
         self.assertEqual(fields_spec, {
+            'display_name': {},
             'name': {},
             'partner': {'fields': {'display_name': {}}},
             'lines': {
@@ -295,6 +300,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         result = multi.onchange(values, ['partner'], fields_spec)
         self.assertEqual(result['value'], {
             'name': partner2.name,
+            'display_name': partner2.name,
             'lines': [
                 Command.update(line1.id, {
                     'name': partner2.name,
@@ -323,6 +329,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         result = multi.onchange(values, ['partner'], fields_spec)
         expected_value = {
             'name': partner2.name,
+            'display_name': partner2.name,
             'lines': [
                 Command.update(line1.id, {
                     'name': partner2.name,
@@ -461,6 +468,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             }},
             'moderator': {'fields': {'display_name': {}}},
             'name': {},
+            'display_name': {},
             'participants': {'fields': {'display_name': {}}},
         })
 
@@ -492,6 +500,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         fields_spec = self.Discussion._get_fields_spec(view_info=view_info)
         self.assertEqual(fields_spec, {
             'name': {},
+            'display_name': {},
             'moderator': {'fields': {'display_name': {}}},
             'messages': {'fields': {
                 'name': {},
@@ -595,6 +604,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
             'size': {},
             'attributes': {},
             'body': {},
+            'display_name': {},
         })
 
         values = {
@@ -795,6 +805,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         fields_spec = multi._get_fields_spec()
         self.assertEqual(fields_spec, {
             'name': {},
+            'display_name': {},
             'partner': {'fields': {'display_name': {}}},
             'lines': {
                 'fields': {
@@ -828,6 +839,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
         result = multi.onchange(values, ['partner'], fields_spec)
         self.assertEqual(result['value'], {
             'name': partner.name,
+            'display_name': partner.name,
             'lines': [
                 Command.update(line.id, {
                     'name': partner.name,
