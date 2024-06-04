@@ -77,6 +77,10 @@ export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
             }
             case "DUPLICATE_PIVOT": {
                 const { pivotId, newPivotId } = cmd;
+                const pivotDefinition = this.getters.getPivotCoreDefinition(pivotId);
+                if(pivotDefinition.type !== "ODOO") {
+                    break;
+                }
                 const pivot = deepCopy(this.pivots[pivotId]);
                 this._addPivot(newPivotId, pivot.fieldMatching);
                 break;
