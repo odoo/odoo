@@ -149,7 +149,7 @@
                             "widget": "monetary",
                             "display_currency": (pricelist or product).currency_id
                         }'/>
-                    <span class="js_raw_price d-none" t-out="product._get_contextual_price()"/>
+                    <span class="js_raw_price d-none" t-esc="combination_info['price']"/>
                     <p class="css_not_available_msg alert alert-warning">Option not available</p>
                 </td>
             </tr>
