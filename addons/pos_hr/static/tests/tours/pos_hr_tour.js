@@ -75,5 +75,9 @@ registry.category("web_tour.tours").add("PosHrTour", {
             ProductScreen.totalAmountIs("8.0"),
             Chrome.clickMenuOption("Orders"),
             TicketScreen.nthRowContains(4, "Mitchell Admin", false),
+
+            // Close register should be accessible by the admin user.
+            Chrome.clickMenuOption("Close Register"),
+            Dialog.is("Closing Register"),
         ].flat(),
 });
