@@ -219,6 +219,9 @@
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html">
                                 <field name="qr_code" class="oe_inline"/>
                             </setting>
+                            <setting id="pay_from_invoices_pdf" title="Add a button to your invoices pdf so that your customers can pay from PDF." string="Pay From PDF" company_dependent="1" help="Add a 'Click To Pay' button to your invoices">
+                                <field name="pay_from_pdf" class="oe_inline"/>
+                            </setting>
                         </block>
                         <block title="Vendor Bills" id="account_vendor_bills">
                             <setting id="show_purchase_receipts" help="Activate to create purchase receipt">

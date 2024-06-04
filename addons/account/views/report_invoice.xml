@@ -290,6 +290,9 @@
                                         <p>Scan this QR Code with<br/>your banking application</p>
                                     </div>
                                 </div>
+                                <div t-if="o.display_pay_from_pdf and o.amount_residual > 0" name="pay_from_pdf_button">
+                                    <a t-attf-href="{{o._get_payment_link()}}" style="display: inline-block; padding: 10px 30px; font-weight: bold; background-color: #714B67; color: #fff; border-radius: 5px;">Click To Pay</a>
+                                </div>
                                 <!--terms and conditions-->
                                 <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
                                     <span t-field="o.narration"/>

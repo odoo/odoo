@@ -98,6 +98,7 @@ class ResCompany(models.Model):
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     qr_code = fields.Boolean(string='Display QR-code on invoices')
+    pay_from_pdf = fields.Boolean(string='Display Payment Link in PDF')
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_download = fields.Boolean('Download by default', default=True)

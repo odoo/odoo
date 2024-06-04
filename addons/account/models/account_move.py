@@ -363,9 +363,13 @@ class AccountMove(models.Model):
         tracking=True,
         compute='_compute_payment_reference', inverse='_inverse_payment_reference', store=True, readonly=False,
     )
+    display_pay_from_pdf = fields.Boolean(
+        string="Display Pay button in Invoices PDF",
+        compute='_compute_display_payment_option_in_pdf',
+    )
     display_qr_code = fields.Boolean(
         string="Display QR-code",
-        compute='_compute_display_qr_code',
+        compute='_compute_display_payment_option_in_pdf',
     )
     qr_code_method = fields.Selection(
         string="Payment QR-code", copy=False,
@@ -1681,12 +1685,14 @@ class AccountMove(models.Model):
         }
 
     @api.depends('company_id')
-    def _compute_display_qr_code(self):
+    def _compute_display_payment_option_in_pdf(self):
         for move in self:
-            move.display_qr_code = (
-                move.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt')
-                and move.company_id.qr_code
-            )
+            if move.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt'):
+                move.display_qr_code = move.company_id.qr_code
+                move.display_pay_from_pdf = move.company_id.pay_from_pdf
+            else:
+                move.display_qr_code = False
+                move.display_pay_from_pdf = False
 
     @api.depends('amount_total', 'currency_id')
     def _compute_amount_total_words(self):
@@ -4861,6 +4867,12 @@ class AccountMove(models.Model):
         self.qr_code_method = qr_code_method
 
         return rslt
+
+    def _get_payment_link(self):
+        payment_link_wizard = self.env['payment.link.wizard'].create({
+            'amount': self.amount_residual,
+        })
+        return payment_link_wizard.link
 
     def _get_pdf_and_send_invoice_vals(self, template, **kwargs):
         return {
