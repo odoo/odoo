@@ -148,6 +148,84 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /**
      * @param {number[]} ids
+     * @param {number} last_message_id
+     * @param {boolean} [sync]
+     */
+    _mark_as_read(ids, last_message_id, sync) {
+        const kwargs = parseModelParams(arguments, "ids", "last_message_id", "sync");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        last_message_id = kwargs.last_message_id;
+        sync = kwargs.sync ?? false;
+        const [member] = this._filter([["id", "in", ids]]);
+        if (!member) {
+            return;
+        }
+        const messages = this.env["mail.message"]._filter([
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", member.channel_id],
+        ]);
+        if (!messages || messages.length === 0) {
+            return;
+        }
+        this._set_last_seen_message([member.id], last_message_id);
+        this.env["discuss.channel.member"]._set_new_message_separator(
+            [member.id],
+            last_message_id + 1,
+            sync
+        );
+    }
+
+    /**
+     * @param {number[]} ids
+     * @param {number} message_id
+     * @param {boolean} [notify=true]
+     */
+    _set_last_seen_message(ids, message_id, notify) {
+        const kwargs = parseModelParams(arguments, "ids", "message_id", "notify");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        message_id = kwargs.message_id;
+        notify = kwargs.notify ?? true;
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const [member] = this._filter([["id", "in", ids]]);
+        if (!member) {
+            return;
+        }
+        DiscussChannelMember._set_new_message_separator([member.id], message_id + 1);
+        DiscussChannelMember.write([member.id], {
+            fetched_message_id: message_id,
+            seen_message_id: message_id,
+            message_unread_counter: DiscussChannelMember._compute_message_unread_counter([
+                member.id,
+            ]),
+        });
+        if (notify) {
+            const [channel] = this.search_read([["id", "in", ids]]);
+            const [partner, guest] = ResPartner._get_current_persona();
+            let target = guest ?? partner;
+            if (DiscussChannel._types_allowing_seen_infos().includes(channel.channel_type)) {
+                target = channel;
+            }
+            BusBus._sendone(target, "mail.record/insert", {
+                ChannelMember: {
+                    id: member?.id,
+                    seen_message_id: message_id ? { id: message_id } : null,
+                },
+            });
+        }
+    }
+
+    /**
+     * @param {number[]} ids
      * @param {number} message_id
      * @param {boolean} sync
      */

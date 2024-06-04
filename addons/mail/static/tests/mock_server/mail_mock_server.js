@@ -418,10 +418,14 @@ registerRoute("/discuss/channel/mark_as_read", discuss_channel_mark_as_read);
 /** @type {RouteCallback} */
 async function discuss_channel_mark_as_read(request) {
     /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-
+    const DiscussChannelMember = this.env["discuss.channel.member"];
     const { channel_id, last_message_id, sync } = await parseRequestParams(request);
-    return DiscussChannel._mark_as_read([channel_id], last_message_id, sync);
+    const [partner, guest] = this.env["res.partner"]._get_current_persona();
+    const [memberId] = this.env["discuss.channel.member"].search([
+        ["channel_id", "=", channel_id],
+        partner ? ["partner_id", "=", partner.id] : ["guest_id", "=", guest.id],
+    ]);
+    return DiscussChannelMember._mark_as_read([memberId], last_message_id, sync);
 }
 
 registerRoute("/discuss/channel/mark_as_unread", discuss_channel_mark_as_unread);

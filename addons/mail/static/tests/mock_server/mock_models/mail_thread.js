@@ -424,9 +424,13 @@ export class MailThread extends models.ServerModel {
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
-                DiscussChannel._set_last_seen_message(ids, message.id, false);
                 const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
                 if (memberOfCurrentUser) {
+                    this.env["discuss.channel.member"]._set_last_seen_message(
+                        [memberOfCurrentUser.id],
+                        message.id,
+                        false
+                    );
                     this.env["discuss.channel.member"]._set_new_message_separator(
                         [memberOfCurrentUser.id],
                         message.id + 1,

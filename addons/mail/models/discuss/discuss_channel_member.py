@@ -416,6 +416,53 @@ class ChannelMember(models.Model):
             self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members
 
+    def _mark_as_read(self, last_message_id, sync=False):
+        """
+        Mark channel as read by updating the seen message id of the current
+        member as well as its new message separator.
+
+        :param last_message_id: the id of the message to be marked as read.
+        :param sync: wether the new message separator and the unread counter in
+            the UX will sync to their server values.
+        """
+        self.ensure_one()
+        domain = [
+            ("model", "=", "discuss.channel"),
+            ("res_id", "=", self.channel_id.id),
+            ("id", "<=", last_message_id),
+        ]
+        last_message = self.env['mail.message'].search(domain, order="id DESC", limit=1)
+        if not last_message:
+            return
+        self._set_last_seen_message(last_message)
+        self._set_new_message_separator(last_message.id + 1, sync=sync)
+
+    def _set_last_seen_message(self, message, notify=True):
+        """
+        Set the last seen message of the current member.
+
+        :param message: the message to set as last seen message.
+        :param notify: whether to send a bus notification relative to the new
+            last seen message.
+        """
+        self.ensure_one()
+        if self.seen_message_id.id >= message.id:
+            return
+        self.fetched_message_id = max(self.fetched_message_id.id, message.id)
+        self.seen_message_id = message.id
+        self.last_seen_dt = fields.Datetime.now()
+        if not notify:
+            return
+        target = self.partner_id or self.guest_id
+        if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
+            target = self.channel_id
+        self.env["bus.bus"]._sendone(target, "mail.record/insert", {
+            "ChannelMember": {
+                "id": self.id,
+                "seen_message_id": {"id": message.id},
+            }
+        })
+
     def _set_new_message_separator(self, message_id, sync=False):
         """
         :param message_id: id of the message above which the new message
