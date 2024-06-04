@@ -1,12 +1,16 @@
 import base64
+import logging
 from werkzeug.urls import url_parse
 
 from odoo import api, fields, models, _
+from odoo.http import request
 from odoo.tools import sql, SQL
 from odoo.addons.base.models.res_users import check_identity
 
 from ..lib.duo_labs.webauthn import base64url_to_bytes, generate_authentication_options, verify_authentication_response, generate_registration_options, verify_registration_response
 from ..lib.duo_labs.webauthn.helpers.structs import AuthenticatorSelectionCriteria, ResidentKeyRequirement, UserVerificationRequirement
+
+_logger = logging.getLogger(__name__)
 
 
 class PassKey(models.Model):
@@ -86,6 +90,13 @@ class PassKey(models.Model):
         for key in self:
             if key.create_uid.id == self.env.user.id:
                 key.sudo().unlink()
+                ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+                _logger.info(
+                    "Passkey (#%d) deleted by %s (#%d) from %s",
+                    self.id,
+                    self.env.user.login, self.env.user.id,
+                    ip
+                )
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -129,15 +140,24 @@ class PassKeyName(models.TransientModel):
             INSERT INTO %s (name, credential_identifier, public_key, create_uid, write_date, create_date)
             VALUES (%s, %s, %s, %s, NOW() AT TIME ZONE 'UTC', NOW() AT TIME ZONE 'UTC')
             '''
+            # Base64 can have different levels of padding depending on the platform / key.
+            credential_identifier = base64.urlsafe_b64decode(credential_identifier + '===').hex()
             self.env.cr.execute(SQL(
                 query,
                 SQL.identifier(self.env['auth.passkey.key']._table),
                 self.name,
-                # Base64 can have different levels of padding depending on the platform / key.
-                base64.urlsafe_b64decode(credential_identifier + '===').hex(),
+                credential_identifier,
                 public_key,
                 self.env.user.id,
             ))
+            passkey = self.env['auth.passkey.key'].sudo().search([('credential_identifier', '=', credential_identifier)])
+            ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+            _logger.info(
+                "Passkey (#%d) created by %s (#%d) from %s",
+                passkey.id,
+                self.env.user.login, self.env.user.id,
+                ip
+            )
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
