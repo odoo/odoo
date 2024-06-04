@@ -140,6 +140,7 @@
                             "display_currency": (pricelist or product).currency_id
                         }'/>
                     <span class="js_raw_price d-none" t-esc="product.price"/>
+                    <input type="hidden" class="product_price" t-att-value="combination_info['price']"/>
                     <p class="css_not_available_msg alert alert-warning">Option not available</p>
                 </td>
             </tr>
@@ -205,6 +206,7 @@
                                 "display_currency": (pricelist or product).currency_id
                             }'/>
                         <span class="js_raw_price d-none" t-esc="combination_info['price']" />
+                        <input type="hidden" class="product_price" t-att-value="combination_info['price']"/>
                         <p class="css_not_available_msg alert alert-warning">Option not available</p>
 
                         <a role="button" href="#" class="js_add btn btn-primary btn-sm"><i class="fa fa-shopping-cart add-optionnal-item"></i> Add to cart</a>
