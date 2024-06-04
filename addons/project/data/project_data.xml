@@ -22,4 +22,24 @@
         <field name="name">Cancelled</field>
         <field name="fold" eval="True"/>
     </record>
+
+        <!-- Project Stages  For Main company-->
+    <record id="project_project_main_stage_0" model="project.project.stage">
+        <field name="sequence">30</field>
+        <field name="name">Specification</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="project_project_main_stage_1" model="project.project.stage">
+        <field name="sequence">35</field>
+        <field name="name">Development</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="project_project_main_stage_2" model="project.project.stage">
+        <field name="sequence">40</field>
+        <field name="name">Deployed</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="fold" eval="True"/>
+    </record>
 </odoo>

@@ -94,6 +94,11 @@
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
         </record>
 
+        <record id="analytic_interior_design" model="account.analytic.account">
+            <field name="name">Interior Design</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
+        </record>
+
         <!-- Stage templates -->
         <record id="project.project_project_stage_2" model="project.project.stage">
             <field name="mail_template_id" ref="project.project_done_email_template"/>
@@ -208,6 +213,21 @@
             <field name="stage_id" ref="project.project_project_stage_2"/>
             <field name="analytic_account_id" ref="project.analytic_construction"/>
             <field name="privacy_visibility">portal</field>
+        </record>
+
+        <record id="project_interior_design" model="project.project">
+            <field name="date_start" eval="(DateTime.today() + relativedelta(months=-2)).strftime('%Y-%m-%d 10:00:00')"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-5)).strftime('%Y-%m-%d 17:00:00')"/>
+            <field name="name">Interior Design</field>
+            <field name="color">5</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type_ids" eval="[Command.link(ref('project_stage_0')), Command.link(ref('project_stage_1')), Command.link(ref('project_stage_2')), Command.link(ref('project_stage_3'))]"/>
+            <field name="privacy_visibility">employees</field>
+            <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="tag_ids" eval="[Command.link(ref('project.project_tags_01'))]"/>
+            <field name="stage_id" ref="project.project_project_main_stage_0"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="analytic_account_id" ref="project.analytic_interior_design"/>
         </record>
 
         <!-- Personal Stages: Mitchell Admin-->
