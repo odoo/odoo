@@ -116,14 +116,6 @@ class PosConfig(models.Model):
     def _load_restaurant_data(self):
         convert.convert_file(self.env, 'pos_restaurant', 'data/scenarios/restaurant_data.xml', None, noupdate=True, mode='init', kind='data')
 
-    def _get_scenario_names(self):
-        result = super()._get_scenario_names()
-        return [
-            *result,
-            ('bar', 'pos_restaurant.pos_config_main_bar'),
-            ('restaurant', 'pos_restaurant.pos_config_main_restaurant'),
-        ]
-
     @api.model
     def load_onboarding_bar_scenario(self):
         ref_name = 'pos_restaurant.pos_config_main_bar'
