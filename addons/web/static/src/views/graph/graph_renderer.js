@@ -610,7 +610,7 @@ export class GraphRenderer extends Component {
         }
         const viewContentTop = this.canvasRef.el.getBoundingClientRect().top;
         const legendTooltip = Object.assign(document.createElement("div"), {
-            className: "o_tooltip_legend popover p-3 pe-none",
+            className: "o_tooltip_legend popover p-3 pe-none position-absolute",
             innerText: fullText,
         });
         legendTooltip.style.top = `${ev.clientY - viewContentTop}px`;
