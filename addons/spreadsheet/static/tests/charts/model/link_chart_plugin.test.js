@@ -3,6 +3,8 @@ import { describe, expect, test } from "@odoo/hoot";
 
 import { Model } from "@odoo/o-spreadsheet";
 import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
+import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
+import { defineSpreadsheetModels } from "../../helpers/data";
 
 const chartId = "uuid1";
 
@@ -31,6 +33,8 @@ defineMenus([
         actionID: "menuAction2",
     },
 ]);
+
+defineSpreadsheetModels();
 
 test("Links between charts and ir.menus are correctly imported/exported", async function () {
     const env = await makeMockEnv();
@@ -78,4 +82,33 @@ test("link is removed when figure is deleted", async function () {
         id: chartId,
     });
     expect(model.getters.getChartOdooMenu(chartId)).toBe(undefined);
+});
+
+test("Links of Odoo charts are duplicated when duplicating a sheet", async function () {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_pie" });
+    const sheetId = model.getters.getActiveSheetId();
+    const secondSheetId = "mySecondSheetId";
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    const newChartId = model.getters.getChartIds(secondSheetId)[0];
+    expect(model.getters.getChartOdooMenu(newChartId)).toEqual(
+        model.getters.getChartOdooMenu(chartId)
+    );
+});
+
+test("Links of standard charts are duplicated when duplicating a sheet", async function () {
+    const env = await makeMockEnv();
+    const model = new Model({}, { custom: { env } });
+    const sheetId = model.getters.getActiveSheetId();
+    const secondSheetId = "mySecondSheetId";
+    createBasicChart(model, chartId);
+    model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+        chartId,
+        odooMenuId: 1,
+    });
+    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    const newChartId = model.getters.getChartIds(secondSheetId)[0];
+    expect(model.getters.getChartOdooMenu(newChartId)).toEqual(
+        model.getters.getChartOdooMenu(chartId)
+    );
 });
