@@ -27,7 +27,7 @@ import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { DynamicList } from "@web/model/relational_model/dynamic_list"
 import { deepEqual } from "@web/core/utils/objects";
 import { getOrigin } from "@web/core/utils/urls";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate, formatDate } from "@web/core/l10n/dates";
 import { onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { keyDown } from "@odoo/hoot-dom";
 
@@ -178,7 +178,7 @@ test("activity view: simple activity rendering", async () => {
     await contains(".o_activity_view_table tr:nth-child(2) .o_activity_record", {
         text: "Meeting Room Furnitures",
     });
-    const today = DateTime.now().toLocaleString(luxon.DateTime.DATE_SHORT);
+    const today = formatDate(DateTime.now());
     await contains(":nth-child(1 of .o_activity_summary_cell)", {
         text: today,
         parent: [
@@ -339,15 +339,11 @@ test("activity view: Activity rendering with done activities", async () => {
     });
     // Cells dates
     await contains(".o-mail-ActivityCell-deadline", {
-        text: luxon.DateTime.fromISO(uploadPlannedActs[0].date_deadline).toLocaleString(
-            luxon.DateTime.DATE_SHORT
-        ),
+        text: formatDate(luxon.DateTime.fromISO(uploadPlannedActs[0].date_deadline)),
         target: domRowMeetingCellUpload,
     });
     await contains(".o-mail-ActivityCell-deadline", {
-        text: luxon.DateTime.fromISO(uploadDoneActs[1].date_done).toLocaleString(
-            luxon.DateTime.DATE_SHORT
-        ),
+        text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[1].date_done)),
         target: domRowOfficeCellUpload,
     });
     // Activity list popovers content
@@ -366,9 +362,7 @@ test("activity view: Activity rendering with done activities", async () => {
     await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "1" }); // 1 done
     await contains(".o-mail-ActivityListPopoverItem", { text: uploadDoneActs[0].user_id[1] });
     await contains(".o-mail-ActivityListPopoverItem", {
-        text: luxon.DateTime.fromISO(uploadDoneActs[0].date_done).toLocaleString(
-            luxon.DateTime.DATE_SHORT
-        ),
+        text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[0].date_done)),
     });
     await click(`${selRowOfficeCellUpload} > div`, {
         target: domActivity,
@@ -376,9 +370,7 @@ test("activity view: Activity rendering with done activities", async () => {
     await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "3" }); // 3 done
     for (const actIdx of [1, 2, 3]) {
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done)),
         });
         await contains(".o-mail-ActivityListPopoverItem", {
             text: uploadDoneActs[actIdx].user_id[1],

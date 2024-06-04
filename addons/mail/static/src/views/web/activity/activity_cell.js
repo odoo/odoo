@@ -5,6 +5,8 @@ import { Component, useRef } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
+import { formatDate } from "@web/core/l10n/dates";
+
 export class ActivityCell extends Component {
     static components = {
         Avatar,
@@ -34,9 +36,7 @@ export class ActivityCell extends Component {
     }
 
     get reportingDateFormatted() {
-        return luxon.DateTime.fromISO(this.props.reportingDate).toLocaleString(
-            luxon.DateTime.DATE_SHORT
-        );
+        return formatDate(luxon.DateTime.fromISO(this.props.reportingDate));
     }
 
     get ongoingActivityCount() {
