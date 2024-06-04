@@ -9,4 +9,8 @@ export default class CompanyOnboardingFormController extends OnboardingStepFormC
     get stepName() {
         return "account.onboarding_onboarding_step_company_data";
     }
+    async isStepCompleted() {
+        const [company] = await this.orm.read(this.props.resModel, [this.props.resId], ["street"]);
+        return !!(company.street && company.street.trim());
+    }
 }
