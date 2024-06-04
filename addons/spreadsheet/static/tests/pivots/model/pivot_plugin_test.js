@@ -29,6 +29,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filt
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
+const { toZone } = spreadsheet.helpers;
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can get a pivotId from cell formula", async function (assert) {
@@ -1245,6 +1246,22 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             newPivotId: "new",
         });
         assert.deepEqual(result.reasons, [CommandResult.PivotIdNotFound]);
+    });
+
+    QUnit.test("Spreadsheet pivot table ignored by global fiter plugin", (assert) => {
+        const model = new Model();
+        model.selection.selectZone({ cell: { col: 0, row: 0 }, zone: toZone("A1:A4") });
+        const pivotId = "pivot1";
+        const sheetId = model.getters.getActiveSheetId();
+        model.dispatch("INSERT_NEW_PIVOT", { pivotId, sheetId });
+        model.dispatch("DUPLICATE_PIVOT", {
+            pivotId,
+            newPivotId: "new",
+        });
+        const pivotIds = model.getters.getPivotIds();
+        const pivotDef = model.getters.getPivotCoreDefinition(pivotId);
+        const dupPivotDef = model.getters.getPivotCoreDefinition(pivotIds[1]);
+        assert.deepEqual(dupPivotDef, { ...pivotDef, name: pivotDef.name + " (copy)" });
     });
 
     QUnit.test("isPivotUnused getter", async (assert) => {
