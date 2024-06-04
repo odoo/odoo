@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setContent, getContent, setSelection } from "../_helpers/selection";
 import { setupEditor } from "../_helpers/editor";
-import { waitUntil, waitFor, click, queryOne, press } from "@odoo/hoot-dom";
+import { waitUntil, waitFor, click, queryOne, press, select } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
 import { insertText } from "../_helpers/user_actions";
 
@@ -255,5 +255,100 @@ describe("Link creation by powerbox", () => {
         await waitFor(".o_we_apply_link");
         click(".o_we_apply_link");
         expect(getContent(el)).toBe('<p>ab<a href="http://test.com">test.com[]</a></p>');
+    });
+});
+
+describe("Link formatting in the popover", () => {
+    test("click on link, the link popover should load the current format correctly", async () => {
+        await setupEditor(
+            '<p><a href="http://test.com/" class="btn btn-outline-primary rounded-circle btn-lg">link2[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        click(".o_we_edit_link");
+        await animationFrame();
+        await waitFor("#link-preview");
+        const linkPreviewEl = queryOne("#link-preview");
+        expect(linkPreviewEl).toHaveClass([
+            "btn",
+            "btn-outline-primary",
+            "rounded-circle",
+            "btn-lg",
+        ]);
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(1);
+        expect(queryOne('select[name="link_style_size"]').selectedIndex).toBe(2);
+        expect(queryOne('select[name="link_style_shape"]').selectedIndex).toBe(3);
+    });
+    test("after changing the link format, the link preview should be updated", async () => {
+        await setupEditor(
+            '<p><a href="http://test.com/" class="btn btn-fill-secondary rounded-circle btn-sm">link2[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        click(".o_we_edit_link");
+        await animationFrame();
+
+        await waitFor("#link-preview");
+        const linkPreviewEl = queryOne("#link-preview");
+        expect(linkPreviewEl).toHaveClass([
+            "btn",
+            "rounded-circle",
+            "btn-fill-secondary",
+            "btn-sm",
+        ]);
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
+        expect(queryOne('select[name="link_style_size"]').selectedIndex).toBe(0);
+        expect(queryOne('select[name="link_style_shape"]').selectedIndex).toBe(5);
+
+        click('select[name="link_type"');
+        select("primary");
+        click('select[name="link_style_size"');
+        select("lg");
+        click('select[name="link_style_shape"');
+        select("rounded-circle");
+        await animationFrame();
+        expect(linkPreviewEl).toHaveClass(["btn", "btn-primary", "rounded-circle", "btn-lg"]);
+    });
+    test("after applying the link format, the link's formate should be updated", async () => {
+        const { el } = await setupEditor('<p><a href="http://test.com/">link2[]</a></p>');
+        await waitFor(".o-we-linkpopover");
+        click(".o_we_edit_link");
+        await animationFrame();
+        await waitFor("#link-preview");
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(0);
+
+        click('select[name="link_type"');
+        select("secondary");
+        await animationFrame();
+        click('select[name="link_style_shape"');
+        select("flat");
+        await animationFrame();
+
+        const linkPreviewEl = queryOne("#link-preview");
+        expect(linkPreviewEl).toHaveClass(["btn", "btn-secondary", "flat"]);
+
+        click(".o_we_apply_link");
+        expect(getContent(el)).toBe(
+            '<p><a href="http://test.com/" class="btn btn-secondary flat">link2[]</a></p>'
+        );
+    });
+    test("no preview of the link when the url is empty", async () => {
+        await setupEditor("<p><a>link2[]</a></p>");
+        await waitFor(".o-we-linkpopover");
+        expect("#link-preview").toHaveCount(0);
+    });
+    test("when no label input, the link preview should have the content of the url", async () => {
+        const { editor } = await setupEditor("<p>ab[]</p>");
+        insertText(editor, "/link");
+        await animationFrame();
+        click(".o-we-command-name:first");
+        await animationFrame();
+        await waitFor(".o-we-linkpopover");
+
+        queryOne(".o_we_href_input_link").focus();
+        for (const char of "newtest.com") {
+            press(char);
+        }
+        await animationFrame();
+        const linkPreviewEl = queryOne("#link-preview");
+        expect(linkPreviewEl).toHaveText("newtest.com");
     });
 });

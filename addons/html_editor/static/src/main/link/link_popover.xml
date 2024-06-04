@@ -10,7 +10,7 @@
                         <input class="o_we_href_input_link m-1" t-model="state.url" placeholder="Type your URL"/>
                     </div>
                     <div class="input-group" t-on-change="onChangeClasses">
-                        <select class="form-select" t-on-change="(ev)=>this.state.type = ev.target.value">
+                        <select name="link_type" class="form-select" t-on-change="(ev)=>this.state.type = ev.target.value">
                             <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                 <t t-if="colorData.type !== 'custom'">
                                     <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview dropdown-item">

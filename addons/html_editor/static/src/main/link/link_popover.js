@@ -215,7 +215,7 @@ export class LinkPopover extends Component {
         const style = ["outline", "fill"].includes(shapes[0]) ? `${shapes[0]}-` : "";
         const shapeClasses = shapes.slice(style ? 1 : 0).join(" ");
         this.state.classes =
-            (this.state.type ? ` btn btn-${style}${this.state.type}` : "") +
+            (this.state.type ? `btn btn-${style}${this.state.type}` : "") +
             (this.state.type && shapeClasses ? ` ${shapeClasses}` : "") +
             (this.state.type && this.state.buttonSize ? " btn-" + this.state.buttonSize : "");
     }
