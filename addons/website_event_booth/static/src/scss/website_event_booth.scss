@@ -13,17 +13,6 @@ label.o_wbooth_category_unavailable {
 
 .o_wbooth_registration_form label {
 
-    position: relative;
-
-    & > input {
-        visibility: hidden;
-        position: absolute;
-    }
-
-    &:not(.o_wbooth_category_unavailable) > input + div {
-        cursor: pointer;
-    }
-
     &:not(.o_wbooth_category_unavailable):hover > input + div {
         opacity: .8;
     }
@@ -36,7 +25,7 @@ label.o_wbooth_category_unavailable {
     }
 
     & img {
-        min-height: 250px;
+        height: 200px;
     }
 
 }
