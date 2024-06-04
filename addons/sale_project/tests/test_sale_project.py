@@ -749,3 +749,28 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_action = multi_company_project.with_company(company).action_view_sos()
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
+
+    def test_action_view_task_stages(self):
+        SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+
+        sale_order_2 = SaleOrder.create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        sale_line_1_order_2 = SaleOrderLine.create({
+            'product_id': self.product_order_service1.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_order_service1.uom_id.id,
+            'price_unit': self.product_order_service1.list_price,
+            'order_id': sale_order_2.id,
+        })
+
+        self.env['project.task'].create({
+            'name': 'Task',
+            'sale_line_id': sale_line_1_order_2.id,
+            'project_id': self.project_global.id,
+        })
+        action = sale_order_2.action_view_task()
+        self.assertEqual(action["context"]["default_project_id"], self.project_global.id)
