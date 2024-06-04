@@ -4306,7 +4306,6 @@ export class OdooEditor extends EventTarget {
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
-        this._activateContenteditable();
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 

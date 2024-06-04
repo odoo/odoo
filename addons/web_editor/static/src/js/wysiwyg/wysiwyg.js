@@ -109,6 +109,7 @@ const Wysiwyg = Widget.extend({
         Wysiwyg.activeWysiwygs.add(this);
         this._oNotEditableObservers = new Map();
         this._joinPeerToPeer = this._joinPeerToPeer.bind(this);
+        this.isReadyForEdition = !this.options.waitForSnippets;
     },
     /**
      *
@@ -124,6 +125,11 @@ const Wysiwyg = Widget.extend({
         if (this.options.autostart) {
             return this.startEdition();
         }
+    },
+    setReadyForEdition: function () {
+        this.isReadyForEdition = true;
+        this.$editable[0].setAttribute("contenteditable", this.isEditableContentEditable);
+
     },
     startEdition: async function () {
         const self = this;
@@ -187,7 +193,6 @@ const Wysiwyg = Widget.extend({
             savedVideo.classList.add(...VideoSelector.mediaSpecificClasses);
             return savedVideo;
         };
-
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
             _t: _t,
             toolbar: this.toolbar.$el[0],
@@ -277,7 +282,10 @@ const Wysiwyg = Widget.extend({
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading', 'o_link_in_selection'],
             foldSnippets: !!options.foldSnippets,
         }, editorCollaborationOptions));
-
+        if (!this.isReadyForEdition) {
+            this.isEditableContentEditable = this.$editable[0].isContentEditable;
+            this.$editable[0].setAttribute("contenteditable", "false");
+        }
         this.odooEditor.addEventListener('contentChanged', function () {
             self.$editable.trigger('content_changed');
             // todo: to remove when removing the legacy field_html
