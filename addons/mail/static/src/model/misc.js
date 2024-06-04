@@ -20,7 +20,6 @@ export const ONE_SYM = Symbol("one");
 export const OR_SYM = Symbol("or");
 const AND_SYM = Symbol("and");
 export const IS_RECORD_SYM = Symbol("isRecord");
-export const IS_RECORD_LIST_SYM = Symbol("isRecordList");
 export const IS_FIELD_SYM = Symbol("isField");
 export const IS_DELETING_SYM = Symbol("isDeleting");
 export const IS_DELETED_SYM = Symbol("isDeleted");
@@ -53,10 +52,6 @@ export function isMany(Model, fieldName) {
 /** @param {Record} record */
 export function isRecord(record) {
     return Boolean(record?._?.[IS_RECORD_SYM]);
-}
-/** @param {RecordList} recordList */
-export function isRecordList(recordList) {
-    return Boolean(recordList?._?.[IS_RECORD_LIST_SYM]);
 }
 /**
  * @param {typeof import("./record").Record} Model

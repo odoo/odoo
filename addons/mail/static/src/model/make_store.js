@@ -55,7 +55,11 @@ export function makeStore(env, { localRegistry } = {}) {
                         get(record, name, recordFullProxy) {
                             recordFullProxy = record._.downgradeProxy(record, recordFullProxy);
                             if (record._.gettingField || !Model._.fields.get(name)) {
-                                return Reflect.get(...arguments);
+                                let res = Reflect.get(...arguments);
+                                if (typeof res === "function") {
+                                    res = res.bind(recordFullProxy);
+                                }
+                                return res;
                             }
                             if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
                                 record._.fieldsComputeInNeed.set(name, true);
