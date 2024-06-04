@@ -34,7 +34,7 @@ class HrEmployee(models.Model):
         employees_barcode_pin = employees.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
 
-        employees = employees.read(fields)
+        employees = employees.read(fields, load=False)
         for employee in employees:
             if employee['user_id'] and employee['user_id'] in manager_ids or employee['id'] in data['pos.config']['data'][0]['advanced_employee_ids']:
                 role = 'manager'
