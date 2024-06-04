@@ -363,11 +363,11 @@
                     </t>
                     <t t-else="">
                         <td>
-                            <span class="text-nowrap">
-                                <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
+                            <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
+                            <t t-if="amount_by_group['display_formatted_tax_group_base_amount']">
                                 <span> on </span>
-                                <span t-out="amount_by_group['formatted_tax_group_base_amount']">27.00</span>
-                            </span>
+                                <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_base_amount']">27.00</span>
+                            </t>
                         </td>
                         <td class="text-end o_price_total">
                             <span class="text-nowrap" t-out="amount_by_group['formatted_tax_group_amount']">4.05</span>
@@ -413,6 +413,14 @@
                                                 27.00
                                             </span>
                                         </span>
+                                        <span t-out="amount_by_group['tax_group_name']">Tax 15%</span>
+                                        <t t-if="amount_by_group['display_formatted_tax_group_base_amount']">
+                                            <span> on </span>
+                                            <span class="text-nowrap" t-out="amount_by_group['tax_group_base_amount_company_currency']"
+                                                   t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'>
+                                                   27.00
+                                            </span>
+                                        </t>
                                     </td>
                                     <td class="text-end o_price_total">
                                         <span class="text-nowrap"
