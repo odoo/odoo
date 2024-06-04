@@ -10,8 +10,9 @@ class PosOrder(models.Model):
         self.ensure_one()
         sms_composer = self.env['sms.composer'].with_context(active_id=self.id).create(
             {
-                'composition_mode': 'numbers',
+                'composition_mode': 'comment',
                 'numbers': phone,
+                'recipient_single_number_itf': phone,
                 'template_id': self.config_id.sms_receipt_template_id.id,
                 'res_model': 'pos.order'
             }
