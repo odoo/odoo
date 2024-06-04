@@ -480,7 +480,7 @@ class AccountTestInvoicingCommon(TransactionCase):
 
     def assert_tax_totals(self, tax_totals, currency, expected_values):
         main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
-        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount', 'display_formatted_tax_group_base_amount'}
         subtotals_keys_to_ignore = {'formatted_amount'}
         comp_curr_keys = {'tax_group_amount_company_currency', 'tax_group_base_amount_company_currency', 'amount_company_currency'}
         to_compare = dict(tax_totals)
