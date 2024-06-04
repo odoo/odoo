@@ -161,6 +161,7 @@ class PortalChatter(http.Controller):
                 'is_user_public': is_user_public,
                 'is_user_employee': request.env.user.has_group('base.group_user'),
                 'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
+                'is_user_editor': request.env.user.has_group('website.group_website_designer'),
                 'display_composer': display_composer,
                 'partner_id': request.env.user.partner_id.id
             }

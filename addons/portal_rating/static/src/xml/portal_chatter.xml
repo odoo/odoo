@@ -30,6 +30,8 @@
             <t t-if="message.rating and message.rating.id" t-call="portal_rating.chatter_rating_publisher">
                 <t t-set="is_publisher" t-value="widget.options['is_user_publisher']"/>
                 <t t-set="rating" t-value="message.rating"/>
+                <t t-set="partner_id" t-value="widget.options['partner_id']"/>
+                <t t-set="is_user_editor" t-value="widget.options['is_user_editor']"/>
             </t>
         </t>
     </t>
@@ -69,7 +71,7 @@
                     <div class="d-inline-block">
                         <h5 class="mb-1"><t t-esc="rating.publisher_name"/></h5>
                     </div>
-                    <div t-if="is_publisher" class="dropdown d-inline-block">
+                    <div t-if="rating.publisher_id == partner_id || is_user_editor" class="dropdown d-inline-block">
                         <button class="btn py-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-ellipsis-v"/>
                         </button>
