@@ -2135,6 +2135,7 @@ class AccountTax(models.Model):
                 'tax_group_base_amount_company_currency': company.currency_id.round(tax_detail['display_base_amount']),
                 'formatted_tax_group_amount': formatLang(self.env, tax_detail['tax_amount_currency'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_detail['display_base_amount_currency'], currency_obj=currency),
+                'display_formatted_tax_group_base_amount': not all(x['amount_type'] == 'fixed' for x in tax_detail['group_tax_details']),
             })
             encountered_base_amounts.add(tax_detail['display_base_amount_currency'])
 
