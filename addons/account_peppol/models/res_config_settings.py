@@ -14,6 +14,7 @@ class ResConfigSettings(models.TransientModel):
         string='EDI user',
         compute='_compute_account_peppol_edi_user',
     )
+    account_peppol_edi_mode = fields.Selection(related='account_peppol_edi_user.edi_mode')
     account_peppol_contact_email = fields.Char(related='company_id.account_peppol_contact_email', readonly=False)
     account_peppol_eas = fields.Selection(related='company_id.peppol_eas', readonly=False)
     account_peppol_edi_identification = fields.Char(related='account_peppol_edi_user.edi_identification')

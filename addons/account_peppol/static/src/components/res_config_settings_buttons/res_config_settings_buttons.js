@@ -41,7 +41,7 @@ class PeppolSettingsButtons extends Component {
     }
 
     get ediMode() {
-        return this.props.record.data.edi_mode;
+        return this.props.record.data.edi_mode || this.props.record.data.account_peppol_edi_mode;
     }
 
     get modeConstraint() {
@@ -62,13 +62,10 @@ class PeppolSettingsButtons extends Component {
     }
 
     get deregisterUserButtonLabel() {
-        const modes = {
-            demo: _t("Switch to Live"),
-        }
         if (['not_registered', 'in_verification'].includes(this.proxyState)) {
             return _t("Discard");
         }
-        return this.modeConstraint !== "demo" && modes[this.ediMode] || _t("Deregister");
+        return _t("Deregister");
     }
 
     async _callConfigMethod(methodName) {
