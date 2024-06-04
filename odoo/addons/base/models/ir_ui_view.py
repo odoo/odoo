@@ -1236,6 +1236,18 @@ actual arch.
         """ Add the fields required for evaluating expressions in the view given by ``node``. """
         root = node
         missing_fields = name_manager.get_missing_fields()
+
+        # Automatically add display_name on every form view, it will be used
+        # by the control panel (if there is one) in case of form view
+        if (
+            root.tag == 'form'
+            and not name_manager.parent  # Don't add display_name for sub views
+            and not name_manager.model._transient  # Don't add display_name for wizard (most of the case in a modal)
+            and 'display_name' not in name_manager.available_fields
+            and 'display_name' not in missing_fields
+        ):
+            missing_fields['display_name'] = (name_manager._get_field_groups('display_name'), [])
+
         for name, (missing_groups, reasons) in missing_fields.items():
             if name not in name_manager.field_info:
                 continue
@@ -1290,18 +1302,11 @@ actual arch.
 
         collect(arch, model)
 
-        # TODO: Keep ? add a test for it ?
-        all_fields = set(field_nodes)
-        # All form view use the display_name in the controller panel
-        # See form_controller.js
-        if self.type == 'form' and not model._transient:
-            all_fields.add('display_name')
-
         for field, nodes in field_nodes.items():
             # if field should trigger an onchange, add on_change="1" on the
             # nodes referring to field
             model = self.env[field.model_name]
-            if model._has_onchange(field, all_fields):
+            if model._has_onchange(field, field_nodes):
                 for node in nodes:
                     if not node.get('on_change'):
                         node.set('on_change', '1')

@@ -1383,6 +1383,7 @@ test("many2many widget: creates a new record with a context containing the paren
                 {},
                 [],
                 {
+                    display_name:{},
                     turtle_foo: {},
                     turtle_trululu: {
                         fields: {

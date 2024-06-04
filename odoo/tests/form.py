@@ -124,14 +124,6 @@ class Form:
         # self._models_info = {model_name: {fields: {field_name: field_info}}}
         tree = etree.fromstring(views['views']['form']['arch'])
 
-        # TODO: check that we can edit/create on the view
-
-        # All form view use the display_name in the controller panel
-        # Sadly we cannot know if the view will be use or not with a control panel
-        # But it is true the most no-wizard models
-        if not record._transient:
-            display_name_elem = etree.Element('field', attrib={'name': 'display_name', 'invisible': 'True', 'readonly': 'True'})
-            tree.insert(0, display_name_elem)
 
         view = self._process_view(tree, record)
         object.__setattr__(self, '_view', view)
