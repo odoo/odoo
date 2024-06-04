@@ -16,12 +16,12 @@ class MailingMailing(models.Model):
 
     def _compute_crm_lead_count(self):
         lead_data = self.env['crm.lead'].with_context(active_test=False).sudo()._read_group(
-            [('source_id', 'in', self.source_id.ids)],
-            ['source_id'], ['__count'],
+            [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
+            ['utm_reference'], ['__count'],
         )
-        mapped_data = {source.id: count for source, count in lead_data}
+        mapped_data = dict(lead_data)
         for mass_mailing in self:
-            mass_mailing.crm_lead_count = mapped_data.get(mass_mailing.source_id.id, 0)
+            mass_mailing.crm_lead_count = mapped_data.get(f'{mass_mailing._name},{mass_mailing.id}', 0)
 
     @api.model
     def action_create_mailing_template_with_leads(self):
@@ -49,7 +49,7 @@ class MailingMailing(models.Model):
                 'search_default_group_by_create_date_day': True,
                 'crm_lead_view_hide_month': True,
             },
-            'domain': [('source_id', 'in', self.source_id.ids)],
+            'domain': [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),

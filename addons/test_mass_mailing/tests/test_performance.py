@@ -38,7 +38,6 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing(self):
         mailing = self.env['mailing.mailing'].create({
-            'name': 'Test',
             'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
             'reply_to_mode': 'new',
@@ -49,7 +48,8 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         # runbot needs +101 compared to local
         with (
             self.mock_mail_gateway(mail_unlink_sent=True),
-            self.assertQueryCount(__system__=1379, marketing=1383),  # 1227, 1229
+            # contains notably 1 query / record for unlink in mail
+            self.assertQueryCount(__system__=1383, marketing=1387),  # 1233, 1234
         ):
             mailing.action_send_mail()
 
@@ -84,7 +84,6 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_send_mailing_w_bl(self):
         mailing = self.env['mailing.mailing'].create({
-            'name': 'Test',
             'subject': 'Test',
             'body_html': '<p>Hello <a role="button" href="https://www.example.com/foo/bar?baz=qux">quux</a><a role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>',
             'reply_to_mode': 'new',
@@ -93,7 +92,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +153 compared to local
-        with self.assertQueryCount(__system__=1410, marketing=1417):  # 1258, 1261
+        # contains notably 1 query / record for unlink in mail
+        with self.assertQueryCount(__system__=1414, marketing=1421):  # 1260, 1262
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

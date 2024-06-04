@@ -59,12 +59,20 @@ class MailingMailing(models.Model):
 
     @api.depends('mailing_type')
     def _compute_medium_id(self):
-        super()._compute_medium_id()
         for mailing in self:
-            if mailing.mailing_type == 'sms' and (not mailing.medium_id or mailing.medium_id == self.env['utm.mixin']._utm_ref('utm.utm_medium_email')):
-                mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_sms').id
-            elif mailing.mailing_type == 'mail' and (not mailing.medium_id or mailing.medium_id == self.env['utm.mixin']._utm_ref('utm.utm_medium_sms')):
-                mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_email').id
+            if mailing.mailing_type == 'mail':
+                if not mailing.medium_id or mailing.medium_id == self.env['utm.mixin']._utm_ref('mass_mailing_sms.utm_medium_sms'):
+                    mailing.medium_id = self.env['utm.mixin']._utm_ref('utm.utm_medium_email').id
+            if mailing.mailing_type == 'sms':
+                if not mailing.medium_id or mailing.medium_id == self.env['utm.mixin']._utm_ref('utm.utm_medium_email'):
+                    mailing.medium_id = self.env['utm.mixin']._utm_ref('mass_mailing_sms.utm_medium_sms').id
+
+    @api.depends('mailing_type')
+    def _compute_source_id(self):
+        super()._compute_source_id()
+        for mailing in self:
+            if mailing.mailing_type == 'sms' and not mailing.source_id:
+                mailing.source_id = self.env['utm.mixin']._utm_ref('mass_mailing_sms.utm_source_mass_sms').id
 
     @api.depends('sms_template_id', 'mailing_type')
     def _compute_body_plaintext(self):

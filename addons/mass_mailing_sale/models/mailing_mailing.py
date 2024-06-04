@@ -15,25 +15,31 @@ class MailingMailing(models.Model):
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
         quotation_data = self.env['sale.order'].sudo()._read_group(
-            [('source_id', 'in', self.source_id.ids), ('order_line', '!=', False)],
-            ['source_id'], ['__count'],
+            [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
+            ['utm_reference'], ['__count'],
         )
-        mapped_data = {source.id: count for source, count in quotation_data}
+        mapped_data = dict(quotation_data)
         for mass_mailing in self:
-            mass_mailing.sale_quotation_count = mapped_data.get(mass_mailing.source_id.id, 0)
+            mass_mailing.sale_quotation_count = mapped_data.get(
+                f'{mass_mailing._name},{mass_mailing.id}',
+                0,
+            )
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
         domain = Domain.AND([
-            [('source_id', 'in', self.source_id.ids)],
+            [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
             [('state', 'not in', ['draft', 'cancel'])]
         ])
         moves_data = self.env['account.move'].sudo()._read_group(
-            domain, ['source_id'], ['amount_untaxed_signed:sum'],
+            domain, ['utm_reference'], ['amount_untaxed_signed:sum'],
         )
-        mapped_data = {source.id: amount_untaxed_signed for source, amount_untaxed_signed in moves_data}
+        mapped_data = dict(moves_data)
         for mass_mailing in self:
-            mass_mailing.sale_invoiced_amount = mapped_data.get(mass_mailing.source_id.id, 0)
+            mass_mailing.sale_invoiced_amount = mapped_data.get(
+                f'{mass_mailing._name},{mass_mailing.id}',
+                0,
+            )
 
     def action_redirect_to_quotations(self):
         helper_header = _("No Quotations yet!")
@@ -45,7 +51,7 @@ class MailingMailing(models.Model):
                 'search_default_group_by_date_day': True,
                 'sale_report_view_hide_date': True,
             },
-            'domain': [('source_id', '=', self.source_id.id)],
+            'domain': [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
             'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
                 helper_header, helper_message,
             ),
@@ -57,7 +63,7 @@ class MailingMailing(models.Model):
 
     def action_redirect_to_invoiced(self):
         domain = Domain.AND([
-            [('source_id', '=', self.source_id.id)],
+            [('utm_reference', 'in', [f'{mailing._name},{mailing.id}' for mailing in self])],
             [('state', 'not in', ['draft', 'cancel'])]
         ])
         moves = self.env['account.move'].search(domain)

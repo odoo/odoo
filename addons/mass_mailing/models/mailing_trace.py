@@ -123,7 +123,7 @@ class MailingTrace(models.Model):
     @api.depends('trace_type', 'mass_mailing_id')
     def _compute_display_name(self):
         for trace in self:
-            trace.display_name = f'{trace.trace_type}: {trace.mass_mailing_id.name} ({trace.id})'
+            trace.display_name = f'{trace.trace_type}: {trace.mass_mailing_id.subject} ({trace.id})'
 
     @api.model_create_multi
     def create(self, vals_list):
