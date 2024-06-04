@@ -15,17 +15,17 @@ publicWidget.registry.hrRecruitment = publicWidget.Widget.extend({
     },
 
     _onClickApplyButton (ev) {
-        const linkedin_profile = document.querySelector("#recruitment4");
-        const resume = document.querySelector("#recruitment6");
+        const linkedin_profileEl = document.querySelector("#recruitment4");
+        const resumeEl = document.querySelector("#recruitment6");
 
-        const is_linkedin_empty = !linkedin_profile || linkedin_profile.value.trim() === "";
-        const is_resume_empty = !resume || !resume.files.length;
+        const is_linkedin_empty = !linkedin_profileEl || linkedin_profileEl.value.trim() === "";
+        const is_resume_empty = !resumeEl || !resumeEl.files.length;
         if (is_linkedin_empty && is_resume_empty) {
-            linkedin_profile.setAttribute("required", true);
-            resume.setAttribute("required", true);
+            linkedin_profileEl.setAttribute("required", true);
+            resumeEl.setAttribute("required", true);
         } else {
-            linkedin_profile.removeAttribute("required");
-            resume.removeAttribute("required");
+            linkedin_profileEl.removeAttribute("required");
+            resumeEl.removeAttribute("required");
         }
     },
 
