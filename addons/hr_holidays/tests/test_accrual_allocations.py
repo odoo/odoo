@@ -1822,3 +1822,27 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # The last added leave creates a discrepancy that exceeds the
             # maximum amount allowed in negative.
             self.assertFalse(allowed_negative_leave.active)
+
+    def test_check_lastcall_change_regular_to_accrual(self):
+        with freeze_time("2017-12-5"):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+            })
+            allocation = self.env['hr.leave.allocation'].with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 10,
+                'allocation_type': 'regular',
+            })
+            allocation.action_validate()
+
+            self.assertEqual(allocation.lastcall, False)
+
+            allocation.action_refuse()
+            allocation.write({
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+            })
+
+            self.assertEqual(allocation.lastcall, datetime.date(2017, 12, 5))
