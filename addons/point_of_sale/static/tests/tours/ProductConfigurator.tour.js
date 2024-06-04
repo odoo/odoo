@@ -4,6 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
@@ -77,6 +78,11 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             // Active: Other and Leather, Inactive: Wool
             ProductConfigurator.numberRadioOptions(2),
             Dialog.confirm(),
+
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
             Chrome.endTour(),
         ].flat(),
 });

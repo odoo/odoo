@@ -315,11 +315,17 @@ export class Orderline extends PosModel {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     set_full_product_name() {
+<<<<<<< HEAD
         this.full_product_name = constructFullProductName(
             this,
             this.pos.models["product.template.attribute.value"].getAllBy("id"),
             this.product.display_name
         );
+||||||| parent of c58394aeff77 (temp)
+        this.full_product_name = this.product.display_name;
+=======
+        this.full_product_name = this.get_full_product_name_with_variant();
+>>>>>>> c58394aeff77 (temp)
     }
     get_price_extra() {
         return this.price_extra;
