@@ -2485,8 +2485,11 @@
     /**
      * Create a range from a xc. If the xc is empty, this function returns undefined.
      */
-    function createRange(getters, sheetId, range) {
-        return range ? getters.getRangeFromSheetXC(sheetId, range) : undefined;
+    function createValidRange(getters, sheetId, xc) {
+        if (!xc)
+            return;
+        const range = getters.getRangeFromSheetXC(sheetId, xc);
+        return !(range.invalidSheetName || range.invalidXc) ? range : undefined;
     }
 
     /** Methods from Odoo Web Utils  */
@@ -5259,6 +5262,7 @@
     };
 
     const macRegex = /Mac/i;
+    const MODIFIER_KEYS = ["Shift", "Control", "Alt", "Meta"];
     /**
      * Return true if the event was triggered from
      * a child element.
@@ -5304,6 +5308,31 @@
     }
     function getOpenedMenus() {
         return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
+    }
+    const letterRegex = /^[a-zA-Z]$/;
+    /**
+     * Transform a keyboard event into a shortcut string that represent this event. The letters keys will be uppercased.
+     *
+     * @argument ev - The keyboard event to transform
+     * @argument mode - Use either ev.key of ev.code to get the string shortcut
+     *
+     * @example
+     * event : { ctrlKey: true, key: "a" } => "Ctrl+A"
+     * event : { shift: true, alt: true, key: "Home" } => "Alt+Shift+Home"
+     */
+    function keyboardEventToShortcutString(ev, mode = "key") {
+        let keyDownString = "";
+        if (!MODIFIER_KEYS.includes(ev.key)) {
+            if (isCtrlKey(ev))
+                keyDownString += "Ctrl+";
+            if (ev.altKey)
+                keyDownString += "Alt+";
+            if (ev.shiftKey)
+                keyDownString += "Shift+";
+        }
+        const key = mode === "key" ? ev.key : ev.code;
+        keyDownString += letterRegex.test(key) ? key.toUpperCase() : key;
+        return keyDownString;
     }
     function isMacOS() {
         return Boolean(macRegex.test(navigator.userAgent));
@@ -7024,7 +7053,7 @@
         constructor(definition, sheetId, getters) {
             super(definition, sheetId, getters);
             this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(getters, sheetId, definition.labelRange);
+            this.labelRange = createValidRange(getters, sheetId, definition.labelRange);
             this.background = definition.background;
             this.verticalAxisPosition = definition.verticalAxisPosition;
             this.legendPosition = definition.legendPosition;
@@ -7268,7 +7297,7 @@
         type = "gauge";
         constructor(definition, sheetId, getters) {
             super(definition, sheetId, getters);
-            this.dataRange = createRange(this.getters, this.sheetId, definition.dataRange);
+            this.dataRange = createValidRange(this.getters, this.sheetId, definition.dataRange);
             this.sectionRule = definition.sectionRule;
             this.background = definition.background;
         }
@@ -7604,7 +7633,7 @@
         constructor(definition, sheetId, getters) {
             super(definition, sheetId, getters);
             this.dataSets = createDataSets(this.getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(this.getters, sheetId, definition.labelRange);
+            this.labelRange = createValidRange(this.getters, sheetId, definition.labelRange);
             this.background = definition.background;
             this.verticalAxisPosition = definition.verticalAxisPosition;
             this.legendPosition = definition.legendPosition;
@@ -7900,7 +7929,7 @@
         constructor(definition, sheetId, getters) {
             super(definition, sheetId, getters);
             this.dataSets = createDataSets(getters, definition.dataSets, sheetId, definition.dataSetsHaveTitle);
-            this.labelRange = createRange(getters, sheetId, definition.labelRange);
+            this.labelRange = createValidRange(getters, sheetId, definition.labelRange);
             this.background = definition.background;
             this.legendPosition = definition.legendPosition;
             this.aggregated = definition.aggregated;
@@ -8067,8 +8096,8 @@
         type = "scorecard";
         constructor(definition, sheetId, getters) {
             super(definition, sheetId, getters);
-            this.keyValue = createRange(getters, sheetId, definition.keyValue);
-            this.baseline = createRange(getters, sheetId, definition.baseline);
+            this.keyValue = createValidRange(getters, sheetId, definition.keyValue);
+            this.baseline = createValidRange(getters, sheetId, definition.baseline);
             this.baselineMode = definition.baselineMode;
             this.baselineDescr = definition.baselineDescr;
             this.background = definition.background;
@@ -18099,7 +18128,7 @@
             }
             const getters = this.env.model.getters;
             const sheetId = getters.getActiveSheetId();
-            const labelRange = createRange(getters, sheetId, this.labelRange);
+            const labelRange = createValidRange(getters, sheetId, this.labelRange);
             const dataSets = createDataSets(getters, this.dataSeriesRanges, sheetId, this.props.definition.dataSetsHaveTitle);
             if (dataSets.length) {
                 return dataSets[0].dataRange.zone.top + 1;
@@ -20263,14 +20292,14 @@
         }
         onKeyDown(ev) {
             const figure = this.props.figure;
-            switch (ev.key) {
+            const keyDownShortcut = keyboardEventToShortcutString(ev);
+            switch (keyDownShortcut) {
                 case "Delete":
                     this.env.model.dispatch("DELETE_FIGURE", {
                         sheetId: this.env.model.getters.getActiveSheetId(),
                         id: figure.id,
                     });
                     this.props.onFigureDeleted();
-                    ev.stopPropagation();
                     ev.preventDefault();
                     ev.stopPropagation();
                     break;
@@ -20291,7 +20320,22 @@
                         x: figure.x + delta[0],
                         y: figure.y + delta[1],
                     });
+                    ev.preventDefault();
                     ev.stopPropagation();
+                    break;
+                case "Ctrl+A":
+                    // Maybe in the future we will implement a way to select all figures
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    break;
+                case "Ctrl+Y":
+                case "Ctrl+Z":
+                    if (keyDownShortcut === "Ctrl+Y") {
+                        this.env.model.dispatch("REQUEST_REDO");
+                    }
+                    else if (keyDownShortcut === "Ctrl+Z") {
+                        this.env.model.dispatch("REQUEST_UNDO");
+                    }
                     ev.preventDefault();
                     ev.stopPropagation();
                     break;
@@ -32513,6 +32557,9 @@
             if (range.invalidXc) {
                 return range.invalidXc;
             }
+            if (!this.getters.tryGetSheet(range.sheetId)) {
+                return INCORRECT_RANGE_STRING;
+            }
             if (range.zone.bottom - range.zone.top < 0 || range.zone.right - range.zone.left < 0) {
                 return INCORRECT_RANGE_STRING;
             }
@@ -42526,9 +42573,11 @@
             if (ev.key === "Enter") {
                 ev.preventDefault();
                 this.stopEdition();
+                this.env.focusableElement.focus();
             }
             if (ev.key === "Escape") {
                 this.cancelEdition();
+                this.env.focusableElement.focus();
             }
         }
         onClickSheetName(ev) {
@@ -46316,6 +46365,12 @@
         else {
             // Shouldn't we always output the value then ?
             const value = cell.value;
+            // If the cell contains a non-exported formula and that is evaluates to
+            // nothing* ,we don't export it.
+            // * non-falsy value are relevant and so are 0 and FALSE, which only leaves
+            // the empty string.
+            if (value === "")
+                return undefined;
             const type = getCellType(value);
             attrs.push(["t", type]);
             node = escapeXml /*xml*/ `<v>${value}</v>`;
@@ -47119,7 +47174,11 @@
                     let cellNode = escapeXml ``;
                     // Either formula or static value inside the cell
                     if (cell.isFormula) {
-                        ({ attrs: additionalAttrs, node: cellNode } = addFormula(cell));
+                        const res = addFormula(cell);
+                        if (!res) {
+                            continue;
+                        }
+                        ({ attrs: additionalAttrs, node: cellNode } = res);
                     }
                     else if (cell.content && isMarkdownLink(cell.content)) {
                         const { label } = parseMarkdownLink(cell.content);
@@ -48102,9 +48161,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.36';
-    __info__.date = '2024-05-24T11:35:30.609Z';
-    __info__.hash = 'b038fad';
+    __info__.version = '16.3.37';
+    __info__.date = '2024-06-04T06:32:14.973Z';
+    __info__.hash = 'e7bf8e1';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
