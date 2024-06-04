@@ -614,8 +614,10 @@ class ResCompany(models.Model):
         self.env['onboarding.onboarding.step'].action_validate_step('account.onboarding_onboarding_step_sales_tax')
 
     def action_save_onboarding_company_data(self):
-        ref = 'account.onboarding_onboarding_step_company_data'
-        self.env['onboarding.onboarding.step'].with_company(self).action_validate_step(ref)
+        self.ensure_one()
+        if self.street:
+            ref = 'account.onboarding_onboarding_step_company_data'
+            self.env['onboarding.onboarding.step'].with_company(self).action_validate_step(ref)
         return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
     def get_chart_of_accounts_or_fail(self):
