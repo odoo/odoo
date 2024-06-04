@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.ProductInfoBanner">
-        <div t-attf-class="{{ this.ui.isSmall ? 'flex-column' : 'justify-content-between' }} {{ this.bannerBackground}}"
-            class="d-flex text-info bg-opacity-25 mx-n3 mt-n3 px-3 pb-2 pt-3 mb-3">
+        <div t-attf-class="{{ bannerClass }}"
+            class="section-product-info-title d-flex text-info bg-opacity-25 mx-n3 mt-n3 px-3 pb-2 pt-3 mb-3">
             <div class="d-flex flex-column">
                 <span class="h4">
                     <span>Internal reference: </span>
