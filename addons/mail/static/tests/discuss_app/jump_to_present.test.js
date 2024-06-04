@@ -14,7 +14,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 
-import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
+import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -36,7 +36,7 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
     expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
-        PRESENT_THRESHOLD,
+        PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Thread").clientHeight,
         { message: "should have enough scroll height to trigger jump to present" }
     );
     await click(".o-mail-Thread-banner", {
@@ -65,8 +65,8 @@ test("Basic jump to present when scrolling to outdated messages (chatter, DESC)"
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 20 });
     await contains(".o-mail-Thread");
-    expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
-        PRESENT_THRESHOLD,
+    expect(document.querySelector(".o-mail-Chatter").scrollHeight).toBeGreaterThan(
+        PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Chatter").clientHeight,
         { message: "should have enough scroll height to trigger jump to present" }
     );
     await contains(".o-mail-Chatter", { scroll: 0 });
