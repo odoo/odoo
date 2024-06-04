@@ -98,17 +98,15 @@ def _mock_user_creation(func, self, *args, **kwargs):
 
 def _mock_receiver_registration(func, self, *args, **kwargs):
     self.account_peppol_proxy_state = 'receiver'
-    return self._action_send_notification(
+    return self.env['peppol.registration']._action_send_notification(
         *_get_notification_message(self.account_peppol_proxy_state)
     )
 
 
 def _mock_check_verification_code(func, self, *args, **kwargs):
-    self.account_peppol_proxy_state = 'sender'
+    self.button_peppol_sender_registration()
     self.verification_code = False
-    if self.smp_registration:
-        return self.button_peppol_smp_registration()
-    return self._action_send_notification(
+    return self.env['peppol.registration']._action_send_notification(
         *_get_notification_message(self.account_peppol_proxy_state)
     )
 
