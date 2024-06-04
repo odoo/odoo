@@ -143,9 +143,11 @@ class StockMoveLine(models.Model):
             if not record.quant_id or record.quantity:
                 continue
             if float_compare(record.move_id.product_qty, record.quantity, precision_rounding=record.move_id.product_uom.rounding) > 0:
-                record.quantity = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity))
+                qty = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity))
+                record.quantity = record.product_id.uom_id._compute_quantity(qty, record.product_uom_id)
             else:
-                record.quantity = max(0, record.quant_id.available_quantity)
+                qty = max(0, record.quant_id.available_quantity)
+                record.quantity = record.product_id.uom_id._compute_quantity(qty, record.product_uom_id)
 
     @api.depends('quantity', 'product_uom_id')
     def _compute_quantity_product_uom(self):
