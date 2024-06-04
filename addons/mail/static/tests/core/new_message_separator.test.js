@@ -274,3 +274,30 @@ test("show new message separator when message is received while chat window is c
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-Thread-newMessage hr + span", { text: "New messages" });
 });
+
+test("only show new message separator in its thread", async () => {
+    // when a message acts as the reference for displaying new message separator,
+    // this should applies only when vieweing the message in its thread.
+    const pyEnv = await startServer();
+    const demoPartnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: demoPartnerId,
+        body: "@Mitchell Admin",
+        attachment_ids: [],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+        needaction: true,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "@Mitchell Admin" });
+    await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
+    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
+    await contains(".o-mail-Message", { text: "@Mitchell Admin" });
+    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
+        count: 0,
+        text: "@Mitchell Admin",
+    });
+});
