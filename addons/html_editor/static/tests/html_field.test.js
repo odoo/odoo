@@ -416,31 +416,28 @@ test.todo("Pasted/dropped images are converted to attachments on save", async (a
     throw new Error("To imp => urgentSave with Image");
 });
 
-test.todo(
-    "isDirty should be false when the content is being transformed by the wysiwyg",
-    async () => {
-        Partner._records = [
-            {
-                id: 1,
-                txt: "<p>a<span>b</span>c</p>",
-            },
-        ];
-        await mountView({
-            type: "form",
-            resId: 1,
-            resModel: "partner",
-            arch: `
+test("isDirty should be false when the content is being transformed by the editor", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: "<p><b>ab</b><b>c</b></p>",
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
             <form>
                 <field name="txt" widget="html"/>
             </form>`,
-        });
+    });
 
-        expect(`[name='txt'] .odoo-editor-editable`).toHaveInnerHTML("<p>abc</p>", {
-            message: "value should be sanitized by the editor",
-        });
-        expect(`.o_form_button_save`).not.toBeVisible();
-    }
-);
+    expect(`[name='txt'] .odoo-editor-editable`).toHaveInnerHTML("<p><b>abc</b></p>", {
+        message: "value should be sanitized by the editor",
+    });
+    expect(`.o_form_button_save`).not.toBeVisible();
+});
 
 test.todo("media dialog: upload", async function (assert) {
     throw new Error("To imp");
