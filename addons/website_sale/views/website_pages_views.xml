@@ -50,24 +50,21 @@
                 <attribute name="type">object</attribute>
                 <attribute name="action">open_website_url</attribute>
             </kanban>
-            <kanban position="inside">
-                <field name="website_url"/>
-            </kanban>
-            <field name="name" position="after">
-                <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
-                    <i class="fa fa-globe me-1" title="Website"/>
-                    <field name="website_id"/>
-                </div>
-                <div class="text-primary" t-esc="record.website_url.value"/>
-            </field>
-            <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
-                <div class="o_kanban_footer">
-                    <div class="position-absolute bottom-0 end-0 m-1">
-                        <t t-if="record.is_published.raw_value">Published </t>
-                        <t t-else="">Not Published </t>
-                        <field name="is_published" widget="boolean_toggle"/>
+            <xpath expr="//main/div/div" position="after">
+                <div class="d-flex flex-column mb-1">
+                    <div class="text-muted" t-if="record.website_id.value" groups="website.group_multi_website">
+                        <i class="fa fa-globe me-1" title="Website"/>
+                        <field name="website_id"/>
                     </div>
+                    <field class="text-primary" name="website_url"/>
                 </div>
+            </xpath>
+            <xpath expr="//aside" position="after">
+                <footer class="justify-content-end flex-grow-1 fs-6">
+                    <field name="is_published" widget="boolean_toggle"/>
+                    <span t-if="record.is_published.raw_value">Published</span>
+                    <span t-else="">Not Published</span>
+                </footer>
             </xpath>
         </field>
     </record>

@@ -622,10 +622,10 @@
             <field name="mode">primary</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='product_lst_price']" position="after">
-                    <div name="product_standard_price" class="mt-1">
+                <xpath expr="//main" position="inside">
+                    <span>
                         Cost: <field name="standard_price"/>
-                    </div>
+                    </span>
                 </xpath>
             </field>
         </record>

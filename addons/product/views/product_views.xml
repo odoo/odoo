@@ -495,44 +495,27 @@
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <kanban sample="1">
-                    <field name="image_128" invisible="1"/>
-                    <field name="id"/>
-                    <field name="lst_price"/>
                     <field name="activity_state"/>
                     <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div class="d-flex oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_kanban_details">
-                                    <div class="o_kanban_record_top mb-0">
-                                        <field name="is_favorite"
-                                            widget="boolean_favorite"
-                                            readonly="1"
-                                            nolabel="1"
-                                            class="me-1"/>
-                                        <div class="o_kanban_record_headings">
-                                            <strong class="o_kanban_record_title">
-                                                <field name="name"/>
-                                            </strong>
-                                        </div>
-                                    </div>
-                                    <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
-                                    <div class="o_kanban_tags_section">
-                                        <field name="product_template_variant_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                    </div>
-                                    <div name="product_lst_price" class="mt-1">
-                                        Price: <field name="lst_price"></field>
-                                    </div>
-                                    <div name="tags"/>
+                        <t t-name="kanban-card">
+                            <main class="pe-2">
+                                <div class="d-flex mb-1 h5">
+                                    <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                    <field name="name"/>
                                 </div>
-                                <div class="o_kanban_image me-1">
-                                    <img t-att-src="kanban_image('product.product', 'image_128', record.id.raw_value)"
-                                        alt="Product"
-                                        class="o_image_64_contain"
-                                        invisible="not image_128"/>
-                                </div>
-                            </div>
+                                <span t-if="record.default_code.value">
+                                    [<field name="default_code"/>]
+                                </span>
+                                <field name="product_template_variant_value_ids" groups="product.group_product_variant" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <span>
+                                    Price: <field name="lst_price"></field>
+                                </span>
+                            </main>
+                            <aside>
+                                <field name="image_128" widget="image" options="{'img_class': 'o_image_64_contain mw-100'}" alt="Product"/>
+                            </aside>
                         </t>
                     </templates>
                 </kanban>
