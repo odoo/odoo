@@ -2,13 +2,11 @@
 
 import { patch } from "@web/core/utils/patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
-import { useService } from "@web/core/utils/hooks";
 
 export const patchAvatarCardPopover = {
     setup() {
         super.setup();
         this.userInfoTemplate = "hr.avatarCardUserInfos";
-        this.actionService = useService("action");
     },
     get fieldNames() {
         const fields = super.fieldNames;
@@ -28,10 +26,10 @@ export const patchAvatarCardPopover = {
     get phone() {
         return this.user.work_phone || this.user.phone;
     },
-    async onClickViewEmployee() {
-        const employeeId = this.user.employee_ids[0];
-        const action = await this.orm.call("hr.employee", "get_formview_action", [employeeId]);
-        this.actionService.doAction(action);
+    async getProfileAction() {
+        return this.user.employee_ids?.length > 0
+            ? this.orm.call("hr.employee", "get_formview_action", [this.user.employee_ids[0]])
+            : super.getProfileAction(...arguments);
     },
 };
 

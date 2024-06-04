@@ -20,14 +20,13 @@ const patchAvatarCardResourcePopover = {
     get phone() {
         return this.record.work_phone || this.record.phone;
     },
-    async onClickViewEmployee() {
-        if (!this.record.employee_id) {
-            return;
-        }
-        const action = await this.orm.call("hr.employee", "get_formview_action", [
+    get showViewProfileBtn() {
+        return this.record.employee_id?.length > 0;
+    },
+    async getProfileAction() {
+        return await this.orm.call("hr.employee", "get_formview_action", [
             this.record.employee_id[0],
         ]);
-        this.actionService.doAction(action);
     },
 };
 
