@@ -762,73 +762,75 @@ class IrActionsReport(models.Model):
                         'attachment': None,
                     }
                 }
+            
+            collected_streams = self.split_pdf(pdf_content_stream, html_ids, collected_streams, res_ids_wo_stream)
+        return collected_streams
 
-            # Split the pdf for each record using the PDF outlines.
+    def split_pdf(self, pdf_content_stream, html_ids, collected_streams, res_ids_wo_stream):
+        # Split the pdf for each record using the PDF outlines.
 
-            # Only one record: append the whole PDF.
-            if len(res_ids_wo_stream) == 1:
-                collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
-                return collected_streams
+        # Only one record: append the whole PDF.
+        if len(res_ids_wo_stream) == 1:
+            collected_streams[res_ids_wo_stream[0]]['stream'] = pdf_content_stream
+            return collected_streams
 
-            # In case of multiple docs, we need to split the pdf according the records.
-            # In the simplest case of 1 res_id == 1 page, we use the PDFReader to print the
-            # pages one by one.
-            html_ids_wo_none = [x for x in html_ids if x]
-            reader = PdfFileReader(pdf_content_stream)
-            if reader.numPages == len(res_ids_wo_stream):
-                for i in range(reader.numPages):
+        # In case of multiple docs, we need to split the pdf according the records.
+        # In the simplest case of 1 res_id == 1 page, we use the PDFReader to print the
+        # pages one by one.
+        html_ids_wo_none = [x for x in html_ids if x]
+        reader = PdfFileReader(pdf_content_stream)
+        if reader.numPages == len(res_ids_wo_stream):
+            for i in range(reader.numPages):
+                attachment_writer = PdfFileWriter()
+                attachment_writer.addPage(reader.getPage(i))
+                stream = io.BytesIO()
+                attachment_writer.write(stream)
+                collected_streams[res_ids_wo_stream[i]]['stream'] = stream
+            return collected_streams
+
+        # In cases where the number of res_ids != the number of pages,
+        # we split the pdf based on top outlines computed by wkhtmltopdf.
+        # An outline is a <h?> html tag found on the document. To retrieve this table,
+        # we look on the pdf structure using pypdf to compute the outlines_pages from
+        # the top level heading in /Outlines.
+        if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
+            root = reader.trailer['/Root']
+            has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
+            if not has_valid_outlines:
+                return {False: {
+                    'report_action': self,
+                    'stream': pdf_content_stream,
+                    'attachment': None,
+                }}
+
+            outlines_pages = []
+            node = root['/Outlines']['/First']
+            while True:
+                outlines_pages.append(root['/Dests'][node['/Dest']][0])
+                if '/Next' not in node:
+                    break
+                node = node['/Next']
+            outlines_pages = sorted(set(outlines_pages))
+
+            # The number of outlines must be equal to the number of records to be able to split the document.
+            has_same_number_of_outlines = len(outlines_pages) == len(res_ids_wo_stream)
+
+            # There should be a top-level heading on first page
+            has_top_level_heading = outlines_pages[0] == 0
+
+            if has_same_number_of_outlines and has_top_level_heading:
+                # Split the PDF according to outlines.
+                for i, num in enumerate(outlines_pages):
+                    to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                     attachment_writer = PdfFileWriter()
-                    attachment_writer.addPage(reader.getPage(i))
+                    for j in range(num, to):
+                        attachment_writer.addPage(reader.getPage(j))
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
                     collected_streams[res_ids_wo_stream[i]]['stream'] = stream
+
                 return collected_streams
-
-            # In cases where the number of res_ids != the number of pages,
-            # we split the pdf based on top outlines computed by wkhtmltopdf.
-            # An outline is a <h?> html tag found on the document. To retrieve this table,
-            # we look on the pdf structure using pypdf to compute the outlines_pages from
-            # the top level heading in /Outlines.
-            if len(res_ids_wo_stream) > 1 and set(res_ids_wo_stream) == set(html_ids_wo_none):
-                root = reader.trailer['/Root']
-                has_valid_outlines = '/Outlines' in root and '/First' in root['/Outlines']
-                if not has_valid_outlines:
-                    return {False: {
-                        'report_action': self,
-                        'stream': pdf_content_stream,
-                        'attachment': None,
-                    }}
-
-                outlines_pages = []
-                node = root['/Outlines']['/First']
-                while True:
-                    outlines_pages.append(root['/Dests'][node['/Dest']][0])
-                    if '/Next' not in node:
-                        break
-                    node = node['/Next']
-                outlines_pages = sorted(set(outlines_pages))
-
-                # The number of outlines must be equal to the number of records to be able to split the document.
-                has_same_number_of_outlines = len(outlines_pages) == len(res_ids_wo_stream)
-
-                # There should be a top-level heading on first page
-                has_top_level_heading = outlines_pages[0] == 0
-
-                if has_same_number_of_outlines and has_top_level_heading:
-                    # Split the PDF according to outlines.
-                    for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
-                        attachment_writer = PdfFileWriter()
-                        for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
-                        stream = io.BytesIO()
-                        attachment_writer.write(stream)
-                        collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-
-                    return collected_streams
-
-            collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
-
+        collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
         return collected_streams
 
     def _prepare_pdf_report_attachment_vals_list(self, report, streams):

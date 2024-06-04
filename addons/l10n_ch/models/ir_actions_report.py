@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
+from collections import OrderedDict
 from odoo import api, models
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from pathlib import Path
@@ -44,54 +45,46 @@ class IrActionsReport(models.Model):
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
             # Render the additional reports.
-            streams_to_append = {}
+            collected_streams = OrderedDict()
+            for res_id in res_ids:
+                collected_streams[res_id] = {
+                    'stream': None,
+                    'attachment': None,
+                }
             if qr_inv_ids:
-                qr_res = self._render_qweb_pdf_prepare_streams(
-                    'l10n_ch.l10n_ch_qr_report',
-                    {
-                        **data,
-                        'skip_headers': False,
-                    },
-                    res_ids=qr_inv_ids,
-                )
+                qr_html = self._render_qweb_html('l10n_ch.l10n_ch_qr_report', qr_inv_ids, data={**data, 'skip_headers': True})[0]
+                qr_bodies, html_ids, _header, _footer, specific_paperformat_args = self._prepare_html(qr_html, report_model=self._get_report('l10n_ch.l10n_ch_qr_report').model)
                 header = self.env.ref('l10n_ch.l10n_ch_qr_header', raise_if_not_found=False)
                 if header:
-                    # Make a separated rendering to get the a page containing the company header. Then, merge the qr bill with it.
-
-                    header_res = self._render_qweb_pdf_prepare_streams(
-                        'l10n_ch.l10n_ch_qr_header',
-                        {
-                            **data,
-                            'skip_headers': True,
-                        },
-                        res_ids=qr_inv_ids,
+                    header_html = self._render_qweb_html('l10n_ch.l10n_ch_qr_header', qr_inv_ids, data={**data, 'skip_headers': True})[0]
+                    header_bodies, _html_ids, header, _footer, _specific_paperformat_args = self._prepare_html(header_html, report_model=self._get_report('l10n_ch.l10n_ch_qr_header').model)
+                    pdf_content = self._run_wkhtmltopdf(
+                        [header_body + qr_body for header_body, qr_body in zip(header_bodies, qr_bodies)],
+                        report_ref='l10n_ch.l10n_ch_qr_report',
+                        header=header,
+                        footer=None,
+                        specific_paperformat_args=specific_paperformat_args,
+                    )
+                else:
+                    pdf_content = self._run_wkhtmltopdf(
+                        qr_bodies,
+                        report_ref='l10n_ch.l10n_ch_qr_report',
+                        header=None,
+                        footer=None,
+                        specific_paperformat_args=specific_paperformat_args,
                     )
 
-                    for invoice_id, stream in qr_res.items():
-                        qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
-                        header_pdf = OdooPdfFileReader(header_res[invoice_id]['stream'], strict=False)
+                collected_streams = self.split_pdf(io.BytesIO(pdf_content), html_ids, collected_streams, html_ids)
 
-                        page = header_pdf.getPage(0)
-                        page.mergePage(qr_pdf.getPage(0))
-
-                        output_pdf = OdooPdfFileWriter()
-                        output_pdf.addPage(page)
-                        new_pdf_stream = io.BytesIO()
-                        output_pdf.write(new_pdf_stream)
-                        streams_to_append[invoice_id] = {'stream': new_pdf_stream}
-                else:
-                    for invoice_id, stream in qr_res.items():
-                        streams_to_append[invoice_id] = stream
-
-            # Add to results
-            for invoice_id, additional_stream in streams_to_append.items():
-                invoice_stream = res[invoice_id]['stream']
-                writer = OdooPdfFileWriter()
-                writer.appendPagesFromReader(OdooPdfFileReader(invoice_stream, strict=False))
-                writer.appendPagesFromReader(OdooPdfFileReader(additional_stream['stream'], strict=False))
-                new_pdf_stream = io.BytesIO()
-                writer.write(new_pdf_stream)
-                res[invoice_id]['stream'] = new_pdf_stream
-                invoice_stream.close()
-                additional_stream['stream'].close()
+                # Add to results
+                for invoice_id, additional_stream in collected_streams.items():
+                    invoice_stream = res[invoice_id]['stream']
+                    writer = OdooPdfFileWriter()
+                    writer.appendPagesFromReader(OdooPdfFileReader(invoice_stream, strict=False))
+                    writer.appendPagesFromReader(OdooPdfFileReader(additional_stream['stream'], strict=False))
+                    new_pdf_stream = io.BytesIO()
+                    writer.write(new_pdf_stream)
+                    res[invoice_id]['stream'] = new_pdf_stream
+                    invoice_stream.close()
+                    additional_stream['stream'].close()
         return res
