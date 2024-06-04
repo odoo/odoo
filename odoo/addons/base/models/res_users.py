@@ -1947,7 +1947,11 @@ class CheckIdentity(models.TransientModel):
 
     def _check_identity(self):
         try:
-            credential = {'content': self.password, 'type': self.auth_method}
+            credential = {
+                'login': self.env.user.login,
+                'password': self.password,
+                'type': 'password',
+            }
             self.create_uid._check_credentials(credential, {'interactive': True})
         except AccessDenied:
             raise UserError(_("Incorrect Password, try again or click on Forgot Password to reset your password."))

@@ -1,5 +1,5 @@
 from odoo import api, fields, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessDenied
 from odoo.addons.base.models.res_users import CheckIdentity
 
 
@@ -14,14 +14,20 @@ class CheckIdentityPasskeys(CheckIdentity):
             return 'webauthn'
         else:
             return super()._get_default_auth_method()
-
+        
     def _check_identity(self):
-        try:
-            super()._check_identity()
-        except UserError:
-            if self.auth_method == 'webauthn':
+        if self.auth_method == 'webauthn':
+            try:
+                credential = {
+                    'login': self.env.user.login,
+                    'webauthn_response': self.password,
+                    'type': 'webauthn',
+                }
+                self.create_uid._check_credentials(credential, {'interactive': True})
+            except AccessDenied:
                 raise UserError(_("Incorrect Passkey. Please provide a valid passkey or use a different authentication method."))
-            raise
+        else:
+            super()._check_identity()
 
     def action_use_password(self):
         self.ensure_one()
