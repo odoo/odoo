@@ -14,7 +14,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -400,6 +400,37 @@ test("activity click on edit", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await click(".o-mail-Activity .btn", { text: "Edit" });
+    await assertSteps(["do_action"]);
+});
+
+test("activity click on edit should pass correct context", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
+    const [activityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
+    const activityId = pyEnv["mail.activity"].create({
+        activity_type_id: activityTypeId,
+        can_write: true,
+        mail_template_ids: [mailTemplateId],
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const env = await start();
+    await openFormView("res.partner", partnerId);
+    patchWithCleanup(env.services.action, {
+        async doAction(action) {
+            step("do_action");
+            expect(action.type).toBe("ir.actions.act_window");
+            expect(action.res_model).toBe("mail.activity");
+            expect(action.res_id).toBe(activityId);
+            expect(action.context).toEqual({
+                default_res_model: "res.partner",
+                default_res_id: partnerId,
+            });
+            return super.doAction(...arguments);
+        },
+    });
     await click(".o-mail-Activity .btn", { text: "Edit" });
     await assertSteps(["do_action"]);
 });

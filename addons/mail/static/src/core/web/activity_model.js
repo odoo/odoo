@@ -159,6 +159,10 @@ export class Activity extends Record {
                     views: [[false, "form"]],
                     target: "new",
                     res_id: this.id,
+                    context: {
+                        default_res_model: this.res_model,
+                        default_res_id: this.res_id,
+                    },
                 },
                 { onClose: resolve }
             )
