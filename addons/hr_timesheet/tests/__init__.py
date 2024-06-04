@@ -6,3 +6,4 @@ from . import test_performance
 from . import test_project_task_quick_create
 from . import test_portal_timesheet
 from . import test_project_project
+from . import test_ui

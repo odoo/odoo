@@ -1735,6 +1735,17 @@ class HttpCase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.bert_user = new_test_user(
+            cls.env,
+            login='bert_user',
+            name='Bert User',
+            email='user@example.com')
+        cls.hugo = new_test_user(
+            cls.env,
+            login='hugo_user',
+            name='Hugo',
+            email='hugo@example.com',
+            tz='UTC')
         if cls.registry_test_mode:
             cls.registry.enter_test_mode(cls.cr, not hasattr(cls, 'readonly_enabled') or cls.readonly_enabled)
             cls.addClassCleanup(cls.registry.leave_test_mode)
