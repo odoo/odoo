@@ -96,6 +96,8 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
         self.assertEqual(a2.mimetype, 'image/png', "the new mimetype should be the one given on write")
         a3 = Attachment.create({'name': 'a3', 'datas': self.blob1_b64, 'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})
         self.assertEqual(a3.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type")
+        a4 = Attachment.create({'name': 'a4', 'datas': self.blob1_b64, 'mimetype': 'Application/VND.OpenXMLformats-officedocument.wordprocessingml.document'})
+        self.assertEqual(a4.mimetype, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', "should preserve office mime type (lowercase)")
 
     def test_08_neuter_xml_mimetype(self):
         """
