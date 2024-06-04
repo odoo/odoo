@@ -506,6 +506,7 @@ export class Wysiwyg extends Component {
             showExtendedTextStylesOptions: options.showExtendedTextStylesOptions,
             getCSSVariableValue: options.getCSSVariableValue,
             convertNumericToUnit: options.convertNumericToUnit,
+            autoActivateContentEditable: this.options.autoActivateContentEditable,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
