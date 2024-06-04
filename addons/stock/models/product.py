@@ -851,11 +851,11 @@ class ProductTemplate(models.Model):
             if record.type == 'consu':
                 if record.is_storable:
                     record.product_tooltip += _(
-                        " You manage the inventory level."
+                        " You manage inventory on hand, replenishments, and reservations."
                     )
                 else:
                     record.product_tooltip += _(
-                        " They are always available."
+                        " As you don't track inventory, there is no reservation: they are always available."
                     )
 
     @api.onchange('tracking')

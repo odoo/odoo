@@ -16,7 +16,8 @@ class ProductTemplate(models.Model):
     pos_categ_ids = fields.Many2many(
         'pos.category', string='Point of Sale Category',
         help="Category used in the Point of Sale.")
-    combo_ids = fields.Many2many('pos.combo', string='Combinations')
+    combo_ids = fields.Many2many('pos.combo', string='Combo Choices',
+        help="e.g. Starter, Main Course, Dessert")
     type = fields.Selection(selection_add=[
         ('combo', 'Combo')
     ], ondelete={'combo': 'set consu'})
