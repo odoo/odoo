@@ -6,11 +6,13 @@ import {
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import {
+    assertSteps,
     click,
     contains,
     insertText,
     start,
     startServer,
+    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
@@ -34,11 +36,17 @@ test("open/close temporary channel", async () => {
 test("open/close persisted channel", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
+    onRpc("/im_livechat/get_session", (req) => {
+        if (req.json().params.persisted) {
+            step("persisted");
+        }
+    });
     const env = await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "How can I help?");
-    triggerHotkey("Enter");
+    await triggerHotkey("Enter");
+    await assertSteps(["persisted"]);
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("[title='Close Chat Window']");
