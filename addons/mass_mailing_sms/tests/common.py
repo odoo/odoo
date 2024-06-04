@@ -169,7 +169,10 @@ class MassSMSCase(SMSCase, MockLinkTracker):
                 for (url, is_shortened, add_link_params) in link_info:
                     if url == 'unsubscribe':
                         url = '%s/sms/%d/%s' % (mailing.get_base_url(), mailing.id, trace.sms_code)
-                    link_params = {'utm_medium': 'SMS', 'utm_source': mailing.name}
+                    link_params = {'utm_medium': mailing.medium_id.name,
+                                   'utm_source': mailing.source_id.name,
+                                   'utm_reference': f'{mailing._name},{mailing.id}',
+                                   }
                     if add_link_params:
                         link_params.update(**add_link_params)
                     self.assertLinkShortenedText(

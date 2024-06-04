@@ -25,12 +25,10 @@ class TestMailingUi(HttpCase):
             {
                 'body_plaintext': 'Some sms spam',
                 'mailing_type': 'sms',
-                'name': 'SMS record with an activity',
                 'subject': 'New SMS!',
             }, {
                 'body_html': '<p>Some email spam</p>',
                 'mailing_type': 'mail',
-                'name': 'Email record with an activity',
                 'subject': 'New Email!',
             }
         ])

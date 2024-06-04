@@ -32,7 +32,7 @@ class MailThread(models.AbstractModel):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
         return super(MailThread, self.with_context(
-            default_mass_mailing_name=False,
+            default_mass_mailing_create=False,
             default_mass_mailing_id=False,
         )).message_mail_with_source(source_ref, **kwargs)
 
@@ -40,7 +40,7 @@ class MailThread(models.AbstractModel):
         # avoid having message send through `message_post*` methods being implicitly considered as
         # mass-mailing
         return super(MailThread, self.with_context(
-            default_mass_mailing_name=False,
+            default_mass_mailing_create=False,
             default_mass_mailing_id=False,
         )).message_post_with_source(source_ref, **kwargs)
 
@@ -84,9 +84,11 @@ class MailThread(models.AbstractModel):
             if msg_references:
                 traces = self.env['mailing.trace'].search([('message_id', 'in', msg_references)], limit=1)
                 if traces:
+                    mailing = traces.mass_mailing_id
                     defaults['campaign_id'] = traces.campaign_id.id
-                    defaults['source_id'] = traces.mass_mailing_id.source_id.id
-                    defaults['medium_id'] = traces.mass_mailing_id.medium_id.id
+                    defaults['medium_id'] = mailing.medium_id.id
+                    defaults['source_id'] = mailing.source_id.id
+                    defaults['utm_reference'] = f'{mailing._name},{mailing.id}'
 
         if custom_values:
             defaults.update(custom_values)

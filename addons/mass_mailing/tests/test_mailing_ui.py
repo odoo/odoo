@@ -33,7 +33,6 @@ class TestMailingUi(MassMailCommon, HttpCaseWithUserDemo):
             'tag_ids': [(4, self.env.ref('utm.utm_tag_1').id)],
         })
         self.env['mailing.mailing'].create({
-            'name': 'First Mailing to disply x2many',
             'subject': 'Bioutifoul mailing',
             'state': 'draft',
             'campaign_id': campaign.id,

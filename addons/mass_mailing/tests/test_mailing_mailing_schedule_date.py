@@ -28,7 +28,6 @@ class TestMailingScheduleDateWizard(MassMailCommon, CronMixinCase):
         with freeze_time(datetime(2023, 2, 17, 9, 0)):
             with self.capture_triggers(cron_job_id) as capt:
                 mailing = self.env['mailing.mailing'].create({
-                    'name': 'mailing',
                     'subject': 'some subject',
                     'mailing_model_id': self.env['ir.model']._get('res.partner').id,
                     'state' : 'draft'
@@ -47,7 +46,6 @@ class TestMailingScheduleDateWizard(MassMailCommon, CronMixinCase):
         with freeze_time(datetime(2023, 2, 17, 9, 0)):
             with self.capture_triggers(cron_job_id) as capt:
                 mailing = self.env['mailing.mailing'].create({
-                    'name': 'mailing',
                     'subject': 'some subject',
                     'mailing_model_id': self.env['ir.model']._get('res.partner').id,
                     'state' : 'draft',
@@ -68,7 +66,6 @@ class TestMailingScheduleDateWizard(MassMailCommon, CronMixinCase):
         with freeze_time(datetime(2023, 2, 17, 9, 0)):
             with self.capture_triggers(cron_job_id) as capt:
                 mailing = self.env['mailing.mailing'].create({
-                    'name': 'mailing',
                     'subject': 'some subject',
                     'mailing_model_id': self.env['ir.model']._get('res.partner').id,
                     'state' : 'draft',
@@ -88,7 +85,6 @@ class TestMailingScheduleDateWizard(MassMailCommon, CronMixinCase):
         with freeze_time(datetime(2023, 2, 17, 9, 0)):
             with self.capture_triggers(cron_job_id) as capt:
                 mailing = self.env['mailing.mailing'].create({
-                    'name': 'mailing',
                     'subject': 'some subject',
                     'mailing_model_id': self.env['ir.model']._get('res.partner').id,
                     'state' : 'draft',
@@ -117,7 +113,6 @@ class TestMailingScheduleDateWizard(MassMailCommon, CronMixinCase):
 
     def test_mailing_schedule_date(self):
         mailing = self.env['mailing.mailing'].create({
-            'name': 'mailing',
             'subject': 'some subject',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })

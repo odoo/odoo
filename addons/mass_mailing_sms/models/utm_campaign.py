@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo import api, fields, models
 
 
 class UtmCampaign(models.Model):
@@ -23,7 +21,6 @@ class UtmCampaign(models.Model):
     ab_testing_sms_winner_selection = fields.Selection([
         ('manual', 'Manual'),
         ('clicks_ratio', 'Highest Click Rate')], string="SMS Winner Selection", default="clicks_ratio")
-
 
     @api.depends('mailing_sms_ids')
     def _compute_mailing_sms_count(self):
@@ -75,11 +72,3 @@ class UtmCampaign(models.Model):
                 continue
             ab_testing_mailings.action_send_winner_mailing()
         return ab_testing_campaign
-
-
-class UtmMixin(models.Model):
-    _inherit = ['utm.mixin']
-
-    @property
-    def SELF_REQUIRED_UTM_REF(self):
-        return super().SELF_REQUIRED_UTM_REF | {'mass_mailing_sms.utm_medium_sms': ('SMS', 'utm.medium')}
