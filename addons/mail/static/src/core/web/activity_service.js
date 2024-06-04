@@ -51,6 +51,7 @@ export class ActivityService {
     }
 
     async edit(activityId) {
+        const activity = this.store.Activity.get(activityId);
         return new Promise((resolve) =>
             this.env.services.action.doAction(
                 {
@@ -61,6 +62,10 @@ export class ActivityService {
                     views: [[false, "form"]],
                     target: "new",
                     res_id: activityId,
+                    context: {
+                        default_res_model: activity.res_model,
+                        default_res_id: activity.res_id,
+                    },
                 },
                 { onClose: resolve }
             )
