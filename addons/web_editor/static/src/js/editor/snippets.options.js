@@ -3728,7 +3728,13 @@ export class SnippetOption {
         // Passed as props to components so bind it here, that way
         // it will always have the same reference.
         this.onUserValueUpdate = this._onUserValueUpdate.bind(this);
+
+        this.constructorPatch();
     }
+    /**
+     * To be patched.
+     */
+    constructorPatch() {}
     /**
      * Called after the constructor. Allows the option to do async stuff
      * before the widgets are mounted.

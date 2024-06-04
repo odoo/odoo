@@ -43,6 +43,7 @@ import {
     LayoutColumn,
     legacyRegistry,
     owlRegistry,
+    SnippetOption,
     UnitUserValue,
     WeInput,
 } from '@web_editor/js/editor/snippets.options'; 
@@ -871,17 +872,17 @@ options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-options.Class.include({
-    custom_events: Object.assign({}, options.Class.prototype.custom_events || {}, {
-        'fonts_custo_request': '_onFontsCustoRequest',
+patch(SnippetOption.prototype, {
+    custom_events: Object.assign({}, SnippetOption.prototype.custom_events || {}, {
+        'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
     specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 
     /**
      * @override
      */
-    init() {
-        this._super(...arguments);
+    constructorPatch() {
+        super.constructorPatch(...arguments);
         // Since the website is displayed in an iframe, its jQuery
         // instance is not the same as the editor. This property allows
         // for easy access to bootstrap plugins (Carousel, Modal, ...).
@@ -890,8 +891,6 @@ options.Class.include({
         // triggers a custom event, only that same jQuery instance will
         // trigger handlers set with `.on`.
         this.$bsTarget = this.ownerDocument.defaultView.$(this.$target[0]);
-
-        this.orm = this.bindService("orm");
     },
 
     //--------------------------------------------------------------------------
@@ -937,7 +936,7 @@ options.Class.include({
      * @override
      */
     async _checkIfWidgetsUpdateNeedReload(widgets) {
-        const needReload = await this._super(...arguments);
+        const needReload = await super._checkIfWidgetsUpdateNeedReload(...arguments);
         if (needReload) {
             return needReload;
         }
@@ -955,7 +954,7 @@ options.Class.include({
     /**
      * @override
      */
-    _computeWidgetState: async function (methodName, params) {
+    async _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'customizeWebsiteViews': {
                 return this._getEnabledCustomizeValues(params.possibleValues, true);
@@ -983,7 +982,7 @@ options.Class.include({
                 return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
         }
-        return this._super(...arguments);
+        return super._computeWidgetState(...arguments);
     },
     /**
      * @private
@@ -1153,7 +1152,7 @@ options.Class.include({
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
         });
-        return this.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
+        return this.env.services.orm.call("web_editor.assets", "make_scss_customization", [url, values]);
     },
     /**
      * Refreshes all public widgets related to the given element.
@@ -1164,7 +1163,7 @@ options.Class.include({
      */
     _refreshPublicWidgets: async function ($el) {
         return new Promise((resolve, reject) => {
-            this.trigger_up('widgets_start_request', {
+            this.env.services.website.websiteRootInstance.trigger_up('widgets_start_request', {
                 editableMode: true,
                 $target: $el || this.$target,
                 onSuccess: resolve,
@@ -1186,15 +1185,15 @@ options.Class.include({
     /**
      * @override
      */
-    _select: async function (previewMode, widget) {
-        await this._super(...arguments);
+    async _select(previewMode, widget) {
+        await super._select(...arguments);
 
         // Some blocks flicker when we start their public widgets, so we skip
         // the refresh for them to avoid the flickering.
         const targetNoRefreshSelector = ".s_instagram_page";
         // TODO: we should review the way public widgets are restarted when
         // converting to OWL and a new API.
-        if (this.options.isWebsite && !widget.$el.closest('[data-no-widget-refresh="true"]').length
+        if (this.options.isWebsite && widget._methodsParams.noWidgetRefresh !== "true"
             && !this.$target[0].matches(targetNoRefreshSelector)) {
             // TODO the flag should be retrieved through widget params somehow
             await this._refreshPublicWidgets();
@@ -1236,6 +1235,11 @@ options.Class.include({
             reloadEditor: true,
         });
     },
+});
+
+options.Class.include({
+    // TODO Keep until WebsiteLevelColor is converted
+    specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 });
 
 function _getLastPreFilterLayerElement($el) {
