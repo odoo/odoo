@@ -4,6 +4,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScr
 import * as Dialog from "@point_of_sale/../tests/tours/helpers/DialogTourMethods";
 import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import * as ProductConfigurator from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
+import * as PaymentScreen from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import { inLeftSide } from "@point_of_sale/../tests/tours/helpers/utils";
@@ -44,7 +45,7 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
 
             // Check that the product has been added to the order with correct attributes and price
             ProductScreen.selectedOrderlineHas(
-                "Configurable Chair",
+                "Configurable Chair (Red, Metal, Other: Custom Fabric)",
                 "1.0",
                 "11.0"
             ),
@@ -90,6 +91,11 @@ registry.category("web_tour.tours").add("ProductConfiguratorTour", {
             // Active: Other and Leather, Inactive: Wool
             ProductConfigurator.numberRadioOptions(2),
             Dialog.confirm(),
+
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.validateButtonIsHighlighted(true),
+            PaymentScreen.clickValidate(),
             Chrome.endTour(),
         ].flat(),
 });
