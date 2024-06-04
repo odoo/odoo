@@ -917,7 +917,7 @@ export class Thread extends Record {
                 }
             });
         }
-        if (this.needactionMessages.length > 0) {
+        if (this.message_needaction_counter > 0) {
             this.markAllMessagesAsRead();
         }
     }
