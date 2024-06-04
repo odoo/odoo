@@ -986,22 +986,6 @@ class PosConfig(models.Model):
         else:
             return f"{ref_name}_{self.env.company.id}"
 
-    def _get_scenario_names(self):
-        return [
-            ('furnitures', 'point_of_sale.pos_config_main'),
-            ('clothes', 'point_of_sale.pos_config_clothes'),
-            ('bakery', 'point_of_sale.pos_config_bakery'),
-        ]
-
-    def _get_existing_scenarios(self):
-        result = []
-        for name, base_ref_name in self._get_scenario_names():
-            ref_name = self._get_suffixed_ref_name(base_ref_name)
-            record = self.env.ref(ref_name, raise_if_not_found=False)
-            if record:
-                result.append(name)
-        return result
-
     @api.model
     def hide_predefined_scenarios(self):
         self.env.company.point_of_sale_show_predefined_scenarios = False
@@ -1016,7 +1000,6 @@ class PosConfig(models.Model):
             "has_pos_config": has_pos_config,
             "has_chart_template": has_chart_template,
             "is_restaurant_installed": bool(self.env['ir.module.module'].search_count([('name', '=', 'pos_restaurant'), ('state', '=', 'installed')])),
-            "existing_scenarios": self._get_existing_scenarios(),
             "show_predefined_scenarios": self.env.company.point_of_sale_show_predefined_scenarios,
         }
 
