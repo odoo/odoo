@@ -1357,7 +1357,8 @@ class Website(models.Model):
                     website_domain if hasattr(Model, 'website_id') else [],
                 ]))
 
-            dependency_records = Model.search(Domain.OR(domains))
+            # sudo() to bypass the field level access rights. i.e: robots_txt
+            dependency_records = Model.sudo().search(Domain.OR(domains))
             if model_name == 'ir.ui.view':
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:

@@ -16,7 +16,7 @@ registerWebsitePreviewTour(
             // Not very robust but still nice to have an extra check as this is the
             // main purpose of this tour
             content: "First check the user is not a designer",
-            trigger: '.dropdown-menu:has([data-menu-xmlid="website_sale.menu_product_pages"]):not(:has([data-menu-xmlid="website.menu_website_pages_list"]))',
+            trigger: '.dropdown-menu:has([data-menu-xmlid="website_sale.menu_product_pages"]):not(:has([data-menu-xmlid="website.menu_edit_menu"]))',
             run: "click",
         },
         {

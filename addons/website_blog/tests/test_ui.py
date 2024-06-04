@@ -120,3 +120,22 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
         self.start_tour("/blog", "blog_tags_with_date", login="admin")
+
+    def test_blog_access_rights(self):
+        group_website_blog_manager_id = self.ref("website_blog.group_website_blog_manager")
+        group_website_designer_id = self.ref("website.group_website_designer")
+        group_employee_id = self.ref("base.group_user")
+        self.env["res.users"].with_context({"no_reset_password": True}).create({
+            "name": "Adam Blog Manager",
+            "login": "adam",
+            "email": "adam.manager@example.com",
+            "group_ids": [(6, 0, [group_website_blog_manager_id, group_employee_id])],
+        })
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_manager", login="adam")
+        self.env["res.users"].with_context({"no_reset_password": True}).create({
+            "name": "Eve Employee",
+            "login": "eve",
+            "email": "eve.employee@example.com",
+            "group_ids": [(6, 0, [group_website_designer_id, group_employee_id])],
+        })
+        self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_no_manager", login="eve")

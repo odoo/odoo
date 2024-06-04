@@ -23,8 +23,8 @@
         'views/snippets/s_dynamic_snippet_blog_posts_preview_data.xml',
         'views/website_pages_views.xml',
         'views/blog_post_add.xml',
-        'security/ir.model.access.csv',
         'security/website_blog_security.xml',
+        'security/ir.model.access.csv',
     ],
     'demo': [
         'data/website_blog_demo.xml'
