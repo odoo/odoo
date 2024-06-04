@@ -273,7 +273,6 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 1},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 2},
             'project': {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3},
-            'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
             'status': {'label': _('Status'), 'order': 'kanban_state', 'sequence': 6},
             'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 8},

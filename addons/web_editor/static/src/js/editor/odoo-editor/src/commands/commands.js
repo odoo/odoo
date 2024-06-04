@@ -555,6 +555,14 @@ export const editorCommands = {
         }
 
         let target = [...(blocks.size ? blocks : li)];
+        if (blocks.size) {
+            // Remove hardcoded padding to have default padding of list element 
+            for (const block of blocks) {
+                if (block.style) {
+                    block.style.padding = "";
+                }
+            }
+        }
         while (target.length) {
             const node = target.pop();
             // only apply one li per ul
