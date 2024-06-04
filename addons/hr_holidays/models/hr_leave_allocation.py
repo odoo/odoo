@@ -678,11 +678,17 @@ class HolidaysAllocation(models.Model):
         self.add_follower(employee_id)
 
         if 'number_of_days_display' not in values and 'number_of_hours_display' not in values:
-            return super().write(values)
+            res = super().write(values)
+            if 'allocation_type' in values:
+                self._add_lastcalls()
+            return res
 
         previous_consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
         result = super().write(values)
         consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
+
+        if 'allocation_type' in values:
+            self._add_lastcalls()
         for allocation in self:
             current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
                 .get(allocation.holiday_status_id, {}).get('excess_days', {})
