@@ -680,9 +680,10 @@ class Channel(models.Model):
         """
         Automatically set the message posted by the current user as seen for themselves.
         """
-        self._set_last_seen_message(message, notify=False)
-        current_channel_member = self.env["discuss.channel.member"].search([("channel_id", "=", self.id), ("is_self", "=", True)])
-        if current_channel_member:
+        if current_channel_member := self.env["discuss.channel.member"].search([
+            ("channel_id", "=", self.id), ("is_self", "=", True)
+        ]):
+            current_channel_member._set_last_seen_message(message, notify=False)
             current_channel_member._set_new_message_separator(message.id + 1)
         return super()._message_post_after_hook(message, msg_vals)
 
@@ -1043,72 +1044,6 @@ class Channel(models.Model):
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
-
-    def _mark_as_read(self, last_message_id=None, sync=False):
-        """
-        Mark channel as read by updating seen message id of the current persona
-        as well as its new message separator.
-        :param last_message_id: the id of the message to be marked as seen, last message of the
-        thread by default. This param SHOULD be required, the default behaviour is DEPRECATED and
-        kept only for compatibility reasons.
-        :param sync: whether the new message separator and the unread counter
-            in the UX will sync to their server values.
-        """
-        self.ensure_one()
-        domain = ["&", ("model", "=", "discuss.channel"), ("res_id", "in", self.ids)]
-        if last_message_id:
-            domain = expression.AND([domain, [('id', '<=', int(last_message_id))]])
-        last_message = (
-            self.env["mail.message"] if last_message_id is False
-            else self.env['mail.message'].search(domain, order="id DESC", limit=1)
-        )
-        if last_message_id is not False and not last_message:
-            return
-        self._set_last_seen_message(last_message)
-        current_member = self.env["discuss.channel.member"].search(
-            [("channel_id", "=", self.id), ("is_self", "=", True)]
-        )
-        current_member._set_new_message_separator(last_message.id + 1, sync=sync)
-        return last_message.id
-
-    def _set_last_seen_message(self, last_message, notify=True):
-        """
-        Set last seen message of `self` channels for the current persona.
-        :param last_message: the message to set as last seen message
-        :param notify: whether to send a `discuss.channel.member/seen`
-        notification.
-        """
-        self.ensure_one()
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        if not current_partner and not current_guest:
-            return
-        channel_member_domain = expression.AND([
-            [('channel_id', 'in', self.ids)],
-            [('partner_id', '=', current_partner.id) if current_partner else ('guest_id', '=', current_guest.id)],
-            expression.OR([
-                [('new_message_separator', '<=', last_message.id)],
-                [('seen_message_id', '=', False)],
-                [('seen_message_id', '<', last_message.id)],
-            ])
-        ])
-        member = self.env['discuss.channel.member'].search(channel_member_domain)
-        if not member:
-            return
-        member.write({
-            'fetched_message_id': max(member.fetched_message_id.id, last_message.id),
-            'seen_message_id': last_message.id,
-            'last_seen_dt': fields.Datetime.now(),
-        })
-        if notify:
-            target = current_partner or current_guest
-            if self.channel_type in self._types_allowing_seen_infos():
-                target = self
-            self.env['bus.bus']._sendone(target, 'mail.record/insert', {
-                'ChannelMember': {
-                    'id': member.id,
-                    'seen_message_id': {'id': last_message.id} if last_message else None,
-                }
-            })
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
