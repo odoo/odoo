@@ -4,7 +4,7 @@ import math
 
 from odoo import api, fields, models, _
 from odoo.tools import float_is_zero
-from odoo.tools.misc import formatLang, format_date
+from odoo.tools.misc import formatLang, format_date, str2bool
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -1282,7 +1282,9 @@ class AccountBankStatementLine(models.Model):
     def _find_or_create_bank_account(self):
         bank_account = self.env['res.partner.bank'].search(
             [('company_id', '=', self.company_id.id), ('acc_number', '=', self.account_number)])
-        if not bank_account:
+        if not bank_account and not str2bool(
+            self.env['ir.config_parameter'].sudo().get_param("account.skip_create_bank_account_on_reconcile")
+        ):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,
