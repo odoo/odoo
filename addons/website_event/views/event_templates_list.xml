@@ -12,6 +12,12 @@
             <!-- Options -->
             <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
             <t t-set="opt_events_list_columns" t-value="is_view_active('website_event.opt_events_list_columns')"/>
+            <t t-set="opt_events_list_rows" t-value="is_view_active('website_event.opt_events_list_rows')"/>
+            <t t-set="opt_index_sidebar" t-value="is_view_active('website_event.opt_index_sidebar')"/>
+            <!-- Qweb variable defining the class suffix for navbar items.
+                 Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
+            <t t-set="navClass" t-valuef="light"/>
+
             <!-- Topbar -->
             <t t-call="website_event.index_topbar">
                 <t t-set="search" t-value="original_search or search or searches['search']"/>
@@ -22,8 +28,8 @@
             <div class="o_wevent_events_list">
                 <div class="container">
                     <div class="row">
-                        <div id="o_wevent_index_main_col" t-attf-class="col-md mb-3 #{opt_events_list_columns and 'opt_events_list_columns' or 'opt_events_list_rows'}">
-                            <div class="row g-4 g-lg-3 g-xxl-4">
+                        <div id="o_wevent_index_main_col" t-attf-class="col-md mb-3 #{layout_mode == 'grid' and 'opt_events_list_columns' or 'opt_events_list_rows'}">
+                            <div id="o_wevent_events_grid" t-attf-class="row g-4 g-lg-3 g-xxl-4 #{opt_index_sidebar and 'o_wevent_sidebar_enabled'}">
                                 <!-- Events List -->
                                 <t t-call="website_event.events_list"/>
                             </div>
@@ -47,7 +53,7 @@
 <!-- Index Topbar -->
 <template id="index_topbar" name="Topbar">
         <div class="container mt-3 mb-4">
-            <div class="o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
+            <div class="o_wevent_index_topbar_filters d-flex d-print-none align-items-center justify-content-end gap-2 w-100">
                 <h2 class="h4 my-0 me-auto pe-sm-4">Events</h2>
                     <t t-foreach="categories" t-as="category">
                         <div t-if="category.is_published and category.tag_ids and any(tag.color for tag in category.tag_ids)" class="dropdown d-none d-lg-block">
@@ -65,11 +71,12 @@
                             </div>
                         </div>
                     </t>
-                <div class="o_wevent_search d-flex w-100 w-lg-auto">
+                <div class="o_wevent_search btn-toolbar flex-nowrap gap-2">
                     <div class="w-100 flex-grow-1">
                         <t t-call="website_event.events_search_box_input"/>
                     </div>
-                    <button class="btn btn-light position-relative ms-2 d-lg-none"
+                    <t t-if="opt_events_list_columns and opt_events_list_rows" t-call="website_event.add_grid_or_list_option"/>
+                    <button class="btn btn-light position-relative d-lg-none"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#o_wevent_index_offcanvas">
                         <i class="fa fa-sliders"/>
@@ -261,16 +268,30 @@
                         </li>
                     </ul>
                 </div>
-            </div>    
+            </div>
         </div>
     </xpath>
+</template>
+
+<!-- Grid or List Display Selection -->
+<template id="website_event.add_grid_or_list_option" active="True" name="Grid or List button">
+    <t t-set="_activeClasses" t-translation="off">active</t>
+    <div t-attf-class="o_wevent_apply_layout btn-group d-flex" t-att-data-active-classes="_activeClasses">
+        <input type="radio" class="btn-check" name="wevent_events_layout" id="o_wevent_apply_grid"  t-att-checked="'checked' if layout_mode == 'grid' else None" value="grid"/>
+        <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode == 'grid' else None} o_wevent_apply_grid" title="Grid" for="o_wevent_apply_grid">
+            <i class="fa fa-th-large"/>
+        </label>
+        <input type="radio" class="btn-check" name="wevent_events_layout" id="o_wevent_apply_list" t-att-checked="'checked' if layout_mode == 'list' else None" value="list"/>
+        <label t-attf-class="btn btn-{{navClass}} #{_activeClasses if layout_mode == 'list' else None} o_wevent_apply_list" title="List" for="o_wevent_apply_list">
+            <i class="oi oi-view-list"/>
+        </label>
+    </div>
 </template>
 
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">
     <!-- Options -->
-    <t t-set="opt_index_sidebar" t-value="is_view_active('website_event.opt_index_sidebar')"/>
-    <t t-if="opt_events_list_columns" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4 col-xl-3'"/>
+    <t t-if="layout_mode == 'grid'" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4 col-xl-3'"/>
     <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-12'"/>
     <!-- No events -->
     <div t-if="not event_ids" class="col-12 text-center">
@@ -290,24 +311,24 @@
         No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="searches['search']"/>'.
     </div>
     <!-- List -->
-    <div t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size}">
+    <div id="o_wevent_event_main_div" t-foreach="event_ids" t-as="event" t-attf-class=" #{opt_event_size}">
         <a t-cache="event if not editable and event.website_published else None" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register'}" class="text-decoration-none text-reset " t-att-data-publish="event.website_published and 'on' or 'off'">
             <article t-attf-class="h-100 #{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
-                <div t-attf-class="h-100 #{opt_events_list_columns and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
-                    <!-- Header -->
-                    <header t-attf-class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 #{opt_events_list_columns and 'col-12' or 'col-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow-sm'}">
+                <div id="o_wevent_event_article_div" t-attf-class="h-100 #{layout_mode == 'grid' and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
+                    <!-- Header in Grid -->
+                    <header t-attf-class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 col-12 #{(not opt_events_list_cards) and 'shadow-sm'} #{layout_mode != 'grid' and 'd-none'}">
                         <!-- Image + Link -->
                         <div class="d-block h-100 w-100">
                             <t t-call="website.record_cover">
                                 <t t-set="_record" t-value="event"/>
                                 <!-- Short Date -->
-                                <div t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
+                                <div t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not layout_mode == 'grid') and 'left'} ">
                                     <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
                                     <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
                                 </div>
                                 <!-- Not open -->
-                                <span t-if="not event.event_registrations_open and (not opt_events_list_cards or not opt_events_list_columns)" class="position-absolute bottom-0 px-3 py-2 w-100 text-bg-light">
-                                    <t t-if="not event.event_registrations_started">
+                                <span t-if="not event.event_registrations_open and (not opt_events_list_cards or not layout_mode == 'grid')" class="position-absolute bottom-0 px-3 py-2 w-100 text-bg-light">
+                                    <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
                                         Registrations not yet open
                                     </t>
                                     <t t-elif="event.event_registrations_sold_out">
@@ -328,10 +349,19 @@
                             </t>
                         </div>
                     </header>
-                    
-                    <!-- Body -->
-                    <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 #{opt_events_list_columns and 'col-12 py-3' or 'col-8 col-lg-9 px-4'} #{not opt_events_list_cards and opt_events_list_columns and 'bg-transparent px-0'} #{not opt_events_list_cards and not opt_events_list_columns and 'bg-transparent py-0'}">
+                    <!-- Header in List -->
+                    <header t-attf-class="overflow-hidden p-0 border-0 rounded-0 d-flex w-auto align-items-center #{(not opt_events_list_cards) and 'shadow-sm'} #{layout_mode != 'list' and 'd-none'}">
+                        <!-- Short Date -->
+                        <div class="o_wevent_event_date shadow-sm o_not_editable left m-3">
+                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
+                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
+                        </div>
+                    </header>
+
+                    <!-- Body in Grid -->
+                    <main t-attf-class="card-body position-relative d-flex flex-column justify-content-between gap-2 col-12 py-3 #{not opt_events_list_cards and 'bg-transparent px-0'} #{layout_mode != 'grid' and 'd-none'}">
                         <div>
+                            <!-- Tags -->
                             <div class="d-flex flex-wrap gap-1 small">
                                 <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
@@ -344,7 +374,7 @@
                             <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'}">
                                 <span t-field="event.name" itemprop="name"/>
                             </h5>
-                            <!-- Start Date & Time -->
+                            <!-- Subtitle -->
                             <small class="o_not_editable opacity-75" itemprop="description" t-out="event.subtitle">
                             </small>
                         </div>
@@ -356,15 +386,69 @@
                             <small t-else="" class="o_not_editable fw-bold" itemprop="location">Online event</small>
                         </div>
                     </main>
-                    
+                    <!-- Body in List -->
+                    <main t-attf-class="card-body position-relative d-flex justify-content-between align-items-center col-8 col-lg-9 px-4 #{not opt_events_list_cards and 'bg-transparent py-0'} #{layout_mode != 'list' and 'd-none'}">
+                        <div>
+                            <div class="d-flex align-items-center gap-3">
+                                <!-- Title -->
+                                <h5 t-attf-class="card-title my-2 #{(not event.website_published) and 'text-danger'} #{(not event.event_registrations_open) and 'text-muted'}">
+                                    <span t-field="event.name" itemprop="name"/>
+                                </h5>
+                            </div>
+                            <div class="d-inline-flex flex-wrap gap-3">
+                                <!-- Location -->
+                                <t t-set="has_city_or_country" t-value="event.address_id.sudo().city or event.address_id.sudo().country_id"/>
+                                <div t-if="not event.address_id or has_city_or_country" class="d-flex align-items-center">
+                                    <i t-attf-class="fa fa-map-marker me-2 #{(not event.event_registrations_open) and 'text-muted'}" title="Location"/>
+                                    <small t-if="event.address_id" t-attf-class="o_not_editable fw-bold #{(not event.event_registrations_open) and 'text-muted'}" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                                    <small t-else="" t-attf-class="o_not_editable fw-bold #{(not event.event_registrations_open) and 'text-muted'}" itemprop="location">Online event</small>
+                                </div>
+                                <!-- Tags -->
+                                <div class="d-flex flex-wrap gap-1 small">
+                                    <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
+                                        <span t-if="tag.color"
+                                            t-attf-class="badge rounded-pill px-2 p-1 #{'o_badge_color_%s' % tag.color if tag.color else 'text-bg-light'}">
+                                            <t t-out="tag.name"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Action Button -->
+                        <div class="d-none d-lg-block">
+                            <div class="d-flex flex-column align-items-end gap-1">
+                                <t t-if="not event.event_registrations_open">
+                                    <small class="text-muted fw-bold">
+                                        <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
+                                            Registrations not open
+                                        </t>
+                                        <t t-elif="event.event_registrations_sold_out">
+                                            Sold Out
+                                        </t>
+                                        <t t-else="">
+                                            Registrations Closed
+                                        </t>
+                                    </small>
+                                </t>
+                                <t t-if="event.event_registrations_open">
+                                    <button type="button" class="btn btn-primary">
+                                        Get Tickets <i class="fa fa-chevron-right"/>
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <button type="button" class="btn btn-secondary">
+                                        Event Info <i class="fa fa-chevron-right"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+                    </main>
+
                     <!-- Footer -->
-                    <footer t-if="not event.event_registrations_open and opt_events_list_columns and opt_events_list_cards"
-                        t-att-class="'small align-self-end w-100 %s %s' % (
-                            opt_events_list_cards and 'card-footer' or (not opt_events_list_columns and 'py-2 mt-2') or 'py-2',
-                            opt_events_list_cards and 'border-top' or 'px-2',
-                        )">
+                    <footer t-if="not event.event_registrations_open and opt_events_list_cards"
+                        t-attf-class="small align-self-end w-100 card-footer border-top #{layout_mode == 'list' and 'd-none'}">
                         <span t-if="not event.event_registrations_open">
-                            <t t-if="not event.event_registrations_started">
+                            <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
                                 Registrations not yet open
                             </t>
                             <t t-elif="event.event_registrations_sold_out">
@@ -387,11 +471,13 @@
 
 <template id="opt_events_list_columns" inherit_id="website_event.events_list" active="True" name="Layout • Columns"/>
 
+<template id="opt_events_list_rows" inherit_id="website_event.events_list" active="True" name="Layout • Rows"/>
+
 <template id="opt_events_list_cards" inherit_id="website_event.events_list" active="True" name="'Cards' Design"/>
 
 <template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
     <xpath expr="//main/*" position="before">
-        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-3 mb-3'}" t-field="event.event_type_id"/>
+        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{layout_mode == 'grid' and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0'} #{not layout_mode == 'grid' and opt_events_list_cards and 'me-3 mb-3'}" t-field="event.event_type_id"/>
     </xpath>
 </template>
 
