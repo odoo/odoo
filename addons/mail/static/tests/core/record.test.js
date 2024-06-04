@@ -841,3 +841,39 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
 });
+
+test("Methods are bound to records", async () => {
+    // Allows to simply `t-on-click="record.method"`
+    (class Persona extends Record {
+        static id = "name";
+        name;
+        saysName() {
+            return this.name;
+        }
+    }).register(localRegistry);
+    const store = await start();
+    const john = store.Persona.insert("John");
+    expect(john.saysName()).toBe("John");
+    const saysName = john.saysName;
+    expect(saysName()).toBe("John");
+});
+
+test("Record lists methods are bound to the record list", async () => {
+    // Allows to simply `onSelected="recordList.add"`
+    (class Message extends Record {
+        static id = "content";
+        content;
+    }).register(localRegistry);
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        messages = Record.many("Message");
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert("General");
+    expect(general.messages.length).toBe(0);
+    const addMessage = general.messages.add;
+    addMessage({ content: "1" });
+    expect(general.messages.length).toBe(1);
+    expect(general.messages.map((msg) => msg.content)).toEqual(["1"]);
+});

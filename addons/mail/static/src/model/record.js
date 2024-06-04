@@ -10,7 +10,6 @@ import {
     isMany,
     isOne,
     isRecord,
-    isRecordList,
     isRelation,
     modelRegistry,
 } from "./misc";
@@ -406,10 +405,6 @@ export class Record {
         if (!collection) {
             return false;
         }
-        if (isRecordList(collection)) {
-            return collection.includes(this);
-        }
-        // Array
         return collection.some((record) => toRaw(record)._raw.eq(this));
     }
 

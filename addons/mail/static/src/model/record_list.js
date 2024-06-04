@@ -1,5 +1,5 @@
 import { markRaw, reactive, toRaw } from "@odoo/owl";
-import { IS_RECORD_LIST_SYM, isRecord } from "./misc";
+import { isRecord } from "./misc";
 
 /** @param {RecordList} reclist */
 function getInverse(reclist) {
@@ -62,7 +62,6 @@ function isOne(reclist) {
 }
 
 export class RecordListInternal {
-    [IS_RECORD_LIST_SYM] = true;
     /** @type {string} */
     name;
     /** @type {Record} */
@@ -270,7 +269,11 @@ export class RecordList extends Array {
                     Object.keys(recordList).includes(name) ||
                     Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
                 ) {
-                    return Reflect.get(recordList, name, recordListFullProxy);
+                    let res = Reflect.get(...arguments);
+                    if (typeof res === "function") {
+                        res = res.bind(recordListFullProxy);
+                    }
+                    return res;
                 }
                 if (isComputeField(recordList) && !isEager(recordList)) {
                     setComputeInNeed(recordList);
