@@ -6,12 +6,6 @@ patch(PosOrderline.prototype, {
         super.setup(...arguments);
         this.note = this.note || "";
     },
-    //@override
-    clone() {
-        const orderline = super.clone(...arguments);
-        orderline.note = this.note;
-        return orderline;
-    },
     get_line_diff_hash() {
         if (this.getNote()) {
             return this.id + "|" + this.getNote();
