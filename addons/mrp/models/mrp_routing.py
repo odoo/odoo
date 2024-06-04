@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+from datetime import datetime
+
 from odoo import api, fields, models, _, tools
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
 
 
 class MrpRoutingWorkcenter(models.Model):
@@ -167,3 +171,52 @@ class MrpRoutingWorkcenter(models.Model):
         if product._name == 'product.template':
             return False
         return not product._match_all_variant_values(self.bom_product_template_attribute_value_ids)
+
+    def _simulate_planning(self, product, start_date, quantity, planning_per_operation=False, simulated_leaves_per_workcenter=False):
+        """ Simulate planning of an operation depending on its workcenter/alternatives work schedule.
+        (see '_plan_workorder')
+        """
+        self.ensure_one()
+        if planning_per_operation is False:
+            planning_per_operation = {}
+        if simulated_leaves_per_workcenter is False:
+            simulated_leaves_per_workcenter = defaultdict(list)
+        # Plan operation after its predecessors
+        date_start = max(start_date, datetime.now())
+        for operation in self.blocked_by_operation_ids:
+            if operation._skip_operation_line(product):
+                continue
+            operation._simulate_planning(product, start_date, quantity, planning_per_operation, simulated_leaves_per_workcenter)
+            date_start = max(date_start, planning_per_operation[operation]['date_finished'])
+        # Consider workcenter and alternatives
+        workcenters = self.workcenter_id | self.workcenter_id.alternative_workcenter_ids
+        best_date_finished = datetime.max
+        for workcenter in workcenters:
+            if not workcenter.resource_calendar_id:
+                raise UserError(_('There is no defined calendar on workcenter %s.', workcenter.name))
+            # Compute theoretical duration
+            capacity = workcenter._get_capacity(product)
+            cycle_number = float_round(quantity / capacity, precision_digits=0, rounding_method='UP')
+            duration_expected = workcenter._get_expected_duration(product) + cycle_number * self.time_cycle * 100.0 / workcenter.time_efficiency
+            # Try to plan on workcenter
+            from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected, simulated_leaves=simulated_leaves_per_workcenter[workcenter])
+            # If the workcenter is unavailable, try planning on the next one
+            if not from_date:
+                continue
+            # Check if this workcenter is better than the previous ones
+            if to_date and to_date < best_date_finished:
+                best_date_start = from_date
+                best_date_finished = to_date
+                best_workcenter = workcenter
+                best_duration_expected = duration_expected
+        # If none of the workcenter are available, raise
+        if best_date_finished == datetime.max:
+            raise UserError(_('Impossible to plan. Please check the workcenter availabilities.'))
+        planning_per_operation[self] = {
+            'date_start': best_date_start,
+            'date_finished': best_date_finished,
+            'workcenter': best_workcenter,
+            'duration_expected': best_duration_expected,
+        }
+        simulated_leaves_per_workcenter[best_workcenter].append((best_date_start, best_date_finished))
+        return planning_per_operation

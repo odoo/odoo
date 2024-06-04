@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from collections import defaultdict, OrderedDict
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 import json
 
 from odoo import api, fields, models, _
@@ -37,22 +37,29 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def _compute_production_capacities(self, bom_qty, bom_data):
         date_today = self.env.context.get('from_date', fields.date.today())
+        earliest = None  # may become (date, capacity) if applicable
         lead_time = bom_data['manufacture_delay']
         same_delay = lead_time == bom_data['availability_delay']
         res = {}
+
         if bom_data.get('producible_qty', 0):
             # Check if something is producible today, at the earliest time possible considering product's lead time.
-            res['earliest_capacity'] = bom_data['producible_qty']
-            res['earliest_date'] = format_date(self.env, date_today + timedelta(days=lead_time))
+            earliest = (date_today + timedelta(days=lead_time), bom_data['producible_qty'])
 
         if bom_data['availability_state'] != 'unavailable':
             if same_delay:
                 # Means that stock will be resupplied at date_today, so the whole manufacture can start at date_today.
-                res['earliest_capacity'] = bom_qty
-                res['earliest_date'] = format_date(self.env, date_today + timedelta(days=bom_data['availability_delay']))
-            else:
-                res['leftover_capacity'] = bom_qty - bom_data.get('producible_qty', 0)
+                earliest = (date_today + timedelta(days=bom_data['availability_delay']), bom_qty)
+            elif (balance := bom_qty - bom_data.get('producible_qty', 0)) > 0:
+                res['leftover_capacity'] = balance
                 res['leftover_date'] = format_date(self.env, date_today + timedelta(days=bom_data['availability_delay']))
+
+        if earliest:
+            # Simulate planning for 'earliest' capacity at date
+            simulated_operations_planning = bom_data['bom']._simulate_planning(bom_data['product'], datetime.combine(earliest[0], time.min), earliest[1])
+            days = max(((p['date_finished'].date() - earliest[0]).days for p in simulated_operations_planning.values()), default=0)
+            res['earliest_date'] = format_date(self.env, earliest[0] + timedelta(days=days))
+            res['earliest_capacity'] = earliest[1]
 
         return res
 
@@ -190,7 +197,7 @@ class ReportBomStructure(models.AbstractModel):
         return closest_forecasted
 
     @api.model
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False):
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
         """ Gets recursively the BoM and all its subassemblies and computes availibility estimations for each component and their disponibility in stock.
             Accepts specific keys in context that will affect the data computed :
             - 'minimized': Will cut all data not required to compute availability estimations.
@@ -201,9 +208,10 @@ class ReportBomStructure(models.AbstractModel):
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
         if line_qty is False:
             line_qty = bom.product_qty
-
         if not product_info:
             product_info = {}
+        if simulated_leaves_per_workcenter is False:
+            simulated_leaves_per_workcenter = defaultdict(list)
 
         company = bom.company_id or self.env.company
         current_quantity = line_qty
@@ -268,13 +276,6 @@ class ReportBomStructure(models.AbstractModel):
             'parent_id': parent_bom and parent_bom.id or False,
         }
 
-        if not is_minimized:
-            operations = self._get_operation_line(product, bom, float_round(current_quantity, precision_rounding=1, rounding_method='UP'), level + 1, index)
-            bom_report_line['operations'] = operations
-            bom_report_line['operations_cost'] = sum([op['bom_cost'] for op in operations])
-            bom_report_line['operations_time'] = sum([op['quantity'] for op in operations])
-            bom_report_line['bom_cost'] += bom_report_line['operations_cost']
-
         components = []
         no_bom_lines = self.env['mrp.bom.line']
         line_quantities = {}
@@ -296,7 +297,8 @@ class ReportBomStructure(models.AbstractModel):
             line_quantity = line_quantities.get(line.id, 0.0)
             if line.child_bom_id:
                 component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
-                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock)
+                                               parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock,
+                                               simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
             else:
                 component = self.with_context(
                     components_closest_forecasted=components_closest_forecasted,
@@ -312,6 +314,15 @@ class ReportBomStructure(models.AbstractModel):
         bom_report_line['producible_qty'] = self._compute_current_production_capacity(bom_report_line)
 
         if not is_minimized:
+
+            max_component_delay = self._get_max_component_delay(bom_report_line['components'])
+            operations = self._get_operation_line(product, bom, float_round(current_quantity, precision_rounding=1, rounding_method='UP'), level + 1, index, max_component_delay, simulated_leaves_per_workcenter)
+            bom_report_line['operations'] = operations
+            bom_report_line['operations_cost'] = sum(op['bom_cost'] for op in operations)
+            bom_report_line['operations_time'] = sum(op['quantity'] for op in operations)
+            bom_report_line['operations_delay'] = max((op['availability_delay'] for op in operations), default=0)
+            bom_report_line['bom_cost'] += bom_report_line['operations_cost']
+
             byproducts, byproduct_cost_portion = self._get_byproducts_lines(product, bom, current_quantity, level + 1, bom_report_line['bom_cost'], index)
             bom_report_line['byproducts'] = byproducts
             bom_report_line['cost_share'] = float_round(1 - byproduct_cost_portion, precision_rounding=0.0001)
@@ -324,6 +335,9 @@ class ReportBomStructure(models.AbstractModel):
         bom_report_line['lead_time'] = route_info.get('lead_time', False)
         bom_report_line['manufacture_delay'] = route_info.get('manufacture_delay', False)
         bom_report_line.update(availabilities)
+        if 'operations_delay' in bom_report_line:
+            bom_report_line['availability_delay'] += bom_report_line['operations_delay']
+            bom_report_line['availability_display'] = self._format_date_display(bom_report_line['availability_state'], bom_report_line['availability_delay'])
 
         if level == 0:
             # Gives a unique key for the first line that indicates if product is ready for production right now.
@@ -444,24 +458,21 @@ class ReportBomStructure(models.AbstractModel):
         return byproducts, byproduct_cost_portion
 
     @api.model
-    def _get_operation_cost(self, duration, operation):
-        return (duration / 60.0) * operation.workcenter_id.costs_hour
+    def _get_operation_cost(self, operation, workcenter, duration):
+        return (duration / 60.0) * workcenter.costs_hour
 
     @api.model
-    def _get_operation_line(self, product, bom, qty, level, index):
+    def _get_operation_line(self, product, bom, qty, level, index, max_delay, simulated_leaves_per_workcenter):
         operations = []
-        total = 0.0
+        date_today = self.env.context.get('from_date', fields.date.today()) + timedelta(days=max_delay)
         qty = bom.product_uom_id._compute_quantity(qty, bom.product_tmpl_id.uom_id)
         company = bom.company_id or self.env.company
+        simulated_operations_planning = bom._simulate_planning(product, datetime.combine(date_today, time.min), qty, simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
         operation_index = 0
         for operation in bom.operation_ids:
             if not product or operation._skip_operation_line(product):
                 continue
-            capacity = operation.workcenter_id._get_capacity(product)
-            operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
-            duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
-                                operation.workcenter_id._get_expected_duration(product)
-            total = self._get_operation_cost(duration_expected, operation)
+            planning = simulated_operations_planning[operation]
             operations.append({
                 'type': 'operation',
                 'index': f"{index}{operation_index}",
@@ -471,10 +482,13 @@ class ReportBomStructure(models.AbstractModel):
                 'link_model': 'mrp.routing.workcenter',
                 'name': operation.name + ' - ' + operation.workcenter_id.name,
                 'uom_name': _("Minutes"),
-                'quantity': duration_expected,
-                'bom_cost': self.env.company.currency_id.round(total),
+                'quantity': planning['duration_expected'],
+                'bom_cost': self.env.company.currency_id.round(self._get_operation_cost(operation, planning['workcenter'], planning['duration_expected'])),
                 'currency_id': company.currency_id.id,
                 'model': 'mrp.routing.workcenter',
+                'availability_state': 'estimated',
+                'availability_delay': (planning['date_finished'].date() - date_today).days,
+                'availability_display': _('Estimated %s', format_date(self.env, planning['date_finished'])) + (" [" + planning['workcenter'].name + "]" if planning['workcenter'] != operation.workcenter_id else ""),
             })
             operation_index += 1
         return operations
@@ -554,6 +568,9 @@ class ReportBomStructure(models.AbstractModel):
                     'bom_cost': operation['bom_cost'],
                     'level': level + 1,
                     'visible': operations_unfolded,
+                    'availability_state': operation['availability_state'],
+                    'availability_delay': operation['availability_delay'],
+                    'availability_display': operation['availability_display'],
                 })
         if data['byproducts']:
             lines.append({
