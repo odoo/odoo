@@ -14,7 +14,11 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
-import { KANBAN_BOX_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
+import {
+    KANBAN_BOX_ATTRIBUTE,
+    KANBAN_CARD_ATTRIBUTE,
+    KANBAN_MENU_ATTRIBUTE,
+} from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
@@ -188,6 +192,7 @@ export class KanbanRecord extends Component {
     ];
     static Compiler = KanbanCompiler;
     static KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;
+    static KANBAN_CARD_ATTRIBUTE = KANBAN_CARD_ATTRIBUTE;
     static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
     static menuTemplate = "web.KanbanRecordMenu";
     static template = "web.KanbanRecord";
@@ -267,6 +272,11 @@ export class KanbanRecord extends Component {
         if (!this.props.list.isGrouped) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");
         }
+        classes.push(archInfo.cardClassName);
+        // TODO: remove when all kanban archs have been converted
+        if (archInfo.isLegacyArch) {
+            classes.push("o_legacy_kanban_record");
+        }
         return classes.join(" ");
     }
 
@@ -302,6 +312,7 @@ export class KanbanRecord extends Component {
         const { archInfo, openRecord, deleteRecord, record, archiveRecord } = this.props;
         const { type } = params;
         switch (type) {
+            // deprecated, records are always in edit mode in form views now, use "open" instead
             case "edit": {
                 return openRecord(record, "edit");
             }
@@ -346,6 +357,12 @@ export class KanbanRecord extends Component {
         }
     }
 
+    get mainTemplate() {
+        return this.props.archInfo.isLegacyArch
+            ? this.templates[this.constructor.KANBAN_BOX_ATTRIBUTE]
+            : this.templates[this.constructor.KANBAN_CARD_ATTRIBUTE];
+    }
+
     /**
      * Returns the kanban-box template's rendering context.
      *
@@ -355,10 +372,9 @@ export class KanbanRecord extends Component {
      * @returns {Object}
      */
     get renderingContext() {
-        return {
+        const renderingContext = {
             context: this.props.record.context,
             JSON,
-            kanban_image: (...args) => getImageSrcFromRecordInfo(this.props.record, ...args),
             luxon,
             read_only_mode: this.props.readonly,
             record: this.dataState.record,
@@ -367,5 +383,11 @@ export class KanbanRecord extends Component {
             widget: this.dataState.widget,
             __comp__: Object.assign(Object.create(this), { this: this }),
         };
+        if (this.props.archInfo.isLegacyArch) {
+            // deprecated, use <field name="" widget="image"/>
+            renderingContext.kanban_image = (...args) =>
+                getImageSrcFromRecordInfo(this.props.record, ...args);
+        }
+        return renderingContext;
     }
 }

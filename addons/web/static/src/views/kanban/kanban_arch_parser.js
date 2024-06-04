@@ -7,6 +7,9 @@ import { archParseBoolean, getActiveActions, processButton } from "@web/views/ut
 /**
  * NOTE ON 't-name="kanban-box"':
  *
+ * "kanban-box" is deprecated. Kanban archs converted to the new (v18) API must
+ * define a "kanban-card" template instead.
+ *
  * Multiple roots are supported in kanban box template definitions, however there
  * are a few things to keep in mind when doing so:
  *
@@ -19,6 +22,7 @@ import { archParseBoolean, getActiveActions, processButton } from "@web/views/ut
  */
 
 export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
+export const KANBAN_CARD_ATTRIBUTE = "kanban-card";
 export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
 
 export class KanbanArchParser {
@@ -141,10 +145,15 @@ export class KanbanArchParser {
         }
 
         // Concrete kanban box elements in the template
-        const cardDoc = templateDocs[KANBAN_BOX_ATTRIBUTE];
+        let cardDoc = templateDocs[KANBAN_CARD_ATTRIBUTE];
+        const isLegacyArch = !cardDoc;
         if (!cardDoc) {
-            throw new Error(`Missing '${KANBAN_BOX_ATTRIBUTE}' template.`);
+            cardDoc = templateDocs[KANBAN_BOX_ATTRIBUTE];
+            if (!cardDoc) {
+                throw new Error(`Missing '${KANBAN_CARD_ATTRIBUTE}' template.`);
+            }
         }
+        const cardClassName = (!isLegacyArch && cardDoc.getAttribute("class")) || "";
 
         if (!defaultOrder.length && handleField) {
             defaultOrder = stringToOrderBy(handleField);
@@ -153,6 +162,7 @@ export class KanbanArchParser {
         return {
             activeActions,
             canOpenRecords,
+            cardClassName,
             cardColorField: xmlDoc.getAttribute("highlight_color"),
             className,
             creates,
@@ -174,6 +184,7 @@ export class KanbanArchParser {
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
             xmlDoc,
+            isLegacyArch,
         };
     }
 
