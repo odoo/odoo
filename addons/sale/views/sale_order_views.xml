@@ -642,10 +642,11 @@
                                 <field name="tax_id"/>
                                 <field name="company_id"/>
                                 <field name="tax_calculation_rounding_method"/>
+                                <field name="currency_id"/>
                                 <control>
-                                    <create name="add_product_control" string="Add a product"/>
-                                    <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                                    <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    <create name="add_product_control" string="Add product"/>
+                                    <create name="add_section_control" string="Add section" context="{'default_display_type': 'line_section'}"/>
+                                    <create name="add_note_control" string="Add note" context="{'default_display_type': 'line_note'}"/>
                                     <button name="action_add_from_catalog"
                                             context="{'order_id': parent.id}"
                                             string="Catalog"
@@ -657,7 +658,7 @@
                                         <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
                                             <t t-if="!record.display_type.raw_value">
                                                 <div class="row g-0">
-                                                    <div class="col-2 pe-3">
+                                                    <div class="col-2 p-1">
                                                         <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
                                                     </div>
                                                     <div class="col-10">
@@ -670,9 +671,8 @@
                                                                 <strong t-out="record.product_id.value" />
                                                             </div>
                                                             <div class="col-auto">
-                                                                <strong>Tax excl.: </strong>
                                                                 <t t-set="line_price" t-value="record.price_subtotal.value"/>
-                                                                <strong class="float-end text-end" t-out="line_price" />
+                                                                <strong class="float-end text-end pe-1" t-out="line_price" widget="monetary"/>
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -685,11 +685,6 @@
                                                             <div class="col text-muted">
                                                                 Unit Price:
                                                                 <t t-out="record.price_unit.value"/>
-                                                            </div>
-                                                            <div class="col-auto" t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
-                                                                <strong>Tax incl.: </strong>
-                                                                <t t-set="line_price" t-value="record.price_total.value"/>
-                                                                <strong class="float-end text-end" t-out="line_price" />
                                                             </div>
                                                         </div>
                                                         <t t-if="record.discount?.raw_value">
@@ -715,7 +710,7 @@
                                 </templates>
                             </kanban>
                         </field>
-                        <div class="float-end d-flex gap-1 mb-2 ms-1"
+                        <div class="float-end d-flex gap-1 mb-2"
                              name="so_button_below_order_lines">
                             <button string="Discount"
                                     name="action_open_discount_wizard"
