@@ -386,19 +386,32 @@ class TestTransferWizard(AccountTestInvoicingCommon):
             'reconcile': True,
         })
 
+        account_with_tax = self.env['account.account'].create({
+            'name': 'Auto Taxed',
+            'code': 'autotaxed',
+            'account_type': 'income',
+            'tax_ids': [Command.link(self.company_data['default_tax_sale'].id)],
+        })
+
         # Create a move before the lock date
         move = self.env['account.move'].create({
             'journal_id': self.company_data['default_journal_sale'].id,
             'date': '2019-01-01',
             'line_ids': [
-                Command.create({'account_id': self.accounts[0].id, 'debit': 1000, }),
-                Command.create({'account_id': self.accounts[0].id, 'credit': 1000, }),
+                Command.create({'account_id': account_with_tax.id, 'debit': 1000}),
+                Command.create({'account_id': account_with_tax.id, 'credit': 1000}),
             ]
         })
         move.action_post()
 
         # Set the lock date
-        move.company_id.write({'period_lock_date': '2019-02-28', 'fiscalyear_lock_date': '2019-02-28'})
+        # (Purchase Lock Date not tested)
+        move.company_id.write({
+            'hard_lock_date': '2019-02-28',
+            'fiscalyear_lock_date': '2019-02-28',
+            'sale_lock_date': '2019-02-28',
+            'tax_lock_date': '2019-02-28',
+        })
 
         # Open the transfer wizard at a date after the lock date
         wizard = self.env['account.automatic.entry.wizard'] \
@@ -409,9 +422,9 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 'journal_id': self.company_data['default_journal_misc'].id,
             })
 
-        # Check that the 'The date is being set prior to the user lock date' message appears.
+        # Check that the 'The date is being set prior to ...' message appears.
         self.assertRecordValues(wizard, [{
-            'lock_date_message': 'The date is being set prior to the user lock date 02/28/2019. '
+            'lock_date_message': 'The date is being set prior to: Global Lock Date (02/28/2019), Hard Lock Date (02/28/2019), Sales Lock Date (02/28/2019), and Tax Return Lock Date (02/28/2019). '
                                  'The Journal Entry will be accounted on 03/31/2019 upon posting.'
         }])
 

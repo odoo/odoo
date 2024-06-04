@@ -485,13 +485,14 @@ class AccountPartialReconcile(models.Model):
                 partial = partial_values['partial']
 
                 # Init the journal entry.
-                lock_date = move.company_id._get_user_fiscal_lock_date()
-                move_date = partial.max_date if partial.max_date > (lock_date or date.min) else today
+                journal = partial.company_id.tax_cash_basis_journal_id
+                lock_date = move.company_id._get_user_fiscal_lock_date(journal)
+                move_date = partial.max_date if partial.max_date > lock_date else today
                 move_vals = {
                     'move_type': 'entry',
                     'date': move_date,
                     'ref': move.name,
-                    'journal_id': partial.company_id.tax_cash_basis_journal_id.id,
+                    'journal_id': journal.id,
                     'company_id': partial.company_id.id,
                     'line_ids': [],
                     'tax_cash_basis_rec_id': partial.id,

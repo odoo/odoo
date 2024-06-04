@@ -798,7 +798,7 @@ class HrExpenseSheet(models.Model):
         if most_recent_expense >= start_month:
             return today
 
-        lock_date = self.company_id._get_user_fiscal_lock_date()
+        lock_date = self.company_id._get_user_fiscal_lock_date(self.journal_id)
 
         return min(
             max(

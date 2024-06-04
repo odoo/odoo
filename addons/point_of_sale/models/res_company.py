@@ -2,6 +2,7 @@
 
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 class ResCompany(models.Model):
     _name = 'res.company'
@@ -40,20 +41,27 @@ class ResCompany(models.Model):
             'account_fiscal_country_id',
         ]
 
-    @api.constrains('period_lock_date', 'fiscalyear_lock_date')
-    def validate_period_lock_date(self):
-        """ This constrains makes it impossible to change the period lock date if
-        some open POS session exists into it. Without that, these POS sessions
-        would trigger an error message saying that the period has been locked when
-        trying to close them.
+    @api.constrains('fiscalyear_lock_date', 'tax_lock_date', 'sale_lock_date', 'hard_lock_date')
+    def validate_lock_dates(self):
+        """ This constrains makes it impossible to change the relevant lock dates if
+        some open POS session would violate them. Without that, these POS sessions
+        could not be closed (since the closing entries violate the lock dates).
         """
         pos_session_model = self.env['pos.session'].sudo()
         for record in self:
+            record = record.with_context(ignore_exceptions=True)
+            fiscal_lock_date = max(record.user_fiscalyear_lock_date, record.user_hard_lock_date)
             sessions_in_period = pos_session_model.search(
                 [
                     ("company_id", "child_of", record.id),
                     ("state", "!=", "closed"),
-                    ("start_at", "<=", record._get_user_fiscal_lock_date()),
+                    *expression.OR([
+                        [("start_at", "<=", fiscal_lock_date)],
+                        [("start_at", "<=", record.user_tax_lock_date)],
+                        # The `config_id.journal_id.type` is either 'sale' or 'misc'
+                        [("config_id.journal_id.type", "=", 'sale'),
+                         ("start_at", "<=", record.user_sale_lock_date)],
+                    ])
                 ]
             )
             if sessions_in_period:
