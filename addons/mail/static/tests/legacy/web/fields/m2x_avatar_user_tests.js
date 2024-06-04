@@ -368,7 +368,14 @@ test("avatar card preview", async (assert) => {
     });
     const mockRPC = (route, args) => {
         if (route === "/web/dataset/call_kw/res.users/read") {
-            assert.deepEqual(args.args[1], ["name", "email", "phone", "im_status", "share"]);
+            assert.deepEqual(args.args[1], [
+                "name",
+                "email",
+                "phone",
+                "im_status",
+                "share",
+                "partner_id",
+            ]);
             step("user read");
         }
     };

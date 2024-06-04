@@ -753,10 +753,9 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
             await contains(".o_card_user_infos > a", { text: "Mario@partner.com" });
             assert.strictEqual(
                 document.querySelector(".o_avatar_card_buttons button").textContent,
-                " View profile ",
+                "View Profile",
                 'No "Send Message" should be displayed for this employee as it is linked to no user'
             );
-
             // Clicking on second employee's avatar (employee with user)
             await click(
                 document.querySelectorAll(

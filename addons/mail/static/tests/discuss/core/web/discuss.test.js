@@ -12,7 +12,7 @@ import {
     step,
     triggerHotkey,
 } from "../../../mail_test_helpers";
-import { onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { pick } from "@web/core/utils/objects";
 
 describe.current.tags("desktop");
@@ -296,4 +296,34 @@ test("no conversation selected when opening non-existing channel in discuss", as
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-down");
     await click(".o-mail-DiscussSidebar .btn", { text: "Channels" }); // check no crash
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
+});
+
+test("can access portal partner profile from avatar popover", async () => {
+    const pyEnv = await startServer();
+    const joelPartnerId = pyEnv["res.partner"].create({
+        name: "Joel",
+        user_ids: [Command.create({ name: "Joel", share: true })],
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: joelPartnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: joelPartnerId,
+        body: "Hello!",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message-avatar", {
+        parent: [".o-mail-Message", { text: "Joel" }],
+    });
+    await click("button", { text: "View Profile" });
+    await contains(".o_form_view");
+    await contains(".o_field_widget[name='name'] .o_input", { value: "Joel" });
 });
