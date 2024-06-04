@@ -320,6 +320,7 @@ class AccountReportLine(models.Model):
     account_codes_formula = fields.Char(string="Account Codes Formula Shortcut", help="Internal field to shorten expression_ids creation for the account_codes engine", inverse='_inverse_account_codes_formula', store=False)
     aggregation_formula = fields.Char(string="Aggregation Formula Shortcut", help="Internal field to shorten expression_ids creation for the aggregation engine", inverse='_inverse_aggregation_formula', store=False)
     external_formula = fields.Char(string="External Formula Shortcut", help="Internal field to shorten expression_ids creation for the external engine", inverse='_inverse_external_formula', store=False)
+    tax_tags_formula = fields.Char(string="Tax Tags Formula Shortcut", help="Internal field to shorten expression_ids creation for the tax_tags engine", inverse='_inverse_aggregation_tax_formula', store=False)
 
     _sql_constraints = [
         ('code_uniq', 'unique (report_id, code)', "A report line with the same code already exists."),
@@ -415,6 +416,9 @@ class AccountReportLine(models.Model):
     def _inverse_aggregation_formula(self):
         self._create_report_expression(engine='aggregation')
 
+    def _inverse_aggregation_tax_formula(self):
+        self._create_report_expression(engine='tax_tags')
+
     def _inverse_account_codes_formula(self):
         self._create_report_expression(engine='account_codes')
 
@@ -441,6 +445,8 @@ class AccountReportLine(models.Model):
                     subformula = 'editable;rounding=0'
                 elif report_line.external_formula == 'monetary':
                     formula = 'sum'
+            elif engine == 'tax_tags' and report_line.tax_tags_formula:
+                subformula, formula = None, report_line.tax_tags_formula
             else:
                 # If we want to replace a formula shortcut with a full-syntax expression, we need to make the formula field falsy
                 # We can't simply remove it from the xml because it won't be updated
