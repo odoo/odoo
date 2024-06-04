@@ -387,14 +387,15 @@ class StockQuant(models.Model):
         ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
+        view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
         action = {
             'name': _('Inventory Adjustments'),
             'view_mode': 'list',
-            'view_id': self.env.ref('stock.view_stock_quant_tree_inventory_editable').id,
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
             'domain': [('location_id.usage', 'in', ['internal', 'transit'])],
+            'views': [(view_id, 'list')],
             'help': """
                 <p class="o_view_nocontent_smiling_face">
                     {}
