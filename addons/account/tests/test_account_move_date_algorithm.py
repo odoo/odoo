@@ -45,9 +45,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             'date': date,
         })
 
-    def _set_lock_date(self, lock_date, period_lock_date=None):
+    def _set_lock_date(self, lock_date):
         self.env.company.fiscalyear_lock_date = fields.Date.from_string(lock_date)
-        self.env.company.period_lock_date = fields.Date.from_string(period_lock_date)
 
     def _reverse_invoice(self, invoice):
         move_reversal = self.env['account.move.reversal']\
@@ -238,9 +237,9 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
     @freezegun.freeze_time('2023-05-01')
     def test_caba_with_different_lock_dates(self):
         """
-        Test the date of the CABA move when reconciling a payment with an invoice
-        with date before fiscalyear_period but after period_lock_date either when
-        having accountant rights or not.
+        Test the date of the CABA move when reconciling a payment in case the lock dates
+        are different between post and reconciliation time (caba move creation time).
+        Ensure that user groups (accountant rights) do not matter.
         """
         self.env.company.tax_exigibility = True
 
@@ -258,13 +257,12 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': tax_waiting_account.id,
         })
 
-        self._set_lock_date('2023-01-01', '2023-02-01')
-
-        for group, expected_date in (
-                ('account.group_account_manager', '2023-01-30'),
-                ('account.group_account_invoice', '2023-05-01'),
+        # User groups do not matter
+        for group in (
+                'account.group_account_manager',
+                'account.group_account_invoice',
         ):
-            with self.subTest(group=group, expected_date=expected_date):
+            with self.subTest(group=group), self.cr.savepoint() as sp:
                 self.env.user.groups_id = [Command.set(self.env.ref(group).ids)]
 
                 self.assertTrue(self.env.user.has_group(group))
@@ -274,14 +272,46 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                     invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
                 )
                 payment = self._create_payment('2023-01-30', amount=invoice.amount_total)
-                (invoice + payment.move_id).action_post()
 
+                self.env.company.sudo().sale_lock_date = fields.Date.to_date('2023-02-01')
+                (invoice + payment.move_id).action_post()
+                self.assertRecordValues([invoice, payment.move_id], [
+                    {'date': fields.Date.to_date('2023-02-28')},
+                    {'date': fields.Date.to_date('2023-01-30')},
+                ])
+
+                self.env.company.sudo().sale_lock_date = fields.Date.to_date('2023-03-01')
                 (invoice + payment.move_id).line_ids\
                     .filtered(lambda x: x.account_id.account_type == 'asset_receivable')\
                     .reconcile()
 
                 caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
 
-                self.assertRecordValues(caba_move, [{
-                    'date': fields.Date.from_string(expected_date),
+                # The sale lock date does not matter for the caba move, since it is not in a sale journal
+                self.assertRecordValues(caba_move.journal_id, [{
+                    'type': 'general',
                 }])
+                self.assertRecordValues(caba_move, [{
+                    'date': fields.Date.to_date('2023-02-28'),
+                }])
+                sp.close()  # Rollback to ensure all subtests start in the same situation
+
+    @freezegun.freeze_time('2024-08-05')
+    def test_lock_date_exceptions(self):
+        for lock_date_field, move_type in [
+            ('fiscalyear_lock_date', 'out_invoice'),
+            ('tax_lock_date', 'out_invoice'),
+            ('sale_lock_date', 'out_invoice'),
+            ('purchase_lock_date', 'in_invoice'),
+        ]:
+            with self.subTest(lock_date_field=lock_date_field, move_type=move_type):
+                self.env.company[lock_date_field] = '2024-07-31'
+                self.env['account.lock_exception'].create({
+                    lock_date_field: fields.Date.to_date('2024-01-01'),
+                    'end_datetime': False,
+                })
+                move = self.init_invoice(
+                    move_type, amounts=[100], taxes=self.env.company.account_sale_tax_id,
+                    invoice_date='2024-07-01', post=True
+                )
+                self.assertEqual(move.date, fields.Date.to_date('2024-07-01'))

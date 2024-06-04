@@ -4,7 +4,7 @@ from contextlib import nullcontext
 from freezegun import freeze_time
 from functools import partial
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
@@ -130,37 +130,54 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         moves = self.env['account.move'].search([])
         moves.filtered(lambda x: x.state != 'draft').button_draft()
         moves.unlink()
-        for lock in ['fiscalyear_lock_date', 'tax_lock_date']:
-            for root_lock, branch_lock, invoice_date, company, expected in (
+        for lock, lock_sale, lock_purchase in [
+            ('hard_lock_date', True, True),
+            ('fiscalyear_lock_date', True, True),
+            ('tax_lock_date', True, True),
+            ('sale_lock_date', True, False),
+            ('purchase_lock_date', False, True),
+        ]:
+            for root_lock, branch_lock, invoice_date, company, move_type, failure_expected in (
                 # before both locks
-                ('3021-01-01', '3022-01-01', '3020-01-01', self.root_company, 'fail'),
-                ('3021-01-01', '3022-01-01', '3020-01-01', self.branch_a, 'fail'),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.root_company, 'in_invoice', lock_purchase),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.root_company, 'out_invoice', lock_sale),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.branch_a, 'in_invoice', lock_purchase),
+                ('3021-01-01', '3022-01-01', '3020-01-01', self.branch_a, 'out_invoice', lock_sale),
                 # between root and branch lock
-                ('3020-01-01', '3022-01-01', '3021-01-01', self.root_company, 'success'),
-                ('3020-01-01', '3022-01-01', '3021-01-01', self.branch_a, 'fail'),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.root_company, 'in_invoice', False),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.root_company, 'out_invoice', False),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.branch_a, 'in_invoice', lock_purchase),
+                ('3020-01-01', '3022-01-01', '3021-01-01', self.branch_a, 'out_invoice', lock_sale),
                 # between branch and root lock
-                ('3022-01-01', '3020-01-01', '3021-01-01', self.root_company, 'fail'),
-                ('3022-01-01', '3020-01-01', '3021-01-01', self.branch_a, 'fail'),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.root_company, 'in_invoice', lock_purchase),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.root_company, 'out_invoice', lock_sale),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.branch_a, 'in_invoice', lock_purchase),
+                ('3022-01-01', '3020-01-01', '3021-01-01', self.branch_a, 'out_invoice', lock_sale),
                 # after both locks
-                ('3020-01-01', '3021-01-01', '3022-01-01', self.root_company, 'success'),
-                ('3020-01-01', '3021-01-01', '3022-01-01', self.branch_a, 'success'),
-            ):
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.root_company, 'in_invoice', False),
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.root_company, 'out_invoice', False),
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.branch_a, 'in_invoice', False),
+                ('3020-01-01', '3021-01-01', '3022-01-01', self.branch_a, 'out_invoice', False),
+               ):
                 with self.subTest(
                     lock=lock,
                     root_lock=root_lock,
                     branch_lock=branch_lock,
                     invoice_date=invoice_date,
+                    move_type=move_type,
                     company=company.name,
                 ), self.env.cr.savepoint() as sp:
+                    check = partial(self.assertRaises, UserError) if failure_expected else nullcontext
+                    move = self.init_invoice(
+                        move_type, amounts=[100], taxes=self.root_company.account_sale_tax_id,
+                        invoice_date=invoice_date, post=True, company=company,
+                    )
+                    self.assertEqual(move.date, fields.Date.to_date(invoice_date))
                     with freeze_time('4000-01-01'):  # ensure we don't lock in the future
                         self.root_company[lock] = root_lock
                         self.branch_a[lock] = branch_lock
-                    check = partial(self.assertRaises, UserError) if expected == 'fail' else nullcontext
                     with check():
-                        self.init_invoice(
-                            'out_invoice', amounts=[100], taxes=self.root_company.account_sale_tax_id,
-                            invoice_date=invoice_date, post=True, company=company,
-                        )
+                        move.button_draft()
                     sp.close()
 
     def test_change_record_company(self):

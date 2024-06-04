@@ -124,8 +124,13 @@ class AutomaticEntryWizard(models.TransientModel):
     @api.constrains('date', 'move_line_ids')
     def _check_date(self):
         for wizard in self:
-            if wizard.move_line_ids.move_id._get_violated_lock_dates(wizard.date, False):
-                raise ValidationError(_("The date selected is protected by a lock date"))
+            for move in wizard.move_line_ids.move_id:
+                violated_lock_dates = move._get_violated_lock_dates(wizard.date, False)
+                if violated_lock_dates:
+                    raise ValidationError(_(
+                        "The date selected is protected by: %(lock_date_info)s.",
+                        lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates)
+                    ))
 
     @api.model
     def default_get(self, fields):
