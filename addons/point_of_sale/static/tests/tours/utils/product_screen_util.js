@@ -453,6 +453,17 @@ export function addCustomerNote(note) {
     );
 }
 
+export function addInternalNote(note) {
+    return inLeftSide(
+        [
+            clickControlButtonMore(),
+            clickControlButton("Internal Note"),
+            TextInputPopup.inputText(note),
+            Dialog.confirm(),
+        ].flat()
+    );
+}
+
 export function checkOrderlinesNumber(number) {
     return [
         {
