@@ -58,4 +58,10 @@ export class ProductInfoBanner extends Component {
 
         return this.state.available_quantity < 5 ? "bg-danger" : "bg-warning";
     }
+
+    get bannerClass() {
+        return `${this.ui.isSmall ? "flex-column" : "justify-content-between"} ${
+            this.bannerBackground
+        }`;
+    }
 }
