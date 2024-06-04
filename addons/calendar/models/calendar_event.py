@@ -814,6 +814,51 @@ class CalendarEvent(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
+    def action_unlink_event(self, attendee_id=None, recurrence=False):
+        """
+        Delete the event after displaying the delete wizard if necessary.
+
+        :param attendee_id: The ID of the attendee for the event
+        :param recurrence: Boolean indicating if the event is recurring
+        :return: Action to delete the event
+        """
+        if self.user_id._has_any_active_synchronization() or len(self.ids) > 1:
+            self.unlink()
+            return {
+                'type': 'ir.actions.act_url',
+                'target': 'self',
+                'url': '/odoo/calendar'
+            }
+
+        template = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
+        if not template:
+            self.unlink()
+            _logger.warning('Template "calendar.calendar_template_delete_event" was not found. Cannot send delete notifications.')
+            return {}
+
+        lang = self.env.context.get('lang')
+        if template.lang:
+            # This method ensures that the template is translated according
+            # to the user's or record's language settings.
+            lang = template._render_lang(self.ids)[self.id]
+            context = {
+                'default_use_template': bool(template),
+                'default_template_id': template.id,
+                'default_attendee_id': attendee_id,
+                'default_record': self.id,
+                'default_recurrence': recurrence,
+                'model_description': self.with_context(lang=lang),
+            }
+            return {
+                'name': _('Delete Event'),
+                'res_model': 'calendar.popover.delete.wizard',
+                'view_id': self.env.ref('calendar.view_event_delete_wizard_form').id,
+                'type': 'ir.actions.act_window',
+                'context': context,
+                'target': 'new',
+                'views': [(False, 'form')],
+            }
+
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
         if operation == 'read' and (not model_name or model_name == 'event.event'):
