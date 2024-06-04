@@ -101,6 +101,7 @@ export class HtmlField extends Component {
     }
 
     getConfig() {
+        const { resId, resModel } = this.props.record;
         const config = {
             content: this.props.record.data[this.props.name],
             Plugins: [
@@ -116,6 +117,7 @@ export class HtmlField extends Component {
                 collaborationResId: parseInt(this.props.record.resId),
             },
             peerId: this.generateId(),
+            recordInfo: { resModel, resId },
         };
         return config;
     }

@@ -110,15 +110,10 @@ export class MediaPlugin extends Plugin {
 
     openMediaDialog(params = {}) {
         const selection = this.shared.getEditableSelection();
-        // todo @phoenix to implement getRecordInfo (maybe a service ?)
-        const resModel = undefined;
-        const resId = undefined;
-        const field = undefined;
-        const type = undefined;
-
         const restoreSelection = () => {
             this.shared.setSelection(selection);
         };
+        const { resModel, resId, field, type } = this.config.recordInfo;
         this.services.dialog.add(MediaDialog, {
             resModel,
             resId,

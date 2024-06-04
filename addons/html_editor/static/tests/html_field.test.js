@@ -1,7 +1,8 @@
 import { HtmlField } from "@html_editor/fields/html_field";
+import { MediaDialog } from "@html_editor/main/media/media_dialog";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, press, queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -323,39 +324,45 @@ test("undo after discard html field changes in form", async () => {
     expect(`.o_form_button_cancel`).not.toBeVisible();
 });
 
-test.todo(
-    "A new MediaDialog after switching record in a Form view should have the correct resId",
-    async () => {
-        Partner._records = [
-            { id: 1, txt: "<p>first</p>" },
-            { id: 2, txt: "<p>second</p>" },
-        ];
-
-        await mountView({
-            type: "form",
-            resId: 1,
-            resIds: [1, 2],
-            resModel: "partner",
-            arch: `
+test("A new MediaDialog after switching record in a Form view should have the correct resId", async () => {
+    patchWithCleanup(MediaDialog.prototype, {
+        setup() {
+            expect.step(`${this.props.resModel} : ${this.props.resId}`);
+            this.size = "xl";
+            this.contentClass = "o_select_media_dialog";
+            this.title = "TEST";
+            this.tabs = [];
+            this.state = {};
+            // no call to super to avoid services dependencies
+            // this test only cares about the props given to the dialog
+        },
+    });
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
                 <form>
                     <field name="txt" widget="html"/>
                 </form>`,
-        });
-        expect(".odoo-editor-editable p:contains(first)").toHaveCount();
+    });
+    expect(".odoo-editor-editable p:contains(first)").toHaveCount(1);
 
-        await contains(`.o_pager_next`).click();
-        expect(".odoo-editor-editable p:contains(second)").toHaveCount();
+    await contains(`.o_pager_next`).click();
+    expect(".odoo-editor-editable p:contains(second)").toHaveCount(1);
 
-        const paragrah = queryOne(".odoo-editor-editable p");
-        setSelection({ anchorNode: paragrah, anchorOffset: 0 });
-        insertText("/Image");
-        // press("Enter")
+    const paragrah = queryOne(".odoo-editor-editable p");
+    setSelection({ anchorNode: paragrah, anchorOffset: 0 });
+    insertText(htmlEditor, "/Image");
+    await animationFrame();
+    expect(".o-we-powerbox").toHaveCount(1);
+    expect(".active .o-we-command-name").toHaveText("Image");
 
-        await tick();
-
-        // todo @phoenix to imp the full test
-    }
-);
+    press("Enter");
+    await animationFrame();
+    expect(["partner : 2"]).toVerifySteps();
+});
 
 test.todo("QWeb plugin select t-field", async (assert) => {
     throw new Error("to imp, use the qweb plugin");
