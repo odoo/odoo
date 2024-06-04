@@ -203,9 +203,9 @@ async function ensureHomeMenu() {
         let menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle");
         if (!menuToggle) {
             // In the Barcode application, there is no navbar. So you have to click
-            // on the o_stock_barcode_menu button which is the equivalent of
-            // the o_menu_toggle button in the navbar.
-            menuToggle = document.querySelector(".o_stock_barcode_menu");
+            // on the o_stock_barcode_home_menu button which is the equivalent
+            // of the o_menu_toggle button in the navbar.
+            menuToggle = document.querySelector(".o_stock_barcode_home_menu");
         }
         await triggerClick(menuToggle, "home menu toggle button");
         await waitForCondition(() => document.querySelector("div.o_home_menu"));
