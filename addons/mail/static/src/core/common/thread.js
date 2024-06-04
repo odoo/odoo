@@ -21,7 +21,8 @@ import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
-export const PRESENT_THRESHOLD = 2500;
+export const PRESENT_VIEWPORT_THRESHOLD = 3;
+const PRESENT_MESSAGE_THRESHOLD = 10;
 
 /**
  * @typedef {Object} Props
@@ -396,7 +397,14 @@ export class Thread extends Component {
     }
 
     get PRESENT_THRESHOLD() {
-        return this.state.showJumpPresent ? PRESENT_THRESHOLD - 200 : PRESENT_THRESHOLD;
+        const viewportHeight = this.scrollableRef.el?.clientHeight * PRESENT_VIEWPORT_THRESHOLD;
+        const messagesHeight = [...this.props.thread.nonEmptyMessages]
+            .reverse()
+            .slice(0, PRESENT_MESSAGE_THRESHOLD)
+            .map((message) => this.refByMessageId.get(message.id))
+            .reduce((totalHeight, message) => totalHeight + message?.el?.clientHeight, 0);
+        const threshold = Math.max(viewportHeight, messagesHeight);
+        return this.state.showJumpPresent ? threshold - 200 : threshold;
     }
 
     get newMessageBannerText() {
