@@ -145,4 +145,22 @@
         </div>
     </we-input>
 </t>
+<t t-name="web_editor.WeColorpicker">
+    <we-select class="o_we_user_value_widget o_we_so_color_palette" t-att-class="getAllClasses()" t-on-click="this._onClick">
+        <we-title t-if="props.slots?.title">
+            <t t-slot="title"/>
+        </we-title>
+        <div>
+            <span class="o_we_color_preview" t-att="getPreviewAttributes()"/>
+            <we-toggler t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <div class="o_we_color_palette_wrapper" style="display: contents;">
+                    <!-- Only render the ColorPalette when the toggler is active -->
+                    <ColorPalette t-if="state.opened" t-props="options" selectedCC="this.state.ccValue" selectedColor="this.state.value" />
+                </div>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
+</t>
 </templates>

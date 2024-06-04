@@ -1850,120 +1850,61 @@ const MultiUserValueWidget = UserValueWidget.extend({
     },
 });
 
-const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
-
+export class ColorpickerUserValue extends SelectUserValue {
+    /** 
+     * The Color Combination value, which is a string ranging from 1 to 5
+     *
+     * @type {string}
+     */
+    get ccValue() {
+        return this._state.ccValue;
+    }
+    set ccValue(value) {
+        this._state.ccValue = value;
+    }
+    /**
+     * A custom color value, selected through the color picker of the color
+     * palette
+     *
+     * @type {string}
+     */
+    get customColorValue() {
+        return this._state.cutomColorValue;
+    }
+    set customColorValue(value) {
+        this._state.customColorValue = value;
+    }
     /**
      * @override
      */
-    start: async function () {
-        const _super = this._super.bind(this);
-        const args = arguments;
-
-        this.resetTabCount = 0;
-
-        // Build the select element with a custom span to hold the color preview
-        this.colorPreviewEl = document.createElement('span');
-        this.colorPreviewEl.classList.add('o_we_color_preview');
-        // todo: This div should be removed whenever possible (like when
-        // converting the uservaluewidget to owl).
-        this.colorPaletteEl = document.createElement('div');
-        this.colorPaletteEl.classList.add('o_we_color_palette_wrapper');
-        this.colorPaletteEl.style.display = 'contents';
-        this.colorPaletteColorNames = [];
-        this.options.childNodes = [this.colorPaletteEl];
-        this.options.valueEl = this.colorPreviewEl;
-        // TODO: find a better way to do this.
-        // The colorpicker widget is started before the ColorPalette component
-        // is attached to the DOM (which only happens once the user opens the
-        // picker). However, the colorNames are only set after the ColorPalette
-        // has been mounted. Initializing the colorNames through a direct call
-        // to the `getColorPickerTemplateService` so that the widget starts
-        // with possible default values is thus necessary to avoid bugs on
-        // `_computeWidgetState()`.
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            const colorpickerTemplate = await wysiwyg.getColorpickerTemplate.call(wysiwyg);
-            this.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
-        }
-        return _super(...args);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    open: function () {
-        if (this.colorPaletteWrapper) {
-            this.colorPaletteWrapper?.update({
-                selectedCC: this._ccValue,
-                selectedColor: this._value,
-                resetTabCount: ++this.resetTabCount,
-            });
-            this._super(...arguments);
-        } else {
-            // TODO review in master, this does async stuff. Maybe the open
-            // method should now be async. This is not really robust as the
-            // colorPalette can be used without it to be fully rendered but
-            // the use of the saved promise where we can should mitigate that
-            // issue.
-            this._colorPaletteRenderPromise = this._renderColorPalette();
-            this._super(...arguments);
-            this._colorPaletteRenderPromise.then(() => {
-                // Re-adjust the position of the colorpicker once the
-                // colorpalette is completely rendered (once that the
-                // colorpicker has its final height.
-                // TODO should not be needed once everything will be converted
-                // to owl.
-                this._adjustDropdownPosition();
-            });
-        }
-    },
-    /**
-     * @override
-     */
-    close: function () {
-        this._super(...arguments);
-        if (this._customColorValue && this._customColorValue !== this._value) {
-            this._value = this._customColorValue;
-            this._customColorValue = false;
-            this._onUserValueChange();
-        }
-    },
-    /**
-     * @override
-     */
-    getMethodsParams: function () {
-        return Object.assign(this._super(...arguments), {
+    getMethodsParams() {
+        return Object.assign(super.getMethodsParams(...arguments), {
             colorNames: this.colorPaletteColorNames,
         });
-    },
+    }
     /**
      * @override
      */
-    getValue: function (methodName) {
+    getValue(methodName) {
         const isCCMethod = (this._methodsParams.withCombinations === methodName);
-        let value = this._super(...arguments);
+        let value = super.getValue(...arguments);
         if (isCCMethod) {
-            value = this._ccValue;
-        } else if (typeof this._customColorValue === 'string') {
-            value = this._customColorValue;
+            value = this.ccValue;
+        } else if (typeof this.customColorValue === 'string') {
+            value = this.customColorValue;
         }
 
         // TODO strange there is some processing below for the normal value but
         // not for the preview value? To check in older stable versions as well.
-        if (typeof this._previewColor === 'string') {
-            return isCCMethod ? this._previewCC : this._previewColor;
+        if (typeof this.previewColor === 'string') {
+            return isCCMethod ? this.previewCC : this.previewColor;
         }
 
         if (value) {
             // TODO probably something to be done to handle gradients properly
             // in this code.
-            const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
-            const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
+            const useCssColor = this._data.useCssColor;
+            const cssCompatible = this._data.cssCompatible;
             if ((useCssColor || cssCompatible) && !isCSSColor(value)) {
                 if (useCssColor) {
                     value = weUtils.getCSSVariableValue(value);
@@ -1973,20 +1914,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             }
         }
         return value;
-    },
-    /**
-     * @override
-     */
-    isContainer: function () {
-        return false;
-    },
-    /**
-     * @override
-     */
-    isActive: function () {
-        return !!this._ccValue
-            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
-    },
+    }
     /**
      * Updates the color preview + re-render the whole color palette widget.
      *
@@ -1999,30 +1927,135 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         // available in `_ccValue`.
         const isCCMethod = (this._methodsParams.withCombinations === methodName);
         // Always call _super but don't change _value if meant for the CC value.
-        await this._super(isCCMethod ? this._value : color, methodName, ...rest);
+        await super.setValue(isCCMethod ? this.value : color, methodName, ...rest);
         if (isCCMethod) {
-            this._ccValue = color;
+            this.ccValue = color;
         }
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return !!this.ccValue
+            || !weUtils.areCssValuesEqual(this.value, 'rgba(0, 0, 0, 0)');
+    }
+    /**
+     * @override
+     */
+    close() {
+        super.close();
+        if (this._state.customColorValue && this._state.customColorValue !== this._state.value) {
+            this._state.value = this._state.customColorValue;
+            this._state.customColorValue = false;
+            this.notifyValueChange(false);
+        }
+    }
+}
 
-        await this._colorPaletteRenderPromise;
+export class WeColorpicker extends WeSelect {
+    static StateModel = ColorpickerUserValue;
+    static template = "web_editor.WeColorpicker";
+    static components = { ...WeSelect.components, ColorPalette }
+    static isContainer = false;
 
+    setup() {
+        super.setup();
+        this.getColorPickerTemplateService = useService("get_color_picker_template");
+        onWillStart(async () => {
+            // TODO: find a better way to do this.
+            // The colorpicker widget is started before the ColorPalette component
+            // is attached to the DOM (which only happens once the user opens the
+            // picker). However, the colorNames are only set after the ColorPalette
+            // has been mounted. Initializing the colorNames through a direct call
+            // to the `getColorPickerTemplateService` so that the widget starts
+            // with possible default values is thus necessary to avoid bugs on
+            // `_computeWidgetState()`.
+            const colorpickerTemplate = await this.getColorPickerTemplateService();
+            this.state.colorPaletteColorNames = this._getColorNames(colorpickerTemplate);
+        });
+        this.colorPaletteColorNames = [];
+        // Colorpalette Props.
+        this.resetTabCount = 0;
+        const options = {
+            resetTabCount: this.resetTabCount,
+            getCustomColors: () => {
+                let result = [];
+                if (this.env.getCustomColors) {
+                    result = this.env.getCustomColors();
+                }
+                return result;
+            },
+            onCustomColorPicked: this._onCustomColorPicked.bind(this),
+            onColorPicked: this._onColorPicked.bind(this),
+            onColorHover: this._onColorHovered.bind(this),
+            onColorLeave: this._onColorLeft.bind(this),
+            onInputEnter: this._onEnterKey.bind(this),
+        };
+        if (this.props.excluded) {
+            options.excluded = this.props.excluded.replace(/ /g, '').split(',');
+        }
+        if (this.props.opacity) {
+            options.opacity = this.props.opacity;
+        }
+        if (this.props.withCombinations) {
+            options.withCombinations = !!this.props.withCombinations;
+        }
+        if (this.props.withGradients) {
+            options.withGradients = !!this.props.withGradients;
+        }
+        if (this.props.noTransparency) {
+            options.noTransparency = !!this.props.noTransparency;
+            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
+        }
+        if (this.props.selectedTab) {
+            options.selectedTab = this.props.selectedTab;
+        }
+        options.getTemplate = this.getColorPickerTemplateService;
+        this.options = options;
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+    /**
+     * @override
+     */
+    isContainer() {
+        return false;
+    }
+    /**
+     * @override
+     */
+    isActive() {
+        return !!this._ccValue
+            || !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
+    }
+    getPreviewAttributes() {
         const classes = weUtils.computeColorClasses(this.colorPaletteColorNames);
-        this.colorPreviewEl.classList.remove(...classes);
-        this.colorPreviewEl.style.removeProperty('background-color');
-        this.colorPreviewEl.style.removeProperty('background-image');
-        const prefix = this.options.dataAttributes.colorPrefix || 'bg';
-        if (this._ccValue) {
-            this.colorPreviewEl.style.backgroundColor = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')})`;
-            this.colorPreviewEl.style.backgroundImage = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')}-gradient)`;
+        // this.colorPreviewEl.classList.remove(...classes);
+        // this.colorPreviewEl.style.removeProperty('background-color');
+        // this.colorPreviewEl.style.removeProperty('background-image');
+        const prefix = this.props.colorPrefix || 'bg';
+        const style = {
+            "background-color": "",
+            "background-image": "",
+        };
+        const attributes = {
+            class: "",
+            style: "",
+        };
+        if (this.state.ccValue) {
+            style["background-color"] = `var(--we-cp-o-cc${this.state.ccValue}-${prefix.replace(/-/, '')})`;
+            style["background-image"] = `var(--we-cp-o-cc${this.state.ccValue}-${prefix.replace(/-/, '')}-gradient)`;
         }
-        if (this._value) {
-            this.colorPreviewEl.style.backgroundImage = 'none';
-            if (isCSSColor(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = this._value;
-            } else if (weUtils.isColorGradient(this._value)) {
-                this.colorPreviewEl.style.backgroundImage = this._value;
-            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = `var(--we-cp-${this._value}`;
+        if (this.state.value) {
+            style["background-image"] = "none";
+            if (isCSSColor(this.state.value)) {
+                style["background-color"] = this.state.value;
+            } else if (weUtils.isColorGradient(this.state.value)) {
+                style["background-image"] = this.state.value;
+            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(this.state.value)) {
+                style["background-color"] = `var(--we-cp-${this.state.value}`;
             } else {
                 // Checking if the className actually exists seems overkill but
                 // it is actually needed to prevent a crash. As an example, if a
@@ -2037,90 +2070,26 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
                 // space inside). In that case, we simply do not show any color.
                 // We could choose to handle this split-value case specifically
                 // but it was decided that this is enough for the moment.
-                const className = `bg-${this._value}`;
+                const className = `bg-${this.state.value}`;
                 if (classes.includes(className)) {
-                    this.colorPreviewEl.classList.add(className);
+                    attributes.class = className;
                 }
             }
         }
+        attributes.style = Object.entries(style).map(([k, v]) => `${k}: ${v}`).join("; ");
         // If the palette was already opened (e.g. modifying a gradient), the new DOM state must be
         // reflected in the palette, but the tab selection must not be impacted.
-        this.colorPaletteWrapper?.update({
-            selectedCC: this._ccValue,
-            selectedColor: this._value,
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @returns {Promise}
-     */
-    _renderColorPalette: async function () {
-        this.resetTabCount = 0;
-        const options = {
-            resetTabCount: this.resetTabCount,
-            selectedCC: this._ccValue,
-            selectedColor: this._value,
-            getCustomColors: () => {
-                let result = [];
-                this.trigger_up('get_custom_colors', {
-                    onSuccess: (colors) => result = colors,
-                });
-                return result;
-            },
-            onCustomColorPicked: this._onCustomColorPicked.bind(this),
-            onColorPicked: this._onColorPicked.bind(this),
-            onColorHover: this._onColorHovered.bind(this),
-            onColorLeave: this._onColorLeft.bind(this),
-            onInputEnter: this._onEnterKey.bind(this),
-        };
-        if (this.options.dataAttributes.excluded) {
-            options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
-        }
-        if (this.options.dataAttributes.opacity) {
-            options.opacity = this.options.dataAttributes.opacity;
-        }
-        if (this.options.dataAttributes.withCombinations) {
-            options.withCombinations = !!this.options.dataAttributes.withCombinations;
-        }
-        if (this.options.dataAttributes.withGradients) {
-            options.withGradients = !!this.options.dataAttributes.withGradients;
-        }
-        if (this.options.dataAttributes.noTransparency) {
-            options.noTransparency = !!this.options.dataAttributes.noTransparency;
-            options.excluded = [...(options.excluded || []), 'transparent_grayscale'];
-        }
-        if (this.options.dataAttributes.selectedTab) {
-            options.selectedTab = this.options.dataAttributes.selectedTab;
-        }
-        const wysiwyg = this.getParent().options.wysiwyg;
-        if (wysiwyg) {
-            options.document = this.$target[0].ownerDocument;
-            options.getTemplate = wysiwyg.getColorpickerTemplate.bind(wysiwyg);
-        }
-        this.colorPaletteWrapper?.destroy();
-        const sidebarDocument = this.colorPaletteEl.ownerDocument;
-        if (!(this.colorPaletteEl instanceof sidebarDocument.defaultView.HTMLElement)) {
-            // When inside an iframe, the element for mounting a component must
-            // be an instance of the iframe's HTMLElement, or else target
-            // validation for attachComponent fails.
-            const newEl = sidebarDocument.importNode(this.colorPaletteEl, true);
-            this.colorPaletteEl.before(newEl);
-            this.colorPaletteEl.remove();
-            this.colorPaletteEl = newEl;
-        }
-        this.colorPaletteWrapper = await attachComponent(this, this.colorPaletteEl, ColorPalette, options);
-    },
+        // TODO: @owl-options this used to be part of setValue, now it isn't.
+        // this.options.selectedCC = this.state.ccValue;
+        // this.options.selectedColor = this.state.value;
+        return attributes;
+    }
     /**
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return ev.originalEvent.__isColorpickerClick || this._super(...arguments);
-    },
+        return ev.__isColorpickerClick || super._shouldIgnoreClick(...arguments);
+    }
     /**
      * Browses the colorpicker XML template to return all possible values of
      * [data-color].
@@ -2140,7 +2109,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             }
         });
         return colorNames;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -2153,53 +2122,64 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      * @param {Object} params
      */
-    _onCustomColorPicked: function (params) {
-        this._customColorValue = params.color;
-    },
+    _onCustomColorPicked(params) {
+        this.state.customColorValue = params.color;
+    }
     /**
      * Called when a color button is clicked -> confirms the preview.
      *
      * @private
      * @param {Object} params
      */
-    _onColorPicked: function (params) {
-        this._previewCC = false;
-        this._previewColor = false;
-        this._customColorValue = false;
+    _onColorPicked(params) {
+        this.state.previewCC = false;
+        this.state.previewColor = false;
+        this.state.customColorValue = false;
 
-        this._ccValue = params.ccValue;
-        this._value = params.color;
+        this.state.ccValue = params.ccValue;
+        this.state.value = params.color;
 
         this._onUserValueChange();
-    },
+    }
     /**
      * Called when a color button is entered -> previews the background color.
      *
      * @private
      * @param {Object} params
      */
-    _onColorHovered: function (params) {
-        this._previewCC = params.ccValue;
-        this._previewColor = params.color;
+    _onColorHovered(params) {
+        this.state.previewCC = params.ccValue;
+        this.state.previewColor = params.color;
         this._onUserValuePreview();
-    },
+    }
     /**
      * Called when a color button is left -> cancels the preview.
      *
      * @private
      */
-    _onColorLeft: function () {
-        this._previewCC = false;
-        this._previewColor = false;
+    _onColorLeft() {
+        this.state.previewCC = false;
+        this.state.previewColor = false;
         this._onUserValueReset();
-    },
+    }
     /**
      * @private
      */
-    _onEnterKey: function () {
-        this.close();
-    },
-});
+    _onEnterKey() {
+        this.state.close();
+    }
+    /**
+     * @override
+     */
+    _onClick() {
+        super._onClick(...arguments);
+        if (this.state.opened) {
+            this.options.resetTabCount++;
+        }
+    }
+}
+
+registry.category("snippet_widgets").add("WeColorpicker", WeColorpicker);
 
 const MediapickerUserValueWidget = UserValueWidget.extend({
     tagName: 'we-button',
@@ -3556,7 +3536,6 @@ const userValueWidgetsRegistry = {
     'we-button-group': ButtonGroupUserValueWidget,
     'we-input': InputUserValueWidget,
     'we-multi': MultiUserValueWidget,
-    'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
     'we-datepicker': DatePickerUserValueWidget,
     'we-list': ListUserValueWidget,
