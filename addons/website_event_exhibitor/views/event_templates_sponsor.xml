@@ -10,6 +10,8 @@
                             lambda sponsor: (not sponsor.website_published, sponsor.sudo().sponsor_type_id.sequence, sponsor.sequence)
                         )" t-as="sponsor">
                         <t t-set="popover_content">
+                            <div t-if="sponsor.sudo().sponsor_type_id.display_ribbon_style and sponsor.sudo().sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                            t-field="sponsor.sudo().sponsor_type_id" t-attf-class="mb-2"/>
                             <div t-field="sponsor.name" class="h5"/>
                             <div t-if="sponsor.url" class="d-flex align-items-baseline">
                                 <i class="fa fa-globe me-2"/><a t-att-href="sponsor.url" t-field="sponsor.url" class="text-truncate"/>
@@ -34,8 +36,6 @@
         <span t-field="sponsor.image_128"
             t-options='{"widget": "image", "class": "img img-fluid", "filename-field": "partner_name"}'/>
     </div>
-    <div t-if="sponsor.sudo().sponsor_type_id.display_ribbon_style and sponsor.sudo().sponsor_type_id.display_ribbon_style != 'no_ribbon'"
-            t-field="sponsor.sudo().sponsor_type_id" t-attf-class="ribbon_#{sponsor.sudo().sponsor_type_id.display_ribbon_style} small text-center text-dark fw-bold"/>
     <span t-if="not sponsor.website_published"
         class="d-flex justify-content-center badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</span>
 </template>
