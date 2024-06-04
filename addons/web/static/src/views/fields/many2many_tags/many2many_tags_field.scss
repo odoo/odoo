@@ -8,6 +8,7 @@
 
 .o_field_widget.o_field_many2many_tags {
     flex-flow: row wrap;
+    margin: var(--Tags-margin, 0);
 
     .o_tags_input {
         padding: 1px 0;
@@ -38,7 +39,7 @@
 
         .o_badge_text, .o_tag_badge_text {
             @include o-text-overflow(inline-block);
-            max-width: 200px;
+            max-width: var(--Tag-max-width, 200px);
         }
     }
 }
