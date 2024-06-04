@@ -97,13 +97,50 @@
             line-height: 18px;
             color: #545454;
             .kv {
-                font-size: 14px;
+                display: block;
+                max-width: 300px;
+                font-size: 12px;
                 line-height: 18px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis !important;
             }
+        }
+
+        .i {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .l {
+            height: 26px;
+            width: 26px;
         }
     }
 
     td.o_seo_keyword_suggestion span.o_seo_suggestion.badge {
         cursor: pointer;
+    }
+
+    .oe_seo_checks {
+        .i {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+    .oe_remove:hover {
+        opacity: 0.7;
+    }
+    .mention-keyword {
+        width: 20% !important;
+    }
+    .o-img-thumbnail {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        margin: 15px;
+        border: 2px solid #ced4da;
     }
 }
