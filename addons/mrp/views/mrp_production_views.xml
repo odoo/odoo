@@ -422,6 +422,7 @@
                                     <field name="warehouse_id" column_invisible="True"/>
                                     <field name="is_locked" column_invisible="True"/>
                                     <field name="move_lines_count" column_invisible="True"/>
+                                    <field name="is_storable" column_invisible="True"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" column_invisible="True"/>
                                     <field name="state" column_invisible="True" force_save="1"/>
                                     <field name="should_consume_qty" column_invisible="True"/>
