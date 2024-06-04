@@ -5,7 +5,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
-
 export class AvatarCardResourcePopover extends AvatarCardPopover {
     static template = "resource_mail.AvatarCardResourcePopover";
 
@@ -40,11 +39,10 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     }
 
     get fieldNames() {
-        return [
-            ...super.fieldNames,
-            "user_id",            
-            "resource_type",
-        ];
+        const excludedFields = new Set(["partner_id"]);
+        return super.fieldNames
+            .concat(["user_id", "resource_type"])
+            .filter((field) => !excludedFields.has(field));
     }
 
     get email() {
@@ -57,6 +55,10 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
 
     get displayAvatar() {
         return this.record.user_id?.length;
+    }
+
+    get showViewProfileBtn() {
+        return false;
     }
 
     onSendClick() {

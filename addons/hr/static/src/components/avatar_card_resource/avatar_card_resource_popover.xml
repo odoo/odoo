@@ -16,14 +16,6 @@
                 <i t-if="record.hr_icon_display == 'presence_to_define'" class="fa fa-fw fa-circle-o text-muted" title="No information" role="img" aria-label="To define"/>
             </span>
         </xpath>
-        <xpath expr="//div[hasclass('o_avatar_card_buttons')]" position="inside">
-            <button
-                t-if="record.employee_id?.length"
-                t-on-click.stop="onClickViewEmployee"
-                class="btn btn-secondary btn-sm o_employee_profile_button">
-                View profile
-            </button>
-        </xpath>
     </t>
 
     <t t-name="hr.avatarCardResourceInfos">
