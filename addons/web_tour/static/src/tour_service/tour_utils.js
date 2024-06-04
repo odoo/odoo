@@ -654,7 +654,7 @@ export const stepUtils = {
             this.simulateEnterKeyboardInSearchModal(),
             {
                 mobile: true,
-                trigger: `.o_kanban_record .o_kanban_record_title :contains('${valueSearched}')`,
+                trigger: `.o_kanban_record:contains('${valueSearched}')`,
                 position: "bottom",
                 run: "click",
             },

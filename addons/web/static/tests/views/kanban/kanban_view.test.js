@@ -220,11 +220,9 @@ test("basic ungrouped rendering", async () => {
         arch: `
             <kanban class="o_kanban_test">
             <templates>
-                <t t-name="kanban-box">
-                <div>
+                <t t-name="kanban-card">
                     <t t-esc="record.foo.value"/>
                     <field name="foo"/>
-                </div>
                 </t>
             </templates>
         </kanban>`,
@@ -245,7 +243,7 @@ test("kanban rendering with class and style attributes", async () => {
         arch: `
             <kanban class="myCustomClass" style="border: 1px solid red;">
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <field name="foo"/>
                     </t>
                 </templates>
@@ -269,7 +267,7 @@ test("generic tags are case insensitive", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <Div class="test">Hello</Div>
                     </t>
                 </templates>
@@ -286,7 +284,7 @@ test("kanban records are clickable by default", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <field name="foo"/>
                     </t>
                 </templates>
@@ -306,7 +304,7 @@ test("kanban records with global_click='0'", async () => {
         arch: `
             <kanban can_open="0">
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="kanban-card">
                         <field name="foo"/>
                     </t>
                 </templates>
@@ -327,13 +325,9 @@ test("float fields are formatted properly without using a widget", async () => {
         arch: `
             <kanban>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="float_field" digits="[0,5]"/>
-                        </div>
-                        <div>
-                            <field name="float_field" digits="[0,3]"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="float_field" digits="[0,5]"/>
+                        <field name="float_field" digits="[0,3]"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -372,14 +366,12 @@ test("field with widget and attributes in kanban", async () => {
             <kanban>
                 <field name="foo"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="int_field" widget="my_field"
-                                str="some string"
-                                bool="true"
-                                num="4.5"
-                            />
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="int_field" widget="my_field"
+                            str="some string"
+                            bool="true"
+                            num="4.5"
+                        />
                     </t>
                 </templates>
             </kanban>`,
@@ -394,7 +386,7 @@ test.tags("desktop")("Hide tooltip when user click inside a kanban headers item"
             <kanban default_group_by="product_id">
                 <field name="product_id" options='{"group_by_tooltip": {"name": "Name"}}'/>
                 <templates>
-                    <t t-name="kanban-box"/>
+                    <t t-name="kanban-card"/>
                 </templates>
             </kanban>`,
     });
@@ -429,9 +421,7 @@ test("display full is supported on fields", async () => {
         <kanban class="o_kanban_test">
             <templates>
                 <t t-name="kanban-box">
-                <div>
                     <field name="foo" display="full"/>
-                </div>
                 </t>
             </templates>
         </kanban>`,
@@ -8033,10 +8023,8 @@ test("kanban with color attribute", async () => {
             <kanban highlight_color="color">
                 <field name="color"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8062,10 +8050,8 @@ test("edit the kanban color with the colorpicker", async () => {
                     <t t-name="kanban-menu">
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8108,10 +8094,8 @@ test("kanban with colorpicker and node with color attribute", async () => {
                     <t t-name="kanban-menu">
                         <field name="colorpickerField" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8141,10 +8125,8 @@ test("edit the kanban color with translated colors resulting in the same terms",
                     <t t-name="kanban-menu">
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -8165,10 +8147,8 @@ test("colorpicker doesn't appear when missing access rights", async () => {
                     <t t-name="kanban-menu">
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="name"/>
                     </t>
                 </templates>
             </kanban>`,

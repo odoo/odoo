@@ -13,15 +13,17 @@ patch(KanbanArchParser.prototype, {
         const archInfo = super.parse(xmlDoc, models, modelName);
 
         // Color and color picker (first node found is taken for each)
-        const cardDoc = archInfo.templateDocs[KANBAN_BOX_ATTRIBUTE];
-        const cardColorEl = cardDoc.querySelector("[color]");
-        const cardColorField = cardColorEl && cardColorEl.getAttribute("color");
+        const legacyCardDoc = archInfo.templateDocs[KANBAN_BOX_ATTRIBUTE];
+        if (legacyCardDoc) {
+            const cardColorEl = legacyCardDoc.querySelector("[color]");
+            const cardColorField = cardColorEl && cardColorEl.getAttribute("color");
 
-        const colorEl = xmlDoc.querySelector("templates .oe_kanban_colorpicker[data-field]");
-        const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
+            const colorEl = xmlDoc.querySelector("templates .oe_kanban_colorpicker[data-field]");
+            const colorField = (colorEl && colorEl.getAttribute("data-field")) || "color";
 
-        archInfo.cardColorField = archInfo.cardColorField || cardColorField;
-        archInfo.colorField = colorField;
+            archInfo.cardColorField = archInfo.cardColorField || cardColorField;
+            archInfo.colorField = colorField;
+        }
 
         return archInfo;
     },

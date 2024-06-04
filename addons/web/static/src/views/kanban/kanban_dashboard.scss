@@ -8,7 +8,7 @@
     --KanbanRecord__dropdown-gap: 0px;
     // ----------------------------------------------------------------------------
 
-    .o_kanban_record > div:not(.o_dropdown_kanban) {
+    .o_legacy_kanban_record > div:not(.o_dropdown_kanban) {
         position: relative;
         display: flex;
         flex-flow: column nowrap;
@@ -93,7 +93,7 @@
     }
 
     // ------- Dropdown toggle & menu -------
-    .o_kanban_record .o_dropdown_kanban {
+    .o_legacy_kanban_record .o_dropdown_kanban {
         visibility: visible;
     }
 }
@@ -179,7 +179,7 @@
 
 .o_kanban_dashboard.o_emphasize_colors .o_kanban_renderer {
     // Emphasize records' colors when necessary
-    .o_kanban_record::after {
+    .o_legacy_kanban_record::after {
         width: $o-kanban-color-border-width * 2;
     }
 }
