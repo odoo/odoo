@@ -141,6 +141,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 200,
                         'tax_group_base_amount': 2000,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
 
                     {
@@ -148,6 +149,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 400,
                         'tax_group_base_amount': 2000,
                         'tax_group_id': self.tax_group2.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -176,6 +178,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 600,
                         'tax_group_base_amount': 3000,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -210,6 +213,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 0,
                         'tax_group_base_amount': 1000,
                         'tax_group_id': tax_0.tax_group_id.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -256,6 +260,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 200,
                         'tax_group_base_amount': 2000,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
 
                     {
@@ -263,6 +268,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 420,
                         'tax_group_base_amount': 2100,
                         'tax_group_id': self.tax_group2.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -291,6 +297,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 620,
                         'tax_group_base_amount': 3000,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -346,6 +353,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 450,
                         'tax_group_base_amount': 2300,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
 
                     {
@@ -353,6 +361,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 300,
                         'tax_group_base_amount': 1000,
                         'tax_group_id': self.tax_group2.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -381,6 +390,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 750,
                         'tax_group_base_amount': 2000,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -433,6 +443,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 126,
                         'tax_group_base_amount': 300,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
                 ],
                 'PRE GROUP 1': [
@@ -441,6 +452,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 120,
                         'tax_group_base_amount': 1200,
                         'tax_group_id': self.tax_group_sub1.id,
+                        'hide_base_amount': None,
                     },
                 ],
                 'PRE GROUP 2': [
@@ -449,6 +461,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 300,
                         'tax_group_base_amount': 1200,
                         'tax_group_id': self.tax_group_sub2.id,
+                        'hide_base_amount': None,
                     },
                 ]
             },
@@ -519,6 +532,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 360,
                         'tax_group_base_amount': 1200,
                         'tax_group_id': self.tax_group1.id,
+                        'hide_base_amount': None,
                     },
                 ],
 
@@ -528,6 +542,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 42,
                         'tax_group_base_amount': 100,
                         'tax_group_id': self.tax_group_sub1.id,
+                        'hide_base_amount': None,
                     },
 
                     {
@@ -535,6 +550,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': 40,
                         'tax_group_base_amount': 400,
                         'tax_group_id': self.tax_group_sub3.id,
+                        'hide_base_amount': None,
                     },
                 ],
 
@@ -544,6 +560,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                         'tax_group_amount': -75,
                         'tax_group_base_amount': 300,
                         'tax_group_id': self.tax_group_sub2.id,
+                        'hide_base_amount': None,
                     },
                 ],
             },
@@ -616,18 +633,21 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'tax_group_amount': 20.41,
                     'tax_group_base_amount': 1020.41,
                     'tax_group_id': self.tax_group_sub3.id,
+                    'hide_base_amount': None,
                 }],
                 "Tax application": [{
                     'tax_group_name': self.tax_group_sub2.name,
                     'tax_group_amount': 210.0,
                     'tax_group_base_amount': 1000.0,
                     'tax_group_id': self.tax_group_sub2.id,
+                    'hide_base_amount': None,
                 }],
                 "Tax exemption": [{
                     'tax_group_name': self.tax_group_sub1.name,
                     'tax_group_amount': -20.41,
                     'tax_group_base_amount': 1020.41,
                     'tax_group_id': self.tax_group_sub1.id,
+                    'hide_base_amount': None,
                 }],
             },
             'subtotals': [{
@@ -684,12 +704,14 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                     'tax_group_amount': 10,
                     'tax_group_base_amount': 100,
                     'tax_group_id': self.tax_group1.id,
+                    'hide_base_amount': None,
                 }],
                 "Tax withholding": [{
                     'tax_group_name': self.tax_group_sub1.name,
                     'tax_group_amount': -47,
                     'tax_group_base_amount': 100,
                     'tax_group_id': self.tax_group_sub1.id,
+                    'hide_base_amount': None,
                 }],
             },
             'subtotals': [{
