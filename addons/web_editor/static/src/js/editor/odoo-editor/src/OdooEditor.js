@@ -270,6 +270,7 @@ export class OdooEditor extends EventTarget {
                 useResponsiveFontSizes: true,
                 showResponsiveFontSizesBadges: false,
                 showExtendedTextStylesOptions: false,
+                autoActivateContentEditable: true,
                 // TODO probably move `getCSSVariableValue` and
                 // `convertNumericToUnit` as odoo-editor utils to avoid this
                 getCSSVariableValue: () => null,
@@ -344,8 +345,10 @@ export class OdooEditor extends EventTarget {
         this.editable.setAttribute('dir', this.options.direction);
 
         // Set contenteditable before clone as FF updates the content at this point.
-        this._activateContenteditable();
-
+        this.canActivateContentEditable = this.options.autoActivateContentEditable;
+        if (this.canActivateContentEditable) {
+            this._activateContenteditable();
+        }
         this._collabClientId = this.options.collaborationClientId;
         this._collabClientAvatarUrl = this.options.collaborationClientAvatarUrl;
 
@@ -2086,6 +2089,7 @@ export class OdooEditor extends EventTarget {
      * from outside the odooEditor.
      */
     activateContenteditable() {
+        this.canActivateContentEditable = true;
         this._activateContenteditable();
     }
 
@@ -2567,6 +2571,7 @@ export class OdooEditor extends EventTarget {
         }
         this.observerActive('_activateContenteditable');
     }
+
     _stopContenteditable() {
         this.observerUnactive('_stopContenteditable');
         if (this.options.isRootEditable) {
@@ -4596,7 +4601,10 @@ export class OdooEditor extends EventTarget {
         this._currentMouseState = ev.type;
         this._lastMouseClickPosition = [ev.x, ev.y];
 
-        this._activateContenteditable();
+        if (this.canActivateContentEditable) {
+            this._activateContenteditable();
+        }
+
         // Ignore any changes that might have happened before this point.
         this.observer.takeRecords();
 
