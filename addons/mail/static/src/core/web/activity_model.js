@@ -1,6 +1,7 @@
 import { Record } from "@mail/core/common/record";
 import { assignDefined } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
+import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
 /**
  * @typedef Data
@@ -134,15 +135,15 @@ export class Activity extends Record {
     write_uid;
 
     get dateDeadlineFormatted() {
-        return this.date_deadline.toLocaleString(luxon.DateTime.DATE_SHORT);
+        return formatDate(this.date_deadline);
     }
 
     get dateDoneFormatted() {
-        return this.date_done.toLocaleString(luxon.DateTime.DATE_SHORT);
+        return formatDate(this.date_done);
     }
 
     get dateCreateFormatted() {
-        return this.create_date.toLocaleString(luxon.DateTime.DATETIME_SHORT);
+        return formatDateTime(this.create_date);
     }
 
     async edit() {
