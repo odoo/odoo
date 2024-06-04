@@ -214,9 +214,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         channel_info = self.make_jsonrpc_request('/im_livechat/get_session', {'anonymous_name': 'visitor', 'channel_id': self.livechat_channel.id})["Thread"]
         member_of_operator = self.env['discuss.channel.member'].search([('channel_id', '=', channel_info['id']), ('partner_id', 'in', self.operators.partner_id.ids)])
         message = self.env['discuss.channel'].browse(channel_info['id']).message_post(body='cc')
-        member_of_operator.channel_id.with_user(self.operators.filtered(
-            lambda operator: operator.partner_id == member_of_operator.partner_id
-        ))._mark_as_read(message.id)
+        member_of_operator._mark_as_read(message.id)
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             member_of_operator._gc_unpin_livechat_sessions()
         self.assertFalse(member_of_operator.is_pinned, "read channel should be unpinned after one day")

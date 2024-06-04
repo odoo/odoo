@@ -183,21 +183,21 @@ class TestChannelInternals(MailCommon, HttpCase):
         chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         msg_2 = self._add_messages(chat, 'Body2', author=self.user_employee.partner_id)
-
-        chat._mark_as_read(msg_2.id)
+        self_member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
+        self_member._mark_as_read(msg_2.id)
+        self_member_info = next(filter(lambda d: d['id'] == self_member.id, chat._channel_info()[0]['channelMembers'][0][1]))
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self_member = next(filter(lambda d: d['persona']['id'] == self.user_admin.partner_id.id, chat._channel_info()[0]['channelMembers'][0][1]))
         self.assertEqual(
-            self_member['seen_message_id']['id'],
+            self_member_info['seen_message_id']['id'],
             msg_2.id,
             "Last message id should have been updated"
         )
 
-        chat._mark_as_read(msg_1.id)
+        self_member._mark_as_read(msg_1.id)
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self_member = next(filter(lambda d: d['persona']['id'] == self.user_admin.partner_id.id, chat._channel_info()[0]['channelMembers'][0][1]))
+        self_member_info = next(filter(lambda d: d['id'] == self_member.id, chat._channel_info()[0]['channelMembers'][0][1]))
         self.assertEqual(
-            self_member['seen_message_id']['id'],
+            self_member_info['seen_message_id']['id'],
             msg_2.id,
             "Last message id should stay the same after mark channel as seen with an older message"
         )
@@ -243,12 +243,12 @@ class TestChannelInternals(MailCommon, HttpCase):
                 },
             ],
         ):
-            chat._mark_as_read(msg_1.id)
+            member._mark_as_read(msg_1.id)
         # There should be no channel member to be set as seen in the second time
         # So no notification should be sent
         self.env['bus.bus'].sudo().search([]).unlink()
         with self.assertBus([], []):
-            chat._mark_as_read(msg_1.id)
+            member._mark_as_read(msg_1.id)
 
     def test_channel_message_post_should_not_allow_adding_wrong_parent(self):
         channels = self.env['discuss.channel'].create([{'name': '1'}, {'name': '2'}])
