@@ -85,10 +85,23 @@ class MrpBatchProduct(models.TransientModel):
             components_list.append(components_line)
 
         productions = self.production_id._split_productions({self.production_id: productions_amount})
-        lots = self.env['stock.lot'].create([{
-            'name': lot_name,
-            'product_id': productions.product_id.id
-        } for lot_name in productions_lot_list])
+        lots = self.env['stock.lot'].search(
+            domain=[
+                ('company_id', 'in', [self.production_id.product_id.company_id.id, False]),
+                ('name', 'in', productions_lot_list),
+                ('product_id', '=', self.production_id.product_id.id)
+            ]
+        )
+        existing_lot_names = lots.mapped('name')
+        raw_lots = []
+        for lot_name in productions_lot_list:
+            if lot_name in existing_lot_names:
+                continue
+            raw_lots.append({
+                'name': lot_name,
+                'product_id': productions.product_id.id
+            })
+        lots = lots + self.env['stock.lot'].create(raw_lots)
 
         productions_to_set = set()
         for production, finished_lot in zip(productions, lots):
