@@ -411,7 +411,7 @@ class Users(models.Model):
         instead.
         """
         """ Override this method to plug additional authentication methods"""
-        assert credential.get('type') == 'password'
+        assert credential['type'] == 'password'
         self.env.cr.execute(
             "SELECT COALESCE(password, '') FROM res_users WHERE id=%s",
             [self.env.user.id]

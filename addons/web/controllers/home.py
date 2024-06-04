@@ -111,7 +111,7 @@ class Home(http.Controller):
 
         if request.httprequest.method == 'POST':
             try:
-                credential = {}
+                credential = {'type': 'password'}
                 for cred_type in CREDENTIAL_PARAMS:
                     if cred_type in request.params:
                         credential[cred_type] = request.params[cred_type]

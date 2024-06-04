@@ -65,11 +65,11 @@ class PasskeyTest(TransactionCase):
         }
         with MockRequest(self.env) as request:
             request.session['webauthn_challenge'] = b'\xa2==\xce\xbb\x94\xca\xa5\x0c S\xb4\xa2^T\x96\xd5\x1d\xf7\x9eP\xab\x0fbr\x17\xb9\xc3\xf8=\x93\xa8\xc1\xc9\x1e\xbd\x8a\x85\xad\x9c/\x91X\xb4b{\xff,\xa8s\xbfOf\xc8\x08\x9aei\x03OG\x17\xe9x'
-            credential = {'content': json.dumps(auth), 'type': 'webauthn'}
-            self.env['res.users']._login(get_db_name(), 'admin', credential, None)
+            credential = {'webauthn_response': json.dumps(auth), 'type': 'webauthn'}
+            self.env['res.users']._login(get_db_name(), credential, None)
             # Replay attacks will raise an error
             with self.assertRaises(Exception):
-                self.env['res.users']._login(get_db_name(), 'admin', credential, None)
+                self.env['res.users']._login(get_db_name(), credential, None)
 
     def test_verification(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')
