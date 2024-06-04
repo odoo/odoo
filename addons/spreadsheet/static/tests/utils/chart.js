@@ -27,6 +27,7 @@ export function insertChartInSpreadsheet(model, type = "odoo_bar") {
  *
  * @param {Object} params
  * @param {function} [params.mockRPC]
+ * @param {object} [params.serverData]
  * @param {string} [params.type]
  *
  * @returns { Promise<{ model: Model, env: Object }>}
@@ -34,6 +35,7 @@ export function insertChartInSpreadsheet(model, type = "odoo_bar") {
 export async function createSpreadsheetWithChart(params = {}) {
     const model = await createModelWithDataSource({
         mockRPC: params.mockRPC,
+        serverData: params.serverData,
     });
 
     insertChartInSpreadsheet(model, params.type);
