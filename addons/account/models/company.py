@@ -6,7 +6,8 @@ import calendar
 
 from odoo import fields, models, api, _, Command
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools import SQL
+from odoo.osv import expression
+from odoo.tools import format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
@@ -35,29 +36,59 @@ PEPPOL_LIST = [
 
 INTEGRITY_HASH_BATCH_SIZE = 1000
 
+SOFT_LOCK_DATE_FIELDS = [
+    'fiscalyear_lock_date',
+    'tax_lock_date',
+    'sale_lock_date',
+    'purchase_lock_date',
+]
+
+LOCK_DATE_FIELDS = [
+    *SOFT_LOCK_DATE_FIELDS,
+    'hard_lock_date',
+]
+
 
 class ResCompany(models.Model):
     _name = "res.company"
     _inherit = ["res.company", "mail.thread"]
 
-    #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection(MONTH_SELECTION, default='12', required=True)
-    period_lock_date = fields.Date(
-        string="Journals Entries Lock Date",
-        tracking=True,
-        help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this"
-             " date. Use it for period locking inside an open fiscal year, for example.")
     fiscalyear_lock_date = fields.Date(
-        string="All Users Lock Date",
+        string="Global Lock Date",
         tracking=True,
-        help="No users, including Advisers, can edit accounts prior to and inclusive of this date."
+        help="No users can edit accounts prior to and inclusive of this date."
              " Use it for fiscal year locking for example.")
     tax_lock_date = fields.Date(
         string="Tax Return Lock Date",
         tracking=True,
         help="No users can edit journal entries related to a tax prior and inclusive of this date.")
-    max_tax_lock_date = fields.Date(compute='_compute_max_tax_lock_date', recursive=True)  # TODO maybe store
+    sale_lock_date = fields.Date(
+        string='Sales Lock Date',
+        tracking=True,
+        help='Prevents creation and modification of entries in sales journals up to the defined date inclusive.'
+    )
+    purchase_lock_date = fields.Date(
+        string='Purchase Lock date',
+        tracking=True,
+        help='Prevents creation and modification of entries in purchase journals up to the defined date inclusive.'
+    )
+    hard_lock_date = fields.Date(
+        string='Hard Lock Date',
+        tracking=True,
+        help='Like the "Global Lock Date", but no exceptions are possible.'
+    )
+    # The user lock date fields are explicitly invalidated when
+    #   * writing the corresponding lock date field on any company
+    #   * an exception for that field is created (for any company)
+    #   * an exception for that field is revoked (for any company)
+    # A `@api.depends` is necessary for the `@api.depends_context` to work correctly
+    user_fiscalyear_lock_date = fields.Date(compute='_compute_user_fiscalyear_lock_date')
+    user_tax_lock_date = fields.Date(compute='_compute_user_tax_lock_date')
+    user_sale_lock_date = fields.Date(compute='_compute_user_sale_lock_date')
+    user_purchase_lock_date = fields.Date(compute='_compute_user_purchase_lock_date')
+    user_hard_lock_date = fields.Date(compute='_compute_user_hard_lock_date')
     transfer_account_id = fields.Many2one('account.account',
         check_company=True,
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current'), ('deprecated', '=', False)]", string="Inter-Banks Transfer Account", help="Intermediary account used when moving money from a liqity account to another")
@@ -279,10 +310,38 @@ class ResCompany(models.Model):
             if html:
                 company.invoice_terms_html = html
 
-    @api.depends('tax_lock_date', 'parent_id.max_tax_lock_date')
-    def _compute_max_tax_lock_date(self):
+    @api.depends('fiscalyear_lock_date')
+    @api.depends_context('uid', 'ignore_exceptions')
+    def _compute_user_fiscalyear_lock_date(self):
+        ignore_exceptions = bool(self.env.context.get('ignore_exceptions', False))
         for company in self:
-            company.max_tax_lock_date = max(company.tax_lock_date or date.min, company.parent_id.sudo().max_tax_lock_date or date.min)
+            company.user_fiscalyear_lock_date = company._get_user_lock_date('fiscalyear_lock_date', ignore_exceptions)
+
+    @api.depends('tax_lock_date')
+    @api.depends_context('uid', 'ignore_exceptions')
+    def _compute_user_tax_lock_date(self):
+        ignore_exceptions = bool(self.env.context.get('ignore_exceptions', False))
+        for company in self:
+            company.user_tax_lock_date = company._get_user_lock_date('tax_lock_date', ignore_exceptions)
+
+    @api.depends('sale_lock_date')
+    @api.depends_context('uid', 'ignore_exceptions')
+    def _compute_user_sale_lock_date(self):
+        ignore_exceptions = bool(self.env.context.get('ignore_exceptions', False))
+        for company in self:
+            company.user_sale_lock_date = company._get_user_lock_date('sale_lock_date', ignore_exceptions)
+
+    @api.depends('purchase_lock_date')
+    @api.depends_context('uid', 'ignore_exceptions')
+    def _compute_user_purchase_lock_date(self):
+        ignore_exceptions = bool(self.env.context.get('ignore_exceptions', False))
+        for company in self:
+            company.user_purchase_lock_date = company._get_user_lock_date('purchase_lock_date', ignore_exceptions)
+
+    @api.depends('hard_lock_date')
+    def _compute_user_hard_lock_date(self):
+        for company in self:
+            company.user_hard_lock_date = max(c.hard_lock_date or date.min for c in company.sudo().parent_ids)
 
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [
@@ -347,15 +406,39 @@ class ResCompany(models.Model):
             })
         return action
 
-    def _validate_fiscalyear_lock(self, values):
-        if values.get('fiscalyear_lock_date'):
+    def _validate_locks(self, values):
+        """Check that the lock date changes are valid.
+        * Check that we do not decrease or remove the hard lock dates.
+        * Check there are no unreconciled bank statement lines in the period we want to lock.
+        * Check there are no unhashed journal entires in the period we want to lock.
+        :param vals: The values passed to the write method.
+        """
+        new_locks = {field: fields.Date.to_date(values[field])for field in LOCK_DATE_FIELDS if field in values}
 
+        fiscalyear_lock_date = new_locks.get('fiscalyear_lock_date')
+        hard_lock_date = new_locks.get('hard_lock_date')
+        sale_lock_date = new_locks.get('sale_lock_date')
+        purchase_lock_date = new_locks.get('purchase_lock_date')
+        fiscal_lock_date = None
+        if fiscalyear_lock_date or hard_lock_date:
+            fiscal_lock_date = max(fiscalyear_lock_date or date.min, hard_lock_date or date.min)
+
+        if 'hard_lock_date' in new_locks:
+            for company in self:
+                if not company.hard_lock_date:
+                    continue
+                if not hard_lock_date:
+                    raise UserError(_("The Hard Lock Date cannot be removed."))
+                if hard_lock_date < company.hard_lock_date:
+                    raise UserError(_("A new Hard Lock Date must be posterior (or equal) to the previous one."))
+
+        if hard_lock_date:
             draft_entries = self.env['account.move'].search([
                 ('company_id', 'child_of', self.ids),
                 ('state', '=', 'draft'),
-                ('date', '<=', values['fiscalyear_lock_date'])])
+                ('date', '<=', hard_lock_date)])
             if draft_entries:
-                error_msg = _('There are still draft entries in the period you want to lock. You should either post or delete them.')
+                error_msg = _('There are still draft entries in the period you want to hard lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'tree',
                     'name': _('Draft Entries'),
@@ -363,14 +446,16 @@ class ResCompany(models.Model):
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
                     'search_view_id': [self.env.ref('account.view_account_move_filter').id, 'search'],
-                    'views': [[self.env.ref('account.view_move_tree').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
+                    'views': [[self.env.ref('account.view_move_tree_multi_edit').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
                 }
                 raise RedirectWarning(error_msg, action_error, _('Show draft entries'))
 
+        # Check for unreconciled bank statement lines
+        if fiscal_lock_date:
             unreconciled_statement_lines = self.env['account.bank.statement.line'].search([
                 ('company_id', 'child_of', self.ids),
                 ('is_reconciled', '=', False),
-                ('date', '<=', values['fiscalyear_lock_date']),
+                ('date', '<=', fiscal_lock_date),
                 ('move_id.state', 'in', ('draft', 'posted')),
             ])
             if unreconciled_statement_lines:
@@ -379,6 +464,8 @@ class ResCompany(models.Model):
                 action_error = self._get_fiscalyear_lock_statement_lines_redirect_action(unreconciled_statement_lines)
                 raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
 
+        # Check for unhashed journal entries
+        if fiscal_lock_date or sale_lock_date or purchase_lock_date:
             # Check if there are still unhashed journal entries
             # Only check journals that have at least one hashed entry.
             journals_to_check = self.env['account.journal']
@@ -390,16 +477,25 @@ class ResCompany(models.Model):
                     ('journal_id', '=', journal.id),
                 ], limit=1):
                     journals_to_check |= journal
-
+            lock_date_domains = []
+            if fiscal_lock_date:
+                lock_date_domains.append([('date', '<=', fiscal_lock_date)])
+            for lock_date, journal_type in [(sale_lock_date, 'sale'), (purchase_lock_date, 'purchase')]:
+                if lock_date:
+                    lock_date_domains.append([
+                        ('date', '<=', lock_date),
+                        ('journal_id.type', '=', journal_type),
+                    ])
             chains_to_hash = self.env['account.move'].search([
                 ('restrict_mode_hash_table', '=', True),
                 ('inalterable_hash', '=', False),
                 ('journal_id', 'in', journals_to_check.ids),
-                ('date', '<=', values['fiscalyear_lock_date']),
+                *expression.OR(lock_date_domains),
             ])._get_chains_to_hash(force_hash=True, raise_if_no_document=False)
+
             move_ids = [move.id for chain in chains_to_hash for move in chain['moves']]
             if move_ids:
-                msg = _("Some journal entries have not been hashed yet. You should hash them before locking the fiscal year.")
+                msg = _("Some journal entries have not been hashed yet. You should hash them before setting the lock dates.")
                 action = {
                     'type': 'ir.actions.act_window',
                     'name': _('Journal Entries to Hash'),
@@ -414,36 +510,143 @@ class ResCompany(models.Model):
                     })
                 raise RedirectWarning(msg, action, _('Show Journal Entries to Hash'))
 
-    def _get_user_fiscal_lock_date(self):
-        """Get the fiscal lock date for this company depending on the user"""
-        lock_date = max(self.period_lock_date or date.min, self.fiscalyear_lock_date or date.min)
-        if self.env.user.has_group('account.group_account_manager'):
-            lock_date = self.fiscalyear_lock_date or date.min
-        if self.parent_id:
-            # We need to use sudo, since we might not have access to a parent company.
-            lock_date = max(lock_date, self.sudo().parent_id._get_user_fiscal_lock_date())
-        return lock_date
+    def _get_user_lock_date(self, soft_lock_date_field, ignore_exceptions=False):
+        """Get the lock date called `soft_lock_date_field` for this company depending on the user.
+        We consider the field and exceptions (except if `ignore_exceptions`) for it in this company and the parent companies.
+        :param str soft_lock_date_field: One of the lock date fields (except 'hard_lock_date'; see SOFT_LOCK_DATE_FIELDS)
+        :param bool ignore_exceptions: Whether we ignore exceptions or not
+        :return the user lock date
+        """
+        self.ensure_one()
+        soft_lock_date = date.min
+        # We need to use sudo, since we might not have access to a parent company.
+        for company in self.sudo().parent_ids:
+            if company[soft_lock_date_field]:
+                if ignore_exceptions:
+                    exception = None
+                else:
+                    exception = self.env['account.lock_exception'].search(
+                        [
+                          ('state', '=', 'active'),  # checks the datetime
+                          '|',
+                              ('user_id', '=', None),
+                              ('user_id', '=', self.env.user.id),
+                          (soft_lock_date_field, '<', company[soft_lock_date_field]),
+                          ('company_id', '=', company.id),
+                        ],
+                        order=f'{soft_lock_date_field} asc',
+                        limit=1,
+                    )
+                if exception:
+                    # The search domain of the exception ensures `exception[soft_lock_date_field] < company[soft_lock_date_field]`
+                    soft_lock_date = max(soft_lock_date, exception[soft_lock_date_field])
+                else:
+                    soft_lock_date = max(soft_lock_date, company[soft_lock_date_field])
+        return soft_lock_date
 
-    def _get_violated_lock_dates(self, accounting_date, has_tax):
+    def _get_user_fiscal_lock_date(self, journal, ignore_exceptions=False):
+        """Get the fiscal lock date for this company (depending on the affected journal) accounting for potential user exceptions
+        :param bool ignore_exceptions: Whether we ignore exceptions or not
+        :return the lock date
+        """
+        self.ensure_one()
+        company = self.with_context(ignore_exceptions=ignore_exceptions)
+        lock = max(company.user_fiscalyear_lock_date, company.user_hard_lock_date)
+        if journal.type == 'sale':
+            lock = max(company.user_sale_lock_date, lock)
+        elif journal.type == 'purchase':
+            lock = max(company.user_purchase_lock_date, lock)
+        return lock
+
+    def _get_violated_soft_lock_date(self, soft_lock_date_field, date):
+        """
+        Check whether `date` violates the lock date called `soft_lock_date_field`.
+        :param str soft_lock_date_field: One of the lock date fields (except 'hard_lock_date'; see SOFT_LOCK_DATE_FIELDS)
+        :param date: We check whether this date is prior or equal to the lock date.
+        :return the violated lock date as a date (or `None`)
+        """
+        violated_date = None
+        if not self:
+            return violated_date
+        self.ensure_one()
+        user_lock_date_field = f'user_{soft_lock_date_field}'
+        regular_lock_date = self.with_context(ignore_exceptions=True)[user_lock_date_field]
+        if date <= regular_lock_date:
+            violated_date = regular_lock_date
+            user_lock_date = self.with_context(ignore_exceptions=False)[user_lock_date_field]
+            violated_date = None if date > user_lock_date else user_lock_date
+        return violated_date
+
+    def _get_lock_date_violations(self, accounting_date, fiscalyear=True, sale=True, purchase=True, tax=True, hard=True):
         """Get all the lock dates affecting the current accounting_date.
-        :param accoutiaccounting_dateng_date: The accounting date
-        :param has_tax: If any taxes are involved in the lines of the invoice
-        :return: a list of tuples containing the lock dates ordered chronologically.
+        :param accounting_date:      The accounting date
+        :param bool fiscalyear:      Whether we should check the `fiscalyear_lock_date`
+        :param bool sale:            Whether we should check the `sale_lock_date`
+        :param bool purchase:        Whether we should check the `purchase_lock_date`
+        :param bool tax:             Whether we should check the `tax_lock_date`
+        :param bool hard:            Whether we should check the `hard_lock_date`
+        :return: a list of tuples containing the lock dates (not ordered chronologically).
         """
         self.ensure_one()
         locks = []
-        user_lock_date = self._get_user_fiscal_lock_date()
-        if accounting_date and user_lock_date and accounting_date <= user_lock_date:
-            locks.append((user_lock_date, _('user')))
-        tax_lock_date = self.max_tax_lock_date
-        if accounting_date and tax_lock_date and has_tax and accounting_date <= tax_lock_date:
-            locks.append((tax_lock_date, _('tax')))
+
+        if not accounting_date:
+            return locks
+
+        soft_lock_date_fields_to_check = [
+            # (field, "to check")
+            ('fiscalyear_lock_date', fiscalyear),
+            ('sale_lock_date', sale),
+            ('purchase_lock_date', purchase),
+            ('tax_lock_date', tax),
+        ]
+        for field, to_check in soft_lock_date_fields_to_check:
+            if not to_check:
+                continue
+            violated_date = self._get_violated_soft_lock_date(field, accounting_date)
+            if violated_date:
+                locks.append((violated_date, field))
+
+        if hard:
+            hard_lock_date = self.user_hard_lock_date
+            if accounting_date <= hard_lock_date:
+                locks.append((hard_lock_date, 'hard_lock_date'))
+
+        return locks
+
+    @api.model
+    def _format_lock_dates(self, lock_dates):
+        """Format a list of lock dates as a string.
+        :param lock_date_violations: list of tuple (lock_date, lock_date_field)
+        :return: a (localized) string listing all the lock date fields and their values
+        """
+        return format_list(self.env, [
+            f"{self.fields_get([field])[field]['string']} ({format_date(self.env, lock_date)})"
+            for lock_date, field in sorted(lock_dates)
+        ])
+
+    def _get_violated_lock_dates(self, accounting_date, has_tax, journal):
+        """Get all the lock dates affecting the current accounting_date.
+        :param accounting_date: The accounting date
+        :param has_tax: If any taxes are involved in the lines of the invoice
+        :param journal: The affected journal
+        :return: a list of tuples containing the lock dates ordered chronologically.
+        """
+        locks = self._get_lock_date_violations(
+            accounting_date,
+            fiscalyear=True,
+            sale=(journal and journal.type == 'sale'),
+            purchase=(journal and journal.type == 'purchase'),
+            tax=has_tax,
+            hard=True,
+        )
         locks.sort()
         return locks
 
     def write(self, values):
-        #restrict the closing of FY if there are still unposted entries
-        self._validate_fiscalyear_lock(values)
+        self._validate_locks(values)
+
+        self.env['res.company'].invalidate_model(fnames=[f'user_{field}' for field in LOCK_DATE_FIELDS if field in values])
 
         # Reflect the change on accounts
         for company in self:

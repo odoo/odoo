@@ -281,10 +281,13 @@ class PosSession(models.Model):
     @api.constrains('start_at')
     def _check_start_date(self):
         for record in self:
-            company = record.config_id.journal_id.company_id
+            journal = record.config_id.journal_id
+            company = journal.company_id
             start_date = record.start_at.date()
-            if (company.period_lock_date and start_date <= company.period_lock_date) or (start_date <= company._get_user_fiscal_lock_date()):
-                raise ValidationError(_("You cannot create a session before the accounting lock date."))
+            violated_lock_dates = company._get_violated_lock_dates(start_date, True, journal)
+            if violated_lock_dates:
+                raise ValidationError(_("You cannot create a session starting before: %(lock_date_info)s",
+                                        lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates)))
 
     def _check_invoices_are_posted(self):
         unposted_invoices = self._get_closed_orders().sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
