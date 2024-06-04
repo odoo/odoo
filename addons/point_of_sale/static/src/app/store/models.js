@@ -592,7 +592,7 @@ export class Orderline extends PosModel {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     set_full_product_name() {
-        this.full_product_name = this.product.display_name;
+        this.full_product_name = this.get_full_product_name_with_variant();
     }
     get_price_extra() {
         return this.price_extra;
