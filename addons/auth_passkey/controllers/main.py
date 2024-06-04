@@ -3,9 +3,12 @@ from base64 import urlsafe_b64encode
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.home import Home
+from odoo.addons.web.controllers.home import Home, CREDENTIAL_PARAMS
 
 from ..lib.duo_labs.webauthn import options_to_json
+
+
+CREDENTIAL_PARAMS.append('webauthn_response')
 
 
 class WebauthnController(http.Controller):
@@ -29,12 +32,3 @@ class WebauthnController(http.Controller):
         auth_options = request.env['auth.passkey.key']._start_auth()
         request.session.webauthn_challenge = auth_options.challenge
         return json.loads(options_to_json(auth_options))
-
-
-class HomeController(Home):
-    @http.route()
-    def web_login(self, redirect=None, **kw):
-        webauthn = request.params.get('webauthn')
-        if webauthn:
-            kw['credential'] = {'webauthn_response': webauthn, 'type': 'webauthn', 'skip_totp': True}
-        return super().web_login(redirect, **kw)

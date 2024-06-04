@@ -23,6 +23,7 @@ SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', '
                           'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
                           'password', 'confirm_password', 'city', 'country_id', 'lang', 'signup_email'}
 LOGIN_SUCCESSFUL_PARAMS = set()
+CREDENTIAL_PARAMS = ['login', 'password', 'type']
 
 
 class Home(http.Controller):
@@ -110,7 +111,10 @@ class Home(http.Controller):
 
         if request.httprequest.method == 'POST':
             try:
-                credential = kw.get('credential', {'login': request.params['login'], 'password': request.params['password'], 'type': 'password'})
+                credential = {}
+                for cred_type in CREDENTIAL_PARAMS:
+                    if cred_type in request.params:
+                        credential[cred_type] = request.params[cred_type]
                 uid = request.session.authenticate(request.db, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(uid, redirect=redirect))

@@ -69,5 +69,6 @@ class UsersPasskey(models.Model):
             except InvalidAuthenticationResponse as e:
                 raise AccessDenied(e.args[0])
             passkey.sign_count = new_sign_count
+            credential['skip_totp'] = True
         else:
             return super()._check_credentials(credential, env)
