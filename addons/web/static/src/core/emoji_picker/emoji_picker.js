@@ -113,7 +113,13 @@ export const loader = {
 export async function loadEmoji() {
     try {
         await loader.loadEmoji();
-        return odoo.loader.modules.get("@web/core/emoji_picker/emoji_data");
+        const { getCategories, getEmojis } = odoo.loader.modules.get(
+            "@web/core/emoji_picker/emoji_data"
+        );
+        return {
+            categories: getCategories(),
+            emojis: getEmojis(),
+        };
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
         return { emojis: [], categories: [] };
