@@ -52,4 +52,7 @@ patch(ProjectRightSidePanel.prototype, {
         }
     },
 
+    get panelVisible() {
+        return super.panelVisible || this.state.data.show_sale_items;
+    },
 });
