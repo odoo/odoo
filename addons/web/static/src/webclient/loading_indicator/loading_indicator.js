@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus } from "@web/core/utils/hooks";
 import { Transition } from "@web/core/transition";
 
 import { Component, useState } from "@odoo/owl";
@@ -22,15 +22,12 @@ export class LoadingIndicator extends Component {
     static props = {};
 
     setup() {
-        this.uiService = useService("ui");
         this.state = useState({
             count: 0,
             show: false,
         });
         this.rpcIds = new Set();
-        this.shouldUnblock = false;
         this.startShowTimer = null;
-        this.blockUITimer = null;
         useBus(rpcBus, "RPC:REQUEST", this.requestCall);
         useBus(rpcBus, "RPC:RESPONSE", this.responseCall);
     }
@@ -59,12 +56,7 @@ export class LoadingIndicator extends Component {
         this.state.count = this.rpcIds.size;
         if (this.state.count === 0) {
             browser.clearTimeout(this.startShowTimer);
-            browser.clearTimeout(this.blockUITimer);
             this.state.show = false;
-            if (this.shouldUnblock) {
-                this.uiService.unblock();
-                this.shouldUnblock = false;
-            }
         }
     }
 }
