@@ -59,10 +59,10 @@
                     </div>
                 </div>
                 <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex h-12">
-                    <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
+                    <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done" style="margin-right:1px;">
                                 New Order
                     </div>
-                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume">
+                    <div t-if="isResumeVisible() and !splittedOrder" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="resumeOrder" name="resume" style="margin-left:1px;">
                                 Resume Order
                     </div>
                 </div>
