@@ -4118,7 +4118,13 @@ const SnippetOptionWidget = Widget.extend({
         // the case, warn the user and potentially ask if he agrees to save its
         // current changes. If not, just do nothing.
         let requiresReload = false;
-        if (!ev.data.previewMode && !ev.data.isSimulatedEvent) {
+        let bypassConfirmSavePrompt = false;
+        this.trigger_up("get_bypass_confirm_save_prompt", {
+            onSuccess: (value) => {
+                bypassConfirmSavePrompt = value;
+            },
+        });
+        if (!ev.data.previewMode && !ev.data.isSimulatedEvent && !bypassConfirmSavePrompt) {
             const linkedWidgets = this._requestUserValueWidgets(...ev.data.triggerWidgetsNames);
             const widgets = [ev.data.widget].concat(linkedWidgets);
 
