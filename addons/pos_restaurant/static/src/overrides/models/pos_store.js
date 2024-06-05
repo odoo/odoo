@@ -235,7 +235,20 @@ patch(PosStore.prototype, {
                     floor.table_ids.map((table) => table.id)
                 )
             );
+<<<<<<< HEAD
             return await this.syncAllOrders({ table_ids: tableIds });
+||||||| parent of b7b325095e18 (temp)
+            await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
+            const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
+            await this._loadMissingProducts(ordersJsons);
+            return ordersJsons;
+=======
+            await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
+            const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
+            await this._loadMissingProducts(ordersJsons);
+            await this._loadMissingPartners(ordersJsons);
+            return ordersJsons;
+>>>>>>> b7b325095e18 (temp)
         } else {
             return await super.getServerOrders();
         }
