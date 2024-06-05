@@ -90,7 +90,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         setCellContent(model, "A1", `=ODOO.LIST(1,1,"active")`);
         assert.strictEqual(getCellValue(model, "A1"), "Loading...");
         await waitForDataLoaded(model); // Await for batching collection of missing fields
-        assert.strictEqual(getCellValue(model, "A1"), true);
+        assert.strictEqual(getCellValue(model, "A1"), "TRUE");
     });
 
     QUnit.test("Can remove a list with undo after editing a cell", async function (assert) {
