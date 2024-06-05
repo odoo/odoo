@@ -62,7 +62,7 @@
                                         <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                             <t t-if="colorData.type !== 'custom'">
                                                 <option t-att-value="colorData.type" t-attf-class="o_btn_preview dropdown-item">
-                                                    <span t-esc="colorData.label"/>
+                                                    <span t-out="colorData.label"/>
                                                 </option>
                                             </t>
                                         </t>
@@ -160,7 +160,7 @@
                         <we-selection-items class="dropdown-menu" name="link_style_color">
                             <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
                                 <we-button class="dropdown-item" href="#" t-att-data-value="colorData.type">
-                                    <t t-esc="colorData.label"/>
+                                    <t t-out="colorData.label"/>
                                 </we-button>
                             </t>
                         </we-selection-items>
@@ -327,7 +327,7 @@
                     <t t-foreach="this.aspectRatios" t-as="ratio" t-key="ratio">
                         <t t-set="is_active" t-value="ratio === this.aspectRatio"/>
                         <label t-attf-class="btn #{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">
-                            <input type="radio" /><t t-esc="ratio_value.label"/>
+                            <input type="radio" /><t t-out="ratio_value.label"/>
                         </label>
                     </t>
                 </div>

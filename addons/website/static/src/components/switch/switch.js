@@ -19,7 +19,7 @@ export class Switch extends Component {
     <label t-att-class="'o_switch' + extraClasses">
         <input type="checkbox" t-att-checked="props.value" t-att-disabled="props.disabled" t-on-change="(ev) => props.onChange(ev.target.checked)"/>
         <span/>
-        <span t-if="props.label" t-esc="props.label" class="ms-2"/>
+        <span t-if="props.label" t-out="props.label" class="ms-2"/>
     </label>
     `;
 

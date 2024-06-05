@@ -5,7 +5,7 @@
         <RemoveButton t-if="props.isRemovable" model="props.model" remove="() => this.remove()"/>
         <div class="o_we_media_dialog_img_wrapper">
             <img t-ref="auto-resize-image" class="o_we_attachment_highlight img img-fluid w-100" t-att-src="props.src" t-att-alt="props.altDescription" t-att-title="props.title" loading="lazy"/>
-            <a t-if="props.author" class="o_we_media_author position-absolute start-0 bottom-0 end-0 text-truncate text-center text-primary fs-6 bg-white-50" t-att-href="props.authorLink" target="_blank" t-esc="props.author"/>
+            <a t-if="props.author" class="o_we_media_author position-absolute start-0 bottom-0 end-0 text-truncate text-center text-primary fs-6 bg-white-50" t-att-href="props.authorLink" target="_blank" t-out="props.author"/>
         </div>
         <span t-if="props.isOptimized" class="badge position-absolute bottom-0 end-0 m-1 text-bg-success">Optimized</span>
     </div>

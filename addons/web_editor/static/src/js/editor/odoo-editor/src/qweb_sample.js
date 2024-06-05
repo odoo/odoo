@@ -4,23 +4,23 @@ export const qwebSample = /* xml */ `
 <h1>Qweb examples</h1>
 <div>
     <t t-set="foo1" t-value="2 + 1"></t>
-    <t t-esc="object">foo</t>
+    <t t-out="object">foo</t>
     <t t-raw="object">foo_raw</t>
-    <t t-esc="invisible"></t>
+    <t t-out="invisible"></t>
 </div>
 
-<h2>t-esc in link</h2>
-<a href="#"="foo">Link without t-esc</a>
-<a href="#" t-esc="foo">Link with t-esc</a>
-<a href="#"><strong t-esc="foo">Link with t-esc and strong</strong></a>
+<h2>t-out in link</h2>
+<a href="#"="foo">Link without t-out</a>
+<a href="#" t-out="foo">Link with t-out</a>
+<a href="#"><strong t-out="foo">Link with t-out and strong</strong></a>
 
 <h2>if else part 1</h2>
 <div>
         <t t-if="record.partner_id.parent_id">
-            <t t-esc="record.partner_id.name">Brandon Freeman</t> (<t t-esc="record.partner_id.parent_id.name">Azure Interior</t>),
+            <t t-out="record.partner_id.name">Brandon Freeman</t> (<t t-out="record.partner_id.parent_id.name">Azure Interior</t>),
         </t>
         <t t-else="">
-            <t t-esc="record.partner_id.name">Brandon Freeman</t>,
+            <t t-out="record.partner_id.name">Brandon Freeman</t>,
         </t>
 </div>
 
@@ -100,7 +100,7 @@ export const qwebSample = /* xml */ `
 </div>
 
 <div>
-    <p t-esc="value">the value</p>
+    <p t-out="value">the value</p>
 </div>
 
 <div>
@@ -113,17 +113,17 @@ export const qwebSample = /* xml */ `
 </div>
 
 <t t-foreach="[1, 2, 3]" t-as="i" t-key="i">
-    <p><t t-esc="i"></t></p>
+    <p><t t-out="i"></t></p>
 </t>
 
 <p t-foreach="[1, 2, 3]" t-as="i" t-key="i">
-    <t t-esc="i"></t>
+    <t t-out="i"></t>
 </p>
 
 <t t-set="foo2">
     <li>ok</li>
 </t>
-<t t-esc="foo2"></t>
+<t t-out="foo2"></t>
 
 <t t-call="other-template"></t>
 
@@ -144,14 +144,14 @@ export const qwebSample = /* xml */ `
         <a t-attf-href="/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px">
             Decline</a>
     </t>
-    <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"><t t-esc="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
+    <a t-attf-href="/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}" style="padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px"><t t-out="'Reschedule' if is_online and target_customer else 'View'">View</t></a>
 </div>
 
 <h2>should see the t-if background color</h2>
 <div style="padding-top:5px;">
     <ul>
         <t t-if="not is_online and object.event_id.description">
-            <li>Description: <t t-esc="object.event_id.description or ''" data-oe-t-inline="true">Meeting to discuss project plan and hash out the details of implementation.</t></li>
+            <li>Description: <t t-out="object.event_id.description or ''" data-oe-t-inline="true">Meeting to discuss project plan and hash out the details of implementation.</t></li>
         </t>
         <t t-elif="is_online and object.event_id.description">
             <t t-set="object.event_id.description_to_html_lines()" t-value="splitted_description" data-oe-t-inline="true"></t>

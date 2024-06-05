@@ -8,8 +8,8 @@
                 <input type="checkbox" t-att-checked="props.value"/>
                 <span/>
             </div>
-            <span t-esc="props.label"/>
-            <span t-if="props.description" class="text-muted" t-esc="props.description"/>
+            <span t-out="props.label"/>
+            <span t-if="props.description" class="text-muted" t-out="props.description"/>
         </label>
     </div>
 </t>
@@ -59,7 +59,7 @@
                     <VideoIframe
                         t-if="this.state.src and !this.state.errorMessage"
                         src="this.state.src"/>
-                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-esc="this.state.errorMessage"/>
+                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-out="this.state.errorMessage"/>
                 </div>
             </div>
         </div>
