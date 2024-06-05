@@ -358,6 +358,9 @@ class StockWarehouseOrderpoint(models.Model):
 
         return replenish report ir.actions.act_window
         """
+        def is_parent_path_in(resupply_loc, path_dict, record_loc):
+            return record_loc and resupply_loc.parent_path in path_dict.get(record_loc, '')
+
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint_replenish")
         action['context'] = self.env.context
         # Search also with archived ones to avoid to trigger product_location_check SQL constraints later
@@ -386,8 +389,8 @@ class StockWarehouseOrderpoint(models.Model):
         domain_move_out = expression.AND([domain_product, domain_state, domain_move_out_loc])
 
         moves_in = defaultdict(list)
-        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id'], ['product_qty:sum']):
-            moves_in[item[0]].append((item[1], item[2]))
+        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
+            moves_in[item[0]].append((item[1], item[2], item[3]))
 
         moves_out = defaultdict(list)
         for item in Move._read_group(domain_move_out, ['product_id', 'location_id'], ['product_qty:sum']):
@@ -401,9 +404,9 @@ class StockWarehouseOrderpoint(models.Model):
         path = {loc: loc.parent_path for loc in self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', all_replenish_location_ids.ids)])}
         for loc in all_replenish_location_ids:
             for product in all_product_ids:
-                qty_available = sum(q[1] for q in quants.get(product, [(0, 0)]) if q[0] and loc.parent_path in path[q[0]])
-                incoming_qty = sum(m[1] for m in moves_in.get(product, [(0, 0)]) if m[0] and loc.parent_path in path[m[0]])
-                outgoing_qty = sum(m[1] for m in moves_out.get(product, [(0, 0)]) if m[0] and loc.parent_path in path[m[0]])
+                qty_available = sum(q[1] for q in quants.get(product, [(0, 0)]) if is_parent_path_in(loc, path, q[0]))
+                incoming_qty = sum(m[2] for m in moves_in.get(product, [(0, 0, 0)]) if is_parent_path_in(loc, path, m[0]) or is_parent_path_in(loc, path, m[1]))
+                outgoing_qty = sum(m[1] for m in moves_out.get(product, [(0, 0)]) if is_parent_path_in(loc, path, m[0]))
                 if float_compare(qty_available + incoming_qty - outgoing_qty, 0, precision_rounding=rounding[product.id]) < 0:
                     # group product by lead_days and location in order to read virtual_available
                     # in batch
