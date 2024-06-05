@@ -31,10 +31,7 @@ class AccountMoveLine(models.Model):
 
     def _get_price_diff_account(self):
         self.ensure_one()
-        if self.product_id.cost_method == 'standard':
-            return False
-        accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)
-        return accounts['expense']
+        return False
 
     def _create_in_invoice_svl(self):
         # TODO master delete (dead code)
@@ -344,7 +341,11 @@ class AccountMoveLine(models.Model):
         vals_list = []
 
         sign = self.move_id.direction_sign
-        expense_account = self._get_price_diff_account()
+        if self.product_id.cost_method == 'standard':
+            expense_account = self._get_price_diff_account()
+        else:
+            accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)
+            expense_account = accounts['expense']
         if not expense_account:
             return vals_list
 

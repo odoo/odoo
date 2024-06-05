@@ -40,7 +40,9 @@ class AccountMove(models.Model):
             for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
                 # Moreover, this function is used for standard cost method only.
-                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time' or line.product_id.cost_method != 'standard':
+                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
+                    continue
+                if line.product_id.cost_method != 'standard' and move.move_type != 'in_refund':
                     continue
 
                 # Retrieve accounts needed to generate the price difference.
@@ -55,11 +57,7 @@ class AccountMove(models.Model):
                 ]) if line.purchase_line_id else self.env['stock.move']
 
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
-                    if move.move_type == 'in_refund':
-                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
-                    else:
-                        valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_in())
-
+                    valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
                     if not valuation_stock_moves:
                         continue
 
@@ -69,22 +67,20 @@ class AccountMove(models.Model):
                 else:
                     # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
                     price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
-                    price_unit = -price_unit if line.move_id.move_type == 'in_refund' else price_unit
                     valuation_date = valuation_stock_moves and max(valuation_stock_moves.mapped('date')) or move.date
                     valuation_price_unit = line.company_currency_id._convert(
                         price_unit, move.currency_id,
                         move.company_id, valuation_date, round=False
                     )
 
-
                 price_unit = line._get_gross_unit_price()
 
+                if line.move_id.move_type == 'in_refund':
+                    price_unit = -price_unit
                 price_unit_val_dif = price_unit - valuation_price_unit
                 # If there are some valued moves, we only consider their quantity already used
-                if line.product_id.cost_method == 'standard':
-                    relevant_qty = line.quantity
-                else:
-                    relevant_qty = line._get_out_and_not_invoiced_qty(valuation_stock_moves)
+
+                relevant_qty = line.quantity
                 price_subtotal = relevant_qty * price_unit_val_dif
 
                 # We consider there is a price difference if the subtotal is not zero. In case a
