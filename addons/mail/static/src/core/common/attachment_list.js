@@ -41,6 +41,14 @@ export class AttachmentList extends Component {
         });
     }
 
+    get images() {
+        return this.props.attachments.filter((a) => a.isImage);
+    }
+
+    get cards() {
+        return this.props.attachments.filter((a) => !a.isImage);
+    }
+
     /**
      * @param {import("models").Attachment} attachment
      */
