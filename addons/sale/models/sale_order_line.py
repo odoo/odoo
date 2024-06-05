@@ -53,6 +53,12 @@ class SaleOrderLine(models.Model):
         order_date = fields.Datetime.from_string(self.order_id.date_order if self.order_id.date_order and self.order_id.state in ['sale', 'done'] else fields.Datetime.now())
         return order_date + timedelta(days=self.customer_lead or 0.0)
 
+    def _add_prices_to_amount(self, amount_untaxed, amount_tax):
+        return (amount_untaxed + self.price_subtotal, amount_tax + self.price_tax)
+
+    def _get_undiscounted_price(self):
+        return (self.price_subtotal * 100)/(100-self.discount) if self.discount != 100 else (self.price_unit * self.product_uom_qty)
+
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
         """

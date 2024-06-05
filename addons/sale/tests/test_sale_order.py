@@ -90,6 +90,7 @@ class TestSaleOrder(TestSaleCommon):
             - Invoice repeatedly while varrying delivered quantities and check that invoice are always what we expect
         """
         # TODO?: validate invoice and register payments
+        self.sol_serv_deliver.qty_delivered = 2
         self.sale_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
 
         self.assertEqual(self.sale_order.amount_total, 1240.0, 'Sale: total amount is wrong')
@@ -110,8 +111,8 @@ class TestSaleOrder(TestSaleCommon):
 
         # create invoice: only 'invoice on order' products are invoiced
         invoice = self.sale_order._create_invoices()
-        self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
-        self.assertEqual(invoice.amount_total, 740.0, 'Sale: invoice total amount is wrong')
+        self.assertEqual(len(invoice.invoice_line_ids), 3, 'Sale: invoice is missing lines')
+        self.assertEqual(invoice.amount_total, 1100.0, 'Sale: invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
         self.assertTrue(len(self.sale_order.invoice_ids) == 1, 'Sale: invoice is missing')
         self.sale_order.order_line._compute_product_updatable()
@@ -122,8 +123,8 @@ class TestSaleOrder(TestSaleCommon):
             line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
         self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
         invoice2 = self.sale_order._create_invoices()
-        self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
-        self.assertEqual(invoice2.amount_total, 500.0, 'Sale: second invoice total amount is wrong')
+        self.assertEqual(len(invoice2.invoice_line_ids), 1, 'Sale: second invoice is missing lines')
+        self.assertEqual(invoice2.amount_total, 140.0, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything should be "invoiced"')
         self.assertTrue(len(self.sale_order.invoice_ids) == 2, 'Sale: invoice is missing')
 
