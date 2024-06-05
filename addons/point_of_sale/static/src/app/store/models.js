@@ -707,7 +707,7 @@ export class Orderline extends PosModel {
         // Tax details.
         const taxDetails = {};
         for (const taxValues of taxesData.taxes_data) {
-            taxDetails[taxValues.taxId] = {
+            taxDetails[taxValues.id] = {
                 amount: taxValues.tax_amount_factorized,
                 base: taxValues.display_base,
             };
