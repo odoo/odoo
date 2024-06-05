@@ -434,7 +434,7 @@ class CrmTeam(models.Model):
                 literal_eval(team.assignment_domain or '[]'),
                 [('create_date', '<=', max_create_dt)],
                 ['&', ('team_id', '=', False), ('user_id', '=', False)],
-                [('is_won', '=', False)]
+                [('won_status', '!=', 'won')]
             ])
             if creation_delta_days > 0:
                 lead_domain = expression.AND([

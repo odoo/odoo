@@ -1008,49 +1008,45 @@ class TestCRMLead(TestCrmCommon):
 
         # Probability 100 is not a sufficient condition to win the lead
         lead.write({'probability': 100})
-        self.assertFalse(lead.is_lost)
-        self.assertFalse(lead.is_won, "A lead with proba = 100 is not won as needs to be in won stage.")
+        self.assertEqual(lead.won_status, 'pending', "A lead with proba = 100 is not won as it needs to be in won stage.")
 
         # Test won validity
         lead.action_set_won()
         self.assertEqual(lead.probability, 100)
-        self.assertFalse(lead.is_lost)
-        self.assertTrue(lead.is_won)
+        self.assertEqual(lead.won_status, 'won')
         with self.assertRaises(ValidationError, msg='A won lead cannot be set as lost.'):
             lead.action_set_lost()
 
         # Won lead can be inactive
         lead.write({'active': False})
-        self.assertTrue(lead.is_won)
+        self.assertEqual(lead.won_status, 'won')
         with self.assertRaises(ValidationError, msg='A won lead cannot have a probability different than 100'):
             lead.write({'probability': 50})
 
         # Restore the lead in a non won stage. won_count = lost_count = 0.1 in frequency table. P = 50%
         lead.write({'stage_id': stage_in_progress.id, 'active': True})
         self.assertFalse(lead.probability == 100)
-        self.assertFalse(lead.is_won)
+        self.assertEqual(lead.won_status, 'pending')
 
         # Test lost validity
         lead.action_set_lost()
         self.assertEqual(lead.probability, 0)
         self.assertFalse(lead.active)
-        self.assertTrue(lead.is_lost)
-        self.assertFalse(lead.is_won)
+        self.assertEqual(lead.won_status, 'lost')
 
         # Test won validity reaching won stage
         lead.write({'stage_id': stage_won.id})
         self.assertEqual(lead.probability, 100)
-        self.assertFalse(lead.is_lost)
-        self.assertTrue(lead.is_won)
+        self.assertEqual(lead.won_status, 'won')
         self.assertFalse(lead.active)
 
         # Back to lost
         lead.write({'probability': 0, 'stage_id': stage_new.id})
-        self.assertTrue(lead.is_lost)
+        self.assertEqual(lead.won_status, 'lost')
 
         # Once active again, lead is not lost anymore
         lead.write({'active': True})
-        self.assertFalse(lead.is_lost, "An active lead cannot be lost")
+        self.assertEqual(lead.won_status, 'pending', "An active lead cannot be lost")
 
 
 @tagged('lead_internals')
