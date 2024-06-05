@@ -71,6 +71,9 @@ class StockPicking(models.Model):
             # Create backorder MO for each move lines
             amounts = [move_line.qty_done for move_line in move.move_line_ids]
             len_amounts = len(amounts)
+            # _split_production can set the qty_done, but not split it.
+            # Remove the qty_done potentially set by a previous split to prevent any issue.
+            production.move_line_raw_ids.filtered(lambda l: l.state == 'assigned').write({'qty_done': 0})
             productions = production._split_productions({production: amounts}, set_consumed_qty=True)
             for production, move_line in zip(productions, move.move_line_ids):
                 if move_line.lot_id:
