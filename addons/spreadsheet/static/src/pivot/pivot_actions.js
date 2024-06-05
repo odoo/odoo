@@ -71,11 +71,11 @@ export function SET_FILTER_MATCHING_CONDITION(position, getters) {
     const cell = getters.getCorrespondingFormulaCell(position);
 
     const pivotId = getters.getPivotIdFromPosition(position);
-    const domainArgs = getters.getPivotDomainArgsFromPosition(position);
-    if (domainArgs === undefined) {
+    const PivotDomain = getters.getPivotDomainArgsFromPosition(position);
+    if (PivotDomain === undefined) {
         return false;
     }
-    const matchingFilters = getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
+    const matchingFilters = getters.getFiltersMatchingPivotArgs(pivotId, PivotDomain);
     const pivotFunction = getFirstPivotFunction(cell.compiledFormula.tokens).functionName;
     return (
         (pivotFunction === "PIVOT.VALUE" ||
@@ -87,7 +87,7 @@ export function SET_FILTER_MATCHING_CONDITION(position, getters) {
 
 export function SET_FILTER_MATCHING(position, env) {
     const pivotId = env.model.getters.getPivotIdFromPosition(position);
-    const domainArgs = env.model.getters.getPivotDomainArgsFromPosition(position);
-    const filters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, domainArgs);
+    const PivotDomain = env.model.getters.getPivotDomainArgsFromPosition(position);
+    const filters = env.model.getters.getFiltersMatchingPivotArgs(pivotId, PivotDomain);
     env.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
 }
