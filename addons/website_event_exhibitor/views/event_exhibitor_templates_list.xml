@@ -236,53 +236,41 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_card" name="Exhibitor Card">
-    <article class="o_wesponsor_card card h-100"
-        itemscope="itemscope" itemtype="http://schema.org/Event">
-        <div class="row g-0 h-100" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
-            <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
-            <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
-                <div class="d-block h-100 w-100">
-                    <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
-                        t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
-                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                            <i class="fa fa-ban me-2"/>Unpublished
-                        </small>
-                        <img class="position-absolute me-3 mt-3"
-                            style="right: 0; top: 0; max-height: 20px;"
-                            t-if="sponsor.partner_id.country_id"
-                            t-att-src="sponsor.partner_id.country_id.image_url"
-                            t-att-alt="sponsor.partner_id.country_id.name"/>
-                    </div>
-                    <div t-else="" class="o_wesponsor_gradient card-img-top"
-                        style="padding-top: 50%">
-                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                            <i class="fa fa-ban me-2"/>Unpublished
-                        </small>
-                    </div>
-                </div>
-            </header>
-            <div class="col-12 h-100 border-top">
-                <main class="card-body">
-                    <!-- Title -->
-                    <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
-                        <span t-field="sponsor.name" itemprop="name" class="text-break fs-6 mb-2"/>
-                        <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
-                            class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">Live
-                        </span>
-                    </h5>
-                    <!-- Catchy sentence -->
-                    <span class="text-muted" t-out="sponsor.subtitle"/>
-                </main>
-            </div>
-        </div>
-        <div class="o_wesponsor_connect_button"
+    <article t-attf-class="o_wesponsor_card card h-100 #{not sponsor.is_published and 'opacity-50'}"
+        itemscope="itemscope" itemtype="http://schema.org/Sponsor">
+        <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>      
+        <header class="card-header position-relative p-0 bg-body">
+            <small t-if="not sponsor.is_published" class="position-absolute bottom-0 w-100 p-3 text-bg-danger">
+                <i class="fa fa-ban me-2"/>Unpublished
+            </small>     
+            <img t-if="sponsor_image_url" 
+                class="o_wesponsor_bg_image object-fit-contain w-100" 
+                t-attf-src="#{sponsor_image_url}"/>
+            <img t-if="sponsor.partner_id.country_id" 
+                class="position-absolute top-0 end-0 me-3 mt-3"
+                style="max-height: 20px;"
+                t-att-src="sponsor.partner_id.country_id.image_url"
+                t-att-alt="sponsor.partner_id.country_id.name"/>
+        </header>
+        <main class="card-body">
+            <!-- Title -->
+            <h5 class="card-title d-flex align-items-start justify-content-between mt-0 mb-0">
+                <span t-field="sponsor.name" itemprop="name" class="text-break fs-6 mb-2"/>
+                <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
+                    class="alert alert-danger mb-2 px-2 py-1 smaller lh-1">Live
+                </span>
+            </h5>
+            <!-- Catchy sentence -->
+            <span class="text-muted" t-out="sponsor.subtitle"/>
+        </main>
+        <div class="o_wesponsor_connect_button position-absolute w-100 h-100 pt-5 text-center"
             t-att-data-sponsor-url="sponsor.website_url"
             t-att-data-is-participating="event.is_participating"
             t-att-data-sponsor-id="sponsor.id"
             t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
             t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
             t-att-data-user-event-manager="is_event_user">
-            <a href="#" class="btn btn-primary h3">
+            <a href="#" role="button" class="btn btn-primary">
                 <t t-if="sponsor.exhibitor_type != 'online'">
                     More info
                 </t>

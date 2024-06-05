@@ -62,16 +62,18 @@
                                 <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
                                 <div t-attf-class="col-md-6 col-lg-4 mb-4 {{ (len(event.event_booth_category_ids) &gt; 3) and 'col-xxl-3' }}">
                                     <label t-attf-class="d-block h-100 #{'o_wbooth_category_unavailable overflow-hidden' if booth_category_unavailable else ''}">
-                                        <input type="radio" name="booth_category_id" t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
+                                        <input type="radio" name="booth_category_id"
+                                            class="d-none"
+                                            t-att-value="booth_category.id" t-att-disabled="booth_category_unavailable"
                                             t-att-checked="booth_category.id == selected_booth_category_id"/>
-                                        <div class="card h-100">
-                                            <div t-field="booth_category.image_1920" class="card-img-top border-bottom"
-                                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'/>
-                                            <div class="card-body d-flex flex-wrap w-100 gap-2 justify-content-between flex-grow-0 pb-0">
+                                        <div class="card cursor-pointer h-100">
+                                            <div t-field="booth_category.image_1920"
+                                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "w-100 object-fit-cover"}'/>
+                                            <div class="card-body d-flex flex-wrap justify-content-between flex-grow-0 pb-0">
                                                 <h5 name="booth_category_name" class="card-title my-0" t-out="booth_category.name"/>
                                                 <span class="booth_category_price"></span>
                                             </div>
-                                             <div class="w-100 small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}" t-field="booth_category.description"/>
+                                             <div class="small" t-attf-id="o_wbooth_booth_description_#{booth_category.id}" t-field="booth_category.description"/>
                                         </div>
                                         <div t-if="booth_category_unavailable" class="o_ribbon_right text-bg-danger">
                                             <span class="text-nowrap">Sold Out</span>

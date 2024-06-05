@@ -277,7 +277,7 @@ class Track(models.Model):
             if track.website_image:
                 track.website_image_url = self.env['website'].image_url(track, 'website_image', size=1024)
             else:
-                track.website_image_url = '/website_event_track/static/src/img/event_track_default_%d.jpeg' % (track.id % 2)
+                track.website_image_url = False
 
     # WISHLIST / VISITOR MANAGEMENT
 

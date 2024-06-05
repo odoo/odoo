@@ -295,38 +295,39 @@
             <article t-attf-class="h-100 #{opt_events_list_cards and 'card'}" itemscope="itemscope" itemtype="http://schema.org/Event">
                 <div t-attf-class="h-100 #{opt_events_list_columns and 'd-flex flex-wrap flex-column' or 'row mx-0'}">
                     <!-- Header -->
-                    <header t-attf-class="card-header overflow-hidden bg-secondary p-0 border-0 rounded-0 #{opt_events_list_columns and 'col-12' or 'col-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow-sm'}">
+                    <header t-attf-class="card-header p-0 border-0 bg-secondary #{opt_events_list_columns and 'col-12' or 'col-4 col-lg-3'} #{(not opt_events_list_cards) and 'shadow-sm'}">
                         <!-- Image + Link -->
-                        <div class="d-block h-100 w-100">
-                            <t t-call="website.record_cover">
-                                <t t-set="_record" t-value="event"/>
-                                <!-- Short Date -->
-                                <div t-attf-class="o_wevent_event_date position-absolute shadow-sm o_not_editable #{(not opt_events_list_columns) and 'left'} ">
-                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="o_wevent_event_month"/>
-                                    <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="o_wevent_event_day oe_hide_on_date_edit"/>
-                                </div>
-                                <!-- Not open -->
-                                <span t-if="not event.event_registrations_open and (not opt_events_list_cards or not opt_events_list_columns)" class="position-absolute bottom-0 px-3 py-2 w-100 text-bg-light">
-                                    <t t-if="not event.event_registrations_started">
-                                        Registrations not yet open
-                                    </t>
-                                    <t t-elif="event.event_registrations_sold_out">
-                                        Sold Out
-                                    </t>
-                                    <t t-else="">
-                                        Registrations Closed
-                                    </t>
-                                </span>
-                                <!-- Participating -->
-                                <small t-if="event.is_participating" class="o_wevent_participating position-absolute bottom-0 px-3 py-2 w-100 text-bg-success">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="event"/>
+                            <!-- Short Date -->
+                            <div t-attf-class="o_wevent_event_date o_not_editable position-absolute d-flex flex-column justify-content-center align-items-center rounded-circle shadow-sm #{(not opt_events_list_columns) and 'left'} ">
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'LLL'}" class="smaller fw-bold text-uppercase"/>
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd'}" class="oe_hide_on_date_edit fs-5 lh-1 fw-light"/>
+                            </div>
+                            <!-- Not open -->
+                            <span t-if="not event.event_registrations_open and (not opt_events_list_cards or not opt_events_list_columns)" class="position-absolute bottom-0 w-100 px-3 py-2 text-bg-light">
+                                <t t-if="not event.event_registrations_started">
+                                    Registrations not yet open
+                                </t>
+                                <t t-elif="event.event_registrations_sold_out">
+                                    Sold Out
+                                </t>
+                                <t t-else="">
+                                    Registrations Closed
+                                </t>
+                            </span>
+                            
+                            <small t-if="event.is_participating or not event.website_published" t-attf-class="position-absolute bottom-0 w-100 px-3 py-2 #{event.is_participating and 'o_wevent_participating text-bg-success'} #{not event.website_published and 'o_wevent_unpublished text-bg-danger'}">
+                            <!-- Participating -->
+                                <t t-if="event.is_participating">
                                     <i class="fa fa-check me-2"/>Registered
-                                </small>
-                                <!-- Unpublished -->
-                                <small t-if="not event.website_published" class="o_wevent_unpublished position-absolute bottom-0 px-3 py-2 w-100 text-bg-danger">
+                                </t>
+                            <!-- Unpublished -->
+                                <t t-if="not event.website_published">
                                     <i class="fa fa-ban me-2"/>Unpublished
-                                </small>
-                            </t>
-                        </div>
+                                </t>
+                            </small>
+                        </t>
                     </header>
                     
                     <!-- Body -->
@@ -391,7 +392,7 @@
 
 <template id="opt_events_list_categories" inherit_id="website_event.events_list" active="False" name="Show Templates">
     <xpath expr="//main/*" position="before">
-        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="badge text-bg-secondary o_wevent_badge #{opt_events_list_columns and 'o_wevent_badge_event' or 'position-absolute bottom-0 end-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-3 mb-3'}" t-field="event.event_type_id"/>
+        <span t-if="event.event_type_id" t-attf-href="/event?type=#{event.event_type_id.id}" t-attf-class="o_wevent_badge badge position-absolute end-0 text-bg-secondary #{opt_events_list_columns and 'o_wevent_badge_event top-0' or 'bottom-0'} #{not opt_events_list_columns and opt_events_list_cards and 'me-3 mb-3'}" t-field="event.event_type_id"/>
     </xpath>
 </template>
 
