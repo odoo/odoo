@@ -266,8 +266,9 @@ export class ClipboardPlugin extends Plugin {
             // the clipboard picture.
             if (files.length && !clipboardElem.querySelector("table")) {
                 // @phoenix @todo: should it be handled in image plugin?
-                this.addImagesFiles(files).then((html) => {
+                return this.addImagesFiles(files).then((html) => {
                     this.shared.domInsert(html);
+                    this.dispatch("ADD_STEP");
                 });
             } else {
                 if (closestElement(selection.anchorNode, "a")) {

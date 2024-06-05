@@ -39,12 +39,19 @@ export class HtmlField extends Component {
 
     setup() {
         const { model } = this.props.record;
-        const commitChanges = () => {
+        const commitChanges = async ({ urgent } = {}) => {
             if (this.isDirty) {
-                return this.updateValue();
+                const savePendingImagesPromise = this.editor.shared.savePendingImages();
+                if (urgent) {
+                    await this.updateValue();
+                }
+                const isDirty = await savePendingImagesPromise;
+                if (isDirty) {
+                    await this.updateValue();
+                }
             }
         };
-        useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges());
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges({ urgent: true }));
         useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => detail.proms.push(commitChanges()));
         this.busService = this.env.services.bus_service;
 
@@ -118,6 +125,7 @@ export class HtmlField extends Component {
             },
             peerId: this.generateId(),
             recordInfo: { resModel, resId },
+            dropImageAsAttachment: true, // @todo @phoenix always true ?
         };
         return config;
     }
