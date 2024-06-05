@@ -51,7 +51,7 @@
         <div class="container-fluid">
             <div class="text-center pt-5">
                 <img style="width: 150px;" src="/web/static/img/logo_inverse_white_206px.png">
-                <p class="mt-3" style="color: #fff;font-size: 30px;">IoTBox</p>
+                <p class="mt-3" style="color: #fff;font-size: 30px;">IoTBox: {{ hostname }}</p>
             </div>
             <div class="pos-display-boxes">
                 {% if pairing_code %}
@@ -79,12 +79,32 @@
                             {%- endfor %}
                         </tbody>
                     </table>
-                    <p class="mb-2 info-text">
-                        <i class="fa fa-info-circle me-1"></i>The customer cart will be displayed here once a Point of Sale session is started.
-                    </p>
-                    <p class="mb-2 info-text">
-                        <i class="fa fa-info-circle me-1"></i>Odoo version 11 or above is required.
-                    </p>
+                    <h5 class="text-center mb-1">IoT Devices</h5>
+                    <table class="table table-hover table-sm table-pos-info">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Devices</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for iot_devices in iot_device_status|groupby('type') -%}
+                                <tr>
+                                    <td>{{ iot_devices.grouper|capitalize }}s</td>
+                                    <td>
+                                        <ul>
+                                            {% for device in iot_devices.list[:10] %}
+                                                <li>{{ device['name'] }}</li>
+                                            {% endfor %}
+                                            {% if iot_devices.list|length > 10 %}
+                                                <li>...</li>
+                                            {% endif %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            {%- endfor %}
+                        </tbody>
+                    </table>
                     <div class="error-message alert alert-danger mb-2 d-none" role="alert" />
                 </div>
             </div>
