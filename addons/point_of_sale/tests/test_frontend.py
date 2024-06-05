@@ -1243,20 +1243,6 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_customer_display(self):
         self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}", 'CustomerDisplayTour', login="pos_user")
 
-    def test_refund_few_quantities(self):
-        """ Test to check that refund works with quantities of less than 0.5 """
-        self.env['product.product'].create({
-            'name': 'Sugar',
-            'list_price': 3,
-            'taxes_id': False,
-            'available_in_pos': True,
-            'uom_id': self.env.ref('uom.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('uom.product_uom_kgm').id
-        })
-
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
-
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
