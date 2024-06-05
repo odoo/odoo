@@ -487,3 +487,66 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         })
         task.description = False
         self.assertEqual(task.html_field_history_get_content_at_revision('description', 1), '<p>Hello</p>', "should recover previous text for description")
+
+    def test_copy_project_with_embedded_actions(self):
+        project_pigs_milestone_action = self.env['ir.actions.act_window'].create({
+            'name': 'Milestones',
+            'res_model': 'project.milestone',
+            'view_mode': 'kanban,tree,form',
+            'domain': f"[('project_id', '=', {self.project_pigs.id})]",
+        })
+        task_action = self.env['ir.actions.act_window'].create({
+            'name': 'Tasks',
+            'res_model': 'project.task',
+            'view_mode': 'kanban,tree,form',
+            'domain': "[('project_id', '=', active_id), ('display_in_project', '=', True)]",
+            'context': "{'default_project_id': active_id}",
+        })
+        task_embedded_action = self.env['ir.embedded.actions'].create({
+            'parent_res_model': 'project.project',
+            'parent_res_id': self.project_pigs.id,
+            'action_id': project_pigs_milestone_action.id,
+            'parent_action_id': task_action.id,
+        })
+        project_model = self.env['ir.model'].search([('model', '=', 'project.task')])
+        task_embedded_filter = self.env['ir.filters'].create({
+            'name': 'filter',
+            'embedded_action_id': task_embedded_action.id,
+            'embedded_parent_res_id': self.project_pigs.id,
+            'action_id': project_pigs_milestone_action.id,
+            'model_id': project_model.id,
+        })
+
+        new_project_pigs = self.project_pigs.copy()
+        embedded_action = self.env['ir.embedded.actions'].search([
+            ('parent_res_model', '=', 'project.project'),
+            ('parent_res_id', '=', new_project_pigs.id),
+        ])
+        self.assertTrue(
+            embedded_action,
+            'The embedded action linked to project pigs should also be copied.',
+        )
+        self.assertEqual(
+            embedded_action.action_id,
+            task_embedded_action.action_id,
+            "The new embedded action should have the same action than the one copied.",
+        )
+        self.assertEqual(
+            embedded_action.parent_res_model,
+            task_embedded_action.parent_res_model,
+        )
+        self.assertEqual(
+            embedded_action.parent_action_id,
+            task_embedded_action.parent_action_id,
+        )
+        duplicated_task_embedded_filter = embedded_action.filter_ids
+        self.assertEqual(
+            len(duplicated_task_embedded_filter),
+            1,
+            "The filter linked to the original embedded action should also be copied."
+        )
+        self.assertEqual(duplicated_task_embedded_filter.name, f"{task_embedded_filter.name} (copy)")
+        self.assertEqual(duplicated_task_embedded_filter.embedded_action_id, embedded_action)
+        self.assertEqual(duplicated_task_embedded_filter.embedded_parent_res_id, new_project_pigs.id)
+        self.assertEqual(duplicated_task_embedded_filter.action_id, task_embedded_filter.action_id)
+        self.assertEqual(duplicated_task_embedded_filter.model_id, task_embedded_filter.model_id)
