@@ -505,7 +505,7 @@ export class PosOrderline extends Base {
         // Tax details.
         const taxDetails = {};
         for (const taxData of taxesData.taxes_data) {
-            taxDetails[taxData.taxId] = {
+            taxDetails[taxData.id] = {
                 amount: taxData.tax_amount_factorized,
                 base: taxData.display_base,
             };
