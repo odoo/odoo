@@ -364,6 +364,7 @@ class ProjectProject(models.Model):
         panel_data = super().get_panel_data()
         return {
             **panel_data,
+            'show_sale_items': self.allow_billable,
             'sale_items': self._get_sale_items() if self.allow_billable else {},
         }
 

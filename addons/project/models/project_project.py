@@ -778,6 +778,7 @@ class Project(models.Model):
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
             'currency_id': self.currency_id.id,
             'show_project_profitability_helper': show_profitability and self._show_profitability_helper(),
+            'show_milestones': self.allow_milestones,
         }
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()
