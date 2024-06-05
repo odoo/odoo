@@ -1,5 +1,5 @@
-/** @odoo-module */
 //@ts-check
+
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
@@ -14,6 +14,7 @@ const { DEFAULT_LOCALE } = constants;
 /**
  * @typedef {import("@odoo/o-spreadsheet").PivotTableColumn} PivotTableColumn
  * @typedef {import("@odoo/o-spreadsheet").PivotTableRow} PivotTableRow
+ * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  */
 
 const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
@@ -132,6 +133,8 @@ export class OdooPivotModel extends PivotModel {
 
     /**
      * Get the value of the given domain for the given measure
+     * @param {string} measure
+     * @param {PivotDomain} domain
      */
     getPivotCellValue(measure, domain) {
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
@@ -187,17 +190,20 @@ export class OdooPivotModel extends PivotModel {
      * e.g. in `PIVOT.HEADER(1, "#stage_id", 1, "#user_id", 1)`
      *      the last group value is the id of the first user of the first stage.
      *
-     * @param {(string | number)[]} domainArgs PIVOT.HEADER arguments
+     * @param {PivotDomain} domain PIVOT.HEADER arguments
+     * @returns {string | boolean | number}
      */
-    getLastPivotGroupValue(domainArgs) {
-        const groupFieldString = domainArgs.at(-2);
-        if (groupFieldString.startsWith("#")) {
-            const { dimensionWithGranularity } = this.parseGroupField(groupFieldString);
-            const { cols, rows } = this._getColsRowsValuesFromDomain(domainArgs);
+    getLastPivotGroupValue(domain) {
+        const lastNode = domain.at(-1);
+        if (!lastNode) {
+            throw new Error("Domain size should be at least 1");
+        }
+        if (lastNode.field.startsWith("#")) {
+            const { dimensionWithGranularity } = this.parseGroupField(lastNode.field);
+            const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
             return this._isCol(dimensionWithGranularity) ? cols.at(-1) : rows.at(-1);
         }
-        const groupValueString = domainArgs.at(-1);
-        return groupValueString;
+        return lastNode.value;
     }
 
     //--------------------------------------------------------------------------
@@ -206,6 +212,7 @@ export class OdooPivotModel extends PivotModel {
 
     /**
      * Get the Odoo domain corresponding to the given domain
+     * @param {PivotDomain} domain
      */
     getPivotCellDomain(domain) {
         const { cols, rows } = this._getColsRowsValuesFromDomain(domain);
@@ -404,29 +411,26 @@ export class OdooPivotModel extends PivotModel {
     /**
      * Transform the given domain in the structure used in this class
      *
-     * @param {(number | boolean | string)[]} domain Domain
+     * @param {PivotDomain} domain Domain
      *
      * @private
      */
     _getColsRowsValuesFromDomain(domain) {
         const rows = [];
         const cols = [];
-        let i = 0;
-        while (i < domain.length) {
-            const groupFieldString = domain[i];
-            const groupValue = domain[i + 1];
+        for (const node of domain) {
             const { field, isPositional, granularity, dimensionWithGranularity } =
-                this.parseGroupField(groupFieldString);
+                this.parseGroupField(node.field);
             let value;
             if (isPositional) {
                 value = this._parsePivotFormulaWithPosition(
                     dimensionWithGranularity,
-                    groupValue,
+                    node.value,
                     cols,
                     rows
                 );
             } else {
-                value = toNormalizedPivotValue(field, groupValue, granularity);
+                value = toNormalizedPivotValue(field, node.value, granularity);
             }
             if (this._isCol(dimensionWithGranularity)) {
                 cols.push(value);
@@ -437,7 +441,6 @@ export class OdooPivotModel extends PivotModel {
                     sprintf(_t("Dimension %s is not a group by"), dimensionWithGranularity)
                 );
             }
-            i += 2;
         }
         return { rows, cols };
     }
