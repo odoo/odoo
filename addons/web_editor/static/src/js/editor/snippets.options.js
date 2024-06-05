@@ -1414,7 +1414,8 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         'color_picked': '_onColorPicked',
         'color_hover': '_onColorHovered',
         'color_leave': '_onColorLeft',
-        'enter_key_color_colorpicker': '_onEnterKey'
+        'enter_key_color_colorpicker': '_onEnterKey',
+        'request_save': '_onSaveRequest',
     }),
 
     /**
@@ -1691,6 +1692,14 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @private
      */
     _onEnterKey: function () {
+        this.close();
+    },
+    /**
+     * Needed to save custom colors when the color palette isn't closed by the user.
+     *
+     * @private
+     */
+    _onSaveRequest() {
         this.close();
     },
 });
