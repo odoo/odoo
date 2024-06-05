@@ -3,7 +3,7 @@
 
     <t t-name="mail.Message">
         <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
-            <div class="o-mail-Message position-relative"
+            <div class="o-mail-Message position-relative pt-1"
                 t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
@@ -33,12 +33,12 @@
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': message.composer }" t-ref="messageContent">
-                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
+                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note }">
                             <span t-if="authorName and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1 text-truncate" t-esc="authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
-                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
+                            <small t-if="!message.is_transient" class="o-mail-Message-date text-muted opacity-75" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <t t-if="message.isPending" t-call="mail.Message.pendingStatus"/>
                                 <RelativeTime t-else="" datetime="message.datetime"/>
@@ -62,6 +62,7 @@
                                 </span>
                             </div>
                             <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
+                            <t t-if="message.is_note and !message.isPending" t-call="mail.Message.actions"/>
                         </div>
                         <div
                             class="position-relative d-flex"
@@ -73,7 +74,7 @@
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': state.isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': state.isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.body" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or state.isEditing)">
@@ -113,7 +114,7 @@
                                             </div>
                                         </t>
                                     </t>
-                                    <t t-if="!message.isPending and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
+                                    <t t-if="!message.is_note and !message.isPending and message.hasTextContent and !env.inChatWindow" t-call="mail.Message.actions"/>
                                 </div>
                                 <AttachmentList
                                     t-if="message.attachments.length > 0"
@@ -123,7 +124,7 @@
                                     messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                             </div>
-                            <t t-if="!message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
+                            <t t-if="!message.is_note and !message.isPending and (!message.hasTextContent or env.inChatWindow)" t-call="mail.Message.actions"/>
                         </div>
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
@@ -138,7 +139,9 @@
             'start-0 ms-3': isAlignedRight,
             'end-0 me-3': (env.inChatWindow or ui.isSmall) and !isAlignedRight,
             'position-absolute top-0 mt-n3': env.inChatWindow or ui.isSmall,
-            'ms-2 mt-1': !env.inChatWindow and !ui.isSmall,
+            'ms-2': !env.inChatWindow and !ui.isSmall,
+            'mt-1': !env.inChatWindow and !ui.isSmall and !message.is_note,
+            'my-n2': message.is_note,
             'invisible': !isActive,
             'o-expanded': optionsDropdown.isOpen
         }"
