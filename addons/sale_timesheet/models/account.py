@@ -176,4 +176,4 @@ class AccountAnalyticLine(models.Model):
         return round(sol.product_uom._compute_quantity(sol.product_uom_qty, to_uom, raise_if_failure=False), 2)
 
     def _is_updatable_timesheet(self):
-        return super()._is_updatable_timesheet and self._is_not_billed()
+        return super()._is_updatable_timesheet() and self._is_not_billed()
