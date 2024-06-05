@@ -48,7 +48,7 @@
                            '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id">
-                    <table class="din_company_info table-borderless" t-if="not skip_headers">
+                    <table class="din_company_info table-borderless">
                         <tr>
                             <td>
                                 <div class="address">
@@ -95,7 +95,7 @@
                             <t t-out="din5008_address_block"/>
                         </t>
                     </table>
-                    <h2 t-if="not skip_headers">
+                    <h2>
                         <span t-if="not o and not docs">Invoice</span>
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />
