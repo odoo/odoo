@@ -28,7 +28,7 @@
                                     </div>
                                 </div>
                                 <div t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
-                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary d-flex align-items-center justify-content-center" >
+                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center" >
                                         <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
                                     </button>
                                 </div>
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex h-12">
+                <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex h-12 gap-1">
                     <div class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
                                 New Order
                     </div>

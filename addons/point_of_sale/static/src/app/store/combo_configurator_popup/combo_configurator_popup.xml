@@ -28,14 +28,16 @@
                 </t>
             </div>
             <t t-set-slot="footer">
-                <button class="confirm btn btn-lg btn-primary"
-                    t-att-disabled="!areAllCombosSelected()" t-on-click="confirm">
-                    Add to order
-                </button>
-                <div class="ms-auto">
-                    <t t-if="!areAllCombosSelected">
-                        Complete the selection to proceed
-                    </t>
+                <div class="d-flex w-100 justify-content-start gap-2">
+                    <button class="confirm btn btn-lg btn-primary"
+                        t-att-disabled="!areAllCombosSelected()" t-on-click="confirm">
+                        Add to order
+                    </button>
+                    <div class="ms-auto">
+                        <t t-if="!areAllCombosSelected">
+                            Complete the selection to proceed
+                        </t>
+                    </div>
                 </div>
             </t>
         </Dialog>
