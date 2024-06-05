@@ -189,7 +189,7 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
         // When an order is selected, it doesn't always contain the reward lines.
         // And the list of active programs are not always correct. This is because
         // of the use of DropPrevious in _updateRewards.
-        if (order) {
+        if (order && !order.finalized) {
             order._updateRewards();
         }
         return result;
