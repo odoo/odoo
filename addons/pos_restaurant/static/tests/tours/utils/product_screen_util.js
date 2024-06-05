@@ -48,6 +48,7 @@ export function tableNameShown(table_name) {
         {
             content: "Table name is shown",
             trigger: `.table-name:contains(${table_name})`,
+            run: "click",
         },
     ];
 }

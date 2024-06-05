@@ -162,5 +162,6 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
     extra_trigger: '.o_list_view',
+    run: "click",
 },
 ]});

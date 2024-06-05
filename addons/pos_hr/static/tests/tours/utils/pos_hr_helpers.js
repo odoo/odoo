@@ -7,6 +7,7 @@ export function clickLoginButton() {
         {
             content: "click login button",
             trigger: ".login-overlay .login-button.select-cashier",
+            run: "click",
         },
     ];
 }
@@ -15,6 +16,7 @@ export function clickCashierName() {
         {
             content: "click cashier name",
             trigger: ".oe_status .cashier-name",
+            run: "click",
         },
     ];
 }

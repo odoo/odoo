@@ -2,6 +2,7 @@ export function clickPercentTip(percent) {
     return [
         {
             trigger: `.tip-screen .percentage:contains("${percent}")`,
+            run: "click",
         },
     ];
 }
@@ -17,6 +18,7 @@ export function clickSettle() {
     return [
         {
             trigger: `.button.highlight.next`,
+            run: "click",
         },
     ];
 }
