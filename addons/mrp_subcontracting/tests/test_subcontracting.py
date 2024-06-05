@@ -991,6 +991,58 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             {'qty_producing': 10.0, 'product_qty': 10.0, 'state': 'to_close'},
         ])
 
+    def test_strict_consumption_backorders(self):
+        """ Test for the correct consumption of components with a 'strict' consumption BoM and available quantity
+            of the component in the subcontracting location.
+        """
+
+        def validate_receipt_with_backorder(picking, qty):
+            picking.move_ids.quantity_done = qty
+            action_dict = picking.button_validate()
+            backorder_wizard = Form(self.env[action_dict['res_model']].with_context(action_dict['context']))
+            backorder_wizard.save().process()
+            return picking.backorder_ids
+
+        self.bom.consumption = 'strict'
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        subcontract_location = self.subcontractor_partner1.property_stock_subcontractor
+        self.env['stock.quant']._update_available_quantity(self.comp1, subcontract_location, 9)
+
+        receipt = self.env['stock.picking'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.finished.name,
+                    'product_id': self.finished.id,
+                    'product_uom_qty': 9,
+                    'product_uom': self.finished.uom_id.id,
+                    'location_id': supplier_location.id,
+                    'location_dest_id': self.warehouse.lot_stock_id.id,
+                })
+            ],
+        })
+
+        receipt.action_confirm()
+        backorder_1 = validate_receipt_with_backorder(receipt, 3)
+        _ = validate_receipt_with_backorder(backorder_1, 3)
+
+        productions = self.env['mrp.production'].search([('product_id', '=', self.finished.id)], order='id')
+        self.assertRecordValues(productions, [
+            {'qty_producing': 3.0, 'product_qty': 3.0, 'state': 'done'},
+            {'qty_producing': 3.0, 'product_qty': 3.0, 'state': 'done'},
+            {'qty_producing': 0.0, 'product_qty': 3.0, 'state': 'progress'},
+        ])
+
+        comp1_moves = productions.move_raw_ids.filtered(lambda m: m.product_id == self.comp1)
+        self.assertRecordValues(comp1_moves, [
+            {'quantity_done': 3.0, 'product_qty': 3.0, 'state': 'done'},
+            {'quantity_done': 3.0, 'product_qty': 3.0, 'state': 'done'},
+            {'quantity_done': 3.0, 'product_qty': 3.0, 'state': 'assigned'},
+        ])
+
 
 @tagged('post_install', '-at_install')
 class TestSubcontractingTracking(TransactionCase):
