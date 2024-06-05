@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRecord">
-        <div
-        role="article"
-        t-att-class="getRecordClasses()"
-        t-att-data-id="props.record.id"
-        t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
-        t-on-click="onGlobalClick"
-        t-ref="root">
-            <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
-            <t t-call="{{ this.constructor.menuTemplate }}"/>
-        </div>
+        <article
+            t-att-class="getRecordClasses()"
+            t-att-data-id="props.record.id"
+            t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
+            t-on-click="onGlobalClick"
+            t-ref="root">
+                <t t-call="{{ templates[this.constructor.KANBAN_BOX_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
+                <t t-call="{{ this.constructor.menuTemplate }}"/>
+        </article>
     </t>
+
     <t t-name="web.KanbanRecordMenu">
         <div t-if="showMenu" class="o_dropdown_kanban bg-transparent position-absolute end-0">
             <Dropdown menuClass="'o-dropdown--kanban-record-menu'" position="'bottom-end'">

@@ -1385,24 +1385,24 @@ test("onchange with 40+ commands for a many2many", async () => {
     await contains(".o_field_widget[name=foo] input").edit("trigger onchange");
     expect(["onchange"]).toVerifySteps();
     expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
-    expect('.o_kanban_record[role="article"]').toHaveCount(40);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
     expect([]).toVerifySteps();
     expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
-    expect('.o_kanban_record[role="article"]').toHaveCount(5);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     await clickSave();
 
     expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
-    expect('.o_kanban_record[role="article"]').toHaveCount(40);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
     expect(".o_x2m_control_panel .o_pager_counter").toHaveText("41-45 / 45");
-    expect('.o_kanban_record[role="article"]').toHaveCount(5);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     await contains(".o_field_widget[name=timmy] .o_pager_next:eq(0)").click();
     expect(".o_x2m_control_panel .o_pager_counter").toHaveText("1-40 / 45");
-    expect('.o_kanban_record[role="article"]').toHaveCount(40);
+    expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(40);
 
     expect(["web_save", "web_read"]).toVerifySteps();
 });

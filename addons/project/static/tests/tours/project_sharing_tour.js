@@ -141,7 +141,7 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
         content: 'Click on the portal project.',
         run: "click",
     }, {
-        trigger: ':iframe div.o_kanban_record',
+        trigger: ':iframe article.o_kanban_record',
         content: 'Click on the task',
         run: "click",
     }, {
