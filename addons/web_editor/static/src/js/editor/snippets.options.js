@@ -408,6 +408,13 @@ export class UserValue {
         return this._state.opened;
     }
     /**
+     * Gives the opportunity for values to prepare asynchronous content.
+     * E.g. fetch external data.
+     */
+    async start() {
+        this.started = true;
+    }
+    /**
      * @TODO: @owl-options: This should be moved into the component
      */
     async willStart() {
@@ -435,7 +442,7 @@ export class UserValue {
     /**
      * @TODO: @owl-options: This should be moved into the component
      */
-    async start() {
+    async old_start() {
         await this._super(...arguments);
 
         if (this.el.classList.contains('o_we_img_animate')) {
@@ -1457,12 +1464,13 @@ class UnitUserValue extends UserValue {
      * @override
      */
     async start() {
+        /*
         const unit = this.el.dataset.unit || '';
         this.el.dataset.unit = unit;
         if (this.el.dataset.saveUnit === undefined) {
             this.el.dataset.saveUnit = unit;
         }
-
+        */
         return super.start(...arguments);
     }
 
@@ -4169,6 +4177,9 @@ export class SnippetOption {
         // current state, related for that method.
         const useValueStates = Object.values(this._userValues);
         const proms = useValueStates.map(async (userValue) => {
+            if (!userValue.started) {
+                await userValue.start();
+            }
             // Update widget value (for each method)
             const methodsNames = userValue.getMethodsNames();
             for (const methodName of methodsNames) {
