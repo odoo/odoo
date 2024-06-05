@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import babel.dates
 import datetime
 import json
 import unittest
@@ -2392,7 +2393,16 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.assertEqual(result[3]['attributes.mydate_count'], 1)
         self.assertEqual(result[3]['attributes.mydate:week'], 'W5 2023')
         self.assertEqual(result[4]['attributes.mydate_count'], 2)
-        self.assertEqual(result[4]['attributes.mydate:week'], 'W1 2022')
+        # Babel issue mitigation
+        # https://github.com/python-babel/babel/pull/621 -- introduced a new bug
+        # https://github.com/python-babel/babel/pull/887 -- proposed a fix but finally closed
+        # https://sources.debian.org/patches/python-babel/2.10.3-1/ -- Debian reverted 621
+        # so this ugly fix is made to have the test working in patched and non patched versions of Babel
+        babel_year = babel.dates.format_date(datetime.datetime(2023, 1, 1), "YYYY", "en_US")  # non patched: '2022' patched: '2023'
+        if babel_year == '2022':  # Broken unpatched babel
+            self.assertEqual(result[4]['attributes.mydate:week'], 'W1 2022')
+        else:  # Patched babel
+            self.assertEqual(result[4]['attributes.mydate:week'], 'W1 2023')
         # check domain
         self.assertEqual(Model.search(result[0]['__domain']), self.message_6 | self.message_7)
         self.assertEqual(Model.search(result[1]['__domain']), self.message_5)
