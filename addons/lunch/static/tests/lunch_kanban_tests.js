@@ -206,7 +206,7 @@ QUnit.module('LunchKanban', (hooks) => {
         click(target, '.lunch_location li:not(.o_m2o_dropdown_option) .dropdown-item:not(.ui-state-active)');
 
         await nextTick();
-        assert.containsN(target, 'div[role=article].o_kanban_record', 2);
+        assert.containsN(target, 'article.o_kanban_record', 2);
     });
 
     QUnit.test("Manager: user change", async function (assert) {
