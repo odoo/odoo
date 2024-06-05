@@ -2606,8 +2606,10 @@ class MrpProduction(models.Model):
                 ('location_id.scrap_location', '=', True),
                 ('location_dest_id.scrap_location', '=', False),
             ])
-            # Either removed or unbuild
-            if not ((duplicates_unbuild or removed) and duplicates - duplicates_unbuild - removed + unremoved == 0):
+            is_final_product = (lot == self.lot_producing_id)
+            # Either removed, unbuild or the final product is the same of some components
+            if not ((duplicates_unbuild or removed or is_final_product) and \
+                    duplicates - duplicates_unbuild - removed + unremoved - is_final_product == 0):
                 return True
         # Check presence of same sn in current production
         duplicates = co_prod_move_lines.filtered(lambda ml: ml.quantity and ml.lot_id == lot)
