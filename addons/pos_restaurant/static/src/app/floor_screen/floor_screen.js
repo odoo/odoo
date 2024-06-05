@@ -381,14 +381,16 @@ export class FloorScreen extends Component {
                 Promise.reject(e);
             } finally {
                 this.pos.tableSyncing = false;
+                const orders = this.pos.getTableOrders(table.id);
+                if (orders.length > 0) {
+                    this.pos.set_order(orders[0]);
+                    this.pos.orderToTransferUuid = null;
+                    this.pos.showScreen(orders[0].get_screen_data().name);
+                } else {
+                    this.pos.add_new_order();
+                    this.pos.showScreen("ProductScreen");
+                }
             }
-        }
-        const orders = this.pos.getTableOrders(table.id);
-        if (orders.length > 0) {
-            this.pos.showScreen(orders[0].get_screen_data().name);
-        } else {
-            this.pos.add_new_order();
-            this.pos.showScreen("ProductScreen");
         }
     }
     unselectTables() {
