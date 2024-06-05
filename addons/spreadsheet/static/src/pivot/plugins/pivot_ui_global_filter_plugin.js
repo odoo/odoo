@@ -8,11 +8,12 @@ import { OdooUIPlugin } from "@spreadsheet/plugins";
 import { helpers } from "@odoo/o-spreadsheet";
 
 const { DateTime } = luxon;
-const { pivotTimeAdapter } = helpers;
+const { pivotTimeAdapter, toPivotDomain } = helpers;
 
 /**
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  * @typedef {import("@odoo/o-spreadsheet").Token} Token
+ * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  */
 
 /**
@@ -156,15 +157,18 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
         }
         const formulaId = args[0];
         const pivotId = this.getters.getPivotId(formulaId);
-        return this.getFiltersMatchingPivotArgs(pivotId, args);
+        const index = functionDescription.functionName === "PIVOT.HEADER" ? 1 : 2;
+        return this.getFiltersMatchingPivotArgs(pivotId, toPivotDomain(args.slice(index)));
     }
 
     /**
      * Get the filter impacted by a pivot
+     * @param {string} pivotId Id of the pivot
+     * @param {PivotDomain} PivotDomain
      */
-    getFiltersMatchingPivotArgs(pivotId, domainArgs) {
-        const argField = domainArgs[domainArgs.length - 2];
-        if (argField === "measure" || !argField) {
+    getFiltersMatchingPivotArgs(pivotId, PivotDomain) {
+        const lastNode = PivotDomain.at(-1);
+        if (!lastNode || lastNode.field === "measure") {
             return [];
         }
         const filters = this.getters.getGlobalFilters();
@@ -176,10 +180,10 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
             if (type !== "ODOO") {
                 continue;
             }
-            const { field, granularity: time } = dataSource.parseGroupField(argField);
+            const { field, granularity: time } = dataSource.parseGroupField(lastNode.field);
             const pivotFieldMatching = this.getters.getPivotFieldMatching(pivotId, filter.id);
             if (pivotFieldMatching && pivotFieldMatching.chain === field.name) {
-                let value = dataSource.getLastPivotGroupValue(domainArgs.slice(-2));
+                let value = dataSource.getLastPivotGroupValue(PivotDomain.slice(-1));
                 if (value === NO_RECORD_AT_THIS_POSITION) {
                     continue;
                 }
