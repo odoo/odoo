@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, queryAll, queryFirst, setInputFiles } from "@odoo/hoot-dom";
+import { click, edit, queryAll, queryFirst, setInputFiles, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -21,6 +21,12 @@ const PRODUCT_IMAGE =
 function getUnique(target) {
     const src = target.dataset.src;
     return new URL(src).searchParams.get("unique");
+}
+
+async function setFiles(files) {
+    click("input[type=file]", { visible: false });
+    setInputFiles(files);
+    await waitFor(`div[name=document] img[data-src^="data:image/"]`, { timeout: 1000 });
 }
 
 class Partner extends models.Model {
@@ -251,15 +257,13 @@ test("clicking save manually after uploading new image should change the unique 
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 
     click("input[type=file]", { visible: false });
-    setInputFiles(
+    await setFiles(
         new File(
             [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
             "fake_file.png",
             { type: "png" }
         )
     );
-    await runAllTimers();
-    await animationFrame();
     expect("div[name=document] img").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`
@@ -278,15 +282,13 @@ test("clicking save manually after uploading new image should change the unique 
 
     // Change the image again. After clicking save, it should have the correct new url.
     click("input[type=file]", { visible: false });
-    setInputFiles(
+    await setFiles(
         new File(
             [Uint8Array.from([...atob(PRODUCT_IMAGE)].map((c) => c.charCodeAt(0)))],
             "fake_file2.gif",
             { type: "gif" }
         )
     );
-    await runAllTimers();
-    await animationFrame();
     expect("div[name=document] img").toHaveAttribute(
         "data-src",
         `data:image/gif;base64,${PRODUCT_IMAGE}`
@@ -582,23 +584,14 @@ test("ImageField is reset when changing record", async () => {
         `,
     });
 
-    const list = new DataTransfer();
-    list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
-
-    async function setFiles() {
-        click("input[type=file]", { visible: false });
-        setInputFiles(list.files);
-        await runAllTimers();
-        await animationFrame();
-    }
-
+    const imageFile = new File([imageData], "fake_file.png", { type: "png" });
     expect("img[data-alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }
     );
 
-    await setFiles();
+    await setFiles(imageFile);
     expect("img[data-alt='Binary file']").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`,
@@ -617,7 +610,7 @@ test("ImageField is reset when changing record", async () => {
         { message: "image field should be reset" }
     );
 
-    await setFiles();
+    await setFiles(imageFile);
     expect("img[data-alt='Binary file']").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`,
