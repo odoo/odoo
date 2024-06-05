@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { archParseBoolean } from "@web/views/utils";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
@@ -57,7 +57,7 @@ export const statInfoField = {
         return {
             digits,
             labelField: options.label_field,
-            noLabel: archParseBoolean(attrs.nolabel),
+            noLabel: exprToBoolean(attrs.nolabel),
             string,
         };
     },

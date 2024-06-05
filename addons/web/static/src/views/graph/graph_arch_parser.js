@@ -1,6 +1,6 @@
+import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { GROUPABLE_TYPES } from "@web/search/utils/misc";
-import { archParseBoolean } from "@web/views/utils";
 
 const MODES = ["bar", "line", "pie"];
 const ORDERS = ["ASC", "DESC", "asc", "desc", null];
@@ -12,18 +12,18 @@ export class GraphArchParser {
             switch (node.tagName) {
                 case "graph": {
                     if (node.hasAttribute("disable_linking")) {
-                        archInfo.disableLinking = archParseBoolean(
+                        archInfo.disableLinking = exprToBoolean(
                             node.getAttribute("disable_linking")
                         );
                     }
                     if (node.hasAttribute("stacked")) {
-                        archInfo.stacked = archParseBoolean(node.getAttribute("stacked"));
+                        archInfo.stacked = exprToBoolean(node.getAttribute("stacked"));
                     }
                     if (node.hasAttribute("cumulated")) {
-                        archInfo.cumulated = archParseBoolean(node.getAttribute("cumulated"));
+                        archInfo.cumulated = exprToBoolean(node.getAttribute("cumulated"));
                     }
                     if (node.hasAttribute("cumulated_start")) {
-                        archInfo.cumulatedStart = archParseBoolean(
+                        archInfo.cumulatedStart = exprToBoolean(
                             node.getAttribute("cumulated_start")
                         );
                     }

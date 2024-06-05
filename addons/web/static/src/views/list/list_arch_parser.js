@@ -1,9 +1,10 @@
-import { Field } from "@web/views/fields/field";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
-import { stringToOrderBy } from "@web/search/utils/order_by";
-import { archParseBoolean, getActiveActions, getDecoration, processButton } from "@web/views/utils";
-import { encodeObjectForTemplate } from "@web/views/view_compiler";
 import { combineModifiers } from "@web/model/relational_model/utils";
+import { stringToOrderBy } from "@web/search/utils/order_by";
+import { Field } from "@web/views/fields/field";
+import { getActiveActions, getDecoration, processButton } from "@web/views/utils";
+import { encodeObjectForTemplate } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 
 export class GroupListArchParser {
@@ -112,7 +113,10 @@ export class ListArchParser {
                     className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
                     optional: node.getAttribute("optional") || false,
                     type: "field",
-                    hasLabel: !(fieldInfo.field.label === false || archParseBoolean(fieldInfo.attrs.nolabel) === true),                    
+                    hasLabel: !(
+                        fieldInfo.field.label === false ||
+                        exprToBoolean(fieldInfo.attrs.nolabel) === true
+                    ),
                     label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
                 });
                 return false;
@@ -174,18 +178,18 @@ export class ListArchParser {
             } else if (["tree", "list"].includes(node.tagName)) {
                 const activeActions = {
                     ...getActiveActions(xmlDoc),
-                    exportXlsx: archParseBoolean(xmlDoc.getAttribute("export_xlsx"), true),
+                    exportXlsx: exprToBoolean(xmlDoc.getAttribute("export_xlsx"), true),
                 };
                 treeAttr.activeActions = activeActions;
 
                 treeAttr.className = xmlDoc.getAttribute("class") || null;
                 treeAttr.editable = xmlDoc.getAttribute("editable");
                 treeAttr.multiEdit = activeActions.edit
-                    ? archParseBoolean(node.getAttribute("multi_edit") || "")
+                    ? exprToBoolean(node.getAttribute("multi_edit") || "")
                     : false;
 
                 treeAttr.openFormView = treeAttr.editable
-                    ? archParseBoolean(xmlDoc.getAttribute("open_form_view") || "")
+                    ? exprToBoolean(xmlDoc.getAttribute("open_form_view") || "")
                     : false;
 
                 const limitAttr = node.getAttribute("limit");
@@ -197,7 +201,7 @@ export class ListArchParser {
                 const groupsLimitAttr = node.getAttribute("groups_limit");
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 
-                treeAttr.noOpen = archParseBoolean(node.getAttribute("no_open") || "");
+                treeAttr.noOpen = exprToBoolean(node.getAttribute("no_open") || "");
                 treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 

@@ -1,21 +1,21 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { user } from "@web/core/user";
-import { standardFieldProps } from "../standard_field_props";
-import { uuid } from "../../utils";
-import { PropertyDefinition } from "./property_definition";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { PropertyValue } from "./property_value";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { reposition } from "@web/core/position/utils";
-import { archParseBoolean } from "@web/views/utils";
+import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { exprToBoolean } from "@web/core/utils/strings";
+import { uuid } from "../../utils";
+import { standardFieldProps } from "../standard_field_props";
+import { PropertyDefinition } from "./property_definition";
+import { PropertyValue } from "./property_value";
 
-import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
 
 export class PropertiesField extends Component {
     static template = "web.PropertiesField";
@@ -937,7 +937,7 @@ export const propertiesField = {
         return {
             context: dynamicInfo.context,
             columns: parseInt(attrs.columns || "1"),
-            showAddButton: archParseBoolean(attrs.showAddButton),
+            showAddButton: exprToBoolean(attrs.showAddButton),
         };
     },
 };

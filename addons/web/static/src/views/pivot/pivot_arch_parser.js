@@ -1,5 +1,5 @@
+import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
-import { archParseBoolean } from "@web/views/utils";
 
 export class PivotArchParser {
     parse(arch) {
@@ -16,7 +16,7 @@ export class PivotArchParser {
             switch (node.tagName) {
                 case "pivot": {
                     if (node.hasAttribute("disable_linking")) {
-                        archInfo.disableLinking = archParseBoolean(
+                        archInfo.disableLinking = exprToBoolean(
                             node.getAttribute("disable_linking")
                         );
                     }
@@ -27,7 +27,7 @@ export class PivotArchParser {
                         archInfo.title = node.getAttribute("string");
                     }
                     if (node.hasAttribute("display_quantity")) {
-                        archInfo.displayQuantity = archParseBoolean(
+                        archInfo.displayQuantity = exprToBoolean(
                             node.getAttribute("display_quantity")
                         );
                     }

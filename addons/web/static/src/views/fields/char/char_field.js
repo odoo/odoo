@@ -1,13 +1,13 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { archParseBoolean } from "@web/views/utils";
+import { exprToBoolean } from "@web/core/utils/strings";
+import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 import { formatChar } from "../formatters";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
-import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 
-import { Component, useExternalListener, useRef, useEffect } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef } from "@odoo/owl";
 
 export class CharField extends Component {
     static template = "web.CharField";
@@ -81,7 +81,7 @@ export const charField = {
         },
     ],
     extractProps: ({ attrs, options }) => ({
-        isPassword: archParseBoolean(attrs.password),
+        isPassword: exprToBoolean(attrs.password),
         dynamicPlaceholder: options.dynamic_placeholder || false,
         dynamicPlaceholderModelReferenceField:
             options.dynamic_placeholder_model_reference_field || "",
