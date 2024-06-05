@@ -24,6 +24,30 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_open_tasks',
     run: "click .modal:visible .btn.btn-primary",
 }, {
+    trigger: ".breadcrumb-item.o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('New Project') .o_dropdown_kanban button",
+    run: "click",
+}, {
+    trigger: ".oe_kanban_action:contains('Milestones')",
+    run: "click",
+}, {
+    trigger: ".o_list_button_add",
+    run: "click",
+}, {
+    trigger: "div[name='name'] input",
+    run: "fill Milestone Zero",
+}, {
+    trigger: ".o_list_button_save",
+    run: "click",
+}, {
+    trigger: ".breadcrumb-item.o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('New Project')",
+    run: "click",
+}, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
     run: "edit New",
 }, {

@@ -1,0 +1,11 @@
+<templates>
+
+    <t t-name="project.TaskStageWithStateSelection">
+        <t t-set="M2Oprops" t-value="(({ stateReadonly, viewType, ...o }) => o)(this.props)"/>
+        <div class="d-flex gap-1">
+            <ProjectTaskStateSelection t-props="stateProps"/>
+            <Many2OneField t-props="M2Oprops"/>
+        </div>
+    </t>
+
+</templates>

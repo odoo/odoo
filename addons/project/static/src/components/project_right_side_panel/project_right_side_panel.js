@@ -46,6 +46,12 @@ export class ProjectRightSidePanel extends Component {
         onWillStart(() => this.loadData());
     }
 
+    get panelVisible() {
+        const data = this.state.data;
+        return this.projectId && ((data?.profitability_items?.costs?.data?.length || data?.profitability_items?.revenues?.data?.length)
+                && data.show_project_profitability_helper) || (!!data?.milestones?.data?.length)
+    }
+
     get context() {
         return this.props.context;
     }
