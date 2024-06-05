@@ -6,6 +6,7 @@ import json
 import logging
 import netifaces as ni
 import os
+import socket
 import subprocess
 import threading
 import time
@@ -225,6 +226,12 @@ class DisplayController(http.Controller):
         if not display_identifier:
             display_identifier = DisplayDriver.get_default_display().device_identifier
 
+        iot_device = [{
+            'name': iot_devices[device].device_name,
+            'type': iot_devices[device].device_type,
+            'identifier': iot_devices[device].device_identifier,
+        } for device in iot_devices]
+
         return pos_display_template.render({
             'title': "Odoo -- Point of Sale",
             'breadcrumb': 'POS Client display',
@@ -232,4 +239,6 @@ class DisplayController(http.Controller):
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
             'pairing_code': connection_manager.pairing_code,
+            'hostname': socket.gethostname(),
+            'iot_device_status': iot_device,
         })
