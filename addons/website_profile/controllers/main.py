@@ -46,7 +46,7 @@ class WebsiteProfile(http.Controller):
         if user_sudo.id == request.env.user.id:
             return user_sudo, False
         if request.env.user.karma < request.website.karma_profile_min:
-            return False, _("Not have enough karma to view other users' profile.")
+            return False, _("You do not have enough karma to view other users' profiles.")
         elif not user_sudo.exists():
             raise request.not_found()
         elif user_sudo.karma == 0 or not user_sudo.website_published:
