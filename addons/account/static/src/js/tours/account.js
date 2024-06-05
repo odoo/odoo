@@ -86,6 +86,7 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "button[name=document_layout_save]",
         extra_trigger: "div.modal-dialog",
         content: _t("Configure document layout."),
+        run: "click",
     },
     {
         trigger: "div[name=partner_missing_email] a",

@@ -278,10 +278,12 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
+                run: "click",
             },
             {
                 content: `unlink in edit plan if unlink possible`,
                 trigger: '.edit-buttons button:contains("Unlink")',
+                run: "click",
             },
             Chrome.clickMenuOption("Edit Plan"),
             ...MergeTable.checkMergeTableIsCancelHelpers(),
@@ -308,10 +310,12 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             {
                 content: `select linked table`,
                 trigger: 'div.isLinked div.label:contains("4")',
+                run: "click",
             },
             {
                 content: `unlink in edit plan if unlink possible`,
                 trigger: '.edit-buttons button:contains("Unlink")',
+                run: "click",
             },
             Chrome.clickMenuOption("Edit Plan"),
             ...MergeTable.checkMergeTableIsCancelHelpers(),
@@ -321,6 +325,7 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             {
                 content: `link in edit plan if link possible`,
                 trigger: '.edit-buttons button:contains("Link")',
+                run: "click",
             },
             Chrome.clickMenuOption("Edit Plan"),
             {

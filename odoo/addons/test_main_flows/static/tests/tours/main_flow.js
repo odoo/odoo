@@ -412,6 +412,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     trigger: '.o_field_widget[name="type"] input[data-value="service"]',
     content: _t('Set to service'),
     position: 'left',
+    run: "click",
 }, {
     mobile: false,
     trigger: ".o_field_widget[name=taxes_id] input",

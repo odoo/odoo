@@ -36,6 +36,7 @@ export function clickFloor(name) {
         {
             content: `click '${name}' floor`,
             trigger: `.floor-selector .button-floor:contains("${name}")`,
+            run: "click",
         },
     ];
 }
@@ -44,6 +45,7 @@ export function clickEditButton(button) {
         {
             content: "add table",
             trigger: `.edit-buttons i[aria-label=${button}]`,
+            run: "click",
         },
     ];
 }
