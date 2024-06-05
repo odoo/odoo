@@ -558,6 +558,9 @@ export class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                 numberOfCols = Math.max(numberOfCols, Number(colIndex) + 2);
                 for (const rowIndex in result[colIndex]) {
                     const cell = result[colIndex][rowIndex];
+                    if (cell.value === undefined) {
+                        continue;
+                    }
                     const xc = toXC(Number(colIndex) + 1, Number(rowIndex) + filterRowIndex);
                     cells[xc] = { content: cell.value.toString() };
                     if (cell.format) {

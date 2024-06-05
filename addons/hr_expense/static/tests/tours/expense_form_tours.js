@@ -1,15 +1,13 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registry.category("web_tour.tours").add('create_expense_no_employee_access_tour', {
     test: true,
     url: "/web",
     steps: () => [
-    {
-        content: "Go to Expense",
-        trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
-    },
+    ...stepUtils.goToAppSteps('hr_expense.menu_hr_expense_root', "Go to the Expenses app"),
     {
         content: "Remove filter for own expenses",
         trigger: '.o_facet_value:contains(My Expense) + button[title="Remove"]',
@@ -42,6 +40,7 @@ registry.category("web_tour.tours").add('create_expense_no_employee_access_tour'
         content: "Exit form",
         trigger: '.o_menu_brand',
     },
+    stepUtils.showAppsMenuItem(),
     {
         content: "Check",
         trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',

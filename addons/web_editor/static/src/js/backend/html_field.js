@@ -147,13 +147,10 @@ export class HtmlField extends Component {
         onMounted(() => {
             this.dynamicPlaceholder?.setElementRef(this.wysiwyg);
         });
-        onWillUnmount(() => {
+        onWillUnmount(async () => {
             if (!this.props.readonly && this._isDirty()) {
-                // If we still have uncommited changes, commit them with the
-                // urgent flag to avoid losing them. Urgent flag is used to be
-                // able to save the changes before the component is destroyed
-                // by the owl component manager.
-                this.commitChanges({ urgent: true });
+                // If we still have uncommited changes, commit them to avoid losing them.
+                await this.commitChanges();
             }
             if (this._qwebPlugin) {
                 this._qwebPlugin.destroy();

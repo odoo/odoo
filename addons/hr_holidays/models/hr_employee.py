@@ -385,9 +385,9 @@ class HrEmployee(models.Model):
     @api.model
     def _get_contextual_employee(self):
         ctx = self.env.context
-        if 'employee_id' in ctx:
+        if self.env.context.get('employee_id') is not None:
             return self.browse(ctx.get('employee_id'))
-        if 'default_employee_id' in ctx:
+        if self.env.context.get('default_employee_id') is not None:
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 

@@ -148,11 +148,22 @@ export class Product extends PosModel {
         const attributes = this.attribute_line_ids
             .map((id) => this.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        return await this.env.services.popup.add(ProductConfiguratorPopup, {
-            product: this,
-            attributes: attributes,
-            quantity: initQuantity,
-        });
+        if (attributes.some((attribute) => attribute.values.length > 1 || attribute.values[0].is_custom)) {
+            return await this.env.services.popup.add(ProductConfiguratorPopup, {
+                product: this,
+                attributes: attributes,
+                quantity: initQuantity,
+            });
+        }
+        return {
+            confirmed: true,
+            payload: {
+                attribute_value_ids: attributes.map((attr) => attr.values[0].id),
+                attribute_custom_values: [],
+                price_extra: attributes.reduce((acc, attr) => acc + attr.values[0].price_extra, 0),
+                quantity: 1,
+            }
+        };
     }
 
     isConfigurable() {
@@ -424,14 +435,16 @@ export class Orderline extends PosModel {
         this.set_full_product_name();
         this.id = json.server_id || json.id || orderline_id++;
         orderline_id = Math.max(this.id + 1, orderline_id);
-        var pack_lot_lines = json.pack_lot_ids;
-        for (var i = 0; i < pack_lot_lines.length; i++) {
-            var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new Packlotline(
-                { env: this.env },
-                { json: { ...packlotline, order_line: this } }
-            );
-            this.pack_lot_lines.add(pack_lot_line);
+        if (this.has_product_lot) {
+            var pack_lot_lines = json.pack_lot_ids;
+            for (var i = 0; i < pack_lot_lines.length; i++) {
+                var packlotline = pack_lot_lines[i][2];
+                var pack_lot_line = new Packlotline(
+                    { env: this.env },
+                    { json: { ...packlotline, order_line: this } }
+                );
+                this.pack_lot_lines.add(pack_lot_line);
+            }
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
         this.set_customer_note(json.customer_note);

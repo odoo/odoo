@@ -144,7 +144,7 @@ class AccountPaymentTerm(models.Model):
             results['amount'] += term['foreign_amount']
         return amount_by_date
 
-    @api.constrains('line_ids')
+    @api.constrains('line_ids', 'early_discount')
     def _check_lines(self):
         round_precision = self.env['decimal.precision'].precision_get('Payment Terms')
         for terms in self:
