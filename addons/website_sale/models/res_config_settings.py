@@ -93,8 +93,6 @@ class ResConfigSettings(models.TransientModel):
     enabled_buy_now_button = fields.Boolean(string="Buy Now")
 
     selectable_pricelist_ids = fields.Many2many(
-        comodel_name='product.pricelist',
-        relation='selectable_pricelists',
         related='website_id.selectable_pricelist_ids',
         readonly=False,
     )
@@ -116,24 +114,6 @@ class ResConfigSettings(models.TransientModel):
                 record.website_id.auth_signup_uninvited = 'b2c'
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
-
-    # === ONCHANGE METHODS === #
-
-    @api.onchange('selectable_pricelist_ids')
-    def onchange_selectable_pricelist_ids(self):
-        for res_config in self:
-            ProductPricelist = self.env['product.pricelist']
-            website_id = res_config.website_id
-            selected_pricelists = ProductPricelist.search([
-                ('id', 'in', res_config.selectable_pricelist_ids.ids),
-            ])
-            for pricelist in selected_pricelists:
-                pricelist.website_ids |= website_id
-            unselected_pricelists = ProductPricelist.search(
-                [('website_ids', 'any', [('id', '=', website_id.id)])]
-            ) - selected_pricelists
-            for pricelist in unselected_pricelists:
-                pricelist.website_ids -= website_id
 
     #=== CRUD METHODS ===#
 

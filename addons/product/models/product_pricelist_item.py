@@ -493,8 +493,8 @@ class PricelistItem(models.Model):
         return price
 
     def _compute_price_before_discount(self, *args, **kwargs):
-        """Compute the base price of the lowest pricelist rule
-        show the discount by default if percentage rule.
+        """Compute the base price of the lowest pricelist rule,
+        discount is shown by default if computation method is a percentage rule.
 
         :param product: recordset of product (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
@@ -510,9 +510,7 @@ class PricelistItem(models.Model):
             pricelist_item = pricelist_rule
             # Find the lowest pricelist rule whose pricelist is configured to show the discount
             # to the customer.
-            while (
-                pricelist_item.base == 'pricelist'
-            ):
+            while pricelist_item.base == 'pricelist':
                 rule_id = pricelist_item.base_pricelist_id._get_product_rule(*args, **kwargs)
                 rule_pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
                 if rule_pricelist_item and rule_pricelist_item.compute_price == 'percentage':

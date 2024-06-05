@@ -99,13 +99,8 @@ class SaleOrderLine(models.Model):
         if self.event_ticket_id and self.event_id:
             event_ticket = self.event_ticket_id
             company = event_ticket.company_id or self.env.company
-            pricelist = self.order_id.pricelist_id
-            price_context = self._get_pricelist_price_context()
-            if pricelist._get_product_rule_policy(
-                event_ticket.product_id,
-                quantity=price_context['quantity']
-            ) != 'percentage':
-                price = event_ticket.with_context(**price_context).price_reduce
+            if self.pricelist_item_id.compute_price != 'percentage':
+                price = event_ticket.with_context(**self._get_pricelist_price_context()).price_reduce
             else:
                 price = event_ticket.price
             return self._convert_to_sol_currency(price, company.currency_id)

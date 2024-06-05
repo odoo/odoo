@@ -30,8 +30,8 @@ class ProductPricelist(models.Model):
 
         If the record has a company, the website should be from that company.
         """
-        for record in self.filtered(lambda pl: pl.website_ids and pl.company_id):
-            if any(website_id.company_id != record.company_id for website_id in record.website_ids):
+        for pricelist in self.filtered(lambda pl: pl.website_ids and pl.company_id):
+            if any(website_id.company_id != pricelist.company_id for website_id in pricelist.website_ids):
                 raise ValidationError(_(
                     "Only the company's websites are allowed."
                     "\nLeave the Company field empty or select a website from that company."

@@ -493,7 +493,7 @@ class ProductTemplate(models.Model):
                 round=False)
 
         # Pricelist price doesn't have to be converted
-        pricelist_price = pricelist._get_product_price(
+        pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
             product=product_or_template,
             quantity=quantity,
             target_currency=currency,
@@ -544,11 +544,8 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
-        if pricelist._get_product_rule_policy(
-            product=product_or_template,
-            quantity=quantity,
-            target_currency=currency,
-        ) != 'percentage':
+        pricelist_item_id = self.env['product.pricelist.item'].browse(pricelist_rule_id)
+        if pricelist_item_id.compute_price != 'percentage':
             # Leftover from before cleanup, different behavior between ecommerce & backend configurator
             # probably to keep product sales price hidden from customers ?
             combination_info['list_price'] = combination_info['price']

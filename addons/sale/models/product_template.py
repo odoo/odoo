@@ -175,10 +175,11 @@ class ProductTemplate(models.Model):
     def get_import_templates(self):
         res = super(ProductTemplate, self).get_import_templates()
         if self.env.context.get('sale_multi_pricelist_product_template'):
-            return [{
-                'label': _("Import Template for Products"),
-                'template': '/product/static/xls/product_template.xls'
-            }]
+            if self.env.user.has_group('product.group_product_pricelist'):
+                return [{
+                    'label': _("Import Template for Products"),
+                    'template': '/product/static/xls/product_template.xls'
+                }]
         return res
 
     @api.model

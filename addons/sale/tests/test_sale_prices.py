@@ -484,7 +484,7 @@ class TestSalePrices(SaleCommon):
 
         pricelist = sale_order.pricelist_id
         pricelist.item_ids = [
-            fields.Command.create({
+            Command.create({
                 'percent_price': 5.0,
                 'compute_price': 'percentage'
             })
@@ -496,7 +496,7 @@ class TestSalePrices(SaleCommon):
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
         pricelist.item_ids = [
-            fields.Command.create({
+            Command.create({
                 'price_discount': 5,
                 'compute_price': 'formula',
             })

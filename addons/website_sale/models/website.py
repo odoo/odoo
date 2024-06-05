@@ -156,12 +156,6 @@ class Website(models.Model):
         comodel_name='product.pricelist',
         compute="_compute_pricelist_ids",
     )
-    # Technical: Used to recompute pricelist_ids
-    all_pricelist_ids = fields.One2many(
-        string="All pricelists",
-        comodel_name='product.pricelist',
-        inverse_name='website_ids',
-    )
 
     selectable_pricelist_ids = fields.Many2many(
         comodel_name='product.pricelist',
@@ -171,7 +165,7 @@ class Website(models.Model):
 
     #=== COMPUTE METHODS ===#
 
-    @api.depends('all_pricelist_ids')
+    @api.depends('selectable_pricelist_ids')
     def _compute_pricelist_ids(self):
         for website in self:
             website = website.with_company(website.company_id)
@@ -188,7 +182,7 @@ class Website(models.Model):
         for website in self:
             website.fiscal_position_id = website._get_current_fiscal_position()
 
-    @api.depends('all_pricelist_ids', 'pricelist_id', 'company_id')
+    @api.depends('selectable_pricelist_ids', 'pricelist_id', 'company_id')
     def _compute_currency_id(self):
         for website in self:
             website.currency_id = website.pricelist_id.currency_id or website.company_id.currency_id
@@ -232,12 +226,11 @@ class Website(models.Model):
         self.ensure_one()
         pricelists = self.env['product.pricelist']
 
-        # Only show selectable or currently used pricelist (cart or session)
-        def check_pricelist(pl):
-            if show_visible:
-                return pl._is_selectable() or pl.id in (current_pl_id, order_pl_id)
-            else:
-                return True
+        if show_visible:
+            # Only show selectable or currently used pricelist (cart or session)
+            check_pricelist = lambda pl: pl._is_selectable() or pl.id in (current_pl_id, order_pl_id)
+        else:
+            check_pricelist = lambda _pl: True
 
         # Note: 1. pricelists from all_pl are already website compliant (went through
         #          `_get_website_pricelists_domain`)
