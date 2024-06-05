@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     {
         content: "Select input",
         trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
-        run: "edit Account Tax Group Product",
+        run: "fill Account Tax Group Product",
     },
     {
         content: "Valid item",
@@ -63,11 +63,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     {
         content: "Modify the input value",
         trigger: '.o_tax_group_edit_input input',
-        run() {
-            this.anchor.value = 200;
-            this.anchor.select();
-            this.anchor.blur();
-        },
+        run: "clear && edit 200",
     },
     // Check new value for total (with modified tax_group_amount).
     {
@@ -108,7 +104,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     {
         content: "Edit tax value",
         trigger: '.o_tax_group_edit_input input',
-        run: "edit 2 && click body",
+        run: "clear && edit 2",
     },
     {
         content: "Check new value of total",

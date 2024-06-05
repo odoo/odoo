@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_header input",
     extra_trigger: '.o_kanban_group',
     content: "Create a personal stage from the To-do kanban view",
-    run: "edit Stage 1",
+    run: "fill Stage 1",
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add",
     content: "Save the personal stage",
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_header input",
     extra_trigger: '.o_kanban_group',
     content: "Create a second personal stage from the To-do kanban view",
-    run: "edit Stage 2",
+    run: "fill Stage 2",
 }, {
     trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add",
     content: "Save the personal stage",

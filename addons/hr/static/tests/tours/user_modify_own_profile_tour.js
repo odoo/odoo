@@ -28,7 +28,8 @@ patch(
                 {
                     content: "Update the email address",
                     trigger: 'div[name="email"] input',
-                    run: "edit updatedemail@example.com",
+                    run: "clear && edit updatedemail@example.com",
+                    pause: true,
                 },
                 ...stepUtils.saveForm(),
             ];

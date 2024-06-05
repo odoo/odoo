@@ -21,7 +21,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "type Parseltongue",
     trigger: 'div[name="lang_ids"] .o_input_dropdown input',
-    run: "edit Parseltongue",
+    run: "clear && edit Parseltongue",
 }, {
     content: 'select Parseltongue',
     trigger: '.dropdown-item:contains(Parseltongue)',
@@ -58,7 +58,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "insert file name",
     trigger: '.modal-dialog input[type="text"]',
-    run: "edit rte_translator.xml",
+    run: "clear && edit rte_translator.xml",
 }, {
     content: "create file",
     trigger: '.modal-dialog button.btn-primary',
@@ -88,7 +88,7 @@ wTourUtils.goToTheme(),
 }, {
     content: "insert page name",
     trigger: '.modal-dialog input[type="text"]',
-    run: "edit rte_translator",
+    run: "clear && edit rte_translator",
 }, {
     content: "create page",
     trigger: '.modal-dialog button.btn-primary',
@@ -170,11 +170,11 @@ wTourUtils.dragNDrop({
 }, {
     content: "translate placeholder",
     trigger: '.modal-dialog input:first',
-    run: "edit test Parseltongue placeholder",
+    run: "clear && edit test Parseltongue placeholder",
 }, {
     content: "translate default value",
     trigger: '.modal-dialog input:last',
-    run: "edit test Parseltongue default value",
+    run: "clear && edit test Parseltongue default value",
 }, {
     content: "close modal",
     trigger: '.modal-footer .btn-primary',
@@ -259,7 +259,7 @@ wTourUtils.dragNDrop({
 }, {
     content: "check bis: placeholder translation",
     trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
-    run: "edit Test",
+    run: "clear && edit Test",
 }, {
     content: "open site menu",
     trigger: 'button[data-menu-xmlid="website.menu_site"]',

@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Write something in composer",
             trigger: ".o-mail-Composer-input",
-            run: "edit blahblah @Not && click body",
+            run: "fill blahblah @Not",
         },
         {
             content: "Mention a partner",
@@ -98,7 +98,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             run(helpers) {
                 this.anchor.value = "test";
                 this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
-            }
+            },
         },
         {
             content: "Check a template is listed",

@@ -67,7 +67,7 @@ const addNewSocialNetwork = function (optionIndex, linkIndex, url, replaceIcon =
     {
         content: "Change added Option label",
         trigger: `we-list table input:eq(${optionIndex})`,
-        run: `edit ${url} && click body`,
+        run: `clear && edit ${url}`,
     },
     {
         content: "Ensure new link is changed",
@@ -130,7 +130,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     {
         content: 'Change custom social to unsupported link',
         trigger: 'we-list table input:eq(6)',
-        run: "edit https://www.paypal.com/abc && click body",
+        run: "clear && edit https://www.paypal.com/abc",
     },
     {
         content: "Ensure paypal icon is found",
@@ -171,7 +171,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     {
         content: 'Change url of the DB instagram link',
         trigger: 'we-list table input:eq(3)',
-        run: "edit https://instagram.com/odoo.official/ && click body",
+        run: "clear && edit https://instagram.com/odoo.official/",
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),

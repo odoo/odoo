@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('event_configurator_tour', {
     run: "click",
 }, {
     trigger: 'div[name="product_id"] input, div[name="product_template_id"] input',
-    run: "edit Event Registration",
+    run: "fill Event Registration",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Event Registration")',
     run: 'click'

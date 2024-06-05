@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
             content: "set one",
             extra_trigger: '#wrap:not(:has(#cart_products div>a>h6:contains("Storage Box")))',
             trigger: '#cart_products input.js_quantity',
-            run: "edit 1",
+            run: "clear && edit 1",
         },
         tourUtils.goToCheckout(),
         ...tourUtils.payWithTransfer(true),

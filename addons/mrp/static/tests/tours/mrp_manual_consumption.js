@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         },
         {
             trigger: 'div[name="quantity"] input',
-            run: "edit 16.0 && click body",
+            run: "edit 16.0",
         },
         {
             trigger: 'div[name="picked"] input',
@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         },
         {
             trigger: "input[id='qty_producing_0']",
-            run: "edit 8.0 && click body",
+            run: "edit 8.0",
         },
         {
             content: "Click Pager",

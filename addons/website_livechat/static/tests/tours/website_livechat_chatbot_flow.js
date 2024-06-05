@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input ",
-            run: "edit No, you won't get my email!",
+            run: "fill No, you won't get my email!",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -65,7 +65,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit okfine@fakeemail.com",
+            run: "fill okfine@fakeemail.com",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit https://www.fakeaddress.com",
+            run: "fill https://www.fakeaddress.com",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit Yes, actually, I'm glad you asked!",
+            run: "fill Yes, actually, I'm glad you asked!",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit I think it's outrageous that you ask for all my personal information!",
+            run: "fill I think it's outrageous that you ask for all my personal information!",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -109,7 +109,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit I will be sure to take this to your manager!",
+            run: "fill I will be sure to take this to your manager!",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit no",
+            run: "fill no",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -171,7 +171,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit no, nothing so say",
+            run: "fill no, nothing so say",
         },
         {
             trigger: ".o-mail-Composer-input",

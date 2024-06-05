@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "click .modal:visible .btn.btn-primary",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
-    run: "edit New",
+    run: "fill New",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
     extra_trigger: '.o_kanban_group',
-    run: "edit Done",
+    run: "fill Done",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
@@ -100,7 +100,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "edit New milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2099 && click body",
+    run: "edit 12/12/2099",
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",
@@ -112,7 +112,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "edit Second milestone",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2022 && click body",
+    run: "edit 12/12/2022",
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",
@@ -121,7 +121,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     run: "click",
 }, {
     trigger: "input[data-field=deadline]",
-    run: "edit 12/12/2100 && click body",
+    run: "edit 12/12/2100",
 }, {
     trigger: ".modal-footer .o_form_button_save",
     run: "click",

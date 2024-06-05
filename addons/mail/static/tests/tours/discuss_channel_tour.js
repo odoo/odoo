@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             content: markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
             auto: true,
-            run: `edit SomeChannel_${new Date().getTime()}`,
+            run: `fill SomeChannel_${new Date().getTime()}`,
         },
         {
             trigger: ".o-discuss-ChannelSelector-list",
@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             ),
             position: "top",
             width: 350,
-            run: `edit SomeText_${new Date().getTime()}`,
+            run: `fill SomeText_${new Date().getTime()}`,
         },
         {
             trigger: ".o-mail-Composer-send:enabled",

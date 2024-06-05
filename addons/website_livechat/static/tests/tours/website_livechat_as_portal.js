@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("website_livechat_as_portal_tour", {
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit Hello, I need help!",
+            run: "fill Hello, I need help!",
         },
         {
             trigger: ".o-mail-Composer-input",

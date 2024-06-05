@@ -35,7 +35,7 @@ stepUtils.showAppsMenuItem(),
 }, {
     content: "search the pricelist",
     trigger: 'input[id="pricelist_id_0"]',
-    run: "edit Custo",
+    run: "fill Custo",
 }, {
     content: "select the pricelist",
     trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
@@ -46,7 +46,7 @@ stepUtils.showAppsMenuItem(),
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: "edit Custo",
+    run: "fill Custo",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Customizable Desk (TEST)")',
     run: "click",

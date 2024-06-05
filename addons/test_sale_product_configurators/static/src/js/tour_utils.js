@@ -47,7 +47,7 @@ function setCustomAttribute(productName, attributeName, customValue) {
     return {
         trigger: `table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("${productName}")) td>div[name="ptal"]:has(div>label:contains("${attributeName}")) input[type="text"]`,
         content: `Set ${customValue} as a custom attribute for ${productName} ${attributeName}`,
-        run: `edit ${customValue} && click .modal-body`,
+        run: `clear && edit ${customValue}`,
     };
 }
 

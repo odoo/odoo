@@ -42,7 +42,7 @@
     }, {
         content: "Complete Email",
         trigger: "input[name=email_from]",
-        run: "edit john@smith.com",
+        run: "clear && edit john@smith.com",
     }, {
         content: "Complete Company",
         trigger: "input[name=partner_name]",

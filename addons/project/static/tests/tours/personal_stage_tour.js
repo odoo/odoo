@@ -41,7 +41,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Create a new personal stage",
     trigger: 'input.form-control',
-    run: "edit Never",
+    run: "fill Never",
 }, {
     content: "Confirm create",
     trigger: '.o_kanban_add',
@@ -77,7 +77,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Create a new personal task",
     trigger: 'input.o_input:not(.o_searchview_input)',
-    run: "edit New Test Task",
+    run: "fill New Test Task",
 }, {
     content: "Confirm create",
     trigger: '.o_kanban_add',

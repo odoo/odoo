@@ -429,6 +429,11 @@ export function compileStepAuto(stepIndex, step, options) {
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
                 const actionHelper = new RunningTourActionHelper(stepEl);
+                const proto = Object.getPrototypeOf(actionHelper);
+                const allowedActions = Object.getOwnPropertyNames(proto)
+                    .filter((name) => typeof proto[name] === "function" && name !== "constructor")
+                    .filter((name) => !name.startsWith("_"));
+                allowedActions.push("scan");
 
                 let result;
                 if (typeof step.run === "function") {
@@ -444,9 +449,19 @@ export function compileStepAuto(stepIndex, step, options) {
                         const m = String(todo)
                             .trim()
                             .match(/^(?<action>\w*) *\(? *(?<arguments>.*?)\)?$/);
-                        await tryToDoAction(() =>
-                            actionHelper[m.groups?.action](m.groups?.arguments)
-                        );
+                        const action = m.groups?.action;
+                        const args = m.groups?.arguments;
+                        if (!allowedActions.includes(action)) {
+                            throwError(tour, step, [
+                                `This action "${action}" is not allowed ! Use action of this list : ${allowedActions.join(
+                                    ","
+                                )}`,
+                            ]);
+                        } else {
+                            await tryToDoAction(() => {
+                                actionHelper[action](args);
+                            });
+                        }
                     }
                 } else {
                     if (stepIndex === tour.steps.length - 1) {

@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "input[name=subject]",
-        run:      "edit Jane Smith",
+        run:      "clear && edit Jane Smith",
     },
     {
         content:  "Update required field status by trying to Send again",
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
                         ":has(.s_website_form_field:has(label:contains('State')):not(.o_has_error))" +
                         ":has(.s_website_form_field:has(label:contains('Invoice Scan')):not(.o_has_error))",
         trigger:  "textarea[name=body_html]",
-        run:      "edit A useless message"
+        run:      "clear && edit A useless message"
     },
     {
         content:  "Update required field status by trying to Send again",
@@ -114,22 +114,22 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content:  "Complete Your Name field",
         trigger:  "input[name='name']",
-        run:      "edit chhagan",
+        run:      "clear && edit chhagan",
     },
     {
         content:  "Complete Email field",
         trigger:  "input[name=email_from]",
-        run:      "edit test@mail.com",
+        run:      "clear && edit test@mail.com",
     },
     {
         content: "Complete Subject field",
         trigger: 'input[name="subject"]',
-        run: "edit subject",
+        run: "clear && edit subject",
     },
     {
         content:  "Complete Your Question field",
         trigger:  "textarea[name='description']",
-        run:      "edit magan",
+        run:      "clear && edit magan",
     },
     {
         content: "Check if conditional field is visible, it shouldn't.",
@@ -144,7 +144,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_submit", {
     {
         content: "Change name input",
         trigger: "input[name='name']",
-        run: "edit odoo",
+        run: "clear && edit odoo",
     },
     {
         content: "Check if conditional field is visible, it should.",

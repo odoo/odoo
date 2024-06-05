@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             position: "right",
             run: function (actions) {
                 const input = this.anchor.querySelector("input");
-                actions.edit("DESK0001", input || this.anchor);
+                actions.fill("DESK0001", input || this.anchor);
                 const descriptionElement = document.querySelector(
                     ".o_form_editable textarea[name='name']"
                 );
@@ -78,7 +78,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             extra_trigger: ".oi-arrow-right",  // Wait for product creation
             content: _t("add the price of your product."),
             position: "right",
-            run: "edit 10.0 && click .o_selected_row",
+            run: "fill 10.0 && click .o_selected_row",
         }, {
             trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
             auto: true,

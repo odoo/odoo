@@ -18,7 +18,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     {
         content: "Input the value for the new website main color (also make sure it is independent from the backend)",
         trigger: '.o_hex_input',
-        run: `edit ${WEBSITE_MAIN_COLOR} && click body`,
+        run: `edit ${WEBSITE_MAIN_COLOR}`,
     },
     wTourUtils.goBackToBlocks(),
     wTourUtils.dragNDrop({id: 's_text_block', name: 'Text'}),
@@ -40,7 +40,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     {
         content: "Input the website main color explicitly",
         trigger: '.o_hex_input',
-        run: `edit ${WEBSITE_MAIN_COLOR} && click body`,
+        run: `edit ${WEBSITE_MAIN_COLOR}`,
     },
     {
         content: "Check that paragraph now uses the main color *class*",

@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_messa
         ...requestChatSteps,
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit Hello, I need help please !",
+            run: "fill Hello, I need help please !",
         },
         {
             trigger: ".o-mail-Composer-input",

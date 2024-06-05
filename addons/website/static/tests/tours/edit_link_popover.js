@@ -3,7 +3,6 @@
 import wTourUtils from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
-import { waitFor } from "@odoo/hoot-dom";
 
 const FIRST_PARAGRAPH = ':iframe #wrap .s_text_image p:nth-child(2)';
 
@@ -51,7 +50,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Type the link URL /contactus",
         trigger: '#o_link_dialog_url_input',
-        run: "edit /contactus",
+        run: "fill /contactus",
     },
     ...clickFooter,
     {
@@ -68,7 +67,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Type the link URL /",
         trigger: '#o_link_dialog_url_input',
-        run: `edit /`,
+        run: `clear && fill /`,
     },
     ...clickFooter,
     {
@@ -111,7 +110,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Change the URL",
         trigger: '#url_input',
-        run: "edit /contactus",
+        run: "clear && edit /contactus",
     },
     {
         content: "Save the Edit Menu modal",
@@ -180,10 +179,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Click 'Home' link in footer",
         trigger: ':iframe footer a[href="/"]',
-        run(helpers) {
-            helpers.click();
-            waitFor(`:iframe .o_edit_menu_popover .o_we_url_link:contains("Home")`, { timeout: 5000 });
-        }
+        run: "click",
     },
     {
         content: "Toolbar should be shown (4)",

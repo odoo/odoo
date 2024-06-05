@@ -18,7 +18,7 @@ const commonSteps = [
     },
     {
         trigger: 'input[id="title_0"]',
-        run: "edit Test Chatbot Sequence",
+        run: "clear && edit Test Chatbot Sequence",
     },
     {
         trigger: 'div[name="script_step_ids"] .o_field_x2many_list_row_add a',

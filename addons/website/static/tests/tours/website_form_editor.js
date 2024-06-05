@@ -24,7 +24,7 @@
         essentialFieldsForDefaultFormFillInSteps.push({
             content: "Enter data in model-required field",
             trigger: `:iframe .s_website_form_model_required .s_website_form_input[name="${data.name}"]`,
-            run: `edit ${data.value}`,
+            run: `clear && fill ${data.value}`,
         });
     }
 
@@ -58,10 +58,7 @@
         return [{
             content: "Open the select",
             trigger: `we-select:has(we-button[${data}]) we-toggler`,
-            run() {
-                // TODO: use run: "click", instead
-                this.anchor.click();
-            }
+            run: "click",
         }, {
             content: "Click on the option",
             trigger: `we-select we-button[${data}]`,
@@ -110,7 +107,7 @@
             ret.push({
                 content: "Change the label text",
                 trigger: 'we-input[data-set-label-text] input',
-                run: `edit ${label}`,
+                run: `clear && edit ${label}`,
             });
         }
         if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
@@ -165,7 +162,7 @@
         }, {
             content: "Rename and leave the field label",
             trigger: 'we-input[data-set-label-text] input',
-            run: "edit Renamed && click body",
+            run: "fill Renamed",
         },
         wTourUtils.goBackToBlocks(),
         {
@@ -207,8 +204,7 @@
         {
             content: "Change the label of 'Conditional Visibility Check 4' and change it to 'Conditional Visibility Check 3'",
             trigger: 'we-input[data-set-label-text] input',
-            // TODO: remove && click body
-            run: "edit Conditional Visibility Check 3 && click body",
+            run: "clear && edit Conditional Visibility Check 3",
         },
         {
             content: "Check that the conditional visibility of the renamed field is removed",
@@ -221,8 +217,7 @@
         {
             content: "Change the label of 'Conditional Visibility Check 6' and change it to 'Conditional Visibility Check 5'",
             trigger: 'we-input[data-set-label-text] input',
-            // TODO: remove && click body
-            run: "edit Conditional Visibility Check 5 && click body",
+            run: "clear && edit Conditional Visibility Check 5",
         },
         {
             content: "Check that 'Conditional Visibility Check 5' is not in the list of the renamed field",
@@ -277,12 +272,6 @@
             run: "edit Xperia",
         },
         {
-            // TODO: Fix code to avoid this behavior
-            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-            trigger: "we-list we-title",
-            run: "click",
-        },
-        {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
             run: "click",
@@ -326,12 +315,6 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: "edit Development Service",
-        }, 
-        {
-            // TODO: Fix code to avoid this behavior
-            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-            trigger: "we-list we-title",
-            run: "click",
         },
         {
             content: "Click on Add new Checkbox",
@@ -370,38 +353,19 @@
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: "edit France",
-        }, 
-        {
-            // TODO: Fix code to avoid this behavior
-            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-            trigger: "we-list we-title",
-            run: "click",
         },
         {
             content: "Click on Add new Checkbox",
             trigger: 'we-button.o_we_list_add_optional',
             run: "click",
-        }, 
-        {
-            // TODO: Fix code to avoid this behavior
-            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-            trigger: "we-list we-title",
-            run: "click",
         },
         {
             content: "Change last Option label",
             trigger: 'we-list table input:eq(3)',
-            // TODO: Fix code to avoid blur event
             run: "edit Canada",
         }, {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
-            run: "click",
-        }, 
-        {
-            // TODO: Fix code to avoid this behavior
-            content: "Click outside focused element before click on add new checkbox otherwise button does'nt work",
-            trigger: "we-list we-title",
             run: "click",
         },
         {
@@ -411,7 +375,7 @@
         }, {
             content: "Change last option label with a number",
             trigger: 'we-list table input:eq(3)',
-            run: "edit 44 - UK",
+            run: "clear && edit 44 - UK",
         }, {
             content: "Check that the input value is the full option value",
             trigger: 'we-list table input:eq(3)',
@@ -622,8 +586,7 @@
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
-            // TODO: remove && click we-title
-            run: "edit test@test.test && click we-title",
+            run: "clear && edit test@test.test",
         },
         // Test a field visibility when it's tied to another Date [Time] field
         // being set.
@@ -635,8 +598,7 @@
         {
             content: "Enter a date in the date input",
             trigger: "[data-name='hidden_condition_additional_date'] input",
-            // TODO: remove && click .o_we_customize_panel
-            run: "edit 03/28/2017 && click .o_we_customize_panel",
+            run: "edit 03/28/2017",
         },
         ...wTourUtils.clickOnSave(),
         {
@@ -729,8 +691,7 @@
         {
             content: 'Change the Recipient Email',
             trigger: '[data-field-name="email_to"] input',
-            // TODO: remove && click body
-            run: "edit test@test.test && click body", 
+            run: "clear && edit test@test.test", 
         },
     ]));
     wTourUtils.registerWebsitePreviewTour('website_form_contactus_edition_no_email', {
@@ -741,7 +702,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            run: "edit ** && click body",
+            run: "clear && edit **",
         }, {
             content: "Check that the recipient email is correct",
             trigger: 'we-input[data-field-name="email_to"] input:value("website_form_contactus_edition_no_email@mail.com")',
@@ -799,33 +760,19 @@
         {
             content: "Open condition item select",
             trigger: 'we-select[data-name="hidden_condition_opt"] we-toggler',
-            run(helpers) {
-                // TODO: use run: "click",
-                this.anchor.click();
-            }
+            run: "click",
         }, {
             content: "Choose first checkbox as condition item",
             trigger: 'we-button[data-set-visibility-dependency="Checkbox 1"]',
-            async run(helpers) {
-                helpers.click();
-                // TODO:to be removed
-                await new Promise((r) => setTimeout(r, 300));
-            }
+            run: "click",
         }, {
             content: "Open condition comparator select",
             trigger: 'we-select[data-attribute-name="visibilityComparator"] we-toggler',
-            run(helpers) {
-                // TODO: use run: "click",
-                this.anchor.click();
-            }
+            run: "click",
         }, {
             content: "Choose 'not equal to' comparator",
             trigger: 'we-button[data-select-data-attribute="!selected"]',
-            async run(helpers) {
-                helpers.click();
-                // TODO: to be removed
-                await new Promise((r) => setTimeout(r, 300));
-            }
+            run: "click",
         },
         ...wTourUtils.clickOnSave(),
 
@@ -897,8 +844,7 @@
         {
             content: "Change a random option",
             trigger: '[data-set-mark] input',
-            // TODO: remove && click body
-            run: "edit ** && click body",
+            run: "edit **",
         },
     ]));
 

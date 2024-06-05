@@ -26,13 +26,13 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     run: 'click'
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="name"]',
-    run: "edit Attendee A",
+    run: "clear && edit Attendee A",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="email"]',
-    run: "edit attendee-a@gmail.com",
+    run: "clear && edit attendee-a@gmail.com",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body input[name*="phone"]',
-    run: "edit +32499123456",
+    run: "clear && edit +32499123456",
 }, {
     trigger: 'div:contains("Ticket #1").modal-body select[name*="1-simple_choice"]',
     run: "selectByLabel Vegetarian",

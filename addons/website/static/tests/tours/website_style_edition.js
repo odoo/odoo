@@ -51,7 +51,8 @@ wTourUtils.goToTheme(),
 {
     content: "Change font size",
     trigger: '[data-variable="font-size-base"] input',
-    run: `edit ${TARGET_FONT_SIZE} && click body`,
+    run: `clear && edit ${TARGET_FONT_SIZE}`,
+    pause: true,
 }, {
     content: "Check the font size was properly adapted",
     trigger: ':iframe #wrapwrap',

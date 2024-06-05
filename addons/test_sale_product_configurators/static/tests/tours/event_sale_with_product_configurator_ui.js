@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: "edit event (",
+    run: "fill event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
     run: "click",
@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'div[name="product_template_id"] input',
     extra_trigger: '.o_data_row:nth-child(3)',  // wait for the new row to be created
-    run: "edit event (",
+    run: "fill event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
     run: "click",
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     run: "click",
 }, {
     trigger: 'tr:has(div[name="o_sale_product_configurator_name"]:contains("Registration Event (TEST variants)")) .o_sale_product_configurator_qty input',
-    run: "edit 5 && click body",
+    run: "clear && edit 5",
 },
     configuratorTourUtils.assertPriceTotal("150.00"),
 {
@@ -107,7 +107,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
 }, {
     trigger: 'div[name="product_template_id"] input',
     extra_trigger: '.o_data_row:nth-child(4)',  // wait for the new row to be created
-    run: "edit event (",
+    run: "fill event (",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Registration Event (TEST variants)")',
     run: "click",

@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("purchase_tour", {
             position: "right",
             run: function (actions) {
                 const input = this.anchor.querySelector("input");
-                actions.edit("DESK0001", input || this.anchor);
+                actions.fill("DESK0001", input || this.anchor);
                 var $descriptionElement = $('.o_form_editable textarea[name="name"]');
                 // when description changes, we know the product has been created
                 $descriptionElement.change(function () {

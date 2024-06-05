@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="partner_id"] input',
     content: 'Add the customer for this quotation (e.g. Brandon Freeman)',
-    run: "edit Brandon Freeman",
+    run: "fill Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the first item on the autocomplete dropdown',
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
     content: markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
-    run: "edit Service Product (Prepaid Hours)",
+    run: "fill Service Product (Prepaid Hours)",
 }, {
     trigger: 'ul.ui-autocomplete a:contains(Service Product (Prepaid Hours))',
     content: 'Select the prepaid service product in the autocomplete dropdown',
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="product_uom_qty"] input',
     content: "Add 10 hours as ordered quantity for this product.",
-    run: "edit 10 && click body",
+    run: "edit 10",
 }, {
     trigger: '.o_field_widget[name=price_subtotal]:contains(2,500.00)',
     run() {},
@@ -189,7 +189,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select a Sales Order Item as Default Sales Order Item for each task in this project.',
-    run: "edit S",
+    run: "clear && fill S",
 }, {
     trigger: '[name="sale_line_id"] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the Sales Order Item in the autocomplete dropdown.',
@@ -215,7 +215,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'div[name="sale_line_employee_ids"] div[name="sale_line_id"] input',
     content: 'Select the Sales Order Item to link to the timesheets of this employee.',
     position: 'bottom',
-    run: "edit S",
+    run: "clear && fill S",
 }, {
     trigger: '[name=sale_line_id] ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
@@ -240,7 +240,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="partner_id"] input',
     content: markup('Add the customer for this project to select an SO and SOL for this customer <i>(e.g. Brandon Freeman)</i>.'),
-    run: "edit Brandon Freeman",
+    run: "clear && fill Brandon Freeman",
 }, {
     trigger: 'div[name="partner_id"] ul > li:first-child > a:contains(Freeman)',
     content: 'Select the customer in the autocomplete dropdown',
@@ -253,7 +253,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
 }, {
     trigger: 'div[name="sale_line_id"] input',
     content: 'Select the first sale order of the list',
-    run: "edit Prepaid",
+    run: "clear && fill Prepaid",
 }, {
     trigger: 'ul.ui-autocomplete > li:first-child > a:not(:has(i.fa))',
     content: 'Select the first item on the autocomplete dropdown',

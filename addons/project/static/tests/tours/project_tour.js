@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         run: "click .modal:visible .btn.btn-primary",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
-        run: "edit New",
+        run: "fill New",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         auto: true,
@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group input",
         extra_trigger: '.o_kanban_group',
-        run: "edit Done",
+        run: "fill Done",
     }, {
         trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
         auto: true,
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add('project_test_tour', {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
         extra_trigger: ".subtask_create_input",
         content: 'Give the sub-task a name',
-        run: "edit newer subtask && click .o_kanban_renderer",
+        run: "edit newer subtask",
     }, {
         trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
         content: 'Change the subtask state',

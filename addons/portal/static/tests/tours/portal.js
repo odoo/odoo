@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('portal_load_homepage', {
         {
             content: 'type a different phone number',
             trigger: 'input[name="phone"]',
-            run: "edit +1 555 666 7788",
+            run: "clear && edit +1 555 666 7788",
         },
         {
             content: "Submit the form",
