@@ -306,13 +306,12 @@ class ReportSaleDetails(models.AbstractModel):
 
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
-        keys1 = line.product_id.product_tmpl_id.pos_categ_ids.mapped("name") or [_('Not Categorized')]
-        for key1 in keys1:
-            products.setdefault(key1, {})
-            products[key1].setdefault(key2, [0.0, 0.0, 0.0])
-            products[key1][key2][0] += line.qty
-            products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
-            products[key1][key2][2] += line.price_subtotal
+        key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
+        products.setdefault(key1, {})
+        products[key1].setdefault(key2, [0.0, 0.0, 0.0])
+        products[key1][key2][0] += line.qty
+        products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
+        products[key1][key2][2] += line.price_subtotal
 
         if line.tax_ids_after_fiscal_position:
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
