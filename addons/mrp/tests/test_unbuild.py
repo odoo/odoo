@@ -945,3 +945,38 @@ class TestUnbuild(TestMrpCommon):
             {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'qty_done': 0.6},
             {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'qty_done': 1.2},
         ])
+
+    def test_unbuild_update_forecasted_qty(self):
+        """
+        Test that the unbuild correctly updates the forecasted quantity of a product.
+        """
+        bom = self.bom_4
+        product = bom.product_id
+        # qty_available + incoming_qty - outgoing_qty  = virtual_available
+        # Currently: 0.0 + 0.0 - 0.0  = 0.0
+        self.assertRecordValues(product, [{"qty_available": 0.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 0.0}])
+        # Manufacture 20 unit
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 20.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertRecordValues(product, [{"qty_available": 0.0, "incoming_qty": 20.0, "outgoing_qty": 0.0, "virtual_available": 20.0}])
+        mo.qty_producing = 20.0
+        mo.move_raw_ids.quantity_done = 20.0
+        mo.button_mark_done()
+        self.assertRecordValues(product, [{"qty_available": 20.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 20.0}])
+        # Unlock the MO and add 10 additional produced quantity
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 30.0
+        mo = mo_form.save()
+        self.assertRecordValues(product, [{"qty_available": 30.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 30.0}])
+        # Unbuild the 15 units
+        action = mo.button_unbuild()
+        unbuild_form = Form(self.env[action['res_model']].with_context(action['context']))
+        unbuild_form.product_qty = 15.0
+        wizard = unbuild_form.save()
+        wizard.action_validate()
+        self.assertRecordValues(product, [{"qty_available": 15.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 15.0}])
