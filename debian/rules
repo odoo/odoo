@@ -6,10 +6,6 @@ export PYBUILD_DISABLE=test
 %:
 	dh ${@} --with=python3 --buildsystem=pybuild
 
-override_dh_auto_build:
-	cp -r addons/* odoo/addons/
-	dh_auto_build
-
 override_dh_auto_install:
 	dh_auto_install
 	rm debian/odoo/usr/lib/python3*/dist-packages/odoo/addons/point_of_sale/static/src/fonts/Inconsolata.otf

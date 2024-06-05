@@ -284,9 +284,8 @@ class DockerTgz(Docker):
 
     def build(self):
         logging.info('Start building python tgz package')
-        self.run('python3 setup.py sdist --quiet --formats=gztar,zip', self.args.build_dir, 'odoo-src-build-%s' % TSTAMP)
+        self.run('python3 -m build --sdist', self.args.build_dir, 'odoo-src-build-%s' % TSTAMP)
         os.rename(glob('%s/dist/odoo-*.tar.gz' % self.args.build_dir)[0], '%s/odoo_%s.%s.tar.gz' % (self.args.build_dir, VERSION, TSTAMP))
-        os.rename(glob('%s/dist/odoo-*.zip' % self.args.build_dir)[0], '%s/odoo_%s.%s.zip' % (self.args.build_dir, VERSION, TSTAMP))
         logging.info('Finished building python tgz package')
 
     def start_test(self):
