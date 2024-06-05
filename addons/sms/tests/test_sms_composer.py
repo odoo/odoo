@@ -28,12 +28,12 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
         cases = [
             (
                 'Hello there, check this awesome <b>app</b> I found:<br/>https://odoo.com',  # not a `a` link in source
-                '<p>Hello there, check this awesome <b>app</b> I found:<br>https://odoo.com</p>',
-                'Hello there, check this awesome *app* I found:\nhttps://odoo.com'
+                '<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:&lt;br/&gt;<a href="https://odoo.com" target="_blank" rel="noreferrer noopener">https://odoo.com</a></p>',
+                'Hello there, check this awesome <b>app</b> I found:<br/>https://odoo.com'
             ), (
                 'Hello there, check this awesome <b>app</b> I found:<br/><a href="https://odoo.com">Here</a>',   # a link
-                '<p>Hello there, check this awesome <b>app</b> I found:<br><a href="https://odoo.com">Here</a></p>',
-                'Hello there, check this awesome *app* I found:\nHere [1]\n\n\n[1] https://odoo.com'  # keep all information
+                '<p>Hello there, check this awesome &lt;b&gt;app&lt;/b&gt; I found:&lt;br/&gt;&lt;a href="<a href="https://odoo.com%22&gt;Here&lt;/a&gt;" target="_blank" rel="noreferrer noopener">https://odoo.com"&gt;Here&lt;/a&gt;</a></p>',
+                'Hello there, check this awesome <b>app</b> I found:<br/><a href="https://odoo.com">Here</a>'  # keep all information
             )
         ]
 
@@ -45,7 +45,7 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
 
                 self.assertSMSNotification(
                     [{'number': '+3215228817386'}], expected_sms_content, message,
-                    mail_message_values={"body": expected_notification_content}
+                    mail_message_values={"body": expected_notification_content},
                 )
 
     def test_message_sms_body_sms_vs_notification(self):
@@ -103,5 +103,4 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                 self.assertSMSNotification(
                     [{'partner': self.partner_employee}], sms_content, messages,
                     mail_message_values={"body": expected_notification_content},
-                    from_plaintext=True,
                 )

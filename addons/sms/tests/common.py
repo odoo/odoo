@@ -184,7 +184,7 @@ class SMSCase(MockSMS):
         self.assertEqual(self._sms, [])
 
     def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True, sent_unlink=False,
-                              mail_message_values=None, from_plaintext=False):
+                              mail_message_values=None):
         """ Check content of notifications and sms.
 
           :param recipients_info: list[{
@@ -195,15 +195,6 @@ class SMSCase(MockSMS):
             }, { ... }]
           :param content: SMS content
           :param mail_message_values: dictionary of expected mail message fields values
-          :param from_plaintext: Set to true if sms was sent from a plaintext input (composer).
-            If it was however sent from an HTML source content, leave False.
-            The differences are that
-            * an url added in raw text should be converted to a link in
-              the chatter and the link markup not be present at all in the sms,
-            * If an url is added in HTML content
-              * outside a link tag, it stays as is (not converted to a link (tracker),
-                not clickable in the chatter).
-              * inside a link tag, we need to keep the link in the chatter (and the sms, with eventual label).
         """
         partners = self.env['res.partner'].concat(*list(p['partner'] for p in recipients_info if p.get('partner')))
         numbers = [p['number'] for p in recipients_info if p.get('number')]
@@ -250,10 +241,7 @@ class SMSCase(MockSMS):
                     raise NotImplementedError('Not implemented')
 
         if messages is not None:
-            tags_to_remove = tools.mail.tags_to_remove.copy()
-            if from_plaintext:  # remove links added just for the chatter
-                tags_to_remove += "a"
-            with patch("odoo.tools.mail.tags_to_remove", tags_to_remove):
+            with patch("odoo.tools.mail.tags_to_remove", tools.mail.tags_to_remove + ["a"]):
                 for message in messages:
                     self.assertEqual(content, tools.html2plaintext(tools.html_sanitize(message.body).rstrip('\n')))
 

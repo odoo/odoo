@@ -147,6 +147,13 @@ class MailThread(models.AbstractModel):
                 }
         return result
 
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, *args, body='', message_type='notification', **kwargs):
+        if message_type == 'sms':
+            kwargs['sms_content'] = body
+            body = sms_content_to_rendered_html(body)
+        return super().message_post(*args, body=body, message_type=message_type, **kwargs)
+
     def _message_sms_schedule_mass(self, body='', template=False, active_domain=None, **composer_values):
         """ Shortcut method to schedule a mass sms sending on a recordset.
 
@@ -230,8 +237,8 @@ class MailThread(models.AbstractModel):
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
-            body=sms_content_to_rendered_html(body), partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
-            message_type='sms', subtype_id=subtype_id, sms_content=body,
+            body=body, partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
+            message_type='sms', subtype_id=subtype_id,
             sms_numbers=sms_numbers, sms_pid_to_number=sms_pid_to_number,
             **kwargs
         )
