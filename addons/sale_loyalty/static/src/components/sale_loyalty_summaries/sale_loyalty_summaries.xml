@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="sale_loyalty.SummariesComponent">
+        <div id="sale_loyalty_summaries" name="sale_loyalty_summaries" class="col">
+            <t t-foreach="couponPoints" t-as="transaction" t-key="transaction">
+                <t t-call="loyalty.loyalty_summary">
+                    <t t-set="program_name" t-value="transaction.program_name"/>
+                    <t t-set="points_balanced" t-value="transaction.points_balanced"/>
+                    <t t-set="points_issued" t-value="transaction.points_issued"/>
+                    <t t-set="points_used" t-value="transaction.points_used"/>
+                </t>
+                <br/>
+            </t>
+        </div> 
+    </t>
+
+</templates>

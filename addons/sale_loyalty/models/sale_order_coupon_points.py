@@ -12,10 +12,12 @@ class SaleOrderCouponPoints(models.Model):
     coupon_id = fields.Many2one(comodel_name='loyalty.card', required=True, ondelete='cascade')
     points = fields.Float(required=True)
 
+    program_name = fields.Char(related="coupon_id.program_id.name")
     # loyalty_points = fields.Float(default=0)
     # loyalty_new_points = fields.Float(compute='_compute_loyalty_new_points')
-    # loyalty_used = fields.Float(default=0)
-    # loyalty_issued = fields.Float(default=0)
+    points_balanced = fields.Float(default=0)
+    points_used = fields.Float(default=0)
+    points_issued = fields.Float(default=0)
 
     # def _compute_loyalty_new_points(self):
     #     for record in self:

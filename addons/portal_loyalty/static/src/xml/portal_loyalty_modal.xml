@@ -2,7 +2,9 @@
 <templates xml:space="preserve">
     <t t-name="portal_loyalty_modal.LoyaltyModal">
         <Dialog title="title" footer="is_ewallet">
-            <span t-if="this.state.couponsHistory" >Last Movements</span>
+            <span t-if="this.state.history" >
+                Last Movements <span class="text-info">(<t t-out="this.state.history.length"/>)</span>
+            </span>
             <span t-else="">Not used</span>
             <table class="table">
                 <thead>
@@ -17,46 +19,39 @@
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    <t t-foreach="this.state.couponsHistory" t-as="coupon" t-key="coupon.id">
-                        <tr t-if="this.state.couponsHistory.length > 1">
-                            <th scope="colgroup" colspan="100%">
-                                <p t-if="coupon.description" t-out="coupon.description"/>
-                            </th>
+                    <t t-foreach="this.state.history" t-as="transaction" t-key="transaction.id">
+                        <tr>
+                            <td t-if="is_ewallet">
+                                <t t-out="transaction.description"/>
+                            </td>
+                            <td t-if="is_loyalty">
+                                <a
+                                    t-if="transaction.sale_order"
+                                    t-attf-href="/my/orders/{{transaction.sale_order_id}}"
+                                >
+                                    <t t-out="transaction.sale_order"/>
+                                </a>
+                                <t t-else="">
+                                    Not an order.
+                                </t>
+                            </td>
+                            <td t-if="is_loyalty">
+                                <t t-out="this.formatDate(transaction.date)"/>
+                            </td>
+                            <td t-if="transaction.issued or is_loyalty">
+                                <p
+                                    t-att-class="transaction.issued ? 'text-success fw-bold' : ''"
+                                    t-out="is_loyalty ? transaction.issued : transaction.issued_display"
+                                />
+                            </td>
+                            <td t-if="transaction.used or is_loyalty">
+                                <p
+                                    t-att-class="transaction.used ? 'text-danger fw-bold' : ''"
+                                    t-out="is_loyalty ? transaction.used : transaction.used_display"
+                                />
+                            </td>
+                            <td t-if="is_loyalty"><t t-out="transaction.new_balance_display"/></td>
                         </tr>
-                        <t t-foreach="coupon.history" t-as="transaction" t-key="transaction.id">
-                            <tr>
-                                <td t-if="is_ewallet">
-                                    <t t-out="transaction.description"/>
-                                </td>
-                                <td t-if="is_loyalty">
-                                    <a
-                                        t-if="transaction.sale_order"
-                                        t-attf-href="/my/orders/{{transaction.sale_order_id}}"
-                                    >
-                                        <t t-out="transaction.sale_order"/>
-                                    </a>
-                                    <t t-else="">
-                                        Not an order.
-                                    </t>
-                                </td>
-                                <td t-if="is_loyalty">
-                                    <t t-out="this.formatDate(transaction.date)"/>
-                                </td>
-                                <td t-if="transaction.issued or is_loyalty">
-                                    <p
-                                        t-att-class="transaction.issued ? 'text-success fw-bold' : ''"
-                                        t-out="is_loyalty ? transaction.issued : transaction.issued_display"
-                                    />
-                                </td>
-                                <td t-if="transaction.used or is_loyalty">
-                                    <p
-                                        t-att-class="transaction.used ? 'text-danger fw-bold' : ''"
-                                        t-out="is_loyalty ? transaction.used : transaction.used_display"
-                                    />
-                                </td>
-                                <td t-if="is_loyalty"><t t-out="transaction.new_balance_display"/></td>
-                            </tr>
-                        </t>
                     </t>
                 </tbody>
             </table>

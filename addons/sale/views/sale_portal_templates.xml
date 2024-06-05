@@ -613,7 +613,6 @@
                     </table>
                 </div>
 
-                TODO: MATP make a template to use this component in the Portal SO and in the Backend
                 <div
                     id="summary"
                     name="summary"
@@ -621,49 +620,7 @@
                     style="page-break-inside: avoid;"
                 >
                     <div class="row row-cols-1 row-cols-sm-2 ">
-                        <div
-                            id="loyalty_summary"
-                            name="loyalty_summary"
-                            class="col"
-                        >
-                            <table class="table table-sm">
-                                <tbody>
-                                    <tr class="border-black">
-                                        <td scope="row"><strong>Loyalty cards</strong></td>
-                                        <td class="text-end">
-                                            <span t-out="sale_order.loyalty_points"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Issued</td>
-                                        <td class="text-end">
-                                            <span t-out="sale_order.loyalty_issued"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td scope="row">Used</td>
-                                        <td class="text-end">
-                                            <span t-out="sale_order.loyalty_used"/>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-black">
-                                        <td scope="row"><strong>New Sold</strong></td>
-                                        <td class="text-end">
-                                            <span
-                                                t-out="sale_order.loyalty_new_points"
-                                            />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- <div class="col-xs-7 col-md-5 ms-auto"> -->
-
-                        <div
-                            id="total"
-                            name="total"
-                            class="col"
-                        >
+                        <div id="total" name="total" class="col">
                             <t t-call="sale.sale_order_portal_content_totals_table"/>
                         </div>
                     </div>
@@ -707,4 +664,7 @@
             <t t-call="#{sale_order._get_name_tax_totals_view()}"/>
         </table>
     </template>
+
+    <!-- <template id="document_tax_totals" inherit_id="account.document_tax_totals_template" primary="True"></template> -->
+
 </odoo>

@@ -31,6 +31,7 @@
             'loyalty/static/src/js/loyalty_list_view.js',
             'loyalty/static/src/scss/loyalty.scss',
             'loyalty/static/src/xml/loyalty_templates.xml',
+            'loyalty/static/src/xml/loyalty_summary_templates.xml',
         ],
     },
     'installable': True,

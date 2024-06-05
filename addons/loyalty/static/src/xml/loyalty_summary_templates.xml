@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <t t-name="loyalty.loyalty_summary"  name="Layout Summary">
+        <table class="table table-sm">
+            <tbody>
+                <tr class="border-black">
+                    <td scope="row">
+                        <strong>Loyalty cards: <t t-out="program_name"/></strong>
+                    </td>
+                    <td class="text-end">
+                        <span t-out="points_balanced"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">Issued</td>
+                    <td class="text-end">
+                        <span t-out="points_issued"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">Used</td>
+                    <td class="text-end">
+                        <span t-out="points_used"/>
+                    </td>
+                </tr>
+                <tr class="border-black">
+                    <td scope="row"><strong>New Sold</strong></td>
+                    <td class="text-end">
+                        <span t-out="points_balanced + points_issued - points_used"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </t>
+
+</odoo>

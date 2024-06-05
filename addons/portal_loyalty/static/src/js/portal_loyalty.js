@@ -14,16 +14,14 @@ publicWidget.registry.PortalLoyaltyWidget = publicWidget.Widget.extend({
     },
 
     _onPortalLoyalty(ev) {
-        console.log("___________________________________");
         const title = ev.currentTarget.dataset.title;
         const points = ev.currentTarget.dataset.points;
         const pointName = ev.currentTarget.dataset.pointName;
         const couponId = parseInt(ev.currentTarget.dataset?.couponId);
         const programId = parseInt(ev.currentTarget.dataset?.programId);
-        const value = ev.currentTarget.dataset.value;
+        // const value = ev.currentTarget.dataset.value;
         const type = ev.currentTarget.dataset.type;
-        console.log(ev.currentTarget.dataset.topUpValues);
-        const topUpValues = ev.currentTarget.dataset.topUpValues.match(/(\d+(?:\.\d+)?)/g).map(
+        const topUpValues = ev.currentTarget.dataset.topUpValues?.match(/(\d+(?:\.\d+)?)/g).map(
             value => parseFloat(value)
         );
         // TODO: MATP check the mandatory value and their formats :/
@@ -90,7 +88,6 @@ export class PortalLoyalty extends Component {
         this.state = useState({
             currencyId: null,
             history: [],
-            coupons_history: [],
             topUpIndex: 0,
         });
 
@@ -98,11 +95,11 @@ export class PortalLoyalty extends Component {
     }
 
     async onWillStartHandler() {
-        const { currencyId, coupons_history, rewards } = await rpc("/my/rewards/history", {
+        const { currencyId, history, rewards } = await rpc("/my/rewards/history", {
             coupon_id: this.props.couponId,
             program_id: this.props.programId,
         });
-        this.state.couponsHistory = coupons_history;
+        this.state.history = history;
         this.state.currencyId = currencyId;
         this.state.rewards = rewards;
     }

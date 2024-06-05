@@ -27,10 +27,10 @@ class SaleOrder(models.Model):
     coupon_point_ids = fields.One2many(
         comodel_name='sale.order.coupon.points', inverse_name='order_id', copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
-    loyalty_points = fields.Float(default=0)
-    loyalty_new_points = fields.Float(default=0)
-    loyalty_used = fields.Float(default=0)
-    loyalty_issued = fields.Float(default=0)
+    # loyalty_points = fields.Float(default=0)
+    # loyalty_new_points = fields.Float(default=0)
+    # loyalty_used = fields.Float(default=0)
+    # loyalty_issued = fields.Float(default=0)
 
     @api.depends('order_line')
     def _compute_reward_total(self):
@@ -537,29 +537,32 @@ class SaleOrder(models.Model):
         Used when validating an order
         """
         for coupon_point_id in self.coupon_point_ids:
-            if coupon_point_id.coupon_id in self.order_line.coupon_id:
-                self.loyalty_points += coupon_point_id.coupon_id.points
-            # Update points of the coupon issued.
-            coupon_point_id.coupon_id.points += coupon_point_id.points
-            # Create/add issued points in coupon history.
-            coupon_point_id.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
-                'description': f"Points issued with {self.name}",
-                'coupon_id': coupon_point_id.coupon_id.id,
-                'sale_order_id': self.id,
-                'sale_order_name': self.name,
-                'issued': coupon_point_id.points,
-                'new_balance': coupon_point_id.coupon_id.points,
-            })
-            # Compute all loyalty points issued by the SO (for summary)
-            self.loyalty_issued += coupon_point_id.points
+            # if coupon_point_id.coupon_id in self.order_line.coupon_id:
+                # self.loyalty_points += coupon_point_id.coupon_id.points
+            if coupon_point_id.points:
+                # Update points of the coupon issued.
+                coupon_point_id.coupon_id.points += coupon_point_id.points
+                # Create/add issued points in coupon history.
+                coupon_point_id.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
+                    'description': f"Points issued with {self.name}",
+                    'coupon_id': coupon_point_id.coupon_id.id,
+                    'sale_order_id': self.id,
+                    'sale_order_name': self.name,
+                    'issued': coupon_point_id.points,
+                    'new_balance': coupon_point_id.coupon_id.points,
+                })
+                # Compute all loyalty points issued by the SO (for summary)
+                # self.loyalty_issued += coupon_point_id.points
 
         for line in self.order_line:
             if not line.reward_id or not line.coupon_id:
                 continue
             # Compute all loyalty points used in the SO (for summary)
-            self.loyalty_used += line.points_cost
+            # self.loyalty_used += line.points_cost
             # Update points of the coupon used.
-            line.coupon_id.points -= line.points_cost
+            coupon_point = self.coupon_point_ids.filtered(lambda pe: pe.coupon_id == line.coupon_id)
+            if coupon_point:
+                coupon_point.sudo().points_used += line.points_cost
             # TODO: MATP Ask for the formation of the description :/
             # Create/add used points in coupon history.
             qty = int(line.reward_id.reward_product_qty * line.product_uom_qty)
@@ -576,7 +579,7 @@ class SaleOrder(models.Model):
                 'new_balance': line.coupon_id.points,
             })
         # Compute final loyalty points after application of programs (for summary).
-        self.loyalty_new_points = self.loyalty_points - self.loyalty_used + self.loyalty_issued
+        # self.loyalty_new_points = self.loyalty_points - self.loyalty_used + self.loyalty_issued
 
     def _get_real_points_for_coupon(self, coupon, post_confirm=False):
         """
@@ -604,11 +607,15 @@ class SaleOrder(models.Model):
                 coupon.sudo().points += points
         for pe in self.coupon_point_ids.sudo():
             if pe.coupon_id in coupon_points:
-                pe.points = coupon_points.pop(pe.coupon_id)
+                points = coupon_points.pop(pe.coupon_id)
+                pe.points = points
+                pe.points_issued = points
         if coupon_points:
             self.sudo().with_context(tracking_disable=True).write({
                 'coupon_point_ids': [(0, 0, {
                     'coupon_id': coupon.id,
+                    'points_balanced': coupon.points,
+                    'points_issued': points,
                     'points': points,
                 }) for coupon, points in coupon_points.items()]
             })
@@ -671,11 +678,6 @@ class SaleOrder(models.Model):
         elif self._get_real_points_for_coupon(coupon) < reward.required_points:
             return {'error': _('The coupon does not have enough points for the selected reward.')}
         reward_vals = self._get_reward_line_values(reward, coupon, **kwargs)
-
-
-
-
-
         self._write_vals_from_reward_vals(reward_vals, old_reward_lines)
         return {}
 

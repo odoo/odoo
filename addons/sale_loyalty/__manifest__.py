@@ -26,5 +26,10 @@
         'views/res_partner_views.xml',
         'views/sale_loyalty_menus.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'sale_loyalty/static/src/components/**/*',
+        ],
+    },
     'license': 'LGPL-3',
 }

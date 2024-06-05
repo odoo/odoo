@@ -28,6 +28,16 @@ class SaleLoyaltyHistory(models.Model):
     reward_id = fields.Many2one(comodel_name='loyalty.reward')
     reward_type = fields.Selection(related='reward_id.reward_type')
 
+    # def __iadd__(self, other):
+    #     print("AHAHHAHAHHAHAHAHAHA"*32)
+    #     # TO ADD the new transaction at the start of the history (order: newest to oldest)
+    #     return other.__add__(self)
+
+    # def __add__(self, other):
+    #     print("RRRRRRRRRRRRRRRRRRRRRRR"*32)
+    #     # TO ADD the new transaction at the start of the history (order: newest to oldest)
+    #     return other.concat(self)
+
     def _float_to_display(self, value):
         for transaction in self:
             transaction[f'{value}_display'] = transaction.coupon_id._format_points(
@@ -45,7 +55,6 @@ class SaleLoyaltyHistory(models.Model):
     @api.depends('new_balance')
     def _compute_new_balance_display(self):
         self._float_to_display('new_balance')
-
 
     # TODO ASK: ADD a line in the history for creation
     date = fields.Datetime(compute='_compute_date', store=True)
