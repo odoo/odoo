@@ -47,7 +47,7 @@
                      t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id">
-                    <table class="din_company_info table-borderless" t-if="not skip_headers">
+                    <table class="din_company_info table-borderless">
                         <tr>
                             <td>
                                 <div class="address">
@@ -94,7 +94,7 @@
                             <t t-out="din5008_address_block"/>
                         </t>
                     </table>
-                    <h2 t-if="not skip_headers">
+                    <h2>
                         <span t-if="not o and not docs">Invoice</span>
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />

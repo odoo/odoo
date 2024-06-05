@@ -4,5 +4,12 @@
         <xpath expr="//t[@t-set='show_qr']" position="attributes">
             <attribute name="t-value" add="and o.qr_code_method != 'ch_qr'" separator=" "/>
         </xpath>
+        <xpath expr="//div[hasclass('main_body')]" position="after">
+            <div t-if="not o.l10n_ch_is_qr_valid" class="oe_structure"/>
+            <div t-else="">
+                <div style="page-break-after: always"/>
+                <br/>
+            </div>
+        </xpath>
     </template>
 </odoo>
