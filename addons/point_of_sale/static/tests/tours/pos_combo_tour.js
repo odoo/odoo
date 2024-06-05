@@ -79,3 +79,22 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             // the split screen is tested in `pos_restaurant`
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosComboPriceCheckTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Desk Combo"),
+            ProductScreen.selectedOrderlineHas("Desk Combo"),
+            ProductScreen.clickOrderline("Desk Organizer"),
+            ProductScreen.selectedOrderlineHas("Desk Organizer", "1.0", "4.45"),
+            ProductScreen.clickOrderline("Desk Pad"),
+            ProductScreen.selectedOrderlineHas("Desk Pad", "1.0", "1.59"),
+            ProductScreen.clickOrderline("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.0", "0.96"),
+            ProductScreen.totalAmountIs("7.00"),
+            ProductScreen.clickPayButton(),
+        ].flat(),
+});

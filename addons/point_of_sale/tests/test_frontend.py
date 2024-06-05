@@ -1267,6 +1267,34 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
 
+    def test_pos_combo_price(self):
+        """ Check that the combo has the expected price """
+        self.desk_organizer.write({"lst_price": 7})
+        self.desk_pad.write({"lst_price": 2.5})
+        self.whiteboard_pen.write({"lst_price": 1.5})
+
+        combo_lines = [self.env["pos.combo.line"].create({"product_id": product.id, "combo_price": 0})
+                       for product in (self.desk_organizer, self.desk_pad, self.whiteboard_pen)]
+        combos = [self.env["pos.combo"].create({"name": combo_line.product_id.name, "combo_line_ids": [(6, 0, [combo_line.id])]})
+                  for combo_line in combo_lines]
+
+        self.env["product.product"].create(
+            {
+                "available_in_pos": True,
+                "list_price": 7,
+                "name": "Desk Combo",
+                "type": "combo",
+                "taxes_id": False,
+                "categ_id": self.env.ref("product.product_category_1").id,
+                "combo_ids": [
+                    (6, 0, [combo.id for combo in combos])
+                ],
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'PosComboPriceCheckTour', login="pos_user")
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
