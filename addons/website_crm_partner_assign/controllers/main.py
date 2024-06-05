@@ -106,8 +106,8 @@ class WebsiteAccount(CustomerPortal):
             'overdue': {'label': _('Late Activities'), 'domain': [('activity_date_deadline', '<', today)]},
             'today': {'label': _('Today Activities'), 'domain': [('activity_date_deadline', '=', today)]},
             'future': {'label': _('Future Activities'), 'domain': [('activity_date_deadline', '>', today)]},
-            'won': {'label': _('Won'), 'domain': [('is_won', '=', True)]},
-            'lost': {'label': _('Lost'), 'domain': [('is_lost', '=', True)]},
+            'won': {'label': _('Won'), 'domain': [('won_status', '=', 'won')]},
+            'lost': {'label': _('Lost'), 'domain': [('won_status', '=', 'lost')]},
         }
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
