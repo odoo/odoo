@@ -44,6 +44,7 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
         if '/proxy_rpc_call/v1/get_favorite_institutions' in r.url:
             r = Response()
             r.status_code = 200
+            r.json = lambda: {'result': {}}
             return r
         return super()._request_handler(s, r, **kw)
 
