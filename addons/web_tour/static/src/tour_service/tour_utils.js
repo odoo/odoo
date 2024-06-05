@@ -532,7 +532,7 @@ export const stepUtils = {
             extra_trigger: extra_trigger,
             auto: true,
             run: (actions) => {
-                const more = hoot.queryOne(".o-form-buttonbox .o_button_more");
+                const more = hoot.queryFirst(".o-form-buttonbox .o_button_more");
                 if (more) {
                     hoot.click(more);
                 }
@@ -598,7 +598,7 @@ export const stepUtils = {
                 trigger: ".o_statusbar_buttons",
                 extra_trigger: extraTrigger,
                 run: (actions) => {
-                    const node = hoot.queryOne(
+                    const node = hoot.queryFirst(
                         ".o_statusbar_buttons .btn.dropdown-toggle:contains(Action)"
                     );
                     if (node) {
