@@ -1958,7 +1958,7 @@ export class Order extends PosModel {
                     .digits
             );
             remainingTotal -= priceUnit;
-            if (comboLine == childLineConf[childLineConf.length - 1]) {
+            if (comboLine.id == childLineConf[childLineConf.length - 1].combo_line_id.id) {
                 priceUnit += remainingTotal;
             }
             const attribute_value_ids = comboLine.configuration?.attribute_value_ids;
