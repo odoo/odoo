@@ -1,12 +1,13 @@
+import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
+import { getActiveActions } from "@web/views/utils";
 import { Widget } from "@web/views/widgets/widget";
-import { archParseBoolean, getActiveActions } from "@web/views/utils";
 
 export class FormArchParser {
     parse(xmlDoc, models, modelName) {
         const jsClass = xmlDoc.getAttribute("js_class");
-        const disableAutofocus = archParseBoolean(xmlDoc.getAttribute("disable_autofocus") || "");
+        const disableAutofocus = exprToBoolean(xmlDoc.getAttribute("disable_autofocus") || "");
         const activeActions = getActiveActions(xmlDoc);
         const fieldNodes = {};
         const widgetNodes = {};
@@ -22,7 +23,7 @@ export class FormArchParser {
                 const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
                 fieldNodes[fieldId] = fieldInfo;
                 node.setAttribute("field_id", fieldId);
-                if (archParseBoolean(node.getAttribute("default_focus") || "")) {
+                if (exprToBoolean(node.getAttribute("default_focus") || "")) {
                     autofocusFieldId = fieldId;
                 }
                 if (fieldInfo.type === "properties") {

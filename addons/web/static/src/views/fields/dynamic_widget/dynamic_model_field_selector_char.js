@@ -1,9 +1,9 @@
-import { CharField, charField } from "@web/views/fields/char/char_field";
 import { registry } from "@web/core/registry";
-import { archParseBoolean } from "@web/views/utils";
+import { exprToBoolean } from "@web/core/utils/strings";
+import { CharField, charField } from "@web/views/fields/char/char_field";
 
-import { DynamicModelFieldSelector } from "./dynamic_model_field_selector";
 import { _t } from "@web/core/l10n/translation";
+import { DynamicModelFieldSelector } from "./dynamic_model_field_selector";
 
 export class DynamicModelFieldSelectorChar extends CharField {
     static template = "web.DynamicModelFieldSelectorChar";
@@ -81,7 +81,7 @@ export const dynamicModelFieldSelectorChar = {
     extractProps({ options }, dynamicInfo) {
         return {
             followRelations: options.follow_relations ?? true,
-            onlySearchable: archParseBoolean(options.only_searchable),
+            onlySearchable: exprToBoolean(options.only_searchable),
             resModel: options.model,
         };
     },

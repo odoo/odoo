@@ -1,8 +1,9 @@
+import { exprToBoolean } from "@web/core/utils/strings";
 import { extractAttributes, visitXML } from "@web/core/utils/xml";
 import { stringToOrderBy } from "@web/search/utils/order_by";
 import { Field } from "@web/views/fields/field";
+import { getActiveActions, processButton } from "@web/views/utils";
 import { Widget } from "@web/views/widgets/widget";
-import { archParseBoolean, getActiveActions, processButton } from "@web/views/utils";
 
 /**
  * NOTE ON 't-name="kanban-box"':
@@ -29,20 +30,20 @@ export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {
         const fields = models[modelName].fields;
         const className = xmlDoc.getAttribute("class") || null;
-        const canOpenRecords = archParseBoolean(xmlDoc.getAttribute("can_open"), true);
+        const canOpenRecords = exprToBoolean(xmlDoc.getAttribute("can_open"), true);
         let defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
         const countLimit = xmlDoc.getAttribute("count_limit");
-        const recordsDraggable = archParseBoolean(xmlDoc.getAttribute("records_draggable"), true);
-        const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
+        const recordsDraggable = exprToBoolean(xmlDoc.getAttribute("records_draggable"), true);
+        const groupsDraggable = exprToBoolean(xmlDoc.getAttribute("groups_draggable"), true);
         const activeActions = getActiveActions(xmlDoc);
-        activeActions.archiveGroup = archParseBoolean(xmlDoc.getAttribute("archivable"), true);
-        activeActions.createGroup = archParseBoolean(xmlDoc.getAttribute("group_create"), true);
-        activeActions.deleteGroup = archParseBoolean(xmlDoc.getAttribute("group_delete"), true);
-        activeActions.editGroup = archParseBoolean(xmlDoc.getAttribute("group_edit"), true);
+        activeActions.archiveGroup = exprToBoolean(xmlDoc.getAttribute("archivable"), true);
+        activeActions.createGroup = exprToBoolean(xmlDoc.getAttribute("group_create"), true);
+        activeActions.deleteGroup = exprToBoolean(xmlDoc.getAttribute("group_delete"), true);
+        activeActions.editGroup = exprToBoolean(xmlDoc.getAttribute("group_edit"), true);
         activeActions.quickCreate =
-            activeActions.create && archParseBoolean(xmlDoc.getAttribute("quick_create"), true);
+            activeActions.create && exprToBoolean(xmlDoc.getAttribute("quick_create"), true);
         const onCreate = xmlDoc.getAttribute("on_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltipInfo = {};

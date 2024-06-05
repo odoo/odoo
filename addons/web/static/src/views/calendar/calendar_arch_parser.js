@@ -1,8 +1,8 @@
 import { browser } from "@web/core/browser/browser";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
-import { archParseBoolean } from "@web/views/utils";
 
 const FIELD_ATTRIBUTE_NAMES = [
     "date_start",
@@ -79,13 +79,13 @@ export class CalendarArchParser {
                         }
                     }
                     if (node.hasAttribute("create")) {
-                        canCreate = archParseBoolean(node.getAttribute("create"), true);
+                        canCreate = exprToBoolean(node.getAttribute("create"), true);
                     }
                     if (node.hasAttribute("delete")) {
-                        canDelete = archParseBoolean(node.getAttribute("delete"), true);
+                        canDelete = exprToBoolean(node.getAttribute("delete"), true);
                     }
                     if (node.hasAttribute("quick_create")) {
-                        quickCreate = archParseBoolean(node.getAttribute("quick_create"), true);
+                        quickCreate = exprToBoolean(node.getAttribute("quick_create"), true);
                         if (quickCreate && node.hasAttribute("quick_create_view_id")) {
                             quickCreateViewId = parseInt(
                                 node.getAttribute("quick_create_view_id"),
@@ -94,16 +94,16 @@ export class CalendarArchParser {
                         }
                     }
                     if (node.hasAttribute("event_open_popup")) {
-                        hasEditDialog = archParseBoolean(node.getAttribute("event_open_popup"));
+                        hasEditDialog = exprToBoolean(node.getAttribute("event_open_popup"));
                     }
                     if (node.hasAttribute("show_unusual_days")) {
-                        showUnusualDays = archParseBoolean(node.getAttribute("show_unusual_days"));
+                        showUnusualDays = exprToBoolean(node.getAttribute("show_unusual_days"));
                     }
                     if (node.hasAttribute("hide_date")) {
-                        isDateHidden = archParseBoolean(node.getAttribute("hide_date"));
+                        isDateHidden = exprToBoolean(node.getAttribute("hide_date"));
                     }
                     if (node.hasAttribute("hide_time")) {
-                        isTimeHidden = archParseBoolean(node.getAttribute("hide_time"));
+                        isTimeHidden = exprToBoolean(node.getAttribute("hide_time"));
                     }
                     if (node.hasAttribute("form_view_id")) {
                         formViewId = parseInt(node.getAttribute("form_view_id"), 10);

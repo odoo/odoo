@@ -1,9 +1,10 @@
 import { Domain } from "@web/core/domain";
-import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { getFieldContext } from "@web/model/relational_model/utils";
-import { archParseBoolean, getClassNameFromDecoration, X2M_TYPES } from "@web/views/utils";
+import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
@@ -211,11 +212,11 @@ export class Field extends Component {
             if (["context", "string", "help", "domain"].includes(name)) {
                 fieldInfo[name] = value;
             } else if (name === "on_change") {
-                fieldInfo.onChange = archParseBoolean(value);
+                fieldInfo.onChange = exprToBoolean(value);
             } else if (name === "options") {
                 fieldInfo.options = evaluateExpr(value);
             } else if (name === "force_save") {
-                fieldInfo.forceSave = archParseBoolean(value);
+                fieldInfo.forceSave = exprToBoolean(value);
             } else if (name.startsWith("decoration-")) {
                 // prepare field decorations
                 fieldInfo.decorations[name.replace("decoration-", "")] = value;
