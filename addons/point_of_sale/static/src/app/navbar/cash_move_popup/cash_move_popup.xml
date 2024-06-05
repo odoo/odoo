@@ -24,14 +24,16 @@
                 <label for="reason">Reason</label>
             </div>
             <t t-set-slot="footer">
-                <button class="button confirm btn btn-lg btn-primary"
-                    t-on-click="confirm"
-                    t-att-disabled="!env.utils.isValidFloat(state.amount)">
-                    Confirm <span t-esc="format(state.amount)"/>
-                </button>
-                <button class="button cancel btn btn-lg btn-secondary" t-on-click="props.close">
-                    Discard
-                </button>
+                <div class="d-flex w-100 justify-content-start gap-2">
+                    <button class="button confirm btn btn-lg btn-primary"
+                        t-on-click="confirm"
+                        t-att-disabled="!env.utils.isValidFloat(state.amount)">
+                        Confirm <span t-esc="format(state.amount)"/>
+                    </button>
+                    <button class="button cancel btn btn-lg btn-secondary" t-on-click="props.close">
+                        Discard
+                    </button>
+                </div>
             </t>
         </Dialog>
     </t>
