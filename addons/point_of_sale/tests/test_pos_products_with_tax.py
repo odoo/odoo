@@ -5,6 +5,9 @@ from odoo import tools
 
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.tests.common import Form
+from odoo.exceptions import UserError
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSProductsWithTax(TestPoSCommon):
@@ -678,3 +681,20 @@ class TestPoSProductsWithTax(TestPoSCommon):
             next(iter(filter(lambda p: p['id'] == product_no_tax.id, pos_data['product.product'])))['taxes_id'],
             []
         )
+
+    def test_combo_product_variant_error(self):
+        """This tests make sure that product containing variants cannot change type to combo"""
+
+        size_attribute = self.env['product.attribute'].create({'name': 'Size'})
+        a1 = self.env['product.attribute.value'].create({'name': 'V0hFCg==', 'attribute_id': size_attribute.id})
+        self.variant_product = self.env["product.product"].create(
+            {
+                "name": "Test product",
+                "attribute_line_ids": [(0, 0, {
+                    "attribute_id": size_attribute.id,
+                    "value_ids": [(6, 0, [a1.id])]
+                })],
+            })
+        with self.assertRaises(UserError):
+            with Form(self.variant_product.product_tmpl_id) as product:
+                product.detailed_type = "combo"
