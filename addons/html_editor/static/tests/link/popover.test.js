@@ -266,8 +266,7 @@ describe("Link formatting in the popover", () => {
         await waitFor(".o-we-linkpopover");
         click(".o_we_edit_link");
         await animationFrame();
-        await waitFor("#link-preview");
-        const linkPreviewEl = queryOne("#link-preview");
+        const linkPreviewEl = await waitFor("#link-preview");
         expect(linkPreviewEl).toHaveClass([
             "btn",
             "btn-outline-primary",
@@ -286,8 +285,7 @@ describe("Link formatting in the popover", () => {
         click(".o_we_edit_link");
         await animationFrame();
 
-        await waitFor("#link-preview");
-        const linkPreviewEl = queryOne("#link-preview");
+        const linkPreviewEl = await waitFor("#link-preview");
         expect(linkPreviewEl).toHaveClass([
             "btn",
             "rounded-circle",
@@ -307,7 +305,7 @@ describe("Link formatting in the popover", () => {
         await animationFrame();
         expect(linkPreviewEl).toHaveClass(["btn", "btn-primary", "rounded-circle", "btn-lg"]);
     });
-    test("after applying the link format, the link's formate should be updated", async () => {
+    test("after applying the link format, the link's format should be updated", async () => {
         const { el } = await setupEditor('<p><a href="http://test.com/">link2[]</a></p>');
         await waitFor(".o-we-linkpopover");
         click(".o_we_edit_link");
