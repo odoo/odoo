@@ -342,3 +342,16 @@ export function isEmail(value) {
 export function isNumeric(value) {
     return Boolean(value?.match(/^\d+$/));
 }
+
+/**
+ * Parse the string to check if the value is true or false
+ * If the string is empty, 0, False or false it's considered as false
+ * The rest is considered as true
+ *
+ * @param {string} str
+ * @param {boolean} [trueIfEmpty=false]
+ * @returns {boolean}
+ */
+export function exprToBoolean(str, trueIfEmpty = false) {
+    return str ? !/^false|0$/i.test(str) : trueIfEmpty;
+}

@@ -3,7 +3,8 @@
 import { visitXML } from "@web/core/utils/xml";
 import { stringToOrderBy } from "@web/search/utils/order_by";
 import { Field } from "@web/views/fields/field";
-import { archParseBoolean, getActiveActions } from "@web/views/utils";
+import { getActiveActions } from "@web/views/utils";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 export class HierarchyArchParser {
     parse(xmlDoc, models, modelName) {
@@ -49,7 +50,7 @@ export class HierarchyArchParser {
                     archInfo.childFieldName = childFieldName;
                 }
                 if (node.hasAttribute("draggable")) {
-                    archInfo.draggable = archParseBoolean(node.getAttribute("draggable"));
+                    archInfo.draggable = exprToBoolean(node.getAttribute("draggable"));
                 }
                 if (node.hasAttribute("icon")) {
                     archInfo.icon = node.getAttribute("icon");

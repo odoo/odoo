@@ -11,7 +11,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
-import { archParseBoolean } from "@web/views/utils";
+import { exprToBoolean } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 
 /**
@@ -125,8 +125,16 @@ export class DateTimeField extends Component {
                     }
                 } else {
                     // If both startDateField and endDateField are set, check if they haven't changed
-                    if (areDatesEqual(toUpdate[this.startDateField], this.props.record.data[this.startDateField]) &&
-                        areDatesEqual(toUpdate[this.endDateField], this.props.record.data[this.endDateField])) {
+                    if (
+                        areDatesEqual(
+                            toUpdate[this.startDateField],
+                            this.props.record.data[this.startDateField]
+                        ) &&
+                        areDatesEqual(
+                            toUpdate[this.endDateField],
+                            this.props.record.data[this.endDateField]
+                        )
+                    ) {
                         delete toUpdate[this.startDateField];
                         delete toUpdate[this.endDateField];
                     }
@@ -295,12 +303,12 @@ export const dateField = {
         endDateField: options[END_DATE_FIELD_OPTION],
         maxDate: options.max_date,
         minDate: options.min_date,
-        alwaysRange: archParseBoolean(options.always_range),
+        alwaysRange: exprToBoolean(options.always_range),
         placeholder: attrs.placeholder,
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
-        warnFuture: archParseBoolean(options.warn_future),
+        warnFuture: exprToBoolean(options.warn_future),
     }),
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
