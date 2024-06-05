@@ -66,8 +66,21 @@ export class AttendeeCalendarModel extends CalendarModel {
     }
 
     /**
+     * Load the filter section and add both 'user' and 'everybody' filters to the context.
      * @override
      */
+    async loadFilterSection(fieldName, filterInfo, previousSection) {
+        let result = await super.loadFilterSection(fieldName, filterInfo, previousSection);
+        if (result?.filters) {
+            user.updateContext({
+                calendar_filters: {
+                    all: result?.filters?.find((f) => f.type == "all")?.active ?? false,
+                    user: result?.filters?.find((f) => f.type == "user")?.active ?? false,
+                }
+            });
+        }
+        return result;
+    }
 
     /**
      * @override
