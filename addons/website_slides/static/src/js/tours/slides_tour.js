@@ -46,7 +46,7 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     position: 'bottom',
     width: 260,
 }, {
-    trigger: ':iframe a.btn-primary.o_wslides_js_slide_upload',
+    trigger: '.o_iframe[is-ready="true"]:iframe a.btn-primary.o_wslides_js_slide_upload',
     content: markup(_t("Your first section is created, now it's time to add lessons to your course. Click on <b>Add Content</b> to upload a document, create an article or link a video.")),
     position: 'bottom',
 }, {
@@ -100,11 +100,11 @@ wTourUtils.registerWebsitePreviewTour('slides_tour', {
     position: 'left',
     width: 170,
 }, {
-    trigger: ':iframe li.breadcrumb-item:nth-child(2)',
+    trigger: '.o_iframe[is-ready="true"]:iframe li.breadcrumb-item:nth-child(2)',
     content: markup(_t("Click on your <b>Course</b> to go back to the table of content.")),
     position: 'top',
 }, {
-    trigger: '.o_menu_systray_item a .o_switch',
+    trigger: '.o_menu_systray_item.o_website_publish_container a',
     content: markup(_t("Once you're done, don't forget to <b>Publish</b> your course.")),
     position: 'bottom',
 }, {
