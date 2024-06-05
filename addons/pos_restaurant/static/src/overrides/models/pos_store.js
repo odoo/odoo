@@ -242,7 +242,20 @@ patch(PosStore.prototype, {
                     floor.table_ids.map((table) => table.id)
                 )
             );
+<<<<<<< saas-17.4
             return await this.syncAllOrders({ table_ids: tableIds });
+||||||| 37d2041b2f13d2f7bfacbbc03515c4b868d87de8
+            await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
+            const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
+            await this._loadMissingProducts(ordersJsons);
+            return ordersJsons;
+=======
+            await this._syncTableOrdersToServer(); // to prevent losing the transferred orders
+            const ordersJsons = await this._getTableOrdersFromServer(tableIds); // get all orders
+            await this._loadMissingProducts(ordersJsons);
+            await this._loadMissingPartners(ordersJsons);
+            return ordersJsons;
+>>>>>>> ced11cd78fff3849a542763389eeaa966284f335
         } else {
             return await super.getServerOrders();
         }
