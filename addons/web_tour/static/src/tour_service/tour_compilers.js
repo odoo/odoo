@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { _legacyIsVisible, isVisible } from "@web/core/utils/ui";
-import { omit, pick } from "@web/core/utils/objects";
+import { omit } from "@web/core/utils/objects";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
@@ -74,13 +74,17 @@ function tryFindTrigger(tour, step, elKey) {
 function findStepTriggers(tour, step) {
     const triggerEl = tryFindTrigger(tour, step, "trigger");
     const altEl = tryFindTrigger(tour, step, "alt_trigger");
+    const extraEl = tryFindTrigger(tour, step, "extra_trigger");
     const skipEl = tryFindTrigger(tour, step, "skip_trigger");
+    step.state = step.state || {};
+    step.state.triggerFound = !!triggerEl;
+    step.state.altTriggerFound = !!altEl;
+    step.state.extraTriggerFound = step.extra_trigger ? !!extraEl : true;
+    step.state.skipTriggerFound = !!skipEl;
     // `extraTriggerOkay` should be true when `step.extra_trigger` is undefined.
     // No need for it to be in the modal.
-    const extraTriggerOkay = step.extra_trigger
-        ? tryFindTrigger(tour, step, "extra_trigger")
-        : true;
-    return { triggerEl, altEl, extraTriggerOkay, skipEl };
+    const extraTriggerOkay = step.state.extraTriggerFound;
+    return { triggerEl, altEl, extraEl, skipEl, extraTriggerOkay };
 }
 
 /**
@@ -99,10 +103,14 @@ function describeFailedStepSimple(tour, step) {
 
 function describeWhyStepFailed(step) {
     const stepState = step.state || {};
-    if (!stepState.stepElFound) {
-        return `The error appears to be that one or more elements in the following list cannot be found in DOM.\n ${JSON.stringify(
-            pick(step, "trigger", "extra_trigger", "alt_trigger", "skip_trigger")
-        )}`;
+    if (step.skip_trigger && !stepState.skipTriggerFound) {
+        return `The cause is that skip trigger (${step.skip_trigger}) element cannot be found in DOM.`;
+    } else if (step.extra_trigger && !stepState.extraTriggerFound) {
+        return `The cause is that extra trigger (${step.extra_trigger}) element cannot be found in DOM.`;
+    } else if (!stepState.triggerFound) {
+        return `The cause is that trigger (${step.trigger}) element cannot be found in DOM.`;
+    } else if (step.alt_trigger && !stepState.altTriggerFound) {
+        return `The cause is that alt(ernative) trigger (${step.alt_trigger}) element cannot be found in DOM.`;
     } else if (!stepState.isVisible) {
         return "Element has been found but isn't displayed. (Use 'step.allowInvisible: true,' if you want to skip this check)";
     } else if (!stepState.isEnabled) {
@@ -110,7 +118,7 @@ function describeWhyStepFailed(step) {
     } else if (stepState.isBlocked) {
         return "Element has been found but DOM is blocked by UI.";
     } else if (!stepState.hasRun) {
-        return `Element has been found. The error seems to be in run()`;
+        return `Element has been found. The error seems to be with step.run`;
     }
     return "";
 }
@@ -182,7 +190,6 @@ function getAnchorEl(el, consumeEvent) {
 function canContinue(el, step) {
     step.state = step.state || {};
     const state = step.state;
-    state.stepElFound = true;
     const rootNode = el.getRootNode();
     state.isInDoc =
         rootNode instanceof ShadowRoot
@@ -403,7 +410,8 @@ export function compileStepAuto(stepIndex, step, options) {
 
                 if (skipEl) {
                     stepEl = skipEl;
-                    step.isCheck = true;
+                    step.run = () => {};
+                    step.allowDisabled = true;
                 }
                 // "isCheck: true" = no action to run and accept disabled elements.
                 if (step.isCheck) {
@@ -427,6 +435,10 @@ export function compileStepAuto(stepIndex, step, options) {
                     pointer.hide();
                 }
 
+                if (!("run" in step)) {
+                    throwError(tour, step, ["The step must have a run key `run() {}`."]);
+                }
+
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
                 const actionHelper = new RunningTourActionHelper(stepEl);
 
@@ -447,13 +459,6 @@ export function compileStepAuto(stepIndex, step, options) {
                         await tryToDoAction(() =>
                             actionHelper[m.groups?.action](m.groups?.arguments)
                         );
-                    }
-                } else {
-                    if (stepIndex === tour.steps.length - 1) {
-                        console.warn("Tour %s: ignoring action (auto) of last step", tour.name);
-                        step.state.hasRun = true;
-                    } else {
-                        await tryToDoAction(() => actionHelper.click());
                     }
                 }
                 return result;

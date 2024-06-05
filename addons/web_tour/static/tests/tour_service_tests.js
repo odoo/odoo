@@ -771,7 +771,7 @@ QUnit.module("Tour service", (hooks) => {
   "run": "click"
 },`;
         const expectedError = [
-            `error: Tour tour1 failed at step content (trigger: .wrong_selector). The error appears to be that one or more elements in the following list cannot be found in DOM.\n {"trigger":".wrong_selector"}`,
+            `error: Tour tour1 failed at step content (trigger: .wrong_selector). The cause is that trigger (.wrong_selector) element cannot be found in DOM.`,
         ];
         assert.verifySteps([expectedWarning, ...expectedError]);
     });
@@ -826,7 +826,7 @@ QUnit.module("Tour service", (hooks) => {
         await mock.advanceTime(750);
 
         const expectedError = [
-            "error: Tour tour2 failed at step .button1. Element has been found. The error seems to be in run()",
+            "error: Tour tour2 failed at step .button1. Element has been found. The error seems to be with step.run",
             "error: Cannot read properties of null (reading 'click')",
             "error: tour not succeeded",
         ];

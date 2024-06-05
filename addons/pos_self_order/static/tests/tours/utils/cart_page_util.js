@@ -2,6 +2,7 @@ export function clickBack() {
     return {
         content: `Click on back button`,
         trigger: `.btn.btn-back`,
+        run: "click",
     };
 }
 
@@ -15,6 +16,7 @@ export function selectTable(table) {
         {
             content: `Click on 'Confirm' button`,
             trigger: `.self_order_popup_table .btn:contains('Confirm')`,
+            run: "click",
         },
     ];
 }
@@ -23,6 +25,7 @@ export function checkProduct(name, price, quantity) {
     return {
         content: `Check product card with ${name} and ${price}`,
         trigger: `.product-card-item:has(strong:contains("${name}")):has(div:contains("${quantity}")):has(div .o-so-tabular-nums:contains("${price}"))`,
+        run: "click",
     };
 }
 
@@ -41,6 +44,7 @@ export function checkAttribute(productName, attributes) {
     return {
         content: `Check product card with ${productName} and ${attributeStringReadable}`,
         trigger: `.product-card-item div:contains("${productName}") + div ${attributeString}`,
+        run: "click",
     };
 }
 
@@ -59,6 +63,7 @@ export function checkCombo(comboName, products) {
         steps.push({
             content: `Check combo ${comboName}`,
             trigger: step,
+            run: "click",
         });
     }
 

@@ -21,7 +21,8 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     auto: true,
     run: "click",
 }, {
-    trigger: "a:contains('Add a product')"
+    trigger: "a:contains('Add a product')",
+    run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: "edit Matrix",

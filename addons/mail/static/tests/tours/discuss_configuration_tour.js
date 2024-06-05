@@ -30,18 +30,22 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
         {
             trigger: "button:contains('All Messages')",
             content: _t("Server notification settings"),
+            run: "click",
         },
         {
             trigger: "button:contains('Mentions Only')",
             content: _t("Server notification settings"),
+            run: "click",
         },
         {
             trigger: "button:contains('Nothing')",
             content: _t("Server notification settings"),
+            run: "click",
         },
         {
             trigger: ".modal-header button[aria-label='Close']",
             content: _t("Click to close"),
+            run: "click",
         },
     ],
 });

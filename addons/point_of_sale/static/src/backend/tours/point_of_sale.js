@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
             width: 215,
             position: "right",
             edition: "community",
+            run: "click",
         },
         {
             trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
@@ -22,6 +23,7 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
             width: 215,
             position: "bottom",
             edition: "enterprise",
+            run: "click",
         },
         {
             trigger: ".o_pos_kanban button.oe_kanban_action_button",
@@ -31,6 +33,7 @@ registry.category("web_tour.tours").add("point_of_sale_tour", {
                 )
             ),
             position: "bottom",
+            run: "click",
         },
     ],
 });

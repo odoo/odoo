@@ -8,6 +8,7 @@ function fillSelect2(inputID, search) {
         {
             content: "Click select2 form item",
             trigger: `.o_website_links_utm_forms div.select2-container#s2id_${inputID} > .select2-choice`,
+            run: "click",
         },
         {
             content: "Enter select2 search query",
@@ -17,6 +18,7 @@ function fillSelect2(inputID, search) {
         {
             content: "Select found select2 item",
             trigger: `.select2-drop li:only-child .select2-match:contains("/^${search}$/")`,
+            run: "click",
         },
         {
             content: "Check that select2 is properly filled",
