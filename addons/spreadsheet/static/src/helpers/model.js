@@ -9,7 +9,11 @@ import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 
 const { formatValue, isDefined, toCartesian } = helpers;
-import { isMarkdownViewUrl, isMarkdownIrMenuIdUrl, isIrMenuXmlUrl } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
+import {
+    isMarkdownViewUrl,
+    isMarkdownIrMenuIdUrl,
+    isIrMenuXmlUrl,
+} from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -81,7 +85,11 @@ export async function waitForDataLoaded(model) {
 
 function containsLinkToOdoo(link) {
     if (link && link.url) {
-        return isMarkdownViewUrl(link.url) || isIrMenuXmlUrl(link.url) || isMarkdownIrMenuIdUrl(link.url);
+        return (
+            isMarkdownViewUrl(link.url) ||
+            isIrMenuXmlUrl(link.url) ||
+            isMarkdownIrMenuIdUrl(link.url)
+        );
     }
 }
 
@@ -141,6 +149,7 @@ function exportGlobalFiltersToSheet(model, data) {
             .flat()
             .filter(isDefined)
             .map(({ value, format }) => formatValue(value, { format, locale }))
+            .filter((formattedValue) =>  formattedValue !== "")
             .join(", ");
     }
 }
