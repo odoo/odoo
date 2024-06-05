@@ -108,8 +108,8 @@ class WebsiteAccount(CustomerPortal):
             'week': {'label': _('This Week Activities'),
                      'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]},
             'overdue': {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]},
-            'won': {'label': _('Won'), 'domain': [('is_won', '=', True)]},
-            'lost': {'label': _('Lost'), 'domain': [('is_lost', '=', True)]},
+            'won': {'label': _('Won'), 'domain': [('won_status', '=', 'won')]},
+            'lost': {'label': _('Lost'), 'domain': [('won_status', '=', 'lost')]},
         }
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
