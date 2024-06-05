@@ -131,7 +131,9 @@
                 <MultiProductAttribute t-elif="attribute.display_type === 'multi'" attributeLine="attributeLine"/>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+                <div class="d-flex w-100 justify-content-start gap-2">
+                    <button class="btn btn-primary o-default-button" t-on-click="confirm">Ok</button>
+                </div>
             </t>
         </Dialog>
     </t>
