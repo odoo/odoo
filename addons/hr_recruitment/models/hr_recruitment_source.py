@@ -7,14 +7,16 @@ from odoo import fields, models
 class HrRecruitmentSource(models.Model):
     _name = 'hr.recruitment.source'
     _description = "Source of Applicants"
-    _inherit = ['utm.source.mixin']
+    _rec_name = "source_id"
 
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     has_domain = fields.Char(compute='_compute_has_domain')
     job_id = fields.Many2one('hr.job', "Job", index=True, ondelete='cascade')
     alias_id = fields.Many2one('mail.alias', "Alias ID", ondelete='restrict')
-    medium_id = fields.Many2one('utm.medium', default=lambda self: self.env['utm.mixin']._utm_ref('utm.utm_medium_website'))
+    medium_id = fields.Many2one('utm.medium', default=lambda self: self.env['utm.mixin']._utm_ref('utm.utm_medium_social_media'))
     campaign_id = fields.Many2one('utm.campaign')
+    source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='restrict',
+                                copy=False, default=lambda self: self.env['utm.mixin']._utm_ref('utm.utm_source_linkedin'))
 
     def _compute_has_domain(self):
         for source in self:
