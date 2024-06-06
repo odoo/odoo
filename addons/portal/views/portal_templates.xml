@@ -432,7 +432,7 @@
             <div class="d-flex gap-2">
                 <img class="o_avatar o_portal_contact_img rounded" t-att-src="_contactAvatar" alt="Contact"/>
                 <div>
-                    <span class="d-block lh-1 mb-1" t-out="_contactName"/>
+                    <span t-attf-class="d-block lh-1 mb-1 {{ 'pt-1' if not _contactLink else '' }}" t-out="_contactName"/>
                     <a t-if="_contactLink" href="#discussion" class="d-flex align-items-center gap-2 small lh-1">Send message</a>
                 </div>
             </div>
