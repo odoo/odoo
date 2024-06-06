@@ -583,7 +583,8 @@ class HrAttendance(models.Model):
         }
 
     def _read_group_employee_id(self, resources, domain):
-        employee_domain = [
-            ('company_id', 'in', self.env.context.get('allowed_company_ids', [])),
-        ]
-        return self.env['hr.employee'].search(employee_domain)
+        user_domain = self.env.context.get('user_domain')
+        if not user_domain:
+            return self.env['hr.employee'].search([('company_id', 'in', self.env.context.get('allowed_company_ids', []))])
+        else:
+            return resources
