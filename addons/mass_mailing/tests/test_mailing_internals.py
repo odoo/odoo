@@ -21,7 +21,7 @@ from odoo.tools import mute_logger
 BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='
 
 
-@tagged('mass_mailing')
+@tagged("mass_mailing")
 class TestMassMailValues(MassMailCommon):
 
     @classmethod
@@ -421,6 +421,10 @@ class TestMassMailValues(MassMailCommon):
             activity.write({'res_id': 0})
             self.env.flush_all()
 
+
+@tagged("mass_mailing", "utm")
+class TestMassMailUTM(MassMailCommon):
+
     @freeze_time('2022-01-02')
     @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 2))
     @users('user_marketing')
@@ -431,6 +435,7 @@ class TestMassMailValues(MassMailCommon):
         that this generated name is unique.
         """
         mailing_0 = self.env['mailing.mailing'].create({'subject': 'First subject'})
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)')
 
         mailing_1, mailing_2, mailing_3, mailing_4, mailing_5, mailing_6 = self.env['mailing.mailing'].create([{
             'subject': 'First subject',
@@ -457,13 +462,20 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing_5.name, 'Mailing [2]')
         self.assertEqual(mailing_6.name, 'Second subject (Mass Mailing created on 2022-01-02)')
 
+        # should generate same name (coming from same subject)
         mailing_0.subject = 'First subject'
-        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02) [4]',
-            msg='The name must have been re-generated')
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
+            msg='The name should not be updated')
 
+        # take a (long) existing name -> should increment
         mailing_0.name = 'Second subject (Mass Mailing created on 2022-01-02)'
         self.assertEqual(mailing_0.name, 'Second subject (Mass Mailing created on 2022-01-02) [2]',
-            msg='The name must be unique')
+            msg='The name must be unique, it was already taken')
+
+        # back to first subject: not linked to any record so should take it back
+        mailing_0.subject = 'First subject'
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)',
+            msg='The name should be back to first one')
 
 
 @tagged('mass_mailing')
