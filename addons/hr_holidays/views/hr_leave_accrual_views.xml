@@ -51,6 +51,9 @@
                             <label for="yearly_day_display" string="on the" class="me-1"/>
                             <field name="yearly_day_display" required="1" style="width: 4rem"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
                         </div>
+                        <div name="allocation_start_date" invisible="frequency != 'allocation_start_date'">
+                            <field name="frequency" style="width: 10.5rem"/>
+                        </div>
                     </group>
                     <group name="maximum_leave">
                         <field name="cap_accrued_time" style="width: 9.35rem"/>
