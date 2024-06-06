@@ -724,7 +724,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 # If we found taxes with the correct amount, look for a tax line using it, and correct it as needed.
                 if taxes:
                     tax_total = float(amount.text)
-                    tax_line = invoice.line_ids.filtered(lambda line: line.tax_line_id in taxes)[:1]
+                    tax_line = invoice.line_ids.filtered(lambda line: line.tax_line_id in taxes, limit=1)
                     if tax_line:
                         sign = -1 if invoice.is_inbound(include_receipts=True) else 1
                         tax_line_amount = abs(tax_line.amount_currency)

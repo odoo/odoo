@@ -105,7 +105,7 @@ class AccountEdiFormat(models.Model):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
             recargo_tax = [t for t in taxes if t.l10n_es_type == 'recargo']
             if recargo_tax and taxes:
-                recargo_main_tax = taxes.filtered(lambda x: x.l10n_es_type in ('sujeto', 'sujeto_isp'))[:1]
+                recargo_main_tax = taxes.filtered(lambda x: x.l10n_es_type in ('sujeto', 'sujeto_isp'), limit=1)
                 if not recargo_tax_details.get(recargo_main_tax):
                     recargo_tax_details[recargo_main_tax] = [
                         x for x in tax_details['tax_details'].values()

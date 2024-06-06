@@ -175,8 +175,9 @@ class ProductFetchImageWizard(models.TransientModel):
             # p.image_fetch_pending needed for self.products_to_process's records that might already
             # have been processed but not yet removed from the list when called from
             # action_fetch_image.
-            lambda p: not p.image_1920 and p.barcode and p.image_fetch_pending
-        )[:limit]  # Apply the limit after the filter with self.products_to_process for more results
+            lambda p: not p.image_1920 and p.barcode and p.image_fetch_pending,
+            limit=limit,  # Apply the limit after the filter with self.products_to_process for more results
+        )
 
     def _process_products(self, products_to_process):
         """ Fetch an image from the Google Custom Search API for each product.

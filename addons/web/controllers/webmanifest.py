@@ -25,11 +25,11 @@ class WebManifest(http.Controller):
                                                          ('module', 'in', module_names)])
         shortcuts = []
         for module in module_ids:
-            data = datas.filtered(lambda res: res.module == module.name)
+            data = datas.filtered(lambda res: res.module == module.name, limit=1)
             if data:
                 shortcuts.append({
                     'name': module.display_name,
-                    'url': '/odoo?menu_id=%s' % data.mapped('res_id')[0],
+                    'url': '/odoo?menu_id=%s' % data.res_id,
                     'description': module.summary,
                     'icons': [{
                         'sizes': '100x100',

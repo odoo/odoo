@@ -139,9 +139,11 @@ class ResourceCalendar(models.Model):
     @api.constrains('attendance_ids')
     def _check_attendance_ids(self):
         for resource in self:
-            if (resource.two_weeks_calendar and
-                    resource.attendance_ids.filtered(lambda a: a.display_type == 'line_section') and
-                    not resource.attendance_ids.sorted('sequence')[0].display_type):
+            if (
+                resource.two_weeks_calendar
+                and any(a.display_type == 'line_section' for a in resource.attendance_ids)
+                and not resource.attendance_ids.sorted('sequence')[0].display_type
+            ):
                 raise ValidationError(_("In a calendar with 2 weeks mode, all periods need to be in the sections."))
 
     @api.depends('two_weeks_calendar')

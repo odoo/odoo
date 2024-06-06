@@ -45,12 +45,13 @@ class LivechatChatbotScriptController(http.Controller):
         # sudo: chatbot.script.step - visitor can access current step of the script
         if current_step := discuss_channel.sudo().chatbot_current_step_id:
             chatbot = current_step.chatbot_script_id
-            user_messages = discuss_channel.message_ids.filtered(
-                lambda message: message.author_id != chatbot.operator_partner_id
+            user_answer = (
+                discuss_channel.message_ids.sorted('id', reverse=True).filtered(
+                    lambda message: message.author_id != chatbot.operator_partner_id,
+                    limit=1,
+                )
+                or request.env['mail.message'].sudo()
             )
-            user_answer = request.env['mail.message'].sudo()
-            if user_messages:
-                user_answer = user_messages.sorted(lambda message: message.id)[-1]
             next_step = current_step._process_answer(discuss_channel, user_answer.body)
         elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id)
@@ -89,12 +90,12 @@ class LivechatChatbotScriptController(http.Controller):
 
         # sudo: chatbot.script - visitor can access chatbot script of their channel
         chatbot = discuss_channel.sudo().chatbot_current_step_id.chatbot_script_id
-        user_messages = discuss_channel.message_ids.filtered(
-            lambda message: message.author_id != chatbot.operator_partner_id
+        user_answer = discuss_channel.message_ids.sorted('id', reverse=True).filtered(
+            lambda message: message.author_id != chatbot.operator_partner_id,
+            limit=1,
         )
 
-        if user_messages:
-            user_answer = user_messages.sorted(lambda message: message.id)[-1]
+        if user_answer:
             result = chatbot._validate_email(user_answer.body, discuss_channel)
 
             if result['posted_message']:

@@ -611,6 +611,14 @@ class TestAPI(SavepointCaseWithUserDemo):
             ps.filtered('parent_id.employee')
         )
 
+        # check filtering on one2many.char
+        # that the function does not crash
+        ps.filtered('category_id.name')
+
+        # filter with a limit
+        limit = len(customers) // 2
+        self.assertEqual(ps.filtered('employee', limit=limit), ps.filtered('employee')[:limit])
+
     @mute_logger('odoo.models')
     def test_80_map(self):
         """ Check map on recordsets. """

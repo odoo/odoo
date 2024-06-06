@@ -940,7 +940,7 @@ class SaleOrderLine(models.Model):
                     # remaining amount to invoice
                     amount = 0
                     for l in inv_lines:
-                        if len(l.tax_ids.filtered(lambda tax: tax.price_include)) > 0:
+                        if any(tax.price_include for tax in l.tax_ids):
                             amount += l.tax_ids.compute_all(l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity)['total_excluded']
                         else:
                             amount += l.currency_id._convert(l.price_unit, line.currency_id, line.company_id, l.date or fields.Date.today(), round=False) * l.quantity

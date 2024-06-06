@@ -45,7 +45,7 @@ class CouponShare(models.TransientModel):
     @api.depends('coupon_id.code', 'program_id.rule_ids.code')
     def _compute_promo_code(self):
         for record in self:
-            record.promo_code = record.coupon_id.code or record.program_id.rule_ids.filtered('code')[:1].code
+            record.promo_code = record.coupon_id.code or record.program_id.rule_ids.filtered('code', limit=1).code
 
     @api.depends('website_id', 'redirect')
     @api.depends_context('use_short_link')

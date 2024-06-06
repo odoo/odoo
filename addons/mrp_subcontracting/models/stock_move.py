@@ -84,11 +84,11 @@ class StockMove(models.Model):
 
     def _auto_record_components(self, qty):
         self.ensure_one()
-        subcontracted_productions = self._get_subcontract_production()
-        production = subcontracted_productions.filtered(lambda p: not p._has_been_recorded())[-1:]
+        subcontracted_productions = self._get_subcontract_production()[::-1]
+        production = subcontracted_productions.filtered(lambda p: not p._has_been_recorded(), limit=1)
         if not production:
             # If new quantity is over the already recorded quantity and we have no open production, then create a new one for the missing quantity.
-            production = subcontracted_productions[-1:]
+            production = subcontracted_productions[:1]
             production = production.sudo().with_context(allow_more=True)._split_productions({production: [production.qty_producing, qty]})[-1:]
         qty = self.product_uom._compute_quantity(qty, production.product_uom_id)
 

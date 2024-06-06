@@ -23,4 +23,4 @@ class PosConfig(models.Model):
 
     def _get_cashier_online_payment_method(self):
         self.ensure_one()
-        return self.payment_method_ids.filtered('is_online_payment')[:1]
+        return self.payment_method_ids.filtered('is_online_payment', limit=1)

@@ -67,7 +67,7 @@ class StockPackageLevel(models.Model):
                                 if float_is_zero(to_dispatch, precision_rounding=ml.product_id.uom_id.rounding):
                                     break
                         else:
-                            corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)[:1]
+                            corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id, limit=1)
                             self.env['stock.move.line'].create({
                                 'location_id': package_level.location_id.id,
                                 'location_dest_id': package_level.location_dest_id.id,

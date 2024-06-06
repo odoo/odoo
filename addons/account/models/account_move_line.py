@@ -2897,7 +2897,7 @@ class AccountMoveLine(models.Model):
 
             # To know which rate to use for the adjustment, get the rate used by the most recent cash basis move
             last_caba_move = max(cash_basis_moves, key=lambda m: m.date) if cash_basis_moves else self.env['account.move']
-            currency_line = last_caba_move.line_ids.filtered(lambda x: x.currency_id == currency)[:1]
+            currency_line = last_caba_move.line_ids.filtered(lambda x: x.currency_id == currency, limit=1)
             currency_rate = currency_line.balance / currency_line.amount_currency if currency_line.amount_currency else 1.0
 
             existing_line_vals_list = move_vals['line_ids']

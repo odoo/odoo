@@ -6152,11 +6152,12 @@ class BaseModel(metaclass=MetaModel):
         else:
             return self._mapped_func(func)
 
-    def filtered(self, func):
+    def filtered(self, func, limit=None):
         """Return the records in ``self`` satisfying ``func``.
 
         :param func: a function or a dot-separated sequence of field names
         :type func: callable or str
+        :param limit: limit the number of results
         :return: recordset of records satisfying func, may be empty.
 
         .. code-block:: python3
@@ -6170,7 +6171,10 @@ class BaseModel(metaclass=MetaModel):
         if isinstance(func, str):
             name = func
             func = lambda rec: any(rec.mapped(name))
-        return self.browse([rec.id for rec in self if func(rec)])
+        filtered_ids = (rec.id for rec in self if func(rec))
+        if limit is not None:
+            filtered_ids = itertools.islice(filtered_ids, limit)
+        return self.browse(filtered_ids)
 
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a

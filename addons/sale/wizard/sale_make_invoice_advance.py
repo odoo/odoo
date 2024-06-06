@@ -175,7 +175,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 delta_amount = (invoice.amount_total - self.fixed_amount) * (1 if invoice.is_inbound() else -1)
                 if not order.currency_id.is_zero(delta_amount):
                     receivable_line = invoice.line_ids\
-                        .filtered(lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
+                        .filtered(lambda aml: aml.account_id.account_type == 'asset_receivable', limit=1)
                     product_lines = invoice.line_ids\
                         .filtered(lambda aml: aml.display_type == 'product')
                     tax_lines = invoice.line_ids\

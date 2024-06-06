@@ -554,7 +554,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         # 2. generate the payments
         total_amount_incl = sum(line[2]['price_subtotal_incl'] for line in order_lines)
         if payments is None:
-            default_cash_pm = self.config.payment_method_ids.filtered(lambda pm: pm.is_cash_count and not pm.split_transactions)[:1]
+            default_cash_pm = self.config.payment_method_ids.filtered(lambda pm: pm.is_cash_count and not pm.split_transactions, limit=1)
             if not default_cash_pm:
                 raise Exception('There should be a cash payment method set in the pos.config.')
             payments = [create_payment(default_cash_pm, total_amount_incl)]
@@ -646,7 +646,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             _logger.info('DONE: Call of before_closing_cb.')
         self._check_invoice_journal_entries(pos_session, orders_map, expected_values=args['journal_entries_before_closing'])
         _logger.info('DONE: Checks for journal entries before closing the session.')
-        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count', limit=1)
         total_cash_payment = sum(pos_session.mapped('order_ids.payment_ids').filtered(lambda payment: payment.payment_method_id.id == cash_payment_method.id).mapped('amount'))
         pos_session.post_closing_cash_details(total_cash_payment)
         pos_session.close_session_from_ui()

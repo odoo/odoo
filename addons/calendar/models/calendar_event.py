@@ -1047,7 +1047,7 @@ class Meeting(models.Model):
         self.ensure_one()
         now = fields.datetime.now()
         sorted_alarms = self.alarm_ids.sorted("duration_minutes")
-        triggered_alarms = sorted_alarms.filtered(lambda alarm: alarm.id in events_by_alarm)[0]
+        triggered_alarms = sorted_alarms.filtered(lambda alarm: alarm.id in events_by_alarm, limit=1)
         event_has_future_alarms = sorted_alarms[0] != triggered_alarms
         next_date = None
         if self.recurrence_id.trigger_id and self.recurrence_id.trigger_id.call_at <= now:

@@ -1468,7 +1468,7 @@ class SaleOrder(models.Model):
 
                 if not move.currency_id.is_zero(delta_amount):
                     receivable_line = move.line_ids.filtered(
-                        lambda aml: aml.account_id.account_type == 'asset_receivable')[:1]
+                        lambda aml: aml.account_id.account_type == 'asset_receivable', limit=1)
                     product_lines = move.line_ids.filtered(
                         lambda aml: aml.display_type == 'product' and aml.is_downpayment)
                     tax_lines = move.line_ids.filtered(

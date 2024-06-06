@@ -82,7 +82,7 @@ class PeppolRegistration(models.TransientModel):
     @api.depends('company_id.account_edi_proxy_client_ids')
     def _compute_edi_user_id(self):
         for wizard in self:
-            wizard.edi_user_id = wizard.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')[:1]
+            wizard.edi_user_id = wizard.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol', limit=1)
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_peppol_warnings(self):

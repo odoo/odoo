@@ -174,7 +174,7 @@ class WebsiteAccount(CustomerPortal):
         return request.render(
             "website_crm_partner_assign.portal_my_opportunity", {
                 'opportunity': opp,
-                'user_activity': opp.sudo().activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
+                'user_activity': opp.sudo().activity_ids.filtered(lambda activity: activity.user_id == request.env.user, limit=1),
                 'stages': request.env['crm.stage'].search([
                     ('is_won', '!=', True), '|', ('team_id', '=', False), ('team_id', '=', opp.team_id.id)
                 ], order='sequence desc, name desc, id desc'),

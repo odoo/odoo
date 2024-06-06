@@ -315,8 +315,9 @@ class HrExpenseSheet(models.Model):
                 expenses = sheet.expense_line_ids
                 expenses_mma_checksums = expenses.message_main_attachment_id.mapped('checksum')
                 sheet.message_main_attachment_id = attachments.filtered(
-                    lambda att: att.checksum in expenses_mma_checksums
-                )[:1] or attachments[:1]
+                    lambda att: att.checksum in expenses_mma_checksums,
+                    limit=1,
+                ) or attachments[:1]
 
     @api.depends('expense_line_ids.currency_id', 'company_currency_id')
     def _compute_currency_id(self):

@@ -1219,7 +1219,7 @@ class Lead(models.Model):
     def action_reschedule_meeting(self):
         self.ensure_one()
         action = self.action_schedule_meeting(smart_calendar=False)
-        next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user, limit=1)
         if next_activity.calendar_event_id:
             action['context']['initial_date'] = next_activity.calendar_event_id.start
         return action
@@ -1239,7 +1239,7 @@ class Lead(models.Model):
 
     def action_snooze(self):
         self.ensure_one()
-        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user, limit=1)
         my_next_activity.action_snooze()
         return True
 

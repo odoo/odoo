@@ -170,7 +170,7 @@ class SaleOrder(models.Model):
         self._update_programs_and_rewards()
 
     def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
-        line = self.order_line.filtered(lambda sol: sol.product_id.id == product_id)[:1]
+        line = self.order_line.filtered(lambda sol: sol.product_id.id == product_id, limit=1)
         reward_id = line.reward_id
         if set_qty == 0 and line.coupon_id and reward_id and reward_id.reward_type == 'discount':
             # Force the deletion of the line even if it's a temporary record created by new()

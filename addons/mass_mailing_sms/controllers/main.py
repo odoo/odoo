@@ -53,7 +53,7 @@ class MailingSMSController(http.Controller):
         )
         tocheck_number = sanitized or sms_number
 
-        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1] if tocheck_number else False
+        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number, limit=1) if tocheck_number else False
         # compute opt-out / blacklist information
         lists_optout = request.env['mailing.list'].sudo()
         lists_optin = request.env['mailing.list'].sudo()

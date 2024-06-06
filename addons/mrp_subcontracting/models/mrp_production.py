@@ -42,7 +42,7 @@ class MrpProduction(models.Model):
                 move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]
-                production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+                production.move_raw_ids.filtered(lambda m: m.product_id == product_id, limit=1).move_line_ids = lines
 
     def write(self, vals):
         if self.env.user._is_portal() and not self.env.su:

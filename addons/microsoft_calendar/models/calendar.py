@@ -522,7 +522,7 @@ class Meeting(models.Model):
             values['location'] = {'displayName': self.location or ''}
 
         if 'alarm_ids' in fields_to_sync:
-            alarm_id = self.alarm_ids.filtered(lambda a: a.alarm_type == 'notification')[:1]
+            alarm_id = self.alarm_ids.filtered(lambda a: a.alarm_type == 'notification', limit=1)
             values['isReminderOn'] = bool(alarm_id)
             values['reminderMinutesBeforeStart'] = alarm_id.duration_minutes
 

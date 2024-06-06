@@ -201,7 +201,7 @@ class PosSession(models.Model):
     @api.depends('payment_method_ids', 'order_ids', 'cash_register_balance_start')
     def _compute_cash_balance(self):
         for session in self:
-            cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
+            cash_payment_method = session.payment_method_ids.filtered('is_cash_count', limit=1)
             if cash_payment_method:
                 total_cash_payment = 0.0
                 result = self.env['pos.payment']._read_group([('session_id', '=', session.id), ('payment_method_id', '=', cash_payment_method.id)], aggregates=['amount:sum'])
@@ -257,7 +257,7 @@ class PosSession(models.Model):
     def _compute_cash_journal(self):
         # Only one cash register is supported by point_of_sale.
         for session in self:
-            cash_journal = session.payment_method_ids.filtered('is_cash_count')[:1].journal_id
+            cash_journal = session.payment_method_ids.filtered('is_cash_count', limit=1).journal_id
             session.cash_journal_id = cash_journal
 
     @api.constrains('config_id')
@@ -373,7 +373,7 @@ class PosSession(models.Model):
             # If the session is in rescue, we only compute the payments in the cash register
             # It is not yet possible to close a rescue session through the front end, see `close_session_from_ui`
             if session.rescue and session.config_id.cash_control:
-                default_cash_payment_method_id = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[0]
+                default_cash_payment_method_id = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash', limit=1)
                 orders = self._get_closed_orders()
                 total_cash = sum(
                     orders.payment_ids.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')
