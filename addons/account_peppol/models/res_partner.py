@@ -72,7 +72,7 @@ class ResPartner(models.Model):
     def _get_participant_info(self, edi_identification):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
-        peppol_user = self.env.company.account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
+        peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
         edi_mode = peppol_user and peppol_user.edi_mode or self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
         sml_zone = 'acc.edelivery' if edi_mode == 'test' else 'edelivery'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
