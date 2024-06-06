@@ -218,6 +218,9 @@ class Challenge(models.Model):
 
         elif vals.get('state') == 'done':
             self._check_challenge_reward(force=True)
+            self.env['gamification.goal'].search([
+                ('challenge_id', 'in', self.ids),
+            ]).update_goal()
 
         elif vals.get('state') == 'draft':
             # resetting progress
