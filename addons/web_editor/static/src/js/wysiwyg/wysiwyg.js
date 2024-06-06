@@ -14,6 +14,7 @@ import { LinkPopoverWidget } from '@web_editor/js/wysiwyg/widgets/link_popover_w
 import { AltDialog } from '@web_editor/js/wysiwyg/widgets/alt_dialog';
 import { ChatGPTPromptDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_prompt_dialog';
 import { ChatGPTAlternativesDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_alternatives_dialog';
+import { ChatGPTTranslateDialog } from "@web_editor/js/wysiwyg/widgets/chatgpt_translate_dialog";
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
@@ -1510,9 +1511,11 @@ export class Wysiwyg extends Component {
     /**
      * Open one of the ChatGPTDialogs to generate or modify content.
      *
-     * @param {'prompt'|'alternatives'} [mode='prompt']
+     * @param {'prompt'|'alternatives'|'translate'} [mode='prompt']
+     * @param {object} options
+     * @param {String} [options.language]
      */
-    openChatGPTDialog(mode = 'prompt') {
+    openChatGPTDialog(mode = 'prompt', options={}) {
         const restore = preserveCursor(this.odooEditor.document);
         const params = {
             insert: content => {
@@ -1553,12 +1556,15 @@ export class Wysiwyg extends Component {
                 }
             },
         };
-        if (mode === 'alternatives') {
+        if (mode === 'alternatives' || mode === 'translate') {
             params.originalText = this.odooEditor.document.getSelection().toString() || '';
+        }
+        if (mode === 'translate') {
+            params.language = options.language;
         }
         this.odooEditor.document.getSelection().collapseToEnd();
         this.env.services.dialog.add(
-            mode === 'prompt' ? ChatGPTPromptDialog : ChatGPTAlternativesDialog,
+            mode === 'prompt' ? ChatGPTPromptDialog : mode === 'translate' ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
             params,
             { onClose: restore },
         );
@@ -1905,10 +1911,17 @@ export class Wysiwyg extends Component {
                 return;
             }
             this.showImageFullscreen(this.lastMediaClicked.src);
-    })
+        });
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
         $toolbar.find('#open-chatgpt').click(openTools);
+        $toolbar.on('click', '#translate .lang', (e) => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+            const language = e.target.dataset.value;
+            this.openChatGPTDialog('translate', { language });
+        });
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
             if (!this.lastMediaClicked) {
                 return;

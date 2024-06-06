@@ -105,6 +105,9 @@ patch(MockServer.prototype, {
                 return SNIPPETS_TEMPLATE;
             }
         }
+        if (args.model === "res.lang" && args.method === "get_installed") {
+            return [["en_US", "English"]];
+        }
         return super._performRPC(...arguments);
     },
 });

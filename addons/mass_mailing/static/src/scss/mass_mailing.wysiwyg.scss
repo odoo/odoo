@@ -61,6 +61,14 @@
         transform: translateX(0);
 
         > .o_we_customize_panel .oe-toolbar {
+            grid-template-areas:
+                "typo typo style style colors"
+                "size align list list link"
+                "ai translate translate . ."
+                "options options options options options"
+                "options2 options2 options2 options2 options2"
+                "options3 options3 options3 options3 options3";
+
             #style.dropup, #font-size.dropup {
                 > .dropdown-menu {
                     overflow-y: scroll;
