@@ -2,6 +2,7 @@
 <odoo>
     <template id="hr_attendance.public_kiosk_mode" name="Attendance Kiosk">
         <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'lang': kiosk_backend_info['lang']}"/>
             <t t-set="head">
                 <title>Attendance Kiosk</title>
                 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
