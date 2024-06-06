@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp.QtyProducingDurationExpected">
+        <t t-if="displayQtyProducingDurationExpected">
+            <t t-if="props.readonly">
+                <t t-esc="qtyProducingDurationExpected"/> / <t t-esc="durationExpected"/>
+            </t>
+            <t t-else="">
+                <input t-att-id="props.id" t-ref="numpadDecimal" t-att-placeholder="props.placeholder" inputmode="numeric" class="o_input"/>
+            </t>
+        </t>
+        <t t-else="">
+            <span t-esc="durationExpected"/>
+        </t>
+    </t>
+</templates>
