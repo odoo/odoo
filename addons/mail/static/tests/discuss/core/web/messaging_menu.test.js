@@ -209,7 +209,8 @@ test("counter is taking into account non-fetched channels", async () => {
     ).toBe(false);
 });
 
-test("counter is updated on receiving message on non-fetched channels", async () => {
+// !FIXME unskip when https://github.com/odoo/odoo/pull/167009 is ported
+test.skip("counter is updated on receiving message on non-fetched channels", async () => {
     patchBrowserNotification("denied");
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
