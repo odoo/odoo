@@ -55,7 +55,7 @@ beforeEach(() => {
     defineModels([Custom, View]);
 });
 
-test.skip("profiling qweb view field renders delay and query", async function (assert) {
+test("profiling qweb view field renders delay and query", async function (assert) {
     await mountView({
         resModel: "custom",
         type: "form",
