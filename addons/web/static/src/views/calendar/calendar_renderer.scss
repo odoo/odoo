@@ -609,6 +609,10 @@
                 }
             }
         }
+        // To avoid some overlapping we set the FullCalendar More popover to a lower value
+        .fc-more-popover {
+            z-index: $zindex-modal-backdrop - 1;
+        }
     }
 }
 
