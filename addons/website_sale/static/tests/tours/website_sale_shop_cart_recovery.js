@@ -77,6 +77,5 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     {
         content: "check product is in restored cart",
         trigger: 'div>a>h6:contains("Acoustic Bloc Screens")',
-        run: function () {},
     },
 ]});

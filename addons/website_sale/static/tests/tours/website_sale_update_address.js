@@ -35,7 +35,6 @@ registry.category("web_tour.tours").add('update_billing_shipping_address', {
         {
             content: "Check there is a warning for required field.",
             trigger: 'h5.text-danger:contains("Some required fields are empty.")',
-            run: () => {},
         },
     ],
 });

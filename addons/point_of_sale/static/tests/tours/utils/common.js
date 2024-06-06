@@ -37,7 +37,6 @@ export function elementDoesNotExist(selector) {
     return {
         content: `Check that element "${selector}" don't exist.`,
         trigger: negate(selector),
-        isCheck: true,
     };
 }
 
@@ -46,7 +45,6 @@ export function waitForLoading() {
         {
             content: "waiting for loading to finish",
             trigger: "body:not(:has(.loader))",
-            run: function () {},
         },
     ];
 }

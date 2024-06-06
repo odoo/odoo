@@ -92,6 +92,5 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_display_on_click", {
         in_modal: false,
         extra_trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
-        isCheck: true,
     },
 ]);

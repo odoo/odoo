@@ -32,7 +32,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_single_custom
 }, {
     trigger: 'td.o_data_cell:contains("single product attribute value: great single custom value")',
     extra_trigger: 'div[name="order_line"]',
-    isCheck: true,
 }, {
     trigger: 'div[name="product_template_id"]',
     run: "click",

@@ -126,5 +126,4 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     run: "click",
 }, {
     trigger: ".o_kanban_view",
-    isCheck: true,
 }]});

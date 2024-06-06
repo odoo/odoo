@@ -80,7 +80,6 @@ registry.category("web_tour.tours").add('test_error_website', {
         content: "http user error page debug has title and message open",
         extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a user http test")',
-        run: function () {},
     }, {
         content: "http user error page debug has traceback closed",
         trigger: 'body:has(div#error_traceback.collapse:not(.show) pre#exception_traceback)',
@@ -98,7 +97,6 @@ registry.category("web_tour.tours").add('test_error_website', {
         content: "http validation error page debug has title and message open",
         extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a validation http test")',
-        run: function () {},
     }, {
         content: "http validation error page debug has traceback closed",
         trigger: 'body:has(div#error_traceback.collapse:not(.show) pre#exception_traceback)',
@@ -116,7 +114,6 @@ registry.category("web_tour.tours").add('test_error_website', {
         content: "http access error page debug has title and message open",
         extra_trigger: 'h1:contains("403: Forbidden")',
         trigger: 'div#error_main.collapse.show pre:contains("This is an access http test")',
-        run: function () {},
     }, {
         content: "http access error page debug has traceback closed",
         trigger: 'body:has(div#error_traceback.collapse:not(.show) pre#exception_traceback)',
@@ -134,7 +131,6 @@ registry.category("web_tour.tours").add('test_error_website', {
         content: "http missing error page debug has title and message open",
         extra_trigger: 'h1:contains("Something went wrong.")',
         trigger: 'div#error_main.collapse.show pre:contains("This is a missing http test")',
-        run: function () {},
     }, {
         content: "http missing error page debug has traceback closed",
         trigger: 'body:has(div#error_traceback.collapse:not(.show) pre#exception_traceback)',
@@ -152,10 +148,8 @@ registry.category("web_tour.tours").add('test_error_website', {
         content: "http 403 error page debug has title but no message",
         extra_trigger: 'h1:contains("403: Forbidden")',
         trigger: 'div#debug_infos:not(:has(#error_main))',
-        run: function () {},
     }, {
         content: "http 403 error page debug has traceback open",
         trigger: 'body:has(div#error_traceback.collapse.show pre#exception_traceback)',
-        run: function () {},
     },
 ]});

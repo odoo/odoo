@@ -21,7 +21,6 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
         {
             content: "Check that we are on channel page",
             trigger: ".o-mail-Thread",
-            run() {},
         },
     ],
 });

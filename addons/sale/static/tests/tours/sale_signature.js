@@ -20,7 +20,6 @@ registry.category("web_tour.tours").add('sale_signature', {
     {
         content: "check submit is enabled",
         trigger: '.o_portal_sign_submit:enabled',
-        run: function () {},
     },
     {
         content: "click select style",
@@ -50,6 +49,5 @@ registry.category("web_tour.tours").add('sale_signature', {
     },
     {
         trigger: 'nav',
-        run: function() {},
     }
 ]});

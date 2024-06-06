@@ -71,7 +71,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         }, {
             trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
-            run: () => {},
             auto: true,
         }, {
             trigger: ".o_field_widget[name='price_unit'] input",

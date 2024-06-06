@@ -86,7 +86,6 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             content: "Check wishlist contains both variants",
             extra_trigger: ':iframe #o_comparelist_table tr:contains("red")',
             trigger: ':iframe #o_comparelist_table tr:contains("black")',
-            run: function () {}, // This is a check
         },
     ]
 );

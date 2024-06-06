@@ -16,12 +16,10 @@
     {
         content: "check compare button contains one product",
         trigger: '.o_product_circle:contains(1)',
-        run: function () {},
     },
     {
         content: "check popover is closed when only one product",
         trigger: 'body:not(:has(.comparator-popover))',
-        run: function () {},
     },
     {
         content: "add second product 'Conference Chair' in a comparison list",
@@ -32,13 +30,11 @@
         content: "check popover is now open and compare button contains two products",
         extra_trigger: '.comparator-popover',
         trigger: ' .o_product_circle:contains(2)',
-        run: function () {},
     },
     {
         content: "check products name are correct in the comparelist",
         extra_trigger: '.o_product_row:contains("Warranty")',
         trigger: '.o_product_row:contains("Conference Chair")',
-        run: function () {},
     },
     // test form product page
     {
@@ -50,12 +46,10 @@
         content: "check compare button is still there and contains 2 products",
         extra_trigger: '#product_details',
         trigger: '.o_product_circle:contains(2)',
-        run: function () {},
     },
     {
         content: "check popover is closed after changing page",
         trigger: 'body:not(:has(.comparator-popover))',
-        run: function () {},
     },
     {
         content: "add first variant to comparelist",
@@ -66,7 +60,6 @@
         content: "check the comparelist is now open and contains 3rd product with correct variant",
         extra_trigger: '.comparator-popover',
         trigger: '.o_product_row:contains("Customizable Desk (Steel, White)")',
-        run: function () {},
     },
     {
         content: "select 2nd variant(Black Color)",
@@ -87,12 +80,10 @@
         extra_trigger: '.o_product_circle:contains(4)',
         trigger: '.o_product_row:contains("Customizable Desk (Steel, Black)")',
         allowInvisible: true, //trigger is not visible .o_product_panel_content => display: none;
-        isCheck: true,
     },
     {
         content: "check limit is not reached",
         trigger: ':not(.o_comparelist_limit_warning)',
-        run: function () {},
     },
     {
         content: "select 3nd variant(Custom)",
@@ -108,7 +99,6 @@
     {
         content: "check limit is reached",
         trigger: '.o_comparelist_limit_warning',
-        run: function () {},
     },
     {
         content: "click on compare button",
@@ -119,22 +109,18 @@
     {
         content: "check 1st product contains correct variant",
         trigger: '.o_product_comparison_table:contains("Conference Chair (Steel)")',
-        run: function () {},
     },
     {
         content: "check 2nd product contains correct variant",
         trigger: '.o_product_comparison_table:contains("Customizable Desk (Steel, White)")',
-        run: function () {},
     },
     {
         content: "check 3rd product is correctly added",
         trigger: '.o_product_comparison_table:contains("Customizable Desk (Steel, Black)")',
-        run: function () {},
     },
     {
         content: "check 4th product is correctly added",
         trigger: '.o_product_comparison_table:contains("Warranty")',
-        run: function () {},
     },
     {
         content: "remove Customizable Desk (Steel, Black) from compare table",
@@ -144,7 +130,6 @@
     {
         content: "check customizable table with black variant is removed",
         trigger: '#o_comparelist_table:not(:contains("Customizable Desk (Steel, Black)"))',
-        run: function () {},
     },
     {
         content: "open compare menu",
@@ -165,7 +150,6 @@
     {
         content: "check product 'Warranty' is removed",
         trigger: '#o_comparelist_table:not(:contains("Warranty"))',
-        run: function () {},
     },
     {
         content: "add product 'Conference Chair' to cart",
@@ -176,6 +160,5 @@
     {
         content: "check product correctly added to cart",
         trigger: '#cart_products:contains("Conference Chair") .js_quantity[value="1"]',
-        run: function () {},
     },
     ]});

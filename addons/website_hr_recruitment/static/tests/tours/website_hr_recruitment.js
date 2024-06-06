@@ -40,7 +40,6 @@
         }, {
             content: "Check the form is submitted without errors",
             trigger: "#jobs_thankyou h1:contains('Congratulations')",
-            isCheck: true,
         }];
     }
 
@@ -167,7 +166,6 @@
     }, {
         content: "Select model-required field",
         trigger: "we-customizeblock-options we-alert > span:not(:contains(undefined))",
-        isCheck: true,
     }
 ]);
 

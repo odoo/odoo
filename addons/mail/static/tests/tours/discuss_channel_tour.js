@@ -91,7 +91,6 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
         {
             trigger: ".o-discuss-ChannelSelector",
             auto: true,
-            isCheck: true,
         },
     ],
 });

@@ -22,28 +22,24 @@ function assertCartAmounts({taxes = false, untaxed = false, total = false, deliv
         steps.push({
             content: 'Check if the tax is correct',
             trigger: `tr#order_total_taxes .oe_currency_value:contains(/^${taxes}$/)`,
-            run: function () {},  // it's a check
         });
     }
     if (untaxed) {
         steps.push({
             content: 'Check if the tax is correct',
             trigger: `tr#order_total_untaxed .oe_currency_value:contains(/^${untaxed}$/)`,
-            run: function () {},  // it's a check
         });
     }
     if (total) {
         steps.push({
             content: 'Check if the tax is correct',
             trigger: `tr#order_total .oe_currency_value:contains(/^${total}$/)`,
-            run: function () {},  // it's a check
         });
     }
     if (delivery) {
         steps.push({
             content: 'Check if the tax is correct',
             trigger: `tr#order_delivery .oe_currency_value:contains(/^${delivery}$/)`,
-            run: function () {},  // it's a check
         });
     }
     return steps
@@ -58,7 +54,6 @@ function assertCartContains({productName, backend, notContains = false} = {}) {
     return {
         content: `Checking if ${productName} is in the cart`,
         trigger: `${backend ? ":iframe" : ""} ${trigger}`,
-        run: () => {}
     };
 }
 
@@ -69,7 +64,6 @@ function assertProductPrice(attribute, value, productName) {
     return {
         content: `The ${attribute} of the ${productName} is ${value}`,
         trigger: `div:contains("${productName}") [data-oe-expression="template_price_vals['${attribute}']"] .oe_currency_value:contains("${value}")`,
-        run: () => {}
     };
 }
 
@@ -152,7 +146,6 @@ function payWithDemo() {
     {
         content: 'eCommerce: check that the payment is successful',
         trigger: '.oe_website_sale_tx_status:contains("Your payment has been successfully processed.")',
-        run: function () {}
     }]
 }
 
@@ -170,7 +163,6 @@ function payWithTransfer(redirect=false) {
             content: "Last step",
             trigger: '.oe_website_sale_tx_status:contains("Please use the following transfer details")',
             timeout: 30000,
-            isCheck: true,
         }]
     } else {
         return [
@@ -186,7 +178,6 @@ function payWithTransfer(redirect=false) {
             }, {
                 content: "wait page loaded",
                 trigger: 'h1:contains("Contact us")',
-                run: function () {}, // it's a check
             }
         ]
     }

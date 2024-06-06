@@ -171,6 +171,5 @@ registry.category("web_tour.tours").add('test_survey_prefill', {
         }
     }, {
         trigger: '.o_survey_title.tour_success_2',
-        isCheck: true,
     }
 ]});

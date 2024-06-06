@@ -10,6 +10,5 @@ export function isClosed() {
     return {
         content: `Check if the POS is closed`,
         trigger: `.o-self-closed`,
-        run: () => {},
     };
 }

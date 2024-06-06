@@ -22,7 +22,6 @@ registry.category("web_tour.tours").add('check_free_delivery', {
             content: "Ensure price was loaded asynchronously",
             extra_trigger: '#o_delivery_methods input[name="o_delivery_radio"]:checked',
             trigger: '#o_delivery_methods [name="o_delivery_method"]:contains("20.0"):contains("The Poste")',
-            run: function () {}, // it's a check
         },
         tourUtils.confirmOrder(),
         {
@@ -35,7 +34,6 @@ registry.category("web_tour.tours").add('check_free_delivery', {
             content: "Confirmation page should be shown",
             trigger: '#oe_structure_website_sale_confirmation_1',
             allowInvisible: true,
-            run: function () {}, // it's a check
         }
     ],
 });

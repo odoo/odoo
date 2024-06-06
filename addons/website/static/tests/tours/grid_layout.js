@@ -86,7 +86,6 @@ wTourUtils.registerWebsitePreviewTour("scroll_to_new_grid_item", {
     }, {
         content: "Make sure the scroll check is done",
         trigger: ".o_scrolled_to_grid_item",
-        isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
 ]);

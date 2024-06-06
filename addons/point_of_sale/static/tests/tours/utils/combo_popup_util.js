@@ -17,7 +17,6 @@ export function isSelected(productName) {
     return {
         content: `Check that ${productName} is selected`,
         trigger: isComboSelectedTrigger(productName),
-        isCheck: true,
         in_modal: true,
         run: "click",
     };
@@ -26,7 +25,6 @@ export function isNotSelected(productName) {
     return {
         content: `Check that ${productName} is not selected`,
         trigger: negate(isComboSelectedTrigger(productName), ".modal-body"),
-        isCheck: true,
         in_modal: true,
         run: "click",
     };
@@ -35,8 +33,7 @@ export function isConfirmationButtonDisabled() {
     return {
         content: "try to click `confirm` without having made all the selections",
         trigger: `${confirmationButtonTrigger}[disabled]`,
-        isCheck: true,
+        allowDisabled: true,
         in_modal: true,
-        run: "click",
     };
 }

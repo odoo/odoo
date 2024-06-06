@@ -23,7 +23,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_after_reload_t
         },
         {
             trigger: messagesContain("Hello! I'm a bot!"),
-            run: () => {},
         },
     ],
 });

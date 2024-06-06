@@ -88,7 +88,6 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
     {
         content: 'Thank you',
         trigger: 'h1:contains("Thank you!")',
-        isCheck: true,
     }
 
 ]});

@@ -32,7 +32,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
         }, {
             content: "This should display the Feedback area",
             trigger: "div#o_mailing_portal_subscription textarea",
-            isCheck: true,
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
@@ -60,7 +59,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
         }, {
             content: "Confirmation exclusion is done",
             trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
-            isCheck: true,
         },
     ],
 });
@@ -96,7 +94,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
         }, {
             content: "This should display the Feedback area",
             trigger: "div#o_mailing_portal_subscription textarea",
-            isCheck: true,
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
@@ -124,7 +121,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
         }, {
             content: "Confirmation exclusion is done",
             trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
-            isCheck: true,
         },
     ],
 });

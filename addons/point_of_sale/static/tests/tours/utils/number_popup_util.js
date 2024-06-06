@@ -12,7 +12,6 @@ export function isShown(val = "") {
             content: `input shown is '${val}'`,
             trigger: `.value:contains("${val}")`,
             in_modal: true,
-            run: () => {},
         },
     ];
 }

@@ -6,6 +6,5 @@ export function has(text, type) {
     return {
         content: `Check if there is a notification with text "${text}"`,
         trigger,
-        isCheck: true,
     };
 }

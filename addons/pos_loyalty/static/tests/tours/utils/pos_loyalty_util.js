@@ -70,7 +70,6 @@ export function isRewardButtonHighlighted(isHighlighted) {
             trigger: isHighlighted
                 ? '.control-buttons button.highlight:contains("Reward")'
                 : '.control-buttons button:contains("Reward"):not(:has(.highlight))',
-            run: function () {}, // it's a check
         },
     ];
 }
@@ -80,7 +79,6 @@ export function eWalletButtonState({ highlighted, text = "eWallet" }) {
             trigger: highlighted
                 ? `.control-buttons button.highlight:contains("${text}")`
                 : `.control-buttons button:contains("${text}"):not(:has(.highlight))`,
-            run: function () {}, // it's a check
         },
     ];
 }
@@ -88,7 +86,6 @@ export function customerIs(name) {
     return [
         {
             trigger: `.product-screen .set-partner:contains("${name}")`,
-            run: function () {},
         },
     ];
 }
@@ -109,7 +106,6 @@ export function checkAddedLoyaltyPoints(points) {
     return [
         {
             trigger: `.loyalty-points-won:contains("${points}")`,
-            run: function () {},
         },
     ];
 }

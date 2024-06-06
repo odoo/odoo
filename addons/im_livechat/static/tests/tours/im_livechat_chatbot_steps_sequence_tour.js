@@ -39,7 +39,6 @@ const commonSteps = [
     {
         trigger: 'tr:contains("Step 1")',
         in_modal: false,
-        run: () => {},
     },
     {
         trigger: "textarea#message_0",
@@ -52,7 +51,6 @@ const commonSteps = [
     {
         trigger: 'tr:contains("Step 2")',
         in_modal: false,
-        run: () => {},
     },
     {
         trigger: "textarea#message_0",
@@ -74,7 +72,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_tour
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",
-            run() {},
         },
         ...stepUtils.discardForm(),
     ],
@@ -95,7 +92,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         {
             trigger: 'tr:contains("Step 3")',
             in_modal: false,
-            run: () => {},
         },
         {
             trigger: "textarea#message_0",
@@ -108,7 +104,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         {
             trigger: 'tr:contains("Step 4")',
             in_modal: false,
-            run: () => {},
         },
         {
             trigger: "textarea#message_0",
@@ -120,7 +115,6 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",
-            run: () => {},
         },
         {
             trigger: 'div[name="script_step_ids"] tr:nth-child(5) .o_row_handle',
@@ -140,12 +134,10 @@ registry.category("web_tour.tours").add("im_livechat_chatbot_steps_sequence_with
         },
         {
             trigger: "body.o_web_client:not(.modal-open)",
-            run: () => {},
         },
         {
             trigger: 'tr:contains("Step 6")',
             in_modal: false,
-            run: () => {},
         },
         ...stepUtils.discardForm(),
     ],

@@ -10,7 +10,6 @@ export function checkBtn(buttonName) {
     return {
         content: `Check is button '${buttonName}'`,
         trigger: `.btn:contains('${buttonName}')`,
-        run: () => {},
     };
 }
 
@@ -38,6 +37,5 @@ export function checkIsDisabledBtn(buttonName) {
     return {
         content: `Check if button '${buttonName}' is disabled`,
         trigger: `button.disabled:contains("${buttonName}")`,
-        run: () => {},
     };
 }

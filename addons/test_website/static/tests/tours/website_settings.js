@@ -23,7 +23,6 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         {
             content: "check that the 'Shared Customers Accounts' setting is checked",
             trigger: "input[id^='shared_user_account']:checked",
-            isCheck: true,
         },
         {
             content: "open website switcher",
@@ -38,7 +37,6 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
         {
             content: `check that the settings of ${websiteName} are loaded (Shared Customers Accounts)`,
             trigger: "input[id^='shared_user_account']:not(:checked)",
-            isCheck: true,
         },
         {
             content: "click on the fake website setting after checking the edited website",

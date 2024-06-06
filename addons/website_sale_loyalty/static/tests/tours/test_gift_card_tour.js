@@ -39,14 +39,12 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         {
             content: 'check gift card amount',
             trigger: '.oe_website_sale .oe_cart',
-            run: function () {}, // it's a check
         },
         ...tourUtils.addToCart({productName: "TEST - Gift Card"}),
         tourUtils.goToCart({quantity: 2}),
         {
             content: 'check gift card amount',
             trigger: '.oe_website_sale .oe_cart',
-            run: function () {}, // it's a check
         },
     ],
 });

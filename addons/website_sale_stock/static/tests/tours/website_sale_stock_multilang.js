@@ -12,11 +12,9 @@ registry.category("web_tour.tours").add('website_sale_stock_multilang', {
     }, {
         content: "Check out of stock message",
         trigger: '#out_of_stock_message:contains("Hors-stock")',
-        isCheck: true,
     }, {
         content: "Check price",
         trigger: 'span:contains("123,45")',
-        isCheck: true,
     }, {
         content: "Open language selector",
         trigger: '.js_language_selector button',
@@ -28,11 +26,9 @@ registry.category("web_tour.tours").add('website_sale_stock_multilang', {
     }, {
         content: "Check out of stock message",
         trigger: '#out_of_stock_message:contains("Out of stock")',
-        isCheck: true,
     }, {
         content: "Check price",
         trigger: 'span:contains("123.45")',
-        isCheck: true,
     }, {
         content: "Open language selector",
         trigger: '.js_language_selector button',
@@ -44,10 +40,8 @@ registry.category("web_tour.tours").add('website_sale_stock_multilang', {
     }, {
         content: "Check out of stock message",
         trigger: '#out_of_stock_message:contains("Hors-stock")',
-        isCheck: true,
     }, {
         content: "Check price",
         trigger: 'span:contains("123,45")',
-        isCheck: true,
     }],
 });

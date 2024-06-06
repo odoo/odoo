@@ -61,7 +61,6 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Check that the setting for ${fontSizeClass} is correct`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).start}")`,
-            isCheck: true,
         }, {
             content: `Change the setting value of ${fontSizeClass}`,
             trigger: `[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"] input`,
@@ -81,7 +80,6 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger: `we-input[data-variable="${classNameInfo.get(fontSizeClass).scssVariableName}"]`
                 + ` input:value("${classNameInfo.get(fontSizeClass).end}")`,
-            isCheck: true,
         }, {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
             trigger: `we-collapse:has(we-input[data-variable=` +
@@ -132,6 +130,5 @@ wTourUtils.registerWebsitePreviewTour("website_text_font_size", {
     {
         content: "Verify that the text block has been deleted",
         trigger: ":iframe #wrap:not(:has(.s_text_block))",
-        isCheck: true,
     },
 ]);

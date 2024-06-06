@@ -97,6 +97,5 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         extra_trigger: ".o_menu_systray .o_user_menu",
         timeout: 30000,
-        isCheck: true,
     },
 ]);

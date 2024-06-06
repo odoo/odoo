@@ -7,7 +7,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             trigger: ".o-mail-DiscussPublic",
             extraTrigger: ".o-mail-Thread",
-            run() {},
         },
         {
             content: "Check that we are on channel page",
@@ -30,7 +29,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Wait for all modules loaded check in previous step",
             trigger: ".o_discuss_channel_public_modules_loaded",
-            run() {},
         },
         {
             content: "Write something in composer",
@@ -54,7 +52,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Check the earlier provided attachment is listed",
             trigger: '.o-mail-AttachmentCard[title="text.txt"]',
             extra_trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
-            run() {},
         },
         {
             content: "Send message",
@@ -64,12 +61,10 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Check message is shown",
             trigger: '.o-mail-Message-body:contains("cheese")',
-            run() {},
         },
         {
             content: "Check message contains the attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
-            run() {},
         },
         {
             content: "Click on more menu",
@@ -104,7 +99,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentCard[title="extra.txt"]',
             extra_trigger:
                 ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
-            run() {},
         },
         {
             content: "Save edited message",
@@ -114,12 +108,10 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         {
             content: "Check message is edited",
             trigger: '.o-mail-Message-body:contains("vegetables")',
-            run() {},
         },
         {
             content: "Check edited message contains the first attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
-            run() {},
         },
         {
             content: "Check edited message contains the extra attachment",
@@ -151,7 +143,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             content: "Check that searched message contains the attachment",
             trigger:
                 '.o-mail-SearchMessagesPanel .o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
-            run() {},
         },
     ],
 });

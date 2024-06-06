@@ -25,7 +25,6 @@ export function isCashMoveButtonHidden() {
         {
             extraTrigger: ".pos-topheader",
             trigger: ".pos-topheader:not(:contains(Cash In/Out))",
-            run: () => {},
         },
     ];
 }
@@ -33,6 +32,5 @@ export function endTour() {
     return {
         content: "Last tour step that avoids error mentioned in commit 443c209",
         trigger: "body",
-        isCheck: true,
     };
 }

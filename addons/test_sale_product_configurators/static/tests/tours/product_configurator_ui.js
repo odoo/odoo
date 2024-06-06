@@ -35,27 +35,24 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     run: "click",
 }, {
     trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) label:contains("Steel")',
-    isCheck: true,
     run: "click",
 }, {
     trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) label:contains("Aluminium")',
     run: "click",
 }, {
     trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("Customizable Desk")) td[name="price"] h5:contains("800.40")',
-    isCheck: true, // check updated price
 }, {
     trigger: 'label[style="background-color:#000000"] input',
     run: "click",
 }, {
     trigger: '.btn-primary:disabled:contains("Confirm")',
-    isCheck: true, // check confirm button is disabled
+    allowDisabled: true, // check confirm button is disabled
 }, {
     trigger: 'label[style="background-color:#FFFFFF"] input',
     run: "click",
 }, {
     trigger: '.btn-primary:not(:disabled):contains("Confirm")',
     extra_trigger: '.modal-footer',
-    isCheck: true, // check confirm is available
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
     run: "click",
@@ -70,10 +67,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
 // check that 3 products were added to the SO
 {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Aluminium, White)")',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("Conference Chair (TEST) (Aluminium)")',
-    isCheck: true,
 },
 // check that additional line is kept if selected but not edited with a click followed by a check
 {
@@ -84,9 +79,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     run: 'click',
 }, {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
-    isCheck: true,
 }, {
     trigger: 'span[name=amount_total]:contains("960.60")',
-    isCheck: true,
 }, ...stepUtils.saveForm(),
 ]});

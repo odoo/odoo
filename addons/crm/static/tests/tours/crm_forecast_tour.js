@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: '.o_column_quick_create:contains(Add next month)',
         content: 'Wait page loading',
-        isCheck: true,
     }, {
         trigger: ".o-kanban-button-new",
         content: "click create",
@@ -85,6 +84,5 @@ registry.category("web_tour.tours").add('crm_forecast', {
     }, {
         trigger: ".o_kanban_record:contains('Test Opportunity 1'):contains('Won')",
         content: "assert that the opportunity has the Won banner",
-        run: function () {},
     }
 ]});

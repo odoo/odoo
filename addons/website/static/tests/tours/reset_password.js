@@ -23,6 +23,5 @@ registry.category("web_tour.tours").add('website_reset_password', {
     {
         content: "check that we're logged in",
         trigger: '.o_user_menu .dropdown-toggle',
-        run: function () {}
     },
 ]});

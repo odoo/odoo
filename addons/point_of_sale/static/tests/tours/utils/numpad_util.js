@@ -19,5 +19,4 @@ export const enterValue = (keys) => keys.split("").map((key) => click(key));
 export const isActive = (buttonValue) => ({
     content: `check if --${buttonValue}-- mode is activated`,
     trigger: `${buttonTriger(buttonValue)}.active`,
-    isCheck: true,
 });

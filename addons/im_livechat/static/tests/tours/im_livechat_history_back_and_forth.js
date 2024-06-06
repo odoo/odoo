@@ -47,8 +47,6 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger: ".o_data_cell:contains(Visitor operator)",
-            run() {},
-            isCheck: true,
         },
     ],
 });

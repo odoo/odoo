@@ -76,7 +76,6 @@ export function clickOrderline(productName, quantity = "1.0") {
         {
             content: "Check the product page",
             trigger: ".product-list",
-            isCheck: true,
         },
     ];
 }
@@ -91,7 +90,6 @@ export function clickSubcategory(name) {
             content: `'${name}' subcategory selected`,
             trigger: `button.category-button:contains("${name}")`,
             mobile: false,
-            run: () => {},
         },
     ];
 }
@@ -124,7 +122,6 @@ export function clickPayButton(shouldCheck = true) {
         steps.push({
             content: "now in payment screen",
             trigger: ".pos-content .payment-screen",
-            run: () => {},
         });
     }
     return steps;
@@ -141,7 +138,6 @@ export function clickPartnerButton() {
             content: "partner screen is shown",
             trigger: PartnerList.clickPartner().trigger,
             in_modal: true,
-            run: () => {},
         },
     ];
 }
@@ -154,8 +150,6 @@ export function customerIsSelected(name) {
         {
             content: `customer '${name}' is selected`,
             trigger: `.product-screen .set-partner:contains("${name}")`,
-            isCheck: true,
-            run: "click",
         },
     ];
 }
@@ -226,7 +220,6 @@ export function clickPriceList(name, isCheckNeedSelectedBeforeClick = false, nam
         step.push({
             content: `verify pricelist ${triggerName} is set and selected`,
             trigger: `.selection-item.selected:contains('${triggerName}')`,
-            run: function () {},
         });
     }
 
@@ -283,7 +276,6 @@ export function clickFiscalPosition(name, checkIsNeeded = false) {
             {
                 content: "the fiscal position " + name + " has been set to the order",
                 trigger: `.modal-body .control-buttons button.o_fiscal_position_button:contains("${name}")`,
-                run: function () {},
             },
             {
                 ...Dialog.cancel(),
@@ -353,7 +345,6 @@ export function isShown() {
         {
             content: "product screen is shown",
             trigger: ".product-screen",
-            run: () => {},
         },
     ];
 }
@@ -375,7 +366,6 @@ export function productIsDisplayed(name) {
         {
             content: `'${name}' should be displayed`,
             trigger: `.product-list .product-name:contains("${name}")`,
-            run: () => {},
         },
     ];
 }
@@ -396,7 +386,6 @@ export function cashDifferenceIs(val) {
     return [
         {
             trigger: `.payment-methods-overview tr td:nth-child(4):contains(${val})`,
-            isCheck: true,
         },
     ];
 }
@@ -405,7 +394,6 @@ export function lastClosingCashIs(val) {
     return [
         {
             trigger: `[name=last_session_closing_cash]:contains(${val})`,
-            isCheck: true,
         },
     ];
 }
@@ -414,7 +402,6 @@ export function checkFirstLotNumber(number) {
         {
             content: "Check lot number",
             trigger: `.popup-input:value(${number})`,
-            run: () => {}, // it's a check
         },
     ];
 }
@@ -497,7 +484,6 @@ export function closePos() {
         {
             content: "close the Point of Sale frontend",
             trigger: ".close-pos-popup .button:contains('Discard')",
-            run: function () {}, //it's a check,
         },
     ];
 }
@@ -519,7 +505,6 @@ export function finishOrder() {
         {
             content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
-            isCheck: true,
         },
         {
             content: "click Next Order",
@@ -536,7 +521,6 @@ export function finishOrder() {
         {
             content: "check if we left the receipt screen",
             trigger: ".pos-content div:not(:has(.receipt-screen))",
-            run: function () {},
         },
     ];
 }

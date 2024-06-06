@@ -6,7 +6,6 @@ export function checkSimplifiedInvoiceNumber(number) {
         {
             content: "verify that the simplified invoice number appears correctly on the receipt",
             trigger: `.receipt-screen .simplified-invoice-number:contains('${number}')`,
-            isCheck: true,
         },
     ];
 }

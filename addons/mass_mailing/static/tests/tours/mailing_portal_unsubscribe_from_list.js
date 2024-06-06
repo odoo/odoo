@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list', 
         }, {
             content: "Confirmation exclusion is done",
             trigger: "div#o_mailing_subscription_update_info span:contains('Email added to our blocklist')",
-            isCheck: true,
         },
     ],
 });
@@ -106,7 +105,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
         }, {
             content: "This should disable the 'Update my subscriptions' (Apply changes) button",
             trigger: "div#o_mailing_subscription_blocklist:not(button#button_form_send)",
-            isCheck: true,
         }, {
             content: "Revert exclusion list",
             trigger: "div#button_blocklist_remove",
@@ -118,7 +116,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
         },  {
             content: "'Update my subscriptions' button usable again",
             trigger: "button#button_form_send:not([disabled])",
-            isCheck: true,
         }, {
             content: "Choose the mailing list 3 to come back",
             trigger: "ul#o_mailing_subscription_form_lists input[title='List3']",
@@ -180,7 +177,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_list_wi
         }, {
             content: "Confirmation feedback is sent",
             trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
-            isCheck: true,
         }
     ],
 });

@@ -24,12 +24,10 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Check that the highlight was applied",
         trigger: ":iframe .s_cover h1 span.o_text_highlight > .o_text_highlight_item > svg:has(.o_text_highlight_path_underline)",
-        isCheck: true,
     },
     {
         content: "Check that the highlights grid was displayed",
         trigger: "we-select[data-name=text_highlight_opt] we-toggler.active",
-        isCheck: true,
     },
     {
         content: "Disable the highlight effect",
@@ -39,7 +37,6 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Check that the highlight was disabled for the title",
         trigger: ":iframe .s_cover:not(:has(.o_text_highlight))",
-        isCheck: true,
     },
     {
         // On muti-line text, the highlight effect is added on every detected
@@ -69,14 +66,12 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Check if the text was correctly updated",
         trigger: ":iframe .o_text_highlight_underline:has(span:contains(Text content line A) + br + span:contains(Text content line B))",
-        isCheck: true,
     },
     ...wTourUtils.selectElementInWeSelectWidget("text_highlight_opt", "Jagged").slice(1), // The select is already opened
     {
         content: "When changing the text highlight, we only replace the highlight SVG with a new drawn one",
         trigger: ":iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(1)",
         extra_trigger: ":iframe .o_text_highlight_item:has(.o_text_highlight_path_jagged):nth-child(3)",
-        isCheck: true,
     },
     {
         content: "Disable the highlight effect",
@@ -86,6 +81,5 @@ wTourUtils.registerWebsitePreviewTour("text_highlights", {
     {
         content: "Check if the original DOM structure was restored",
         trigger: ":iframe .s_cover p:has(strong:contains(Text content line A) + br + i:contains(Text content line B))",
-        isCheck: true,
     },
 ]);

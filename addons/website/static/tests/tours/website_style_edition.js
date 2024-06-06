@@ -124,5 +124,4 @@ wTourUtils.goToTheme(),
 }, {
     content: "The media dialog should open",
     trigger: '.o_select_media_dialog',
-    run: () => {}, // It's a check.
 }]);

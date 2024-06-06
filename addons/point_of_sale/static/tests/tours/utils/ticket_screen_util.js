@@ -67,7 +67,6 @@ export function selectFilter(name) {
         },
         {
             trigger: `.pos-search-bar .filter ul`,
-            run: () => {},
         },
         {
             trigger: `.pos-search-bar .filter ul li:contains("${name}")`,
@@ -96,7 +95,6 @@ export function settleTips() {
         {
             content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
-            run: function () {},
         },
     ];
 }
@@ -122,12 +120,10 @@ export function checkStatus(orderName, status) {
     return [
         {
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(7):contains(${status})`,
-            run: () => {},
             mobile: false,
         },
         {
             trigger: `.ticket-screen .order-row > .col:contains("${orderName}") ~ .col:nth-child(2):contains(${status})`,
-            run: () => {},
             mobile: true,
         },
     ];
@@ -142,7 +138,6 @@ export function nthRowContains(n, string, viewMode) {
         {
             trigger: `.ticket-screen .orders > .order-row:nth-child(${n}):contains("${string}")`,
             mobile: viewMode,
-            run: () => {},
         },
     ];
 }
@@ -150,7 +145,6 @@ export function contains(string) {
     return [
         {
             trigger: `.ticket-screen .orders:contains("${string}")`,
-            run: () => {},
         },
     ];
 }
@@ -158,7 +152,6 @@ export function noNewTicketButton() {
     return [
         {
             trigger: ".ticket-screen .controls .buttons:nth-child(1):has(.discard)",
-            run: () => {},
         },
     ];
 }
@@ -166,7 +159,6 @@ export function filterIs(name) {
     return [
         {
             trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
-            run: () => {},
         },
     ];
 }
@@ -174,27 +166,23 @@ export function invoicePrinted() {
     return [
         {
             trigger: ProductScreen.controlButtonTrigger("Reprint Invoice"),
-            run: () => {},
         },
     ];
 }
 export function toRefundTextContains(text) {
     return inLeftSide({
         trigger: `.ticket-screen .to-refund-highlight:contains("${text}")`,
-        run: () => {},
     });
 }
 export function refundedNoteContains(text) {
     return inLeftSide({
         trigger: `.ticket-screen .refund-note:contains("${text}")`,
-        run: () => {},
     });
 }
 export function tipContains(amount) {
     return [
         {
             trigger: `.ticket-screen .tip-cell:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -202,7 +190,6 @@ export function receiptTotalIs(amount) {
     return [
         {
             trigger: `.receipt-screen .pos-receipt-amount:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }

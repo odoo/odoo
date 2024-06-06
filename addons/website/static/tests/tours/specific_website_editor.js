@@ -9,7 +9,6 @@ wTourUtils.registerWebsitePreviewTour("generic_website_editor", {
 }, () => [{
     trigger: ':iframe body:not([data-hello="world"])',
     content: 'Check that the editor DOM matches its website-generic features',
-    run: function () {}, // Simple check
 }]);
 
 // Good practice would have been to use `wTourUtils.registerWebsitePreviewTour`
@@ -23,5 +22,4 @@ registry.category("web_tour.tours").add('specific_website_editor', {
 {
     trigger: ':iframe body[data-hello="world"]',
     content: 'Check that the editor DOM matches its website-specific features',
-    run: function () {}, // Simple check
 }]});

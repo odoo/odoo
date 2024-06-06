@@ -72,5 +72,4 @@
         content: "Check edit button is there",
         trigger: "a:contains('Edit your answer')",
         auto: true,
-        isCheck: true,
     }]);

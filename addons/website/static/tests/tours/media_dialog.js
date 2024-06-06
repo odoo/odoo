@@ -23,7 +23,6 @@ wTourUtils.dragNDrop({
 }, {
     content: "Check that the media library is available",
     trigger: '.o_select_media_dialog:has(.o_we_search_select option[value="media-library"])',
-    isCheck: true,
 },
 ]);
 
@@ -152,6 +151,5 @@ wTourUtils.registerWebsitePreviewTour("website_media_dialog_image_shape", {
     {
         content: "Checks that the icon doesn't have a shape",
         trigger: ":iframe .s_text_image .fa-heart:not([data-shape])",
-        run: () => {}, //it's a check
     },
 ]);

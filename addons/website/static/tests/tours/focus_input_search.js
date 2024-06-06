@@ -28,13 +28,11 @@ wTourUtils.registerWebsitePreviewTour(
         {
             content: "Write something in the search box.",
             trigger: ".o_snippet_search_filter_input:value(hello)",
-            isCheck: true,
         },
         wTourUtils.goToTheme(),
         {
             content: "Wait for loading",
             trigger: ".o_we_customize_theme_btn.active",
-            isCheck: true,
         },
         wTourUtils.goBackToBlocks(),
         {

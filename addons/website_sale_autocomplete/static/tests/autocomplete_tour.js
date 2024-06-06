@@ -23,7 +23,6 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
 }, {
     content: 'Check if results have appeared',
     trigger: '.js_autocomplete_result',
-    run: function () {}
 }, {
     content: 'Input again in street field',
     trigger: 'input[name="street"]',

@@ -63,16 +63,13 @@ registry.category("web_tour.tours").add('configurator_flow', {
         content: "Events should be selected (module already installed)",
         extra_trigger: '.card.border-success:contains("Pricing")',
         trigger: '.card.card_installed:contains("Events")',
-        run: function () {}, // it's a check
     }, {
         content: "Slides should be selected (module already installed)",
         trigger: '.card.card_installed:contains("eLearning")',
-        run: function () {}, // it's a check
     }, {
         content: "Success Stories (Blog) and News (Blog) should be selected (module already installed)",
         extra_trigger: '.card.card_installed:contains("Success Stories")',
         trigger: '.card.card_installed:contains("News")',
-        run: function () {}, // it's a check
     }, {
         content: "Click on build my website",
         trigger: 'button.btn-primary',
@@ -80,12 +77,10 @@ registry.category("web_tour.tours").add('configurator_flow', {
     }, {
         content: "Loader should be shown",
         trigger: '.o_website_loader_container',
-        run: function () {}, // it's a check
     }, {
         content: "Wait until the configurator is finished",
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
-        isCheck: true,
     }, {
         content: "check menu and footer links are correct",
         trigger: 'body:not(.editor_enable)', // edit mode left

@@ -84,22 +84,18 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         content: "check upload progress bar is correctly shown (1)",
         trigger: `.o_we_progressbar:contains('icon.ico'):contains('${formatErrorMsg}')`,
         in_modal: false,
-        run: function () {}, // it's a check
     }, {
         content: "check upload progress bar is correctly shown (2)",
         trigger: ".o_we_progressbar:contains('image.webp'):contains('File has been uploaded')",
         in_modal: false,
-        run: function () {}, // it's a check
     }, {
         content: "check upload progress bar is correctly shown (3)",
         trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
         in_modal: false,
-        run: function () {}, // it's a check
     }, {
         content: "check upload progress bar is correctly shown (4)",
         trigger: ".o_we_progressbar:contains('image.jpeg'):contains('File has been uploaded')",
         in_modal: false,
-        run: function () {}, // it's a check
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
@@ -141,7 +137,6 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
         content: "check upload progress bar is correctly shown",
         trigger: ".o_we_progressbar:contains('image.png')",
         in_modal: false,
-        run: function () {}, // it's a check
     }, {
         content: "there should only have one notification toaster",
         trigger: ".o_notification",
@@ -155,15 +150,12 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress', {
     }, {
         content: "media dialog has closed after the upload",
         trigger: 'body:not(:has(.o_select_media_dialog))',
-        run: () => {}, // It's a check.
     }, {
         content: "the upload progress toast was updated",
         trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
-        run: () => {}, // It's a check.
     }, {
         content: "toaster should disappear after a few seconds if the uploaded image is successful",
         trigger: "body:not(:has(.o_we_progressbar))",
-        run: function () {}, // it's a check
     },
     // 3. Check error single image upload
     {
@@ -236,7 +228,6 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         extra_trigger: '.o_notification_close',
         trigger: ".o_we_progressbar:contains('fox'):contains('File has been uploaded')",
         in_modal: false,
-        run: function () {}, // it's a check
     }, {
         content: "notification should close after 3 seconds",
         trigger: 'body:not(:has(.o_notification_close))',

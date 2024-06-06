@@ -7,7 +7,6 @@ const requestChatSteps = [
     },
     {
         trigger: ".o-mail-ChatWindow",
-        isCheck: true,
     },
 ];
 
@@ -32,7 +31,6 @@ registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_messa
         },
         {
             trigger: ".o-mail-Message:contains('Hello, I need help')",
-            isCheck: true,
         },
     ],
 });

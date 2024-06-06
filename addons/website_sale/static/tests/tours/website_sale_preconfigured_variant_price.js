@@ -17,5 +17,4 @@ registry.category("web_tour.tours").add('website_sale_product_configurator_optio
     name: 'Check that modal was opened with the correct variant price',
     trigger: 'main.oe_advanced_configurator_modal',
     extra_trigger: 'main.oe_advanced_configurator_modal span:contains("800.40")',
-    run: () => {},
 }]});

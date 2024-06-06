@@ -58,7 +58,6 @@ export function isOptionShown(option) {
         {
             content: `option ${option} is shown`,
             trigger: `.form-check-label:contains('${option}')`,
-            run: () => {},
         },
     ];
 }

@@ -50,7 +50,6 @@ registry.category("web_tour.tours").add('google_analytics_view_item', {
         // a new view event should have been generated, for another variant
         trigger: `body[view-event-id]:not([view-event-id="${itemId}"])`,
         timeout: 25000,
-        run: () => {}, // it's a check
     },
 ]});
 
@@ -64,6 +63,5 @@ registry.category("web_tour.tours").add('google_analytics_add_to_cart', {
         extra_trigger: 'body[cart-event-id]',
         trigger: "a:has(.my_cart_quantity:contains(/^1$/))",
         timeout: 25000,
-        run: () => {}, // it's a check
     },
 ]});

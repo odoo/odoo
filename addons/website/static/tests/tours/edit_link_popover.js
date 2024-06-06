@@ -14,7 +14,6 @@ const clickFooter = [{
 }, {
     content: "Wait delayed click on footer",
     trigger: '.o_we_customize_panel we-title:contains("Footer")',
-    run: function () {}, // it's a check
 }];
 
 const clickEditLink = [{
@@ -24,7 +23,6 @@ const clickEditLink = [{
 }, {
     content: "Ensure popover is closed",
     trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
-    run: function () {}, // it's a check
     in_modal: false,
 }];
 
@@ -62,7 +60,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Popover should be shown",
         trigger: ':iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")', // At this point preview is loaded
-        run: function () {}, // it's a check
     },
     ...clickEditLink,
     {
@@ -79,7 +76,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Popover should be shown with updated preview data",
         trigger: ':iframe .o_edit_menu_popover .o_we_url_link:contains("Home")',
-        run: function () {}, // it's a check
     },
     {
         content: "Click on Remove Link in Popover",
@@ -89,12 +85,10 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Link should be removed",
         trigger: `${FIRST_PARAGRAPH}:not(:has(a))`,
-        run: function () {}, // it's a check
     },
     {
         content: "Ensure popover is closed",
         trigger: ':iframe html:not(:has(.o_edit_menu_popover))', // popover should be closed
-        run: function () {}, // it's a check
     },
     // 2. Test links in navbar (website)
     {
@@ -105,7 +99,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Popover should be shown (2)",
         trigger: ':iframe .o_edit_menu_popover .o_we_url_link:contains("Home")',
-        run: function () {}, // it's a check
     },
     ...clickEditLink,
     {
@@ -127,7 +120,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Popover should be shown with updated preview data (2)",
         trigger: ':iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
-        run: function () {}, // it's a check
     },
     {
         content: "Click on Edit Menu in Popover",
@@ -137,7 +129,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Edit Menu (tree) should open",
         trigger: '.o_website_dialog .oe_menu_editor',
-        run: function () {}, // it's a check
     },
     {
         content: "Close modal",
@@ -170,12 +161,10 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Popover should be shown (3)",
         trigger: ':iframe .o_edit_menu_popover .o_we_url_link:contains("Contact Us")',
-        run: function () {}, // it's a check
     },
     {
         content: "Toolbar should be shown (3)",
         trigger: `.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:value('/contactus'))`,
-        run: function () {}, // it's a check
     },
     {
         content: "Click 'Home' link in footer",
@@ -188,7 +177,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Toolbar should be shown (4)",
         trigger: `.oe-toolbar:not(.oe-floating):has(#o_link_dialog_url_input:value('/'))`,
-        run: function () {}, // it's a check
     },
     // 4. Popover should close when clicking non-link element
     ...clickFooter,
@@ -212,7 +200,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
         content: "Ensure popover is opened on double click, and so is right panel edit link",
         trigger: 'html:has(#o_link_dialog_url_input)',
         extra_trigger: ':iframe html:has(.o_edit_menu_popover)',
-        run: function () {}, // it's a check
     },
     {
         content: "Ensure that a click on the link popover link opens a new window in edit mode",
@@ -233,6 +220,5 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_2', {
     {
         content: "Ensure that link is opened correctly in edit mode",
         trigger: '.new_backend_window_opened',
-        run: () => {}, // it's a check
     },
 ]);

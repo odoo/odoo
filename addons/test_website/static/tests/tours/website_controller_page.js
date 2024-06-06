@@ -69,6 +69,5 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_default_page_chec
             assertEqual(iframeDocument.querySelector(".listing_layout_switcher #o_wstudio_apply_list").checked, true);
             assertEqual([...iframeDocument.querySelectorAll(".test_record_listing")].length, 2);
         },
-        isCheck: true,
     },
 ]);

@@ -187,7 +187,6 @@ const addImageToSection = (sectionName, pageName, backend) => {
 {
     content: 'eLearning: check course page',
     trigger: `${prefix}.o_wslides_course_main`,
-    isCheck: true,
 }];
 };
 
@@ -254,7 +253,6 @@ const addPdfToSection = function (sectionName, pageName, backend) {
 }, {
     content: 'eLearning: check course page',
     trigger: `${prefix}.o_wslides_course_main`,
-    isCheck: true,
 }];
 };
 

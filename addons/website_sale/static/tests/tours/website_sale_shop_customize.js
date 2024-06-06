@@ -18,7 +18,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "check the selection",
             trigger: ':iframe form.js_attributes input:checked + label:contains(Steel - Test)',
-            run: function () {}, // it's a check
         },
         {
             content: "select product",
@@ -30,7 +29,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "check list view of variants is disabled initially",
             extra_trigger: ":iframe #product_detail",
             trigger: ':iframe body:not(:has(.js_product_change))',
-            run: function () {},
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -53,12 +51,10 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             context: "check variant price",
             trigger: ':iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
-            run: function () {},
         },
         {
             content: "check price is 750",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
-            run: function () {},
         },
         {
             content: "switch to another variant",
@@ -68,7 +64,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "verify that price has changed when changing variant",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
-            run: function () {},
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -91,12 +86,10 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "check page loaded after list of variant customization disabled",
             trigger: ":iframe .js_product:not(:has(.js_product_change))",
-            run: function () {}, // it's a check
         },
         {
             content: "check price is 750",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
-            run: function () {},
         },
         {
             content: "switch to Aluminium variant",
@@ -106,7 +99,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "verify that price has changed when changing variant",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^800.40$/)",
-            run: function () {}, // it's a check
         },
         {
             content: "switch back to Steel variant",
@@ -116,7 +108,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "check price is 750",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^750.00$/)",
-            run: function () {},
         },
         {
             content: "click on 'Add to Cart' button",
@@ -126,7 +117,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         {
             content: "check quantity",
             trigger: ":iframe .my_cart_quantity:contains(/^1$/),.o_extra_menu_items .fa-plus",
-            run: function () {}, // it's a check
         },
         tourUtils.goToCart({backend: true}),
         {
@@ -157,7 +147,6 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             content: "finish",
             extra_trigger: ':iframe body:not(:has(#products_grid_before .js_attributes))',
             trigger: ':iframe #wrap:not(:has(li:has(.my_cart_quantity):visible))',
-            run: function () {}, // it's a check
         },
     ],
 );

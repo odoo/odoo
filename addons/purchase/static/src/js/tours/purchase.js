@@ -79,7 +79,6 @@ registry.category("web_tour.tours").add("purchase_tour", {
         {
             trigger: '.o_form_editable textarea[name="name"].product_creation_success',
             auto: true,
-            run: function () {}, // wait for product creation
         },
         {
             trigger: ".o_form_editable input[name='product_qty'] ",

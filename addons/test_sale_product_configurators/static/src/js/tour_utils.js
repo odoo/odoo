@@ -62,7 +62,6 @@ function assertPriceTotal(total) {
     return {
         trigger: `table.o_sale_product_configurator_table tr>td[colspan="4"] span:contains("${total}")`,
         content: `Assert that the total is ${total}`,
-        isCheck: true,
     };
 }
 
@@ -70,7 +69,6 @@ function assertProductNameContains(productName) {
     return {
         trigger: `table.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] h5:contains("${productName}"))`,
         content: `Assert that the productName contains ${productName}`,
-        isCheck: true,
     };
 }
 

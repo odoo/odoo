@@ -17,7 +17,6 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
         },
         {
             trigger: "input[id*='activity_type_id']:value('Call')",
-            run: () => {},
         },
         {
             extra_trigger: "button:contains('Schedule')",
@@ -54,7 +53,6 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
         },
         {
             trigger: ".o-mail-Message:contains('Play Mario Kart')",
-            isCheck: true,
         },
     ],
 });

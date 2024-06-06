@@ -26,7 +26,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         },
         {
             content: "Wait until the modal is closed",
-            isCheck: true,
             trigger: "body:not(.modal-open)",
         },
     ],

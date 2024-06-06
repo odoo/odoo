@@ -40,12 +40,10 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "check reward product",
             trigger: 'div>strong:contains("10.0% discount on total amount")',
-            run: function () {}, // it's a check
         },
         {
             content: "check loyalty points",
             trigger: '.oe_website_sale_gift_card span:contains("372.03 Points")',
-            run: function () {}, // it's a check
         },
         /* 2. Add some cabinet to get a free one, play with quantity */
         {
@@ -83,7 +81,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
             extra_trigger: ".oe_currency_value:contains(/74.00/):not(#cart_total)",
             trigger: '.oe_website_sale .oe_cart',
-            run: function () {}, // it's a check
         },
         /* 3. Add some cabinet to get a free one, play with quantity */
         {
@@ -94,7 +91,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "check reduction amount got recomputed when changing qty",
             trigger: '.oe_currency_value:contains("- 106.00")',
-            run: function () {}, // it's a check
         },
         {
             content: "add more Small Cabinet into cart",
@@ -104,7 +100,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "check free product is added",
             trigger: '#wrap:has(div>strong:contains("Free Product - Small Cabinet"))',
-            run: function () {}, // it's a check
         },
         {
             content: "remove one cabinet from cart",
@@ -114,7 +109,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         {
             content: "check free product is removed",
             trigger: '#wrap:not(:has(div>strong:contains("Free Product - Small Cabinet")))',
-            run: function () {}, // it's a check
         },
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
         {

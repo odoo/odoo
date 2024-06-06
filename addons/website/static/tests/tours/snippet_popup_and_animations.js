@@ -126,7 +126,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Check that the popup has been closed",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') i.fa-eye-slash",
-        isCheck: true,
     },
     wTourUtils.clickOnElement("Last image of the 'Columns' snippet", ":iframe .s_three_columns .o_animate_on_scroll img"),
     wTourUtils.changeOption("WebsiteAnimate", 'we-toggler:contains("None")'),
@@ -135,7 +134,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the hover effect animation has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='overlay']",
         extra_trigger: ".snippet-option-WebsiteAnimate we-row:contains('Animation') we-select[data-is-animation-type-selection] we-toggler:contains('On Hover')",
-        isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -146,7 +144,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the outline effect has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-hover-effect='outline']",
         extra_trigger: ".snippet-option-WebsiteAnimate we-select[data-attribute-name='hoverEffect'] we-toggler:contains('Outline')",
-        isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
     {
@@ -168,7 +165,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
         content: "Check that the Blur filter has been applied on the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img[data-gl-filter='blur']",
         extra_trigger: ".snippet-option-ImageTools we-select:contains('Filter') we-toggler:contains('Blur')",
-        isCheck: true,
     },
     {
         content: "Click on the 'undo' button",
@@ -178,7 +174,6 @@ wTourUtils.registerWebsitePreviewTour("snippet_popup_and_animations", {
     {
         content: "Check that the Blur filter has been removed from the image",
         trigger: ":iframe .s_three_columns .o_animate_on_scroll img:not([data-gl-filter='blur'])",
-        isCheck: true,
     },
     ...wTourUtils.clickOnSave(),
     {

@@ -7,7 +7,6 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
     steps: () => [
         {
             trigger: 'div[name=move_raw_ids] td[name="quantity"]:last:contains("0.00")',
-            run: () => {},
         },
         {
             trigger: 'div[name=move_raw_ids] td[name="quantity"]:last',
@@ -37,7 +36,6 @@ registry.category("web_tour.tours").add('test_mrp_manual_consumption_02', {
         },
         {
             trigger: 'div[name=move_raw_ids] td[name="quantity"]:last:contains("16.00")',
-            run: () => {},
         },
         ...stepUtils.saveForm(),
 ]});

@@ -70,7 +70,6 @@ function closeProfileDialog({content, totp_state}) {
         },
     }, {
         trigger: 'body.dialog-closed',
-        run() {},
     }];
 }
 

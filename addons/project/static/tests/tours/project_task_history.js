@@ -134,6 +134,5 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
     }, {
         content: "Verify that we are on kanban view",
         trigger: 'button.o_switch_view.o_kanban.active',
-        isCheck: true,
     }
 ]});

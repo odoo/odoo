@@ -101,7 +101,6 @@ export function waitForUnitTest() {
             content: "wait for unit tests to finish",
             trigger: ".pos.done-testing",
             in_modal: false,
-            run: function () {}, // it's a check
         },
     ];
 }

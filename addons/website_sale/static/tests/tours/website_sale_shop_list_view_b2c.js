@@ -13,7 +13,6 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         {
             content: "check price on /shop",
             trigger: ':iframe .oe_product_cart .oe_currency_value:contains("825.00")',
-            run: () => {}, // It's a check.
         },
         {
             content: "select product",
@@ -24,7 +23,6 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             content: "check products list is disabled initially (when on /product page)",
             trigger: ':iframe body:not(:has(.js_product_change))',
             extra_trigger: ':iframe #product_details',
-            run: () => {}, // It's a check.
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -47,17 +45,14 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         {
             content: "check page loaded after 'Products List' enabled",
             trigger: ':iframe .js_product_change',
-            run: () => {}, // It's a check.
         },
         {
             context: "check variant price",
             trigger: ':iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("55.44")',
-            run: () => {}, // It's a check.
         },
         {
             content: "check price is 825",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^825.00$/)",
-            run: () => {}, // It's a check.
         },
         {
             content: "switch to another variant",
@@ -67,7 +62,6 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         {
             content: "verify that price has changed when changing variant",
             trigger: ":iframe .product_price .oe_price .oe_currency_value:contains(/^880.44$/)",
-            run: () => {}, // It's a check.
         },
         {
             content: "click on 'Add to Cart' button",
@@ -78,7 +72,6 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
         {
             content: "check price on /cart",
             trigger: ":iframe #cart_products .oe_currency_value:contains(/^880.44$/)",
-            run: () => {}, // It's a check.
         },
     ],
 );

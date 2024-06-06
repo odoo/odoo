@@ -34,7 +34,6 @@ registry.category("web_tour.tours").add('website_sale_cart_notification', {
                     console.error('The cart notification is not closed!');
                 }
             },
-            isCheck: true,
         },
         ...tourUtils.searchProduct('website_sale_cart_notification_product_2'),
         {

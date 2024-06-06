@@ -21,7 +21,6 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if Q3 button is Submit',
         trigger: 'button.btn:contains("Submit")',
-        isCheck: true,
     }, {
         content: 'Go back to Q2',
         trigger: 'button.btn[value="previous"]',
@@ -29,7 +28,6 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if the alert box is present',
         trigger: 'div.o_survey_question_error span',
-        isCheck: true,
     }, {
         content: 'Skip question Q2 again',
         trigger: 'button.btn:contains("Continue")',
@@ -45,7 +43,6 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if question is Q1',
         trigger: 'div.js_question-wrapper:contains("Q1")',
-        isCheck: true,
     }, {
         content: 'Click on "Next Skipped" button',
         trigger: 'button.btn:contains("Next Skipped")',
@@ -53,7 +50,6 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if question is Q2',
         trigger: 'div.js_question-wrapper:contains("Q2")',
-        isCheck: true,
     }, {
         content: 'Click on "Next Skipped" button',
         trigger: 'button.btn:contains("Next Skipped")',
@@ -61,7 +57,6 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if question is Q1 again (should loop on skipped questions)',
         trigger: 'div.js_question-wrapper:contains("Q1")',
-        isCheck: true,
     }, {
         content: 'Answer Q1',
         trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 2")',
@@ -69,7 +64,6 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if the visible question is the skipped question Q2',
         trigger: 'div.js_question-wrapper:contains("Q2")',
-        isCheck: true,
     }, {
         content: 'Answer Q2',
         trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 3")',
@@ -81,6 +75,5 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
     }, {
         content: 'Check if the survey is done',
         trigger: 'div.o_survey_finished h1:contains("Thank you!")',
-        isCheck: true,
     }],
 });

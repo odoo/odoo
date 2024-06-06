@@ -210,7 +210,6 @@ export function isShown() {
         {
             content: "payment screen is shown",
             trigger: ".pos .payment-screen",
-            run: () => {},
         },
     ];
 }
@@ -223,7 +222,6 @@ export function changeIs(amount) {
         {
             content: `change is ${amount}`,
             trigger: `.payment-status-change .amount:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -232,7 +230,6 @@ export function isInvoiceOptionSelected() {
         {
             content: "Invoice option is selected",
             trigger: ".payment-buttons .js_invoice.highlight",
-            isCheck: true,
         },
     ];
 }
@@ -245,7 +242,6 @@ export function remainingIs(amount) {
         {
             content: `remaining amount is ${amount}`,
             trigger: `.payment-status-remaining .amount:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -260,7 +256,6 @@ export function validateButtonIsHighlighted(isHighlighted = true) {
             trigger: isHighlighted
                 ? `.payment-screen .button.next.highlight`
                 : `.payment-screen .button.next:not(:has(.highlight))`,
-            run: () => {},
             mobile: false,
         },
         {
@@ -268,7 +263,6 @@ export function validateButtonIsHighlighted(isHighlighted = true) {
             trigger: isHighlighted
                 ? `.payment-screen .btn-switchpane:not(.secondary):contains('Validate')`
                 : `.payment-screen .btn-switchpane.secondary:contains('Validate')`,
-            run: () => {},
             mobile: true,
         },
     ];
@@ -282,12 +276,10 @@ export function emptyPaymentlines(amountToPay) {
         {
             content: `there are no paymentlines`,
             trigger: `.paymentlines-empty`,
-            run: () => {},
         },
         {
             content: `amount to pay is '${amountToPay}'`,
             trigger: `.paymentlines-empty .total:contains("${amountToPay}")`,
-            run: () => {},
         },
     ];
 }
@@ -301,12 +293,10 @@ export function selectedPaymentlineHas(paymentMethodName, amount) {
         {
             content: `line paid via '${paymentMethodName}' is selected`,
             trigger: `.paymentlines .paymentline.selected .payment-name:contains("${paymentMethodName}")`,
-            run: () => {},
         },
         {
             content: `amount tendered in the line is '${amount}'`,
             trigger: `.paymentlines .paymentline.selected .payment-amount:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -315,7 +305,6 @@ export function totalIs(amount) {
         {
             content: `total is ${amount}`,
             trigger: `.total:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -324,7 +313,6 @@ export function totalDueIs(amount) {
         {
             content: `total due is ${amount}`,
             trigger: `.payment-status-total-due:contains("${amount}")`,
-            run: () => {},
         },
     ];
 }
@@ -344,7 +332,6 @@ export function isInvoiceButtonChecked() {
         {
             content: "check invoice button is checked",
             trigger: ".js_invoice.highlight",
-            run: () => {},
         },
     ];
 }
@@ -375,7 +362,6 @@ export function clickPartnerButton() {
             content: "partner screen is shown",
             trigger: PartnerList.clickPartner().trigger,
             in_modal: true,
-            run: () => {},
         },
     ];
 }
@@ -389,7 +375,6 @@ export function shippingLaterHighlighted() {
         {
             content: "Shipping later button is highlighted",
             trigger: ".button:contains('Ship Later').highlight",
-            isCheck: true,
         },
     ];
 }

@@ -26,21 +26,18 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
     steps = steps.concat([{
         content: `Check we are on the "${talkName}" talk page`,
         trigger: 'div.o_wesession_track_main',
-        run: function () {}, // it's a check
     }]);
 
     if (reminderOn) {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was already on`,
             trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-            run: function () {}, // it's a check
         }]);
     }
     else {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was off`,
             trigger: 'div.o_wetrack_js_reminder i.fa-bell-o',
-            run: function () {}, // it's a check
         }]);
         if (toggleReminder) {
             steps = steps.concat([{
@@ -50,7 +47,6 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
             }, {
                 content: `Check Favorite for ${talkName} is now on`,
                 trigger: 'div.o_wetrack_js_reminder i.fa-bell',
-                run: function () {}, // it's a check
             }]);
         }
     }
@@ -65,10 +61,8 @@ var discoverTalkSteps = function (talkName, fromList, reminderOn, toggleReminder
 var discoverRoomSteps = function (roomName) {
     var steps = [{
         content: 'Go on "' + roomName + '" room in List',
+        // can't click on it, it will try to launch Jitsi and fail on chrome headless
         trigger: 'a.o_wevent_meeting_room_card h4:contains("' + roomName + '")',
-        run: function() {
-            // can't click on it, it will try to launch Jitsi and fail on chrome headless
-        },
     }];
     return steps;
 };
@@ -116,17 +110,14 @@ var registerSteps = [{
     run: 'click',
 }, {
     trigger: 'div.o_wereg_confirmed_attendees span:contains("Raoulette Poiluchette")',
-    run: function () {} // check
 }, {
     trigger: 'div.o_wereg_confirmed_attendees span:contains("Michel Tractopelle")',
-    run: function () {} // check
 },  {
     content: "Click on 'register favorites talks' button",
     trigger: 'a:contains("register to your favorites talks now")',
     run: 'click',
 },  {
     trigger: 'h5:contains("Book your talks")',
-    run: function() {},
 }];
 
 /**
@@ -148,7 +139,6 @@ var browseTalksSteps = [{
 }, {
     content: 'Check we are on the talk list page',
     trigger: 'h5:contains("Book your talks")',
-    run: function () {} // check
 }];
 
 var browseBackSteps = [{
@@ -158,7 +148,6 @@ var browseBackSteps = [{
 }, {
     content: 'Check we are back on the talk list page',
     trigger: 'h5:contains("Book your talks")',
-    run: function () {} // check
 }];
 
 var browseMeetSteps = [{
@@ -168,7 +157,6 @@ var browseMeetSteps = [{
 }, {
     content: 'Check we are on the community page',
     trigger: 'h3:contains("Join a room")',
-    run: function () {} // check
 }];
 
 

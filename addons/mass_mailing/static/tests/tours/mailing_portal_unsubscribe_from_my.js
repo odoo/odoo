@@ -70,7 +70,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
         }, {
             content: "This should display the Feedback area",
             trigger: "div#o_mailing_portal_subscription textarea",
-            isCheck: true,
         }, {
             content: "Write feedback reason",
             trigger: "textarea[name='feedback']",
@@ -87,7 +86,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
             content: "Once sent feedback area is readonly",
             trigger: "fieldset input.o_mailing_subscription_opt_out_reason[disabled]",
             extra_trigger: "textarea[disabled]",
-            isCheck: true,
+            allowDisabled: true,
         }, {
             content: "Now exclude me",
             trigger: "div#button_blocklist_add",
@@ -99,11 +98,9 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
         }, {
             content: "This should disable the 'Update my subscriptions' (Apply changes) button",
             trigger: "div#o_mailing_subscription_blocklist:not(button#button_form_send)",
-            isCheck: true,
         }, {
             content: "This should enabled Feedback again",
             trigger: "div#o_mailing_portal_subscription textarea",
-            isCheck: true,
         }, {
             content: "Display warning about mailing lists",
             trigger: "div#o_mailing_subscription_form_blocklisted p:contains('You will not receive any news from those mailing lists you are a member of')",
@@ -124,7 +121,6 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_my', {
         }, {
             content: "Confirmation feedback is sent",
             trigger: "div#o_mailing_subscription_feedback_info span:contains('Sent. Thanks you for your feedback!')",
-            isCheck: true,
         }
     ],
 });
