@@ -27,10 +27,6 @@ class SaleOrder(models.Model):
     coupon_point_ids = fields.One2many(
         comodel_name='sale.order.coupon.points', inverse_name='order_id', copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
-    # loyalty_points = fields.Float(default=0)
-    # loyalty_new_points = fields.Float(default=0)
-    # loyalty_used = fields.Float(default=0)
-    # loyalty_issued = fields.Float(default=0)
 
     @api.depends('order_line')
     def _compute_reward_total(self):
@@ -562,9 +558,11 @@ class SaleOrder(models.Model):
             # Update points of the coupon used.
             coupon_point = self.coupon_point_ids.filtered(lambda pe: pe.coupon_id == line.coupon_id)
             if coupon_point:
-                coupon_point.sudo().points_used += line.points_cost
+                coupon_point.sudo().used += line.points_cost
             # TODO: MATP Ask for the formation of the description :/
             # Create/add used points in coupon history.
+            # Update points of the coupon used.
+            coupon_point_id.coupon_id.points -= line.points_cost
             qty = int(line.reward_id.reward_product_qty * line.product_uom_qty)
             line.coupon_id.history_ids += self.env['sale.loyalty.history'].create({
                 'coupon_id': line.coupon_id.id,
@@ -614,8 +612,8 @@ class SaleOrder(models.Model):
             self.sudo().with_context(tracking_disable=True).write({
                 'coupon_point_ids': [(0, 0, {
                     'coupon_id': coupon.id,
-                    'points_balanced': coupon.points,
-                    'points_issued': points,
+                    'balance': coupon.points,
+                    'issued': points,
                     'points': points,
                 }) for coupon, points in coupon_points.items()]
             })

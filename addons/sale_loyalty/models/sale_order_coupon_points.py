@@ -13,11 +13,12 @@ class SaleOrderCouponPoints(models.Model):
     points = fields.Float(required=True)
 
     program_name = fields.Char(related="coupon_id.program_id.name")
+    program_type = fields.Selection(related="coupon_id.program_id.program_type")
     # loyalty_points = fields.Float(default=0)
     # loyalty_new_points = fields.Float(compute='_compute_loyalty_new_points')
-    points_balanced = fields.Float(default=0)
-    points_used = fields.Float(default=0)
-    points_issued = fields.Float(default=0)
+    balance = fields.Float(default=0)
+    used = fields.Float(default=0)
+    issued = fields.Float(default=0)
 
     # def _compute_loyalty_new_points(self):
     #     for record in self:

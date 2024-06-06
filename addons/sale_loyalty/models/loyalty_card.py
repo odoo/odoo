@@ -31,17 +31,18 @@ class LoyaltyCard(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        coupon = super().create(vals_list)
-        if coupon.points:
-            coupon.history_ids = self.env['sale.loyalty.history'].create({
-                'description': "Created",
-                'coupon_id': coupon.id,
-                'sale_order_id': coupon.order_id.id,
-                'sale_order_name': coupon.order_id.name,
-                'issued': coupon.points,
-                'new_balance': coupon.points,
-            })
-        return coupon
+        coupons = super().create(vals_list)
+        for coupon in coupons:
+            if coupon.points:
+                coupon.history_ids = self.env['sale.loyalty.history'].create({
+                    'description': vals_list['description'],
+                    'coupon_id': coupon.id,
+                    'sale_order_id': coupon.order_id.id,
+                    'sale_order_name': coupon.order_id.name,
+                    'issued': coupon.points,
+                    'new_balance': coupon.points,
+                })
+        return coupons
 
     def _get_default_template(self):
         default_template = super()._get_default_template()

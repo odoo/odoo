@@ -4,29 +4,29 @@
         <table class="table table-sm">
             <tbody>
                 <tr class="border-black">
-                    <td scope="row">
-                        <strong>Loyalty cards: <t t-out="program_name"/></strong>
+                    <td scope="row" class="text-nowrap">
+                        <strong><t t-out="'Loyalty cards: ' + program_name"/></strong>
                     </td>
                     <td class="text-end">
-                        <span t-out="points_balanced"/>
+                        <span t-out="balance"/>
                     </td>
                 </tr>
                 <tr>
                     <td scope="row">Issued</td>
                     <td class="text-end">
-                        <span t-out="points_issued"/>
+                        <span t-out="issued"/>
                     </td>
                 </tr>
                 <tr>
                     <td scope="row">Used</td>
                     <td class="text-end">
-                        <span t-out="points_used"/>
+                        <span t-out="used"/>
                     </td>
                 </tr>
                 <tr class="border-black">
                     <td scope="row"><strong>New Sold</strong></td>
                     <td class="text-end">
-                        <span t-out="points_balanced + points_issued - points_used"/>
+                        <span t-out="balance + issued - used"/>
                     </td>
                 </tr>
             </tbody>

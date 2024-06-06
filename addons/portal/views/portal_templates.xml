@@ -880,7 +880,7 @@
                             role="button"
                             data-type="ewallet"
                             t-att-data-coupon-id="coupon.id"
-                            t-att-data-title="coupon.description"
+                            t-att-data-title="coupon.program_id.name"
                             t-att-data-points="coupon.points_display"
                             t-att-data-point-name="coupon.point_name"
                             t-att-data-top-up-values="program.TOP_UP_VALUES"
@@ -898,7 +898,7 @@
                                     width="40"
                                 />
                                 <div class="d-flex flex-column gap-1">
-                                    <span t-out="coupon.description"/>
+                                    <span t-out="coupon.program_id.name"/>
                                     <p class="m-0 text-600" t-out="coupon.points_display"/>
                                 </div>
                             </div>
