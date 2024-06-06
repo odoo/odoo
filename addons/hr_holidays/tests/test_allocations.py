@@ -18,6 +18,7 @@ class TestAllocations(TestHrHolidaysCommon):
             'time_type': 'leave',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no',
+            'allocation_type': 'regular',
         })
         cls.department = cls.env['hr.department'].create({
             'name': 'Test Department',
@@ -45,7 +46,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'mode_company_id': self.company.id,
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
-            'allocation_type': 'regular',
         })
 
         company_allocation.action_validate()
@@ -61,7 +61,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
-            'allocation_type': 'regular',
         })
 
         employee_allocation.action_validate()
@@ -76,7 +75,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'department_id': self.department.id,
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
-            'allocation_type': 'regular',
         })
 
         department_allocation.action_validate()
@@ -91,7 +89,6 @@ class TestAllocations(TestHrHolidaysCommon):
             'category_id': self.category_tag.id,
             'holiday_status_id': self.leave_type.id,
             'number_of_days': 2,
-            'allocation_type': 'regular',
         })
 
         category_allocation.action_validate()

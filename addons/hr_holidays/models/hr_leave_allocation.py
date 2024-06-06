@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
-
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
@@ -61,6 +56,7 @@ class HolidaysAllocation(models.Model):
         "hr.leave.type", compute='_compute_holiday_status_id', store=True, string="Time Off Type", required=True, readonly=False,
         domain=_domain_holiday_status_id,
         default=_default_holiday_status_id)
+    allocation_type = fields.Selection(related='holiday_status_id.allocation_type')
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
@@ -120,10 +116,6 @@ class HolidaysAllocation(models.Model):
     lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
     nextcall = fields.Date("Date of the next accrual allocation", readonly=True, default=False)
     already_accrued = fields.Boolean()
-    allocation_type = fields.Selection([
-        ('regular', 'Regular Allocation'),
-        ('accrual', 'Accrual Allocation')
-    ], string="Allocation Type", default="regular", required=True, readonly=True)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan',
         compute="_compute_from_holiday_status_id", store=True, readonly=False, tracking=True,
@@ -139,8 +131,12 @@ class HolidaysAllocation(models.Model):
          "(holiday_type='department' AND department_id IS NOT NULL) or "
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
-        ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
+
+    @api.constrains('number_of_days', 'holiday_status_id')
+    def _check_duration(self):
+        if any(alloc.allocation_type == 'regular' and alloc.number_of_days <= 0 for alloc in self):
+            raise UserError(_('The duration must be greater than 0.'))
 
     @api.constrains('date_from', 'date_to')
     def _check_date_from_date_to(self):
