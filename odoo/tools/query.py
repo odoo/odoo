@@ -64,15 +64,15 @@ class Query:
         self._joins: dict[str, tuple[SQL, SQL, SQL]] = {}
 
         # holds the list of WHERE conditions (to be joined with 'AND')
-        self._where_clauses = []
+        self._where_clauses: list[SQL] = []
 
         # order, limit, offset
-        self._order = None
-        self.limit = None
-        self.offset = None
+        self._order: SQL | None = None
+        self.limit: int | None = None
+        self.offset: int | None = None
 
         # memoized result
-        self._ids = None
+        self._ids: tuple[int] | None = None
 
     def make_alias(self, alias: str, link: str) -> str:
         """ Return an alias based on ``alias`` and ``link``. """
@@ -192,7 +192,12 @@ class Query:
         """
         if self._ids is not None and not args:
             # inject the known result instead of the subquery
-            return SQL("%s", self._ids or (None,))
+            if not self._ids:
+                # in case we have nothing, we want to use a sub_query with no records
+                # because an empty tuple leads to a syntax error
+                # and a tuple containing just None creates issues for `NOT IN`
+                return SQL("(SELECT 1 WHERE FALSE)")
+            return SQL("%s", self._ids)
 
         if self.limit or self.offset:
             # in this case, the ORDER BY clause is necessary

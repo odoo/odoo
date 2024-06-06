@@ -4,6 +4,7 @@
 """ High-level objects for fields. """
 
 from collections import defaultdict
+from collections.abc import Set
 from datetime import date, datetime, time
 from operator import attrgetter
 from xmlrpc.client import MAXINT
@@ -40,8 +41,8 @@ from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from .tools.translate import html_translate, _
 from .tools.mimetypes import guess_mimetype
 
+from odoo.domains import Domain, NEGATIVE_TERM_OPERATORS
 from odoo.exceptions import CacheMiss
-from odoo.osv import expression
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -723,37 +724,50 @@ class Field(MetaField('DummyField', (object,), {})):
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
 
-        # This should never happen to avoid bypassing security checks
-        # and should already be converted to (..., 'in', subquery)
-        assert operator not in ('any', 'not any')
+        # Compute the new domain for ('x.y.z', op, value)
+        # as ('x', 'any', [('y', 'any', [('z', op, value)])])
+        # If the followed relation is a nullable many2one, we accept null
+        # for that path as well.
 
         # determine whether the related field can be null
-        if isinstance(value, (list, tuple)):
+        if isinstance(value, (Set, list, tuple)):
             value_is_null = any(val is False or val is None for val in value)
         else:
             value_is_null = value is False or value is None
-
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
-            (operator not in expression.NEGATIVE_TERM_OPERATORS and value_is_null)
-            or (operator in expression.NEGATIVE_TERM_OPERATORS and not value_is_null)
+            (operator in NEGATIVE_TERM_OPERATORS) != value_is_null
         )
+
+        # build the domain
+        # Note that the access of many2one fields is done using sudo
+        # (see compute_sudo), but the given value may have a different context
+        model = records.env[self.model_name].with_context(active_test=False)
+        model = model.sudo(records.env.su or self.compute_sudo)
 
         def make_domain(path, model):
             if '.' not in path:
-                return [(path, operator, value)]
+                if isinstance(value, Domain):
+                    # The related field is computed using a different context,
+                    # but the search must be executed using context of records,
+                    # therefore transform the domain into a query
+                    field = model._fields[path]
+                    comodel = model.env[field.comodel_name]
+                    final_value = comodel.with_env(records.env)._search(value)
+                else:
+                    final_value = value
+                return Domain(path, operator, final_value)
 
             prefix, suffix = path.split('.', 1)
             field = model._fields[prefix]
             comodel = model.env[field.comodel_name]
 
-            domain = [(prefix, 'in', comodel._search(make_domain(suffix, comodel)))]
+            # Transform sub-domain into a query to fix access rules
+            sub_domain = make_domain(suffix, comodel)
+            domain = Domain(prefix, 'any', comodel._search(sub_domain))
             if can_be_null and field.type == 'many2one' and not field.required:
-                return expression.OR([domain, [(prefix, '=', False)]])
+                domain |= Domain(prefix, '=', False)
 
             return domain
-
-        model = records.env[self.model_name].with_context(active_test=False)
-        model = model.sudo(records.env.su or self.compute_sudo)
 
         return make_domain(self.related, model)
 
@@ -4009,10 +4023,9 @@ class PropertiesDefinition(Field):
                 # (e.g. if the module has been uninstalled)
                 # check if the domain is still valid
                 try:
-                    expression.expression(
-                        ast.literal_eval(property_domain),
-                        record.env[property_model],
-                    )
+                    dom = Domain(ast.literal_eval(property_domain))
+                    model = record.env[property_model].sudo()
+                    dom.optimize(model)
                 except ValueError:
                     del property_definition['domain']
 

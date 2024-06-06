@@ -2308,7 +2308,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ test search on many2one ordered by id """
         with self.assertQueries(['''
             SELECT "test_new_api_message"."id" FROM "test_new_api_message"
-            WHERE ("test_new_api_message"."active" = %s)
+            WHERE "test_new_api_message"."active" = %s
             ORDER BY  "test_new_api_message"."discussion"
         ''']):
             self.env['test_new_api.message'].search([], order='discussion')
@@ -2329,6 +2329,10 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(
             Model.search([('parent_id', '=', 'Parent')]),
             child_of_active + child_of_inactive,
+        )
+        self.assertEqual(
+            Model.search([('id', 'child_of', active_parent.id)]),
+            active_parent + child_of_active,
         )
         # weird semantics: active_parent is in both results but doesn't have a parent_id
         self.assertEqual(
@@ -2999,7 +3003,7 @@ class TestFields(TransactionCaseWithUserDemo):
                    "test_new_api_prefetch"."write_uid",
                    "test_new_api_prefetch"."write_date"
             FROM "test_new_api_prefetch"
-            WHERE ("test_new_api_prefetch"."id" IN %s)
+            WHERE "test_new_api_prefetch"."id" IN %s
         """]):
             records.mapped('name')  # fetch all fields with prefetch=True
 
@@ -3010,7 +3014,7 @@ class TestFields(TransactionCaseWithUserDemo):
                 "test_new_api_prefetch"."hermione",
                 "test_new_api_prefetch"."ron"
             FROM "test_new_api_prefetch"
-            WHERE ("test_new_api_prefetch"."id" IN %s)
+            WHERE "test_new_api_prefetch"."id" IN %s
         """]):
             records.mapped('harry')  # fetch all fields with prefetch='Harry Potter'
             records.mapped('hermione')  # fetched already
@@ -3022,7 +3026,7 @@ class TestFields(TransactionCaseWithUserDemo):
                 "test_new_api_prefetch"."hansel",
                 "test_new_api_prefetch"."gretel"
             FROM "test_new_api_prefetch"
-            WHERE ("test_new_api_prefetch"."id" IN %s)
+            WHERE "test_new_api_prefetch"."id" IN %s
         """]):
             records.mapped('hansel')  # fetch all fields with prefetch='Hansel and Gretel'
             records.mapped('gretel')  # fetched already
@@ -4321,7 +4325,7 @@ def select(model, *fnames):
         f'"{table}"."{fname}"'
         for fname in ['id'] + list(fnames)
     )
-    return f'SELECT {terms} FROM "{table}" WHERE ("{table}"."id" IN %s)'
+    return f'SELECT {terms} FROM "{table}" WHERE "{table}"."id" IN %s'
 
 
 def insert(model, *fnames, rowcount=1):
@@ -4881,12 +4885,12 @@ class TestModifiedPerformance(TransactionCase):
                    "test_new_api_modified_line"."create_uid",
                    "test_new_api_modified_line"."create_date"
             FROM "test_new_api_modified_line"
-            WHERE ("test_new_api_modified_line"."id" IN %s)
+            WHERE "test_new_api_modified_line"."id" IN %s
         """, """
             SELECT "test_new_api_modified_line"."id",
                    "test_new_api_modified_line"."parent_id"
             FROM "test_new_api_modified_line"
-            WHERE ("test_new_api_modified_line"."id" IN %s)
+            WHERE "test_new_api_modified_line"."id" IN %s
         """], flush=False):
             # Two requests:
             # - one for fetch modified_line_a_child_child data (invalidate just before)

@@ -4,8 +4,6 @@ import base64
 import binascii
 import contextlib
 import hashlib
-import io
-import itertools
 import logging
 import mimetypes
 import os
@@ -17,7 +15,7 @@ import werkzeug
 from collections import defaultdict
 from PIL import Image
 
-from odoo import api, fields, models, SUPERUSER_ID, tools, _
+from odoo import api, fields, models, Domain, SUPERUSER_ID, tools, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.http import Stream, root, request
 from odoo.tools import config, human_size, ImageProcess, str2bool, consteq
@@ -520,9 +518,10 @@ class IrAttachment(models.Model):
         # add res_field=False in domain if not present; the arg[0] trick below
         # works for domain items and '&'/'|'/'!' operators too
         disable_binary_fields_attachments = False
+        domain = Domain(domain)
         if not any(arg[0] in ('id', 'res_field') for arg in domain):
             disable_binary_fields_attachments = True
-            domain = [('res_field', '=', False)] + domain
+            domain &= Domain('res_field', '=', False)
 
         if self.env.is_superuser():
             # rules do not apply for the superuser
