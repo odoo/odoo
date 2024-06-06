@@ -484,3 +484,36 @@ registry.category("web_tour.tours").add('test_edit_existing_line', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
+    test: true,
+    steps: () => [
+        {
+            trigger: ".o_optional_columns_dropdown_toggle",
+            run: "click",
+        },
+        {
+            trigger: ".dropdown-item:contains('Serial Numbers')",
+            run: "click",
+        },
+        {
+            trigger: ".o_data_cell.o_many2many_tags_cell",
+            run: "click",
+        },
+        {
+            trigger: ".oi-close:first",
+            run: "click",
+        },
+        {
+            trigger: ".oi-close:first",
+            run: "click",
+        },
+        {
+            trigger: ".o_form_button_save",
+            run: "click",
+        },
+        {
+            trigger: ".o_form_renderer.o_form_saved",
+        },
+    ]
+});
