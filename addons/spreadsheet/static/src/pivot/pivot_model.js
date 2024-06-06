@@ -265,10 +265,7 @@ export class OdooPivotModel extends PivotModel {
         const rows = this._getSpreadsheetRows(this.data.rowGroupTree);
         rows.push(rows.shift()); //Put the Total row at the end.
         const measures = this.getDefinition().measures.map((measure) => measure.name);
-        const rowTitle = this.getDefinition().rows[0]
-            ? this.getDefinition().rows[0].displayName
-            : "";
-        return new SpreadsheetPivotTable(cols, rows, measures, rowTitle);
+        return new SpreadsheetPivotTable(cols, rows, measures);
     }
 
     //--------------------------------------------------------------------------
