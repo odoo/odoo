@@ -16,7 +16,20 @@ export class BooleanFavoriteField extends Component {
         noLabel: false,
     };
 
+    get iconClass() {
+        return this.props.record.data[this.props.name] ? "fa fa-star me-1" : "fa fa-star-o me-1";
+    }
+
+    get label() {
+        return this.props.record.data[this.props.name]
+            ? _t("Remove from Favorites")
+            : _t("Add to Favorites");
+    }
+
     async update() {
+        if (this.props.readonly) {
+            return;
+        }
         const changes = { [this.props.name]: !this.props.record.data[this.props.name] };
         await this.props.record.update(changes, { save: this.props.autosave });
     }
@@ -38,9 +51,10 @@ export const booleanFavoriteField = {
             ),
         },
     ],
-    extractProps: ({ attrs, options }) => ({
+    extractProps: ({ attrs, options }, dynamicInfo) => ({
         noLabel: archParseBoolean(attrs.nolabel),
         autosave: "autosave" in options ? Boolean(options.autosave) : true,
+        readonly: dynamicInfo.readonly,
     }),
 };
 
