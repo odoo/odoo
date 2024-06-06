@@ -112,9 +112,7 @@ class Home(http.Controller):
         if request.httprequest.method == 'POST':
             try:
                 credential = {'type': 'password'}
-                for cred_type in CREDENTIAL_PARAMS:
-                    if cred_type in request.params:
-                        credential[cred_type] = request.params[cred_type]
+                credential.update({key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS})
                 auth_info = request.session.authenticate(request.db, credential)
                 request.params['login_success'] = True
                 return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
