@@ -604,6 +604,27 @@ class ProductTemplateAttributeExclusion(models.Model):
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
         string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id), ('ptav_active', '=', True)]")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        exclusions = super().create(vals_list)
+        exclusions.product_tmpl_id._create_variant_ids()
+        return exclusions
+
+    def unlink(self):
+        # Keep a reference to the related templates before the deletion.
+        templates = self.product_tmpl_id
+        res = super().unlink()
+        templates._create_variant_ids()
+        return res
+
+    def write(self, values):
+        templates = self.env['product.template']
+        if 'product_tmpl_id' in values:
+            templates = self.product_tmpl_id
+        res = super().write(values)
+        (templates | self.product_tmpl_id)._create_variant_ids()
+        return res
+
 
 class ProductAttributeCustomValue(models.Model):
     _name = "product.attribute.custom.value"

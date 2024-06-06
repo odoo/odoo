@@ -5,6 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
+# Nemanja Skadric, 2024
+# コフスタジオ, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022\n"
+"Last-Translator: コフスタジオ, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr ""
+msgstr "%s: Time Off"
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -40,6 +42,15 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"Jedno odsustvo ne može biti postavljeno preko više ugovora sa različitim radnim rasporedima.\n"
+"\n"
+"Molimo vas da kreirate jedno odsustvo za svaki ugovor.\n"
+"\n"
+"Odsustvo:\n"
+"%s\n"
+"\n"
+"Ugovori:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
@@ -49,12 +60,12 @@ msgstr "Ugovor Zapošljenog"
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr ""
+msgstr "HR Radni unos"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr ""
+msgstr "Vrsta unosa rada HR"
 
 #. module: hr_work_entry_holidays
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
@@ -74,6 +85,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Status je postavljen na 'To Submit', kada je zahtev za slobodne dane kreiran.\n"
+"Status je 'To Approve', kada je zahtev za slobodne dane potvrđen od strane korisnika.\n"
+"Status je 'Refused', kada je zahtev za slobodne dane odbijen od strane menadžera.\n"
+"Status je 'Approved', kada je zahtev za slobodne dane odobren od strane menadžera."
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -82,6 +97,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"Nema zaposlenog postavljenog na slobodne dane. Molimo vas da se uverite da "
+"ste prijavljeni u ispravnu kompaniju."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
@@ -93,14 +110,14 @@ msgstr "Odsustvo"
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave_type
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Time Off Type"
-msgstr ""
+msgstr "Tip Pauze"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
 msgid "Work Entry Type"
-msgstr ""
+msgstr "Vrsta unosa posla"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "Radni unos koji se koristi u platnom listu."

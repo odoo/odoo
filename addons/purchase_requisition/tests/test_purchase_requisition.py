@@ -2,12 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import Form
 
 from datetime import timedelta
 
+from odoo.tests.common import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_00_purchase_requisition_users(self):
@@ -91,9 +94,20 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         # lazy reproduction of clicking on "New Quotation" act_window button
         po_form = Form(self.env['purchase.order'].with_context({"default_requisition_id": bo.id, "default_user_id": False}))
         po = po_form.save()
-        po.button_confirm()
+
         self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should have been copied to purchase order')
         self.assertEqual(po.partner_id, bo.vendor_id, 'The blanket order vendor should have been copied to purchase order')
+
+        po_form = Form(po)
+        po_form.order_line.remove(0)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+
+        po = po_form.save()
+        po.button_confirm()
+        self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should still be copied to purchase order')
+        self.assertEqual(po.state, "purchase")
 
     def test_06_purchase_requisition(self):
         """ Create a blanket order for a product and a vendor already linked via
@@ -348,3 +362,149 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         po_2 = po_1.alternative_po_ids - po_1
         self.assertFalse(po_2.requisition_id, "The requisition_id should not be set in the alternative purchase order")
+
+    def test_12_alternative_po_line_different_currency(self):
+        """ Check alternative PO with different currency is compared correctly"""
+        currency_eur = self.env.ref("base.EUR")
+        currency_usd = self.env.ref("base.USD")
+        (currency_usd | currency_eur).active = True
+
+        self.env.ref('base.main_company').currency_id = currency_usd
+
+        # 1 USD = 0.5 EUR
+        self.env['res.currency.rate'].create([{
+            'name': fields.Datetime.today(),
+            'currency_id': self.env.ref('base.USD').id,
+            'rate': 1,
+        }, {
+            'name': fields.Datetime.today(),
+            'currency_id': self.env.ref('base.EUR').id,
+            'rate': 0.5,
+        }])
+        vendor_usd = self.env["res.partner"].create({
+            "name": "Supplier A",
+        })
+        vendor_eur = self.env["res.partner"].create({
+            "name": "Supplier B",
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor_usd.id,
+                'price': 100,
+                'currency_id': currency_usd.id,
+            }), (0, 0, {
+                'partner_id': vendor_eur.id,
+                'price': 80,
+                'currency_id': currency_eur.id,
+            })]
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor_eur
+        po_form.currency_id = currency_eur
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 1
+        po_orig = po_form.save()
+        self.assertEqual(po_orig.order_line.price_unit, 80)
+        self.assertEqual(po_orig.currency_id, currency_eur)
+
+        # Creates an alternative PO
+        action = po_orig.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_usd
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+
+        po_alt = po_orig.alternative_po_ids - po_orig
+        # Ensure that the currency in the alternative purchase order is set to USD
+        # because, in some case, the company's default currency is EUR.
+        self.assertEqual(po_alt.currency_id, currency_usd)
+        self.assertEqual(po_alt.order_line.price_unit, 100)
+
+        # po_alt has cheaper price_unit/price_subtotal after conversion USD -> EUR
+        # 80 / 0.5 = 160 USD > 100 EUR
+        best_price_ids, best_date_ids, best_price_unit_ids = po_orig.get_tender_best_lines()
+        self.assertEqual(len(best_price_ids), 1)
+        # Equal dates
+        self.assertEqual(len(best_date_ids), 2)
+        self.assertEqual(len(best_price_unit_ids), 1)
+        # alt_po is cheaper than orig_po
+        self.assertEqual(best_price_ids[0], po_alt.order_line.id)
+        self.assertEqual(best_price_unit_ids[0], po_alt.order_line.id)
+
+    def test_alternative_po_with_multiple_price_list(self):
+        vendor_a = self.env["res.partner"].create({
+            "name": "Supplier A",
+        })
+        vendor_b = self.env["res.partner"].create({
+            "name": "Supplier B",
+        })
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor_a.id,
+                'price': 5,
+            }), (0, 0, {
+                'partner_id': vendor_b.id,
+                'price': 4,
+                'min_qty': 10,
+            }), (0, 0, {
+                'partner_id': vendor_b.id,
+                'price': 6,
+                'min_qty': 1,
+            }),
+            ]
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 100
+        po_orig = po_form.save()
+        self.assertEqual(po_orig.order_line.price_unit, 5)
+        # Creates an alternative PO
+        action = po_orig.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor_b
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_wizard.action_create_alternative()
+        po_alt = po_orig.alternative_po_ids - po_orig
+        self.assertEqual(po_alt.order_line.price_unit, 4)
+
+    def test_08_purchase_requisition_sequence(self):
+        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        self.env['ir.sequence'].create({
+            'code': 'purchase.requisition.blanket.order',
+            'prefix': 'REQ_',
+            'name': 'Blanket Order sequence',
+            'company_id': new_company.id,
+        })
+        self.bo_requisition.company_id = new_company
+        self.bo_requisition.action_in_progress()
+        self.assertTrue(self.bo_requisition.name.startswith("REQ_"))
+
+    def test_taxes_for_alternative_po(self):
+        """
+            Check that PO lines of PO generated by alternative compute taxes
+        """
+        product = self.product_13
+        vendor = self.res_partner_1
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = vendor
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 1
+        orig_po = po_form.save()
+        # Creates an alternative PO
+        action = orig_po.action_create_alternative()
+        alt_po_wizard_form = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wizard_form.partner_id = vendor
+        alt_po_wizard_form.copy_products = True
+        alt_po_wizard = alt_po_wizard_form.save()
+        alt_po_id = alt_po_wizard.action_create_alternative()['res_id']
+        alt_po = self.env['purchase.order'].browse(alt_po_id)
+        self.assertEqual(orig_po.order_line.taxes_id, alt_po.order_line.taxes_id)

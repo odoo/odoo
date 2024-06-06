@@ -3,24 +3,27 @@
 import core from "web.core";
 import FormEditorRegistry from "website.form_editor_registry";
 
-const _t = core._t;
+const _lt = core._lt;
 
 FormEditorRegistry.add('create_mailing_contact', {
     formFields: [{
         name: 'name',
         required: true,
-        string: _t('Your Name'),
+        fillWith: "name",
+        string: _lt('Your Name'),
         type: 'char',
     }, {
         name: 'email',
-        required: true,
-        string: _t('Your Email'),
+        modelRequired: true,
+        fillWith: "email",
+        string: _lt('Your Email'),
         type: 'email',
     }, {
         name: 'list_ids',
         relation: 'mailing.list',
-        required: true,
-        string: _t('Subscribe to'),
+        modelRequired: true,
+        string: _lt('Subscribe to'),
         type: 'many2many',
+        fieldName: "name",
     }],
 });

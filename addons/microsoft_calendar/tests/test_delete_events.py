@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch, ANY, call
+from datetime import timedelta
 
+from odoo import fields
+
+from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.models.res_users import User
@@ -86,17 +90,19 @@ class TestDeleteEvents(TestCommon):
         """
         Archive several events at once should not produce any exception.
         """
+        # arrange
+        several_simple_events = self.several_events.filtered(lambda ev: not ev.recurrency and ev.microsoft_id)
         # act
-        self.several_events.action_archive()
+        several_simple_events.action_archive()
         self.call_post_commit_hooks()
-        self.several_events.invalidate_recordset()
+        several_simple_events.invalidate_recordset()
 
         # assert
-        self.assertFalse(all(e.active for e in self.several_events))
+        self.assertFalse(all(e.active for e in several_simple_events))
 
         mock_delete.assert_has_calls([
             call(e.ms_organizer_event_id, token=ANY, timeout=ANY)
-            for e in self.several_events
+            for e in several_simple_events
         ])
 
     @patch.object(MicrosoftCalendarService, 'get_events')
@@ -132,7 +138,8 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_delete_one_event_from_recurrence_from_odoo_calendar(self, mock_delete):
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         idx = 2
         event_id = self.recurrent_events[idx].ms_organizer_event_id
@@ -152,7 +159,8 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'delete')
     def test_delete_first_event_from_recurrence_from_odoo_calendar(self, mock_delete):
-
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         idx = 0
         event_id = self.recurrent_events[idx].ms_organizer_event_id
@@ -199,7 +207,6 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_delete_first_event_from_recurrence_from_outlook_calendar(self, mock_get_events):
-
         # arrange
         rec_values = [
             dict(
@@ -223,6 +230,8 @@ class TestDeleteEvents(TestCommon):
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_delete_one_event_and_future_from_recurrence_from_outlook_calendar(self, mock_get_events):
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
         # arrange
         idx = range(4, self.recurrent_events_count)
         rec_values = [
@@ -259,7 +268,7 @@ class TestDeleteEvents(TestCommon):
         )
 
         # act
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+        self.organizer_user.with_context(dont_notify=True).with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
 
         # assert
         self.assertFalse(self.recurrence.exists())
@@ -270,3 +279,60 @@ class TestDeleteEvents(TestCommon):
         """
         Same than test_delete_first_event_and_future_from_recurrence_from_outlook_calendar.
         """
+
+    @patch.object(MicrosoftCalendarService, 'delete')
+    def test_delete_single_event_from_recurrence_from_odoo_calendar(self, mock_delete):
+        """
+        Deletes the base_event of a recurrence and checks if the event was archived and the recurrence was updated.
+        """
+        if not self.sync_odoo_recurrences_with_outlook_feature():
+            return
+        # arrange
+        idx = 0
+        event_id = self.recurrent_events[idx].ms_organizer_event_id
+
+        # act
+        self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('self_only')
+        self.call_post_commit_hooks()
+
+        # assert that event is not active anymore and that a new base_event was select for the recurrence
+        self.assertFalse(self.recurrent_events[idx].active)
+        self.assertNotEqual(self.id, self.recurrent_events[idx].recurrence_id.base_event_id.id)
+        self.assertTrue(self.id not in [rec.id for rec in self.recurrent_events[idx].recurrence_id.calendar_event_ids])
+        mock_delete.assert_called_once_with(
+            event_id,
+            token=mock_get_token(self.organizer_user),
+            timeout=ANY
+        )
+
+    @patch.object(MicrosoftCalendarService, 'delete')
+    def test_delete_recurrence_previously_synced(self, mock_delete):
+        # Arrange: select recurrent event and update token validity to simulate an active sync environment.
+        idx = 0
+        self.organizer_user.microsoft_calendar_token_validity = fields.Datetime.now() + timedelta(hours=1)
+
+        # Act: try to delete a recurrent event that was already synced.
+        with self.assertRaises(UserError):
+            self.recurrent_events[idx].with_user(self.organizer_user).action_mass_archive('all_events')
+            self.call_post_commit_hooks()
+
+        # Ensure that event remains undeleted after deletion attempt and delete method wasn't called.
+        self.assertTrue(self.recurrent_events[idx].with_user(self.organizer_user)._check_microsoft_sync_status())
+        self.assertTrue(self.recurrent_events[idx].active)
+        mock_delete.assert_not_called()
+
+    def test_forbid_recurrence_unlinking_list_view(self):
+        # Forbid recurrence unlinking from list view with sync on.
+        self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
+        with self.assertRaises(UserError):
+            self.recurrent_events.unlink()
+
+        # Allow recurrence unlinking when update comes from Microsoft (dont_notify=True).
+        self.recurrent_events[2:].with_context(dont_notify=True).unlink()
+        self.assertTrue(all(not event.exists() for event in self.recurrent_events[2:]), "Recurrent event must be deleted after unlink from Microsoft.")
+
+        # Allow unlinking recurrence when sync is off for the current user.
+        self.organizer_user.microsoft_synchronization_stopped = True
+        self.assertFalse(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
+        self.recurrent_events[1].with_user(self.organizer_user).unlink()
+        self.assertFalse(self.recurrent_events[1].exists(), "Recurrent event must be deleted after unlink with sync off.")

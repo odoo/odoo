@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    clickSave,
+    editInput,
+    getFixture,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { HtmlField } from "@web/views/fields/html/html_field";
@@ -49,6 +55,32 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.containsOnce(target, "div.kek");
         assert.strictEqual(target.querySelector(".o_field_html .kek").style.color, "red");
         assert.strictEqual(target.querySelector(".o_field_html").textContent, "some text");
+    });
+
+    QUnit.test("html field with required attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `<form><field name="txt" required="1"/></form>`,
+        });
+
+        const textarea = target.querySelector(".o_field_html textarea");
+        assert.ok(textarea, "should have a text area");
+
+        await editInput(textarea, null, "");
+        assert.strictEqual(textarea.value, "");
+
+        await clickSave(target);
+        assert.strictEqual(
+            target.querySelector(".o_notification_title").textContent,
+            "Invalid fields: "
+        );
+        assert.strictEqual(
+            target.querySelector(".o_notification_content").innerHTML,
+            "<ul><li>txt</li></ul>"
+        );
     });
 
     QUnit.test("html fields are correctly rendered (edit)", async (assert) => {

@@ -45,6 +45,7 @@ class TestResourceCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestResourceCommon, cls).setUpClass()
+        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
 
         # UTC+1 winter, UTC+2 summer
         cls.calendar_jean = cls._define_calendar('40 Hours', [(8, 16, i) for i in range(5)], 'Europe/Brussels')
@@ -58,7 +59,7 @@ class TestResourceCommon(TransactionCase):
             (0, 0, 0, '1', 'line_section', 10), (8, 16, 0, '1', False, 11), (7, 15, 2, '1', False, 12),
             (8, 16, 3, '1', False, 13), (10, 16, 4, '1', False, 14)], 'Europe/Brussels')
 
-        cls.calendar_paul = cls._define_calendar('Morning and evening shifts', sum([((2, 7, i), (10, 16, i)) for i in range(5)], ()), 'Brazil/DeNoronha')
+        cls.calendar_paul = cls._define_calendar('Morning and evening shifts', sum([((2, 7, i), (10, 16, i)) for i in range(5)], ()), 'America/Noronha')
 
         # Employee is linked to a resource.resource via resource.mixin
         cls.jean = cls.env['resource.test'].create({
@@ -82,3 +83,22 @@ class TestResourceCommon(TransactionCase):
             'name': 'Paul',
             'resource_calendar_id': cls.calendar_paul.id,
         })
+
+        cls.two_weeks_resource = cls._define_calendar_2_weeks(
+            'Two weeks resource',
+            [
+                (0, 0, 0, '0', 'line_section', 0),
+                (8, 16, 0, '0', False, 1),
+                (8, 16, 1, '0', False, 2),
+                (8, 16, 2, '0', False, 3),
+                (8, 16, 3, '0', False, 4),
+                (8, 16, 4, '0', False, 5),
+                (0, 0, 0, '1', 'line_section', 10),
+                (8, 16, 0, '1', False, 11),
+                (8, 16, 1, '1', False, 12),
+                (8, 16, 2, '1', False, 13),
+                (8, 16, 3, '1', False, 14),
+                (8, 16, 4, '1', False, 15)
+            ],
+            'Europe/Brussels'
+        )

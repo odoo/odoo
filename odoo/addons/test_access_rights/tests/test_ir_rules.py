@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo import Command
@@ -124,3 +124,30 @@ class TestRules(TransactionCase):
         ObjCateg.clear_caches()
         records = SomeObj.with_context(only_media=True).search([('id', '=', self.id1)])
         self.assertTrue(records)
+
+    def test_domain_constrains(self):
+        """ An error should be raised if domain is not correct """
+
+        rule = self.env['ir.rule'].create({
+            'name': 'Test record rule',
+            'model_id': self.env.ref('test_access_rights.model_test_access_right_some_obj').id,
+            'domain_force': [],
+        })
+        invalid_domains = [
+            'A really bad domain!',
+            [(1, '!=', 1)],
+            [('non_existing_field', '=', 'value')],
+        ]
+
+        for domain in invalid_domains:
+            with self.assertRaisesRegex(ValidationError, 'Invalid domain'):
+                rule.domain_force = domain
+
+        valid_domains = [
+            False,
+            [(1, '=', 1)],
+            [('val', '=', 12)],
+        ]
+        for domain in valid_domains:
+            # no error is raised
+            rule.domain_force = domain

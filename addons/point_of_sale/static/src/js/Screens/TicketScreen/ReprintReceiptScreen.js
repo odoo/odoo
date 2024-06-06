@@ -11,7 +11,9 @@ odoo.define('point_of_sale.ReprintReceiptScreen', function (require) {
                 owl.onMounted(this.onMounted);
             }
             onMounted() {
-                this.printReceipt();
+                setTimeout(() => {
+                    this.printReceipt();
+                }, 50);
             }
             confirm() {
                 this.showScreen('TicketScreen', { reuseSavedUIState: true });

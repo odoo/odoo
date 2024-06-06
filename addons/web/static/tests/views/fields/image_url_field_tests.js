@@ -1,7 +1,13 @@
 /** @odoo-module **/
 
 import { KanbanController } from "@web/views/kanban/kanban_controller";
-import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -236,6 +242,41 @@ QUnit.module("Fields", (hooks) => {
             target,
             'div[name="foo"] > img',
             "the widget should not contain an image"
+        );
+    });
+
+    QUnit.test("onchange update image fields", async function (assert) {
+        const srcTest = "/my/test/src";
+        serverData.models.partner.onchanges = {
+            display_name(record) {
+                record.foo = srcTest;
+            },
+        };
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="foo" widget="image_url" options="{'size': [90, 90]}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector('div[name="foo"] > img').dataset.src,
+            FR_FLAG_URL,
+            "the image should have the correct src"
+        );
+
+        await editInput(target, '[name="display_name"] input', "test");
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector('div[name="foo"] > img').dataset.src,
+            srcTest,
+            "the image should have the onchange src"
         );
     });
 });

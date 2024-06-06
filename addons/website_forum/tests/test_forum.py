@@ -203,7 +203,8 @@ class TestForum(TestForumCommon):
             for post_user_group in groups:
                 self.assertEqual(post_user_group['__count'], 1)
 
-        check_vote_records_count_and_integrity(2)
+        ORIGIN_COUNT = len(self.env['forum.post.vote'].search([]).post_id)
+        check_vote_records_count_and_integrity(ORIGIN_COUNT)
         self.post.create_uid.karma = KARMA['ask']
         self.user_portal.karma = KARMA['dwv']
         initial_vote_count = self.post.vote_count
@@ -236,7 +237,7 @@ class TestForum(TestForumCommon):
         self.post.invalidate_recordset()
         self.assertEqual(post_as_portal.user_vote, -1)
 
-        check_vote_records_count_and_integrity(3)
+        check_vote_records_count_and_integrity(ORIGIN_COUNT + 1)
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_downvote_crash(self):
@@ -494,3 +495,14 @@ class TestForum(TestForumCommon):
         self.assertEqual(len(food_tags), 2, "One Food tag should have been created in each forum.")
         self.assertIn(forum_1, food_tags.forum_id, "One Food tag should have been created for forum 1.")
         self.assertIn(forum_2, food_tags.forum_id, "One Food tag should have been created for forum 2.")
+
+    def test_forum_post_link(self):
+        content = 'This is a test link: <a href="https://www.example.com/route?param1=a&param2=b" rel="ugc">test</a> Let make sure it works.'
+        self.user_portal.karma = 50
+        with self.with_user(self.user_portal.login):
+            post = self.env['forum.post'].create({
+                'name': "Post Forum test",
+                'content': content,
+                'forum_id': self.forum.id,
+            })
+        self.assertEqual(post.content, '<p>This is a test link: <a rel="nofollow" href="https://www.example.com/route?param1=a&amp;param2=b">test</a> Let make sure it works.</p>')

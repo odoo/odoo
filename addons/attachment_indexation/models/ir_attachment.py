@@ -140,3 +140,7 @@ class IrAttachment(models.Model):
         if checksum:
             index_content_cache[checksum] = res
         return res
+
+    def copy(self, default=None):
+        index_content_cache[self.checksum] = self.index_content
+        return super().copy(default=default)

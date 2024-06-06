@@ -19,12 +19,19 @@ from threading import Thread
 import time
 import contextlib
 import requests
+import secrets
 
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
+from odoo.tools.misc import file_path
 from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
+
+try:
+    import crypt
+except ImportError:
+    _logger.warning('Could not import library crypt')
 
 #----------------------------------------------------------
 # Helper
@@ -124,37 +131,36 @@ def check_git_branch():
     checkout to match it if needed.
     """
     server = get_odoo_server_url()
-    if server:
-        urllib3.disable_warnings()
-        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        try:
-            response = http.request(
-                'POST',
-                server + "/web/webclient/version_info",
-                body = '{}',
-                headers = {'Content-type': 'application/json'}
-            )
+    urllib3.disable_warnings()
+    http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    try:
+        response = http.request('POST',
+            server + "/web/webclient/version_info",
+            body='{}',
+            headers={'Content-type': 'application/json'}
+        )
 
-            if response.status == 200:
-                git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
+        if response.status == 200:
+            git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
 
-                db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
-                if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
-                    db_branch = 'master'
+            db_branch = json.loads(response.data)['result']['server_serie'].replace('~', '-')
+            if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
+                db_branch = 'master'
 
-                local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+            local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
+            _logger.info("Current IoT Box local git branch: %s / Associated Odoo database's git branch: %s", local_branch, db_branch)
 
-                if db_branch != local_branch:
-                    with writable():
-                        subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
-                        subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
-                        subprocess.check_call(git + ['branch', '-m', db_branch])
-                        subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
-                        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
+            if db_branch != local_branch:
+                with writable():
+                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
+                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
+                    subprocess.check_call(git + ['branch', '-m', db_branch])
+                    subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
+                    os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
 
-        except Exception as e:
-            _logger.error('Could not reach configured server')
-            _logger.error('A error encountered : %s ' % e)
+    except Exception as e:
+        _logger.error('Could not reach configured server')
+        _logger.error('A error encountered : %s ', e)
 
 def check_image():
     """
@@ -187,6 +193,23 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
     write_file('token', token)
     write_file('odoo-db-uuid.conf', db_uuid or '')
     write_file('odoo-enterprise-code.conf', enterprise_code or '')
+
+def generate_password():
+    """
+    Generate an unique code to secure raspberry pi
+    """
+    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
+    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    try:
+        shadow_password = crypt.crypt(password, crypt.mksalt())
+        subprocess.run(('sudo', 'usermod', '-p', shadow_password, 'pi'), check=True)
+        with writable():
+            subprocess.run(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'), check=True)
+        return password
+    except subprocess.CalledProcessError as e:
+        _logger.error("Failed to generate password: %s", e.output)
+        return 'Error: Check IoT log'
+
 
 def get_certificate_status(is_first=True):
     """
@@ -319,6 +342,22 @@ def load_certificate():
         start_nginx_server()
     return True
 
+def delete_iot_handlers():
+    """
+    Delete all the drivers and interfaces
+    This is needed to avoid conflicts
+    with the newly downloaded drivers
+    """
+    try:
+        for directory in ['drivers', 'interfaces']:
+            path = file_path(f'hw_drivers/iot_handlers/{directory}')
+            iot_handlers = list_file_by_os(path)
+            for file in iot_handlers:
+                unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file}")
+        _logger.info("Deleted old IoT handlers")
+    except OSError:
+        _logger.exception('Failed to delete old IoT handlers')
+
 def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
@@ -331,6 +370,7 @@ def download_iot_handlers(auto=True):
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto}, timeout=8)
             if resp.data:
+                delete_iot_handlers()
                 with writable():
                     drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
                     path = path_file(str(Path().joinpath(*drivers_path)))
@@ -339,6 +379,11 @@ def download_iot_handlers(auto=True):
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def compute_iot_handlers_addon_name(handler_kind, handler_file_name):
+    # TODO: replace with `removesuffix` (for Odoo version using an IoT image that use Python >= 3.9)
+    return "odoo.addons.hw_drivers.iot_handlers.{handler_kind}.{handler_name}".\
+        format(handler_kind=handler_kind, handler_name=handler_file_name.replace('.py', ''))
 
 def load_iot_handlers():
     """
@@ -350,7 +395,7 @@ def load_iot_handlers():
         path = get_resource_path('hw_drivers', 'iot_handlers', directory)
         filesList = list_file_by_os(path)
         for file in filesList:
-            spec = util.spec_from_file_location(file, str(Path(path).joinpath(file)))
+            spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), str(Path(path).joinpath(file)))
             if spec:
                 module = util.module_from_spec(spec)
                 try:

@@ -121,6 +121,18 @@ var certificationCompletionSteps = [{
     content: 'Survey: check certification successful',
     trigger: 'div:contains("Congratulations, you have passed the test")',
     run: function () {}
+}, { // Sharing the certification
+    trigger: 'a:contains("Share your certification")'
+}, {
+    trigger: '.oe_slide_js_share_email input',
+    run: 'text friend@example.com'
+}, {
+    trigger: '.oe_slide_js_share_email button',
+}, {
+    trigger: '.oe_slide_js_share_email .alert:not(.d-none):contains("Sharing is caring")',
+    run: function () {}  // check email has been sent
+}, {
+    trigger: 'button.btn-close',  // close sharing modal
 }, {
     content: 'Survey: back to course home page',
     trigger: 'a:contains("Go back to course")'

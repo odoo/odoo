@@ -71,6 +71,20 @@ odoo.define('point_of_sale.tour.ProductConfiguratorTourMethods', function (requi
                 },
             ];
         }
+
+        numberRadioOptions(number) {
+            return [
+                {
+                    trigger: `.product-configurator-popup .attribute-name-cell`,
+                    run: () => {
+                        const radio_options = $('.product-configurator-popup .attribute-name-cell').length;
+                        if (radio_options !== number) {
+                            throw new Error(`Expected ${number} radio options, got ${radio_options}`);
+                        }
+                    }
+                },
+            ];
+        }
     }
 
     return createTourMethods('ProductConfigurator', Do, Check);

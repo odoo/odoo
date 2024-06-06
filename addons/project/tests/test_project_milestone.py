@@ -61,7 +61,10 @@ class TestProjectMilestone(TestProjectCommon):
         unique_name_1 = "unique_name_1"
         unique_name_2 = "unique_name_2"
         unique_names = [unique_name_1, unique_name_2]
-        project = self.env['project.project'].create({'name': 'Test project'})
+        project = self.env['project.project'].create({
+            'name': 'Test project',
+            'allow_milestones': True,
+        })
         milestones = self.env['project.milestone'].create([{
             'name': unique_name_1,
             'project_id': project.id,

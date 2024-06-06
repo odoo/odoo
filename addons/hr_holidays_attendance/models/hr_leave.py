@@ -42,7 +42,7 @@ class HRLeave(models.Model):
             employee = leave.employee_id
             duration = leave.number_of_hours_display
             overtime_duration = leave.overtime_id.sudo().duration
-            if overtime_duration != duration:
+            if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this leave.'))
                 leave.overtime_id.sudo().duration = -1 * duration
@@ -62,7 +62,7 @@ class HRLeave(models.Model):
             if not leave.overtime_id:
                 leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
                     'employee_id': employee.id,
-                    'date': fields.Date.today(),
+                    'date': leave.date_from,
                     'adjustment': True,
                     'duration': -1 * duration,
                 })
@@ -79,7 +79,7 @@ class HRLeave(models.Model):
         for leave in overtime_leaves:
             overtime = self.env['hr.attendance.overtime'].sudo().create({
                 'employee_id': leave.employee_id.id,
-                'date': fields.Date.today(),
+                'date': leave.date_from,
                 'adjustment': True,
                 'duration': -1 * leave.number_of_hours_display
             })

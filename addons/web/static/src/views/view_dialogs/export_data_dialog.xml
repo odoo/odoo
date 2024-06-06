@@ -42,7 +42,7 @@
                     <div class="o_left_field_panel h-100 overflow-auto border">
                         <div class="o_field_tree_structure">
                             <t t-if="fieldsAvailable">
-                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length">
+                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length + '_' + state.isCompatible">
                                     <ExportDataItem
                                         exportList="state.exportList"
                                         field="field"
@@ -117,7 +117,7 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click.stop="onClickExportButton">Export</button>
+                <button class="btn btn-primary o_select_button" data-hotkey="v" t-on-click.stop="onClickExportButton" t-att-disabled="state.disabled">Export</button>
                 <button class="btn o_form_button_cancel" t-att-class="(props.disableMultipleSelection &amp;&amp; props.noCreate) ? 'btn-primary' : 'btn-secondary'" data-hotkey="z" t-on-click.stop="props.close">Close</button>
             </t>
         </Dialog>

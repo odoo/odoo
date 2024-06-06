@@ -32,6 +32,9 @@ class WebsiteEventSaleController(WebsiteEventController):
             return super()._create_attendees_from_registration_post(event, registration_data)
 
         order_sudo = request.website.sale_get_order(force_create=True)
+        if order_sudo.state != 'draft':
+            request.website.sale_reset()
+            order_sudo = request.website.sale_get_order(force_create=True)
 
         tickets_data = defaultdict(int)
         for data in registration_data:

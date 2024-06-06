@@ -125,19 +125,19 @@
                     t-att-data-session-answers="session_answers"
                     t-att-data-website-share-url="slide.website_share_url">
                     <t t-call="website_slides.slide_sidebar_done_button"/>
-                    <div class="ms-2 o_wslides_sidebar_content">
+                    <div class="ms-2 o_wslides_sidebar_content overflow-hidden">
                         <a t-if="can_access" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-set="icon_class" t-value="'me-2'"/>
                                 <t t-call="website_slides.slide_icon"/>
-                                <div class="o_wslides_fs_slide_name" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-truncate" t-esc="slide.name"/>
                             </div>
                         </a>
                         <span t-else="" class="d-block" href="#">
                             <div class="d-flex">
                                 <t t-set="icon_class" t-value="'me-2 text-600'"/>
                                 <t t-call="website_slides.slide_icon"/>
-                                <div class="o_wslides_fs_slide_name text-600" t-esc="slide.name"/>
+                                <div class="o_wslides_fs_slide_name text-600 text-truncate" t-esc="slide.name"/>
                             </div>
                         </span>
                         <ul class="list-unstyled w-100 pt-2 small ps-4" t-if="slide._has_additional_resources() or (slide.question_ids and not slide.slide_category =='quiz')" >

@@ -1,126 +1,139 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * bus
-#
-# Translators:
+# 	* bus
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 16:41+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Armenian (http://www.transifex.com/odoo/odoo-9/language/hy/)\n"
-"Language: hy\n"
+"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Language-Team: Armenian (https://app.transifex.com/odoo/teams/41243/hy/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: hy\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
-msgid "A user can only have one IM status."
-msgstr ""
-
-#. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
-msgid "Create date"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
-msgid "Created by"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
-msgid "Display Name"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_id
-#: model:ir.model.fields,field_description:bus.field_bus_presence_id
-msgid "ID"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_status
-#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
-#: model:ir.model.fields,field_description:bus.field_res_users_im_status
-msgid "IM Status"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
-msgid "Last Poll"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
-msgid "Last Presence"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_message
-msgid "Message"
-msgstr "Հաղորդագրություն"
-
-#. module: bus
-#: selection:bus.presence,status:0
-msgid "Offline"
-msgstr ""
-
-#. module: bus
-#: selection:bus.presence,status:0
-msgid "Online"
+#: model:ir.model,name:bus.model_bus_bus
+msgid "Communication Bus"
 msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Գործընկեր"
+msgid "Contact"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__id
+msgid "ID"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence__status
+#: model:ir.model.fields,field_description:bus.field_res_partner__im_status
+#: model:ir.model.fields,field_description:bus.field_res_users__im_status
+msgid "IM Status"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
+#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
+msgid "Last Poll"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
+msgid "Last Presence"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
+msgid "Message"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
+msgid "Offline"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
+msgid "Online"
+msgstr ""
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "Refresh"
+msgstr ""
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+msgid "User"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
@@ -128,12 +141,11 @@ msgid "User Presence"
 msgstr ""
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_users
-#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
-msgstr "Օգտագործողներ"
+msgstr ""
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_bus
-msgid "bus.bus"
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
 msgstr ""

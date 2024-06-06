@@ -25,6 +25,11 @@ apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
+# At the first start it is necessary to configure a password
+# This will be modified by a unique password on the first start of Odoo
+password="$(openssl rand -base64 12)"
+echo "pi:${password}" | chpasswd
+
 PKGS_TO_INSTALL="
     console-data \
     cups \
@@ -45,13 +50,15 @@ PKGS_TO_INSTALL="
     nginx-full \
     openbox \
     printer-driver-all \
-    python-cups \
     python3 \
+    python3-cups \
     python3-babel \
     python3-dateutil \
+    python3-dbus \
     python3-decorator \
     python3-dev \
     python3-docutils \
+    python3-geoip2 \
     python3-jinja2 \
     python3-ldap \
     python3-libsass \
@@ -73,8 +80,10 @@ PKGS_TO_INSTALL="
     python3-tz \
     python3-urllib3 \
     python3-werkzeug \
+    python3-venv \
     rsync \
     screen \
+    swig \
     unclutter \
     vim \
     x11-utils \
@@ -99,16 +108,23 @@ rm -rfv /usr/share/doc
 # Even in stretch, we had an error with langid (but worked otherwise)
 # We fixe the version of evdev to 1.2.0 because in 1.3.0 we have a RuntimeError in 'get_event_loop()'
 PIP_TO_INSTALL="
-    evdev==1.2.0 \
+    evdev==1.6.0 \
     gatt \
     polib \
     pycups \
     pyusb \
     v4l2 \
     pysmb==1.2.9.1 \
-    cryptocode==0.1"
+    cryptocode==0.1 \
+    PyKCS11 \
+    vcgencmd \
+    RPi.GPIO \
+    rjsmin==1.1.0"
 
-pip3 install ${PIP_TO_INSTALL}
+mkdir venv
+python3 -m venv venv
+venv/bin/pip3 install ${PIP_TO_INSTALL}
+rsync -avrhp venv/lib/python3.11/site-packages/* /usr/lib/python3/dist-packages/
 
 # Dowload MPD server and library for Six terminals
 wget 'https://nightly.odoo.com/master/iotbox/eftdvs' -P /usr/local/bin/
@@ -134,7 +150,6 @@ echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 update-rc.d -f hostapd remove
 update-rc.d -f nginx remove
 update-rc.d -f dnsmasq remove
-update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
 systemctl enable led-status.service
@@ -142,8 +157,7 @@ systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target
 systemctl disable getty@tty1.service
-systemctl enable autologin@.service
-systemctl disable systemd-timesyncd.service
+systemctl enable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
@@ -170,3 +184,6 @@ create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
 create_ramdisk_dir "/tmp"
 mkdir -v /root_bypass_ramdisks
+
+echo "password"
+echo ${password}

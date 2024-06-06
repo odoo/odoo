@@ -26,7 +26,12 @@ class PhoneBlackList(models.Model):
 
     @api.model_create_multi
     def create(self, values):
-        # First of all, extract values to ensure emails are really unique (and don't modify values in place)
+        """ Create new (or activate existing) blacklisted numbers.
+                A. Note: Attempt to create a number that already exists, but is non-active, will result in its activation.
+                B. Note: If the number already exists and it's active, it will be added to returned set, (it won't be re-created)
+        Returns Recordset union of created and existing phonenumbers from the requested list of numbers to create
+        """
+        # Extract and sanitize numbers, ensuring uniques
         to_create = []
         done = set()
         for value in values:
@@ -40,15 +45,23 @@ class PhoneBlackList(models.Model):
             done.add(sanitized)
             to_create.append(dict(value, number=sanitized))
 
-        """ To avoid crash during import due to unique email, return the existing records if any """
-        sql = '''SELECT number, id FROM phone_blacklist WHERE number = ANY(%s)'''
-        numbers = [v['number'] for v in to_create]
-        self._cr.execute(sql, (numbers,))
-        bl_entries = dict(self._cr.fetchall())
-        to_create = [v for v in to_create if v['number'] not in bl_entries]
+        # Search for existing phone blacklist entries, even inactive ones (will be activated again)
+        numbers_requested = [values['number'] for values in to_create]
+        existing = self.with_context(active_test=False).search([('number', 'in', numbers_requested)])
 
-        results = super(PhoneBlackList, self).create(to_create)
-        return self.env['phone.blacklist'].browse(bl_entries.values()) | results
+        # Out of existing pb records, activate non-active, (unless requested to leave them alone with 'active' set to False)
+        numbers_to_keep_inactive = {values['number'] for values in to_create if not values.get('active', True)}
+        numbers_to_keep_inactive = numbers_to_keep_inactive & set(existing.mapped('number'))
+        existing.filtered(lambda pb: not pb.active and pb.number not in numbers_to_keep_inactive).write({'active': True})
+
+        # Create new records, while skipping existing_numbers
+        existing_numbers = set(existing.mapped('number'))
+        to_create_filtered = [values for values in to_create if values['number'] not in existing_numbers]
+        created = super().create(to_create_filtered)
+
+        # Preserve the original order of numbers requested to create
+        numbers_to_id = {record.number: record.id for record in existing | created}
+        return self.browse(numbers_to_id[number] for number in numbers_requested)
 
     def write(self, values):
         if 'number' in values:
@@ -65,13 +78,19 @@ class PhoneBlackList(models.Model):
         if args:
             new_args = []
             for arg in args:
-                if isinstance(arg, (list, tuple)) and arg[0] == 'number' and isinstance(arg[2], str):
-                    number = arg[2]
-                    sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-                    if sanitized:
-                        new_args.append([arg[0], arg[1], sanitized])
+                if isinstance(arg, (list, tuple)) and arg[0] == 'number':
+                    if isinstance(arg[2], str):
+                        number = arg[2]
+                        sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
+                        search_term = sanitized or number
+                    elif isinstance(arg[2], list) and all(isinstance(number, str) for number in arg[2]):
+                        search_term = [
+                            phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized'] or number
+                            for number in arg[2]
+                        ]
                     else:
-                        new_args.append(arg)
+                        search_term = arg[2]
+                    new_args.append([arg[0], arg[1], search_term])
                 else:
                     new_args.append(arg)
         else:
@@ -79,20 +98,10 @@ class PhoneBlackList(models.Model):
         return super(PhoneBlackList, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     def add(self, number):
-        sanitized = phone_validation.phone_sanitize_numbers_w_record([number], self.env.user)[number]['sanitized']
-        return self._add([sanitized])
+        return self._add([number])
 
     def _add(self, numbers):
-        """ Add or re activate a phone blacklist entry.
-
-        :param numbers: list of sanitized numbers """
-        records = self.env["phone.blacklist"].with_context(active_test=False).search([('number', 'in', numbers)])
-        todo = [n for n in numbers if n not in records.mapped('number')]
-        if records:
-            records.action_unarchive()
-        if todo:
-            records += self.create([{'number': n} for n in todo])
-        return records
+        return self.create([{'number': n} for n in numbers])
 
     def action_remove_with_reason(self, number, reason=None):
         records = self.remove(number)
@@ -119,7 +128,7 @@ class PhoneBlackList(models.Model):
 
     def phone_action_blacklist_remove(self):
         return {
-            'name': 'Are you sure you want to unblacklist this Phone Number?',
+            'name': _('Are you sure you want to unblacklist this Phone Number?'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'phone.blacklist.remove',

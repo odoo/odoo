@@ -34,9 +34,14 @@ def create_internal_project(cr, registry):
 
 def _uninstall_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
-    act_window = env.ref('project.open_view_project_all', raise_if_not_found=False)
-    if act_window and act_window.domain and 'is_internal_project' in act_window.domain:
-        act_window.domain = []
+
+    def update_action_window(xmlid):
+        act_window = env.ref(xmlid, raise_if_not_found=False)
+        if act_window and act_window.domain and 'is_internal_project' in act_window.domain:
+            act_window.domain = []
+
+    update_action_window('project.open_view_project_all')
+    update_action_window('project.open_view_project_all_group_stage')
 
     # archive the internal projects
     project_ids = env['res.company'].search([('internal_project_id', '!=', False)]).mapped('internal_project_id')

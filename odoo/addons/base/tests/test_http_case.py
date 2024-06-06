@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import HttpCase, tagged
-from odoo.tools import mute_logger, logging
+from odoo.tests.common import HttpCase, tagged, ChromeBrowser
+from odoo.tools import config, logging
 from unittest.mock import patch
 
 @tagged('-at_install', 'post_install')
@@ -47,5 +47,44 @@ class TestHttpCase(HttpCase):
                 if text == 'test successful':
                     continue
                 self.assertEqual(text, "Object(custom=Object, value=1, description='dummy')")
-                console_log_count +=1
+                console_log_count += 1
         self.assertEqual(console_log_count, 1)
+
+    @patch.dict(config.options, {"dev_mode": []})
+    def test_404_assets(self):
+        IrAttachment = self.env['ir.attachment']
+        # Ensure no assets exists
+        IrAttachment.search([('url', '=like', '/web/assets/%')]).unlink()
+        response = self.url_open('/NoSuchPage')
+        self.assertEqual(response.status_code, 404, "Page should not exist")
+        self.assertFalse(
+            IrAttachment.search_count([('url', '=like', '/web/assets/%')]),
+            "Assets should not have been generated because the transaction was rolled back"
+            # Well, they should - but this is part of a compromise to avoid
+            # being in the way of the read-only mode.
+        )
+        response = self.url_open('/')
+        self.assertEqual(response.status_code, 200, "Page should exist")
+        self.assertTrue(
+            IrAttachment.search_count([('url', '=like', '/web/assets/%')]),
+            "Assets should have been generated"
+        )
+
+
+@tagged('-at_install', 'post_install')
+class TestChromeBrowser(HttpCase):
+    def setUp(self):
+        super().setUp()
+        screencasts_dir = config['screencasts'] or config['screenshots']
+        with patch.dict(config.options, {'screencasts': screencasts_dir, 'screenshots': config['screenshots']}):
+            self.browser = ChromeBrowser(self)
+        self.addCleanup(self.browser.stop)
+        self.addCleanup(self.browser.clear)
+
+    def test_screencasts(self):
+        self.browser.start_screencast()
+        self.browser.navigate_to('about:blank')
+        self.browser._wait_ready()
+        code = "setTimeout(() => console.log('test successful'), 2000); setInterval(() => document.body.innerText = (new Date()).getTime(), 100);"
+        self.browser._wait_code_ok(code, 10)
+        self.browser._save_screencast()

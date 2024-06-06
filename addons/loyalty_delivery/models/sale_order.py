@@ -9,5 +9,5 @@ class SaleOrder(models.Model):
 
     def _compute_amount_total_without_delivery(self):
         self.ensure_one()
-        lines = self.order_line.filtered(lambda l: l.coupon_id)
+        lines = self.order_line.filtered(lambda l: l.coupon_id and l.coupon_id.program_type in ['ewallet', 'gift_card'])
         return super()._compute_amount_total_without_delivery() - sum(lines.mapped('price_unit'))

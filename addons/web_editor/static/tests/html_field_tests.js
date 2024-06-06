@@ -1,10 +1,18 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture, makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, makeDeferred, mockSendBeacon, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
+import { FormController } from '@web/views/form/form_controller';
 import { HtmlField } from "@web_editor/js/backend/html_field";
+import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
+import { parseHTML, setSelection } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { onRendered } from "@odoo/owl";
+import { wysiwygData } from "web_editor.test_utils";
+import { insertText } from '@web_editor/js/editor/odoo-editor/test/utils'
+
+// Legacy
+import legacyEnv from 'web.commonEnv';
 
 async function iframeReady(iframe) {
     const iframeLoadPromise = makeDeferred();
@@ -40,6 +48,104 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         registry.category("fields").add("html", HtmlField, { force: true });
     });
 
+    QUnit.module("Form view interactions with the HtmlField");
+
+    QUnit.test("A new MediaDialog after switching record in a Form view should have the correct resId", async (assert) => {
+        serverData.models.partner.records = [
+            {id: 1, txt: "<p>first</p>"},
+            {id: 2, txt: "<p>second</p>"},
+        ];
+        let wysiwyg, mediaDialog;
+        const wysiwygPromise = makeDeferred();
+        const mediaDialogPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            }
+        });
+        patchWithCleanup(MediaDialog.prototype, {
+            setup() {
+                mediaDialog = this;
+                mediaDialogPromise.resolve();
+                this.size = 'xl';
+                this.contentClass = 'o_select_media_dialog';
+                this.title = "TEST";
+                this.tabs = [];
+                this.state = {};
+                // no call to super to avoid services dependencies
+                // this test only cares about the props given to the dialog
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+
+        assert.containsOnce(target, ".odoo-editor-editable p:contains(first)");
+
+        // click on the pager to switch to the next record
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.containsOnce(target, ".odoo-editor-editable p:contains(second)");
+        const paragraph = target.querySelector(".odoo-editor-editable p");
+        setSelection(paragraph, 0, paragraph, 0);
+
+        wysiwyg.openMediaDialog();
+        await mediaDialogPromise;
+
+        assert.equal(mediaDialog.props.resId, 2);
+    });
+
+    QUnit.test("discard html field changes in form", async (assert) => {
+        serverData.models.partner.records = [{ id: 1, txt: "<p>first</p>" }];
+        let wysiwyg;
+        const wysiwygPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                wysiwyg = this.wysiwyg;
+                wysiwygPromise.resolve();
+            },
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" options="{'style-inline' : true}"/>
+                </form>`,
+        });
+        await wysiwygPromise;
+        const editor = wysiwyg.odooEditor;
+        const editable = editor.editable;
+        editor.testMode = true;
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+        const paragraph = editable.querySelector("p");
+        await setSelection(paragraph, 0);
+        await insertText(editor, "a");
+        assert.strictEqual(editable.innerHTML, `<p>afirst</p>`);
+        // For blur event here to call _onWysiwygBlur function in html_field
+        await editable.dispatchEvent(new Event("blur", { bubbles: true, cancelable: true }));
+        // Wait for the updates to be saved , if we don't wait the update of the value will
+        // be done after the call for discardChanges since it uses some async functions.
+        await new Promise((r) => setTimeout(r, 100));
+        const discardButton = target.querySelector(".o_form_button_cancel");
+        assert.ok(discardButton);
+        await click(discardButton);
+        assert.strictEqual(editable.innerHTML, `<p>first</p>`);
+    });
 
     QUnit.module('Sandboxed Preview');
 
@@ -284,5 +390,170 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             assert.strictEqual(link.getAttribute('target'), '_blank');
             assert.strictEqual(link.getAttribute('rel'), 'noreferrer');
         }
+    });
+
+    QUnit.module('Save scenarios');
+
+    QUnit.test("Ensure that urgentSave works even with modified image to save", async (assert) => {
+        assert.expect(5);
+
+        let sendBeaconDef;
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                const { args, model } = params;
+                if (route === '/web/dataset/call_kw/partner/write' && model === 'partner') {
+                    if (writeCount === 0) {
+                        // Save normal value without image.
+                        assert.equal(args[1].txt, `<p class="test_target"><br></p>`);
+                    } else if (writeCount === 1) {
+                        // Save image with unfinished modification changes.
+                        assert.equal(args[1].txt, imageContainerHTML);
+                    } else if (writeCount === 2) {
+                        // Save the modified image.
+                        assert.equal(args[1].txt, getImageContainerHTML(newImageSrc, false));
+                    } else {
+                        // Fail the test if too many write are called.
+                        assert.ok(writeCount === 2, "Write should only be called 3 times during this test");
+                    }
+                    writeCount += 1;
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
+
+        let formController;
+        // Patch to get the controller instance.
+        patchWithCleanup(FormController.prototype, {
+            setup() {
+                this._super(...arguments);
+                formController = this;
+            }
+        });
+        // Patch to get a promise to get the htmlField component instance when
+        // the wysiwyg is instancied.
+        const htmlFieldPromise = makeDeferred();
+        patchWithCleanup(HtmlField.prototype, {
+            async startWysiwyg() {
+                await this._super(...arguments);
+                await nextTick();
+                htmlFieldPromise.resolve(this);
+            }
+        });
+        // Add a partner record and ir.attachments model and record.
+        serverData.models.partner.records.push({
+            id: 1,
+            txt: "<p class='test_target'><br></p>",
+        });
+        serverData.models["ir.attachment"] = wysiwygData({})["ir.attachment"];
+        const imageRecord = serverData.models["ir.attachment"].records[0];
+        // Method to get the html of a cropped image.
+        // Use `data-src` instead of `src` when the SRC is an URL that would
+        // make a call to the server.
+        const getImageContainerHTML = (src, isModified) => {
+            return `
+                <p>
+                    <img
+                        class="img img-fluid o_we_custom_image o_we_image_cropped${isModified ? ' o_modified_image_to_save' : ''}"
+                        data-original-id="${imageRecord.id}"
+                        data-original-src="${imageRecord.image_src}"
+                        data-mimetype="image/png"
+                        data-width="50"
+                        data-height="50"
+                        data-scale-x="1"
+                        data-scale-y="1"
+                        data-aspect-ratio="0/0"
+                        ${src.startsWith("/web") ? 'data-src="' : 'src="'}${src}"
+                    >
+                    <br>
+                </p>
+            `.replace(/(?:\s|(?:\r\n))+/g, ' ')
+             .replace(/\s?(<|>)\s?/g, '$1');
+        };
+        // Promise to resolve when we want the response of the modify_image RPC.
+        const modifyImagePromise = makeDeferred();
+        let writeCount = 0;
+        let modifyImageCount = 0;
+        // Valid base64 encoded image in its transitory modified state.
+        const imageContainerHTML = getImageContainerHTML(
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII",
+            true
+        );
+        // New src URL to assign to the image when the modification is
+        // "registered".
+        const newImageSrc = "/web/image/1234/cropped_transparent.png";
+        const mockRPC = async function (route, args) {
+            if (
+                route === '/web/dataset/call_kw/partner/write' &&
+                args.model === 'partner'
+            ) {
+                assert.ok(false, "write should only be called through sendBeacon");
+            } else if (
+                route === `/web_editor/modify_image/${imageRecord.id}`
+            ) {
+                if (modifyImageCount === 0) {
+                    assert.equal(args.res_model, 'partner');
+                    assert.equal(args.res_id, 1);
+                    await modifyImagePromise;
+                    return newImageSrc;
+                } else {
+                    // Fail the test if too many modify_image are called.
+                    assert.ok(modifyImageCount === 0, "The image should only have been modified once during this test");
+                }
+                modifyImageCount += 1;
+            }
+        };
+        // Add the ajax service (legacy), because wysiwyg RPCs use it.
+        patchWithCleanup(legacyEnv, {
+            services: {
+                ...legacyEnv.services,
+                ajax: {
+                    rpc: mockRPC,
+                },
+            }
+        });
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html"/>
+                </form>`,
+            mockRPC: mockRPC,
+        });
+        // Let the htmlField be mounted and recover the Component instance.
+        const htmlField = await htmlFieldPromise;
+        const editor = htmlField.wysiwyg.odooEditor;
+
+        // Simulate an urgent save without any image in the content.
+        sendBeaconDef = makeDeferred();
+        await formController.beforeUnload();
+        await sendBeaconDef;
+
+        // Replace the empty paragraph with a paragrah containing an unsaved
+        // modified image
+        const imageContainerElement = parseHTML(imageContainerHTML).firstChild;
+        let paragraph = editor.editable.querySelector(".test_target");
+        editor.editable.replaceChild(imageContainerElement, paragraph);
+        editor.historyStep();
+
+        // Simulate an urgent save before the end of the RPC roundtrip for the
+        // image.
+        sendBeaconDef = makeDeferred();
+        await formController.beforeUnload();
+        await sendBeaconDef;
+
+        // Resolve the image modification (simulate end of RPC roundtrip).
+        modifyImagePromise.resolve();
+        await modifyImagePromise;
+        await nextTick();
+
+        // Simulate the last urgent save, with the modified image.
+        sendBeaconDef = makeDeferred();
+        await formController.beforeUnload();
+        await sendBeaconDef;
     });
 });

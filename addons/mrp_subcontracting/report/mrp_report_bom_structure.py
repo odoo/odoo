@@ -22,7 +22,10 @@ class ReportBomStructure(models.AbstractModel):
     def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, index=0, product_info=False, ignore_stock=False):
         res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, index, product_info, ignore_stock)
         if bom.type == 'subcontract' and not self.env.context.get('minimized', False):
-            seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+            if not res['product']:
+                seller = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]
+            else:
+                seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.product_uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             if seller:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):

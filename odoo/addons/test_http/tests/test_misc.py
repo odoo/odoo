@@ -7,20 +7,32 @@ from unittest.mock import patch
 from urllib.parse import urlparse
 
 import odoo
-from odoo.http import root
+from odoo.http import root, content_disposition
 from odoo.tests import tagged
-from odoo.tests.common import HOST, new_test_user, get_db_name
-from odoo.tools import config, file_path
+from odoo.tests.common import HOST, new_test_user, get_db_name, BaseCase
+from odoo.tools import config, file_path, parse_version
 from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
+
+try:
+    from importlib import metadata
+    werkzeug_version = metadata.version('werkzeug')
+except ImportError:
+    import werkzeug
+    werkzeug_version = werkzeug.__version__
 
 
 @tagged('post_install', '-at_install')
 class TestHttpMisc(TestHttpBase):
     def test_misc0_redirect(self):
         res = self.nodb_url_open('/test_http//greeting')
-        self.assertEqual(res.status_code, 404)
+        awaited_codes = [404]
+        if parse_version('2.2.0') <= parse_version(werkzeug_version) <= parse_version('3.0.1'):
+            # Bug in werkzeug from 2.2.0 up to 3.0.1 (shipped in Ubuntu Noble 24.04)
+            # not a big deal but should be removed once fixed upstream.
+            awaited_codes.append(308)
+        self.assertIn(res.status_code, awaited_codes)
 
     def test_misc1_reverse_proxy(self):
         # client <-> reverse-proxy <-> odoo
@@ -158,7 +170,7 @@ class TestHttpEnsureDb(TestHttpBase):
         self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
 
     def test_ensure_db1_grant_db(self):
-        res = self.multidb_url_open('/test_http/ensure_db?db=db0', timeout=10000)
+        res = self.multidb_url_open('/test_http/ensure_db?db=db0')
         res.raise_for_status()
         self.assertEqual(res.status_code, 302)
         self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
@@ -201,3 +213,45 @@ class TestHttpEnsureDb(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, 'db1')
+
+    def test_ensure_db4_unicode(self):
+        self.db_list = ["basededonnée1", "basededonnée2"]  # é matters
+
+        res = self.multidb_url_open('/test_http/ensure_db?db=basededonnée1')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 302)
+        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/test_http/ensure_db')
+        self.assertEqual(odoo.http.root.session_store.get(res.cookies['session_id']).db, 'basededonnée1')
+
+        # follow the redirection
+        res = self.multidb_url_open('/test_http/ensure_db')
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, 'basededonnée1')
+
+
+class TestContentDisposition(BaseCase):
+
+    def test_content_disposition(self):
+        """ Test that content_disposition filename conforms to RFC 6266, RFC 5987 """
+        assertions = [
+            ('foo bar.xls', 'foo%20bar.xls', 'Space character'),
+            ('foo(bar).xls', 'foo%28bar%29.xls', 'Parenthesis'),
+            ('foo<bar>.xls', 'foo%3Cbar%3E.xls', 'Angle brackets'),
+            ('foo[bar].xls', 'foo%5Bbar%5D.xls', 'Brackets'),
+            ('foo{bar}.xls', 'foo%7Bbar%7D.xls', 'Curly brackets'),
+            ('foo@bar.xls', 'foo%40bar.xls', 'At sign'),
+            ('foo,bar.xls', 'foo%2Cbar.xls', 'Comma sign'),
+            ('foo;bar.xls', 'foo%3Bbar.xls', 'Semicolon sign'),
+            ('foo:bar.xls', 'foo%3Abar.xls', 'Colon sign'),
+            ('foo\\bar.xls', 'foo%5Cbar.xls', 'Backslash sign'),
+            ('foo"bar.xls', 'foo%22bar.xls', 'Double quote sign'),
+            ('foo/bar.xls', 'foo%2Fbar.xls', 'Slash sign'),
+            ('foo?bar.xls', 'foo%3Fbar.xls', 'Question mark'),
+            ('foo=bar.xls', 'foo%3Dbar.xls', 'Equal sign'),
+            ('foo*bar.xls', 'foo%2Abar.xls', 'Star sign'),
+            ("foo'bar.xls", 'foo%27bar.xls', 'Single-quote sign'),
+            ('foo%bar.xls', 'foo%25bar.xls', 'Percent sign'),
+        ]
+        for filename, pct_encoded, hint in assertions:
+            self.assertEqual(content_disposition(filename), f"attachment; filename*=UTF-8''{pct_encoded}", f'{hint} should be percent encoded')

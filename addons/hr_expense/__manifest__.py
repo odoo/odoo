@@ -67,6 +67,9 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'web.assets_tests': [
             'hr_expense/static/tests/tours/expense_upload_tours.js',
         ],
+        'web.qunit_mobile_suite_tests': [
+            'hr_expense/static/tests/expense_mobile_tests.js',
+        ],
     },
     'license': 'LGPL-3',
 }

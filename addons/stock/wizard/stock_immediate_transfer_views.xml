@@ -21,7 +21,7 @@
                 <field name="immediate_transfer_line_ids" nolabel="1" attrs="{'invisible': [('show_transfers', '=', False)]}">>
                     <tree create="0" delete="0" editable="top">
                         <field name="picking_id"/>
-                        <field name="to_immediate" widget="boolean_toggle"/>
+                        <field name="to_immediate" widget="boolean_toggle" options="{'autosave': False}"/>
                     </tree>
                 </field>
 

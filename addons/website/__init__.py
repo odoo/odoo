@@ -41,7 +41,6 @@ def uninstall_hook(cr, registry):
 
 def post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
-    env['ir.module.module'].update_theme_images()
 
     if request:
         env = env(context=request.default_context())

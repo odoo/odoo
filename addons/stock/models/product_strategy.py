@@ -107,7 +107,7 @@ class StockPutawayRule(models.Model):
         out_locations = self.location_out_id
         if out_locations:
             self.env['stock.picking.type'].with_context(active_test=False)\
-                .search([('default_location_dest_id', 'in', out_locations.ids)])\
+                .search([('default_location_dest_id', 'in', out_locations.ids), ('show_reserved', '=', False)])\
                 .write({'show_reserved': True})
 
     def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):
@@ -121,6 +121,7 @@ class StockPutawayRule(models.Model):
         checked_locations = set()
         for putaway_rule in self:
             location_out = putaway_rule.location_out_id
+            child_locations = location_out.child_internal_location_ids
 
             if not putaway_rule.storage_category_id:
                 if location_out in checked_locations:
@@ -128,8 +129,9 @@ class StockPutawayRule(models.Model):
                 if location_out._check_can_be_used(product, quantity, package, qty_by_location[location_out.id]):
                     return location_out
                 continue
+            else:
+                child_locations = child_locations.filtered(lambda loc: loc.storage_category_id == putaway_rule.storage_category_id)
 
-            child_locations = location_out.child_internal_location_ids
             # check if already have the product/package type stored
             for location in child_locations:
                 if location in checked_locations:

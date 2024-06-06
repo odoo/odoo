@@ -15,7 +15,12 @@
             />
         </t>
         <t t-else="">
-            <div t-att-class="props.className">This domain is not supported.</div>
+            <div t-att-class="props.className">
+                This domain is not supported.
+                <t t-if="!props.readonly">
+                    <button class="btn btn-sm btn-primary ms-2" t-on-click="() => this.resetDomain()">Reset domain</button>
+                </t>
+            </div>
         </t>
     </t>
 

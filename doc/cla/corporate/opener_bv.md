@@ -8,8 +8,8 @@ declaration.
 
 Signed,
 
-*  Stefan Rijnhart stefan@opener.am https://github.com/stefanrijnhart
+*  Stefan Rijnhart stefan@opener.amsterdam https://github.com/stefanrijnhart
 
 List of contributors:
 
-*  Stefan Rijnhart stefan@opener.am https://github.com/stefanrijnhart
+*  Stefan Rijnhart stefan@opener.amsterdam https://github.com/stefanrijnhart

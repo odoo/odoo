@@ -13,9 +13,9 @@ class EmployeeSkill(models.Model):
     _order = "skill_type_id, skill_level_id"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
-    skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True, domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True)
-    skill_level_id = fields.Many2one('hr.skill.level', compute='_compute_skill_level_id', domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True)
-    skill_type_id = fields.Many2one('hr.skill.type', required=True)
+    skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True, domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True, ondelete='cascade')
+    skill_level_id = fields.Many2one('hr.skill.level', compute='_compute_skill_level_id', domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True, ondelete='cascade')
+    skill_type_id = fields.Many2one('hr.skill.type', required=True, ondelete='cascade')
     level_progress = fields.Integer(related='skill_level_id.level_progress')
 
     _sql_constraints = [

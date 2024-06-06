@@ -19,12 +19,11 @@
 # Karol Rybak <karolrybak85@gmail.com>, 2022
 # Piotr Strębski <strebski@gmail.com>, 2022
 # Jaroslaw Kaczmarski, 2022
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
 # Dawid Prus, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
-# Wiktor Kaźmierczak <wik92tor@wp.pl>, 2022
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
 # Natalia Gros <nag@odoo.com>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
@@ -32,21 +31,20 @@
 # Martin Trigaux, 2022
 # Mariusz, 2022
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
-# Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Krzysztof Przygoda, 2022
-# Maksym <ms@myodoo.pl>, 2023
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Tadeusz Karpiński, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
+# Maksym <ms@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,11 +145,6 @@ msgid "%s cannot be deleted. Try to cancel them before."
 msgstr "%snie może zostać usunięty. Spróbuj anulować go wcześniej."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
-
-#. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Overview - %s' % object.display_name"
 msgstr "'Przegląd Bom - %s' % object.display_name"
@@ -199,7 +192,7 @@ msgstr "18″ x 2½″ Noga kwadratowa"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid ": Insufficient Quantity To Unbuild"
-msgstr ": Niewystarczająca ilość do odbudowy"
+msgstr ": Niewystarczająca ilość do demontażu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -292,7 +285,7 @@ msgstr "<span class=\"o_stat_text\">Wyprodukowano</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">OEE</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">OEE</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -318,7 +311,7 @@ msgstr "<span class=\"o_stat_text\">Źródło MO</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Demontaż</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -474,7 +467,7 @@ msgstr "<strong>Data końcowa: </strong>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "<strong>Unit Cost</strong>"
-msgstr "<strong>Koszt jednostki</strong>"
+msgstr "<strong>Koszt jednostkowy</strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -594,6 +587,16 @@ msgstr "Dodawanie kontroli jakości do zleceń roboczych"
 #: model:ir.model,name:mrp.model_mrp_workcenter_tag
 msgid "Add tag for the workcenter"
 msgstr "Dodaj tag dla gniazda produkcyjnego"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
+msgid "Additional time in minutes for the cleaning."
+msgstr "Dodatkowy czas czyszczenia w minutach."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
+msgid "Additional time in minutes for the setup."
+msgstr "Dodatkowy czas konfiguracji w minutach."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
@@ -725,7 +728,7 @@ msgstr "Zastosuj do Wariantów"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Approve"
-msgstr "Aprobuj"
+msgstr "Zatwierdź"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -775,8 +778,8 @@ msgid "Attachment URL"
 msgstr "Adres załącznika"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1082,13 +1085,6 @@ msgid "BoM Type"
 msgstr "Typ Zest. Mat."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "Produkt linii BoM %s nie powinien być taki sam jak produkt BoM."
-
-#. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
 msgid "Bolt"
 msgstr "Śruba"
@@ -1170,7 +1166,7 @@ msgstr "Anuluj"
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__cancel
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
-msgstr "Anulowano"
+msgstr "Anulowane"
 
 #. module: mrp
 #. odoo-python
@@ -1878,7 +1874,7 @@ msgstr "Wyświetla zużyte numery partii/serii"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "Do you confirm you want to unbuild"
-msgstr ""
+msgstr "Czy potwierdzasz chęć demontażu?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
@@ -2279,7 +2275,7 @@ msgstr "Przeglądarka Google Slides"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Group By"
-msgstr "Grupuj wg."
+msgstr "Grupuj wg"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2575,6 +2571,7 @@ msgstr "To zostało już odblokowane"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
@@ -2767,7 +2764,8 @@ msgstr "Miejsce"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr "Lokalizacja, w której znajduje się produkt, który ma zostać usunięty."
+msgstr ""
+"Lokalizacja, w której znajduje się produkt, który ma zostać demontowany."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -2786,7 +2784,7 @@ msgid ""
 "order."
 msgstr ""
 "Lokalizacja, do której mają zostać wysłane komponenty wynikające z polecenia"
-" unbuild."
+" demontażu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3157,8 +3155,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Reguła minimalnych zapasów"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3306,7 +3304,7 @@ msgstr "Brak utraty produktywności dla tego sprzętu"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
-msgstr ""
+msgstr "Nie znaleziono polecenia demontażu"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -3395,7 +3393,7 @@ msgstr "Liczba zamówień produkcji do przetworzenia"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_count
 msgid "Number of Unbuilds"
-msgstr ""
+msgstr "Liczba demontaży"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_error_counter
@@ -3413,7 +3411,7 @@ msgstr "Liczba wygenerowanych MO"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Liczba wiadomości wymagających akcji"
 
 #. module: mrp
@@ -3447,7 +3445,7 @@ msgstr "Cel OEE"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
 msgid "Oee"
-msgstr ""
+msgstr "Oee"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -3512,8 +3510,8 @@ msgstr ""
 "Każda operacja jest wykonywana w określonym centrum roboczym i ma określony czas trwania."
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -4359,6 +4357,12 @@ msgid "Route"
 msgstr "Ścieżka"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Pozycje marszruty"
@@ -4949,12 +4953,12 @@ msgstr "Zestaw stołowy"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
 msgid "Tag"
-msgstr "Znacznik"
+msgstr "Tag"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__name
 msgid "Tag Name"
-msgstr "Nazwa znacznika"
+msgstr "Nazwa tagu"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_allocation
@@ -5020,6 +5024,15 @@ msgstr "Pojemność musi być ściśle dodatnia."
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
 msgstr "Komponent %s nie powinien być tym samym, co produkt do wytworzenia."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"The current configuration is incorrect because it would create a cycle "
+"between these products: %s."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5301,16 +5314,6 @@ msgid "Time Tracking: %(user)s"
 msgstr "Śledzenie czasu: %(user)s"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Time in minutes for the cleaning."
-msgstr "Czas czyszczenia w minutach."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Time in minutes for the setup."
-msgstr "Czas ustawiania w minutach."
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
 msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
@@ -5470,7 +5473,7 @@ msgstr "Śledzenie"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
 msgid "Transfer"
-msgstr "Przekaz"
+msgstr "Pobranie"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5539,17 +5542,17 @@ msgstr "Zamówienia demontażu"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr ""
+msgstr "Demontaż: %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
 msgid "Unbuilds"
-msgstr ""
+msgstr "Demontaże"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
-msgstr ""
+msgstr "Zdemontowany"
 
 #. module: mrp
 #. odoo-javascript
@@ -5703,6 +5706,15 @@ msgid "Validate"
 msgstr "Zatwierdź"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid ""
+"Values cannot be set and validated because a Lot/Serial Number needs to be specified for a tracked product that is having its consumed amount increased:\n"
+"- "
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #, python-format
@@ -5782,7 +5794,7 @@ msgstr "Magazyn:"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr ""
+msgstr "Ostrzeżenie Niewystarczająca ilość demontowana"
 
 #. module: mrp
 #. odoo-python
@@ -5808,7 +5820,7 @@ msgstr "Warstwa ścieralna"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
 msgid "Website"
-msgstr "Strona WWW"
+msgstr "Strona internetowa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
@@ -6258,7 +6270,7 @@ msgstr "Nie można tworzyć zależności cyklicznych."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Nie można usunąć zlecenia niebudowania, jeśli jego stan to \"Gotowe\"."
+msgstr "Nie można usunąć zlecenia demontażu, jeśli jego stan to \"Gotowe\"."
 
 #. module: mrp
 #. odoo-python
@@ -6294,7 +6306,7 @@ msgstr "Nie można dwukrotnie wprowadzić tego samego numeru seryjnego."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr ""
+msgstr "Nie można dokonać demontażu cofniętego zlecenia produkcyjnego."
 
 #. module: mrp
 #. odoo-python
@@ -6320,6 +6332,16 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Zużyto inną niż oczekiwana ilość następujących produktów.\n"
+"\n"
+"<b attrs=\"{'invisible': [('consumption', '=', 'strict')]}\">\n"
+"Prosimy o potwierdzenie, że zostało to zrobione celowo.\n"
+"</b>\n"
+"<b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
+"Sprawdź zużycie komponentów lub poproś kierownika o zatwierdzenie \n"
+"<span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">tego zamówienia produkcyjnego</span>\n"
+"<span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">tych zamówień produkcyjnych</span>.\n"
+"</b>"
 
 #. module: mrp
 #. odoo-python
@@ -6418,13 +6440,6 @@ msgstr "Musisz zapewnić partię dla gotowego produktu."
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
-#, python-format
-msgid "You need to supply Lot/Serial Number"
-msgstr "Należy podać numer partii/seryjny"
-
-#. module: mrp
-#. odoo-python
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
@@ -6441,6 +6456,14 @@ msgstr "Wyprodukowałeś mniej niż wynosił początkowy popyt"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Należy podać numer partii produktu końcowego."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action

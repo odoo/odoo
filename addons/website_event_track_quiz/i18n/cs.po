@@ -11,14 +11,16 @@
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Jiří Podhorecký, 2023
+# Jakub Smolka, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jiří Podhorecký, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +54,7 @@ msgid "Add Quiz"
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "All questions must be answered !"
@@ -70,7 +72,7 @@ msgid "Answer"
 msgstr "Odpovědět"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
@@ -78,7 +80,7 @@ msgid "Check answers"
 msgstr "Zkontrolovat odpovědi"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Check your answers"
@@ -95,7 +97,7 @@ msgid "Concrete Blocks Wall"
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Congratulations, you scored a total of"
@@ -117,7 +119,7 @@ msgid "Correct Answer"
 msgstr "Správná odpověď"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Correct."
@@ -175,7 +177,7 @@ msgstr ""
 #: model:ir.model,name:website_event_track_quiz.model_event_track
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__event_track_id
 msgid "Event Track"
-msgstr ""
+msgstr "Zaměření události"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
@@ -232,7 +234,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Incorrect."
@@ -320,7 +322,7 @@ msgid "Number of Points"
 msgstr "Počet bodů"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Oopsie, you did not score any point on this quiz."
@@ -337,14 +339,14 @@ msgid "OpenWood is not an Open Source congres about Apps."
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Point"
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
 #, python-format
@@ -363,6 +365,7 @@ msgid "Question"
 msgstr "Otázka"
 
 #. module: website_event_track_quiz
+#. odoo-python
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
 msgid ""
@@ -371,6 +374,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track_quiz
+#. odoo-python
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
 msgid "Question \"%s\" must have 1 correct answer to be valid."
@@ -415,7 +419,7 @@ msgid "Quiz Questions"
 msgstr "Kvízové otázky"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "Quiz validation error"
@@ -430,7 +434,7 @@ msgid "Quizzes"
 msgstr "Kvízy"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "Reset"
@@ -452,11 +456,6 @@ msgid "Search Attendees"
 msgstr "Hledat účastníky"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
-msgid "Search courses"
-msgstr "Hledat kurzy"
-
-#. module: website_event_track_qui
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Search users"
 msgstr "Hledat uživatele"
@@ -488,7 +487,7 @@ msgid "Take the Quiz"
 msgstr "Zúčastněte se kvízu"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "The correct answer was:"
@@ -500,7 +499,7 @@ msgid "There is currently no leaderboard available"
 msgstr "Momentálně není k dispozici žádná výsledková tabulka"
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "There was an error validating this quiz."
@@ -514,7 +513,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "This quiz is already done. Retaking it is not possible."
@@ -533,7 +532,7 @@ msgstr "Track"
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr ""
+msgstr "Vazba Téma / Návštěvník"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
@@ -588,7 +587,7 @@ msgstr ""
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_0
 msgid "Wood"
-msgstr ""
+msgstr "Dřevo"
 
 #. module: website_event_track_quiz
 #: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_0
@@ -617,14 +616,14 @@ msgid "e.g. What is Joe's favorite motto?"
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "point!"
 msgstr ""
 
 #. module: website_event_track_quiz
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
 msgid "points!"

@@ -62,7 +62,7 @@ class StockRule(models.Model):
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
                     quantity=procurement.product_qty,
-                    date=procurement_date_planned.date(),
+                    date=max(procurement_date_planned.date(), fields.Date.today()),
                     uom_id=procurement.product_uom)
 
             # Fall back on a supplier for which no price may be defined. Not ideal, but better than

@@ -354,6 +354,8 @@ class Import(models.TransientModel):
                 return getattr(self, '_read_' + file_extension)(options)
             except ValueError as e:
                 raise e
+            except ImportValidationError as e:
+                raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using guessed mimetype %s", self.file_name or '<unknown>', self.id, mimetype)
 
@@ -363,6 +365,8 @@ class Import(models.TransientModel):
             try:
                 return getattr(self, '_read_' + file_extension)(options)
             except ValueError as e:
+                raise e
+            except ImportValidationError as e:
                 raise e
             except Exception:
                 _logger.warning("Failed to read file '%s' (transient id %d) using user-provided mimetype %s", self.file_name or '<unknown>', self.id, self.file_type)
@@ -491,6 +495,9 @@ class Import(models.TransientModel):
                     separator = options['separator'] = candidate
                     break
 
+        if not len(options['quoting']) == 1:
+            raise ImportValidationError(_("Error while importing records: Text Delimiter should be a single character."))
+
         csv_iterator = pycompat.csv_reader(
             io.BytesIO(csv_data),
             quotechar=options['quoting'],
@@ -559,6 +566,9 @@ class Import(models.TransientModel):
                 val = self._remove_currency_symbol(val)
                 if val:
                     if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
+                        if options['float_decimal_separator'] == '.' and val.count('.') > 1:
+                            # This is not a float so exit this try
+                            float('a')
                         val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
                     # We are now sure that this is a float, but we still need to find the
                     # thousand and decimal separator
@@ -1046,6 +1056,10 @@ class Import(models.TransientModel):
         import_fields = [f for f in fields if f]
 
         _file_length, rows_to_import = self._read_file(options)
+        if len(rows_to_import[0]) != len(fields):
+            raise ImportValidationError(
+                _("Error while importing records: all rows should be of the same size, but the title row has %d entries while the first row has %d. You may need to change the separator character.", len(fields), len(rows_to_import[0]))
+            )
 
         if options.get('has_headers'):
             rows_to_import = rows_to_import[1:]
@@ -1195,8 +1209,8 @@ class Import(models.TransientModel):
     def _parse_date_from_data(self, data, index, name, field_type, options):
         dt = datetime.datetime
         fmt = fields.Date.to_string if field_type == 'date' else fields.Datetime.to_string
-        d_fmt = options.get('date_format')
-        dt_fmt = options.get('datetime_format')
+        d_fmt = options.get('date_format') or DEFAULT_SERVER_DATE_FORMAT
+        dt_fmt = options.get('datetime_format') or DEFAULT_SERVER_DATETIME_FORMAT
         for num, line in enumerate(data):
             if not line[index]:
                 continue
@@ -1265,14 +1279,13 @@ class Import(models.TransientModel):
 
             return base64.b64encode(content)
         except Exception as e:
-            _logger.exception(e)
-            raise ImportValidationError(
-                _(
-                    "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s",
-                    url=url, field_name=field, line_number=line_number + 1, error=e
-                ),
-                field=field
-            )
+            _logger.warning(e, exc_info=True)
+            raise ImportValidationError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
+                'url': url,
+                'field_name': field,
+                'line_number': line_number + 1,
+                'error': e
+            })
 
     def execute_import(self, fields, columns, options, dryrun=False):
         """ Actual execution of the import
@@ -1522,7 +1535,7 @@ class Import(models.TransientModel):
 
         return input_file_data
 
-_SEPARATORS = [' ', '/', '-', '']
+_SEPARATORS = [' ', '/', '-', '.', '']
 _PATTERN_BASELINE = [
     ('%m', '%d', '%Y'),
     ('%d', '%m', '%Y'),

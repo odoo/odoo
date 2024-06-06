@@ -12,6 +12,6 @@ class ResConfigSettings(models.TransientModel):
         "Minimum score",
         config_parameter='recaptcha_min_score',
         groups='base.group_system',
-        default="0.5",
-        help="Should be between 0.0 and 1.0.\n1.0 is very likely a good interaction, 0.0 is very likely a bot"
+        default="0.7",
+        help="By default, should be one of 0.1, 0.3, 0.7, 0.9.\n1.0 is very likely a good interaction, 0.0 is very likely a bot"
     )

@@ -47,6 +47,7 @@ class ChannelUsersRelation(models.Model):
     ]
 
     def _recompute_completion(self):
+        slides_marked_uncompleted = self.env.context.get("slides_marked_uncompleted")
         read_group_res = self.env['slide.slide.partner'].sudo()._read_group(
             ['&', '&', ('channel_id', 'in', self.mapped('channel_id').ids),
              ('partner_id', 'in', self.mapped('partner_id').ids),
@@ -64,13 +65,16 @@ class ChannelUsersRelation(models.Model):
         uncompleted_records = self.env['slide.channel.partner']
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
-            record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
+            if record.completed and not slides_marked_uncompleted:
+                record.completion = 100.0
+            else:
+                record.completion = round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
 
             if not record.channel_id.active:
                 continue
             elif not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
-            elif record.completed and record.completed_slides_count < record.channel_id.total_slides:
+            elif slides_marked_uncompleted and record.completed and record.completed_slides_count < record.channel_id.total_slides:
                 uncompleted_records += record
 
         if completed_records:
@@ -848,7 +852,7 @@ class Channel(models.Model):
             additional_domain=[('request_partner_id', '=', partner.id)]
         ).mapped('res_id')
         for channel in self:
-            if channel.id not in requested_cids:
+            if channel.id not in requested_cids and channel.user_id:
                 activities += channel.activity_schedule(
                     'website_slides.mail_activity_data_access_request',
                     note=_('<b>%s</b> is requesting access to this course.') % partner.name,
@@ -991,3 +995,9 @@ class Channel(models.Model):
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
         }
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/{slug(self)}')

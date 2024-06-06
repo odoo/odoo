@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from os.path import basename, join as opj
 from unittest.mock import patch
 from freezegun import freeze_time
+from urllib3.util import parse_url
 
 import odoo
 from odoo.tests import new_test_user, tagged
@@ -269,6 +270,53 @@ class TestHttpStatic(TestHttpStaticCommon):
         res = self.url_open(f'/web/image/res.users/{public_user.id}/image_128?download=1')
         self.assertEqual(res.status_code, 404)
 
+    def test_static17_content_missing_checksum(self):
+        att = self.env['ir.attachment'].create({
+            'name': 'testhttp.txt',
+            'db_datas': 'some data',
+            'public': True,
+        })
+        self.assertFalse(att.checksum)
+        self.assertDownload(
+            url=f'/web/content/{att.id}',
+            headers={},
+
+            assert_status_code=200,
+            assert_headers={
+                'Content-Length': '9',
+                'Content-Type': 'text/plain; charset=utf-8',
+                'Content-Disposition': 'inline; filename=testhttp.txt',
+            },
+            assert_content=b'some data',
+        )
+
+    def test_static18_image_missing_checksum(self):
+        with file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
+            att = self.env['ir.attachment'].create({
+                'name': 'gizeh.png',
+                'db_datas': file.read(),
+                'mimetype': 'image/png',
+                'public': True,
+            })
+        self.assertFalse(att.checksum)
+        self.assertDownloadGizeh(f'/web/image/{att.id}')
+
+    def test_static19_fallback_redirection_loop(self):
+        bad_path = '/test_http/static/idontexist.png'
+        self.assertRaises(FileNotFoundError, file_open, bad_path[1:])
+
+        self.env['ir.attachment'].create({
+            'name': 'idontexist.png',
+            'mimetype': 'image/png',
+            'url': bad_path,
+            'public': True,
+        })
+
+        res = self.url_open(bad_path, allow_redirects=False)
+        location = parse_url(res.headers.get('Location', ''))
+        self.assertNotEqual(location.path, bad_path, "loop detected")
+        self.assertEqual(res.status_code, 404)
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
@@ -392,6 +440,7 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         # The timezone should be %Z (instead of 'GMT' hardcoded) but
         # somehow strftime doesn't set it.
         http_date_format = '%a, %d %b %Y %H:%M:%S GMT'
+        today = datetime.utcnow().strftime(http_date_format)
         one_week_away = (datetime.utcnow() + timedelta(weeks=1)).strftime(http_date_format)
 
         res1 = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png')
@@ -401,11 +450,17 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertEqual(res1.headers.get('Expires'), one_week_away)
         self.assertIn('ETag', res1.headers)
 
-        res2 = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png', headers={
+        res_etag = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png', headers={
             'If-None-Match': res1.headers['ETag']
         })
-        res2.raise_for_status()
-        self.assertEqual(res2.status_code, 304, "We should not download the file again.")
+        res_etag.raise_for_status()
+        self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")
+
+        res_last_modified = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png', headers={
+            'If-Modified-Since': today,
+        })
+        res_last_modified.raise_for_status()
+        self.assertEqual(res_last_modified.status_code, 304, "We should not download the file again.")
 
     @freeze_time(datetime.utcnow())
     def test_static_cache1_unique(self, domain=''):
@@ -413,18 +468,25 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         # The timezone should be %Z (instead of 'GMT' hardcoded) but
         # somehow strftime doesn't set it.
         http_date_format = '%a, %d %b %Y %H:%M:%S GMT'
+        today = datetime.utcnow().strftime(http_date_format)
         one_year_away = (datetime.utcnow() + timedelta(days=365)).strftime(http_date_format)
 
-        res1 = self.assertDownloadGizeh(f'{domain}/web/content/test_http.gizeh_png?unique=1')
+        res1 = self.assertDownloadGizeh(f'{domain}/web/image/test_http.gizeh_png?unique=1')
         self.assertEqual(res1.headers.get('Cache-Control'), 'public, max-age=31536000, immutable')  # one year
         self.assertEqual(res1.headers.get('Expires'), one_year_away)
         self.assertIn('ETag', res1.headers)
 
-        res2 = self.db_url_open(f'{domain}/web/content/test_http.gizeh_png?unique=1', headers={
+        res_etag = self.db_url_open(f'{domain}/web/image/test_http.gizeh_png?unique=1', headers={
             'If-None-Match': res1.headers['ETag']
         })
-        res2.raise_for_status()
-        self.assertEqual(res2.status_code, 304, "We should not download the file again.")
+        res_etag.raise_for_status()
+        self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")
+
+        res_last_modified = self.db_url_open(f'{domain}/web/image/test_http.gizeh_png?unique=1', headers={
+            'If-Modified-Since': today,
+        })
+        res_last_modified.raise_for_status()
+        self.assertEqual(res_last_modified.status_code, 304, "We should not download the file again.")
 
     @freeze_time(datetime.utcnow())
     def test_static_cache2_nocache(self, domain=''):
@@ -433,8 +495,8 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertNotIn('Expires', res1.headers)
         self.assertIn('ETag', res1.headers)
 
-        res2 = self.db_url_open(f'{domain}/web/content/test_http.gizeh_png?nocache=1', headers={
+        res_etag = self.db_url_open(f'{domain}/web/content/test_http.gizeh_png?nocache=1', headers={
             'If-None-Match': res1.headers['ETag']
         })
-        res2.raise_for_status()
-        self.assertEqual(res2.status_code, 304, "We should not download the file again.")
+        res_etag.raise_for_status()
+        self.assertEqual(res_etag.status_code, 304, "We should not download the file again.")

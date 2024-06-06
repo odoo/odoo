@@ -52,7 +52,7 @@ class SaleOrderLine(models.Model):
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
     def _get_sale_order_fields(self):
-        return ["product_id", "name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
+        return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
 
     def read_converted(self):
         field_names = self._get_sale_order_fields()
@@ -76,7 +76,11 @@ class SaleOrderLine(models.Model):
 
             elif sale_line.display_type == 'line_note':
                 if results:
-                    results[-1]['customer_note'] = sale_line.name
+                    if results[-1].get('customer_note'):
+                        results[-1]['customer_note'] += "--" + sale_line.name
+                    else:
+                        results[-1]['customer_note'] = sale_line.name
+
 
         return results
 
@@ -98,3 +102,9 @@ class SaleOrderLine(models.Model):
         # do not delete downpayment lines created from pos
         pos_downpayment_lines = self.filtered(lambda line: line.is_downpayment and line.sudo().pos_order_line_ids)
         return super(SaleOrderLine, self - pos_downpayment_lines).unlink()
+
+    @api.depends('pos_order_line_ids')
+    def _compute_untaxed_amount_invoiced(self):
+        super()._compute_untaxed_amount_invoiced()
+        for line in self:
+            line.untaxed_amount_invoiced += sum(line.pos_order_line_ids.mapped('price_subtotal'))

@@ -285,8 +285,6 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("editing a domain with `parent` key", async (assert) => {
-        assert.expect(1);
-
         // Create the domain selector and its mock environment
         await mountComponent(DomainSelector, {
             props: {
@@ -297,10 +295,11 @@ QUnit.module("Components", (hooks) => {
             },
         });
         assert.strictEqual(
-            target.lastElementChild.innerHTML,
-            "This domain is not supported.",
+            target.lastElementChild.textContent,
+            " This domain is not supported. Reset domain",
             "an error message should be displayed because of the `parent` key"
         );
+        assert.containsOnce(target, "button:contains(Reset domain)");
     });
 
     QUnit.test("creating a domain with a default option", async (assert) => {

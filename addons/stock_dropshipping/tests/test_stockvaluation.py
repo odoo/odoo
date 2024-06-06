@@ -324,3 +324,16 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         self.assertTrue(8 in return_pick.move_ids.stock_valuation_layer_ids.mapped('value'))
         self.assertTrue(-8 in return_pick.move_ids.stock_valuation_layer_ids.mapped('value'))
+
+        # return again to have a new dropship picking from a dropship return
+        stock_return_picking_form_2 = Form(self.env['stock.return.picking']
+            .with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking_2 = stock_return_picking_form_2.save()
+        stock_return_picking_action_2 = stock_return_picking_2.create_returns()
+        return_pick_2 = self.env['stock.picking'].browse(stock_return_picking_action_2['res_id'])
+        return_pick_2.move_ids[0].move_line_ids[0].qty_done = 1.0
+        return_pick_2._action_done()
+
+        self.assertTrue(8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))
+        self.assertTrue(-8 in return_pick_2.move_ids.stock_valuation_layer_ids.mapped('value'))

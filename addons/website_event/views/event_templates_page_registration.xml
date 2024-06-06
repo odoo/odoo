@@ -42,7 +42,7 @@
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
                             <div class="d-flex">
-                                <h5 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'EEEE MMMM dd, YYYY'}" t-att-datetime="event.date_begin"/>
+                                <h5 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                             </div>
                             <t t-if="not event.is_one_day">Start -</t>
                             <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
@@ -53,7 +53,7 @@
                                 (<span t-out="event.date_tz"/>)
                                 <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
                                 <div class="d-flex">
-                                    <h5 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'EEEE MMMM dd, YYYY'}"/>
+                                    <h5 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}"/>
                                 </div>
                                 <t t-if="not event.is_one_day">End -</t>
                             </t>
@@ -144,7 +144,7 @@
     <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
         id="registration_form"
         class="mb-5"
-        t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+        t-attf-data-action="/event/#{slug(event)}/registration/new" action="javascript:void(0)"
         itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div id="o_wevent_tickets" class="o_wevent_theme_bg_base shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
@@ -221,7 +221,7 @@
             </t>
             <div t-else="" class="o_wevent_registration_single">
                 <div class="row p-2 ps-3">
-                    <div class="col-lg-8 d-flex flex-columns align-items-center" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                    <div class="col-lg-8 d-flex flex-column flex-lg-row align-items-start align-items-lg-center" itemscope="itemscope" itemtype="http://schema.org/Offer">
                         <h6 itemprop="name" class="my-0 pe-3 border-end text-dark o_wevent_single_ticket_name">
                             <span t-if="tickets" t-field="tickets.name"/>
                             <span t-else="">Registration</span>

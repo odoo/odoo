@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import models, fields, api, _
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
@@ -247,7 +248,11 @@ class Task(models.Model):
     _inherit = "project.task"
 
     analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
+    allow_timesheets = fields.Boolean(
+        "Allow timesheets",
+        compute='_compute_allow_timesheets', compute_sudo=True,
+        search='_search_allow_timesheets', readonly=True,
+        help="Timesheets can be logged on this task.")
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
@@ -267,6 +272,17 @@ class Task(models.Model):
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
+
+    @api.depends('project_id.allow_timesheets')
+    def _compute_allow_timesheets(self):
+        for task in self:
+            task.allow_timesheets = task.project_id.allow_timesheets
+
+    def _search_allow_timesheets(self, operator, value):
+        query = self.env['project.project'].sudo()._search([
+            ('allow_timesheets', operator, value),
+        ])
+        return [('project_id', 'in', query)]
 
     @api.depends('analytic_account_id.active', 'project_id.analytic_account_id.active')
     def _compute_analytic_account_active(self):
@@ -291,7 +307,7 @@ class Task(models.Model):
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
                 task.overtime = max(task_total_hours - task.planned_hours, 0)
-                if task_total_hours > task.planned_hours:
+                if float_compare(task_total_hours, task.planned_hours, precision_digits=2) >= 0:
                     task.progress = 100
                 else:
                     task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)

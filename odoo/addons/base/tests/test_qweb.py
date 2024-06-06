@@ -662,6 +662,7 @@ class TestQWebNS(TransactionCase):
             """
         })
 
+        error_msg = ''
         try:
             "" + 0
         except TypeError as e:
@@ -702,6 +703,11 @@ class TestQWebBasic(TransactionCase):
             ("['test_' + x for x in ['a', 'b']]",       {},                             ['test_a', 'test_b']),
             ("""1 and 2 and 0
                 or 9""",                                {},                             9),
+            ('[x for x in (1,2)]',                      {},                             [1, 2]),  # LOAD_FAST_AND_CLEAR
+            ('list(x for x in (1,2))',                  {},                             [1, 2]),  # END_FOR, CALL_INTRINSIC_1
+            ('v if v is None else w',                   {'v': False, 'w': 'foo'},       'foo'),  # POP_JUMP_IF_NONE
+            ('v if v is not None else w',               {'v': None, 'w': 'foo'},        'foo'),  # POP_JUMP_IF_NOT_NONE
+            ('{a for a in (1, 2)}',                     {},                             {1, 2}),  # RERAISE
         ]
 
         IrQweb = self.env['ir.qweb']
@@ -709,7 +715,7 @@ class TestQWebBasic(TransactionCase):
             expr_namespace = IrQweb._compile_expr(expr)
 
             compiled = compile("""def test(values):\n  values['result'] = %s""" % expr_namespace, '<test>', 'exec')
-            globals_dict = IrQweb._prepare_globals()
+            globals_dict = IrQweb._IrQWeb__prepare_globals()
             values = {}
             unsafe_eval(compiled, globals_dict, values)
             test = values['test']

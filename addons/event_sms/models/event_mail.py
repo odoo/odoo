@@ -58,7 +58,7 @@ class EventMailScheduler(models.Model):
                     )
                     scheduler.update({
                         'mail_done': True,
-                        'mail_count_done': scheduler.event_id.seats_reserved + scheduler.event_id.seats_used,
+                        'mail_count_done': scheduler.event_id.seats_expected,
                     })
 
         return super(EventMailScheduler, self).execute()

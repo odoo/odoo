@@ -13,6 +13,7 @@ const wUtils = require('website.utils');
 const {isImageSupportedForStyle} = require('web_editor.image_processing');
 require('website.s_popup_options');
 const {Domain} = require('@web/core/domain');
+const {SIZES, MEDIAS_BREAKPOINTS} = require('@web/core/ui/ui_service');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -625,6 +626,7 @@ options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 options.Class.include({
     custom_events: _.extend({}, options.Class.prototype.custom_events || {}, {
         'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
+        'request_save': '_onSaveRequest',
     }),
     specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 
@@ -686,28 +688,10 @@ options.Class.include({
         }
         for (const widget of widgets) {
             const methodsNames = widget.getMethodsNames();
-            const specialMethodsNames = [];
-            // If it's a pageOption, it's most likely to need to reload, so check the widgets.
-            if (this.data.pageOptions) {
-                specialMethodsNames.push(methodsNames);
-            } else {
-                for (const methodName of methodsNames) {
-                    if (this.specialCheckAndReloadMethodsNames.includes(methodName)) {
-                        specialMethodsNames.push(methodName);
-                    }
-                }
-            }
-            if (!specialMethodsNames.length) {
-                continue;
-            }
-            let paramsReload = false;
-            for (const methodName of specialMethodsNames) {
-                if (widget.getMethodsParams(methodName).reload) {
-                    paramsReload = true;
-                    break;
-                }
-            }
-            if (paramsReload) {
+            const methodNamesToCheck = this.data.pageOptions
+                ? methodsNames
+                : methodsNames.filter(m => this.specialCheckAndReloadMethodsNames.includes(m));
+            if (methodNamesToCheck.some(m => widget.getMethodsParams(m).reload)) {
                 return true;
             }
         }
@@ -772,9 +756,9 @@ options.Class.include({
 
         // Finally, only update the bundles as no reload is required
         await this._reloadBundles();
-        // Any option that require to reload bundle should probably
-        // also update the color preview of the theme tabs, as
-        // bundles can affect the look of the previews.
+        // TODO kept to be fully stable but this is useless, this is done
+        // automatically with _reloadBundles. As this is not a costly operation
+        // it is ok to do it twice for no reason in stable. To remove in master.
         this.trigger_up('option_update', {
             optionName: 'ThemeColors',
             name: 'update_color_previews',
@@ -962,6 +946,22 @@ options.Class.include({
             reloadEditor: true,
         });
     },
+    /**
+     * This handler prevents reloading the page twice with a `request_save`
+     * event when a widget is already going to handle reloading the page.
+     *
+     * @param {OdooEvent} ev
+     */
+    _onSaveRequest(ev) {
+        // If a widget requires a reload, any subsequent request to save is
+        // useless, as the reload will save the page anyway. It can cause
+        // a race condition where the wysiwyg attempts to reload the page twice,
+        // so ignore the request.
+        if (this.__willReload) {
+            ev.stopPropagation();
+            return;
+        }
+    }
 });
 
 function _getLastPreFilterLayerElement($el) {
@@ -1588,6 +1588,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 
     notify(name, data) {
         if (name === 'update_color_previews') {
+            // TODO remove this part in master, this is handled automatically
+            // at each bundle reload.
             this.updateColorPreviews = true;
         }
     },
@@ -1604,6 +1606,8 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
      */
     async updateUI() {
         if (this.updateColorPreviews) {
+            // TODO remove this part in master, this is handled automatically
+            // at each bundle reload.
             this.trigger_up('update_color_previews');
             this.updateColorPreviews = false;
         }
@@ -1658,6 +1662,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             ccPreviewEls.push(ccPreviewEl);
             presetCollapseEl.appendChild(collapseEl);
         }
+        // TODO investigate in master why this would be necessary
         this.trigger_up('update_color_previews');
         await this._super(...arguments);
     },
@@ -2239,26 +2244,7 @@ options.registry.WebsiteLevelColor = options.Class.extend({
 });
 
 options.registry.HeaderLayout = options.registry.WebsiteLevelColor.extend({
-    /**
-     * @overide
-     */
-    async customizeWebsiteViews(previewMode, widgetValue, params) {
-        const _super = this._super.bind(this);
-
-        if (params.name === 'header_sidebar_opt') {
-            // When the user selects sidebar as header, make sure that the
-            // header position is regular.
-            await new Promise(resolve => {
-                this.trigger_up('action_demand', {
-                    actionName: 'toggle_page_option',
-                    params: [{name: 'header_overlay', value: false}],
-                    onSuccess: () => resolve(),
-                });
-            });
-        }
-
-        return _super(...arguments);
-    }
+    // TODO: to remove in master, it is only kept for the stable versions.
 });
 
 options.registry.HeaderNavbar = options.Class.extend({
@@ -2619,8 +2605,13 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @override
      */
     async onTargetShow() {
-        if (this.$target[0].classList.contains('o_snippet_mobile_invisible')
-                || this.$target[0].classList.contains('o_snippet_desktop_invisible')) {
+        // TODO In future version use tool method to determine isMobilePreview.
+        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+        const isMobilePreview = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+        const isMobileHidden = this.$target[0].classList.contains("o_snippet_mobile_invisible");
+        if ((this.$target[0].classList.contains('o_snippet_mobile_invisible')
+                || this.$target[0].classList.contains('o_snippet_desktop_invisible')
+            ) && isMobilePreview === isMobileHidden) {
             this.$target[0].classList.add('o_snippet_override_invisible');
         }
     },
@@ -2729,7 +2720,7 @@ options.registry.anchor = options.Class.extend({
                     return;
                 }
 
-                const alreadyExists = !!document.getElementById(anchorName);
+                const alreadyExists = !!self.ownerDocument.getElementById(anchorName);
                 this.$('.o_anchor_already_exists').toggleClass('d-none', !alreadyExists);
                 $input.toggleClass('is-invalid', alreadyExists);
                 if (!alreadyExists) {
@@ -2788,7 +2779,7 @@ options.registry.anchor = options.Class.extend({
             const title = $titles.length > 0 ? $titles[0].innerText : this.data.snippetName;
             const anchorName = this._text2Anchor(title);
             let n = '';
-            while (document.getElementById(anchorName + n)) {
+            while (this.ownerDocument.getElementById(anchorName + n)) {
                 n = (n || 1) + 1;
             }
             this._setAnchorName(anchorName + n);
@@ -3431,6 +3422,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
         this.isAnimatedText = this.$target.hasClass('o_animated_text');
         this.$optionsSection = this.$overlay.data('$optionsSection');
         this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
+        this.$overlay[0].querySelector(".o_handles").classList.toggle("pe-none", this.isAnimatedText);
     },
     /**
      * @override
@@ -3710,7 +3702,7 @@ options.registry.MegaMenuLayout = options.registry.SelectTemplate.extend({
 });
 
 /**
- * Hides delete button for Mega Menu block.
+ * Hides delete and clone buttons for Mega Menu block.
  */
 options.registry.MegaMenuNoDelete = options.Class.extend({
     forceNoDeleteButton: true,
@@ -3834,11 +3826,7 @@ options.registry.GridImage = options.Class.extend({
      * @returns {?HTMLElement}
      */
     _getImageGridItem() {
-        const parentEl = this.$target[0].parentNode;
-        if (parentEl && parentEl.classList.contains('o_grid_item_image')) {
-            return parentEl;
-        }
-        return null;
+        return this.$target[0].closest(".o_grid_item_image");
     },
     /**
      * @override

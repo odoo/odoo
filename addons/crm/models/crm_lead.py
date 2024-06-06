@@ -15,7 +15,7 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import date_utils, email_re, email_split, is_html_empty, groupby
+from odoo.tools import date_utils, email_split, is_html_empty, groupby
 from odoo.tools.misc import get_lang
 
 from . import crm_stage
@@ -283,7 +283,8 @@ class Lead(models.Model):
                 continue
             team_domain = [('use_leads', '=', True)] if lead.type == 'lead' else [('use_opportunities', '=', True)]
             team = self.env['crm.team']._get_default_team_id(user_id=user.id, domain=team_domain)
-            lead.team_id = team.id
+            if lead.team_id != team:
+                lead.team_id = team.id
 
     @api.depends('user_id', 'team_id', 'partner_id')
     def _compute_company_id(self):
@@ -331,12 +332,14 @@ class Lead(models.Model):
     @api.depends('user_id')
     def _compute_date_open(self):
         for lead in self:
-            lead.date_open = self.env.cr.now() if lead.user_id else False
+            if not lead.date_open and lead.user_id:
+                lead.date_open = self.env.cr.now()
 
     @api.depends('stage_id')
     def _compute_date_last_stage_update(self):
         for lead in self:
-            lead.date_last_stage_update = self.env.cr.now()
+            if not lead.date_last_stage_update:
+                lead.date_last_stage_update = self.env.cr.now()
 
     @api.depends('create_date', 'date_open')
     def _compute_day_open(self):
@@ -722,13 +725,27 @@ class Lead(models.Model):
         if vals.get('website'):
             vals['website'] = self.env['res.partner']._clean_website(vals['website'])
 
-        stage_updated, stage_is_won = vals.get('stage_id'), False
-        # stage change: update date_last_stage_update
-        if stage_updated:
-            stage = self.env['crm.stage'].browse(vals['stage_id'])
-            if stage.is_won:
-                vals.update({'probability': 100, 'automated_probability': 100})
-                stage_is_won = True
+        now = self.env.cr.now()
+        stage_updated, stage_is_won = False, False
+        # stage change (or reset): update date_last_stage_update if at least one
+        # lead does not have the same stage
+        if 'stage_id' in vals:
+            stage_updated = any(lead.stage_id.id != vals['stage_id'] for lead in self)
+            if stage_updated:
+                vals['date_last_stage_update'] = now
+            if stage_updated and vals.get('stage_id'):
+                stage = self.env['crm.stage'].browse(vals['stage_id'])
+                if stage.is_won:
+                    vals.update({'probability': 100, 'automated_probability': 100})
+                    stage_is_won = True
+        # user change; update date_open if at least one lead does not
+        # have the same user
+        if 'user_id' in vals and not vals.get('user_id'):
+            vals['date_open'] = False
+        elif vals.get('user_id'):
+            user_updated = any(lead.user_id.id != vals['user_id'] for lead in self)
+            if user_updated:
+                vals['date_open'] = now
 
         # stage change with new stage: update probability and date_closed
         if vals.get('probability', 0) >= 100 or not vals.get('active', True):
@@ -1240,17 +1257,21 @@ class Lead(models.Model):
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
-        alias_record = self.env['mail.alias'].search([
-            ('alias_name', '!=', False),
-            ('alias_name', '!=', ''),
-            ('alias_model_id.model', '=', 'crm.lead'),
-            ('alias_parent_model_id.model', '=', 'crm.team'),
-            ('alias_force_thread_id', '=', False)
-        ], limit=1)
+        alias_domain = [
+            ('company_id', '=', self.env.company.id),
+            ('alias_id.alias_name', '!=', False),
+            ('alias_id.alias_name', '!=', ''),
+            ('alias_id.alias_model_id.model', '=', 'crm.lead'),
+        ]
+        # sort by use_leads, then by our membership of the team
+        alias_records = self.env['crm.team'].search(alias_domain).sorted(
+            lambda r: (r.use_leads, self.env.user in r.member_ids), reverse=True
+        )
+        alias_record = alias_records[0] if alias_records else None
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
-            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
+            sub_title = _('Use the <i>New</i> button, or send an email to %s to test the email gateway.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------
@@ -1371,7 +1392,12 @@ class Lead(models.Model):
             if merged_data.get('stage_id') not in team_stage_ids.ids:
                 merged_data['stage_id'] = team_stage_ids[0].id if team_stage_ids else False
 
-        # write merged data into first opportunity
+        # write merged data into first opportunity; remove some keys if already
+        # set on opp to avoid useless recomputes
+        if 'user_id' in merged_data and opportunities_head.user_id.id == merged_data['user_id']:
+            merged_data.pop('user_id')
+        if 'team_id' in merged_data and opportunities_head.team_id.id == merged_data['team_id']:
+            merged_data.pop('team_id')
         opportunities_head.write(merged_data)
 
         # delete tail opportunities
@@ -1625,7 +1651,6 @@ class Lead(models.Model):
         new_team_id = team_id if team_id else self.team_id.id
         upd_values = {
             'type': 'opportunity',
-            'date_open': self.env.cr.now(),
             'date_conversion': self.env.cr.now(),
         }
         if customer != self.partner_id:
@@ -1830,7 +1855,7 @@ class Lead(models.Model):
             'is_company': is_company,
             'type': 'contact'
         }
-        if self.lang_id:
+        if self.lang_id.active:
             res['lang'] = self.lang_id.code
         return res
 
@@ -1912,11 +1937,13 @@ class Lead(models.Model):
         return res
 
     def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email_normalized,
-            'email_cc': False}
-            for r in self}
+        return {
+            r.id: {
+                'partner_ids': [],
+                'email_to': ','.join(tools.email_normalize_all(r.email_from)) or r.email_from,
+                'email_cc': False,
+            } for r in self
+        }
 
     def _message_get_suggested_recipients(self):
         recipients = super(Lead, self)._message_get_suggested_recipients()
@@ -1965,23 +1992,43 @@ class Lead(models.Model):
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            new_partner = message.partner_ids.filtered(
+                lambda partner: partner.email == self.email_from or (self.email_normalized and partner.email_normalized == self.email_normalized)
+            )
             if new_partner:
+                if new_partner[0].email_normalized:
+                    email_domain = ('email_normalized', '=', new_partner[0].email_normalized)
+                else:
+                    email_domain = ('email_from', '=', new_partner[0].email)
                 self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+                    ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
+                ]).write({'partner_id': new_partner[0].id})
         return super(Lead, self)._message_post_after_hook(message, msg_vals)
 
     def _message_partner_info_from_emails(self, emails, link_mail=False):
+        """ Try to propose a better recipient when having only an email by populating
+        it with the partner_name / contact_name field of the lead e.g. if lead
+        contact_name is "Raoul" and email is "raoul@raoul.fr", suggest
+        "Raoul" <raoul@raoul.fr> as recipient. """
         result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
-        for partner_info in result:
-            if not partner_info.get('partner_id') and (self.partner_name or self.contact_name):
-                emails = email_re.findall(partner_info['full_name'] or '')
-                email = emails and emails[0] or ''
-                if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = tools.formataddr((self.contact_name or self.partner_name, email))
-                    break
+        if not (self.partner_name or self.contact_name) or not self.email_from:
+            return result
+        for email, partner_info in zip(emails, result):
+            if partner_info.get('partner_id') or not email:
+                continue
+            # reformat email if no name information
+            name_emails = tools.email_split_tuples(email)
+            name_from_email = name_emails[0][0] if name_emails else False
+            if name_from_email:
+                continue  # already containing name + email
+            name_from_email = self.partner_name or self.contact_name
+            emails_normalized = tools.email_normalize_all(email)
+            email_normalized = emails_normalized[0] if emails_normalized else False
+            if email.lower() == self.email_from.lower() or (email_normalized and self.email_normalized == email_normalized):
+                partner_info['full_name'] = tools.formataddr((
+                    name_from_email,
+                    ','.join(emails_normalized) if emails_normalized else email))
+                break
         return result
 
     def _phone_get_number_fields(self):
@@ -2157,7 +2204,8 @@ class Lead(models.Model):
                     s_lead_lost *= value_result['lost'] / total_lost
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
+            probability = s_lead_won / (s_lead_won + s_lead_lost)
+            lead_probabilities[lead_id] = min(max(round(100 * probability, 2), 0.01), 99.99)
         return lead_probabilities
 
     # ---------------------------------

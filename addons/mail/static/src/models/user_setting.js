@@ -41,25 +41,41 @@ registerModel({
             }
             return constraints;
         },
+        buildKeySet({ shiftKey, ctrlKey, altKey, key }) {
+            const keys = new Set();
+            if (key) {
+                keys.add(key === "Meta" ? "Alt" : key);
+            }
+            if (shiftKey) {
+                keys.add("Shift");
+            }
+            if (ctrlKey) {
+                keys.add("Control");
+            }
+            if (altKey) {
+                keys.add("Alt");
+            }
+            return keys;
+        },
         /**
          * @param {event} ev
-         * @param {Object} param1
-         * @param {boolean} param1.ignoreModifiers
          */
-        isPushToTalkKey(ev, { ignoreModifiers = false } = {}) {
+        isPushToTalkKey(ev) {
             if (!this.usePushToTalk || !this.pushToTalkKey) {
                 return false;
             }
-            const { key, shiftKey, ctrlKey, altKey } = this.pushToTalkKeyFormat();
-            if (ignoreModifiers) {
-                return ev.key === key;
+            const [shiftKey, ctrlKey, altKey, key] = this.pushToTalkKey.split(".");
+            const settingsKeySet = this.buildKeySet({ shiftKey, ctrlKey, altKey, key });
+            const eventKeySet = this.buildKeySet({
+                shiftKey: ev.shiftKey,
+                ctrlKey: ev.ctrlKey,
+                altKey: ev.altKey,
+                key: ev.key,
+            });
+            if (ev.type === "keydown") {
+                return [...settingsKeySet].every((key) => eventKeySet.has(key));
             }
-            return (
-                ev.key === key &&
-                ev.shiftKey === shiftKey &&
-                ev.ctrlKey === ctrlKey &&
-                ev.altKey === altKey
-            );
+            return settingsKeySet.has(ev.key === "Meta" ? "Alt" : ev.key);
         },
         pushToTalkKeyFormat() {
             if (!this.pushToTalkKey) {
@@ -76,7 +92,10 @@ registerModel({
         pushToTalkKeyToString() {
             const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
             const f = (k, name) => k ? name : '';
-            return `${f(ctrlKey, 'Ctrl + ')}${f(altKey, 'Alt + ')}${f(shiftKey, 'Shift + ')}${key}`;
+            const keys = [
+                f(ctrlKey, 'Ctrl'), f(altKey, 'Alt'), f(shiftKey, 'Shift'), key === " " ? "Space": key
+            ].filter(Boolean);
+            return keys.join(" + ");
         },
         /**
          * @param {String} audioInputDeviceId
@@ -101,7 +120,11 @@ registerModel({
          * @param {event} ev
          */
         async setPushToTalkKey(ev) {
-            const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
+            const nonElligibleKeys = new Set(['Shift', 'Control', 'Alt', 'Meta']);
+            let pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}`;
+            if (!nonElligibleKeys.has(ev.key)) {
+                pushToTalkKey += `.${ev.key === ' ' ? 'Space' : ev.key}`;
+            }
             this.update({ localPushToTalkKey: pushToTalkKey });
             if (this.messaging.currentUser) {
                 this._saveSettings();

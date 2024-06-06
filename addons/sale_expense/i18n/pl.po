@@ -10,14 +10,15 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Martin Trigaux, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +60,13 @@ msgid "Expense Report"
 msgstr "Raport wydatków"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_bank_statement_line__expense_sheet_id
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__expense_sheet_id
+#: model:ir.model.fields,field_description:sale_expense.field_account_payment__expense_sheet_id
+msgid "Expense Sheet"
+msgstr "Arkusz wydatków"
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
 msgstr "Podział wydatków"
@@ -71,12 +79,14 @@ msgid "Expenses"
 msgstr "Wydatki"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
 msgstr "Wydatki z tej kategorii mogą być dodane do zamówienia sprzedaży"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid ""
@@ -86,6 +96,7 @@ msgstr ""
 " momencie zaksięgowania."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid ""
@@ -110,6 +121,11 @@ msgid "Invoicing"
 msgstr "Fakturowanie"
 
 #. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Zapis dziennika"
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
 msgid "Journal Item"
 msgstr "Pozycja zapisu"
@@ -120,6 +136,7 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Reinvoiced Sales Orders"

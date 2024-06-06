@@ -88,6 +88,8 @@ class HrEmployeeBase(models.AbstractModel):
             ('holiday_status_id.requires_allocation', '=', 'yes'),
             ('state', '=', 'validate'),
             ('date_from', '<=', current_date),
+            '|',
+            ('date_to', '=', False),
             ('date_to', '>=', current_date),
         ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
         rg_results = dict((d['employee_id'][0], {"employee_id_count": d['employee_id_count'], "number_of_days": d['number_of_days']}) for d in data)
@@ -300,7 +302,7 @@ class HrEmployee(models.Model):
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
         self = self._get_contextual_employee()
-        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz)
+        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz or 'utc')
         public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
         return list(map(lambda bh: {
             'id': -bh.id,

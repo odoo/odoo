@@ -350,3 +350,55 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             },
         )
+        # invoice with negative subtotal on move line
+        NEG_AMOUNT = -42
+        invoice_3 = self.env['account.move'].create({
+            "name": "I am negative",
+            "move_type": "out_invoice",
+            "state": "draft",
+            "partner_id": self.partner.id,
+            "invoice_date": datetime.today(),
+            "invoice_line_ids": [Command.create({
+                "analytic_distribution": {self.analytic_account.id: analytic_distribution},
+                "product_id": self.product_a.id,
+                "quantity": 1,
+                "product_uom_id": self.product_a.uom_id.id,
+                "price_unit": NEG_AMOUNT,
+            }), Command.create({
+                "product_id": self.product_a.id,
+                "quantity": 1,
+                "product_uom_id": self.product_a.uom_id.id,
+                "price_unit": -NEG_AMOUNT,  # so the invoice is not negative and we can post it
+            })],
+        })
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': NEG_AMOUNT * analytic_contribution,
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
+                }],
+                'total': {
+                    'to_invoice': NEG_AMOUNT * analytic_contribution,
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
+                },
+            },
+        )
+        invoice_3.action_post()
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['revenues'],
+            {
+                'data': [{
+                    'id': 'other_invoice_revenues',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
+                    'to_invoice': 0.0,
+                    'invoiced': (2 * (self.product_a.standard_price + self.product_b.standard_price) + NEG_AMOUNT) * analytic_contribution,
+                }],
+                'total': {
+                    'to_invoice': 0.0,
+                    'invoiced': (2 * (self.product_a.standard_price + self.product_b.standard_price) + NEG_AMOUNT) * analytic_contribution,
+                },
+            },
+        )

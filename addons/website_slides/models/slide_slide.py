@@ -641,17 +641,27 @@ class Slide(models.Model):
                     # only update keys that are not set in the incoming vals
                     slide.update({key: value for key, value in slide_metadata.items() if key not in vals.keys()})
 
-            if not 'completion_time' not in vals:
+            if 'completion_time' not in vals:
                 slide._on_change_document_binary_content()
 
             if slide.is_published and not slide.is_category:
                 slide._post_publication()
+                slide.channel_id.channel_partner_ids._recompute_completion()
         return slides
 
     def write(self, values):
         if values.get('is_category'):
             values['is_preview'] = True
             values['is_published'] = True
+
+        # if the slide type is changed, remove incompatible url or html_content
+        # done here to satisfy the SQL constraint
+        # using a stored-computed field in place does not work
+        if 'slide_category' in values:
+            if values['slide_category'] == 'article':
+                values = {'url': False, **values}
+            elif values['slide_category'] != 'article':
+                values = {'html_content': False, **values}
 
         res = super(Slide, self).write(values)
         if values.get('is_published'):
@@ -673,8 +683,8 @@ class Slide(models.Model):
                 })
 
         if 'is_published' in values or 'active' in values:
-            # if the slide is published/unpublished, recompute the completion for the partners
-            self.slide_partner_ids._recompute_completion()
+            # recompute the completion for all partners of the channel
+            self.channel_id.channel_partner_ids._recompute_completion()
 
         return res
 
@@ -689,7 +699,9 @@ class Slide(models.Model):
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
+        channel_partner_ids = self.channel_id.channel_partner_ids
         super(Slide, self).unlink()
+        channel_partner_ids._recompute_completion()
 
     def toggle_active(self):
         # archiving/unarchiving a channel does it on its slides, too
@@ -797,7 +809,10 @@ class Slide(models.Model):
         return self._sign_token(partner_id)
 
     def _send_share_email(self, email, fullscreen):
-        # TDE FIXME: template to check
+        courses_without_templates = self.channel_id.filtered(lambda channel: not channel.share_slide_template_id)
+        if courses_without_templates:
+            raise UserError(_('Impossible to send emails. Select a "Share Template" for courses %(course_names)s first',
+                                 course_names=', '.join(courses_without_templates.mapped('name'))))
         mail_ids = []
         for record in self:
             template = record.channel_id.share_slide_template_id.with_context(
@@ -924,7 +939,7 @@ class Slide(models.Model):
         # Remove the Karma point gained
         completed_slides._action_set_quiz_done(completed=False)
 
-        self.env['slide.slide.partner'].sudo().search([
+        self.env['slide.slide.partner'].with_context(slides_marked_uncompleted=True).sudo().search([
             ('slide_id', 'in', completed_slides.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
         ]).completed = False
@@ -1037,7 +1052,7 @@ class Slide(models.Model):
           (e.g: 'Video could not be found') """
 
         self.ensure_one()
-        google_app_key = self.env['website'].get_current_website().website_slide_google_app_key
+        google_app_key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
         error_message = False
         try:
             response = requests.get(
@@ -1128,7 +1143,7 @@ class Slide(models.Model):
                 params['access_token'] = access_token
 
         if not params.get('access_token'):
-            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
+            params['key'] = self.env['website'].get_current_website().sudo().website_slide_google_app_key
 
         error_message = False
         try:
@@ -1366,3 +1381,9 @@ class Slide(models.Model):
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_url
         return results_data
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/slide/{slug(self)}')

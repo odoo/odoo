@@ -69,7 +69,7 @@ class ProjectCustomerPortal(CustomerPortal):
         domain = self._prepare_project_domain()
 
         searchbar_sortings = self._prepare_searchbar_sortings()
-        if not sortby:
+        if not sortby or sortby not in searchbar_sortings:
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
@@ -273,7 +273,6 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 1},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 2},
             'project': {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3},
-            'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
             'status': {'label': _('Status'), 'order': 'kanban_state', 'sequence': 6},
             'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 8},
@@ -412,7 +411,8 @@ class ProjectCustomerPortal(CustomerPortal):
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(group))]
 
                     if not grouped_tasks:
-                        grouped_tasks = [tasks_no_milestone]
+                        if tasks_no_milestone:
+                            grouped_tasks = [tasks_no_milestone]
                     else:
                         if grouped_tasks[len(grouped_tasks) - 1][0].milestone_id and tasks_no_milestone:
                             grouped_tasks.append(tasks_no_milestone)
@@ -422,7 +422,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 else:
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
             else:
-                grouped_tasks = [tasks]
+                grouped_tasks = [tasks] if tasks else []
 
             task_states = dict(Task_sudo._fields['kanban_state']._description_selection(request.env))
             if sortby == 'status':

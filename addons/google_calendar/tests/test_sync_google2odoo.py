@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from dateutil.relativedelta import relativedelta
 from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
-from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
+from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo import Command, tools
+from unittest.mock import patch
 
 class TestSyncGoogle2Odoo(TestSyncGoogle):
 
@@ -19,11 +20,90 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'email': 'public_email@example.com',
             'type': 'contact',
         })
+        self.env.ref('base.partner_admin').write({
+            'name': 'Mitchell Admin',
+            'email': 'admin@yourcompany.example.com',
+        })
         self.private_partner = self.env['res.partner'].create({
             'name': 'Private Contact',
             'email': 'private_email@example.com',
             'type': 'private',
         })
+
+    def generate_recurring_event(self, mock_dt, **values):
+        """ Function Used to return a recurrence created at fake time of 'mock_dt'. """
+        rrule = values.pop('rrule', None)
+        google_id = values.pop('google_id', None)
+        with self.mock_datetime_and_now(mock_dt):
+            base_event = self.env['calendar.event'].with_user(self.organizer_user).create({
+                'name': 'coucou',
+                'need_sync': False,
+                **values
+            })
+            recurrence = self.env['calendar.recurrence'].with_user(self.organizer_user).create({
+                'google_id': google_id,
+                'rrule': rrule,
+                'need_sync': False,
+                'base_event_id': base_event.id,
+            })
+            recurrence._apply_recurrence()
+        return recurrence
+
+    def google_respond_to_recurrent_event_with_option_this_event(self, recurrence, event_index, response_status):
+        """
+        Function returns google api response simulating 'self.attendee_user' responding to the event number 'event_index' (0-indexed)
+        in 'recurrence' with response of 'response_status' and option "This event"
+        """
+        update_time = (recurrence.write_date + timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        recurrence_google_values = recurrence._google_values()
+        recurrence_google_values['updated'] = update_time
+        updated_event_google_values = recurrence.calendar_event_ids.sorted('start')[event_index]._google_values()
+        updated_event_google_values['updated'] = update_time
+        updated_event_google_values['attendees'] = [
+            {"email": self.organizer_user.partner_id.email, "responseStatus": "accepted"},
+            {"email": self.attendee_user.partner_id.email, "responseStatus": response_status},
+        ]
+        return [
+            recurrence_google_values,
+            updated_event_google_values,
+        ]
+
+    def google_respond_to_recurrent_event_with_option_all_events(self, recurrence, response_status):
+        """
+        Function returns google api response simulating 'self.attendee_user' responding to 'recurrence'
+        with response of 'response_status' and option "All events"
+        """
+        update_time = (recurrence.write_date + timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        recurrence_google_values = recurrence._google_values()
+        recurrence_google_values['updated'] = update_time
+        recurrence_google_values['attendees'] = [
+            {"email": self.organizer_user.partner_id.email, "responseStatus": "accepted"},
+            {"email": self.attendee_user.partner_id.email, "responseStatus": response_status},
+        ]
+        return [recurrence_google_values]
+
+    def google_respond_to_recurrent_event_with_option_following_events(self, recurrence, event_index, response_status, rrule1, rrule2):
+        """
+        Function returns google api response simulating 'self.attendee_user' responding to the event number 'event_index' (0-indexed)
+        in 'recurrence' with response of 'response_status' and option "This and following events".
+        """
+        update_time = (recurrence.write_date + timedelta(seconds=30)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        recurrence_google_values = recurrence._google_values()
+        recurrence_google_values['updated'] = update_time
+        updated_event_google_values = recurrence.calendar_event_ids.sorted('start')[event_index]._google_values()
+        updated_event_google_values['updated'] = update_time
+        updated_event_google_values['attendees'] = [
+            {"email": self.organizer_user.partner_id.email, "responseStatus": "accepted"},
+            {"email": self.attendee_user.partner_id.email, "responseStatus": response_status},
+        ]
+        updated_event_id = updated_event_google_values['id']
+        updated_event_google_values['id'] = updated_event_id[:updated_event_id.index('_') + 1] + 'R' + updated_event_id[updated_event_id.index('_') + 1:]
+        recurrence_google_values["recurrence"] = [rrule1]
+        updated_event_google_values["recurrence"] = [rrule2]
+        return [
+            recurrence_google_values,
+            updated_event_google_values,
+        ]
 
     @property
     def now(self):
@@ -305,6 +385,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'reminders': {'useDefault': True},
             'start': {'date': '2020-01-6'},
             'end': {'date': '2020-01-7'},
+            'transparency': 'opaque',
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
@@ -823,6 +904,38 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(no_duplicate_event), 1)
 
     @patch_api
+    def test_recurrence_list_contains_more_items(self):
+        recurrence_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        values = {
+            'id': recurrence_id,
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'recurrence': ['EXDATE;TZID=Europe/Rome:20200113',
+                           'RRULE:FREQ=WEEKLY;COUNT=3;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'date': '2020-01-6'},
+            'end': {'date': '2020-01-7'},
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
+        self.assertTrue(recurrence, "it should have created a recurrence")
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 3, "it should have created a recurrence with 3 events")
+        self.assertTrue(all(events.mapped('recurrency')))
+        self.assertEqual(events[0].start_date, date(2020, 1, 6))
+        self.assertEqual(events[1].start_date, date(2020, 1, 13))
+        self.assertEqual(events[2].start_date, date(2020, 1, 20))
+        self.assertEqual(events[0].stop_date, date(2020, 1, 6))
+        self.assertEqual(events[1].stop_date, date(2020, 1, 13))
+        self.assertEqual(events[2].stop_date, date(2020, 1, 20))
+        self.assertEqual(events[0].google_id, '%s_20200106' % recurrence_id)
+        self.assertEqual(events[1].google_id, '%s_20200113' % recurrence_id)
+        self.assertEqual(events[2].google_id, '%s_20200120' % recurrence_id)
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
     def test_simple_event_into_recurrency(self):
         """ Synched single events should be converted in recurrency without problems"""
         google_id = 'aaaaaaaaaaaa'
@@ -968,6 +1081,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                 'dateTime': '2020-01-13T19:55:00+01:00',
                 'timeZone': 'Europe/Brussels'
             },
+            'transparency': 'opaque',
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
         self.assertEqual(event.attendee_ids.state, 'declined')
@@ -1005,6 +1119,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                                               '%s_owner_id' % self.env.cr.dbname: other_user.id}},
             'reminders': {'overrides': [], 'useDefault': False},
             'visibility': 'public',
+            'transparency': 'opaque',
         }, timeout=3)
 
     @patch_api
@@ -1135,8 +1250,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         }])
         self.sync(gevent)
         # User attendee removed but gevent owner might be added after synch.
-        mails = sorted(set(event.attendee_ids.mapped('email')))
-        self.assertEqual(mails, ['odoobot@example.com'])
+        mails = event.attendee_ids.mapped('email')
+        self.assertFalse(mails)
 
         self.assertGoogleAPINotCalled()
 
@@ -1206,6 +1321,62 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
         event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
         self.assertTrue(event, "It should have created an event")
+        self.assertEqual(event.videocall_location, 'https://meet.google.com/odoo-random-test')
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_event_with_local_videocall(self):
+        """This makes sure local video call is not discarded if google's meeting url is False"""
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'start': date(2020, 1, 6),
+            'stop': date(2020, 1, 6),
+            'google_id': google_id,
+            'user_id': self.env.user.id,
+            'need_sync': False,
+            'partner_ids': [(6, 0, self.env.user.partner_id.ids)],
+            'videocall_location': 'https://meet.google.com/odoo_local_videocall',
+        })
+        values = {
+            'id': google_id,
+            'status': 'confirmed',
+            'description': 'Event without meeting url',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Event without meeting url',
+            'visibility': 'public',
+            'attendees': [{
+                'displayName': 'Mitchell Admin',
+                'email': self.public_partner.email,
+                'responseStatus': 'needsAction'
+            },],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'conferenceData': {
+                'entryPoints': [{
+                    'entryPointType': 'video',
+                    'uri': False,
+                    'label': 'no label'
+                }]
+            },
+            'updated': self.now,
+        }
+        # make sure local video call is not discarded
+        gevent = GoogleEvent([values])
+        self.env['calendar.event']._sync_google2odoo(gevent)
+        self.assertEqual(event.videocall_location, 'https://meet.google.com/odoo_local_videocall')
+
+        # now google has meet URL and make sure local video call is updated accordingly
+        values['conferenceData']['entryPoints'][0]['uri'] = 'https://meet.google.com/odoo-random-test'
+        gevent = GoogleEvent([values])
+        self.env['calendar.event']._sync_google2odoo(gevent)
         self.assertEqual(event.videocall_location, 'https://meet.google.com/odoo-random-test')
         self.assertGoogleAPINotCalled()
 
@@ -1315,6 +1486,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'start': datetime(2020, 1, 6),
             'stop': datetime(2020, 1, 6),
             'need_sync': False,
+            'user_id': self.env.uid
         })
         recurrence = self.env['calendar.recurrence'].create({
             'google_id': google_id,
@@ -1341,7 +1513,9 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
         events = recurrence.calendar_event_ids.sorted('start')
         self.assertEqual(len(events), 2)
-        self.assertFalse(events.mapped('attendee_ids'))
+        # Only the event organizer must remain as attendee.
+        self.assertEqual(len(events.mapped('attendee_ids')), 1)
+        self.assertEqual(events.mapped('attendee_ids')[0].partner_id, self.env.user.partner_id)
         self.assertGoogleAPINotCalled()
 
     @patch_api
@@ -1644,4 +1818,268 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         # The stream is not blocking, but there is a duplicate
 
         # Not call API
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_attendee_status_is_not_updated_when_syncing_and_time_data_is_not_changed(self):
+        recurrence_id = "aaaaaaaa"
+        organizer = new_test_user(self.env, login="organizer")
+        other_user = new_test_user(self.env, login='calendar_user')
+        base_event = self.env['calendar.event'].with_user(organizer).create({
+            'name': 'coucou',
+            'start': datetime(2020, 1, 6, 9, 0),
+            'stop': datetime(2020, 1, 6, 10, 0),
+            'need_sync': False,
+            'partner_ids': [Command.set([organizer.partner_id.id, other_user.partner_id.id])]
+        })
+        recurrence = self.env['calendar.recurrence'].with_user(organizer).create({
+            'google_id': recurrence_id,
+            'rrule': 'FREQ=DAILY;INTERVAL=1;COUNT=3',
+            'need_sync': False,
+            'base_event_id': base_event.id,
+        })
+        recurrence._apply_recurrence()
+
+        self.assertTrue(all(len(event.attendee_ids) == 2 for event in recurrence.calendar_event_ids), 'should have 2 attendees in all recurring events')
+        organizer_state = recurrence.calendar_event_ids.sorted('start')[0].attendee_ids.filtered(lambda attendee: attendee.partner_id.email == organizer.partner_id.email).state
+        self.assertEqual(organizer_state, 'accepted', 'organizer should have accepted')
+        values = [{
+            'summary': 'coucou',
+            'id': recurrence_id,
+            'recurrence': ['RRULE:FREQ=DAILY;INTERVAL=1;COUNT=3'],
+            'start': {'dateTime': '2020-01-06T10:00:00+01:00'},
+            'end': {'dateTime': '2020-01-06T11:00:00+01:00'},
+            'reminders': {'useDefault': True},
+            'organizer': {'email': organizer.partner_id.email},
+            'attendees': [{'email': organizer.partner_id.email, 'responseStatus': 'accepted'}, {'email': other_user.partner_id.email, 'responseStatus': 'accepted'}],
+            'updated': self.now,
+        }]
+        self.env['calendar.recurrence'].with_user(other_user)._sync_google2odoo(GoogleEvent(values))
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 3, "it should have created a recurrence with 3 events")
+        self.assertEqual(events[0].attendee_ids[0].state, 'accepted', 'after google sync, organizer should have accepted status still')
+        self.assertGoogleAPINotCalled()
+
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_accepting_recurrent_event_with_this_event_option_synced_by_attendee(self, mock_get_events):
+        """
+        Test accepting a recurring event with the option "This event" on Google Calendar and syncing the attendee's calendar.
+        Ensure that event is accepeted by attendee in Odoo.
+        """
+        recurrence_id = "abcd1"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_this_event(recurrence, 2, 'accepted')
+        mock_get_events.return_value = (
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+        )
+        expected_states = ["needsAction", "needsAction", "accepted", "needsAction"]
+        with self.mock_datetime_and_now("2024-04-22"):
+            self.attendee_user.sudo()._sync_google_calendar(self.google_service)
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
+
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_accepting_recurrent_event_with_this_event_option_synced_by_organizer(self, mock_get_events):
+        """
+        Test accepting a recurring event with the option "This event" on Google Calendar and syncing the organizer's calendar.
+        Ensure that event is accepeted by attendee in Odoo.
+        """
+        recurrence_id = "abcd2"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_this_event(recurrence, 2, 'accepted')
+        mock_get_events.return_value = (
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+        )
+        expected_states = ["needsAction", "needsAction", "accepted", "needsAction"]
+        with self.mock_datetime_and_now("2024-04-22"):
+            self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
+
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_accepting_recurrent_event_with_all_events_option_synced_by_attendee(self, mock_get_events):
+        """
+        Test accepting a recurring event with the option "All events" on Google Calendar and syncing the attendee's calendar.
+        Ensure that all events are accepeted by attendee in Odoo.
+        """
+        recurrence_id = "abcd3"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_all_events(recurrence, "accepted")
+        mock_get_events.return_value = (
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+        )
+        expected_states = ["accepted", "accepted", "accepted", "accepted"]
+        with self.mock_datetime_and_now("2024-04-22"):
+            self.attendee_user.sudo()._sync_google_calendar(self.google_service)
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
+
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_accepting_recurrent_event_with_all_events_option_synced_by_organizer(self, mock_get_events):
+        """
+        Test accepting a recurring event with the option "All events" on Google Calendar and syncing the organizer's calendar.
+        Ensure that all events are accepeted by attendee in Odoo.
+        """
+        recurrence_id = "abcd4"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_all_events(recurrence, "accepted")
+        mock_get_events.return_value = (
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+        )
+        expected_states = ["accepted", "accepted", "accepted", "accepted"]
+        with self.mock_datetime_and_now("2024-04-22"):
+            self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
+
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_accepting_recurrent_event_with_following_events_option_synced_by_attendee(self, mock_get_events):
+        """
+        Test accepting a recurring event with the option "This and following events" on Google Calendar and syncing the attendee's calendar.
+        Ensure that affected events are accepeted by attendee in Odoo.
+        """
+        recurrence_id = "abcd5"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_following_events(
+            recurrence=recurrence,
+            event_index=2,
+            response_status="accepted",
+            rrule1="RRULE:FREQ=DAILY;UNTIL=20240321T215959Z",
+            rrule2="RRULE:FREQ=DAILY;COUNT=2"
+        )
+        mock_get_events.return_value = (
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+        )
+        expected_states = ["needsAction", "needsAction", "accepted", "accepted"]
+        with self.mock_datetime_and_now("2024-04-22"):
+            self.attendee_user.sudo()._sync_google_calendar(self.google_service)
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
+
+    @patch.object(GoogleCalendarService, 'get_events')
+    def test_accepting_recurrent_event_with_all_following_option_synced_by_organizer(self, mock_get_events):
+        """
+        Test accepting a recurring event with the option "This and following events" on Google Calendar and syncing the organizer's calendar.
+        Ensure that affected events are accepeted by attendee in Odoo.
+        """
+        recurrence_id = "abcd6"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-20",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 3, 20, 9, 0),
+            stop=datetime(2024, 3, 20, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id, self.attendee_user.partner_id.id])],
+        )
+        google_events = self.google_respond_to_recurrent_event_with_option_following_events(
+            recurrence=recurrence,
+            event_index=2,
+            response_status="accepted",
+            rrule1="RRULE:FREQ=DAILY;UNTIL=20240321T215959Z",
+            rrule2="RRULE:FREQ=DAILY;COUNT=2"
+        )
+        mock_get_events.return_value = (
+            GoogleEvent(google_events), None, [{'method': 'popup', 'minutes': 30}]
+        )
+        expected_states = ["needsAction", "needsAction", "accepted", "accepted"]
+        with self.mock_datetime_and_now("2024-04-22"):
+            self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+            attendees = self.env['calendar.attendee'].search([
+                ('partner_id', '=', self.attendee_user.partner_id.id)
+            ]).sorted(key=lambda r: r.event_id.start)
+            for i, expected_state in enumerate(expected_states):
+                self.assertEqual(attendees[i].state, expected_state)
+
+    @patch_api
+    def test_keep_organizer_attendee_writing_recurrence_from_google(self):
+        """
+        When receiving recurrence updates from google in 'write_from_google', make
+        sure the organizer is kept as attendee of the events. This will guarantee
+        that the newly updated events will not disappear from the calendar view.
+        """
+        def check_organizer_as_single_attendee(self, recurrence, organizer):
+            """ Ensure that the organizer is the single attendee of the recurrent events. """
+            for event in recurrence.calendar_event_ids:
+                self.assertTrue(len(event.attendee_ids) == 1, 'Should have only one attendee.')
+                self.assertEqual(event.attendee_ids[0].partner_id, organizer.partner_id, 'The single attendee must be the organizer.')
+
+        # Generate a regular recurrence with only the organizer as attendee.
+        recurrence_id = "rec_id"
+        recurrence = self.generate_recurring_event(
+            mock_dt="2024-04-10",
+            google_id=recurrence_id,
+            rrule="FREQ=DAILY;INTERVAL=1;COUNT=4",
+            start=datetime(2024, 4, 11, 9, 0),
+            stop=datetime(2024, 4, 11, 10, 0),
+            partner_ids=[Command.set([self.organizer_user.partner_id.id])],
+        )
+        check_organizer_as_single_attendee(self, recurrence, self.organizer_user)
+
+        # Update the recurrence without specifying its attendees, the organizer must be kept as
+        # attendee after processing it, thus the new events will be kept in its calendar view.
+        values = [{
+            'summary': 'updated_rec',
+            'id': recurrence_id,
+            'recurrence': ['RRULE:FREQ=DAILY;INTERVAL=1;COUNT=3'],
+            'start': {'dateTime': '2024-04-13T8:00:00+01:00'},
+            'end': {'dateTime': '2024-04-13T9:00:00+01:00'},
+            'reminders': {'useDefault': True},
+            'organizer': {'email': self.organizer_user.partner_id.email},
+            'attendees': [],
+            'updated': self.now,
+        }]
+        self.env['calendar.recurrence'].with_user(self.organizer_user)._sync_google2odoo(GoogleEvent(values))
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 3, "The new recurrence must have three events.")
+        check_organizer_as_single_attendee(self, recurrence, self.organizer_user)
         self.assertGoogleAPINotCalled()

@@ -8,15 +8,17 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Chloe Wang, 2023
+# Ryan <ouyang.em@gmail.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1267,9 +1269,7 @@ msgstr "确认后, 出现提示消息."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
-#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
-#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
@@ -1355,7 +1355,7 @@ msgid ""
 msgstr ""
 "在标准价格和 AVCO 中：产品的价值（在 AVCO 中自动计算）。\n"
 "在 FIFO 中：将离开库存的下一个单位的值（自动计算）。\n"
-"用于在购买成本未知时对产品进行估价（例如库存调整）。\n"
+"用于在采购成本未知时对产品进行估价（例如库存调整）。\n"
 "用于计算销售订单的利润。"
 
 #. module: product
@@ -1711,8 +1711,8 @@ msgstr "错误数"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+msgid "Number of messages requiring action"
+msgstr "需要采取行动的消息数量"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
@@ -2364,12 +2364,6 @@ msgid "Rule Tip"
 msgstr "规则提示"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
-#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "短信息发送错误"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
 msgstr "销售"
@@ -2475,7 +2469,7 @@ msgstr "如果这条规则只能用于一个产品模板模版，则指定一个
 msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
-msgstr ""
+msgstr "指定要添加或减去（如果为负数）到计算出的折扣金额的固定金额。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2599,7 +2593,7 @@ msgstr "计算的价格基于产品默认计量单位。"
 msgid ""
 "The default Unit of Measure and the purchase Unit of Measure must be in the "
 "same category."
-msgstr "默认的计量单位和购买单位的度量必须在同一类别中。"
+msgstr "默认的计量单位和采购单位的度量必须在同一类别中。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
@@ -2648,7 +2642,7 @@ msgstr "要生成的变体数量太多。 您不应为每个组合生成变体�
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr "该价格购买产品"
+msgstr "该价格采购产品"
 
 #. module: product
 #. odoo-python
@@ -2664,6 +2658,13 @@ msgid ""
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
 msgstr "供应商要求的最小采购数量。如果不设定单位，将会使用默认采购单位。"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr "舍入方法必须严格为正数。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3036,18 +3037,6 @@ msgid ""
 msgstr "我们特别注重细节，这就是我们的办公桌质量上乘的原因。"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "网站消息"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "网站沟通记录"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -3191,6 +3180,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"您无法删除值 %s，因为它用于以下产品：\n"
+"%s\n"
+"如果这个值过去曾与某个产品关联，您将无法删除它。"
 
 #. module: product
 #. odoo-python
@@ -3220,7 +3212,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
-msgstr ""
+msgstr "您无法删除值 %s，因为它曾在某些产品中使用过。"
 
 #. module: product
 #. odoo-python

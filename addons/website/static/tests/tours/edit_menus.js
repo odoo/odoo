@@ -93,6 +93,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'iframe #top_menu .nav-item a:contains("Random!")',
     },
     {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: 'iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+        run: () => {}, // It's a check.
+    },
+    {
         content: "Click on Edit Link",
         trigger: 'iframe .o_edit_menu_popover a.o_we_edit_link',
     },
@@ -115,6 +120,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     // Edit the menu item from the "edit menu" popover button
     ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Click on the 'Modnar' link",
         trigger: 'iframe #top_menu .nav-item a:contains("Modnar")',
@@ -260,5 +266,18 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         trigger: 'iframe #top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
                  '.s_mega_menu_odoo_menu',
         run: () => {}, // It's a check.
-    }
+    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Open nested menu item",
+        trigger: 'iframe #top_menu .nav-item:contains("Home"):nth(1) .dropdown-toggle',
+    },
+    {
+        // If this step fails, it means that a patch inside bootstrap was lost.
+        content: "Press the 'down arrow' key.",
+        trigger: 'iframe #top_menu .nav-item:contains("Home") li:contains("Contact us")',
+        run: function (actions) {
+            this.$anchor[0].dispatchEvent(new window.KeyboardEvent("keydown", { key: "ArrowDown" }));
+        },
+    },
 ]);

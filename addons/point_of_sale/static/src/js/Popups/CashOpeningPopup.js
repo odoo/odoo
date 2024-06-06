@@ -1,10 +1,12 @@
 odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     'use strict';
 
+    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
+    const { parse } = require('web.field_utils');
 
-    const { useState } = owl;
+    const { useState, useRef } = owl;
 
     class CashOpeningPopup extends AbstractAwaitablePopup {
         setup() {
@@ -15,6 +17,8 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
                 openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
                 displayMoneyDetailsPopup: false,
             });
+            useValidateCashInput("openingCashInput", this.env.pos.pos_session.cash_register_balance_start);
+            this.openingCashInputRef = useRef('openingCashInput');
         }
         //@override
         async confirm() {
@@ -36,6 +40,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             this.state.displayMoneyDetailsPopup = false;
         }
         updateCashOpening({ total, moneyDetailsNotes }) {
+            this.openingCashInputRef.el.value = this.env.pos.format_currency_no_symbol(total);
             this.state.openingCash = total;
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
@@ -43,12 +48,10 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             this.manualInputCashCount = false;
             this.closeDetailsPopup();
         }
-        handleInputChange() {
+        handleInputChange(event) {
+            if (event.target.classList.contains('invalid-cash-input')) return;
             this.manualInputCashCount = true;
-            this.state.notes = "";
-            if (typeof(this.state.openingCash) !== "number") {
-                this.state.openingCash = 0;
-            }
+            this.state.openingCash = parse.float(event.target.value);
         }
     }
 

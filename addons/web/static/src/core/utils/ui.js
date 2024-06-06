@@ -162,7 +162,7 @@ let TABABLE_SELECTOR = "[tabindex], a, area, button, frame, iframe, input, objec
 TABABLE_SELECTOR = TABABLE_SELECTOR.slice(0, TABABLE_SELECTOR.length - 1);
 
 export function getTabableElements(container = document.body) {
-    const elements = container.querySelectorAll(TABABLE_SELECTOR);
+    const elements = [...container.querySelectorAll(TABABLE_SELECTOR)].filter(isVisible);
     const byTabIndex = {};
     for (const el of [...elements]) {
         if (!byTabIndex[el.tabIndex]) {

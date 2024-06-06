@@ -25,7 +25,8 @@ class AccountMove(models.Model):
         invoice_line_pickings = {}
         for line in self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
             line_count += 1
-            done_moves_related = line.sale_line_ids.mapped('move_ids').filtered(lambda m: m.state == 'done' and m.location_dest_id.usage == 'customer')
+            done_moves_related = line.sale_line_ids.mapped('move_ids').filtered(
+                lambda m: m.state == 'done' and m.location_dest_id.usage == 'customer' and m.picking_type_id.code == 'outgoing')
             if len(done_moves_related) <= 1:
                 if done_moves_related and line_count not in invoice_line_pickings.get(done_moves_related.picking_id, []):
                     invoice_line_pickings.setdefault(done_moves_related.picking_id, []).append(line_count)

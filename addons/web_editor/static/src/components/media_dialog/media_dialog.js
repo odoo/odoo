@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useService } from '@web/core/utils/hooks';
+import { Mutex } from "@web/core/utils/concurrency";
 import { useWowlService } from '@web/legacy/utils';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Notebook } from '@web/core/notebook/notebook';
@@ -43,6 +44,7 @@ export class MediaDialog extends Component {
         this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.notificationService = useService('notification');
+        this.mutex = new Mutex();
 
         this.tabs = [];
         this.selectedMedia = useState({});
@@ -159,7 +161,14 @@ export class MediaDialog extends Component {
         const saveSelectedMedia = selectedMedia.length
             && (this.state.activeTab !== TABS.ICONS.id || selectedMedia[0].initialIconChanged || !this.props.media);
         if (saveSelectedMedia) {
-            const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm });
+            // Calling a mutex to make sure RPC calls inside `createElements`
+            // are properly awaited (e.g. avoid creating multiple attachments
+            // when clicking multiple times on the same media). As
+            // `createElements` is static, the mutex has to be set on the media
+            // dialog itself to be destroyed with its instance.
+            const elements = await this.mutex.exec(async() =>
+                await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm })
+            );
             elements.forEach(element => {
                 if (this.props.media) {
                     element.classList.add(...this.props.media.classList);
@@ -167,11 +176,13 @@ export class MediaDialog extends Component {
                     if (style) {
                         element.setAttribute('style', style);
                     }
-                    if (this.props.media.dataset.shape) {
-                        element.dataset.shape = this.props.media.dataset.shape;
-                    }
-                    if (this.props.media.dataset.shapeColors) {
-                        element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                    if (this.state.activeTab === TABS.IMAGES.id) {
+                        if (this.props.media.dataset.shape) {
+                            element.dataset.shape = this.props.media.dataset.shape;
+                        }
+                        if (this.props.media.dataset.shapeColors) {
+                            element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                        }
                     }
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {

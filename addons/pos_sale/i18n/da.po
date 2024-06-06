@@ -6,15 +6,16 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2022
 # lhmflexerp <lhm@flexerp.dk>, 2022
 # Mads Søndergaard, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "(left:"
-msgstr ""
+msgstr "(venstre:"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -50,6 +51,13 @@ msgstr "<span class=\"o_form_label\">Salgs hold</span>"
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 msgid "<span style=\"margin: 0px 5px;\">:</span>"
 msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "A new order has been created."
+msgstr "En ny ordre er blevet oprettet."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -109,7 +117,7 @@ msgstr "Kunde"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Customer loading error"
-msgstr ""
+msgstr "Kundelæsningsfejl"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -129,7 +137,7 @@ msgstr "Leveret fra"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
-msgstr ""
+msgstr "Ønsker du at indlæse SN/Lots knyttet til salgsordren?"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
@@ -352,7 +360,7 @@ msgstr "Tilbud/Ordre"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
-msgstr ""
+msgstr "SN/Lots Loading"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -401,7 +409,7 @@ msgstr "Salgsteam"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr ""
+msgstr "Salgsteam (PoS)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -484,7 +492,7 @@ msgstr "Status"
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "The amount due from the sale order."
-msgstr ""
+msgstr "Salgsordrens beløb, der skal betales."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
@@ -498,7 +506,7 @@ msgstr "Valutakursen til valuta på kursen anvendelig på datoen for ordren"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "There was a problem in loading the %s customer."
-msgstr ""
+msgstr "Der opstod et problem med at indlæse %s kunden."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -525,6 +533,11 @@ msgstr "Dette produkt vil blive anvendt som forudbetaling på en salgsordre."
 #, python-format
 msgid "Total"
 msgstr "I alt"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Overfør"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -554,7 +567,7 @@ msgstr "Kan ikke indhente ordre hvis offline."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Unpaid Amount"
-msgstr ""
+msgstr "Ubetalt beløb"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -579,3 +592,5 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
+"Du har forsøgt at opkræve en udbetaling på %s, men der er kun %s tilbage, "
+"der skal betales, %s vil blive anvendt på indkøbsordrelinjen."

@@ -9,6 +9,8 @@ import {
 } from '@mail/../tests/helpers/test_utils';
 
 import { patchWithCleanup } from '@web/../tests/helpers/utils';
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { session } from '@web/session';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -619,6 +621,11 @@ QUnit.test('allow attachment delete on authored message', async function (assert
 
 QUnit.test('prevent attachment delete on non-authored message in channels', async function (assert) {
     assert.expect(2);
+
+    // mock a regular user
+    const sessionAdminState = session.is_admin;
+    session.is_admin = false;
+    registerCleanup(() => session.is_admin = sessionAdminState);
 
     const pyEnv = await startServer();
     const partnerId = pyEnv['res.partner'].create({});

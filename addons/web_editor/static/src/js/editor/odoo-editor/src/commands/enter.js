@@ -14,6 +14,7 @@ import {
     splitTextNode,
     toggleClass,
     isVisible,
+    nodeSize,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -97,6 +98,41 @@ HTMLHeadingElement.prototype.oEnter = function () {
         setCursorStart(node);
     }
 };
+const isAtEdgeofLink = (link, offset) => {
+    const childNodes = [...link.childNodes];
+    let firstVisibleIndex = childNodes.findIndex(isVisible);
+    firstVisibleIndex = firstVisibleIndex === -1 ? 0 : firstVisibleIndex;
+    if (offset <= firstVisibleIndex) {
+        return 'start';
+    }
+    let lastVisibleIndex = childNodes.reverse().findIndex(isVisible);
+    lastVisibleIndex = lastVisibleIndex === -1 ? 0 : childNodes.length - lastVisibleIndex;
+    if (offset >= lastVisibleIndex) {
+        return 'end';
+    }
+    return false;
+}
+HTMLAnchorElement.prototype.oEnter = function (offset) {
+    const edge = isAtEdgeofLink(this, offset);
+    if (edge === 'start') {
+        // Do not break the link at the edge: break before it.
+        if (this.previousSibling) {
+            return HTMLElement.prototype.oEnter.call(this.previousSibling, nodeSize(this.previousSibling));
+        } else {
+            const index = childNodeIndex(this);
+            return HTMLElement.prototype.oEnter.call(this.parentElement, index ? index - 1 : 0);
+        }
+    } else if (edge === 'end') {
+        // Do not break the link at the edge: break after it.
+        if (this.nextSibling) {
+            return HTMLElement.prototype.oEnter.call(this.nextSibling, 0);
+        } else {
+            return HTMLElement.prototype.oEnter.call(this.parentElement, childNodeIndex(this));
+        }
+    } else {
+        HTMLElement.prototype.oEnter.call(this, ...arguments);
+    }
+}
 /**
  * Same specific behavior as headings elements.
  */

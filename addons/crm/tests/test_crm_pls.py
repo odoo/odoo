@@ -6,7 +6,7 @@ from datetime import timedelta
 from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Date
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, tagged, users, loaded_demo_data
 from odoo.tests.common import TransactionCase
 
 
@@ -31,6 +31,11 @@ class TestCRMPLS(TransactionCase):
         cls.pls_team = cls.env['crm.team'].create({
             'name': 'PLS Team',
         })
+
+        # Ensure independance on demo data
+        cls.env['crm.lead'].with_context({'active_test': False}).search([]).unlink()
+        cls.env['crm.lead.scoring.frequency'].search([]).unlink()
+        cls.cr.flush()
 
     def _get_lead_values(self, team_id, name_suffix, country_id, state_id, email_state, phone_state, source_id, stage_id):
         return {
@@ -165,9 +170,14 @@ class TestCRMPLS(TransactionCase):
 
         leads = Lead.create(leads_to_create)
 
-        # assign team 3 to all leads with no teams (also take data into account).
-        leads_with_no_team = self.env['crm.lead'].sudo().search([('team_id', '=', False)])
-        leads_with_no_team.write({'team_id': team_ids[2]})
+        # Assert lead data.
+        existing_leads = Lead.with_context({'active_filter': False}).search([])
+        self.assertEqual(existing_leads, leads)
+        self.assertEqual(existing_leads.filtered(lambda lead: not lead.team_id), leads[-4::])
+
+        # Assign leads without team to team 3 to compare probability
+        # as a separate team and the one with no team set. See below (*)
+        leads[-4::].team_id = team_ids[2]
 
         # Set the PLS config
         self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
@@ -201,12 +211,14 @@ class TestCRMPLS(TransactionCase):
 
         # Probability for Lead with no teams should be based on all the leads no matter their team.
         # De-assign team 3 and rebuilt frequency table and recompute.
-        # Proba should be different as "no team" is not considered as a separated team.
-        leads_with_no_team.write({'team_id': False})
+        # Proba should be different as "no team" is not considered as a separated team. (*)
+        leads[-4::].write({'team_id': False})
+        leads[-4::].flush_recordset()
+
         Lead._cron_update_automated_probabilities()
         lead_13_no_team_proba = leads[13].automated_probability
         self.assertTrue(lead_13_team_3_proba != leads[13].automated_probability, "Probability for leads with no team should be different than if they where in their own team.")
-        self.assertEqual(tools.float_compare(lead_13_no_team_proba, 36.65, 2), 0)
+        self.assertAlmostEqual(lead_13_no_team_proba, 35.19, places=2)
 
         # Test frequencies
         lead_4_stage_0_freq = LeadScoringFrequency.search([('team_id', '=', leads[4].team_id.id), ('variable', '=', 'stage_id'), ('value', '=', stage_ids[0])])
@@ -477,6 +489,56 @@ class TestCRMPLS(TransactionCase):
         self.assertEqual(tools.float_compare(lead_tag_1.automated_probability, 28.6, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_2.automated_probability, 28.6, 2), 0)
         self.assertEqual(tools.float_compare(lead_tag_1_2.automated_probability, 28.6, 2), 0)
+
+    def test_predictive_lead_scoring_always_won(self):
+        """ The computation may lead scores close to 100% (or 0%), we check that pending
+        leads are always in the ]0-100[ range."""
+        Lead = self.env['crm.lead']
+        LeadScoringFrequency = self.env['crm.lead.scoring.frequency']
+        country_id = self.env['res.country'].search([], limit=1).id
+        stage_id = self.env['crm.stage'].search([], limit=1).id
+        team_id = self.env['crm.team'].create({'name': 'Team Test 1'}).id
+        # create two leads
+        leads = Lead.create([
+            self._get_lead_values(team_id, 'edge pending', country_id, False, False, False, False, stage_id),
+            self._get_lead_values(team_id, 'edge lost', country_id, False, False, False, False, stage_id),
+            self._get_lead_values(team_id, 'edge won', country_id, False, False, False, False, stage_id),
+        ])
+        # set a new tag
+        leads.tag_ids = self.env['crm.tag'].create({'name': 'lead scoring edge case'})
+
+        # Set the PLS config
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_start_date", "2000-01-01")
+        # tag_ids can be used in versions newer than v14
+        self.env['ir.config_parameter'].sudo().set_param("crm.pls_fields", "country_id")
+
+        # set leads as won and lost
+        leads[1].action_set_lost()
+        leads[2].action_set_won()
+
+        # recompute
+        Lead._cron_update_automated_probabilities()
+        self.env.invalidate_all()
+
+        # adapt the probability frequency to have high values
+        # this way we are nearly sure it's going to be won
+        freq_stage = LeadScoringFrequency.search([('variable', '=', 'stage_id'), ('value', '=', str(stage_id))])
+        freq_tag = LeadScoringFrequency.search([('variable', '=', 'tag_id'), ('value', '=', str(leads.tag_ids.id))])
+        freqs = freq_stage + freq_tag
+
+        # check probabilities: won edge case
+        freqs.write({'won_count': 10000000, 'lost_count': 1})
+        leads._compute_probabilities()
+        self.assertEqual(tools.float_compare(leads[2].probability, 100, 2), 0)
+        self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
+        self.assertEqual(tools.float_compare(leads[0].probability, 99.99, 2), 0)
+
+        # check probabilities: lost edge case
+        freqs.write({'won_count': 1, 'lost_count': 10000000})
+        leads._compute_probabilities()
+        self.assertEqual(tools.float_compare(leads[2].probability, 100, 2), 0)
+        self.assertEqual(tools.float_compare(leads[1].probability, 0, 2), 0)
+        self.assertEqual(tools.float_compare(leads[0].probability, 0.01, 2), 0)
 
     def test_settings_pls_start_date(self):
         # We test here that settings never crash due to ill-configured config param 'crm.pls_start_date'

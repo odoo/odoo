@@ -464,11 +464,12 @@ class HolidaysType(models.Model):
             )
         return (self.name, {
                 'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
-                'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
+                'usable_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
+                'virtual_remaining_leaves': ('%.2f' % (self.max_leaves - self.virtual_leaves_taken)).rstrip('0').rstrip('.'),
                 'max_leaves': ('%.2f' % self.max_leaves).rstrip('0').rstrip('.'),
                 'leaves_taken': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
                 'virtual_leaves_taken': ('%.2f' % self.virtual_leaves_taken).rstrip('0').rstrip('.'),
-                'leaves_requested': ('%.2f' % (self.max_leaves - self.virtual_remaining_leaves - self.leaves_taken)).rstrip('0').rstrip('.'),
+                'leaves_requested': ('%.2f' % (self.virtual_leaves_taken - self.leaves_taken)).rstrip('0').rstrip('.'),
                 'leaves_approved': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
                 'closest_allocation_remaining': ('%.2f' % closest_allocation_remaining).rstrip('0').rstrip('.'),
                 'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to) if self.closest_allocation_to_expire.date_to else False,

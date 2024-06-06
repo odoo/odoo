@@ -39,17 +39,24 @@ class AccountMove(models.Model):
                             'quantity': line.qty if lot.product_id.tracking == 'lot' else 1.0,
                             'uom_name': line.product_uom_id.name,
                             'lot_name': lot.lot_name,
+                            'pos_lot_id': lot.id,
                         })
 
         return lot_values
 
-    def _get_reconciled_vals(self, partial, amount, counterpart_line):
+    def _compute_payments_widget_reconciled_info(self):
         """Add pos_payment_name field in the reconciled vals to be able to show the payment method in the invoice."""
-        result = super()._get_reconciled_vals(partial, amount, counterpart_line)
-        if counterpart_line.move_id.sudo().pos_payment_ids:
-            pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
-            result['pos_payment_name'] = pos_payment.payment_method_id.name
-        return result
+        super()._compute_payments_widget_reconciled_info()
+        for move in self:
+            if move.invoice_payments_widget:
+                if move.state == 'posted' and move.is_invoice(include_receipts=True):
+                    reconciled_partials = move._get_all_reconciled_invoice_partials()
+                    for i, reconciled_partial in enumerate(reconciled_partials):
+                        counterpart_line = reconciled_partial['aml']
+                        pos_payment = counterpart_line.move_id.sudo().pos_payment_ids
+                        move.invoice_payments_widget['content'][i].update({
+                            'pos_payment_name': pos_payment.payment_method_id.name,
+                        })
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
@@ -59,7 +66,7 @@ class AccountMoveLine(models.Model):
         if not self.product_id:
             return self.price_unit
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
-        order = self.move_id.pos_order_ids
-        if order:
-            price_unit = order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
+        sudo_order = self.move_id.sudo().pos_order_ids
+        if sudo_order:
+            price_unit = sudo_order._get_pos_anglo_saxon_price_unit(self.product_id, self.move_id.partner_id.id, self.quantity)
         return price_unit

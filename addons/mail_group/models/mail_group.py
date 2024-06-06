@@ -248,16 +248,21 @@ class MailGroup(models.Model):
     # ------------------------------------------------------------
 
     def _alias_get_error_message(self, message, message_dict, alias):
+        """ Checks for access errors related to sending email to the mailing list.
+        Returns None if the mailing list is public or if no error cases are detected. """
         self.ensure_one()
 
-        if alias.alias_contact == 'followers':
-            # Members only
-            if not self._find_member(message_dict.get('email_from')):
-                return _('Only members can send email to the mailing list.')
-            # Skip the verification because the partner is in the member list
-            return
+        # Error Case: Selected group of users, but no user found for that email
+        email = email_normalize(message_dict.get('email_from', ''))
+        email_has_access = self.search_count([('id', '=', self.id), ('access_group_id.users.email_normalized', '=', email)])
+        if self.access_mode == 'groups' and not email_has_access:
+            return _('Only selected groups of users can send email to the mailing list.')
 
-        return super(MailGroup, self)._alias_get_error_message(message, message_dict, alias)
+        # Error Case: Access for members, but no member found for that email
+        elif self.access_mode == 'members' and not self._find_member(message_dict.get('email_from')):
+            return _('Only members can send email to the mailing list.')
+
+        return None
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):

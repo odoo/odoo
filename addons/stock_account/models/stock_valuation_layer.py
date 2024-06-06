@@ -4,6 +4,8 @@
 from odoo import api, fields, models, tools
 from odoo.tools import float_compare, float_is_zero
 
+from collections import defaultdict
+
 
 class StockValuationLayer(models.Model):
     """Stock Valuation Layer"""
@@ -42,6 +44,7 @@ class StockValuationLayer(models.Model):
 
     def _validate_accounting_entries(self):
         am_vals = []
+        aml_to_reconcile = defaultdict(set)
         for svl in self:
             if not svl.with_company(svl.company_id).product_id.valuation == 'real_time':
                 continue
@@ -55,9 +58,16 @@ class StockValuationLayer(models.Model):
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
         for svl in self:
-            # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            move = svl.stock_move_id
+            product = svl.product_id
             if svl.company_id.anglo_saxon_accounting:
-                svl.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=svl.product_id)
+                move._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=product)
+            for aml in (move | move.origin_returned_move_id)._get_all_related_aml():
+                if aml.reconciled or aml.move_id.state != "posted" or not aml.account_id.reconcile:
+                    continue
+                aml_to_reconcile[(product, aml.account_id)].add(aml.id)
+        for aml_ids in aml_to_reconcile.values():
+            self.env['account.move.line'].browse(aml_ids).reconcile()
 
     def _validate_analytic_accounting_entries(self):
         for svl in self:

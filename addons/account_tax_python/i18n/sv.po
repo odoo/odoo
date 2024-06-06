@@ -8,6 +8,8 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Simon S, 2022
 # lasch a <bmail440@gmail.com>, 2022
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: lasch a <bmail440@gmail.com>, 2022\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,6 +68,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Beräkna skattebeloppet genom att ställa in variabeln \"resultat\".\n"
+"\n"
+":param base_amount: float, faktiskt belopp på vilket skatten tillämpas\n"
+":param pris_enhet: float\n"
+":param kvantitet: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton eller None\n"
+":param partner: res.partner recordset singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -78,6 +88,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Beräkna skattebeloppet genom att ställa in variabeln \"resultat\".\n"
+"\n"
+":param base_amount: float, faktiskt belopp på vilket skatten tillämpas\n"
+":param pris_enhet: float\n"
+":param kvantitet: float\n"
+":param product: product.product recordset singleton eller None\n"
+":param partner: res.partner recordset singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -90,6 +107,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Avgör om skatten ska tillämpas genom att sätta variabeln \"result\" till True eller False.\n"
+"\n"
+":param pris_enhet: float\n"
+":param kvantitet: float\n"
+":param företag: res.företag recordset singleton\n"
+":param product: product.product recordset singleton eller None\n"
+":param partner: res.partner recordset singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -101,6 +125,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Avgör om skatten ska tillämpas genom att sätta variabeln \"result\" till True eller False.\n"
+"\n"
+":param pris_enhet: float\n"
+":param kvantitet: float\n"
+":param product: product.product recordset singleton eller None\n"
+":param partner: res.partner recordset singleton eller None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
@@ -125,3 +155,16 @@ msgstr "Skatteberäkning"
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
 msgstr "Momsmallar"
+
+#. module: account_tax_python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""
+"Du angav ogiltig kod %r i %r skatter\n"
+"\n"
+"Fel: %s"

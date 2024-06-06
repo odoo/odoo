@@ -12,7 +12,7 @@
         </record>
 
         <record id="fiscal_position_bg_private_eu" model="account.fiscal.position.template">
-            <field name="name">Private EU</field>
+            <field name="name">EU B2C</field>
             <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10n_bg_chart_template"/>
             <field name="auto_apply" eval="True"/>
@@ -21,9 +21,10 @@
 
         <record id="fiscal_position_template_in_eu" model="account.fiscal.position.template">
             <field name="sequence">30</field>
-            <field name="name">Inside EU</field>
+            <field name="name">EU B2B</field>
             <field name="chart_template_id" ref="l10n_bg_chart_template"/>
             <field name="auto_apply" eval="True"/>
+            <field name="vat_required" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
         </record>
 

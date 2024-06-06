@@ -1,4 +1,8 @@
 .odoo-editor-editable {
+    .btn {
+        user-select: auto;
+        cursor: text !important;
+    }
     ::selection {
         /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
             X = converted color component (R, G, B) (0 <= X <= 255)
@@ -34,6 +38,12 @@
         cursor: pointer !important;
     }
 }
+.o_table_ui_container {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+}
 .o_table_ui {
     background-color: transparent;
     position: absolute;
@@ -45,14 +55,21 @@
     }
     > div {
         position: absolute;
+        left: 0;
+        top: 0;
     }
     .o_table_ui_menu_toggler {
         cursor: pointer;
         background-color: var(--o-table-ui-bg, #{$o-white});
         color: var(--o-table-ui-color, #{$o-main-text-color});
-        border: $border-width solid var(--o-table-ui-border, #{$border-color});
-        border-radius: 5px;
-        padding: 2px 3px;
+        border: $border-width solid rgba($color: $o-brand-odoo, $alpha: 1.0);
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        background-color: rgba($color: $o-brand-odoo, $alpha: 0.7);
     }
     .o_table_ui_menu {
         display: none;
@@ -62,6 +79,7 @@
         border: $border-width solid var(--o-table-ui-border, #{$border-color});
         padding: 5px 0;
         white-space: nowrap;
+        margin-left: 50%;
 
         > div:hover {
             background-color: var(--o-table-ui-hover, #{$o-gray-200});
@@ -71,7 +89,7 @@
             color: var(--o-table-ui-color, #{$o-main-text-color});
         }
         div {
-            padding: 0 8px;
+            padding: 2px 8px;
         }
     }
     &.o_open {
@@ -85,6 +103,30 @@
             }
         }
     }
+    &.o_row_ui {
+        border-right: none !important;
+        min-width: 1rem;
+
+        .o_table_ui_menu_toggler {
+            min-width: 1rem;
+        }
+        .o_table_ui_menu {
+            position: absolute;
+            margin-left: 100%;
+            top: 50%;
+        }
+    }
+
+    &.o_column_ui {
+        border-bottom: none !important;
+    }
+}
+
+.odoo-editor-editable a.o_link_in_selection:not(.btn) {
+    background-color: #a6e3e2;
+    color: black !important;
+    border: 1px dashed #008f8c;
+    margin: -1px;
 }
 
 .oe-floating {
@@ -107,7 +149,7 @@
     color: white;
     border-radius: 8px;
 
-    .toolbar-bottom::before {
+    &.toolbar-bottom::before {
         content: '';
         position: absolute;
         width: 0;
@@ -246,11 +288,11 @@
         width: 19px;
         height: 19px;
         padding: 0;
-        margin-right: 3px;
+        margin-inline-end: 3px;
         margin-bottom: 3px;
 
         &:last-of-type {
-            margin-right: 0;
+            margin-inline-end: 0;
         }
         &.active {
             background-color: var(--oeTablepicker-color-accent, $o-brand-primary);
@@ -293,6 +335,7 @@
     border-radius: 4px;
     overflow: hidden;
     display: flex;
+    min-width: max-content;
 
     ::-webkit-scrollbar {
         background: transparent;

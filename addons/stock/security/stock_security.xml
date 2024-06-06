@@ -123,7 +123,7 @@
     <record model="ir.rule" id="stock_location_comp_rule">
         <field name="name">Location multi-company</field>
         <field name="model_id" ref="model_stock_location"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
      <record model="ir.rule" id="stock_move_rule">
@@ -135,13 +135,13 @@
      <record model="ir.rule" id="stock_move_line_rule">
         <field name="name">stock_move_line multi-company</field>
         <field name="model_id" search="[('model','=','stock.move.line')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
      </record>
 
     <record model="ir.rule" id="stock_quant_rule">
         <field name="name">stock_quant multi-company</field>
         <field name="model_id" ref="model_stock_quant"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="stock_warehouse_orderpoint_rule">
@@ -153,19 +153,19 @@
      <record model="ir.rule" id="product_pulled_flow_comp_rule">
         <field name="name">product_pulled_flow multi-company</field>
         <field name="model_id" ref="model_stock_rule"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="stock_location_route_comp_rule">
         <field name="name">stock_route multi-company</field>
         <field name="model_id" ref="model_stock_route"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="stock_quant_package_comp_rule">
         <field name="name">stock_quant_package multi-company</field>
         <field name="model_id" ref="model_stock_quant_package"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="stock_scrap_company_rule">
@@ -177,13 +177,13 @@
     <record model="ir.rule" id="report_stock_quantity_flow_comp_rule">
         <field name="name">report_stock_quantity_flow multi-company</field>
         <field name="model_id" ref="model_report_stock_quantity"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="stock_storage_category_rule">
         <field name="name">stock_storage_category multi-company</field>
         <field name="model_id" ref="model_stock_storage_category"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
 </data>

@@ -255,7 +255,7 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     # Productivity Apps
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "default_productivity_apps" "True"
     DetailPrint "Installing Windows service"
-    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init --logfile "$INSTDIR\server\odoo.log" -s'
+    nsExec::ExecTOLog '"$INSTDIR\python\python.exe" "$INSTDIR\server\odoo-bin" --stop-after-init -c "$INSTDIR\server\odoo.conf" --logfile "$INSTDIR\server\odoo.log" -s'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
@@ -351,8 +351,8 @@ Section $(TITLE_Ghostscript) SectionGhostscript
     VAR /GLOBAL ghostscript_exe_filename
     VAR /GLOBAL ghostscript_url
 
-    StrCpy $ghostscript_exe_filename "gs1000w64.exe"
-    StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs1000/$ghostscript_exe_filename"
+    StrCpy $ghostscript_exe_filename "gs10012w64.exe"
+    StrCpy $ghostscript_url "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10012/$ghostscript_exe_filename"
 
     DetailPrint "Downloading Ghostscript"
     inetc::get "$ghostscript_url" "$TEMP\$ghostscript_exe_filename" /POPUP

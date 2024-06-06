@@ -8,15 +8,15 @@
 # Thomas, 2023
 # Michael Hofer, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -506,23 +506,23 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'Angebot' if object.state in ('draft', 'sent') else 'Auftrag'\"></t>\n"
 "        Hallo,\n"
 "        <br><br>\n"
 "        Ihre\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            Proformarechnung für <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            Pro-Forma-Rechnung für <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 $</span> ist verfügbar.\n"
+"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 €</span> ist verfügbar.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"doc_name or ''\">Angebot</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (mit der Referenz: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 $</span> steht zur Prüfung bereit.\n"
+"            über den Betrag von <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">10,00 €</span> steht zur Prüfung bereit.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
@@ -617,8 +617,13 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Bezahlt</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Storniert</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warte auf Zahlung</b>"
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Warten auf Zahlung</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -982,7 +987,7 @@ msgid ""
 msgstr ""
 "Je nach Produktkonfiguration kann die gelieferte Menge automatisch durch einen Mechanismus berechnet werden:\n"
 "  - Manuell: Die Menge wird manuell auf der Position eingestellt\n"
-"  - Kostenstelle aus Auslagen: Die Menge ist die Mengensumme aus gebuchten Auslagen\n"
+"  - Kostenrechnung aus Auslagen: Die Menge ist die Mengensumme aus gebuchten Auslagen\n"
 "  - Zeiterfassung: Die Menge ist die Summe der Stunden, die für Aufgaben erfasst wurden, die mit dieser Verkaufsposition verbunden sind.\n"
 "  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
@@ -1107,7 +1112,7 @@ msgstr "Suche nach Kostenverteilung"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr "Kostenrechnung aus Spesen"
+msgstr "Kostenrechnung aus Auslagen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -1290,7 +1295,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Choose between electronic signatures or online payments."
 msgstr ""
-"Wählen Sie zwischen elektronischen Unterschrifen oder Online-Zahlungen."
+"Wählen Sie zwischen elektronischen Unterschriften oder Online-Zahlungen."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_payment_provider_onboarding_wizard
@@ -1643,7 +1648,7 @@ msgstr "Datum:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Abschlagzahlung abziehen"
+msgstr "Anzahlung abziehen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1653,7 +1658,7 @@ msgstr "Standard-Limit:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr "Gültigkeit des Standardangebots"
+msgstr "Standardgültigkeit für Angebot"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
@@ -1718,9 +1723,10 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Liefertermin, den Sie dem Kunden zusagen können, errechnet sich bei "
-"Serviceprodukten aus der minimalen Vorlaufzeit der Auftragspositionen. Bei "
-"Versand wird die Versandbedingung des Auftrags berücksichtigt, um entweder "
-"die minimale oder maximale Vorlaufzeit der Auftragspositionen zu verwenden."
+"Dienstleistungsprodukten aus der minimalen Vorlaufzeit der "
+"Auftragspositionen. Bei Versand wird die Versandbedingung des Auftrags "
+"berücksichtigt, um entweder die minimale oder maximale Vorlaufzeit der "
+"Auftragspositionen zu verwenden."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2648,8 +2654,7 @@ msgstr "Methode zum Aktualisieren der gelieferten Menge"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
-"Fehlende Pflichtfelder in der abzurechnenden Verkaufsauftragsposition."
+msgstr "Fehlende Pflichtfelder in der abzurechnenden Verkaufsauftragszeile."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
@@ -2769,7 +2774,7 @@ msgstr "Jetzt erstellen wir ein Beispielangebot."
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Number"
-msgstr "Anzahl"
+msgstr "Nummer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction_counter
@@ -2791,13 +2796,13 @@ msgstr "Anzahl der Fehler"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+msgid "Number of messages requiring action"
+msgstr "Anzahl der Meldungen, die eine Aktion erfordern"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
@@ -2844,7 +2849,7 @@ msgstr "Online-Zahlung"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_signature
 msgid "Online Signature"
-msgstr "Online-Unterschrift"
+msgstr "Online-Signatur"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2873,7 +2878,7 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
-"Öffnen Sie die Verkaufs-App, um Ihr erstes Angebot mit ein paar Klicks zu "
+"Öffnen Sie die Verkaufsapp, um Ihr erstes Angebot mit ein paar Klicks zu "
 "versenden."
 
 #. module: sale
@@ -2884,7 +2889,7 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"Optionale Übersetzung (ISO-Code) zur Auswahl beim E-Mailversand. Falls es "
+"Optionale Übersetzung (ISO-Code) zur Auswahl beim E-Mail-Versand. Falls es "
 "keinen Eintrag gibt, wird die englische Version verwendet. Es sollte sich "
 "normalerweise um einen Platzhalterausdruck handeln, der die passende Sprache"
 " enthält, z. B. {{ object.partner_id.lang }}."
@@ -3500,7 +3505,7 @@ msgid ""
 "Request a online signature and/or payment to the customer in order to "
 "confirm orders automatically."
 msgstr ""
-"Benötigt eine Online-Unterschrift und/oder eine Zahlung des Kunden, um eine "
+"Benötigt eine Online-Signatur und/oder eine Zahlung des Kunden, um eine "
 "automatische Auftragsbestätigung umzusetzen."
 
 #. module: sale
@@ -3511,7 +3516,7 @@ msgstr "Bitten Sie um eine Online-Zahlung zur Bestätigung von Aufträgen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr "Bitten Sie um eine Online-Unterschrift zur Bestätigung von Aufträgen"
+msgstr "Bitten Sie um eine Online-Signatur zur Bestätigung von Aufträgen"
 
 #. module: sale
 #. odoo-python
@@ -3530,8 +3535,7 @@ msgstr "Verantwortlicher Benutzer"
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
 msgstr ""
-"Umsatzziel für den aktuellen Monat (unversteuerte Summe der bestätigten "
-"Rechnungen)."
+"Umsatzziel für den aktuellen Monat (Nettosumme der bestätigten Rechnungen)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -3748,7 +3752,7 @@ msgid ""
 msgstr ""
 "Verkaufsauftragsposition, zu der die aufgewendete Zeit hinzugefügt wird, "
 "damit sie Ihrem Kunden in Rechnung gestellt werden kann. Entfernen Sie die "
-"Verkaufsauftragsposition, damit der Zeiterfassungsbogen nicht abrechenbar "
+"Verkaufsauftragsposition, damit der Zeiterfassungsbogen nichtabrechenbar "
 "ist."
 
 #. module: sale
@@ -3776,7 +3780,7 @@ msgstr "Verkauf: Angebot senden"
 #: code:addons/sale/models/crm_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "Verkäufe: Unversteuerter Gesamtbetrag"
+msgstr "Verkäufe: gesamter Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -3941,7 +3945,7 @@ msgstr "Setzen Sie mehrere Preise pro Produkt, automatische Rabatte etc."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Set payments"
-msgstr "Zahlungen festlegen"
+msgstr "Zahlungen einrichten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4118,7 +4122,7 @@ msgstr "Gesamtsumme"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr "Unversteuerte Gesamtsumme"
+msgstr "Gesamte Nettosumme"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -4379,7 +4383,7 @@ msgstr "Der Betrag der Anzahlung muss positiv sein."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr "Zur Zeit gibt es keine Aufträge für Ihr Konto."
+msgstr "Zurzeit gibt es keine Aufträge für Ihr Konto."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4617,7 +4621,7 @@ msgstr "Transaktionen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr "Artname"
+msgstr "Name des Typs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -4694,28 +4698,28 @@ msgstr "Entsperren"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Unversteuerter Betrag"
+msgstr "Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "Unversteuerter abgerechneter Betrag"
+msgstr "Abgerechneter Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr "Unversteuerter abzurechnender Betrag"
+msgstr "Abzurechnender Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "Unversteuerter Rechnungsbetrag"
+msgstr "Abgerechneter Nettobetrag"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr "Unversteuerter Gesamtbetrag"
+msgstr "Gesamter Nettobetrag"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4911,7 +4915,7 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Sie können die Art einer Verkaufsauftragsposition nicht ändern. Stattdessen "
+"Sie können die Art einer Verkaufsauftragszeile nicht ändern. Stattdessen "
 "sollten Sie die aktuelle Position löschen und eine neue Position mit der "
 "richtigen Art erstellen."
 

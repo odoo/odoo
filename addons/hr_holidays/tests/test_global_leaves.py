@@ -75,6 +75,63 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'date_to': date(2022, 3, 7),
             })
 
+    def test_leave_on_deleted_global_leave(self):
+        public_leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Public Time Off',
+            'date_from': datetime(2024, 2, 20, 0, 0),
+            'date_to': datetime(2024, 2, 22, 23, 59),
+            'company_id': self.employee_emp.company_id.id,
+        })
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'requires_allocation': 'yes',
+            'employee_requests': 'no',
+            'allocation_validation_type': 'no',
+            'leave_validation_type': 'both',
+            'responsible_id': self.user_hrmanager_id,
+        })
+        self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp_id,
+            'name': '2 days allocation',
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 2,
+            'state': 'confirm',
+            'date_from': date(2024, 2, 1),
+            'date_to': date(2024, 2, 29),
+        })
+        covered_leave_1 = self.env['hr.leave'].create({
+            'name': 'Covered Leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': leave_type.id,
+            'date_from': datetime(2024, 2, 19, 7, 0),
+            'date_to': datetime(2024, 2, 20, 18, 0),
+        })
+        self.assertEqual(covered_leave_1.number_of_days, 1, 'The leave should have a duration of 1 day.')
+        covered_leave_2 = self.env['hr.leave'].create({
+            'name': 'Covered Leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': leave_type.id,
+            'date_from': datetime(2024, 2, 21, 7, 0),
+            'date_to': datetime(2024, 2, 21, 18, 0),
+        })
+        self.assertEqual(covered_leave_2.number_of_days, 0, 'The leave should have a duration of 0 days.')
+        covered_leave_3 = self.env['hr.leave'].create({
+            'name': 'Covered Leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': leave_type.id,
+            'date_from': datetime(2024, 2, 22, 7, 0),
+            'date_to': datetime(2024, 2, 23, 18, 0),
+        })
+        self.assertEqual(covered_leave_3.number_of_days, 1, 'The leave should have a duration of 1 day.')
+
+        public_leave.unlink()
+        self.assertEqual(covered_leave_1.active, True, 'The partially covered leave should still be active.')
+        self.assertEqual(covered_leave_1.number_of_days, 1, 'The leave should have a duration of 1 day.')
+        self.assertEqual(covered_leave_2.active, False, 'The covered leave should be archived.')
+        self.assertEqual(covered_leave_3.active, True, 'The partially covered leave should still be active.')
+        self.assertEqual(covered_leave_3.number_of_days, 1, 'The leave should have a duration of 1 day.')
+
     def test_leave_on_calendar_leave(self):
         self.env['resource.calendar.leaves'].create({
                 'name': 'Correct Leave',
@@ -106,7 +163,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         """
         calendar_asia = self.env['resource.calendar'].create({
             'name': 'Asia calendar',
-            'tz': 'Asia/Calcutta', # UTC +05:30
+            'tz': 'Asia/Kolkata', # UTC +05:30
             'hours_per_day': 8.0,
             'attendance_ids': []
         })
@@ -119,9 +176,9 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         # Expectation:
         # 6:00:00 in UTC (data from the browser) --> 8:00:00 for Europe/Brussel (UTC +02:00)
-        # 8:00:00 for Asia/Calcutta (UTC +05:30) --> 2:30:00 in UTC
+        # 8:00:00 for Asia/Kolkata (UTC +05:30) --> 2:30:00 in UTC
         self.assertEqual(global_leave.date_from, datetime(2023, 5, 15, 2, 30))
         self.assertEqual(global_leave.date_to, datetime(2023, 5, 15, 11, 30))
         # Note:
         # The user in Europe/Brussels timezone see 4:30 and not 2:30 because he is in UTC +02:00.
-        # The user in Asia/Calcutta timezone (determined via the browser) see 8:00 because he is in UTC +05:30
+        # The user in Asia/Kolkata timezone (determined via the browser) see 8:00 because he is in UTC +05:30

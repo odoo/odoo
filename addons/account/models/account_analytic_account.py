@@ -15,6 +15,9 @@ class AccountAnalyticAccount(models.Model):
         compute='_compute_vendor_bill_count',
     )
 
+    debit = fields.Monetary(groups='account.group_account_readonly')
+    credit = fields.Monetary(groups='account.group_account_readonly')
+
     @api.depends('line_ids')
     def _compute_invoice_count(self):
         sale_types = self.env['account.move'].get_sale_types(include_receipts=True)

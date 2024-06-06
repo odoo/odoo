@@ -98,7 +98,7 @@
         @extend .oe_inline;
         float: right!important;
     }
-    @for $i from 2 through 12 {
+    @for $i from 2 through 13 {
         .o_field_widget.o_input_#{$i}ch input{
             width: 1ch * $i !important;
         }
@@ -474,7 +474,7 @@
 
     @include media-breakpoint-up(sm) {
         .o_inner_group {
-            grid-template-columns: fit-content(150px) 1fr;
+            grid-template-columns: fit-content(150px) minmax(0, 1fr);
             &.o_form_fw_labels {
                 grid-template-columns: 150px 1fr;
             }
@@ -712,10 +712,26 @@
         }
     }
 
+    span.o_list_monetary {
+        display: block
+    }
+
+    .o_field_monetary {
+        /*rtl:ignore*/
+        direction : ltr;
+    }
+
+    .o_list_monetary {
+        /*rtl:ignore*/
+        text-align: right;
+        /*rtl:ignore*/
+        direction : ltr;
+    }
+
     .o_field_float, .o_field_date, .o_field_monetary {
         &.oe_inline {
             &, input {
-                max-width: 9rem;
+                max-width: inherit;
             }
         }
     }
@@ -950,6 +966,7 @@
             max-width: 300px;
         }
     }
+
     @include media-breakpoint-down(md) {
         .o_cp_buttons {
             width: 100%;

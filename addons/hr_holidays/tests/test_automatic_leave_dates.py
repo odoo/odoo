@@ -11,7 +11,6 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestAutomaticLeaveDates, cls).setUpClass()
-
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Automatic Test',
             'time_type': 'leave',

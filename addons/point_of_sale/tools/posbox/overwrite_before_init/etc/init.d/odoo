@@ -27,12 +27,10 @@ test -x $DAEMON || exit 0
 set -e
 
 function _start() {
-    # Wait for time to be synced or AP to start or max 30 seconds
-    cnt=30
-    while ! test -a /run/systemd/timesync/synchronized && ! ip route | grep 10.11.12.1 && ((cnt--)); do
-        sleep 1
-    done
     start-stop-daemon --start --quiet --pidfile $PIDFILE --chuid $USER:$USER --background --make-pidfile --exec $DAEMON -- --config $CONFIG --logfile $LOGFILE --load=$MODULES --max-cron-threads=0
+
+    # this enables and starts the first existing network synchronization service
+    timedatectl set-ntp true
 }
 
 function _stop() {

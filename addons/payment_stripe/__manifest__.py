@@ -6,6 +6,7 @@
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "An Irish-American payment provider covering the US and many others.",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_provider_views.xml',
@@ -19,9 +20,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'payment_stripe/static/src/js/express_checkout_form.js',
-            'payment_stripe/static/src/js/payment_form.js',
-            'payment_stripe/static/src/js/stripe_options.js',
+            'payment_stripe/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

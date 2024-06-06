@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
@@ -1220,7 +1220,7 @@ msgstr "Dodaj sekcję"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Add Tag"
-msgstr "Dodaj znacznik"
+msgstr "Dodaj tag"
 
 #. module: website_slides
 #. odoo-javascript
@@ -1536,6 +1536,11 @@ msgid "Average Review"
 msgstr "Średnia ocena"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
@@ -1590,12 +1595,12 @@ msgstr "Można edytować treść"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_completed
 msgid "Can Mark Completed"
-msgstr ""
+msgstr "Może oznaczać jako ukończone"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_self_mark_uncompleted
 msgid "Can Mark Uncompleted"
-msgstr ""
+msgstr "Może oznaczać jako nieukończone"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
@@ -1651,7 +1656,7 @@ msgstr "Anuluj"
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_carpenter
 msgid "Carpenter"
-msgstr ""
+msgstr "Stolarz"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -1748,7 +1753,7 @@ msgstr "Kanał / Grupy kursów"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
 msgid "Channel/Course Tag"
-msgstr "Kanał/ Znaczniki kursu"
+msgstr "Kanał/ Tag kursu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__channel_ids
@@ -2025,8 +2030,8 @@ msgid ""
 "created less than 7 days ago."
 msgstr ""
 "Gratulacje! Twoja pierwsza lekcja jest już dostępna. Zobaczmy dostępne "
-"opcje. Znacznik \"<b>Nowy</b>\" wskazuje, że ta lekcja została utworzona "
-"mniej niż 7 dni temu."
+"opcje. Tag \"<b>Nowy</b>\" wskazuje, że ta lekcja została utworzona mniej "
+"niż 7 dni temu."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
@@ -2248,25 +2253,25 @@ msgstr "Strony kursu"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
 msgid "Course Tag"
-msgstr "Znacznik kursu"
+msgstr "Tag kursu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "Course Tag Group"
-msgstr "grupa znaczników kursu"
+msgstr "grupa tagów kursu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Course Tag Groups"
-msgstr "grupy znaczników kursu"
+msgstr "grupy tagów kursu"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_action
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_tree
 msgid "Course Tags"
-msgstr "Znaczniki Kursu"
+msgstr "Tagi kursu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
@@ -2886,8 +2891,8 @@ msgid "File Name"
 msgstr "Nazwa pliku"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -3127,7 +3132,7 @@ msgstr "Grupa"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
-msgstr "Grupuj wg."
+msgstr "Grupuj wg"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__name
@@ -3392,6 +3397,15 @@ msgstr "Źródło obrazu"
 #, python-format
 msgid ""
 "Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"Impossible to send emails. Select a \"Share Template\" for courses "
 "%(course_names)s first"
 msgstr ""
 
@@ -3816,7 +3830,7 @@ msgstr "Polubienia"
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide_resource__resource_type__url
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Link"
-msgstr "Odnośnik"
+msgstr "Link"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_google_url
@@ -3962,7 +3976,7 @@ msgstr "Metody"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_2
 msgid "Mighty Carrots"
-msgstr ""
+msgstr "Potężne marchewki"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_1
@@ -4254,7 +4268,7 @@ msgstr "Niewystarczająca ilość karmy by wyświetlić"
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "Notifications"
-msgstr "Notyfikacje"
+msgstr "Powiadomienia"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
@@ -4307,7 +4321,7 @@ msgstr "Liczba błędów"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr "Liczba wiadomości wymagających akcji"
 
 #. module: website_slides
@@ -4553,14 +4567,6 @@ msgid "Preview"
 msgstr "Podgląd"
 
 #. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "Prywatne"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
 msgid "Private Course"
 msgstr "Prywatny Kurs"
@@ -4578,7 +4584,7 @@ msgstr "Promowany slajd"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
 msgid "Public"
-msgstr "Publiczny"
+msgstr "Publiczne"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -5491,7 +5497,7 @@ msgstr "Wygrywaj i zdobywaj karmę"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 #, python-format
 msgid "Tag"
-msgstr "Znacznik"
+msgstr "Tag"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5505,7 +5511,7 @@ msgstr "Oznacz Grupę"
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
 #, python-format
 msgid "Tag Group (required for new tags)"
-msgstr "Oznacz Grup (wymagane dla nowych oznaczeń)"
+msgstr "Oznacz Grup (wymagane dla nowych tagów)"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
@@ -5699,11 +5705,9 @@ msgstr "Slajd może zostać oznaczony jako nieukończony, a postęp"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
-"Link do filmu można uzyskać za pomocą przycisku \"udostępnij\" w interfejsie"
-" Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5973,6 +5977,20 @@ msgid "Unknown error, try again."
 msgstr "Nieznany błąd, spróbuj jeszcze raz"
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr "Nienotowany"
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -6199,7 +6217,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__website_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
 msgid "Website"
-msgstr "Strona WWW"
+msgstr "Strona internetowa"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__challenge_category__slides
@@ -6439,7 +6457,7 @@ msgstr "Nie możesz przesłać pliku chronionego hasłem."
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot add tags to this course."
-msgstr "Nie możesz dodawać znaczników do tego kursu"
+msgstr "Nie możesz dodawać tagów do tego kursu"
 
 #. module: website_slides
 #. odoo-python
@@ -6847,11 +6865,9 @@ msgstr "login"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
-"oznacza? Ustawienie prywatności Vimeo \"Prywatne\" oznacza, że jest to film, który może być oglądany tylko przez użytkowników posiadających link do niego.\n"
-"Twoje wideo nigdy nie pojawi się w wynikach wyszukiwania ani na Twoim kanale."
 
 #. module: website_slides
 #. odoo-javascript

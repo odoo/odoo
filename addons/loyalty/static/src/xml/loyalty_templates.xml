@@ -9,25 +9,25 @@
     </t>
 
     <t t-name="loyalty.LoyaltyActionHelper" owl="1">
-        <div class="o_view_nocontent">
-            <div class="o_nocontent_help">
-                <t t-out="props.noContentHelp"/>
-            </div>
+        <div class="o_view_nocontent flex-wrap pt-5">
             <div class="container">
+                <div class="o_nocontent_help">
+                    <t t-out="props.noContentHelp"/>
+                </div>
                 <div class="row justify-content-center loyalty-templates-container">
                     <t t-foreach="Object.entries(loyaltyTemplateData)" t-as="data" t-key="data[0]">
                         <t t-set="loyalty_el_icon" t-value="data[1].icon"/>
                         <t t-set="loyalty_el_title" t-value="data[1].title"/>
-                        <div class="col-6 col-lg-3 py-4">
+                        <div class="col-6 col-md-4 col-lg-3 py-4">
                             <div class="card rounded p-3 d-flex align-items-stretch h-100 loyalty-template" t-on-click.stop.prevent="() => this.onTemplateClick(data[0])">
                                 <div class="row m-0 w-100 h-100">
                                     <div class="col-lg-4 p-0">
-                                        <div class="d-flex w-100 h-100 align-items-center justify-content-center display-3 p-3 text-muted">
+                                        <div class="d-flex w-100 h-100 align-items-start justify-content-center display-3 p-3 text-muted">
                                             <img t-attf-src="/loyalty/static/img/{{loyalty_el_icon}}.svg" t-attf-alt="{{loyalty_el_title}}"/>
                                         </div>
                                     </div>
                                     <div class="col-lg-8 p-0">
-                                        <div class="card-body d-flex flex-column text-center justify-content-center text-lg-start h-100">
+                                        <div class="card-body d-flex flex-column align-items-start justify-content-start h-100">
                                             <h3 class="card-title" t-out="loyalty_el_title"/>
                                             <p class="card-text" t-out="data[1].description"/>
                                         </div>

@@ -58,20 +58,24 @@ export const dialogService = {
                     id,
                 },
             };
-            if (env.isSmall) {
-                const scrollOrigin = { top: window.scrollY, left: window.scrollX };
-                dialog.dialogData.scrollToOrigin = () => {
-                    if (!Object.keys(dialogs).length) {
-                        window.scrollTo(scrollOrigin);
-                    }
-                };
-            }
+            const scrollOrigin = { top: window.scrollY, left: window.scrollX };
+            dialog.dialogData.scrollToOrigin = () => {
+                if (!Object.keys(dialogs).length) {
+                    window.scrollTo(scrollOrigin);
+                }
+            };
             dialogs[id] = dialog;
 
             return close;
         }
 
-        return { add };
+        function closeAll() {
+            for (const id in dialogs) {
+                dialogs[id].dialogData.close();
+            }
+        }
+
+        return { add, closeAll };
     },
 };
 

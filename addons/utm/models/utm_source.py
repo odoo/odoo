@@ -72,15 +72,22 @@ class UtmSourceMixin(models.AbstractModel):
         return super().create(vals_list)
 
     def write(self, values):
+        if (values.get(self._rec_name) or values.get('name')) and len(self) > 1:
+            raise ValueError(
+                _('You cannot update multiple records with the same name. The name should be unique!')
+            )
+
         if values.get(self._rec_name) and not values.get('name'):
             values['name'] = self.env['utm.source']._generate_name(self, values[self._rec_name])
         if values.get('name'):
-            values['name'] = self.env['utm.mixin']._get_unique_names(self._name, [values['name']])[0]
+            values['name'] = self.env['utm.mixin'].with_context(
+                utm_check_skip_record_ids=self.source_id.ids
+            )._get_unique_names("utm.source", [values['name']])[0]
 
         super().write(values)
 
     def copy(self, default=None):
         """Increment the counter when duplicating the source."""
         default = default or {}
-        default['name'] = self.env['utm.mixin']._get_unique_names(self._name, [self.name])[0]
+        default['name'] = self.env['utm.mixin']._get_unique_names("utm.source", [self.name])[0]
         return super().copy(default)

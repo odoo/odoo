@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from unittest.mock import patch, ANY
+from datetime import datetime, timedelta
 
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
@@ -9,6 +10,7 @@ from odoo.addons.microsoft_calendar.tests.common import TestCommon, mock_get_tok
 from odoo.tests import users
 
 import json
+from freezegun import freeze_time
 
 
 @patch.object(User, '_get_microsoft_calendar_token', mock_get_token)
@@ -27,53 +29,50 @@ class TestAnswerEvents(TestCommon):
                     microsoft_id=combine_ids("123", "456"),
                 )
             )
+        (self.organizer_user | self.attendee_user).microsoft_calendar_token_validity = datetime.now() + timedelta(hours=1)
 
-    @patch.object(MicrosoftCalendarService, 'patch')
-    def test_attendee_accepts_event_from_odoo_calendar(self, mock_patch):
+    @patch.object(MicrosoftCalendarService, '_get_single_event')
+    @patch.object(MicrosoftCalendarService, 'answer')
+    def test_attendee_accepts_event_from_odoo_calendar(self, mock_answer, mock_get_single_event):
         attendee = self.env["calendar.attendee"].search([
             ('event_id', '=', self.simple_event.id),
             ('partner_id', '=', self.attendee_user.partner_id.id)
         ])
-
+        attendee_ms_organizer_event_id = 100
+        mock_get_single_event.return_value = (True, {'value': [{'id': attendee_ms_organizer_event_id}]})
         attendee.with_user(self.attendee_user).do_accept()
         self.call_post_commit_hooks()
         self.simple_event.invalidate_recordset()
 
-        mock_patch.assert_called_once_with(
-            self.simple_event.ms_organizer_event_id,
-            {
-                "attendees": [{
-                    'emailAddress': {'address': attendee.email or '', 'name': attendee.display_name or ''},
-                    'status': {'response': 'accepted'}
-                }]
-            },
-            token=mock_get_token(self.organizer_user),
-            timeout=ANY,
+        mock_answer.assert_called_once_with(
+            attendee_ms_organizer_event_id,
+            'accept',
+            {"comment": "", "sendResponse": True},
+            token=mock_get_token(self.attendee_user),
+            timeout=20,
         )
 
-    @patch.object(MicrosoftCalendarService, 'patch')
-    def test_attendee_declines_event_from_odoo_calendar(self, mock_patch):
+    @patch.object(MicrosoftCalendarService, '_get_single_event')
+    @patch.object(MicrosoftCalendarService, 'answer')
+    def test_attendee_declines_event_from_odoo_calendar(self, mock_answer, mock_get_single_event):
         attendee = self.env["calendar.attendee"].search([
             ('event_id', '=', self.simple_event.id),
             ('partner_id', '=', self.attendee_user.partner_id.id)
         ])
-
+        attendee_ms_organizer_event_id = 100
+        mock_get_single_event.return_value = (True, {'value': [{'id': attendee_ms_organizer_event_id}]})
         attendee.with_user(self.attendee_user).do_decline()
         self.call_post_commit_hooks()
         self.simple_event.invalidate_recordset()
-
-        mock_patch.assert_called_once_with(
-            self.simple_event.ms_organizer_event_id,
-            {
-                "attendees": [{
-                    'emailAddress': {'address': attendee.email or '', 'name': attendee.display_name or ''},
-                    'status': {'response': 'declined'}
-                }]
-            },
-            token=mock_get_token(self.organizer_user),
-            timeout=ANY,
+        mock_answer.assert_called_once_with(
+            attendee_ms_organizer_event_id,
+            'decline',
+            {"comment": "", "sendResponse": True},
+            token=mock_get_token(self.attendee_user),
+            timeout=20,
         )
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_accepts_event_from_outlook_calendar(self, mock_get_events):
         """
@@ -98,6 +97,7 @@ class TestAnswerEvents(TestCommon):
         ])
         self.assertEqual(attendee.state, "accepted")
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_accepts_event_from_outlook_calendar_synced_by_organizer(self, mock_get_events):
         """
@@ -133,6 +133,7 @@ class TestAnswerEvents(TestCommon):
         there is no way to update the attendee status to "declined".
         """
 
+    @freeze_time('2021-09-22')
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_attendee_declines_event_from_outlook_calendar_synced_by_organizer(self, mock_get_events):
         """
@@ -180,3 +181,31 @@ class TestAnswerEvents(TestCommon):
         ).json()
         # the status must be sync_stopped
         self.assertEqual(response['result']['status'], 'sync_stopped')
+
+    @patch.object(MicrosoftCalendarService, '_get_single_event')
+    @patch.object(MicrosoftCalendarService, 'answer')
+    def test_answer_event_with_external_organizer(self, mock_answer, mock_get_single_event):
+        """ Answer an event invitation from an outsider user and check if it was patched on Outlook side. """
+        # Simulate an event that came from an external provider: the organizer isn't registered in Odoo.
+        self.simple_event.write({'user_id': False, 'partner_id': False})
+        self.simple_event.attendee_ids.state = 'needsAction'
+
+        # Accept the event using the admin account and ensure that answer request is called.
+        attendee_ms_organizer_event_id = 100
+        mock_get_single_event.return_value = (True, {'value': [{'id': attendee_ms_organizer_event_id}]})
+        self.simple_event.attendee_ids[0].with_user(self.organizer_user)._microsoft_sync_event('accept')
+        mock_answer.assert_called_once_with(
+            attendee_ms_organizer_event_id,
+            'accept', {'comment': '', 'sendResponse': True},
+            token=mock_get_token(self.organizer_user),
+            timeout=20
+        )
+
+        # Decline the event using the admin account and ensure that answer request is called.
+        self.simple_event.attendee_ids[0].with_user(self.organizer_user)._microsoft_sync_event('decline')
+        mock_answer.assert_called_with(
+            attendee_ms_organizer_event_id,
+            'decline', {'comment': '', 'sendResponse': True},
+            token=mock_get_token(self.organizer_user),
+            timeout=20
+        )

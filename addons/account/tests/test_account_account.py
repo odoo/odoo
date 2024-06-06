@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
 import psycopg2
+from freezegun import freeze_time
 
 
 @tagged('post_install', '-at_install')
@@ -342,3 +344,115 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         # saving a form without a code should not be possible
         with self.assertRaises(AssertionError):
             account_form.save()
+
+    @freeze_time('2023-09-30')
+    def test_generate_account_suggestions(self):
+        """
+            Test the generation of account suggestions for a partner.
+
+            - Creates: partner and a account move of that partner.
+            - Checks if the most frequent account for the partner matches created account (with recent move).
+            - Sets the account as deprecated and checks that it no longer appears in the suggestions.
+
+            * since tested function takes into account last 2 years, we use freeze_time
+        """
+        partner = self.env['res.partner'].create({'name': 'partner_test_generate_account_suggestions'})
+        account = self.company_data['default_account_revenue']
+        self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'invoice_date': '2023-09-30',
+            'line_ids': [Command.create({'price_unit': 100, 'account_id': account.id})]
+        })
+
+        results_1 = self.env['account.account']._get_most_frequent_accounts_for_partner(
+            company_id=self.env.company.id,
+            partner_id=partner.id,
+            move_type="out_invoice"
+        )
+        self.assertEqual(account.id, results_1[0], "Account with most account_moves should be listed first")
+
+        account.deprecated = True
+        account.flush_recordset(['deprecated'])
+        results_2 = self.env['account.account']._get_most_frequent_accounts_for_partner(
+            company_id=self.env.company.id,
+            partner_id=partner.id,
+            move_type="out_invoice"
+        )
+        self.assertFalse(account.id in results_2, "Deprecated account should NOT appear in account suggestions")
+
+    @freeze_time('2017-01-01')
+    def test_account_opening_balance(self):
+        company = self.env.company
+        account = self.company_data['default_account_revenue']
+        balancing_account = company.get_unaffected_earnings_account()
+
+        self.assertFalse(company.account_opening_move_id)
+
+        account.opening_debit = 300
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 300.0},
+            {'account_id': balancing_account.id,    'balance': -300.0},
+        ])
+
+        account.opening_credit = 500
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 300.0},
+            {'account_id': balancing_account.id,    'balance': 200.0},
+            {'account_id': account.id,              'balance': -500.0},
+        ])
+
+        account.opening_balance = 0
+        self.cr.precommit.run()
+        self.assertFalse(company.account_opening_move_id.line_ids)
+
+        account.currency_id = self.currency_data['currency']
+        account.opening_debit = 100
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': -100.0,  'amount_currency': -100.0},
+        ])
+
+        company.account_opening_move_id.write({'line_ids': [
+            Command.create({
+                'account_id': account.id,
+                'balance': 100.0,
+                'amount_currency': 200.0,
+                'currency_id': account.currency_id.id,
+            }),
+            Command.create({
+                'account_id': balancing_account.id,
+                'balance': -100.0,
+            }),
+        ]})
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': -100.0,  'amount_currency': -100.0},
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': -100.0,  'amount_currency': -100.0},
+        ])
+
+        account.opening_credit = 1000
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': balancing_account.id,    'balance': 800.0,   'amount_currency': 800.0},
+            {'account_id': account.id,              'balance': 100.0,   'amount_currency': 200.0},
+            {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
+        ])
+
+        account.opening_debit = 1000
+        self.cr.precommit.run()
+        self.assertRecordValues(company.account_opening_move_id.line_ids.sorted(), [
+            # pylint: disable=bad-whitespace
+            {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
+            {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
+        ])

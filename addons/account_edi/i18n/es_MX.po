@@ -6,7 +6,7 @@
 # Martin Trigaux, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr "Información de la facturación electrónica"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr "Advertencia(s) de la facturación electrónica"
+msgstr "Advertencias en la facturación electrónica"
 
 #. module: account_edi
 #. odoo-python
@@ -84,7 +84,7 @@ msgstr ""
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "Se suspende la cancelación del EDI"
+msgstr "Suspender la cancelación del EDI"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -431,6 +431,14 @@ msgstr ""
 "que se procesa el documento)."
 
 #. module: account_edi
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+"Los siguientes documentos ya fueron enviados y no se pueden resecuenciar: %s"
+
+#. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
@@ -497,8 +505,7 @@ msgid ""
 "instead."
 msgstr ""
 "No puede editar el siguiente asiento contable %s porque ya se envió un "
-"documento electrónico . En lugar de esto, use el botón de 'Solicitar "
-"Cancelación EDI’."
+"documento electrónico, use el botón de \"Solicitar cancelación EDI\"."
 
 #. module: account_edi
 #. odoo-python

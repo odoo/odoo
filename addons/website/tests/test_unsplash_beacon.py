@@ -16,8 +16,34 @@ class TestUnsplashBeacon(odoo.tests.HttpCase):
             <t t-set="pageName" t-value="'homepage'"/>
             <div id="wrap" class="oe_structure oe_empty">
                 <img src="/unsplash/pYyOZ8q7AII/306/fairy.jpg"/>
+                <!--
+                    Keeping this javascript inline instead of extracting it
+                    to avoid tempting users to publish such a file on their
+                    production system.
+                -->
+                <script>
+                    Object.defineProperty(window, "$", {
+                        get() {
+                            return this._patched$;
+                        },
+                        set(value) {
+                            delete this.$;
+                            this._patched$ = value;
+                            // Patch RPC call.
+                            const oldGet = value.get.bind(this);
+                            value.get = (url, data, success, dataType) => {
+                                if (url === "https://views.unsplash.com/v") {
+                                    const imageEl = document.querySelector(`img[src^="/unsplash/${data.photo_id}/"]`);
+                                    imageEl.dataset.beacon = "sent";
+                                    return;
+                                }
+                                return oldGet(url, data, success, dataType);
+                            };
+                        },
+                    });
+                </script>
             </div>
             </t>
         </t>'''
         # Access page.
-        self.start_tour("/?test_unsplash_beacon", "test_unsplash_beacon")
+        self.start_tour('/', 'test_unsplash_beacon')

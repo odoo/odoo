@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ResUsersSettings(models.Model):
     _name = 'res.users.settings'
     _description = 'User Settings'
+    _rec_name = 'user_id'
 
     user_id = fields.Many2one('res.users', string="User", required=True, readonly=True, ondelete='cascade')
     is_discuss_sidebar_category_channel_open = fields.Boolean(string="Is discuss sidebar category channel open?", default=True)

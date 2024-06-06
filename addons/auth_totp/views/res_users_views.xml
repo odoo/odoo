@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
                 <separator/>
-                <filter name="totp_enabled" string="Two-factor authentication Enabled" domain="[('totp_secret','!=',False)]"/>
-                <filter name="totp_disabled" string="Two-factor authentication Disabled" domain="[('totp_secret','=',False)]"/>
+                <filter name="totp_enabled" string="Two-factor authentication Enabled" domain="[('totp_enabled','!=',False)]"/>
+                <filter name="totp_disabled" string="Two-factor authentication Disabled" domain="[('totp_enabled','=',False)]"/>
             </xpath>
         </field>
     </record>

@@ -11,6 +11,8 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
 
     startSteps();
 
+    Chrome.check.isCashMoveButtonShown();
+
     // Order 1 is at Product Screen
     ProductScreen.do.confirmOpeningPopup();
     ProductScreen.do.clickHomeCategory();

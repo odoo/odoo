@@ -11,8 +11,12 @@ class AccountMoveLine(models.Model):
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         if so_line:
-            bom = self.env['mrp.bom']._bom_find(products=so_line.product_id, company_id=so_line.company_id.id, bom_type='phantom')[so_line.product_id]
-            if bom:
+            # We give preference to the bom in the stock moves for the sale order lines
+            # If there are changes in BOMs between the stock moves creation and the
+            # invoice validation a wrong price will be taken
+            boms = so_line.move_ids.filtered(lambda m: m.state != 'cancel').mapped('bom_line_id.bom_id').filtered(lambda b: b.type == 'phantom')
+            if boms:
+                bom = boms[0]
                 is_line_reversing = self.move_id.move_type == 'out_refund'
                 qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
                 account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)

@@ -5,9 +5,15 @@ import time
 
 from odoo.tests.common import TransactionCase, Form
 from odoo.tools import mute_logger
+from odoo import Command
 
 
 class TestSaleMrpProcurement(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('product.group_product_variant').id)]})
 
     def test_sale_mrp(self):
         # Required for `uom_id` to be visible in the view
@@ -271,3 +277,34 @@ class TestSaleMrpProcurement(TransactionCase):
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', kit_1.id)])
         self.assertFalse(orderpoint_product)
+
+    def test_sale_mrp_avoid_multiple_pickings(self):
+        """
+        Test sale of multiple products. Avoid multiple pickings being
+        generated when we are not in 3 steps manufacturing.
+        """
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.sam_loc_id = warehouse.lot_stock_id
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': 'sol_p1',
+                    'product_id': self.env['product.product'].create({'name': 'p1'}).id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+                Command.create({
+                    'name': 'sol_p2',
+                    'product_id': self.env['product.product'].create({'name': 'p2'}).id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+            ],
+        })
+
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 1)
+        self.assertEqual(so.picking_ids.picking_type_id, warehouse.out_type_id)

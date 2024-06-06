@@ -251,6 +251,7 @@ class Channel(models.Model):
             all_emp_group = None
         if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
+        self.env['bus.bus']._sendmany([(channel, 'mail.channel/delete', {'id': channel.id}) for channel in self])
 
     def write(self, vals):
         if 'channel_type' in vals:
@@ -626,8 +627,9 @@ class Channel(models.Model):
 
     def _message_add_reaction_after_hook(self, message, content):
         self.ensure_one()
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guests = [('insert', {'id': self.env.context.get('guest').id})]
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
+            guests = [('insert', {'id': guest.id})]
             partners = []
         else:
             guests = []
@@ -647,8 +649,9 @@ class Channel(models.Model):
 
     def _message_remove_reaction_after_hook(self, message, content):
         self.ensure_one()
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guests = [('insert-and-unlink', {'id': self.env.context.get('guest').id})]
+        guest = self.env['mail.guest']._get_guest_from_context()
+        if self.env.user._is_public() and guest:
+            guests = [('insert-and-unlink', {'id': guest.id})]
             partners = []
         else:
             guests = []
@@ -999,9 +1002,16 @@ class Channel(models.Model):
             if member.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
                 return
-            member.write({
-                'fetched_message_id': last_message_id,
-            })
+            # Avoid serialization error when multiple tabs are opened.
+            query = """
+                UPDATE mail_channel_member
+                SET fetched_message_id = %s
+                WHERE id IN (
+                    SELECT id FROM mail_channel_member WHERE id = %s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """
+            self.env.cr.execute(query, (last_message_id, member.id))
             self.env['bus.bus']._sendone(channel, 'mail.channel.member/fetched', {
                 'channel_id': channel.id,
                 'id': member.id,

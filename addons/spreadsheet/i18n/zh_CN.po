@@ -8,16 +8,18 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # digitalliuzg8888, 2022
 # Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
+# Chloe Wang, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,21 +124,6 @@ msgstr "+添加另一条规则"
 #, python-format
 msgid "- [optional]"
 msgstr "-[可选的]"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
-#, python-format
-msgid ""
-"/** Font Awesome by Dave Gandy\n"
-" *  http://fontawesome.io/\n"
-" *  https://fontawesome.com/license\n"
-" */"
-msgstr ""
-"/** Font Awesome by Dave Gandy\n"
-" * http://fontawesome.io/\n"
-" * https://fontawesome.com/license\n"
-" */"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -398,6 +385,7 @@ msgstr "应用于范围"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "April"
 msgstr "四月"
@@ -427,6 +415,7 @@ msgstr "升序（A⟶ Z）。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "August"
 msgstr "八月"
@@ -745,7 +734,7 @@ msgstr "清除多行 %s - %s"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Clip"
-msgstr ""
+msgstr "截取"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1016,6 +1005,13 @@ msgstr "创建筛选"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
+#, python-format
+msgid "Cumulative data"
+msgstr "累计数据"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Cumulative interest paid over a set of periods."
@@ -1224,6 +1220,7 @@ msgstr "优惠券有效期天数，包含结算日期。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "December"
 msgstr "十二月"
@@ -1411,6 +1408,7 @@ msgstr "编辑"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Edit link"
@@ -1474,6 +1472,7 @@ msgstr "两个日期之间的确切年数。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "February"
 msgstr "二月"
@@ -1491,6 +1490,13 @@ msgstr "字段%s不存在"
 #, python-format
 msgid "Field %s is not supported because of its type (%s)"
 msgstr "字段%s因其类型(%s)而不被支持"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/list/list_data_source.js:0
+#, python-format
+msgid "Fields of type \"%s\" are not supported"
+msgstr "不支持字段类型 \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1635,6 +1641,13 @@ msgstr "冻结"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Friday"
+msgstr "周五"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid ""
 "Function ${name} has an argument that has been declared with more than one "
 "type whose type 'META'. The 'META' type can only be declared alone."
@@ -1759,7 +1772,7 @@ msgstr "不同利率的本金的未来价值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Gauge"
-msgstr ""
+msgstr "Gauge"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1964,6 +1977,13 @@ msgstr "如果未找到有效的匹配项，则返回此值。"
 #, python-format
 msgid "Increase decimal places"
 msgstr "增加小数位"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Index out of range."
+msgstr "索引超出范围。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2340,6 +2360,7 @@ msgstr "斜体"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "January"
 msgstr "一月"
@@ -2347,6 +2368,7 @@ msgstr "一月"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "July"
 msgstr "七月"
@@ -2354,6 +2376,7 @@ msgstr "七月"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "June"
 msgstr "六月"
@@ -2544,6 +2567,7 @@ msgstr "拐点下限必须小于拐点上限"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "March"
 msgstr "三月"
@@ -2600,6 +2624,7 @@ msgstr "数据集中的最大数值。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "May"
 msgstr "五月"
@@ -2733,6 +2758,13 @@ msgstr "修改后的内部收益率。"
 #, python-format
 msgid "Modulo (remainder) operator."
 msgstr "模（余数）运算符。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Monday"
+msgstr "周一"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2886,6 +2918,7 @@ msgstr "未实现的运算符%s为条件格式化的种类。  %s"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "November"
 msgstr "十一月"
@@ -2995,6 +3028,7 @@ msgstr "数据集中的数值平均值。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "October"
 msgstr "十月"
@@ -3004,7 +3038,7 @@ msgstr "十月"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Overflow"
-msgstr ""
+msgstr "上溢"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3332,6 +3366,13 @@ msgstr "返回与提供的逻辑值相反的值。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Returns the content of a cell, specified by row and column offset."
+msgstr "根据行和列偏移量的指定，返回单元格的内容。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Returns the error value #N/A."
 msgstr "返回错误值 #N/A。"
 
@@ -3456,6 +3497,13 @@ msgstr "指定单元格的行号。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Saturday"
+msgstr "周六"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Save"
@@ -3466,7 +3514,7 @@ msgstr "保存"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Scorecard"
-msgstr ""
+msgstr "计分卡"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3548,6 +3596,7 @@ msgstr "选择期间..."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/assets_backend/constants.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "September"
 msgstr "九月"
@@ -3789,6 +3838,13 @@ msgstr "表格范围内的值总和。"
 #, python-format
 msgid "Sums a range depending on multiple criteria."
 msgstr "根据多个条件求和一个范围。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Sunday"
+msgstr "周日"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4487,7 +4543,7 @@ msgstr "用于设置数字格式的模式，用引号引起来。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The period (%s) must be less than or equal life (%."
-msgstr ""
+msgstr "期限（%s）须小于或等于寿命（%）。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5146,6 +5202,15 @@ msgstr "该公式具有超过100个部分。 无法正确处理，请考虑将�
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid ""
+"This function can only return a single cell value, not an array. Provide "
+"valid row and column indices."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/currency/formulas.js:0
 #, python-format
 msgid ""
@@ -5176,6 +5241,13 @@ msgstr "由于合并，该操作无法实现。请先删除合并，然后再试
 #, python-format
 msgid "Thresholds"
 msgstr "阈值"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Thursday"
+msgstr "周四"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5224,6 +5296,13 @@ msgstr "将标签视为文本"
 #, python-format
 msgid "Truncates a number."
 msgstr "截断数字。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Tuesday"
+msgstr "周二"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5282,14 +5361,14 @@ msgstr "取消隐藏所有行"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unhide columns"
-msgstr ""
+msgstr "取消隐藏列"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Unhide rows"
-msgstr ""
+msgstr "取消隐藏行"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5466,6 +5545,13 @@ msgstr "我们在您的选择旁边找到了数据。由于这个数据没有被
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Wednesday"
+msgstr "周三"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Week number of the year."
 msgstr "年度周数。"
 
@@ -5566,7 +5652,7 @@ msgstr "引用的单元格是否为空"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Wrap"
-msgstr ""
+msgstr "包裹"
 
 #. module: spreadsheet
 #. odoo-javascript

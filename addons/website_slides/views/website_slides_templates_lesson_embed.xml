@@ -45,7 +45,7 @@
                             <t t-if="is_external_embed">
                                 <t t-call="website_slides.slide_share_modal">
                                     <t t-set="record" t-value="slide"/>
-                                    <t t-set="website_share_url" t-value="slide.channel_id.website_share_url"/>
+                                    <t t-set="website_share_url" t-value="slide.website_share_url"/>
                                     <t t-set="include_embed" t-value="True"/>
                                     <t t-set="embed_hide_starting_page" t-value="True"/>
                                 </t>
@@ -104,7 +104,7 @@
                                             <i class="fa fa-search-plus" />
                                         </span>
                                     </div>
-                                    <div class="col text-center">
+                                    <div class="col text-center o_slide_navigation_buttons">
                                         <span id="first" class="me-1 me-sm-2" title="First slide" aria-label="First slide" role="button"><i class="fa fa-step-backward"/></span>
                                         <span id="previous" class="mx-1 mx-sm-2" title="Previous slide" aria-label="Previous slide" role="button"><i class="fa fa-arrow-circle-left"/></span>
                                         <span id="next" class="mx-1 mx-sm-2" title="Next slide" aria-label="Next slide" role="button"><i class="fa fa-arrow-circle-right"/></span>

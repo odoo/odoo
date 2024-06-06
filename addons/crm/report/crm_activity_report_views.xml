@@ -55,7 +55,7 @@
                     <separator/>
                     <filter string="Trailing 12 months" name="completion_date" domain="[
                         ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                        ('date', '>=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                        ('date', '&lt;=', (datetime.datetime.combine(context_today(), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <separator/>

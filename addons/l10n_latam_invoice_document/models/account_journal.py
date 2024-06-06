@@ -36,3 +36,8 @@ class AccountJournal(models.Model):
         if self.l10n_latam_use_documents:
             self.refund_sequence = False
         return res
+
+    def _compute_has_sequence_holes(self):
+        journals_use_documents = self.filtered(lambda x: x.l10n_latam_use_documents)
+        journals_use_documents.has_sequence_holes = False
+        super(AccountJournal, self - journals_use_documents)._compute_has_sequence_holes()

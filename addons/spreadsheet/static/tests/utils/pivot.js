@@ -22,7 +22,7 @@ export async function insertPivotInSpreadsheet(model, params) {
             colGroupBys: archInfo.colGroupBys,
             rowGroupBys: archInfo.rowGroupBys,
             activeMeasures: archInfo.activeMeasures,
-            resModel: "partner",
+            resModel: params.resModel || "partner",
         },
         searchParams: {
             domain: [],

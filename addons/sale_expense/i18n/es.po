@@ -5,14 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Ana Sanjuán, 2023
+# Wil Odoo, 2024
+# Carolina Fernández, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Last-Translator: Carolina Fernández, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +38,7 @@ msgstr "Puede ser refacturado"
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
 msgid "Customer to Reinvoice"
-msgstr "Cliente a reembolsar"
+msgstr "Cliente a refacturar"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -54,6 +57,13 @@ msgid "Expense Report"
 msgstr "Informe de gastos"
 
 #. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_account_bank_statement_line__expense_sheet_id
+#: model:ir.model.fields,field_description:sale_expense.field_account_move__expense_sheet_id
+#: model:ir.model.fields,field_description:sale_expense.field_account_payment__expense_sheet_id
+msgid "Expense Sheet"
+msgstr "Hoja de gastos"
+
+#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense_split
 msgid "Expense Split"
 msgstr "Dividir gastos"
@@ -66,28 +76,31 @@ msgid "Expenses"
 msgstr "Gastos"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid "Expenses of this category may not be added to a Sales Order."
-msgstr "No se pueden añadir gastos de esta categoría a una orden de venta."
+msgstr "No se pueden añadir gastos de esta categoría a un pedido de venta."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid ""
 "Expenses will be added to the Sales Order at their actual cost when posted."
 msgstr ""
-"Se añadirán los gastos a la orden de venta a su costo real cuando se "
+"Se añadirán los gastos a un pedido de venta a su coste real cuando se "
 "registren."
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/product_template.py:0
 #, python-format
 msgid ""
 "Expenses will be added to the Sales Order at their sales price (product "
 "price, pricelist, etc.) when posted."
 msgstr ""
-"Se añadirán los gastos a la orden de venta a su precio de venta (precio del "
+"Se añadirán los gastos al pedido de venta a su precio de venta (precio del "
 "producto, lista de precios, etc.) cuando se registren."
 
 #. module: sale_expense
@@ -96,13 +109,18 @@ msgid ""
 "If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
-"Si la categoría tiene una política de gastos, se volverá a facturar en esta "
-"orden de venta"
+"Si la categoría tiene una política de gastos, se volverá a facturar en este "
+"pedido de venta"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
 msgid "Invoicing"
 msgstr "Facturación"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move_line
@@ -115,10 +133,11 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: sale_expense
+#. odoo-python
 #: code:addons/sale_expense/models/hr_expense_sheet.py:0
 #, python-format
 msgid "Reinvoiced Sales Orders"
-msgstr "Órdenes de venta refacturadas"
+msgstr "Pedidos de venta refacturados"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count

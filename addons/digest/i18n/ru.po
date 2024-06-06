@@ -13,14 +13,15 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Martin Trigaux, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,17 +37,17 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"button\" id=\"button_open_report\">Open Report</span>"
-msgstr ""
+msgstr "<span class=\"button\" id=\"button_open_report\">Открытый отчет</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span class=\"odoo_link_text\">Odoo</span>"
-msgstr ""
+msgstr "<span class=\"odoo_link_text\">Odoo</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "<span style=\"color: #8f8f8f;\">Unsubscribe</span>"
-msgstr ""
+msgstr "<span style=\"color: #8f8f8f;\">Отписаться от рассылки</span>"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -77,10 +78,11 @@ msgid "Available Fields"
 msgstr "Доступные поля"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Choose the metrics you care about"
-msgstr ""
+msgstr "Выберите показатели, которые вам важны"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
@@ -98,6 +100,7 @@ msgid "Configure Digest Emails"
 msgstr "Настройте дайджест"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Connect"
@@ -161,7 +164,6 @@ msgstr "Рассылать дайджест"
 #: model:ir.actions.act_window,name:digest.digest_digest_action
 #: model:ir.actions.server,name:digest.ir_cron_digest_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:digest.ir_cron_digest_scheduler_action
-#: model:ir.cron,name:digest.ir_cron_digest_scheduler_action
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
@@ -182,7 +184,7 @@ msgstr "Советы дайджеста"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Digest Title"
-msgstr ""
+msgstr "Дайджест Название"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
@@ -216,6 +218,9 @@ msgid ""
 "Have a question about a document? Click on the responsible user's picture to"
 " start a conversation. If his avatar has a green dot, he is online."
 msgstr ""
+"У вас есть вопрос о документе? Нажмите на изображение ответственного "
+"пользователя, чтобы начать разговор. Если на его аватаре есть зеленая точка,"
+" значит, он в сети."
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
@@ -224,10 +229,11 @@ msgid "ID"
 msgstr "Идентификатор"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/controllers/portal.py:0
 #, python-format
 msgid "Invalid periodicity set on digest"
-msgstr ""
+msgstr "Неверная периодичность, установленная для дайджеста"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__is_subscribed
@@ -243,12 +249,12 @@ msgstr "Сводка KPI"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_form
 msgid "KPI Digest Tip"
-msgstr ""
+msgstr "Дайджест KPI Совет"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_tip_view_tree
 msgid "KPI Digest Tips"
-msgstr ""
+msgstr "Советы по составлению дайджеста KPI"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -266,18 +272,21 @@ msgid "Kpi Res Users Connected Value"
 msgstr "Значение Kpi Res подключенных пользователей"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 24 hours"
-msgstr ""
+msgstr "Последние 24 часа"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 30 Days"
 msgstr "30 дней"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 7 Days"
@@ -304,7 +313,7 @@ msgstr "Последнее обновление"
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
 msgid "Messages Sent"
-msgstr ""
+msgstr "Отправленные Сообщения"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__monthly
@@ -329,12 +338,12 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__next_run_date
 msgid "Next Mailing Date"
-msgstr ""
+msgstr "Дата следующей рассылки"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Odoo Mobile"
-msgstr ""
+msgstr "Odoo Mobile"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
@@ -348,6 +357,7 @@ msgid "Powered by"
 msgstr "На базе"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Prefer a broader overview ?"
@@ -359,6 +369,8 @@ msgid ""
 "Press ALT in any screen to highlight shortcuts for every button in the "
 "screen. It is useful to process multiple documents in batch."
 msgstr ""
+"Нажмите ALT на любом экране, чтобы выделить ярлыки для каждой кнопки на "
+"экране. Это удобно для пакетной обработки нескольких документов."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__quarterly
@@ -376,6 +388,7 @@ msgstr "Получатели"
 #: model_terms:ir.ui.view,arch_db:digest.digest_section_mobile
 msgid "Run your business from anywhere with <b>Odoo Mobile</b>."
 msgstr ""
+"Управляйте своим бизнесом из любого места с помощью <b>Odoo Mobile</b>."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -385,7 +398,7 @@ msgstr "Отправить сейчас"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "Sent by"
-msgstr ""
+msgstr "Отправлено от"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
@@ -403,10 +416,11 @@ msgid "Status"
 msgstr "Статус"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Switch to weekly Digests"
-msgstr ""
+msgstr "Переход на еженедельные дайджесты"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__tip_description
@@ -416,52 +430,52 @@ msgstr "описание советы"
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_2
 msgid "Tip: A calculator in Odoo"
-msgstr ""
+msgstr "Подскажите: Калькулятор в Odoo"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_1
 msgid "Tip: Click on an avatar to chat with a user"
-msgstr ""
+msgstr "Совет: Нажмите на аватар, чтобы пообщаться с пользователем"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_3
 msgid "Tip: How to ping users in internal notes?"
-msgstr ""
+msgstr "Совет: Как пинговать пользователей во внутренних заметках?"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
-msgstr ""
+msgstr "Совет: Знание - сила"
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_0
 msgid "Tip: Speed up your workflow with shortcuts"
-msgstr ""
+msgstr "Совет: Ускорьте рабочий процесс с помощью быстрых клавиш"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_2
 msgid "Tip: A calculator in Odoo"
-msgstr ""
+msgstr "Подскажите: Калькулятор в Odoo"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_1
 msgid "Tip: Click on an avatar to chat with a user"
-msgstr ""
+msgstr "Совет: Нажмите на аватар, чтобы пообщаться с пользователем"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_3
 msgid "Tip: How to ping users in internal notes?"
-msgstr ""
+msgstr "Совет: Как пинговать пользователей во внутренних заметках?"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_4
 msgid "Tip: Knowledge is power"
-msgstr ""
+msgstr "Совет: Знание - сила"
 
 #. module: digest
 #: model:digest.tip,name:digest.digest_tip_digest_0
 msgid "Tip: Speed up your workflow with shortcuts"
-msgstr ""
+msgstr "Совет: Ускорьте рабочий процесс с помощью быстрых клавиш"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
@@ -474,6 +488,9 @@ msgid ""
 "Type \"@\" to notify someone in a message, or \"#\" to link to a channel. "
 "Try to notify @OdooBot to test the feature."
 msgstr ""
+"Введите \"@\", чтобы уведомить кого-то в сообщении, или \"#\", чтобы дать "
+"ссылку на канал. Попробуйте уведомить @OdooBot, чтобы протестировать "
+"функцию."
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__sequence
@@ -495,21 +512,26 @@ msgstr "Пользователи, которые уже получили это�
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Want to add your own KPIs?<br/>"
-msgstr ""
+msgstr "Хотите добавить свои собственные KPI?<br/>"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Want to customize this email?"
-msgstr ""
+msgstr "Хотите настроить это письмо?"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid ""
 "We have noticed you did not connect these last few days. We have "
 "automatically switched your preference to %(new_perioridicy_str)s Digests."
 msgstr ""
+"Мы заметили, что в последние несколько дней вы не подключались. Мы "
+"автоматически переключили ваши предпочтения на %(new_perioridicy_str)s "
+"Дайджесты."
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__periodicity__weekly
@@ -523,6 +545,9 @@ msgid ""
 "This is useful when computing a margin or a discount on a quotation, sale "
 "order or invoice."
 msgstr ""
+"При редактировании числа можно использовать формулы, введя символ `=`. Это "
+"полезно при расчете маржи или скидки по котировке, заказу на продажу или "
+"счету-фактуре."
 
 #. module: digest
 #: model_terms:digest.tip,tip_description:digest.digest_tip_digest_4
@@ -530,11 +555,13 @@ msgid ""
 "When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
 "Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
+"При отслеживании документов используйте значок карандаша, чтобы точно настроить информацию, которую вы хотите получать.\n"
+"Следите за проектом / командой продавцов, чтобы отслеживать задачи этого проекта / возможности этой команды."
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from:<br/>"
-msgstr ""
+msgstr "Вы успешно отписались от рассылки:<br/>"
 
 #. module: digest
 #: model:digest.digest,name:digest.digest_digest_default
@@ -544,22 +571,25 @@ msgstr "Периодическая сводка Odoo"
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "e.g. Your Weekly Digest"
-msgstr ""
+msgstr "например, \"Ваш еженедельный дайджест"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "monthly"
-msgstr ""
+msgstr "ежемесячно"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "quarterly"
-msgstr ""
+msgstr "ежеквартально"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "weekly"
-msgstr ""
+msgstr "еженедельно"

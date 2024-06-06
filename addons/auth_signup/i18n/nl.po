@@ -746,6 +746,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "Laat klanten inloggen om hun documenten te bekijken"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this login"
+msgstr "Meerdere accounts gevonden voor deze login"
+
+#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "Nog nooit verbonden"
@@ -820,7 +826,7 @@ msgstr "Stel wachtwoord opnieuw in"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr "Stuur instructies voor het opnieuw instellen van het wachtwoord"
+msgstr "Instructies voor het resetten van wachtwoorden verzenden"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form

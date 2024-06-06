@@ -24,7 +24,7 @@
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.report_assets_common" t-css="false"/>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'">
+            <body t-att-class="'container' if not full_width else 'container-fluid'" t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
                 <div id="wrapwrap">
                     <main>
                         <t t-out="0"/>
@@ -59,23 +59,13 @@
                     **/
 
                     /** The footers are not at the bottom of the page, so we push them down. **/
-                    .o_background_footer  {
-                        margin-top: 295px !important;
+                    .o_background_footer, .o_standard_footer, .o_boxed_footer, .o_clean_footer {
+                        position: absolute;
+                        bottom: 0;
+                        left:50px;
+                        right:50px;
                         font-size: 0.8rem
                     }
-                    .o_standard_footer {
-                        margin-top: 200px !important;
-                        font-size: 0.8rem
-                    }
-                    .o_boxed_footer {
-                         margin-top: 270px !important;
-                         font-size: 0.8rem
-                    }
-                    .o_clean_footer {
-                         margin-top: 175px !important;
-                         font-size: 0.8rem
-                    }
-
                     /** Avoid image overflowing and creating a scrollbar **/
                     .o_background_header {
                         min-width: initial !important;
@@ -93,7 +83,7 @@
 
                 </style>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden">
+            <body t-att-class="'container' if not full_width else 'container-fluid'" style="overflow:hidden" t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
                 <div id="wrapwrap">
                         <t t-out="0"/>
                 </div>
@@ -119,25 +109,21 @@
     <template id="report_invoice_wizard_preview">
         <t t-call="web.html_preview_container">
            <t t-call="web.external_layout">
-                   <div class="address row">
-                       <div name="address" class="col-5" style="margin-left: auto">
-                           <address>
-                               <address class="mb-0" itemscope="itemscope"
-                                        itemtype="http://schema.org/Organization">
-                                   <div>
-                                       <span itemprop="name">Deco Addict</span>
-                                   </div>
-                                   <div itemprop="address" itemscope="itemscope"
-                                        itemtype="http://schema.org/PostalAddress">
-                                       <div class="d-flex align-items-baseline">
-                                           <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
-                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
-                                       </div>
-                                   </div>
-                               </address>
-                           </address>
-                       </div>
-                   </div>
+                   <t t-set="address">
+                       <address class="mb-0" itemscope="itemscope"
+                                itemtype="http://schema.org/Organization">
+                           <div>
+                               <span itemprop="name">Deco Addict</span>
+                           </div>
+                           <div itemprop="address" itemscope="itemscope"
+                                itemtype="http://schema.org/PostalAddress">
+                               <div class="d-flex align-items-baseline">
+                                   <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
+                               </div>
+                           </div>
+                       </address>
+                   </t>
                    <div class="page mt-5">
                        <h2>
                            <span>Invoice</span>
@@ -280,7 +266,7 @@
                     }
                 </script>
             </head>
-            <body class="container" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" style="overflow:hidden">
+            <body class="container" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" style="overflow:hidden" t-att-dir="env['res.lang']._lang_get(lang or env.user.lang).direction or 'ltr'">
                 <t t-out="body"/>
             </body>
         </html>

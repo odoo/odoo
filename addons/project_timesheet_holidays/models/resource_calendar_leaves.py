@@ -80,7 +80,7 @@ class ResourceCalendarLeaves(models.Model):
         """
         work_hours_data = self._work_time_per_day()
         employees_groups = self.env['hr.employee']._read_group(
-            [('resource_calendar_id', 'in', self.calendar_id.ids)],
+            [('resource_calendar_id', 'in', self.calendar_id.ids), ('company_id', 'in', self.env.companies.ids)],
             ['resource_calendar_id', 'ids:array_agg(id)'],
             ['resource_calendar_id'])
         mapped_employee = {
@@ -142,6 +142,38 @@ class ResourceCalendarLeaves(models.Model):
             'employee_id': employee_id.id,
             'company_id': employee_id.company_id.id,
         }
+
+    def _generate_public_time_off_timesheets(self, employees):
+        timesheet_vals_list = []
+        work_hours_data = self._work_time_per_day()
+        timesheet_read_group = self.env['account.analytic.line']._read_group(
+            [('global_leave_id', 'in', self.ids), ('employee_id', 'in', employees.ids)],
+            ['date:array_agg'],
+            ['employee_id']
+        )
+        timesheet_dates_per_employee_id = {
+            res['employee_id'][0]: res['date']
+            for res in timesheet_read_group
+        }
+        for leave in self:
+            for employee in employees:
+                if employee.resource_calendar_id != leave.calendar_id:
+                    continue
+                work_hours_list = work_hours_data[leave.id]
+                timesheet_dates = timesheet_dates_per_employee_id.get(employee.id, [])
+                for index, (day_date, work_hours_count) in enumerate(work_hours_list):
+                    generate_timesheet = day_date not in timesheet_dates
+                    if not generate_timesheet:
+                        continue
+                    timesheet_vals = leave._timesheet_prepare_line_values(
+                        index,
+                        employee,
+                        work_hours_list,
+                        day_date,
+                        work_hours_count
+                    )
+                    timesheet_vals_list.append(timesheet_vals)
+        return self.env['account.analytic.line'].sudo().create(timesheet_vals_list)
 
     @api.model_create_multi
     def create(self, vals_list):

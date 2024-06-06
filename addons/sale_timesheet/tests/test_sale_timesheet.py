@@ -693,6 +693,119 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         ])
         self.assertEqual(len(message_sent), 1, 'Sale Timesheet: An email should only be sent to the saleperson when the state of the sale order change to upselling')
 
+    def test_timesheet_upsell_copied_so(self):
+        """ Test that copying a SO which had an upsell activity still create an upsell activity on the copy. """
+
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'user_id': self.user_employee_company_B.id,
+        })
+        # create SO and confirm it
+        uom_days = self.env.ref('uom.product_uom_day')
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_order_timesheet3.id,
+            'product_uom': uom_days.id,
+        })
+        sale_order.action_confirm()
+        task = sale_order_line.task_id
+
+        # let's log some timesheets
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 8,
+            'employee_id': self.employee_manager.id,
+        })
+
+        sale_order._create_invoices()
+        last_message_id = self.env['mail.message'].search([('model', '=', 'sale.order'), ('res_id', '=', sale_order.id)], limit=1).id or 0
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        message_sent = self.env['mail.message'].search([
+            ('id', '>', last_message_id),
+            ('subject', 'like', 'Upsell'),
+            ('model', '=', 'sale.order'),
+            ('res_id', '=', sale_order.id),
+        ])
+
+        self.assertEqual(len(message_sent), 1, 'Sale Timesheet: An email should always be sent to the saleperson when the state of the sale order change to upselling')
+
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        message_sent = self.env['mail.message'].search([
+            ('id', '>', last_message_id),
+            ('subject', 'like', 'Upsell'),
+            ('model', '=', 'sale.order'),
+            ('res_id', '=', sale_order.id),
+        ])
+        self.assertEqual(len(message_sent), 1, 'Sale Timesheet: An email should only be sent to the saleperson when the state of the sale order change to upselling')
+
+        sale_order = sale_order.copy()
+        sale_order.action_confirm()
+        task = sale_order.order_line.task_id
+
+        # let's log some timesheets
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 8,
+            'employee_id': self.employee_manager.id,
+        })
+
+        sale_order._create_invoices()
+        last_message_id = self.env['mail.message'].search([('model', '=', 'sale.order'), ('res_id', '=', sale_order.id)], limit=1).id or 0
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
+        message_sent = self.env['mail.message'].search([
+            ('id', '>', last_message_id),
+            ('subject', 'like', 'Upsell'),
+            ('model', '=', 'sale.order'),
+            ('res_id', '=', sale_order.id),
+        ])
+
+        self.assertEqual(len(message_sent), 1, 'Sale Timesheet: An email should always be sent to the saleperson when the state of the sale order change to upselling')
+
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 5,
+            'employee_id': self.employee_user.id,
+        })
+
+        message_sent = self.env['mail.message'].search([
+            ('id', '>', last_message_id),
+            ('subject', 'like', 'Upsell'),
+            ('model', '=', 'sale.order'),
+            ('res_id', '=', sale_order.id),
+        ])
+        self.assertEqual(len(message_sent), 1, 'Sale Timesheet: An email should only be sent to the saleperson when the state of the sale order change to upselling')
+
     def test_unlink_timesheet(self):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,

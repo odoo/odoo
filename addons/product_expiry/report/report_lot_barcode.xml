@@ -21,50 +21,50 @@
 
 <template id="label_lot_template_view_expiry" inherit_id="stock.label_lot_template_view">
     <xpath expr="//t[@name='datamatrix_lot']" position="before">
-        <t t-if="lot.use_expiration_date">
-            <t t-if="lot.use_date">
-                <t t-set="final_barcode" t-value="(final_barcode or '') + '15' + lot.use_date.strftime('%y%m%d')"/>
+        <t t-if="lot['lot_record'].use_expiration_date">
+            <t t-if="lot['lot_record'].use_date">
+                <t t-set="final_barcode" t-value="(final_barcode or '') + '15' + lot['lot_record'].use_date.strftime('%y%m%d')"/>
 ^FO100,150
-^A0N,44,33^FDBest before: <t t-out="lot.use_date" t-options='{"widget": "date"}'/>^FS
+^A0N,44,33^FDBest before: <t t-out="lot['lot_record'].use_date" t-options='{"widget": "date"}'/>^FS
             </t>
-            <t t-if="lot.expiration_date">
-                <t t-set="final_barcode" t-value="(final_barcode or '') + '17' + lot.expiration_date.strftime('%y%m%d')"/>
-                    <t t-if="not lot.use_date">
+            <t t-if="lot['lot_record'].expiration_date">
+                <t t-set="final_barcode" t-value="(final_barcode or '') + '17' + lot['lot_record'].expiration_date.strftime('%y%m%d')"/>
+                    <t t-if="not lot['lot_record'].use_date">
 ^FO100,150
                     </t>
                     <t t-else="">
 ^FO100,200
                     </t>
-^A0N,44,33^FDUse by: <t t-out="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
             </t>
         </t>
     </xpath>
     <xpath expr="//t[@name='code128_barcode']" position="before">
-        <t t-elif="lot.use_expiration_date and (lot.use_date or lot.expiration_date)">
+        <t t-elif="lot['lot_record'].use_expiration_date and (lot['lot_record'].use_date or lot['lot_record'].expiration_date)">
 ^FO100,50
-^A0N,44,33^FD<t t-out="lot.product_id.display_name"/>^FS
+^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
 ^FO100,100
-^A0N,44,33^FDLN/SN: <t t-out="lot.name"/>^FS
-            <t t-if="lot.use_date">
+^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
+            <t t-if="lot['lot_record'].use_date">
 ^FO100,150
-^A0N,44,33^FDBest before: <t t-out="lot.use_date" t-options='{"widget": "date"}'/>^FS
-                <t t-if="lot.expiration_date">
+^A0N,44,33^FDBest before: <t t-out="lot['lot_record'].use_date" t-options='{"widget": "date"}'/>^FS
+                <t t-if="lot['lot_record'].expiration_date">
 ^FO100,200
-^A0N,44,33^FDUse by: <t t-out="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
 ^FO100,250^BY3
                 </t>
                 <t t-else="">
 ^FO100,200^BY3
                 </t>
 ^BCN,100,Y,N,N
-^FD<t t-out="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
             </t>
-            <t t-elif="lot.expiration_date">
+            <t t-elif="lot['lot_record'].expiration_date">
 ^FO100,150
-^A0N,44,33^FDUse by: <t t-out="lot.expiration_date" t-options='{"widget": "date"}'/>^FS
+^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
 ^FO100,200^BY3
 ^BCN,100,Y,N,N
-^FD<t t-out="lot.name"/>^FS
+^FD<t t-out="lot['name']"/>^FS
             </t>
         </t>
     </xpath>

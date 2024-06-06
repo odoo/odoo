@@ -3,8 +3,8 @@
 # 	* resource
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Tony Ng, 2023
+# Martin Trigaux, 2023
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +68,7 @@ msgstr "出勤時間不能重疊."
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average Hour per Day"
-msgstr "每天平均小時數"
+msgstr "平均每天工時"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
@@ -126,7 +126,7 @@ msgstr "期間"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
 msgid "Day of Week"
-msgstr "星期"
+msgstr "星期幾"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
@@ -179,12 +179,12 @@ msgstr "第一個"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "第一週"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
 msgid "Friday"
-msgstr "五"
+msgstr "星期五"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -257,12 +257,6 @@ msgstr "如果啟用欄位設定為未啟用，它將允許您隱藏工作時間
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid "Impossible to switch calendar type for the default company schedule."
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:0
-#, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr "在雙週模式的日曆中，所有時期都需要在分區中."
@@ -311,7 +305,7 @@ msgstr "物料"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__0
 msgid "Monday"
-msgstr "一"
+msgstr "星期一"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -424,7 +418,7 @@ msgstr "資源允許您建立和管理資源參與的特定的計劃階段. 您�
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
 msgid "Saturday"
-msgstr "六"
+msgstr "星期六"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -450,7 +444,7 @@ msgstr "第二個"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "第二週"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -495,7 +489,7 @@ msgstr "離開的開始日期"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
 msgid "Sunday"
-msgstr "日"
+msgstr "星期日"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -516,7 +510,7 @@ msgstr "UX用途的技術欄位."
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr ""
+msgstr "目前的星期（%s 至 %s）對應 %s 的那個。"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -547,7 +541,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
 msgid "Thursday"
-msgstr "四"
+msgstr "星期四"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -593,7 +587,7 @@ msgstr "時區調整"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
 msgid "Tuesday"
-msgstr "二"
+msgstr "星期二"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -623,7 +617,7 @@ msgstr "使用者"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
 msgid "Wednesday"
-msgstr "三"
+msgstr "星期三"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -640,7 +634,7 @@ msgstr "週三上午"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Number"
-msgstr ""
+msgstr "週數"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -662,12 +656,12 @@ msgstr "工作資源"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
-msgstr "工作起始"
+msgstr "工作開始"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
 msgid "Work to"
-msgstr "工作截止"
+msgstr "工作至"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
@@ -711,13 +705,13 @@ msgstr "不能刪除週與週之間的分區."
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "first"
-msgstr ""
+msgstr "第一"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "other week"
-msgstr ""
+msgstr "其他星期"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

@@ -6,7 +6,9 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     const { isConnectionError } = require('point_of_sale.utils');
 
     const { debounce } = require("@web/core/utils/timing");
-    const { useListener } = require("@web/core/utils/hooks");
+    const { useListener, useAutofocus } = require("@web/core/utils/hooks");
+    const { useAsyncLockedMethod } = require("point_of_sale.custom_hooks");
+    const { session } = require("@web/session");
 
     const { onWillUnmount, useRef } = owl;
 
@@ -28,8 +30,9 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     class PartnerListScreen extends PosComponent {
         setup() {
             super.setup();
+            useAutofocus({refName: 'search-word-input-partner'});
             useListener('click-save', () => this.env.bus.trigger('save-partner'));
-            useListener('save-changes', this.saveChanges);
+            useListener('save-changes', useAsyncLockedMethod(this.saveChanges));
             this.searchWordInputRef = useRef('search-word-input-partner');
 
             // We are not using useState here because the object
@@ -89,8 +92,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                 );
                 if (indexOfSelectedPartner !== -1) {
                     res.splice(indexOfSelectedPartner, 1);
-                    res.unshift(this.state.selectedPartner);
                 }
+                res.unshift(this.state.selectedPartner);
             }
             return res
         }
@@ -150,10 +153,11 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             this.activateEditMode();
         }
         createPartner() {
-            // initialize the edit screen with default details about country & state
+            // initialize the edit screen with default details about country, state & lang
             this.state.editModeProps.partner = {
                 country_id: this.env.pos.company.country_id,
                 state_id: this.env.pos.company.state_id,
+                lang: session.user_context.lang,
             }
             this.activateEditMode();
         }
@@ -164,7 +168,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                     method: 'create_from_ui',
                     args: [event.detail.processedChanges],
                 });
-                await this.env.pos.load_new_partners();
+                await this.env.pos._loadPartners([partnerId]);
                 this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
                 this.confirm();
             } catch (error) {
@@ -197,8 +201,11 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             let domain = [];
             const limit = 30;
             if(this.state.query) {
-                domain = ['|', ["name", "ilike", this.state.query + "%"],
-                               ["parent_name", "ilike", this.state.query + "%"]];
+                const search_fields = ["name", "parent_name", "phone_mobile_search", "email"];
+                domain = [
+                    ...Array(search_fields.length - 1).fill('|'),
+                    ...search_fields.map(field => [field, "ilike", this.state.query + "%"])
+                ];
             }
             const result = await this.env.services.rpc(
                 {

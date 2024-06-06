@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -745,16 +746,19 @@ class TestAccessRightsUnlink(TestHrHolidaysAccessRightsCommon):
         leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_confirm_in_past_by_user(self):
-        """ A simple user cannot delete its leave in the past"""
+        """ A simple user cannot delete past leaves, but can delete today's leave"""
         values = {
             'name': 'Random Leave',
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.leave_type.id,
             'state': 'confirm',
         }
-        leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=-4), 1, values)
-        with self.assertRaises(UserError), self.cr.savepoint():
-            leave.with_user(self.user_employee.id).unlink()
+        with freeze_time('2024-5-23 13:00:00'):
+            other_leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(hours=-4), 1, values)
+            other_leave.with_user(self.user_employee.id).unlink()
+            leave = self.request_leave(self.user_employee_id, datetime.now() + relativedelta(days=-4), 1, values)
+            with self.assertRaises(UserError), self.cr.savepoint():
+                leave.with_user(self.user_employee.id).unlink()
 
     def test_leave_unlink_validate_by_user(self):
         """ A simple user cannot delete its leave in validate state"""

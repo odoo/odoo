@@ -28,37 +28,37 @@
     <record id="hr_employee_comp_rule" model="ir.rule">
         <field name="name">Employee multi company rule</field>
         <field name="model_id" ref="model_hr_employee"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_dept_comp_rule" model="ir.rule">
         <field name="name">Department multi company rule</field>
         <field name="model_id" ref="model_hr_department"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_employee_public_comp_rule" model="ir.rule">
         <field name="name">Employee multi company rule</field>
         <field name="model_id" ref="model_hr_employee_public"/>
-        <field name="domain_force">['|',('company_id', '=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_job_comp_rule" model="ir.rule">
         <field name="name">Job multi company rule</field>
         <field name="model_id" ref="model_hr_job"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_plan_company_rule" model="ir.rule">
         <field name="name">Plan multi-company rule</field>
         <field name="model_id" ref="model_hr_plan"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="hr_plan_activity_type_company_rule" model="ir.rule">
         <field name="name">Plan Activity Type multi-company rule</field>
         <field name="model_id" ref="model_hr_plan_activity_type"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 </data>
 </odoo>

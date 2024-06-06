@@ -27,4 +27,6 @@ class PrintPreNumberedChecks(models.TransientModel):
         for payment in payments:
             payment.check_number = '%0{}d'.format(number_len) % check_number
             check_number += 1
-        return payments.do_print_checks()
+        checks_action = payments.do_print_checks()
+        checks_action.update({'close_on_report_download': True})
+        return checks_action

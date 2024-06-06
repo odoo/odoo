@@ -551,6 +551,40 @@ class TestVariantsNoCreate(ProductAttributesCommon):
         # no_variant attribute should not appear on the variant
         self.assertNotIn(self.size_attribute_s, template.product_variant_ids.product_template_attribute_value_ids.product_attribute_value_id)
 
+    def test_unarchive_multiple_products_with_variants(self):
+        product_attribut = self.env['product.attribute'].create({
+            'name': 'Color',
+            'sequence': 1,
+            'create_variant': 'dynamic',
+        })
+        attr_value = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': product_attribut.id,
+            'sequence': 1,
+        })
+        first_product = self.env['product.template'].create({
+            'name': 'Sofa',
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': product_attribut.id,
+                'value_ids': [(6, 0, [attr_value.id])],
+            })]
+        })
+        second_product = first_product.copy({
+            'product_variant_ids': [(0, 0, {
+            'name': 'Sofa',
+            })]
+        })
+
+        products = first_product + second_product
+        products.action_archive()
+        self.assertFalse(first_product.active)
+        self.assertFalse(second_product.active)
+        self.assertFalse(second_product.product_variant_ids)
+        products.action_unarchive()
+        # check products should be unarchived successfully.
+        self.assertTrue(first_product.active)
+        self.assertTrue(second_product.active)
+        self.assertTrue(second_product.product_variant_ids)
 
 @tagged('post_install', '-at_install')
 class TestVariantsManyAttributes(TransactionCase):
@@ -1030,6 +1064,8 @@ class TestVariantsArchive(ProductVariantsCommon):
         Product._revert_method('unlink')
 
     def test_name_search_dynamic_attributes(self):
+        # To be able to test dynamic variant "variants" feature must be set up
+        self.env.user.write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
         dynamic_attr = self.env['product.attribute'].create({
             'name': 'Dynamic',
             'create_variant': 'dynamic',
@@ -1401,6 +1437,7 @@ class TestVariantsExclusion(ProductAttributesCommon):
             )
 
         cls.smartphone_s = get_ptav(cls.smartphone, cls.size_attribute_s)
+        cls.smartphone_l = get_ptav(cls.smartphone, cls.size_attribute_l)
         cls.smartphone_256 = get_ptav(cls.smartphone, cls.storage_attr_value_256)
         cls.smartphone_128 = get_ptav(cls.smartphone, cls.storage_attr_value_128)
 
@@ -1471,3 +1508,32 @@ class TestVariantsExclusion(ProductAttributesCommon):
             'exclude_for': [(2, self.smartphone_s.exclude_for.ids[0], 0)]
         })
         self.assertEqual(len(self.smartphone.product_variant_ids), 3, 'With one exclusion, the smartphone should have 3 active different variants')
+
+    @mute_logger('odoo.models.unlink')
+    def test_exclusions_crud(self):
+        """ Make sure that exclusions creation, update & delete are correctly handled.
+
+        Exclusions updates are not necessarily done from a specific template.
+        """
+        PTAE = self.env['product.template.attribute.exclusion']
+
+        exclude = PTAE.create({
+            'product_tmpl_id': self.smartphone.id,
+            'product_template_attribute_value_id': self.smartphone_s.id,
+            'value_ids': [Command.set(self.smartphone_256.ids)]
+        })
+        self.assertEqual(len(self.smartphone.product_variant_ids), 3)
+        self.assertNotIn(
+            self.smartphone_s + self.smartphone_256,
+            [product.product_template_attribute_value_ids for product in self.smartphone.product_variant_ids],
+        )
+
+        exclude.value_ids = [Command.set(self.smartphone_128.ids)]
+        self.assertEqual(len(self.smartphone.product_variant_ids), 3)
+        self.assertNotIn(
+            self.smartphone_s + self.smartphone_128,
+            [product.product_template_attribute_value_ids for product in self.smartphone.product_variant_ids],
+        )
+
+        exclude.unlink()
+        self.assertEqual(len(self.smartphone.product_variant_ids), 4)

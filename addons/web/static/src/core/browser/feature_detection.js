@@ -15,6 +15,15 @@ export function isBrowserChrome() {
     return browser.navigator.userAgent.includes("Chrome");
 }
 
+/**
+ * true if the browser is Firefox
+ *
+ * @returns {boolean}
+ */
+export function isBrowserFirefox() {
+    return browser.navigator.userAgent.includes("Firefox");
+}
+
 export function isAndroid() {
     return /Android/i.test(browser.navigator.userAgent);
 }

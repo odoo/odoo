@@ -9,6 +9,7 @@ class StockGenerate(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockGenerate, cls).setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         Product = cls.env['product.product']
         cls.product_serial = Product.create({
             'name': 'Tracked by SN',

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from freezegun import freeze_time
+
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
@@ -190,6 +192,85 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         })
         cls.move_2.action_post()
 
+        analytic_plan_1, analytic_plan_2 = cls.env['account.analytic.plan'].create([
+            {'name': 'Plan Test 1', 'company_id': False},
+            {'name': 'Plan Test 2', 'company_id': False},
+        ])
+        cls.analytic_account_1, cls.analytic_account_2 = cls.env['account.analytic.account'].create([
+            {
+                'name': 'test_analytic_account_1',
+                'plan_id': analytic_plan_1.id,
+                'code': 'TESTEUH1'
+            },
+            {
+                'name': 'test_analytic_account_2',
+                'plan_id': analytic_plan_2.id,
+                'code': 'TESTEUH2'
+            },
+        ])
+
+    @freeze_time('2024-03-13')
+    def test_transfer_default_tax(self):
+        """ Make sure default taxes on accounts are not computed on transfer moves
+        """
+        account_with_tax = self.env['account.account'].create({
+            'name': 'Auto Taxed',
+            'code': 'autotaxed',
+            'account_type': 'expense',
+            'tax_ids': [Command.link(self.company_data['default_tax_purchase'].id)],
+        })
+        expense_accrual_account = self.env['account.account'].create({
+            'name': 'Accrual Expense Account',
+            'code': '234567',
+            'account_type': 'expense',
+            'reconcile': True,
+        })
+        move_with_tax = self.env['account.move'].create({
+            'journal_id': self.journal.id,
+            'line_ids': [
+                Command.create({
+                    'account_id': account_with_tax.id,
+                    'balance': 400,
+                }),
+                Command.create({
+                    'account_id': self.payable_account.id,
+                    'balance': -460,
+                }),
+            ]
+        })
+        move_with_tax.action_post()
+
+        self.assertRecordValues(move_with_tax.line_ids, [
+            {'balance': 400, 'account_id': account_with_tax.id},
+            {'balance': -460, 'account_id': self.payable_account.id},
+            {'balance': 60, 'account_id': self.company_data['default_account_tax_purchase'].id},
+        ])
+
+        # Open the transfer wizard
+
+        # We use a form to pass the context properly to the depends_context move_line_ids field
+        context = {'active_model': 'account.move.line', 'active_ids': move_with_tax.line_ids[0].ids}
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_period'
+            wizard_form.date = '2019-05-01'
+            wizard_form.journal_id = self.company_data['default_journal_misc']
+            wizard_form.expense_accrual_account = expense_accrual_account
+        wizard = wizard_form.save()
+
+        # Create the adjustment moves.
+        wizard_res = wizard.do_action()
+
+        # Check that the adjustment moves only contain the expense account and not the linked taxes.
+        created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+
+        self.assertRecordValues(created_moves[0].line_ids, [
+            {'balance': 400, 'account_id': account_with_tax.id},
+            {'balance': -400, 'account_id': expense_accrual_account.id},
+        ])
+        self.assertRecordValues(created_moves[1].line_ids, [
+            {'balance': -400, 'account_id': account_with_tax.id},
+            {'balance': 400, 'account_id': expense_accrual_account.id},
+        ])
 
     def test_transfer_wizard_reconcile(self):
         """ Tests reconciliation when doing a transfer with the wizard
@@ -346,3 +427,88 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
         adjustment_move = created_moves[1]  # There are 2 created moves; the adjustment move is the second one.
         self.assertRecordValues(adjustment_move, [{'date': fields.Date.to_date('2019-03-31')}])
+
+    def test_transfer_wizard_amount_currency_is_zero(self):
+        """ Tests that the transfer wizard create a transfer move when the amount_currency is zero.
+        """
+        move = self.env['account.move'].create({
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'date': '2019-01-01',
+            'line_ids': [
+                Command.create({'account_id': self.accounts[2].id, 'currency_id': self.company.currency_id.id, 'amount_currency': 1000, 'debit': 1000, }),
+                Command.create({'account_id': self.receivable_account.id, 'currency_id': self.test_currency_1.id, 'amount_currency': 0, 'credit': 1000, }),
+            ]
+        })
+        move.action_post()
+
+        active_move_lines = move.line_ids.filtered(lambda line: line.account_id.id == self.receivable_account.id)
+        context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
+            wizard_form.destination_account_id = self.accounts[0]
+            wizard_form.journal_id = self.company_data['default_journal_misc']
+
+        wizard = wizard_form.save()
+
+        transfer_move_id = wizard.do_action()['res_id']
+        transfer_move = self.env['account.move'].browse(transfer_move_id)
+
+        source_line = transfer_move.line_ids.filtered(lambda x: x.account_id == self.receivable_account)
+        destination_line = transfer_move.line_ids.filtered(lambda x: x.account_id == self.accounts[0])
+
+        self.assertRecordValues(source_line, [
+            {'account_id': self.receivable_account.id, 'amount_currency': 0.0, 'currency_id': self.test_currency_1.id, 'balance': 1000}
+        ])
+        self.assertRecordValues(destination_line, [
+              {'account_id': self.accounts[0].id, 'amount_currency': 0.0, 'currency_id': self.test_currency_1.id, 'balance': -1000}
+        ])
+
+    def test_transfer_wizard_analytic(self):
+        """ Tests that the analytic distribution is transmitted when doing a transfer with the wizard """
+        invoice = self.env['account.move'].create([
+            {
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2017-01-01',
+                'journal_id': self.company_data['default_journal_sale'].id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'quantity': 1,
+                        'price_unit': 1000.0,
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'analytic_distribution': {self.analytic_account_1.id: 100},
+                    }),
+                    Command.create({
+                        'quantity': 1,
+                        'price_unit': 2000.0,
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'analytic_distribution': {self.analytic_account_1.id: 50, self.analytic_account_2.id: 50},
+                    }),
+                    Command.create({
+                        'quantity': 1,
+                        'price_unit': 1000.0,
+                        'account_id': self.company_data['default_account_revenue'].id,
+                        'analytic_distribution': False,
+                    }),
+                ],
+            }
+        ])
+        invoice.action_post()
+        wizard = self.env['account.automatic.entry.wizard'].with_context(
+            active_model='account.move.line',
+            active_ids=invoice.invoice_line_ids.ids
+        ).create({
+            'action': 'change_account',
+            'date': '2018-01-01',
+            'journal_id': self.journal.id,
+            'destination_account_id': self.receivable_account.id,
+        })
+
+        transfer_move = self.env['account.move'].browse(wizard.do_action()['res_id'])
+
+        self.assertRecordValues(transfer_move.line_ids, [
+            {'balance': -4000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 25}},
+            {'balance': 1000, 'analytic_distribution': {str(self.analytic_account_1.id): 100}},
+            {'balance': 2000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 50}},
+            {'balance': 1000, 'analytic_distribution': False},
+        ])

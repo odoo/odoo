@@ -68,7 +68,7 @@
 .o_field_widget {
     // Default display and alignment of widget and internal <input/>
     text-align: inherit;
-    display: inline-block;
+    display: var(--fieldWidget-display, inline-block);
 
     textarea.o_input,
     input.o_input {

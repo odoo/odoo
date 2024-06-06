@@ -2,7 +2,8 @@
 <template>
     <div t-name='res_config_dev_tool' owl="1">
         <div id="developer_tool">
-            <SettingsContainer title="'Developer Tools'" class="'row mt16 o_settings_container'">
+            <t t-set="title">Developer Tools</t>
+            <SettingsContainer title="title" class="'row mt16 o_settings_container'">
                 <Setting class="'col-12 col-lg-6 o_setting_box'" id="devel_tool">
                     <div class="o_setting_right_pane">
                         <a t-if="!isDebug" class="d-block" href="?debug=1">Activate the developer mode</a>

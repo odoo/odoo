@@ -39,6 +39,7 @@ class PaymentTransaction(models.Model):
             'access_token': payment_utils.generate_access_token(
                 processing_values['reference'],
                 converted_amount,
+                self.currency_id.id,
                 processing_values['partner_id']
             )
         }
@@ -98,6 +99,9 @@ class PaymentTransaction(models.Model):
             endpoint='/payments',
             payload=data,
             method='POST',
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self, scope='payment_request_token'
+            )
         )
 
         # Handle the payment request response

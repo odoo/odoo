@@ -258,15 +258,16 @@ class Warehouse(models.Model):
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
                 to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
                 if to_add:
-                    existing_route = Route.search([
+                    existing_routes = Route.search([
                         ('supplied_wh_id', '=', warehouse.id),
-                        ('supplier_wh_id', 'in', to_remove.ids),
+                        ('supplier_wh_id', 'in', to_add.ids),
                         ('active', '=', False)
                     ])
-                    if existing_route:
-                        existing_route.toggle_active()
-                    else:
-                        warehouse.create_resupply_routes(to_add)
+                    if existing_routes:
+                        existing_routes.toggle_active()
+                    remaining_to_add = to_add - existing_routes.supplier_wh_id
+                    if remaining_to_add:
+                        warehouse.create_resupply_routes(remaining_to_add)
                 if to_remove:
                     to_disable_route_ids = Route.search([
                         ('supplied_wh_id', '=', warehouse.id),
@@ -341,10 +342,14 @@ class Warehouse(models.Model):
 
         for picking_type, values in data.items():
             if self[picking_type]:
+                self[picking_type].sudo().sequence_id.write(sequence_data[picking_type])
                 self[picking_type].write(values)
             else:
                 data[picking_type].update(create_data[picking_type])
+                existing_sequence = IrSequenceSudo.search_count([('company_id', '=', sequence_data[picking_type]['company_id']), ('name', '=', sequence_data[picking_type]['name'])], limit=1)
                 sequence = IrSequenceSudo.create(sequence_data[picking_type])
+                if existing_sequence:
+                    sequence.name = _("%(name)s (copy)(%(id)s)", name=sequence.name, id=str(sequence.id))
                 values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
                 warehouse_data[picking_type] = PickingType.create(values).id
 
@@ -371,12 +376,20 @@ class Warehouse(models.Model):
         return True
 
     def _find_global_route(self, xml_id, route_name):
+        return self._find_or_create_global_route(xml_id, route_name, create=False)
+
+    def _find_or_create_global_route(self, xml_id, route_name, create=True):
         """ return a route record set from an xml_id or its name. """
-        route = self.env.ref(xml_id, raise_if_not_found=False)
+        data_route = route = self.env.ref(xml_id, raise_if_not_found=False)
+        company = self.company_id[:1] or self.env.company
+        if not route or (route.company_id and route.company_id != company):
+            route = self.env['stock.route'].with_context(active_test=False).search([
+                ('name', 'like', route_name), ('company_id', 'in', [False, company.id])
+            ], order='company_id', limit=1)
         if not route:
-            route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
-        if not route:
-            raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            if not data_route or not create:
+                raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            route = data_route.copy({'name': data_route.name, 'company_id': company.id, 'rule_ids': False})
         return route
 
     def _get_global_route_rules_values(self):
@@ -408,7 +421,7 @@ class Warehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'propagate_carrier': True,
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {
                     'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
@@ -779,7 +792,7 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
             'supplier_wh_id': supplier_warehouse.id,
-            'company_id': self.company_id.id,
+            'company_id': (self.company_id & supplier_warehouse.company_id).id,
         }
 
     # Pull / Push tools
@@ -1069,7 +1082,7 @@ class Warehouse(models.Model):
     @api.returns('self')
     def _get_all_routes(self):
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
-        routes |= self.env["stock.route"].search([('supplied_wh_id', 'in', self.ids)])
+        routes |= self.env["stock.route"].with_context(active_test=False).search([('supplied_wh_id', 'in', self.ids)])
         return routes
 
     def action_view_all_routes(self):

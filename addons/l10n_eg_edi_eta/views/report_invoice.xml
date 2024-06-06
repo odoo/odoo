@@ -1,14 +1,14 @@
 <odoo>
     <data>
         <template id="egyptian_invoice" inherit_id="account.report_invoice_document">
-            <xpath expr="//t[@t-set='address']" position="after">
-                <t t-set="information_block">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <div id="qrcode_eg" t-if="o.l10n_eg_qr_code">
                     <p>
-                        <img t-if="o.l10n_eg_qr_code"
-                             style="display:block;"
-                             t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_eg_qr_code, 130, 130)"/>
+                        <strong class="text-center">ETA QR Code</strong>
+                        <img style="display:block;"
+                             t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_eg_qr_code, 130, 130)"/>
                     </p>
-                </t>
+                </div>
             </xpath>
         </template>
     </data>

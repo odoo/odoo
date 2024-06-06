@@ -248,7 +248,7 @@
                 <t t-set="vals" t-value="vals.get('price_vals', {})"/>
                 <cbc:PriceAmount
                         t-att-currencyID="vals['currency'].name"
-                        t-out="format_float(vals.get('price_amount'), vals.get('product_price_dp'))"/>
+                        t-out="vals.get('price_amount')"/>
                 <!-- nbr of item units to which the price applies), i.e.: 1 Dozen = 12 units, not mandatory -->
                 <cbc:BaseQuantity
                         t-att="vals.get('base_quantity_attrs', {})"
@@ -370,6 +370,9 @@
                 <cbc:AllowanceTotalAmount
                     t-att-currencyID="monetary_tot_vals['currency'].name"
                     t-out="format_float(monetary_tot_vals.get('allowance_total_amount'), monetary_tot_vals.get('currency_dp'))"/>
+                <cbc:ChargeTotalAmount
+                    t-att-currencyID="monetary_tot_vals['currency'].name"
+                    t-out="format_float(monetary_tot_vals.get('charge_total_amount'), monetary_tot_vals.get('currency_dp'))"/>
                 <cbc:PrepaidAmount
                     t-att-currencyID="monetary_tot_vals['currency'].name"
                     t-out="format_float(monetary_tot_vals.get('prepaid_amount'), monetary_tot_vals.get('currency_dp'))"/>

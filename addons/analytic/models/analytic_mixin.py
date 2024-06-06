@@ -11,7 +11,6 @@ class AnalyticMixin(models.AbstractModel):
     analytic_distribution = fields.Json(
         'Analytic',
         compute="_compute_analytic_distribution", store=True, copy=True, readonly=False,
-        precompute=True
     )
     # Json non stored to be able to search on analytic_distribution.
     analytic_distribution_search = fields.Json(
@@ -49,25 +48,32 @@ class AnalyticMixin(models.AbstractModel):
         pass
 
     def _search_analytic_distribution(self, operator, value):
-        if operator not in ['=', '!=', 'ilike', 'not ilike'] or not isinstance(value, (str, bool)):
+        if operator == 'in' and isinstance(value, (tuple, list)):
+            account_ids = value
+            operator_inselect = 'inselect'
+        elif operator in ('=', '!=', 'ilike', 'not ilike') and isinstance(value, (str, bool)):
+            operator_name_search = '=' if operator in ('=', '!=') else 'ilike'
+            account_ids = list(self.env['account.analytic.account']._name_search(name=value, operator=operator_name_search))
+            operator_inselect = 'inselect' if operator in ('=', 'ilike') else 'not inselect'
+        else:
             raise UserError(_('Operation not supported'))
-        operator_name_search = '=' if operator in ('=', '!=') else 'ilike'
-        account_ids = list(self.env['account.analytic.account']._name_search(name=value, operator=operator_name_search))
 
         query = f"""
-            SELECT id 
+            SELECT id
             FROM {self._table}
             WHERE analytic_distribution ?| array[%s]
         """
-        operator_inselect = 'inselect' if operator in ('=', 'ilike') else 'not inselect'
         return [('id', operator_inselect, (query, [[str(account_id) for account_id in account_ids]]))]
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        for arg in args:
-            if isinstance(arg, (list, tuple)) and arg[0] == 'analytic_distribution' and isinstance(arg[2], str):
-                arg[0] = 'analytic_distribution_search'
+        args = self._apply_analytic_distribution_domain(args)
         return super()._search(args, offset, limit, order, count, access_rights_uid)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        domain = self._apply_analytic_distribution_domain(domain)
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
 
     def write(self, vals):
         """ Format the analytic_distribution float value, so equality on analytic_distribution can be done """
@@ -103,3 +109,11 @@ class AnalyticMixin(models.AbstractModel):
             vals['analytic_distribution'] = vals.get('analytic_distribution') and {
                 account_id: float_round(distribution, decimal_precision) for account_id, distribution in vals['analytic_distribution'].items()}
         return vals
+
+    def _apply_analytic_distribution_domain(self, domain):
+        return [
+            ('analytic_distribution_search', leaf[1], leaf[2])
+            if len(leaf) == 3 and leaf[0] == 'analytic_distribution' and isinstance(leaf[2], (str, tuple, list))
+            else leaf
+            for leaf in domain
+        ]

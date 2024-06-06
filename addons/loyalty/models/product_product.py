@@ -11,7 +11,9 @@ class ProductProduct(models.Model):
     def write(self, vals):
         if not vals.get('active', True) and any(product.active for product in self):
             # Prevent archiving products used for giving rewards
-            rewards = self.env['loyalty.reward'].sudo().search([('discount_line_product_id', 'in', self.ids)], limit=1)
+            rewards = self.env['loyalty.reward'].sudo().search(
+                [('discount_line_product_id', 'in', self.ids), ('active', '=', True)], limit=1
+            )
             if rewards:
                 raise ValidationError(_("This product may not be archived. It is being used for an active promotion program."))
         return super().write(vals)
@@ -26,5 +28,5 @@ class ProductProduct(models.Model):
             raise UserError(_(
                 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
                 " Please archive it instead.",
-                name=product.name
+                name=product.with_context(display_default_code=False).display_name
             ))

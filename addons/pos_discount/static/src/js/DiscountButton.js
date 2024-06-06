@@ -19,7 +19,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                 isInputSelected: true
             });
             if (confirmed) {
-                const val = Math.round(Math.max(0,Math.min(100,parseFloat(payload))));
+                const val = Math.max(0,Math.min(100,parseFloat(payload)));
                 await self.apply_discount(val);
             }
         }

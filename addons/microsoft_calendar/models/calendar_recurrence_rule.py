@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class RecurrenceRule(models.Model):
@@ -28,7 +29,7 @@ class RecurrenceRule(models.Model):
         # modified in Odoo but computed from other fields).
         for recurrence in self.filtered('rrule'):
             values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
-            recurrence.write(dict(values, need_sync_m=False))
+            recurrence.with_context(dont_notify=True).write(dict(values, need_sync_m=False))
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync_m').calendar_event_ids
@@ -100,7 +101,8 @@ class RecurrenceRule(models.Model):
         vals['event_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
-        if self._has_base_event_time_fields_changed(new_event_values):
+        # Edge case:  if the base event was deleted manually in 'self_only' update, skip applying recurrence.
+        if self._has_base_event_time_fields_changed(new_event_values) and (new_event_values['start'] >= self.base_event_id.start):
             # we need to recreate the recurrence, time_fields were modified.
             base_event_id = self.base_event_id
             # We archive the old events to recompute the recurrence. These events are already deleted on Microsoft side.
@@ -120,7 +122,7 @@ class RecurrenceRule(models.Model):
                     | self.env["calendar.event"]._get_recurrent_fields()
             )
             # We avoid to write time_fields because they are not shared between events.
-            self._write_events(dict({
+            self.with_context(dont_notify=True)._write_events(dict({
                 field: value
                 for field, value in new_event_values.items()
                 if field not in time_fields
@@ -134,15 +136,12 @@ class RecurrenceRule(models.Model):
             detached_events.unlink()
 
     def _get_microsoft_sync_domain(self):
-        # Empty rrule may exists in historical data. It is not a desired behavior but it could have been created with
-        # older versions of the module. When synced, these recurrence may come back from Microsoft after database cleaning
-        # and trigger errors as the records are not properly populated.
-        # We also prevent sync of other user recurrent events.
-        domain = [('calendar_event_ids.user_id', '=', self.env.user.id), ('rrule', '!=', False)]
+        # Do not sync Odoo recurrences with Outlook Calendar anymore.
+        domain = expression.FALSE_DOMAIN
         return self._extend_microsoft_domain(domain)
 
     def _cancel_microsoft(self):
-        self.calendar_event_ids._cancel_microsoft()
+        self.calendar_event_ids.with_context(dont_notify=True)._cancel_microsoft()
         super()._cancel_microsoft()
 
     @api.model
@@ -183,3 +182,11 @@ class RecurrenceRule(models.Model):
             )
 
         return new_recurrence
+
+    def _get_event_user_m(self, user_id=None):
+        """ Get the user who will send the request to Microsoft (organizer if synchronized and current user otherwise). """
+        self.ensure_one()
+        event = self._get_first_event()
+        if event:
+            return event._get_event_user_m(user_id)
+        return self.env.user

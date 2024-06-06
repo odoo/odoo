@@ -30,10 +30,16 @@ export function useActiveElement(refName) {
     const uiService = useService("ui");
     const owner = useRef(refName);
 
-    let lastTabableEl, firstTabableEl;
-
     function trapFocus(e) {
-        switch (getActiveHotkey(e)) {
+        const hotkey = getActiveHotkey(e);
+        if (!["tab", "shift+tab"].includes(hotkey)) {
+            return;
+        }
+        const el = e.currentTarget;
+        const tabableEls = getTabableElements(el);
+        const firstTabableEl = tabableEls[0] || el;
+        const lastTabableEl = tabableEls[tabableEls.length - 1] || el;
+        switch (hotkey) {
             case "tab":
                 if (document.activeElement === lastTabableEl) {
                     firstTabableEl.focus();
@@ -66,8 +72,7 @@ export function useActiveElement(refName) {
                      */
                     el.tabIndex = -1;
                 }
-                firstTabableEl = tabableEls[0] || el;
-                lastTabableEl = tabableEls[tabableEls.length - 1] || el;
+                const firstTabableEl = tabableEls[0] || el;
 
                 el.addEventListener("keydown", trapFocus);
 

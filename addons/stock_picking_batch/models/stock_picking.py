@@ -122,14 +122,16 @@ class StockPicking(models.Model):
             picking._find_auto_batch()
         return res
 
-    def _action_done(self):
-        res = super()._action_done()
+    def button_validate(self):
+        res = super().button_validate()
         to_assign_ids = set()
         if self and self.env.context.get('pickings_to_detach'):
             self.env['stock.picking'].browse(self.env.context['pickings_to_detach']).batch_id = False
             to_assign_ids.update(self.env.context['pickings_to_detach'])
 
         for picking in self:
+            if picking.state != 'done':
+                continue
             # Avoid inconsistencies in states of the same batch when validating a single picking in a batch.
             if picking.batch_id and any(p.state != 'done' for p in picking.batch_id.picking_ids):
                 picking.batch_id = None
@@ -238,6 +240,11 @@ class StockPicking(models.Model):
             domain = expression.AND([domain, [('picking_ids.location_dest_id', '=', self.location_dest_id.id)]])
 
         return domain
+
+    def _package_move_lines(self, batch_pack=False):
+        if batch_pack:
+            return super(StockPicking, self.batch_id.picking_ids if self.batch_id else self)._package_move_lines(batch_pack)
+        return super()._package_move_lines(batch_pack)
 
     def assign_batch_user(self, user_id):
         if not user_id:

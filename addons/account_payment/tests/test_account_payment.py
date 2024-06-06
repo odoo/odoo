@@ -2,9 +2,10 @@
 
 from unittest.mock import patch
 
-from odoo.tests import tagged
-
+from odoo import Command
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
+from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -149,3 +150,50 @@ class TestAccountPayment(AccountPaymentCommon):
             [('payment_transaction_id', '=', tx.id)]
         )
         self.assertEqual(payment_count, 0, msg="validation transactions should not create payments")
+
+    def test_prevent_unlink_apml_with_active_provider(self):
+        """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
+        should raise an error.
+        """
+        self.assertEqual(self.dummy_provider.state, 'test')
+        with self.assertRaises(UserError):
+            self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
+
+    def test_provider_journal_assignation(self):
+        """ Test the computation of the 'journal_id' field and so, the link with the accounting side. """
+        def get_payment_method_line(provider):
+            return self.env['account.payment.method.line'].search([
+                ('code', '=', provider.code),
+                ('payment_provider_id', '=', provider.id),
+            ])
+
+        with self.mocked_get_payment_method_information(), self.mocked_get_default_payment_method_id():
+            journal = self.company_data['default_journal_bank']
+            provider = self.provider
+            self.assertRecordValues(provider, [{'journal_id': journal.id}])
+
+            # Test changing the journal.
+            copy_journal = journal.copy()
+            provider.journal_id = copy_journal
+            self.assertRecordValues(provider, [{'journal_id': copy_journal.id}])
+            self.assertRecordValues(get_payment_method_line(provider), [{'journal_id': copy_journal.id}])
+
+            # Test duplication of the provider.
+            copy_provider = self.provider.copy()
+            self.assertRecordValues(copy_provider, [{'journal_id': False}])
+            copy_provider.state = 'test'
+            self.assertRecordValues(copy_provider, [{'journal_id': journal.id}])
+
+            # We are able to have both on the same journal...
+            with self.assertRaises(ValidationError):
+                # ...but not having both with the same name.
+                provider.journal_id = journal
+
+            method_line = get_payment_method_line(copy_provider)
+            method_line.name = "dummy (copy)"
+            provider.journal_id = journal
+
+            # You can't have twice the same acquirer on the same journal.
+            copy_provider_pml = get_payment_method_line(copy_provider)
+            with self.assertRaises(ValidationError):
+                journal.inbound_payment_method_line_ids = [Command.update(copy_provider_pml.id, {'payment_provider_id': provider.id})]

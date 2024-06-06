@@ -4,6 +4,7 @@ import Dialog from 'web.Dialog';
 import core from 'web.core';
 import options from 'web_editor.snippets.options';
 import { loadBundle } from "@web/core/assets";
+import { cloneContentEls } from "website.utils";
 
 const _t = core._t;
 
@@ -14,7 +15,8 @@ options.registry.EmbedCode = options.Class.extend({
 
     async editCode() {
         const $container = this.$target.find('.s_embed_code_embedded');
-        const code = $container.html().trim();
+        const templateEl = this.$target[0].querySelector("template.s_embed_code_saved");
+        let embedContent = templateEl.innerHTML.trim();
 
         await loadBundle({
             jsLibs: [
@@ -25,8 +27,10 @@ options.registry.EmbedCode = options.Class.extend({
         });
 
         await new Promise(resolve => {
-            const $content = $(core.qweb.render('website.custom_code_dialog_content'));
-            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], code || '');
+            const $content = $(core.qweb.render('website.custom_code_dialog_content', {
+                contentText: _t(`If you need to add analytics or marketing tags, inject code in your <head> or <body> instead. The option is in the "Theme" tab.`)
+            }));
+            const aceEditor = this._renderAceEditor($content.find('.o_ace_editor_container')[0], embedContent || "");
             const dialog = new Dialog(this, {
                 title: _t("Edit embedded code"),
                 $content,
@@ -35,7 +39,14 @@ options.registry.EmbedCode = options.Class.extend({
                         text: _t("Save"),
                         classes: 'btn-primary',
                         click: async () => {
-                            $container[0].innerHTML = aceEditor.getValue();
+                            embedContent = aceEditor.getValue();
+
+                            // Removes scripts tags from the DOM as we don't
+                            // want them to interfere during edition, but keeps
+                            // them in a `<template>` that will be saved to the
+                            // database.
+                            templateEl.content.replaceChildren(cloneContentEls(embedContent, true));
+                            $container[0].replaceChildren(cloneContentEls(embedContent));
                         },
                         close: true,
                     },

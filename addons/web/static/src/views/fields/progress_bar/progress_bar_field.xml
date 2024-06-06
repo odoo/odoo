@@ -5,7 +5,7 @@
         <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
             <div t-if="props.title" class="o_progressbar_title text-nowrap pe-1"><t t-esc="props.title"/></div>
             <div class="o_progress align-middle overflow-hidden" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
-                <div t-attf-class="{{ state.currentValue > state.maxValue ? 'bg-secondary' : 'bg-primary' }} h-100" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
+                <div t-attf-class="{{ state.currentValue > state.maxValue ? 'o_progress_exceed' : '' }} h-100" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
             </div>
             <div class="o_progressbar_value d-flex">
                 <t t-if="isPercentage">
@@ -15,6 +15,7 @@
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
+                        autocomplete="off"
                         t-att-value="formatCurrentValue() or ''"
                         t-att-required="props.required"
                         t-on-change="onCurrentValueChange"
@@ -32,6 +33,7 @@
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
+                        autocomplete="off"
                         t-att-value="formatCurrentValue()"
                         t-on-change="onCurrentValueChange"
                         t-on-input="onCurrentValueInput"
@@ -46,6 +48,7 @@
                         class="o_input h-100 text-center"
                         type="text"
                         inputmode="decimal"
+                        autocomplete="off"
                         t-att-value="formatMaxValue()"
                         t-on-change="onMaxValueChange"
                         t-on-input="onMaxValueInput"

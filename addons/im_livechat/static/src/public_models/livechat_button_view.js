@@ -61,7 +61,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
-            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').hide();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').hide();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field')
                 .removeClass('d-none')
@@ -82,17 +82,18 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout) {
                 clearTimeout(this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout);
             }
+            if (this.messaging.publicLivechatGlobal.publicLivechat.uuid) {
+                const postedMessage = await this.messaging.rpc({
+                    route: '/chatbot/restart',
+                    params: {
+                        channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                        chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
+                    },
+                });
 
-            const postedMessage = await this.messaging.rpc({
-                route: '/chatbot/restart',
-                params: {
-                    channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-                    chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
-                },
-            });
-
-            if (postedMessage) {
-                this.messaging.publicLivechatGlobal.chatbot.addMessage(postedMessage);
+                if (postedMessage) {
+                    this.messaging.publicLivechatGlobal.chatbot.addMessage(postedMessage);
+                }
             }
 
             this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });
@@ -107,20 +108,6 @@ registerModel({
         closeChat() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
             deleteCookie('im_livechat_session');
-        },
-        /**
-         * Called when the visitor leaves the livechat chatter the first time (first click on X button)
-         * this will deactivate the mail_channel, notify operator that visitor has left the channel.
-         */
-        leaveSession() {
-            const cookie = getCookie('im_livechat_session');
-            if (cookie) {
-                const channel = JSON.parse(cookie);
-                if (channel.uuid) {
-                    this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
-                }
-                deleteCookie('im_livechat_session');
-            }
         },
         openChat() {
             if (this.isOpenChatDebounced) {

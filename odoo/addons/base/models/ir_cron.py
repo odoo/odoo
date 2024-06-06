@@ -12,10 +12,15 @@ import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+from psycopg2 import sql
+
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.get_manifest('base')['version']
 MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
+
+# custom function to call instead of NOTIFY postgresql command (opt-in)
+ODOO_NOTIFY_FUNCTION = os.environ.get('ODOO_NOTIFY_FUNCTION')
 
 
 class BadVersion(Exception):
@@ -46,6 +51,7 @@ class ir_cron(models.Model):
     _name = "ir.cron"
     _order = 'cron_name'
     _description = 'Scheduled Actions'
+    _allow_sudo_commands = False
 
     ir_actions_server_id = fields.Many2one(
         'ir.actions.server', 'Server action',
@@ -80,10 +86,23 @@ class ir_cron(models.Model):
             self = self.with_context(default_state='code')
         return super(ir_cron, self).default_get(fields_list)
 
+    @api.onchange('active', 'interval_number')
+    def _onchange_interval_number(self):
+        if self.active and self.interval_number <= 0:
+            self.active = False
+            return {'warning': {
+                'title': _("Scheduled action disabled"),
+                'message': _("This scheduled action has been disabled because its interval number is not a strictly positive value.")}
+            }
+
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
+            cron._try_lock()
+            _logger.info('Manually starting job `%s`.', cron.name)
             cron.with_user(cron.user_id).with_context({'lastcall': cron.lastcall}).ir_actions_server_id.run()
+            self.env.flush_all()
+            _logger.info('Job `%s` done.', cron.name)
             cron.lastcall = fields.Datetime.now()
         return True
 
@@ -114,6 +133,7 @@ class ir_cron(models.Model):
                     # take into account overridings of _process_job() on that database
                     registry = odoo.registry(db_name)
                     registry[cls._name]._process_job(db, cron_cr, job)
+                    cron_cr.commit()
                     _logger.debug("job %s updated and released", job_id)
 
         except BadVersion:
@@ -289,6 +309,11 @@ class ir_cron(models.Model):
         # 3: now
         # 4: future_nextcall, the cron nextcall as seen from now
 
+        if job['interval_number'] <= 0:
+            _logger.error("Job %s %r has been disabled because its interval number is null or negative.", job['id'], job['cron_name'])
+            cron_cr.execute("UPDATE ir_cron SET active=false WHERE id=%s", [job['id']])
+            return
+
         with cls.pool.cursor() as job_cr:
             lastcall = fields.Datetime.to_datetime(job['lastcall'])
             interval = _intervalTypes[job['interval_type']](job['interval_number'])
@@ -346,8 +371,6 @@ class ir_cron(models.Model):
               AND call_at < (now() at time zone 'UTC')
         """, [job['id']])
 
-        cron_cr.commit()
-
     @api.model
     def _callback(self, cron_name, server_action_id, job_id):
         """ Run the method associated to a given job. It takes care of logging
@@ -366,6 +389,7 @@ class ir_cron(models.Model):
             if _logger.isEnabledFor(logging.DEBUG):
                 start_time = time.time()
             self.env['ir.actions.server'].browse(server_action_id).run()
+            self.env.flush_all()
             _logger.info('Job `%s` done.', cron_name)
             if start_time and _logger.isEnabledFor(logging.DEBUG):
                 end_time = time.time()
@@ -503,13 +527,18 @@ class ir_cron(models.Model):
         ir_cron modification and on trigger creation (regardless of call_at)
         """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
-            cr.execute('NOTIFY cron_trigger, %s', [self.env.cr.dbname])
+            if ODOO_NOTIFY_FUNCTION:
+                query = sql.SQL("SELECT {}('cron_trigger', %s)").format(sql.Identifier(ODOO_NOTIFY_FUNCTION))
+            else:
+                query = "NOTIFY cron_trigger, %s"
+            cr.execute(query, [self.env.cr.dbname])
         _logger.debug("cron workers notified")
 
 
 class ir_cron_trigger(models.Model):
     _name = 'ir.cron.trigger'
     _description = 'Triggered actions'
+    _allow_sudo_commands = False
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()

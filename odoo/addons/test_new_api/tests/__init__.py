@@ -15,3 +15,5 @@ from . import test_domain
 from . import test_schema
 from . import test_company_checks
 from . import test_unlink
+from . import test_views
+from . import test_autovacuum

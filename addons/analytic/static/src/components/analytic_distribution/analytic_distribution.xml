@@ -16,9 +16,11 @@
         <div class="analytic_distribution_popup o-dropdown-menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
             <div class="popover-header sticky-top">
                 <div class="d-flex">
-                    <div class="h5 mt-2 me-auto">Analytic</div>
+                    <div class="h5 mt-2 me-auto">
+                        Analytic
+                        <span t-if="tags.length and allowSave" class="btn btn-link" t-on-click="onSaveNew">New Model</span>
+                    </div>
                     <div class="popupButtons">
-                        <span t-if="tags.length and allowSave" class="btn o_button" t-on-click="onSaveNew"><i class="fa fa-save"/></span>
                         <span class="o_button ms-2 cursor-pointer" t-on-click.stop="() => this.closeAnalyticEditor()"><span class="fa fa-close"/></span>
                     </div>
                 </div>

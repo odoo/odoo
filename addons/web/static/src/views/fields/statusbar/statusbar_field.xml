@@ -31,12 +31,12 @@
                         aria-label="Current state"
                         aria-checked="true"
                         aria-current="step"
-                        t-att-disabled="props.isDisabled"
+                        t-att-disabled="isDisabled"
                         t-att-data-value="item.id"
                         t-esc="item.name"
                     />
                 </t>
-                <t t-elif="props.isDisabled">
+                <t t-elif="isDisabled">
                     <button
                         type="button"
                         class="btn o_arrow_button disabled text-uppercase"
@@ -44,7 +44,7 @@
                         role="radio"
                         aria-label="Not active state"
                         aria-checked="false"
-                        t-att-disabled="props.isDisabled"
+                        t-att-disabled="isDisabled"
                         t-att-data-value="item.id"
                         t-esc="item.name"
                     />
