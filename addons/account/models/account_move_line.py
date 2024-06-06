@@ -1223,7 +1223,10 @@ class AccountMoveLine(models.Model):
             line.id for line in self if line.parent_state == "posted"
         ])
         lines_to_modify.analytic_line_ids.unlink()
-        lines_to_modify._create_analytic_lines()
+
+        context = dict(self.env.context)
+        context.pop('default_account_id', None)
+        lines_to_modify.with_context(context)._create_analytic_lines()
 
     @api.onchange('account_id')
     def _inverse_account_id(self):
