@@ -1088,7 +1088,7 @@ class ButtonUserValue extends UserValue {
     }
 }
 
-class WeButton extends UserValueComponent {
+export class WeButton extends UserValueComponent {
     static template = "web_editor.WeButton";
     static StateModel = ButtonUserValue;
     setup() {
@@ -1274,7 +1274,7 @@ class BaseSelectionUserValue extends UserValue {
         return Object.values(this._subValues).find(value => value.isActive());
     }
 }
-class SelectUserValue extends BaseSelectionUserValue {
+export class SelectUserValue extends BaseSelectionUserValue {
 
     static PLACEHOLDER_TEXT = _t("None");
 
@@ -1349,7 +1349,7 @@ class SelectUserValue extends BaseSelectionUserValue {
     }
 }
 const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({});
-class WeSelect extends UserValueComponent {
+export class WeSelect extends UserValueComponent {
     static isContainer = true;
     static template = "web_editor.WeSelect";
     static components = { Dropdown, WeTitle };
@@ -4892,7 +4892,7 @@ export class SnippetOption {
         }
 
         if (requiresReload) {
-            this.trigger_up('request_save', {
+            this.env.requestSave({
                 reloadEditor: true,
                 optionSelector: this.data.selector,
                 url: this.data.reload,
