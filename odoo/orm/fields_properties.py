@@ -10,10 +10,10 @@ from collections import defaultdict
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.osv import expression
 from odoo.tools import SQL, OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
 
+from .domains import Domain
 from .fields import Field, _logger
 from .models import BaseModel
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_property_field_value_name, parse_field_expr
@@ -790,10 +790,9 @@ class PropertiesDefinition(Field):
                 # (e.g. if the module has been uninstalled)
                 # check if the domain is still valid
                 try:
-                    expression.expression(
-                        ast.literal_eval(property_domain),
-                        record.env[property_model],
-                    )
+                    dom = Domain(ast.literal_eval(property_domain))
+                    model = record.env[property_model]
+                    dom.validate(model)
                 except ValueError:
                     del property_definition['domain']
 
