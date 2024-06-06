@@ -2138,6 +2138,42 @@ class StockMove(TransactionCase):
         move_partial._action_assign()
         self.assertEqual(move_partial.state, 'assigned')
 
+    def test_past_quantity(self):
+        """Test the quantity is correct when looking in the past."""
+        # make some stock
+        self.env["stock.quant"].create({
+            "product_id": self.product.id,
+            "location_id": self.stock_location.id,
+            "inventory_quantity": 3.0,
+        }).action_apply_inventory()
+        product_in_past = self.product.with_context(to_date=fields.Date.add(fields.Date.today(), days=-7))
+        self.assertAlmostEqual(self.product.qty_available, 3.0)
+        self.assertAlmostEqual(product_in_past.qty_available, 0)
+
+        # Make a move with a demand of 2, but confirms only 1
+        move_partial = self.env["stock.move"].create({
+            "name": "test_partial",
+            "location_id": self.stock_location.id,
+            "location_dest_id": self.customer_location.id,
+            "product_id": self.product.id,
+            "product_uom": self.uom_unit.id,
+            "product_uom_qty": 2.0,
+        })
+        move_partial._action_confirm()
+        move_partial._action_assign()
+        self.assertEqual(len(move_partial.move_line_ids), 1)
+
+        move_partial.move_line_ids[0].quantity = 1
+        move_partial.picked = True
+        move_partial._action_done(cancel_backorder=True)
+        self.assertEqual(move_partial.state, "done")
+        self.assertAlmostEqual(move_partial.product_qty, 2)
+        self.assertAlmostEqual(move_partial.quantity, 1)
+
+        # Check the quantity in the past is still 0
+        self.assertAlmostEqual(self.product.qty_available, 2.0)
+        self.assertAlmostEqual(product_in_past.qty_available, 0)
+
     def test_product_tree_views(self):
         """Test to make sure that there are no ACLs errors in users with basic permissions."""
         self.env["stock.quant"]._update_available_quantity(self.product, self.stock_location, 3.0)
