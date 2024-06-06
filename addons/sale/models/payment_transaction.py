@@ -113,6 +113,24 @@ class PaymentTransaction(models.Model):
                     confirmed_orders |= quotation
         return confirmed_orders
 
+<<<<<<< saas-17.4
+||||||| c25013c79cf315856799ec009969c083d0c63965
+    def _set_authorized(self, state_message=None, **kwargs):
+        """ Override of payment to confirm the quotations automatically. """
+        super()._set_authorized(state_message=state_message, **kwargs)
+        confirmed_orders = self._check_amount_and_confirm_order()
+        confirmed_orders._send_order_confirmation_mail()
+        (self.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+
+=======
+    def _set_authorized(self, state_message=None, **kwargs):
+        """ Override of payment to confirm the quotations automatically. """
+        txs_to_process = super()._set_authorized(state_message=state_message, **kwargs)
+        confirmed_orders = txs_to_process._check_amount_and_confirm_order()
+        confirmed_orders._send_order_confirmation_mail()
+        (txs_to_process.sale_order_ids - confirmed_orders)._send_payment_succeeded_for_order_mail()
+
+>>>>>>> edd90f214a65aae374a0d6dc183b67d5e7b63eb2
     def _log_message_on_linked_documents(self, message):
         """ Override of payment to log a message on the sales orders linked to the transaction.
 
