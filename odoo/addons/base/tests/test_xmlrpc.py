@@ -157,7 +157,7 @@ class TestAPIKeys(common.HttpCase):
         self.addCleanup(_request_stack.pop)
 
     def test_trivial(self):
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])['uid']
         self.assertEqual(uid, self._user.id)
 
         ctx = model.dispatch('execute_kw', [
@@ -168,7 +168,7 @@ class TestAPIKeys(common.HttpCase):
 
     def test_wrongpw(self):
         # User.authenticate raises but RPC.authenticate returns False
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'aws', {}])
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'aws', {}])['uid']
         self.assertFalse(uid)
         with self.assertRaises(AccessDenied):
             model.dispatch('execute_kw', [
@@ -183,10 +183,10 @@ class TestAPIKeys(common.HttpCase):
         }).make_key()
         k = r['context']['default_key']
 
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'ananananan', {}])['uid']
         self.assertEqual(uid, self._user.id)
 
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', k, {}])
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', k, {}])['uid']
         self.assertEqual(uid, self._user.id)
 
         ctx = model.dispatch('execute_kw', [

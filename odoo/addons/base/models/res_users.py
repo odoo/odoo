@@ -423,6 +423,11 @@ class Users(models.Model):
             self._set_encrypted_password(self.env.user.id, replacement)
         if not valid:
             raise AccessDenied()
+        return {
+            'uid': self.env.user.id,
+            'auth_method': 'password',
+            'mfa': 'default',
+        }
 
     def _compute_password(self):
         for user in self:
@@ -822,7 +827,8 @@ class Users(models.Model):
                     if not user:
                         raise AccessDenied()
                     user = user.with_user(user)
-                    user._check_credentials(credential, user_agent_env)
+                    auth_info = user._check_credentials(credential, user_agent_env)
+                    auth_info['uid'] = user.id
                     tz = request.httprequest.cookies.get('tz') if request else None
                     if tz in pytz.all_timezones and (not user.tz or not user.login_date):
                         # first login or missing tz -> set tz to browser tz
@@ -834,7 +840,7 @@ class Users(models.Model):
 
         _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
 
-        return user.id
+        return auth_info
 
     @classmethod
     def authenticate(cls, db, credential, user_agent_env):
@@ -847,10 +853,10 @@ class Users(models.Model):
            :param dict user_agent_env: environment dictionary describing any
                relevant environment attributes
         """
-        uid = cls._login(db, credential, user_agent_env=user_agent_env)
+        auth_info = cls._login(db, credential, user_agent_env=user_agent_env)
         if user_agent_env and user_agent_env.get('base_location'):
             with cls.pool.cursor() as cr:
-                env = api.Environment(cr, uid, {})
+                env = api.Environment(cr, auth_info['uid'], {})
                 if env.user.has_group('base.group_system'):
                     # Successfully logged in as system user!
                     # Attempt to guess the web base url...
@@ -861,7 +867,7 @@ class Users(models.Model):
                             ICP.set_param('web.base.url', base)
                     except Exception:
                         _logger.exception("Failed to update web.base.url configuration parameter")
-        return uid
+        return auth_info
 
     @classmethod
     @tools.ormcache('uid', 'passwd')

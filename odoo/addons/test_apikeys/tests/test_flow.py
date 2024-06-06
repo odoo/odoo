@@ -35,7 +35,7 @@ class TestAPIKeys(HttpCaseWithUserDemo, TestTOTPMixin):
 
         [(_, [key], [])] = self.messages
 
-        uid = self.xmlrpc_common.authenticate(db, 'demo', key, {})
+        uid = self.xmlrpc_common.authenticate(db, 'demo', key, {})['uid']
         [r] = self.xmlrpc_object.execute_kw(
             db, uid, key,
             'res.users', 'read', [uid, ['login']]
@@ -56,5 +56,5 @@ class TestAPIKeys(HttpCaseWithUserDemo, TestTOTPMixin):
         self.start_tour('/web', 'apikeys_tour_setup', login='demo')
         self.start_tour('/web', 'totp_tour_setup', login='demo')
         [(_, [key], [])] = self.messages  # pylint: disable=unbalanced-tuple-unpacking
-        uid = self.xmlrpc_common.authenticate(db, 'demo', key, {})
+        uid = self.xmlrpc_common.authenticate(db, 'demo', key, {})['uid']
         self.assertEqual(uid, self.env.ref('base.user_demo').id)

@@ -986,7 +986,8 @@ class Session(collections.abc.MutableMapping):
         }
 
         registry = Registry(dbname)
-        pre_uid = registry['res.users'].authenticate(dbname, credential, wsgienv)
+        auth_info = registry['res.users'].authenticate(dbname, credential, wsgienv)
+        pre_uid = auth_info['uid']
 
         self.uid = None
         self.pre_login = credential['login']
@@ -997,7 +998,7 @@ class Session(collections.abc.MutableMapping):
 
             # if 2FA is disabled we finalize immediately
             user = env['res.users'].browse(pre_uid)
-            if credential.get('skip_totp') or not user._mfa_url():
+            if auth_info.get('mfa') == 'skip' or not user._mfa_url():
                 self.finalize(env)
 
         if request and request.session is self and request.db == dbname:
@@ -1007,7 +1008,7 @@ class Session(collections.abc.MutableMapping):
             # request env needs to be able to access the latest changes from the auth layers
             request.env.cr.commit()
 
-        return pre_uid
+        return auth_info
 
     def finalize(self, env):
         """

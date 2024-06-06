@@ -78,9 +78,9 @@ class ResUsers(models.Model):
         visitor_pre_authenticate_sudo = None
         if request and request.env:
             visitor_pre_authenticate_sudo = request.env['website.visitor']._get_visitor_from_request()
-        uid = super(ResUsers, cls).authenticate(db, credential, user_agent_env)
-        if uid and visitor_pre_authenticate_sudo:
-            env = api.Environment(request.env.cr, uid, {})
+        auth_info = super(ResUsers, cls).authenticate(db, credential, user_agent_env)
+        if auth_info.get('uid') and visitor_pre_authenticate_sudo:
+            env = api.Environment(request.env.cr, auth_info['uid'], {})
             user_partner = env.user.partner_id
             visitor_current_user_sudo = env['website.visitor'].sudo().search([
                 ('partner_id', '=', user_partner.id)
@@ -94,4 +94,4 @@ class ResUsers(models.Model):
             else:
                 visitor_pre_authenticate_sudo.access_token = user_partner.id
                 visitor_pre_authenticate_sudo._update_visitor_last_visit()
-        return uid
+        return auth_info

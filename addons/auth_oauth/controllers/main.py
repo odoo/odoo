@@ -151,8 +151,8 @@ class OAuthController(http.Controller):
                 url = '/web#menu_id=%s' % menu
 
             credential = {'login': login, 'password': key, 'type': 'password'}
-            pre_uid = request.session.authenticate(dbname, credential)
-            resp = request.redirect(_get_login_redirect_url(pre_uid, url), 303)
+            auth_info = request.session.authenticate(dbname, credential)
+            resp = request.redirect(_get_login_redirect_url(auth_info['uid'], url), 303)
             resp.autocorrect_location_header = False
 
             # Since /web is hardcoded, verify user has right to land on it

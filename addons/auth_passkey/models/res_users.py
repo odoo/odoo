@@ -71,5 +71,10 @@ class UsersPasskey(models.Model):
                 raise AccessDenied(e.args[0])
             passkey.sign_count = new_sign_count
             credential['skip_totp'] = True
+            return {
+                'uid': self.env.user.id,
+                'auth_method': 'passkey',
+                'mfa': 'skip',
+            }
         else:
             return super()._check_credentials(credential, env)

@@ -85,7 +85,7 @@ class TestTOTP(HttpCaseWithUserDemo, TestTOTPMixin):
         self.start_tour('/', 'totp_login_disabled', login=None)
 
         # 6. Check that rpc is now re-allowed
-        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})
+        uid = self.xmlrpc_common.authenticate(get_db_name(), 'demo', 'demo', {})['uid']
         self.assertEqual(uid, self.user_demo.id)
         [r] = self.xmlrpc_object.execute_kw(
             get_db_name(), uid, 'demo',

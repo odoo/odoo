@@ -31,8 +31,8 @@ class Session(http.Controller):
         if not http.db_filter([db]):
             raise AccessError("Database not found.")
         credential = {'login': login, 'password': password, 'type': 'password'}
-        pre_uid = request.session.authenticate(db, credential)
-        if pre_uid != request.session.uid:
+        auth_info = request.session.authenticate(db, credential)
+        if auth_info['uid'] != request.session.uid:
             # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@) and Android
             # Correct behavior should be to raise AccessError("Renewing an expired session for user that has multi-factor-authentication is not supported. Please use /web/login instead.")
             return {'uid': None}

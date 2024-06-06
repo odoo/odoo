@@ -115,9 +115,9 @@ class Home(http.Controller):
                 for cred_type in CREDENTIAL_PARAMS:
                     if cred_type in request.params:
                         credential[cred_type] = request.params[cred_type]
-                uid = request.session.authenticate(request.db, credential)
+                auth_info = request.session.authenticate(request.db, credential)
                 request.params['login_success'] = True
-                return request.redirect(self._login_redirect(uid, redirect=redirect))
+                return request.redirect(self._login_redirect(auth_info['uid'], redirect=redirect))
             except odoo.exceptions.AccessDenied as e:
                 if e.args == odoo.exceptions.AccessDenied().args:
                     values['error'] = _("Wrong login/password")
