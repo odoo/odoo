@@ -299,7 +299,7 @@ export class ProfilingQwebView extends Component {
             query: query,
         });
         const div = new DOMParser().parseFromString(xml, "text/html").querySelector("div");
-        node.insertBefore(div, node.firstChild);
+        node.appendChild(div);
     }
     _renderInfo(delays, querys, displayDetail, groups, node) {
         const xml = renderToString("web.ProfilingQwebView.info", {
@@ -309,7 +309,7 @@ export class ProfilingQwebView extends Component {
             groups: groups,
         });
         const div = new DOMParser().parseFromString(xml, "text/html").querySelector("div");
-        node.insertBefore(div, node.firstChild);
+        node.appendChild(div);
     }
 
     //--------------------------------------------------------------------------
