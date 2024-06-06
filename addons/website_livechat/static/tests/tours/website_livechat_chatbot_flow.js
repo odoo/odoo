@@ -17,8 +17,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
         },
         {
+            // check second welcome message is posted
             trigger: messagesContain("I help lost visitors find their way."),
-            run: () => {}, // check second welcome message is posted
         },
         {
             trigger: messagesContain("How can I help you?"),
@@ -46,8 +46,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
         },
         {
+            // check ask email step following selecting option A
             trigger: messagesContain("Can you give us your email please?"),
-            run: () => {}, // check ask email step following selecting option A
         },
         {
             trigger: ".o-mail-Composer-input ",
@@ -58,10 +58,10 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: "press Enter",
         },
         {
+            // check invalid email detected and the bot asks for a retry
             trigger: messagesContain(
                 "'No, you won't get my email!' does not look like a valid email. Can you please try again?"
             ),
-            run: () => {}, // check invalid email detected and the bot asks for a retry
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -72,12 +72,12 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: "press Enter",
         },
         {
+            // check that this time the email goes through and we proceed to next step
             trigger: messagesContain("Your email is validated, thank you!"),
-            run: () => {}, // check that this time the email goes through and we proceed to next step
         },
         {
+            // should ask for website now
             trigger: messagesContain("Would you mind providing your website address?"),
-            run: () => {}, // should ask for website now
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -89,7 +89,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             trigger: messagesContain("Great, do you want to leave any feedback for us to improve?"),
-            run: () => {}, // should ask for feedback now
+            // should ask for feedback now
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -116,46 +116,46 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: "press Enter",
         },
         {
+            // last step is displayed
             trigger: messagesContain("Ok bye!"),
-            run: () => {}, // last step is displayed
         },
         {
             trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
             run: "click",
         },
         {
+            // check that conversation is properly restarting
             trigger: messagesContain("Restarting conversation..."),
-            run: () => {}, // check that conversation is properly restarting
         },
         {
+            // check first welcome message is posted
             trigger: messagesContain("Hello! I'm a bot!"),
-            run: () => {}, // check first welcome message is posted
         },
         {
+            // check second welcome message is posted
             trigger: messagesContain("I help lost visitors find their way."),
-            run: () => {}, // check second welcome message is posted
         },
         {
+            // check question_selection message is posted
             trigger: messagesContain("How can I help you?"),
-            run: () => {}, // check question_selection message is posted
         },
         {
             trigger: 'li:contains("Pricing Question")',
             run: "click",
         },
         {
+            // the path should now go towards 'Pricing Question (first part)'
             trigger: messagesContain(
                 "For any pricing question, feel free ton contact us at pricing@mycompany.com"
             ),
-            run: () => {}, // the path should now go towards 'Pricing Question (first part)'
         },
         {
+            // the path should now go towards 'Pricing Question (second part)'
             trigger: messagesContain("We will reach back to you as soon as we can!"),
-            run: () => {}, // the path should now go towards 'Pricing Question (second part)'
         },
         {
+            // should ask for website now
             trigger: messagesContain("Would you mind providing your website address?"),
-            run: () => {}, // should ask for website now
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -166,8 +166,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: "press Enter",
         },
         {
+            // should ask for feedback now
             trigger: messagesContain("Great, do you want to leave any feedback for us to improve?"),
-            run: () => {}, // should ask for feedback now
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -184,7 +184,6 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         {
             // wait for chatbot script to finish.
             trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
-            run() {},
         },
     ],
 });

@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add('website_links_tour', {
         {
             content: "check that existing links are shown",
             trigger: '#o_website_links_recent_links .btn_shorten_url_clipboard',
-            run: function () {}, // it's a check
         },
         {
             content: "fill the URL form input",
@@ -102,7 +101,6 @@ registry.category("web_tour.tours").add('website_links_tour', {
             content: "check click number and ensure graphs are initialized",
             extra_trigger: '.website_links_click_chart .title:contains("1 clicks")',
             trigger: 'canvas',
-            run: function () {}, // it's a check
         },
         {
             content: "click on Last Month tab",

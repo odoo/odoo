@@ -43,7 +43,6 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: ':iframe .o_project_sharing',
     content: 'Wait the project sharing feature be loaded',
-    run: function () {},
 }, {
     trigger: ':iframe button.o-kanban-button-new',
     content: 'Click "Create" button',
@@ -55,7 +54,6 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     content: "Check that task stages cannot be drag and dropped",
     trigger: ':iframe .o_kanban_group:not(.o_group_draggable)',
-    isCheck: true,
 }, {
     trigger: ':iframe .o_kanban_quick_create .o_kanban_edit',
     content: 'Go to the form view of this new task',
@@ -115,7 +113,6 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
 }, {
     trigger: ':iframe .o_list_view',
     content: 'Check the list view',
-    isCheck: true,
 }];
 
 registry.category("web_tour.tours").add('project_sharing_tour', {
@@ -154,6 +151,5 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
     }, {
         trigger: ':iframe i:contains("This task is currently blocked by")',
         content: 'Check that the blocked task is not visible',
-        isCheck: true,
     },
 ]});

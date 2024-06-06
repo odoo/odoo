@@ -65,7 +65,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that the label input contains the new content",
         trigger: '#o_link_dialog_label_input:value(odoo website)',
-        isCheck: true,
     },
     {
         content: "Link tools, should be open, change the url",
@@ -95,7 +94,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "The link should have the secondary button style.",
         trigger: ':iframe .s_text_image a.btn.btn-secondary[href="http://odoo.be"]:contains("odoo website")',
-        isCheck: true,
     },
     // 4. Add link on image.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -132,12 +130,10 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that the second image is not within a link.",
         trigger: ':iframe .s_three_columns .row > :nth-child(2) div > img',
-        isCheck: true,
     },
     {
         content: "Check that link tools appear.",
         trigger: ':iframe .popover div a:contains("http://odoo.com")',
-        isCheck: true,
     },
     // 5. Remove link from image.
     {
@@ -148,7 +144,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that image is not within a link anymore.",
         trigger: ':iframe .s_three_columns .row > :nth-child(1) div > img',
-        isCheck: true,
     },
     // 6. Add mega menu with Cards template and edit URL on text-selected card.
     wTourUtils.clickOnElement("menu link", ":iframe header .nav-item a"),
@@ -180,7 +175,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Wait for drop",
         trigger: '.oe_menu_editor:first-child:contains("Mega")',
-        isCheck: true,
     },
     wTourUtils.clickOnElement("Save button", ".btn-primary:contains('Save')"),
     wTourUtils.clickOnElement("mega menu", ":iframe header .o_mega_menu_toggle"),
@@ -195,7 +189,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check nothing is lost",
         trigger: ":iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
-        isCheck: true,
     },
     // 7. Create new a link from a URL-like text.
     // TODO: the two following steps should be removed.
@@ -208,7 +201,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Be sure that mega menu is hidden",
         trigger: `:iframe #wrapwrap:not(div[data-name="Mega Menu"])`,
-        isCheck: true,
     },
     {
         content: "Replace first paragraph, write a URL",
@@ -233,7 +225,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         // input at input[name=url]
         content: "Check that link was created",
         trigger: ":iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
-        isCheck: true,
     },
     {
         content: "Click on link to open the link tools",
@@ -256,7 +247,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated",
         trigger: ":iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
-        isCheck: true,
     },
     {
         content: "Change it back http",
@@ -271,7 +261,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated",
         trigger: ":iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
-        isCheck: true,
     },
     // 9. Test conversion between http and mailto links.
     {
@@ -283,7 +272,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated and link content is synced with URL",
         trigger: ":iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
-        isCheck: true,
     },
     {
         content: "Change URL back into a http one",
@@ -295,7 +283,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that link was updated and link content is synced with URL",
         trigger: ":iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
-        isCheck: true,
     },
     // 10. Test that UI stays up-to-date.
     // TODO this step which was added by https://github.com/odoo/odoo/commit/9fc283b514d420fdfd66123845d9ec3563572692
@@ -309,7 +296,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Popover should be shown",
         trigger: ":iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
-        isCheck: true,
     },
     */
     {
@@ -337,7 +323,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that links's href was updated",
         trigger: ":iframe .s_text_image p a[href='http://callmemaybe.com/shop']:contains('callmemaybe.com/shop')",
-        isCheck: true,
     },
     */
     // TODO this step is disabled for now because it is a cause of race
@@ -348,7 +333,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check popover content is up-to-date",
         trigger: ":iframe .popover div a:contains('http://callmemaybe.com/shop')",
-        isCheck: true,
     },
     */
     // TODO this step is disabled for now because writing "/shop" in above steps
@@ -375,7 +359,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Wait the sidebar is openend",
         trigger: `we-title:contains(Inline text)`,
         extra_trigger: `input#o_link_dialog_url_input`,
-        isCheck: true,
     },
     {
         content: "Enter partial URL",
@@ -392,7 +375,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check that links's href and label were updated",
         trigger: ":iframe .s_text_image p a[href='/contactus']:contains('/contactus')",
-        isCheck: true,
     },
     // 12. Add a link leading to a 404 page
     {
@@ -412,7 +394,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Check popover content is up-to-date (2)",
         trigger: ":iframe .popover div a:contains('/this-address-does-not-exist')",
-        isCheck: true,
     },
     */
     // 13. Check that ZWS is not added in the link label input.
@@ -426,7 +407,6 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Verify that the link label input does not contain ZWS",
         trigger: "#o_link_dialog_label_input:value('Contact Us')",
         extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
-        isCheck: true,
     },
     // TODO: understand why tour need big timeout to passed and remove it
     ...wTourUtils.clickOnSave("bottom", 20000),

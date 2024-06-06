@@ -53,7 +53,6 @@ export function isShown() {
         {
             content: "receipt screen is shown",
             trigger: ".pos .receipt-screen",
-            run: () => {},
         },
     ];
 }
@@ -62,7 +61,6 @@ export function receiptIsThere() {
         {
             content: "there should be the receipt",
             trigger: ".receipt-screen .pos-receipt",
-            run: () => {},
         },
     ];
 }
@@ -70,12 +68,10 @@ export function totalAmountContains(value) {
     return [
         {
             trigger: `.receipt-screen .top-content h1:contains("${value}")`,
-            run: () => {},
             mobile: false, // not rendered on mobile
         },
         {
             trigger: `.receipt-screen`,
-            run: () => {},
             mobile: true, // On mobile, at least wait for the receipt screen to show
         },
     ];
@@ -84,7 +80,6 @@ export function emailIsSuccessful() {
     return [
         {
             trigger: `.receipt-screen .notice .text-success`,
-            run: () => {},
         },
     ];
 }
@@ -93,7 +88,6 @@ export function trackingMethodIsLot() {
         {
             content: `tracking method is Lot`,
             trigger: `li:contains("Lot Number")`,
-            run: () => {},
         },
     ];
 }

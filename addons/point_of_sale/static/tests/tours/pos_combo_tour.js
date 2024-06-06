@@ -17,12 +17,10 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             {
                 content: "check that amount is not displayed if zero",
                 trigger: `article.product .product-content:not(:has(.price-tag:contains("0")))`,
-                isCheck: true,
             },
             {
                 content: "check that amount is properly displayed when it is not 0",
                 trigger: `article.product .product-content .product-name:contains("Combo Product 3") ~.price-tag:contains("2.60")`,
-                isCheck: true,
             },
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 5"),

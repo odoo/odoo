@@ -32,7 +32,6 @@ registry.category("web_tour.tours").add('forum_question', {
     }, {
         content: "This page contain new created question.",
         trigger: '#wrap:has(.fa-star)',
-        run: function() {}, //it's a check that page has been reloaded,
     }, {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
@@ -62,6 +61,5 @@ registry.category("web_tour.tours").add('forum_question', {
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '.o_wforum_validate_toggler',
-        isCheck: true,
     }]
 });

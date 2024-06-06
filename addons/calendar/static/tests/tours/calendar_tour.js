@@ -76,7 +76,6 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
         {
             trigger: '.o_event_title:contains("TEST EVENT")',
             content: "Check the event title",
-            isCheck: true,
         },
     ],
 });
@@ -129,7 +128,6 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
         {
             content: "Wait declined status",
             trigger: ".o_attendee_status_declined",
-            isCheck: true,
         },
     ],
 });
@@ -156,7 +154,6 @@ registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_fi
         {
             content: "Wait declined status",
             trigger: ".o_attendee_status_declined",
-            isCheck: true,
         },
     ],
 });

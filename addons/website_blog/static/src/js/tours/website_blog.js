@@ -52,7 +52,6 @@
         trigger: ".o_select_media_dialog .o_we_search",
         content: _t("Search for an image. (eg: type \"business\")"),
         position: "top",
-        run() {},
     }, {
         trigger: ".o_select_media_dialog .o_existing_attachment_cell:first img",
         extra_trigger: '.modal:has(.o_existing_attachment_cell:first)',
@@ -86,6 +85,5 @@
     }, {
         trigger: '.o_menu_systray_item a:contains("Published")',
         auto: true,
-        isCheck: true,
     }
 ]);

@@ -78,5 +78,4 @@
         content: _t("Let's now take a look at your eCommerce dashboard to get your eCommerce website ready in no time."),
         position: "bottom",
         // Just check during test mode. Otherwise, clicking it will result to random error on loading the Chart.js script.
-        run: () => {},
     }]);

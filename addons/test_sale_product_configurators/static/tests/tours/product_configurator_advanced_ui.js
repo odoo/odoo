@@ -66,24 +66,17 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
     run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Customizable Desk (TEST) (Custom, White, PAV9, PAV5, PAV1)"):not(:contains("PA9: Single PAV"))',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("Legs: Custom: Custom 1")',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("PA1: PAV9: Custom 2")',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("PA4: PAV9: Custom 3")',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("PA5: PAV1")',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("PA7: PAV1")',
-    isCheck: true,
 }, {
     trigger: 'td.o_data_cell:contains("PA8: PAV1")',
-    isCheck: true,
 }, ...stepUtils.saveForm()
 ]});

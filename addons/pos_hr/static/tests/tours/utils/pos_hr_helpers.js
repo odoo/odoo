@@ -25,7 +25,6 @@ export function loginScreenIsShown() {
         {
             content: "login screen is shown",
             trigger: ".login-overlay .screen-login .login-body",
-            run: () => {},
         },
     ];
 }
@@ -35,13 +34,11 @@ export function cashierNameIs(name) {
             content: `logged cashier is '${name}'`,
             trigger: `.pos .oe_status .username:contains("${name}")`,
             mobile: false,
-            run: () => {},
         },
         {
             content: `logged cashier is '${name}'`,
             trigger: `.pos .oe_status img[alt="${name}"]`,
             mobile: true,
-            run: () => {},
         },
     ];
 }

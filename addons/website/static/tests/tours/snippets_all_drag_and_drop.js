@@ -48,7 +48,6 @@ for (const snippet of snippetsNames) {
     }, {
         content: `check ${snippet} setting are loaded, wait panel is visible`,
         trigger: ".o_we_customize_panel",
-        run: function () {}, // it's a check
     }, {
         content: `Remove the ${snippet} snippet`, // Avoid bad perf if many snippets
         trigger: "we-button.oe_snippet_remove:last",
@@ -79,7 +78,6 @@ for (const snippet of snippetsNames) {
         }, {
             content: `Make sure ${snippet} is hidden`,
             trigger: ":iframe body:not(.modal-open)",
-            isCheck: true,
         });
     } else if (isDropInOnlySnippet) {
         // The 'drop in only' snippets have their 'data-snippet' attribute

@@ -29,12 +29,10 @@
             {
                 content: "Verify Price displayed",
                 trigger: `.oe_currency_value:contains(${price})`,
-                run: function () {}, // it's a check
             },
             {
                 content: "Verify Price of selected booth",
                 trigger: `div.o_wbooth_booth_total_price span.oe_currency_value:contains(${priceSelected})`,
-                run: function () {}, // it's a check
             },
         ]
     }
@@ -44,7 +42,6 @@
             {
                 content: "Verify Price before discount",
                 trigger: `del:contains(${discount})`,
-                run: function () {}, // it's a check
             },
         ]
     }

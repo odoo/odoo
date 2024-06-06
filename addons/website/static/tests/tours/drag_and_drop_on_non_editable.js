@@ -19,7 +19,6 @@ wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
     {
         content: "Verify that the Replace options is in the editor.",
         trigger: "we-button[data-replace-media]",
-        isCheck: true,
     },
     wTourUtils.goBackToBlocks(),
     Object.assign(wTourUtils.dragNDrop({
@@ -32,6 +31,5 @@ wTourUtils.registerWebsitePreviewTour("test_drag_and_drop_on_non_editable", {
     {
         content: "Verify that the Text Highlight building block isn't in a non editable element.",
         trigger: ":iframe .s_company_team :not(.o_not_editable) > .s_text_highlight",
-        isCheck: true,
     },
 ]);

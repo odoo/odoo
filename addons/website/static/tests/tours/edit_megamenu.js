@@ -54,7 +54,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         trigger: '#oe_snippets.o_loaded',
-        run() {},
     },
     // Edit a menu item
     wTourUtils.clickOnExtraMenuItem({extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"}, true),
@@ -72,7 +71,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "Check that the last menu link was deleted",
         trigger: ':iframe .s_mega_menu_odoo_menu .row > div:first-child .nav:not(:has(:nth-child(6)))',
-        run: () => null,
     },
     {
         content: "Click on the first title item.",
@@ -111,7 +109,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     {
         content: "The menu item should have been renamed.",
         trigger: ':iframe .o_mega_menu h4:contains("New Menu Item")',
-        run: function () {}, // it's a check
     },
 ]);
 wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
@@ -154,12 +151,10 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         trigger: '#oe_snippets.o_loaded',
-        run() {},
     },
     {
         content: "Check for the new mega menu",
         trigger: ':iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
-        run: function () {}, // it's a check
     },
     // Edit a menu item
     wTourUtils.clickOnExtraMenuItem({extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"}, true),
@@ -202,6 +197,5 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     {
         content: "The menu item should only convert selected text to Bold.",
         trigger: ':iframe .s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child span:not(:has(strong))',
-        run: function () {}, // it's a check
     },
 ]);

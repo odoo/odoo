@@ -684,7 +684,6 @@ export const stepUtils = {
             {
                 content: "wait for save completion",
                 trigger: ".o_form_readonly, .o_form_saved",
-                run() {},
                 auto: true,
             },
         ];
@@ -708,7 +707,6 @@ export const stepUtils = {
                 content: "wait for cancellation to complete",
                 trigger:
                     ".o_view_controller.o_list_view, .o_form_view > div > div > .o_form_readonly, .o_form_view > div > div > .o_form_saved",
-                run() {},
                 auto: true,
             },
         ];
@@ -718,7 +716,6 @@ export const stepUtils = {
         return {
             content: "Wait until the iframe is ready",
             trigger: `:has([is-ready="true"]):iframe html`,
-            isCheck: true,
         };
     },
 };

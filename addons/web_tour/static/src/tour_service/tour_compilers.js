@@ -413,11 +413,6 @@ export function compileStepAuto(stepIndex, step, options) {
                     step.run = () => {};
                     step.allowDisabled = true;
                 }
-                // "isCheck: true" = no action to run and accept disabled elements.
-                if (step.isCheck) {
-                    step.run = () => {};
-                    step.allowDisabled = true;
-                }
 
                 if (!stepEl) {
                     return false;
@@ -433,10 +428,6 @@ export function compileStepAuto(stepIndex, step, options) {
                     pointer.pointTo(stepEl, step);
                     await new Promise((r) => browser.setTimeout(r, showPointerDuration));
                     pointer.hide();
-                }
-
-                if (!("run" in step)) {
-                    throwError(tour, step, ["The step must have a run key `run() {}`."]);
                 }
 
                 // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.

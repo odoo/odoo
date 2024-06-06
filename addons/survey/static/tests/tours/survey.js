@@ -78,6 +78,5 @@ registry.category("web_tour.tours").add('test_survey', {
     {
         content: 'Thank you',
         trigger: 'h1:contains("Thank you!")',
-        isCheck: true,
     }
 ]});

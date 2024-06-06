@@ -70,6 +70,5 @@
         {
             content: "Check never custom variant",
             trigger: 'div.text-muted>span:contains(Never attribute size custom: Yes never custom: TEST)',
-            isCheck: true,
         }
     ]});

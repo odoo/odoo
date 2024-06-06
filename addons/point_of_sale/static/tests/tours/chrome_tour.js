@@ -12,10 +12,8 @@ registry.category("web_tour.tours").add("ChromeTour", {
         [
             Dialog.confirm("Open session"),
             Chrome.clickMenuButton(),
-            {
-                ...Chrome.clickMenuDropdownOption("Cash In/Out"),
-                isCheck: true,
-            },
+            Chrome.clickMenuDropdownOption("Cash In/Out"),
+            Dialog.confirm(),
             Chrome.clickMenuButton(),
 
             // Order 1 is at Product Screen

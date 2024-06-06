@@ -11,7 +11,6 @@ function amountIs(method, amount) {
     return {
         content: `Check that the ${method} amount is ${amount}`,
         trigger: `div.row:has(div:contains('${method}')):has(div:contains('${amount}'))`,
-        isCheck: true,
     };
 }
 const ADD_PRODUCT =
@@ -47,7 +46,6 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             postMessage(NEW_ORDER, "new order"),
             {
                 trigger: " div:contains('Start adding products')",
-                isCheck: true,
             },
             Order.doesNotHaveLine({}),
             amountIs("Total", "0.00"),

@@ -23,7 +23,6 @@
     {
         content: "Check b2b Tax-Excluded Prices",
         trigger: ".product_price .oe_price .oe_currency_value:contains(/^79.00$/)",
-        run: function () {}, // it's a check
     },
     {
         content: "Click on add to cart",
@@ -115,12 +114,10 @@
     {
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(SO1 Billing Street, 33):contains(SO1BillingCity):contains(Afghanistan)',
-        run: function () {}, // it's a check
     },
     {
         content: "Check selected shipping address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(17, SO1 Shipping Road):contains(SO1ShippingCity):contains(Afghanistan)',
-        run: function () {}, // it's a check
     },
     {
         content: "Click for edit address",
@@ -136,7 +133,6 @@
         content: "Change billing address form",
         trigger: 'select[name="country_id"]',
         extra_trigger: 'h3:contains("Billing address")',
-        isCheck: true,
     },
     {
         trigger: `input[name="name"]`,
@@ -163,7 +159,6 @@
     {
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
-        run: function () {}, // it's a check
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -277,7 +272,6 @@
     {
         content: "Check b2c Tax-Included Prices",
         trigger: ".product_price .oe_price .oe_currency_value:contains(/^90.85$/)",
-        run: function () {}, // it's a check
     },
     {
         content: "Click on add to cart",
@@ -471,16 +465,13 @@
     {
         content: "Check selected billing address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
-        run: function () {}, // it's a check
     },
     {
         content: "Check selected shipping address is same as typed in previous step",
         trigger: '#shipping_and_billing:contains(SO2New Shipping Street, 5):contains(SO2NewShipping):contains(Afghanistan)',
-        run: function () {}, // it's a check
     },
     ...tourUtils.payWithTransfer(),
     {
         content: "Check payment status confirmation window",
         trigger: ".oe_website_sale_tx_status[data-order-tracking-info]",
-        isCheck: true,
     }]});

@@ -75,7 +75,6 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "ensure banner section exists",
         trigger: ":iframe #wrap section[data-name='Banner']",
-        run: function () {}, // check
     },
     {
         content: "ensure custom banner section exists",
@@ -101,6 +100,5 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "ensure custom snippet disappeared",
         trigger: "#oe_snippets:not(:has(.oe_snippet[name='Bruce Banner']))",
-        run: function () {}, // check
     },
 ]);

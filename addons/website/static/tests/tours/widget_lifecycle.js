@@ -31,7 +31,6 @@ wTourUtils.registerWebsitePreviewTour("widget_lifecycle", {
     {
         content: "Wait for the widget to be started",
         trigger: ":iframe .s_countdown.public_widget_started",
-        run: () => {}, // It's a check
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {

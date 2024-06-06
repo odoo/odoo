@@ -45,7 +45,6 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure image size is displayed",
         trigger: "#oe_snippets we-title:contains('Image') .o_we_image_weight:contains('kb')",
-        run: function () {}, // check
     },
     wTourUtils.changeOption("ImageTools", 'we-select[data-name="shape_img_opt"] we-toggler'),
     wTourUtils.changeOption("ImageTools", "we-button[data-set-img-shape]"),
@@ -62,12 +61,10 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure the svg doesn't have a shape",
         trigger: ":iframe .s_picture figure img:not([data-shape])",
-        run: function () {}, // check
     },
     {
         content: "ensure image size is not displayed",
         trigger: "#oe_snippets we-title:contains('Image'):not(:has(.o_we_image_weight:visible))",
-        run: function () {}, // check
     },
     {
         content: "replace image",
@@ -87,7 +84,6 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure icon block is displayed",
         trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
-        run: function () {}, // check
     },
     {
         content: "select footer",
@@ -102,7 +98,6 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure icon block is still displayed",
         trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
-        run: function () {}, // check
     },
     {
         content: "replace icon",
@@ -124,7 +119,6 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
         content: "wait for preview to appear",
         // "about:blank" because the VideoWidget was patched at the start of this tour
         trigger: ".o_select_media_dialog div.media_iframe_video [src='about:blank']:iframe body",
-        run: function () {}, // check
     },
     {
         content: "confirm selection",
@@ -134,7 +128,6 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure video option block is displayed",
         trigger: "#oe_snippets we-customizeblock-options we-title:contains('Video')",
-        run: function () {}, // check
     },
     {
         content: "replace image",
@@ -154,7 +147,6 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure icon block is displayed",
         trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
-        run: function () {}, // check
     },
     {
         content: "select footer",
@@ -169,6 +161,5 @@ wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     {
         content: "ensure icon block is still displayed",
         trigger: "#oe_snippets we-customizeblock-options we-title:contains('Icon')",
-        run: function () {}, // check
     },
 ]);

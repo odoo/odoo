@@ -25,7 +25,6 @@ function checkEyeIcon(snippetName, visible) {
             content: `The eye icon of ${snippetName} ${endExplanation}`,
             trigger:
             `.${invisibleElPanel} .o_we_invisible_entry:contains("${snippetName}") i.${eyeIcon}`,
-            run: () => {}, // it is a check
         };
 }
 function checkEyesIconAfterSave(footerIsHidden = true) {
@@ -161,7 +160,6 @@ wTourUtils.clickOnSnippet(snippets[0]),
 {
     content: "Check the order on the 'Invisible Elements' panel",
     trigger: ".o_we_invisible_el_panel div:nth-child(3):contains('Banner')",
-    run: () => {}, // it is a check
 },
 {
     content: "Toggle the visibility of the Footer",
@@ -171,7 +169,6 @@ wTourUtils.clickOnSnippet(snippets[0]),
 {
     content: "Check that the footer is visible",
     trigger: ":iframe #wrapwrap footer",
-    run: () => {}, // it is a check
 },
 // Click on the "Banner" snippet.
 wTourUtils.clickOnSnippet(snippets[1]),
@@ -184,7 +181,6 @@ wTourUtils.clickOnSnippet(snippets[1]),
 {
     content: "Check the order on the 'Invisible Elements' panel",
     trigger: ".o_we_invisible_el_panel div:nth-child(3):contains('Text - Image')",
-    run: () => {}, // it is a check
 },
 ]);
 
@@ -209,7 +205,6 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     {
         content: "Check that the Column has been added in the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Column')",
-        run: () => {}, // it is a check
     },
     {
         content: "Click on the 'Text - Image' snippet",
@@ -220,7 +215,6 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     {
         content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
-        run: () => {}, // it is a check
     },
     {
         content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
@@ -230,13 +224,11 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     {
         content: "Check that the snippet is visible on the website",
         trigger: ":iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
-        run: () => {}, // it is a check
     },
     wTourUtils.changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
     {
         content: "Check that the 'Text - Image' has been removed from the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel:not(.o_we_invisible_entry:contains('Text - Image'))",
-        run: () => {}, // it is a check
     },
     {
         content: "Click on the 'Column' entry on the 'Invisible Elements' panel",
@@ -246,13 +238,11 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     {
         content: "Check that the column is visible on the website",
         trigger: ":iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
-        run: () => {}, // it is a check
     },
     wTourUtils.changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
     {
         content: "Check that the column has been removed from the 'Invisible Elements' panel",
         trigger: "#oe_snippets:not(:has(.o_we_invisible_entry:contains('Column')))",
-        run: () => {}, // it is a check
     },
     {
         content: "Activate mobile preview",
@@ -262,6 +252,5 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
     {
         content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
-        run: () => {}, // it is a check
     },
 ]);

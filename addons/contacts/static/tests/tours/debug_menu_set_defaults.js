@@ -16,7 +16,6 @@
             {
                 content: "Check that Company is checked by default, and not Individual",
                 trigger: '.o_field_widget[name="company_type"] input[data-value="company"]:checked',
-                run: function () {},
             },
             {
                 content: "Select the individual radio button",
@@ -64,7 +63,6 @@
             {
                 content: "Check that Individual is checked instead of Company",
                 trigger: '.o_field_widget[name="company_type"] input[data-value="person"]:checked',
-                run: function () {},
             },
             {
                 content: "Discard the contact creation",
@@ -74,7 +72,6 @@
             {
                 content: "Wait for discard",
                 trigger: '.o_control_panel .o-kanban-button-new',
-                run() {},
             },
         ]
     });

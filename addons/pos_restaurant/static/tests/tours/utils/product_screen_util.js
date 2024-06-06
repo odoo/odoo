@@ -30,7 +30,6 @@ export function guestNumberIs(num) {
         {
             content: `guest number is ${num}`,
             trigger: ProductScreen.controlButtonTrigger("Guests") + `:contains(${num})`,
-            run: function () {}, // it's a check
         },
     ];
 }
@@ -39,7 +38,6 @@ export function orderBtnIsPresent() {
         {
             content: "Order button is here",
             trigger: ".actionpad .button.submit-order",
-            run: function () {}, // it's a check
         },
     ];
 }

@@ -16,7 +16,6 @@ const checkTOCNavBar = function (tocPosition, activeHeaderPosition) {
     return {
         content: `Check that the header ${activeHeaderPosition} is active for TOC ${tocPosition}`,
         trigger: `:iframe .s_table_of_content:eq(${tocPosition}) .table_of_content_link:eq(${activeHeaderPosition}).active `,
-        run: () => {}, // This is a check.
     };
 };
 

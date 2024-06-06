@@ -23,7 +23,6 @@ wTourUtils.registerWebsitePreviewTour("shop_editor", {
 }, {
     trigger: ":iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=true]",
     content: "Check pricelist dropdown opened",
-    isCheck: true,
 }]);
 
 wTourUtils.registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
@@ -47,5 +46,4 @@ wTourUtils.registerWebsitePreviewTour("shop_editor_set_product_ribbon", {
 {
     content: "Check that the ribbon was properly saved",
     trigger: ':iframe .oe_product:first .o_ribbon:contains("Sale")',
-    isCheck: true,
 }]);

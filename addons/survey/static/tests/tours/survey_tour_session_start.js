@@ -33,11 +33,9 @@ registry.category("web_tour.tours").add('test_survey_session_start_tour', {
     }
 }, {
     trigger: '.o_survey_session_attendees_count.waitrpc:contains("3")',
-    isCheck: true
 }, {
     trigger: 'h1',
     run: "press ArrowRight",
 }, {
     trigger: 'h1:contains("Nickname")',
-    run: function () {} // check first question is displayed
 }])});

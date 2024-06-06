@@ -67,12 +67,10 @@ registry.category("web_tour.tours").add('configurator_translation', {
     }, {
         content: "Loader should be shown",
         trigger: '.o_website_loader_container',
-        run: function () {}, // it's a check
     }, {
         content: "Wait until the configurator is finished",
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
         timeout: 30000,
-        isCheck: true,
     }, {
         content: "Check if the current interface language is active and monkey patch terms",
         trigger: "body",
@@ -95,6 +93,5 @@ registry.category("web_tour.tours").add('configurator_translation', {
     }, {
          content: "wait for editor to be closed",
          trigger: ':iframe body:not(.editor_enable)',
-         run: function () {}, // It's a check.
     }
 ]});

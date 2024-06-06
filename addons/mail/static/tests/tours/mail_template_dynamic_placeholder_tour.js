@@ -34,7 +34,6 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Wait for the autocomplete RPC",
             trigger: 'div[name="model_id"] .ui-autocomplete:contains("Contact")',
-            isCheck: true,
         },
         {
             content: "Click on contact",
@@ -66,7 +65,6 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Check if the dynamic placeholder popover is opened",
             trigger: "div.o_model_field_selector_popover",
-            isCheck: true,
         },
         {
             content: "filter the dph result",
@@ -165,7 +163,6 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "Wait for the form view to disappear",
             trigger: "body:not(:has(.o_form_sheet))",
-            isCheck: true,
         },
     ],
 });

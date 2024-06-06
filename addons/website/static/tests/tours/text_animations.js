@@ -24,7 +24,6 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     {
         content: "Check that the animation was applied",
         trigger: ":iframe .s_cover h1 span.o_animated_text",
-        isCheck: true,
     },
     {
         content: "Click on the 'Animate Text' button",
@@ -34,7 +33,6 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     {
         content: "Check that the animation was disabled for the title",
         trigger: ":iframe .s_cover:not(:has(.o_animated_text))",
-        isCheck: true,
     },
     {
         content: "Try to apply the text animation again",
@@ -44,6 +42,5 @@ wTourUtils.registerWebsitePreviewTour("text_animations", {
     {
         content: "Check that the animation was applied",
         trigger: ":iframe .s_cover:has(span.o_animated_text)",
-        isCheck: true,
     },
 ]);

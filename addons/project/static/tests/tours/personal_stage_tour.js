@@ -17,15 +17,12 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     // Default is grouped by stage, user should not be able to create/edit a column
     content: "Check that there is no create column",
     trigger: "body:not(.o_column_quick_create)",
-    run: function () {},
 }, {
     content: "Check that there is no create column",
     trigger: "body:not(.o_column_edit)",
-    run: function () {},
 }, {
     content: "Check that there is no create column",
     trigger: "body:not(.o_column_delete)",
-    run: function () {},
 }, {
     content: "Go to tasks",
     trigger: 'button[data-menu-xmlid="project.menu_project_management"]',
@@ -49,7 +46,6 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Check that column exists",
     trigger: '.o_kanban_header:contains("Never")',
-    run: function () {},
 }, {
     content: 'Open column edit dropdown',
     trigger: '.o_kanban_header:contains("Never") .dropdown-toggle',
@@ -85,5 +81,4 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Check that task exists",
     trigger: '.o_kanban_record_title:contains("New Test Task")',
-    run: function () {},
 }]});

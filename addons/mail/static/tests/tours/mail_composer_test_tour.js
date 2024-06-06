@@ -59,7 +59,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Check the earlier provided attachment is listed",
             trigger: '.o_attachment[title="text.txt"]',
-            run() {},
         },
         {
             content: "Check subject is autofilled",
@@ -107,7 +106,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Check a template is listed",
             in_modal: false,
             trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
-            run() {},
         },
         {
             content: "Send message",
@@ -122,7 +120,6 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Check message contains the attachment",
             trigger: '.o-mail-Message .o-mail-AttachmentCard:contains("text.txt")',
-            isCheck: true,
         },
         // Test the full composer input text is kept on closing
         {

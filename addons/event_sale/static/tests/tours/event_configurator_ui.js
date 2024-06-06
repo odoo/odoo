@@ -50,7 +50,6 @@ registry.category("web_tour.tours").add('event_configurator_tour', {
     // click somewhere else to exit cell focus
 }, {
     trigger: "td[name='name'] span:contains('VIP')",
-    run: () => {}, // check
 }, {
     trigger: 'ul.nav a:contains("Order Lines")',
     run: 'click'
@@ -84,6 +83,5 @@ registry.category("web_tour.tours").add('event_configurator_tour', {
     // click somewhere else to exit cell focus
 }, {
     trigger: "td[name='name'] span:contains('Standard')",
-    run: () => {}, // check
 }, ...stepUtils.saveForm()
 ]});

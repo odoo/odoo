@@ -54,7 +54,6 @@ export function selectedFloorIs(name) {
         {
             content: `selected floor is '${name}'`,
             trigger: `.floor-selector .button-floor.btn-primary:contains("${name}")`,
-            run: () => {},
         },
     ];
 }
@@ -62,7 +61,6 @@ export function orderCountSyncedInTableIs(table, count) {
     return [
         {
             trigger: `.floor-map .table .label:contains("${table}") ~ .order-count:contains("${count}")`,
-            run: function () {},
         },
     ];
 }
@@ -70,7 +68,6 @@ export function isShown() {
     return [
         {
             trigger: ".floor-map",
-            run: function () {},
         },
     ];
 }

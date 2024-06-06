@@ -121,6 +121,5 @@ registry.category("web_tour.tours").add('account_tour', {
         trigger: "button[name=action_register_payment]",
         content: _t("The button priority shifted since the invoice has been sent. Let's register the payment now."),
         position: "bottom",
-        run() {},
     }
 ]});

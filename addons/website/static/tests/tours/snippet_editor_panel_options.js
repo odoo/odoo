@@ -35,7 +35,6 @@ wTourUtils.dragNDrop({
 }, {
     content: "The snippet should have the correct class.",
     trigger: ':iframe .s_text_image > .o_container_small',
-    run: () => {}, // It's a check.
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
     trigger: '#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container',
@@ -159,7 +158,6 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
 {
     content: "The snippet row should have the grid mode class.",
     trigger: ":iframe .s_text_block .row.o_grid_mode",
-    run: () => {}, // It's a check.
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
     trigger: "#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container",
@@ -177,7 +175,6 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 {
     content: "The snippet row should not have the grid mode class anymore.",
     trigger: ":iframe .s_text_block .row:not(.o_grid_mode)",
-    run: () => {}, // It's a check.
 }, {
     content: "The text toolbar should still be visible, and the text still selected.",
     trigger: "#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container",
@@ -198,11 +195,6 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 }, {
     content: "Check if dropdown opened correctly.",
     trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=true]",
-    // TODO: convert the next two "run: () => {}" to "isCheck: true" but make
-    // sure that the test is failing without its fix. More precisely, make sure
-    // that the tour system does not select invisible DOM elements when
-    // "isCheck: true" is used.
-    run: () => {}, // It's a check.
 }, {
     content: "Click on the first paragraph again.",
     trigger: ":iframe .s_text_block p",
@@ -210,7 +202,6 @@ wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
 }, {
     content: "Check if dropdown closed correctly.",
     trigger: "#style button[data-bs-toggle=dropdown][aria-expanded=false]",
-    run: () => {}, // It's a check.
 },
 ...wTourUtils.clickOnSave(),
 ]);

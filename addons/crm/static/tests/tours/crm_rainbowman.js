@@ -35,7 +35,6 @@
         }, {
             trigger: ".o_reward_rainbow",
             extra_trigger: ".o_reward_rainbow",
-            run: function () {} // check rainbowman is properly displayed
         }, {
             // This step and the following simulates the fact that after drag and drop,
             // from the previous steps, a click event is triggered on the window element,
@@ -44,7 +43,6 @@
             run: "click",
         }, {
             trigger: ".o_kanban_renderer:not(:has(.o_kanban_quick_create))",
-            run() {},
         }, {
             trigger: ".o-kanban-button-new",
             content: "create second lead",
@@ -63,7 +61,6 @@
             run: "click",
         }, {
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 2')",
-            run: function () {} // wait for the record to be properly created
         }, {
             // move first test back to new stage to be able to test rainbowman a second time
             trigger: ".o_kanban_record .o_kanban_record_title:contains('Test Lead 1')",
@@ -94,6 +91,5 @@
             trigger: ".o_menu_brand",
             extra_trigger: ".o_reward_rainbow",
             content: "last rainbowman appears",
-            isCheck: true,
         }
     ]});

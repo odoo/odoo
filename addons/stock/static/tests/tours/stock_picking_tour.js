@@ -66,7 +66,6 @@ registry.category("web_tour.tours").add('test_detailed_op_no_save_1', { test: tr
     },
     {
         trigger: ".o_control_panel_actions button:contains('Traceability')",
-        isCheck: true,
     },
 ]});
 
@@ -159,7 +158,6 @@ registry.category("web_tour.tours").add('test_generate_serial_1', { test: true, 
     },
     {
         trigger: ".o_control_panel_actions button:contains('Traceability')",
-        isCheck: true,
     },
 ]});
 
@@ -299,7 +297,6 @@ registry.category("web_tour.tours").add('test_generate_serial_2', { test: true, 
     },
     {
         trigger: ".o_control_panel_actions button:contains('Traceability')",
-        isCheck: true,
     },
 ]});
 
@@ -402,7 +399,6 @@ registry.category("web_tour.tours").add('test_add_new_line', {
         },
         {
             trigger: ".o_form_renderer.o_form_saved",
-            isCheck: true,
         },
     ]
 });
@@ -444,7 +440,6 @@ registry.category("web_tour.tours").add('test_edit_existing_line', {
         },
         {
             trigger: ".o_form_renderer.o_form_saved",
-            isCheck: true,
         },
     ]
 });

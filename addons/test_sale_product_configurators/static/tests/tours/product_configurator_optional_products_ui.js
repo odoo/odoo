@@ -56,15 +56,11 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     run: "click",
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',
-    isCheck: true,
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Office Chair Black")) td.o_data_cell:contains("1.0")',
-    isCheck: true,
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Conference Chair")) td.o_data_cell:contains("1.0")',
-    isCheck: true,
 }, {
     trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")) td.o_data_cell:contains("1.0")',
-    isCheck: true,
 }, ...stepUtils.saveForm()
 ]});

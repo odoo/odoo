@@ -46,9 +46,9 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', ':iframe .s_add_to_cart_btn'),
         {
+            // wait for the page to load, as the next check was sometimes too fast
             content: "Wait for the redirection to the payment page",
             trigger: 'body',
-            isCheck: true,  // wait for the page to load, as the next check was sometimes too fast
         },
         wTourUtils.assertPathName('/shop/payment', ':iframe a[href="/shop/cart"]'),
 

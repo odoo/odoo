@@ -140,8 +140,8 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: 'button[name="action_open_session_manager"]',
     run: "click",
 }, {
+    // check nickname question is displayed
     trigger: 'h1:contains("Nickname")',
-    isCheck: true // check nickname question is displayed
 }, {
     trigger: 'body',
     run: async () => { rootWidget = await odoo.loader.modules.get('root.widget'); }
@@ -149,74 +149,74 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: 'h1',
     run: nextScreen
 }, {
+    // check text question is displayed
     trigger: 'h1:contains("Text Question")',
-    isCheck: true // check text question is displayed
 }, {
+    // check we have 3 answers
     trigger: '.o_survey_session_progress_small:contains("3 / 3")',
-    isCheck: true // check we have 3 answers
 }, {
+    // check attendee 1 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 1 is the best")',
-    isCheck: true // check attendee 1 answer is displayed
 }, {
+    // check attendee 2 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 2 rulez")',
-    isCheck: true // check attendee 2 answer is displayed
 }, {
+    // check attendee 3 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 3 will crush you")',
-    isCheck: true // check attendee 3 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
+    // check we have 2 answers
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
-    isCheck: true // check we have 2 answers
 }, {
+    // check attendee 1 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("10/10/2010")',
-    isCheck: true // check attendee 1 answer is displayed
 }, {
+    // check attendee 2 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("11/11/2011")',
-    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: 'h1',
     run: previousScreen
 }, {
+    // check text question is displayed
     trigger: 'h1:contains("Text Question")',
-    isCheck: true // check text question is displayed
 }, {
+    // check we have 3 answers
     trigger: '.o_survey_session_progress_small:contains("3 / 3")',
-    isCheck: true // check we have 3 answers
 }, {
+    // check attendee 1 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 1 is the best")',
-    isCheck: true // check attendee 1 answer is displayed
 }, {
+    // check attendee 2 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 2 rulez")',
-    isCheck: true // check attendee 2 answer is displayed
 }, {
+    // check attendee 3 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 3 will crush you")',
-    isCheck: true // check attendee 3 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
+    // check we have 2 answers
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
-    isCheck: true // check we have 2 answers
 }, {
+    // check attendee 1 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("10/10/2010")',
-    isCheck: true // check attendee 1 answer is displayed
 }, {
+    // check attendee 2 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("11/11/2011")',
-    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
+    // check we have 2 answers
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
-    isCheck: true // check we have 2 answers
 }, {
+    // check attendee 2 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("10/10/2010 10:00:00")',
-    isCheck: true // check attendee 2 answer is displayed
 }, {
+    // check attendee 3 answer is displayed
     trigger: '.o_survey_session_text_answer_container:contains("11/11/2011 15:55:55")',
-    isCheck: true // check attendee 3 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
@@ -311,8 +311,8 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
         });
     }
 }, {
+    // Final Leaderboard is displayed
     trigger: 'h1:contains("Final Leaderboard")',
-    isCheck: true // Final Leaderboard is displayed
 }, {
     trigger: 'h1',
     run: () => {
@@ -340,12 +340,12 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
         }
     }
 }, {
+    // Final Leaderboard is displayed
     trigger: 'h1:contains("Final Leaderboard")',
-    isCheck: true // Final Leaderboard is displayed
 }, {
     trigger:".o_survey_session_close:has(i.fa-close)",
     run: "click",
 }, {
+    // check that we can start another session
     trigger: 'button[name="action_start_session"]',
-    isCheck: true // check that we can start another session
 }])});

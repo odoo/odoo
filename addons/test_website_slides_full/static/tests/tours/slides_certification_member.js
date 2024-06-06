@@ -41,7 +41,6 @@ var initTourSteps = [{
 }, {
     content: 'eLearning: previous step check',
     trigger: '.o_wslides_course_main.empty-content-success',
-    run: function () {} // check that previous step succeeded
 }];
 
 var buyCertificationSteps = [{
@@ -63,7 +62,6 @@ var buyCertificationSteps = [{
 }, {
     content: 'eLearning: user should be enrolled',
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
-    run: function () {}
 }, {
     content: 'eLearning: start course',
     trigger: '.o_wslides_js_slides_list_slide_link',
@@ -127,7 +125,6 @@ var succeedCertificationSteps = [{
 var certificationCompletionSteps = [{
     content: 'Survey: check certification successful',
     trigger: 'div:contains("Congratulations, you have passed the test")',
-    run: function () {}
 }, { // Sharing the certification
     trigger: 'a:contains("Share your certification")',
     run: "click",
@@ -139,7 +136,6 @@ var certificationCompletionSteps = [{
     run: "click",
 }, {
     trigger: '.o_wslides_js_share_email .alert:not(.d-none):contains("Sharing is caring")',
-    run: function () {}  // check email has been sent
 }, {
     trigger: 'button.btn-close',  // close sharing modal,
     run: "click",
@@ -154,7 +150,6 @@ var certificationCompletionSteps = [{
 }, {
     content: 'eLearning: course should be completed',
     trigger: '.o_wslides_course_card:contains("DIY Furniture") .rounded-pill:contains("Completed")',
-    run: function () {}
 }];
 
 var profileSteps = [{
@@ -164,7 +159,6 @@ var profileSteps = [{
 }, {
     content: 'eLearning: check that the user profile certifications include the new certification',
     trigger: '.o_wprofile_slides_course_card_body:contains("Furniture Creation Certification")',
-    run: function () {}
 }];
 
 registry.category("web_tour.tours").add('certification_member', {

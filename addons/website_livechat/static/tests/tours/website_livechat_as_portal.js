@@ -18,7 +18,6 @@ registry.category("web_tour.tours").add("website_livechat_as_portal_tour", {
         },
         {
             trigger: ".o-mail-Message:contains('Hello, I need help!')",
-            isCheck: true,
         },
     ],
 });

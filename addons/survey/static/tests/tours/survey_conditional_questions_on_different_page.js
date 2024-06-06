@@ -22,7 +22,6 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
         }, {
             content: 'Check that Q3 is visible',
             trigger: 'div.js_question-wrapper:contains("Q3")',
-            isCheck: true,
         }, {
             content: 'Answer Q2 with Answer 2',
             trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 2")',
@@ -30,7 +29,6 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
         }, {
             content: 'Check that Q3 is still visible',
             trigger: 'div.js_question-wrapper:contains("Q3")',
-            isCheck: true,
         }, {
             content: 'Go back',
             trigger: 'button[value="previous"]',
@@ -54,7 +52,6 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
         }, {
             content: 'Check that Q3 is now visible again',
             trigger: 'div.js_question-wrapper:contains("Q3")',
-            isCheck: true,
         }
     ],
 });

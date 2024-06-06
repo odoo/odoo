@@ -9,7 +9,6 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_logged'
 {
     trigger: 'a:contains("Gardening: The Know-How")',
     content: 'Check that the previews are accessible',
-    run: function () {}
 }, {
     trigger: '.o_wslides_slides_list_slide:contains("Home Gardening")',
     content: 'Check that other slides are not accessible',
@@ -24,10 +23,8 @@ registry.category('web_tour.tours').add('invite_check_channel_preview_as_logged'
 }, {
     trigger: '.o_wslides_js_course_join:contains("You\'re enrolled")',
     content: 'Check that user is enrolled',
-    run: function () {}
 }, {
     trigger: '.o_wslides_js_slides_list_slide_link:contains("Home Gardening")',
     content: 'Check that slides are now accessible',
-    run: function () {}
 },
 ]});

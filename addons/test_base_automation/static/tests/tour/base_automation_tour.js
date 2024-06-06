@@ -478,7 +478,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
         {
             extra_trigger: "body:not(:has(.modal-content))",
             trigger: ".o_form_button_cancel",
-            isCheck: true,
         },
     ],
 });
@@ -548,7 +547,6 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".o_base_automation_kanban_view",
-            isCheck: true,
         },
     ],
 });
@@ -587,7 +585,6 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         {
             trigger:
                 ".o_field_widget[name='trg_field_ref'] :not(:has(.o-autocomplete--dropdown-menu))",
-            isCheck: true,
         },
         {
             trigger: ".o_field_widget[name='trg_field_ref'] input",
@@ -606,7 +603,6 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger: ".o_base_automation_kanban_view",
-            isCheck: true,
         },
     ],
 });

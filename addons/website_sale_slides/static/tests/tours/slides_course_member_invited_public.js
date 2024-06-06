@@ -9,7 +9,6 @@ registry.category('web_tour.tours').add('invited_on_payment_course_public', {
 {
     trigger: '.o_wslides_identification_banner a:contains("Log in")',
     content: 'Check that there is an identification banner',
-    run: function () {}
 }, {
     trigger: '.o_wslides_js_course_join a:contains("Log in")',
     run: function () {
@@ -36,10 +35,8 @@ registry.category('web_tour.tours').add('invited_on_payment_course_public', {
 }, {
     trigger: 'a:contains("Gardening: The Know-How")',
     content: 'Check that preview slides are now accessible',
-    run: function () {}
 }, {
     trigger: '.o_wslides_js_course_join:contains("Add to Cart")',
     content: 'Check that the course can now be bought',
-    run: function () {}
 }
 ]});

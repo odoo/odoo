@@ -44,7 +44,6 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     {
         content: "Check the preview of the gray 900 after hue change",
         trigger: '[variable="900"][style="background-color: rgb(36, 41, 33) !important;"]',
-        run: () => {}, // This is a check.
     },
     ...waitForCSSReload(),
     {
@@ -59,7 +58,6 @@ wTourUtils.registerWebsitePreviewTour('website_gray_color_palette', {
     {
         content: "Check the preview of the gray 900 after saturation change",
         trigger: '[variable="900"][style="background-color: rgb(34, 47, 27) !important;"]',
-        run: () => {}, // This is a check.
     },
     ...waitForCSSReload(),
     {

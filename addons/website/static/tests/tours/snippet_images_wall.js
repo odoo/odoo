@@ -74,7 +74,6 @@ selectSignImageStep,
 }, {
     content: "Check if sign is in second column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][data-original-src*='library_image_14'])",
-    isCheck: true,
 },
 ...reselectSignImageSteps,
 {
@@ -84,7 +83,6 @@ selectSignImageStep,
 }, {
     content: "Check if sign is in first column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
-    isCheck: true,
 },
 ...reselectSignImageSteps,
 {
@@ -94,7 +92,6 @@ selectSignImageStep,
 }, {
     content: "Check if sign is in third column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
-    isCheck: true,
 },
 ...reselectSignImageSteps,
 {
@@ -104,7 +101,6 @@ selectSignImageStep,
 }, {
     content: "Check if sign is in first column",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
-    isCheck: true,
 },
 ...reselectSignImageSteps,
 {
@@ -114,5 +110,4 @@ selectSignImageStep,
 }, {
     content: "Check layout",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
-    isCheck: true,
 }]);
