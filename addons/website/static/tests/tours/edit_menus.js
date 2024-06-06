@@ -44,7 +44,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "There should be a new megamenu item.",
         trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
-        run: () => {}, // It's a check.
     },
     // Add a menu item in edit mode.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -127,7 +126,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Label should have changed",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar")',
-        run: () => {}, // it's a check
     },
     // Edit the menu item from the "edit menu" popover button
     ...wTourUtils.clickOnEditAndWaitEditMode(),
@@ -173,7 +171,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Label should have changed",
         trigger: ':iframe .top_menu .nav-item a:contains("Modnar !!")',
-        run: () => {}, // It's a check.
     },
     // Nest menu item from the menu.
     {
@@ -207,7 +204,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Wait for drop",
         trigger: '.oe_menu_editor li:contains("Home") ul li:contains("Contact us")',
-        run: () => {}, // It's a check.
     },
     // Drag the Mega menu to the first position.
     {
@@ -226,7 +222,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Wait for drop",
         trigger: '.oe_menu_editor:first-child:contains("Megaaaaa!")',
-        run: () => {}, // It's a check.
     },
     {
         content: "Save the website menu with new nested menus",
@@ -252,7 +247,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "The Home menu should be closed",
         trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
-        run: () => {}, // It's a check.
     },
     {
         content: "Open the Home menu after scroll",
@@ -263,7 +257,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "Check that the Home menu is opened",
         trigger: ':iframe .top_menu .nav-item:contains("Home") ul.show li' +
             ' a.dropdown-item:contains("Contact us")[href="/contactus"]',
-        run: () => {}, // It's a check.
     },
     {
         content: "Close the Home menu",
@@ -273,7 +266,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Check that the Home menu is closed",
         trigger: ':iframe .top_menu .nav-item:contains("Home"):has(ul:not(.show))',
-        run: () => {}, // It's a check.
     },
     {
         content: "Open the mega menu",
@@ -297,7 +289,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     {
         content: "Check that the mega menu is closed",
         trigger: ':iframe .top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"]:not(.show))',
-        run: () => {}, // It's a check.
     },
     {
         content: "Open the mega menu after scroll",
@@ -308,7 +299,6 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         content: "Check that the mega menu is opened",
         trigger: ':iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
                  '.s_mega_menu_odoo_menu',
-        run: () => {}, // It's a check.
     },
     ...wTourUtils.clickOnEditAndWaitEditMode(),
     {

@@ -67,7 +67,6 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
-            isCheck: true,
         },
     ]
 });

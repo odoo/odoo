@@ -75,11 +75,9 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Check that Question 2 has 'normal' trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
-        isCheck: true,
     }, {
         content: "Check that Question 3 has 'normal' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
-        isCheck: true,
     }, {
         content: "Move Question 3 above its trigger (Question 2)",
         trigger: "div[name=question_and_page_ids] table tr:eq(3) div[name=sequence]",
@@ -87,7 +85,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
-        isCheck: true,
     }, {
         content: "Open that question to check the server's misplacement evaluation agrees",
         trigger: "tr.o_data_row td:contains('Question 3')",
@@ -108,7 +105,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that the alert is gone",
         trigger: `.o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
         in_modal: true,
-        isCheck: true,
     }, {
         content: "Choose a new valid trigger",
         trigger: ".o_field_widget[name=triggering_answer_ids] input",
@@ -123,7 +119,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     {
         content: "Check that Question 3 has its 'normal' trigger icon back",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
-        isCheck: true,
     }, {
         content: "Move Question 3 back below Question 2",
         trigger: "div[name=question_and_page_ids] table tr:eq(2) div[name=sequence]",
@@ -153,7 +148,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that Question 3 has 'warning' trigger icon",
         trigger: "tr:contains('Question 3') button i.fa-exclamation-triangle",
-        isCheck: true,
     }, {
         content: "Open that question again",
         trigger: "tr.o_data_row td:contains('Question 3')",
@@ -174,13 +168,11 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that the alert is gone in this case too",
         trigger: `.o_form_sheet_bg div:first-child:not(.alert-warning).o_form_sheet`,
         in_modal: true,
-        isCheck: true,
     },
     ...stepUtils.saveForm(),
     {
         content: "Check that Question 3 has its 'normal' trigger icon back",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
-        isCheck: true,
     }, {
         content: "Move Question 1 back above Question 2",
         trigger: "div[name=question_and_page_ids] table tr:eq(3) div[name=sequence]",
@@ -201,11 +193,9 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that Question 3 no longer has a trigger icon",
         trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
         allowInvisible: true,
-        isCheck: true,
     }, {
         content: "Check that Question 2 however still has a trigger icon",
         trigger: "tr:contains('Question 2') button i.fa-code-fork",
-        isCheck: true,
     }, {
         content: "Delete Question 1",
         trigger: "tr:contains('Question 1') button[name=delete]",
@@ -214,7 +204,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         content: "Check that now Question 2 too does no longer have a trigger icon",
         trigger: "tr:contains('Question 2') div.o_widget_survey_question_trigger:not(:has(button))",
         allowInvisible: true,
-        isCheck: true,
     }, {
         content: 'Go back to Kanban View',
         trigger: '[data-menu-xmlid="survey.menu_survey_form"]',
@@ -222,7 +211,6 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
     }, {
         content: "Check that we arrived on the kanban view",
         trigger: ".o-kanban-button-new",
-        isCheck: true,
     }
 ]});
 
@@ -262,7 +250,6 @@ function saveAndNew() {
             // suggested_answer_ids required even though in_modal is specified...
             trigger: "div[name=suggested_answer_ids] .o_list_table tbody tr:first-child:not(.o_data_row)", // empty answers list
             in_modal: true,
-            isCheck: true,
         }
     ];
 }
@@ -280,7 +267,6 @@ function changeTab(tabName) {
             content: `Wait for tab ${tabName} tab`,
             trigger: `.modal-content a[name=${tabName}].nav-link.active`,
             in_modal: true,
-            isCheck: true,
         }
     ];
 }

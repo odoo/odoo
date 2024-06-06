@@ -40,7 +40,6 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
                 content:
                     "verify that the simplified invoice number does not appear on the receipt, because this order is invoiced, so it does not have a simplified invoice number",
                 trigger: ".receipt-screen:not(:has(.simplified-invoice-number))",
-                isCheck: true,
             },
             ReceiptScreen.clickNextOrder(),
 

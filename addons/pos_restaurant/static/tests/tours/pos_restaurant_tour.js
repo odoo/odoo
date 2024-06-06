@@ -20,7 +20,6 @@ function isSyncStatusConnected() {
         {
             trigger:
                 ".pos-topheader .pos-rightheader .status-buttons .oe_status:has(.js_connected)",
-            run: () => {},
         },
     ];
 }
@@ -234,7 +233,6 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
 const billScreenQRCode = {
     content: "QR codes are shown",
     trigger: ".pos-receipt #posqrcode",
-    run: () => {},
 };
 
 registry.category("web_tour.tours").add("BillScreenTour", {
@@ -291,7 +289,6 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             {
                 content: `refresh page`,
                 trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
                 run: () => {
                     window.location.reload();
                 },
@@ -299,7 +296,6 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             {
                 content: `Verify table 4 and 5 is merge`,
                 trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
                 run: () => {
                     if ($("div.table div.label:contains('4')").length < 2) {
                         throw new TourError("Table isn't merge");
@@ -331,7 +327,6 @@ registry.category("web_tour.tours").add("MergeTableTour", {
             {
                 content: `Verify table 4 and 5 is merge`,
                 trigger: 'div.table div.label:contains("4")',
-                isCheck: true,
                 run: () => {
                     if ($("div.table div.label:contains('4')").length < 2) {
                         throw new TourError("Table isn't merge");

@@ -29,13 +29,11 @@ export function is({ title } = {}) {
         content: "dialog is open",
         trigger,
         in_modal: true,
-        isCheck: true,
     };
 }
 export function isNot() {
     return {
         content: "no dialog is open",
         trigger: negate(".modal-open"),
-        isCheck: true,
     };
 }

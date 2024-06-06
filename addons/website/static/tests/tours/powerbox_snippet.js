@@ -40,6 +40,5 @@ wTourUtils.clickOnSnippet({
 {
     content: "Check if s_alert snipept is inserted",
     trigger: ":iframe .s_alert",
-    isCheck: true,
 }
 ]);

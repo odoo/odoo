@@ -33,7 +33,6 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         {
             content: 'check reward',
             trigger: '.alert:contains("10% on Super Chair")',
-            isCheck: true,
         },
         {
             content: 'claim reward',
@@ -43,7 +42,6 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         {
             content: 'check claimed reward',
             trigger: 'div>strong:contains("10% on Super Chair")',
-            isCheck: true,
         },
         // Try to reapply the same promo code
         {
@@ -60,7 +58,6 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         {
             content: 'check refused message',
             trigger: '.alert-danger:contains("This promo code is already applied")',
-            isCheck: true,
         },
     ],
 });

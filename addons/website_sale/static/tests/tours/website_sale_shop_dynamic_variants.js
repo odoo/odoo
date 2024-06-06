@@ -21,7 +21,6 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     {
         content: "wait for variant to be loaded",
         trigger: '.oe_price .oe_currency_value:contains("0.00")',
-        run: function () {},
     },
     {
         content: "click add to cart",
@@ -33,6 +32,5 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
     {
         content: "check the variant is in the cart",
         trigger: 'div>a>h6:contains(Dynamic Product (Dynamic Value 2))',
-        isCheck: true,
     },
 ]});

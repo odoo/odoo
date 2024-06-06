@@ -27,11 +27,11 @@ import { stepUtils } from "@web_tour/tour_service/tour_utils";
     trigger: ':iframe a.o_wslides_js_slides_list_slide_link:contains("Home Gardening")',
     run: "click",
 }, {
+    // check we land on the fullscreen view
     trigger: ':iframe .o_wslides_fs_main',
-    run: function () {} // check we land on the fullscreen view
 },
 ...wTourUtils.clickOnEditAndWaitEditMode()
 , {
+    // check we are redirected on the detailed view
     trigger: ':iframe .o_wslides_lesson_main',
-    run: function () {} // check we are redirected on the detailed view
 }]);

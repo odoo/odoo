@@ -21,7 +21,6 @@ export function changePricelist(pricelistName) {
         {
             content: 'Wait for pricelist to load',
             trigger: `.dropdown-toggle:contains(${pricelistName})`,
-            run: function () {},
         },
     ];
 }
@@ -45,7 +44,6 @@ function checkPriceEvent(eventName, price) {
         {
             content: "Verify Price",
             trigger: `.oe_currency_value:contains(${price})`,
-            run: function () {}, // it's a check
         },
         {
             content: "Open the ticket picking modal",
@@ -60,7 +58,6 @@ function checkPriceDiscountEvent(eventName, price, discount) {
         {
             content: "Verify Price before discount",
             trigger: `del:contains(${discount})`,
-            run: function () {}, // it's a check
         },
     ]
 }

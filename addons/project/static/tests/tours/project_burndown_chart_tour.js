@@ -85,5 +85,4 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
 }, {
     content: 'The comparison menu is not rendered',
     trigger: ':not(:has(.o_comparison_menu))',
-    isCheck: true,
 }]});

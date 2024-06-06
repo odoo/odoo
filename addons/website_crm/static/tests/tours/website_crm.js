@@ -25,7 +25,6 @@
     {
         content: "Ensure form model has changed and page reload is done after save",
         trigger: ":iframe section.s_website_form form[data-model_name='crm.lead']",
-        isCheck: true,
     }]);
 
     registry.category("web_tour.tours").add('website_crm_tour', {
@@ -62,7 +61,6 @@
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thank You!'))",
-        isCheck: true,
     }]});
 
     registry.category("web_tour.tours").add('website_crm_catch_logged_partner_info_tour', {
@@ -83,7 +81,6 @@
     }, {
         content: "Check we were redirected to the success page",
         trigger: "#wrap:has(h1:contains('Thank You!'))",
-        isCheck: true,
     }]});
 
     export default {};

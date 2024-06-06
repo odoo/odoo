@@ -41,7 +41,6 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
         {
             content: "select oe_structure specific view",
             trigger: 'div.ace_line .ace_xml:contains("somenewcontent")',
-            run: function () {},
         },
         {
             content: "open file selector menu",
@@ -71,7 +70,6 @@ wTourUtils.registerWebsitePreviewTour('html_editor_multiple_templates', {
            content: "check that the page has both modification",
            extra_trigger: ':iframe #wrapwrap:contains("anothernewcontent")',
            trigger: ':iframe #wrapwrap:contains("somenewcontent")',
-           run: function () {}, // it's a check
        },
     ]
 );
@@ -106,7 +104,6 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "select 'user_custom_rules'",
             trigger: '.o_resource_editor .o_select_menu_toggler:contains("user_custom_rules")',
-            run: () => {},
         },
         // 2. Edit that file and ensure it was saved then reset it
         {
@@ -125,7 +122,6 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "check that the scss modification got applied",
             trigger: ':iframe body:has(#wrap:hidden)',
-            run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
         {
@@ -141,7 +137,6 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "check that the scss file was reset correctly, wrap content should now be visible again",
             trigger: ':iframe #wrap:visible',
-            run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
         // 3. Customize again that file (will be used in second part of the test
@@ -162,7 +157,6 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss', {
         {
             content: "check that the scss modification got applied",
             trigger: ':iframe body:has(#wrap:hidden)',
-            run: function () {}, // it's a check
         },
     ]
 );
@@ -199,7 +193,6 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
         {
             content: "select 'user_custom_rules'",
             trigger: '.o_resource_editor .o_select_menu_toggler:contains("user_custom_rules")',
-            run: () => {},
         },
         // 5. Edit that file and ensure it was saved then reset it
         {
@@ -230,7 +223,6 @@ wTourUtils.registerWebsitePreviewTour('test_html_editor_scss_2', {
             content: "check that the scss file was reset correctly",
             extra_trigger: `body:not(:has(div.ace_line:contains("${adminCssModif}")))`,
             trigger: `body:not(:has(div.ace_line:contains("${demoCssModif}")))`,
-            run: function () {}, // it's a check
             timeout: 30000, // SCSS compilation might take some time
         },
     ]

@@ -25,6 +25,5 @@ registry.category('web_tour.tours').add('invited_on_payment_course_logged', {
 }, {
     trigger: 'a:contains("Gardening: The Know-How")',
     content: 'Check that preview slides are accessible',
-    run: function () {}
 }
 ]});

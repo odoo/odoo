@@ -20,7 +20,6 @@ export function mergeTableHelpers(childName, parentName) {
         {
             content: `Verify table ${childName} is merged into table ${parentName}`,
             trigger: `div.table div.label:contains("${parentName}")`,
-            isCheck: true,
             run: () => {
                 if ($(`div.table div.label:contains('${parentName}')`).length < 2) {
                     throw new TourError("Tables aren't merged");
@@ -35,7 +34,6 @@ export function checkMergeTableIsCancelHelpers() {
         {
             content: `Verify table 4 and 5 isn't merge anymore`,
             trigger: 'div.table div.label:contains("4")',
-            isCheck: true,
             run: () => {
                 if ($("div.table div.label:contains('4')").length !== 1) {
                     throw new TourError("Table is still merge");
@@ -45,7 +43,6 @@ export function checkMergeTableIsCancelHelpers() {
         {
             content: `Verify table 4 and 5 isn't merge anymore`,
             trigger: 'div.table div.label:contains("5")',
-            isCheck: true,
             run: () => {
                 if ($("div.table div.label:contains('5')").length !== 1) {
                     throw new TourError("Table is still merge");

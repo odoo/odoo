@@ -19,6 +19,5 @@ registry.category("web_tour.tours").add('test_json_auth', {
     },
 }, {
     trigger: 'span:contains(Mitchell Admin), span:contains(Administrator)',
-    run: function () {},
 }
 ]});

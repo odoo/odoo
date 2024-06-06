@@ -608,11 +608,9 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 }, {
     mobile: false,
     trigger: "td[name='product_id'][data-tooltip*='the_flow.product'], td[name='product_template_id'][data-tooltip*='the_flow.product']",
-    run: () => {}, // check
 }, {
     mobile: false,
     trigger: "td[name='product_uom'][data-tooltip='Units']",
-    isCheck: true,
 }, {
     mobile: true,
     trigger: ".o_field_widget[name=product_id] input",
@@ -636,9 +634,9 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     position: 'right',
     run: "click",
 }, {
+    // check if the new record is displayed
     mobile: true,
     trigger: ".modal-footer .btn-primary:contains('Save & New'):not([disabled])",
-    run: () => {}, // check if the new record is displayed
 }, {
     /**
      * We need both triggers because the "sale_product_configurator" module replaces the
@@ -658,11 +656,9 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 }, {
     mobile: false,
     trigger: "td[name='product_id'][data-tooltip*='the_flow.service'], td[name='product_template_id'][data-tooltip*='the_flow.service']",
-    run: () => {}, // check
 }, {
     mobile: false,
     trigger: "td[name='product_uom'][data-tooltip='Hours']",
-    isCheck: true,
 }, {
     mobile: false,
     trigger: 'label:contains("Untaxed Amount")',

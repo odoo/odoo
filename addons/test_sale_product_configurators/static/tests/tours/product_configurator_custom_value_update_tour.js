@@ -38,12 +38,10 @@ configuratorTourUtils.assertProductNameContains("Customizable Desk (TEST) (Custo
     run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Legs: Custom: 123")',
-    isCheck: true,
 },
 ...stepUtils.saveForm(),
 {
     trigger: 'td.o_data_cell:contains("Legs: Custom: 123")',
-    isCheck: true,
 },
 {
     trigger: 'div[name="product_template_id"]',
@@ -59,7 +57,6 @@ configuratorTourUtils.setCustomAttribute("Customizable Desk (TEST)", "Legs", "12
     run: "click",
 }, {
     trigger: 'td.o_data_cell:contains("Legs: Custom: 123456")',
-    isCheck: true,
 },
 ...stepUtils.saveForm(),
 ]});

@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add('shop_zoom', {
     {
         content: "check that the image viewer opened",
         trigger: '.o_wsale_image_viewer',
-        run: () => {},
     },
     {
         content: "close the image viewer",
@@ -49,6 +48,5 @@ registry.category("web_tour.tours").add('shop_zoom', {
     {
         content: "check there is a zoom on that big image",
         trigger: '.o_wsale_image_viewer',
-        run: () => {},
     },
 ]});

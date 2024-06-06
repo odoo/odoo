@@ -13,7 +13,6 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: 'div:contains("enter your password")',
-    run: () => {},
 }, {
     content: "Input password",
     trigger: '[name=password]',
@@ -25,7 +24,6 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 }, {
     content: "Check the wizard has opened",
     trigger: 'li:contains("scan the barcode below")',
-    run: () => {}
 }, {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
@@ -42,7 +40,6 @@ registry.category("web_tour.tours").add('totportal_tour_setup', {
 }, {
     content: "Check that the button has changed",
     trigger: 'button:contains(Disable two-factor authentication)',
-    run: () => {}
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_enabled', {
@@ -81,7 +78,6 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "check we're logged in",
     trigger: "h3:contains(My account)",
-    run: () => {}
 }, {
     content: "go back to security",
     trigger: "a:contains(Security)",
@@ -93,7 +89,6 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: 'div:contains("enter your password")',
-    run: () => {},
 }, {
     content: "Input password",
     trigger: '[name=password]',
@@ -105,7 +100,6 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "Check that the button has changed",
     trigger: 'button:contains(Enable two-factor authentication)',
-    run: () => {}
 }]});
 
 registry.category("web_tour.tours").add('totportal_login_disabled', {
@@ -130,5 +124,4 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
 }, {
     content: "check we're logged in",
     trigger: "h3:contains(My account)",
-    run: () => {}
 }]});

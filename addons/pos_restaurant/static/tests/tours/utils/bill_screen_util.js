@@ -13,7 +13,6 @@ export function isShown() {
         {
             content: "Bill screen is shown",
             trigger: '.receipt-screen h2:contains("Bill Printing")',
-            run: () => {},
         },
     ];
 }

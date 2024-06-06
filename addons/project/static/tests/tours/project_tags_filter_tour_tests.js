@@ -35,18 +35,15 @@ registry.category("web_tour.tours").add('project_tags_filter_tour',
     trigger: '.o_kanban_group:has(.o_kanban_header:has(span:contains("pig"))) .o_kanban_record:has(span:contains("Pigs"))',
     extra_trigger: '.o_kanban_group:has(.o_kanban_header:has(span:contains("goat"))):not(:has(.o_kanban_record))',
     content: 'check that the corkscrew tail filter has taken effect',
-    run: () => {},
 }, ...changeFilter("horned tag filter"),
 {
     trigger: '.o_kanban_group:has(.o_kanban_header:has(span:contains("goat"))) .o_kanban_record:has(span:contains("Goats"))',
     extra_trigger: '.o_kanban_group:has(.o_kanban_header:has(span:contains("pig"))):not(:has(.o_kanban_record))',
     content: 'check that the horned filter has taken effect',
-    run: () => {},
 }, ...changeFilter("4 Legged tag filter"),
 {
     trigger: '.o_kanban_group:has(.o_kanban_header:has(span:contains("goat"))) .o_kanban_record:has(span:contains("Goats"))',
     extra_trigger: '.o_kanban_group:has(.o_kanban_header:has(span:contains("pig"))) .o_kanban_record:has(span:contains("Pigs"))',
     content: 'check that the 4 legged filter has taken effect',
-    run: () => {},
 },
 ]});

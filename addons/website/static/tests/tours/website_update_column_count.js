@@ -23,7 +23,6 @@ const addMobileOrderToTextImageSnippet = [
         content: "Check that the mobile order classes and styles are correct",
         trigger: `${textImageSnippetRow}:has(.order-lg-0[style*='order: 1;']:nth-child(1))`
             + ":has(.order-lg-0[style*='order: 0;']:nth-child(2))",
-        isCheck: true,
     },
 ];
 
@@ -31,7 +30,6 @@ const checkIfNoMobileOrder = (snippetRowSelector) => {
     return {
         content: "Check that the mobile order classes and styles were removed",
         trigger: `${snippetRowSelector}:not(:has(.order-lg-0[style*='order: ']))`,
-        isCheck: true,
     };
 };
 
@@ -58,11 +56,9 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Check that there are now 5 items on 5 columns, and that it didn't change the mobile layout",
     trigger: `${columnsSnippetRow}:has(.col-lg-2:nth-child(5):not(.col-2)):not(:has(:nth-child(6)))`,
-    isCheck: true,
 }, {
     content: "Check that there is an offset on the 1st item to center the row on desktop, but not on mobile",
     trigger: `${columnsSnippetRow} > .offset-lg-1:not(.offset-1):first-child`,
-    isCheck: true,
 }, {
     content: "Open the columns count select",
     trigger: columnCountOptSelector,
@@ -94,7 +90,6 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Check that there are still 4 items but on rows of 3 columns",
     trigger: `${columnsSnippetRow}:has(.col-lg-6.col-4:nth-child(4))`,
-    isCheck: true,
 },
 // As there is no practical way to resize the items through the handles, the
 // next step approximates part of what could be reached.
@@ -110,7 +105,6 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Check that the counter shows 'Custom'",
     trigger: `${columnCountOptSelector} we-toggler:contains('Custom')`,
-    isCheck: true,
 }, {
     content: "Click on the 2nd item",
     trigger: `${columnsSnippetRow} > :nth-child(2)`,
@@ -124,7 +118,6 @@ wTourUtils.clickOnSnippet({
              "and that order: 1, .order-lg-0 is set on the 3rd item, and order: 2, .order-lg-0 on the 2nd",
     trigger: `${columnsSnippetRow}:has([style*='order: 0;'].order-lg-0:first-child)`,
     extra_trigger: `${columnsSnippetRow}:has([style*='order: 2;'].order-lg-0:nth-child(2) + [style*='order: 1;'].order-lg-0:nth-child(3))`,
-    isCheck: true,
 }, {
     content: "Toggle desktop view",
     trigger: ".o_we_website_top_actions [data-action='mobile']",
@@ -140,7 +133,6 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Check that each item has a different mobile order from 0 to 5",
     trigger: `${columnsSnippetRow}${[0, 1, 2, 3, 4, 5].map(n => `:has([style*='order: ${n};'].order-lg-0)`).join("")}`,
-    isCheck: true,
 }, {
     content: "Click on the 6th item",
     trigger: `${columnsSnippetRow} > :nth-child(6)`,
@@ -150,7 +142,6 @@ wTourUtils.clickOnSnippet({
     // without it.
     content: "Wait for move arrows to appear",
     trigger: ":iframe .o_overlay_move_options:has([data-name='move_left_opt'] + .d-none[data-name='move_right_opt'])",
-    isCheck: true,
 }, {
     content: "Change the orders of the 5th and 6th items to override the mobile orders",
     trigger: ":iframe .o_overlay_move_options [data-name='move_left_opt']",
@@ -158,7 +149,6 @@ wTourUtils.clickOnSnippet({
 }, {
     content: "Check that there are no orders anymore",
     trigger: `${columnsSnippetRow}:not(:has([style*='order: 0;'])):not(:has(.order-lg-0))`,
-    isCheck: true,
 },
 ]);
 
@@ -177,7 +167,6 @@ wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop",
         trigger: `${columnsSnippetRow}:has(.order-lg-0[style*='order: 1;']:nth-child(1))`
             + ":has(.order-lg-0[style*='order: 0;']:nth-child(2))"
             + ":has(.order-lg-0[style*='order: 2;']:nth-child(3))",
-        isCheck: true,
     },
     // Add a mobile order to the "Text-Image" snippet columns.
     ...addMobileOrderToTextImageSnippet,
@@ -208,6 +197,5 @@ wTourUtils.registerWebsitePreviewTour("website_mobile_order_with_drag_and_drop",
         content: "Check that the order gap left in 'Columns' was filled",
         trigger: `${columnsSnippetRow}:has(.order-lg-0[style*='order: 0;']:nth-child(1))`
             + ":has(.order-lg-0[style*='order: 1;']:nth-child(2))",
-        isCheck: true,
     },
 ]);

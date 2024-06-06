@@ -53,7 +53,6 @@ stepUtils.showAppsMenuItem(),
 }, {
     content: "check price is correct (USD)",
     trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4) h5:contains("750.00")',
-    isCheck: true,
 }, {
     content: "add one more",
     trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(3)>div>button:has(i.fa-plus)',
@@ -61,7 +60,6 @@ stepUtils.showAppsMenuItem(),
 }, {
     content: "check price for 2",
     trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4) h5:contains("600.00")',
-    isCheck: true,
 },
     configuratorTourUtils.addOptionalProduct("Conference Chair"),
     configuratorTourUtils.increaseProductQuantity("Conference Chair"),

@@ -35,7 +35,6 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     {
         content: "Check that brand b is not available",
         trigger: '.css_not_available',
-        isCheck: true,
     },
     {
         content: "select brand b even though it's not available",
@@ -45,12 +44,10 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     {
         content: "check combination is not possible",
         trigger: '.js_main_product.css_not_available .css_not_available_msg:contains("This combination does not exist.")',
-        isCheck: true,
     },
     {
         content: "check add to cart not possible",
         trigger: '#add_to_cart.disabled',
-        isCheck: true,
     },
     {
         content: "change second variant to remove warning",
@@ -60,12 +57,10 @@ registry.category("web_tour.tours").add('tour_shop_archived_variant_multi', {
     {
         content: "Check that brand b is not available",
         trigger: '.css_not_available',
-        isCheck: true,
     },
     {
         content: "Check that second variant is disabled",
         trigger: '.css_not_available input[data-attribute_name="Color"][data-value_name="Black"]',
-        isCheck: true,
     },
 ]});
 

@@ -26,7 +26,6 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Check that we have to enter enhanced security mode",
     trigger: 'div:contains("enter your password")',
-    run: () => {},
 }, {
     content: "Input password",
     trigger: '[name=password] input',
@@ -38,7 +37,6 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "Check that we're now on the key description dialog",
     trigger: 'p:contains("Enter a description of and purpose for the key.")',
-    run: () => {},
 }, {
     content: "Enter description",
     trigger: '[name=name] input',
@@ -62,7 +60,6 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 }, {
     content: "check that our key is present (FIXME: requires HR to be installed)",
     trigger: '[name=api_key_ids] td:contains("my key")',
-    run() {},
 }]});
 
 // deletes the previously created key
