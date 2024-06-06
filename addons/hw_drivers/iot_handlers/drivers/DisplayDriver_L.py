@@ -67,9 +67,7 @@ class DisplayDriver(Driver):
     def run(self):
         while self.device_identifier != 'distant_display' and not self._stopped.is_set():
             time.sleep(60)
-            if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier:
-                # Refresh the page every minute
-                self.call_xdotools('F5')
+            self.call_xdotools('F5')  # Refresh the page every minute
 
     def update_url(self, url=None):
         os.environ['DISPLAY'] = ":0." + self._x_screen
@@ -229,7 +227,6 @@ class DisplayController(http.Controller):
         iot_device = [{
             'name': iot_devices[device].device_name,
             'type': iot_devices[device].device_type,
-            'identifier': iot_devices[device].device_identifier,
         } for device in iot_devices]
 
         return pos_display_template.render({
