@@ -476,7 +476,7 @@ class GettextAlias(object):
 
     def _get_lang(self, frame):
         # try, in order: context.get('lang'), kwargs['context'].get('lang'),
-        # self.env.lang, self.localcontext.get('lang'), request.env.lang
+        # self.env.lang, request.env.lang
         lang = None
         if frame.f_locals.get('context'):
             lang = frame.f_locals['context'].get('lang')
@@ -488,9 +488,6 @@ class GettextAlias(object):
             s = frame.f_locals.get('self')
             if hasattr(s, 'env'):
                 lang = s.env.lang
-            if not lang:
-                if hasattr(s, 'localcontext'):
-                    lang = s.localcontext.get('lang')
             if not lang:
                 try:
                     from odoo.http import request
