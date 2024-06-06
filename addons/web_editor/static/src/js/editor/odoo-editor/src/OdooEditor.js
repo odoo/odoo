@@ -3203,6 +3203,11 @@ export class OdooEditor extends EventTarget {
                     ? 'block'
                     : 'none';
             }
+
+            const translateDropdown = this.toolbar.querySelector('#translate');
+            if (translateDropdown) {
+                translateDropdown.style.display = sel.isCollapsed ? 'none' : '';
+            }
         }
         this.updateColorpickerLabels();
         const listUIClasses = {UL: 'fa-list-ul', OL: 'fa-list-ol', CL: 'fa-tasks'};
