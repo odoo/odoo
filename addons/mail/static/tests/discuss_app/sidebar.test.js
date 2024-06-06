@@ -783,6 +783,7 @@ test("channel - states: open should update the value on the server", async () =>
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
+    onRpc("res.users.settings", "set_res_users_settings", () => step("set_res_users_settings"));
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-right"); // wait fully loaded
@@ -794,6 +795,8 @@ test("channel - states: open should update the value on the server", async () =>
     expect(initalSettings.is_discuss_sidebar_category_channel_open).toBe(false);
     await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-right"); // wait fully loaded
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
+    await contains(".o-mail-DiscussSidebarCategory:contains('Channels') .oi.oi-chevron-down");
+    await assertSteps(["set_res_users_settings"]); // ensure the server is updated before asserting
     const newSettings = await getService("orm").call(
         "res.users.settings",
         "_find_or_create_for_user",
