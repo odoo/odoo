@@ -155,7 +155,7 @@ def handle_demo(func, self, *args, **kwargs):
         return self.account_peppol_edi_mode == 'demo'
 
     def get_demo_mode_res_partner(self, args, kwargs):
-        peppol_user = self.env.company.account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
+        peppol_user = self.env.company.sudo().account_edi_proxy_client_ids.filtered(lambda user: user.proxy_type == 'peppol')
         if peppol_user:
             return peppol_user.edi_mode == 'demo'
         return False
