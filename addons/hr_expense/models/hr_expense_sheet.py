@@ -734,7 +734,7 @@ class HrExpenseSheet(models.Model):
 
     def _validate_analytic_distribution(self):
         for line in self.expense_line_ids:
-            line._validate_distribution(account=line.account_id.id, business_domain='expense', company_id=line.company_id.id)
+            line._validate_distribution(account=line.account_id.id, product=line.product_id.id, business_domain='expense', company_id=line.company_id.id)
 
     def _get_responsible_for_approval(self):
         if self.user_id:
