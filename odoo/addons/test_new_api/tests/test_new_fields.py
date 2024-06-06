@@ -2412,6 +2412,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             self._search(Model, [('parent_id', '=', 'Parent')]),
             child_of_active + child_of_inactive,
         )
+        self.assertEqual(
+            Model.search([('id', 'child_of', active_parent.id)]),
+            active_parent + child_of_active,
+        )
         # weird semantics: active_parent is in both results but doesn't have a parent_id
         self.assertEqual(
             self._search(Model, [('parent_id', 'child_of', active_parent.id)]),
@@ -2442,15 +2446,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertQueries(["""
             SELECT "test_new_api_model_active_field"."id"
             FROM "test_new_api_model_active_field"
-            WHERE TRUE
-            ORDER BY "test_new_api_model_active_field"."id"
-        """, """
-            SELECT "test_new_api_model_active_field"."id"
-            FROM "test_new_api_model_active_field"
-            WHERE FALSE
             ORDER BY "test_new_api_model_active_field"."id"
         """]):
             Model.search([('active', 'in', [True, False])])
+        with self.assertQueries([]):
             Model.search([('active', 'not in', [True, False])])
 
     def test_60_one2many_domain(self):

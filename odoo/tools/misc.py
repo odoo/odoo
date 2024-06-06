@@ -1056,7 +1056,7 @@ class OrderedSet(MutableSet[T], typing.Generic[T]):
     """ A set collection that remembers the elements first insertion order. """
     __slots__ = ['_map']
 
-    def __init__(self, elems=()):
+    def __init__(self, elems: Iterable[T] = ()):
         self._map: dict[T, None] = dict.fromkeys(elems)
 
     def __contains__(self, elem):

@@ -291,15 +291,11 @@ class test_search(TransactionCase):
     def test_22_like_folding(self):
         Model = self.env['res.country']
 
+        # there is just one query for the first search as it matches all
+        # the second search does not run, because the domain is False
         with self.assertQueries(["""
             SELECT "res_country"."id"
             FROM "res_country"
-            WHERE TRUE
-            ORDER BY "res_country"."name"->>%s
-        """, """
-            SELECT "res_country"."id"
-            FROM "res_country"
-            WHERE FALSE
             ORDER BY "res_country"."name"->>%s
         """]):
             Model.search([('code', 'ilike', '')])

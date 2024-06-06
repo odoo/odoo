@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections.abc import Iterable
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import _, SQL
+from odoo.tools import SQL, _
 
 
 class PhoneBlacklist(models.Model):
@@ -72,7 +74,7 @@ class PhoneBlacklist(models.Model):
             sanitize = self.env.user._phone_format
             if isinstance(value, str):
                 value = sanitize(number=value) or value
-            elif isinstance(value, list) and all(isinstance(number, str) for number in value):
+            elif isinstance(value, Iterable) and all(isinstance(number, str) for number in value):
                 value = [sanitize(number=number) or number for number in value]
         return super()._condition_to_sql(alias, field_expr, operator, value, query)
 

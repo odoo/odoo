@@ -10,18 +10,23 @@ from collections import defaultdict
 from operator import attrgetter
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.osv import expression
 from odoo.tools import SQL, OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
 
+from .domains import Domain
 from .fields import Field, _logger
 from .models import BaseModel
-from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_property_field_value_name, parse_field_expr
+from .utils import COLLECTION_TYPES, SQL_OPERATORS, parse_field_expr, regex_alphanumeric
 
 if typing.TYPE_CHECKING:
     from odoo.tools import Query
 
 NoneType = type(None)
+
+
+def check_property_field_value_name(property_name):
+    if not (0 < len(property_name) <= 512) or not regex_alphanumeric.match(property_name):
+        raise ValueError(f"Wrong property field value name {property_name!r}.")
 
 
 class Properties(Field):
@@ -790,10 +795,9 @@ class PropertiesDefinition(Field):
                 # (e.g. if the module has been uninstalled)
                 # check if the domain is still valid
                 try:
-                    expression.expression(
-                        ast.literal_eval(property_domain),
-                        record.env[property_model],
-                    )
+                    dom = Domain(ast.literal_eval(property_domain))
+                    model = record.env[property_model]
+                    dom.validate(model)
                 except ValueError:
                     del property_definition['domain']
 
