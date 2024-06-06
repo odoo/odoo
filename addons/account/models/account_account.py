@@ -6,6 +6,7 @@ import re
 import json
 
 from odoo import api, fields, models, _, Command
+from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import SQL, Query
@@ -425,7 +426,8 @@ class AccountAccount(models.Model):
         if field_name != 'root_id' or set_count:
             return super()._search_panel_domain_image(field_name, domain, set_count, limit)
 
-        if expression.is_false(self, domain):
+        domain = Domain(domain)
+        if domain.is_false():
             return {}
 
         query_account = self.env['account.account']._search(domain, limit=limit)
