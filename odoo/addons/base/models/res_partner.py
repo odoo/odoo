@@ -404,6 +404,12 @@ class Partner(models.Model):
         if self.parent_id:
             self.lang = self.parent_id.lang or self.env.context.get('default_lang') or self.env.lang
 
+    @api.onchange('is_company')
+    def _onchange_is_company_for_parent_id(self):
+        # When switching a contact from individual to a company, the parent_id should be reset.
+        if self.is_company:
+            self.parent_id = False
+
     @api.onchange('country_id')
     def _onchange_country_id(self):
         if self.country_id and self.country_id != self.state_id.country_id:
