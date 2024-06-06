@@ -84,7 +84,7 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onAddProductIntoCart: function () {
-        const productID = this.el.querySelector('input[name="product_id"]').getAttribute('value')
+        const productID = this.el.querySelector('input[name="product_id"]').value;
         this._vpv('/stats/ecom/product_add_to_cart/' + productID);
     },
     /**
@@ -112,10 +112,12 @@ publicWidget.registry.websiteSaleTracking = publicWidget.Widget.extend({
      * @private
      */
     _onOrderPayment: function () {
-        const method = this.el
-            .querySelector("#payment_method input[name=provider]:checked")
-            .parentNode.querySelector("span").textContent;
-        this._vpv('/stats/ecom/order_payment/' + method);
+        // TODO: To review again - divy
+        let paymentMethodEl = this.el.querySelector("#payment_method input[name=provider]:checked");
+        while (paymentMethodEl && paymentMethodEl.matches("span")) {
+            paymentMethodEl = paymentMethodEl.nextElementSibling;
+        }
+        this._vpv('/stats/ecom/order_payment/' + paymentMethodEl?.textContent);
     },
 });
 

@@ -82,19 +82,18 @@ publicWidget.registry.WebsiteSale.include({
      */
     _onModalSubmit: function (goToShop) {
         const mainProductEl = this.el
-            .querySelector(".js_product.in_cart.main_product")
-            .querySelector(".product_id");
+            .querySelector(".js_product.in_cart.main_product .product_id")
         const productTrackingInfo = mainProductEl.dataset.productTrackingInfo;
         if (productTrackingInfo) {
             const currency = productTrackingInfo['currency'];
             const productsTrackingInfo = [];
             this.el.querySelectorAll(".js_product.in_cart").forEach((el) => {
                 productsTrackingInfo.push({
-                    'item_id': el.getElementsByClassName("product_id").value,
+                    'item_id': parseInt(el.getElementsByClassName("product_id").value),
                     'item_name': el.getElementsByClassName("product_display_name").textContent,
-                    'quantity': el.getElementsByClassName("js_quantity").value,
+                    'quantity': parseFloat(el.getElementsByClassName("js_quantity").value),
                     'currency': currency,
-                    'price': el.getElementsByClassName("oe_price").getElementsByClassName("oe_currency_value").teeachxtContent,
+                    'price': parseFloat(el.getElementsByClassName("oe_price").getElementsByClassName("oe_currency_value").textContent),
                 });
             });
             if (productsTrackingInfo.length) {

@@ -8,6 +8,7 @@ import website_sale_utils from "@website_sale/js/website_sale_utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { renderToString } from "@web/core/utils/render";
+import { redirect } from "@web/core/utils/urls";
 
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 
@@ -76,10 +77,11 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                     const newLink =
                         "/shop/compare?products=" +
                         encodeURIComponent(self.comparelist_product_ids);
-                    window.location.href =
+                    const url =
                         Object.keys(self.comparelist_product_ids || {}).length === 0
                             ? "/shop"
                             : newLink;
+                    redirect(url);
                 });
             });
         });
@@ -108,10 +110,11 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                     const newLink =
                         "/shop/compare?products=" +
                         encodeURIComponent(self.comparelist_product_ids);
-                    window.location.href =
+                    const url =
                         Object.keys(self.comparelist_product_ids || {}).length === 0
                             ? "/shop"
                             : newLink;
+                    redirect(url);
                 });
             });
         });
@@ -135,12 +138,12 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 }
             }
 
-            let form = elem.closest("form");
-            form = form ? form : this.el.querySelector("#product_details > form");
+            let formEl = elem.closest("form");
+            formEl = formEl ? formEl : this.el.querySelector("#product_details > form");
             this.selectOrCreateProduct(
-                form,
+                formEl,
                 productId,
-                form.querySelector(".product_template_id")?.value
+                formEl.querySelector(".product_template_id")?.value
             ).then(function (productId) {
                 productId = parseInt(productId, 10) || parseInt(elem.dataset?.productProductId, 10);
                 if (!productId) {
@@ -244,7 +247,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                 const parser = new DOMParser();
                 const template = parser.parseFromString(self.product_data[res].render, "text/html")
                     .body.firstChild;
-                document.querySelectorAll(".o_comparelist_products")[0]?.append(template);
+                document.querySelector(".o_comparelist_products")?.append(template);
             }
         });
         const popover = Popover.getOrCreateInstance(
@@ -358,10 +361,10 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
      * @param {Event} ev
      */
     _onClickComparelistTr: function (ev) {
-        const target = ev.currentTarget;
+        const targetEl = ev.currentTarget;
         // TODO_VISP: remove this
-        $($(target).data("target")).children().slideToggle(100);
-        target
+        $($(targetEl).data("target")).children().slideToggle(100);
+        targetEl
             .querySelectorAll(".fa-chevron-circle-down, .fa-chevron-circle-right")
             .forEach((el) => {
                 el.classList.toggle("fa-chevron-circle-down fa-chevron-circle-right");
@@ -373,13 +376,13 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
      */
     _onFormSubmit(ev) {
         ev.preventDefault();
-        const form = ev.currentTarget;
+        const formEl = ev.currentTarget;
         const cellIndex = ev.currentTarget.closest("td").cellIndex;
         this.getCartHandlerOptions(ev);
         // Override product image container for animation.
-        this.itemImgContainer =
+        this.itemImgContainerEl =
             this.el.querySelector("#o_comparelist_table tr").children[cellIndex];
-        const inputProductEl = form.querySelector('input[type="hidden"][name="product_id"]');
+        const inputProductEl = formEl.querySelector('input[type="hidden"][name="product_id"]');
         const productId = parseInt(inputProductEl.value);
         if (productId) {
             const productTrackingInfo = inputProductEl.dataset.productTrackingInfo;
@@ -389,17 +392,17 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
                     new CustomEvent("add_to_cart_event", { detail: productTrackingInfo })
                 );
             }
-            return this.addToCart(this._getAddToCartParams(productId, form));
+            return this.addToCart(this._getAddToCartParams(productId, formEl));
         }
     },
     /**
      * Get the addToCart Params
      *
      * @param {number} productId
-     * @param {Element} form
+     * @param {Element} formEl
      * @override
      */
-    _getAddToCartParams(productId, form) {
+    _getAddToCartParams(productId, formEl) {
         return {
             product_id: productId,
             add_qty: 1,

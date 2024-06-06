@@ -51,32 +51,32 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @private
      */
     _changeCountry: function () {
-        if (!this.el.querySelector("#country_id").value) {
+        const countryEl = this.el.querySelector("#country_id");
+        if (!countryEl.value) {
             return;
         }
-        return rpc("/shop/country_infos/" + this.el.querySelector("#country_id").value, {
-            mode: this.el.querySelector("#country_id").getAttribute("mode"),
-        }).then(function (data) {
+        return rpc("/shop/country_infos/" + countryEl.value, {
+            mode: countryEl.getAttribute("mode"),
+        }).then((data) => {
             // placeholder phone_code
-            document
+            this.el
                 .querySelector("input[name='phone']")
                 .setAttribute("placeholder", data.phone_code !== 0 ? "+" + data.phone_code : "");
 
             // populate states and display
-            const selectStateEl = document.querySelector("select[name='state_id']");
+            const selectStateEl = this.el.querySelector("select[name='state_id']");
             // dont reload state at first loading (done in qweb)
-            if (
-                parseInt(selectStateEl.dataset.init) === 0 ||
+            if (selectStateEl.getDataset("init") === 0 ||
                 selectStateEl.querySelectorAll("option").length === 1
             ) {
                 if (data.states.length || data.state_required) {
                     selectStateEl.innerHTML = "";
                     data.states.forEach((x) => {
-                        const opt = document.createElement("option");
-                        opt.textContent = x[1];
-                        opt.value = x[0];
-                        opt.dataset.code = x[2];
-                        selectStateEl.append(opt);
+                        const optionEl = document.createElement("option");
+                        optionEl.textContent = x[1];
+                        optionEl.value = x[0];
+                        optionEl.dataset.code = x[2];
+                        selectStateEl.append(optionEl);
                     });
                     selectStateEl.closest("div").style.display = "";
                 } else {
@@ -90,8 +90,8 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
 
             // manage fields order / visibility
             if (data.fields) {
-                const divZipEL = document.querySelector(".div_zip");
-                const divCityEl = document.querySelector(".div_city");
+                const divZipEL = this.el.querySelector(".div_zip");
+                const divCityEl = this.el.querySelector(".div_city");
                 if (data.fields.indexOf("zip") > data.fields.indexOf("city")) {
                     divZipEL.parentNode.insertBefore(divCityEl, divZipEL);
                 } else {
@@ -99,20 +99,20 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
                 }
                 var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
                 all_fields.forEach((field) => {
-                    const fieldEl = document.querySelector(
+                    const fieldEl = this.el.querySelector(
                         ".checkout_autoformat .div_" + field.split("_")[0]
                     );
                     fieldEl.style.display = data.fields.includes(field) ? "" : "none";
                 });
             }
 
-            const lableZipEl = document.querySelector("label[for='zip']");
+            const lableZipEl = this.el.querySelector("label[for='zip']");
             if (lableZipEl) {
                 lableZipEl.classList.toggle("label-optional", !data.zip_required);
                 lableZipEl.setAttribute("required", !!data.zip_required);
             }
             if (lableZipEl) {
-                const lableStateIdEl = document.querySelector("label[for='state_id']");
+                const lableStateIdEl = this.el.querySelector("label[for='state_id']");
                 lableStateIdEl.classList.toggle("label-optional", !data.state_required);
                 lableStateIdEl.setAttribute("required", !!data.state_required);
             }
@@ -124,8 +124,8 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onChangeShippingUseSame: function (ev) {
-        if (document.querySelector(".ship_to_other")) {
-            document.querySelector(".ship_to_other").style.display = ev.currentTarget.checked
+        if (this.el.querySelector(".ship_to_other")) {
+            this.el.querySelector(".ship_to_other").style.display = ev.currentTarget.checked
                 ? "none"
                 : "";
         }

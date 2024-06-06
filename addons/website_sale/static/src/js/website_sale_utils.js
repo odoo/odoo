@@ -13,7 +13,7 @@ export const cartHandlerMixin = {
     getCartHandlerOptions(ev) {
         this.isBuyNow = ev.currentTarget.classList.contains('o_we_buy_now');
         const targetSelector = ev.currentTarget.dataset.animationSelector || 'img';
-        this.itemImgContainer = ev.currentTarget.closest(`${targetSelector}`);
+        this.itemImgContainerEl = ev.currentTarget.closest(`${targetSelector}`);
     },
     /**
      * Used to add product depending on stayOnPageOption value.
@@ -97,9 +97,10 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
  * @param {Object} data
  */
 function updateCartNavBar(data) {
+    sessionStorage.setItem('website_sale_cart_quantity', data.cart_quantity);
     const myCartQuantityEl = document.querySelector(".my_cart_quantity");
-    const parentLi = myCartQuantityEl.closest("li.o_wsale_my_cart");
-    parentLi.classList.remove("d-none");
+    const parentLiEl = myCartQuantityEl.closest("li.o_wsale_my_cart");
+    parentLiEl.classList.remove("d-none");
     myCartQuantityEl.classList.toggle("d-none", data.cart_quantity === 0);
     myCartQuantityEl.classList.add("o_mycart_zoom_animation");
 
@@ -115,8 +116,10 @@ function updateCartNavBar(data) {
     }, 300);
     const jsCartLinesEl = document.querySelector(".js_cart_lines");
     if (jsCartLinesEl) {
-        jsCartLinesEl.insertAdjacentHTML("beforebegin", data["website_sale.cart_lines"]);
-        jsCartLinesEl?.remove();
+        const cartLinesEl = new DOMParser()
+            .parseFromString(data["website_sale.cart_lines"], "text/html")
+            .querySelector("#cart_products");
+        jsCartLinesEl.parentNode.replaceChild(cartLinesEl, jsCartLinesEl);
     }
     if (document.querySelector("#cart_total")) {
         document.querySelector("#cart_total").outerHTML = data["website_sale.total"];
@@ -155,8 +158,8 @@ function showWarning(message) {
     if (!message) {
         return;
     }
-    const page = this.el.querySelector(".oe_website_sale");
-    const cartAlertEl = page.querySelector("#data_warning");
+    const pageEl = this.el.querySelector(".oe_website_sale");
+    const cartAlertEl = pageEl.querySelector("#data_warning");
     if (!cartAlertEl) {
         const cartAlertDivEl = document.createElement("div");
         cartAlertDivEl.className = "alert alert-danger alert-dismissible";
@@ -173,7 +176,7 @@ function showWarning(message) {
         cartAlertDivEl.appendChild(buttonEl);
         cartAlertDivEl.appendChild(spanEl);
 
-        page.prepend(cartAlertDivEl);
+        pageEl.prepend(cartAlertDivEl);
     }
     cartAlertEl.querySelector("span:last-child").textContent = message;
 }

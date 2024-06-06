@@ -90,8 +90,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                 el.closest(".js_product").querySelector(".product_id:checked")?.value
             );
         }
-        const form = el.closest("form");
-        let templateId = form.querySelector(".product_template_id")?.value;
+        const formEl = el.closest("form");
+        let templateId = formEl.querySelector(".product_template_id")?.value;
         // when adding from /shop instead of the product page, need another selector
         if (!templateId) {
             templateId = el.dataset.productTemplateId;
@@ -149,10 +149,10 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      */
     _updateWishlistView: function () {
         const wishButtonEl = document.querySelector(".o_wsale_my_wish");
-        if (wishButtonEl && wishButtonEl.classList.contains("o_wsale_my_wish_hide_empty")) {
-            wishButtonEl.classList.toggle('d-none', !this.wishlistProductIDs.length);
-        }
         if (wishButtonEl) {
+            if (wishButtonEl.classList.contains("o_wsale_my_wish_hide_empty")) {
+                wishButtonEl.classList.toggle('d-none', !this.wishlistProductIDs.length);
+            }
             wishButtonEl.querySelector('.my_wish_quantity').textContent = this.wishlistProductIDs.length;
         }
     },
@@ -203,11 +203,11 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _addToCart: function (productID, qty) {
-        const tr = this.el.querySelector(`tr[data-product-id="${productID}"]`);
-        const productTrackingInfo = tr.dataset.productTrackingInfo;
+        const trEl = this.el.querySelector(`tr[data-product-id="${productID}"]`);
+        const productTrackingInfo = trEl.dataset.productTrackingInfo;
         if (productTrackingInfo) {
             productTrackingInfo.quantity = parseFloat(qty);
-            tr.dispatchEvent(
+            trEl.dispatchEvent(
                 new CustomEvent("add_to_cart_event", { detail: [productTrackingInfo] })
             );
         }
@@ -270,8 +270,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
     _onChangeVariant: function (ev) {
         const input = ev.target;
         const parentEl = input.closest(".js_product");
-        if (parentEl) {
-            const el = parentEl.querySelector("[data-action='o_wishlist']");
+        const el = parentEl?.querySelector("[data-action='o_wishlist']");
+        if (el) {
             if (!this.wishlistProductIDs.includes(parseInt(input.value, 10))) {
                 el.disabled = false;
                 el.classList.remove("disabled");

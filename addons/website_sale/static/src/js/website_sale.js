@@ -12,6 +12,7 @@ import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { listenSizeChange, SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
 import { isBrowserFirefox, hasTouch } from "@web/core/browser/feature_detection";
 import { Component } from "@odoo/owl";
+import { redirect } from "@web/core/utils/urls";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -97,7 +98,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      */
     getSelectedVariantValues: function (container) {
-        const combination = container?.querySelector("input.js_product_change:checked")?.dataset
+        const combination = container?.querySelector("input.js_product_change:checked")?.getDataset()
             .combination;
         if (combination) {
             return combination;
@@ -195,32 +196,32 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
     /**
      * @private
      */
-    _changeCartQuantity: function (input, value, dom_optional, line_id, productIDs) {
+    _changeCartQuantity: function (inputEl, value, dom_optional, line_id, productIDs) {
         [...dom_optional].forEach((elem) => {
             elem.querySelector(".js_quantity").textContent = value;
             productIDs.push(elem.querySelector("span[data-product-id]").dataset.productId);
         });
-        input.dataset.updateChange = "true";
+        inputEl.dataset.updateChange = "true";
 
         rpc("/shop/cart/update_json", {
             line_id: line_id,
-            product_id: parseInt(input.dataset.productId, 10),
+            product_id: parseInt(inputEl.dataset.productId, 10),
             set_qty: value,
             display: true,
         }).then((data) => {
-            input.dataset.updateChange = "false";
-            let check_value = parseInt(input.value || 0, 10);
+            inputEl.dataset.updateChange = "false";
+            let check_value = parseInt(inputEl.value || 0, 10);
             if (isNaN(check_value)) {
                 check_value = 1;
             }
             if (value !== check_value) {
-                input?.dispatchEvent(new Event("change", { bubbles: true }));
+                inputEl?.dispatchEvent(new Event("change", { bubbles: true }));
                 return;
             }
             if (!data.cart_quantity) {
                 return window.location = '/shop/cart';
             }
-            input.value = data.quantity;
+            inputEl.value = data.quantity;
             const jsQtyLineIdEL = this.el.querySelector(
                 '.js_quantity[data-line-id="' + line_id + '"]'
             );
@@ -245,9 +246,9 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      *
      * @override
      */
-    _getProductId: function (parent) {
-        if (parent.querySelector("input.js_product_change")) {
-            return parseInt(parent.querySelector("input.js_product_change:checked").value);
+    _getProductId: function (parentEl) {
+        if (parentEl.querySelector("input.js_product_change")) {
+            return parseInt(parentEl.querySelector("input.js_product_change:checked").value);
         } else {
             return VariantMixin._getProductId.apply(this, arguments);
         }
@@ -286,7 +287,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             const images = salePage.querySelectorAll("img[data-zoom]");
             for (const image of images) {
                 const callback = () => {
-                    //TODO-VISP: remove this when website conversion gets murged
+                    //TODO-VISP: remove this when website conversion gets merged
                     $(image).zoomOdoo({
                         event: "mouseenter",
                         attach: this._getProductImageContainerSelector(),
@@ -349,33 +350,32 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @override
      * @private
      */
-    _updateProductImage: function (productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
-        let imageEls = productContainer.querySelectorAll(this._getProductImageContainerSelector());
+    _updateProductImage: function (productContainerEl, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
+        let imagesEl = productContainerEl.querySelector(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if (imageEls && !this._isEditorEnabled()) {
+        if (imagesEl && !this._isEditorEnabled()) {
             const parser = new DOMParser();
             newImages = parser
                 .parseFromString(newImages, "text/html")
                 .querySelector("#o-carousel-product");
-            imageEls[0].parentNode.appendChild(newImages);
-            imageEls.forEach((img) => img.remove());
-            imageEls = newImages;
+            imagesEl.parentNode.replaceChild(newImages, imagesEl);
+            imagesEl = newImages;
             // Update the sharable image (only work for Pinterest).
-            const shareImageSrc = imageEls.querySelector('img').src;
+            const shareImageSrc = imagesEl.querySelector('img').src;
             document.querySelector('meta[property="og:image"]')
                 .setAttribute('content', shareImageSrc);
 
-            if (imageEls.getAttribute("id") === "o-carousel-product") {
+            if (imagesEl.getAttribute("id") === "o-carousel-product") {
                 // TODO-VISP take a look
-                window.Carousel.getOrCreateInstance(imageEls, { interval: 0 });
+                window.Carousel.getOrCreateInstance(imagesEl).to(0);
             }
             this._startZoom();
             // fix issue with carousel height
-            this.trigger_up("widgets_start_request", { $target: $(imageEls) });
+            this.trigger_up("widgets_start_request", { $target: $(imagesEl) });
         }
-        imageEls.classList.toggle("css_not_available", !isCombinationPossible);
+        imagesEl.classList.toggle("css_not_available", !isCombinationPossible);
     },
     /**
      * @private
@@ -401,25 +401,25 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * and add handlers to the modal events (confirm, back, ...)
      *
      * @private
-     * @param {Element} form the related webshop form
+     * @param {Element} formEl the related webshop form
      */
-    _handleAdd: function (form) {
+    _handleAdd: function (formEl) {
         var self = this;
-        this.form = form;
+        this.form = formEl;
 
         var productSelector = [
             'input[type="hidden"][name="product_id"]',
             'input[type="radio"][name="product_id"]:checked'
         ];
         const productReady = this.selectOrCreateProduct(
-            form,
-            parseInt(form.querySelector(productSelector.join(", ")).value, 10),
-            form.querySelector(".product_template_id")?.value
+            formEl,
+            parseInt(formEl.querySelector(productSelector.join(", ")).value, 10),
+            formEl.querySelector(".product_template_id")?.value
         );
 
         return productReady.then(function (productId) {
-            form.querySelector(productSelector.join(", ")).value = productId;
-            self._updateRootProduct(form, productId);
+            formEl.querySelector(productSelector.join(", ")).value = productId;
+            self._updateRootProduct(formEl, productId);
             return self._onProductReady();
         });
     },
@@ -440,9 +440,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         const params = this.rootProduct;
 
         const productEl = document.querySelector("#product_detail");
-        let productTrackingInfo = productEl?.dataset.productTrackingInfo;
+        let productTrackingInfo = productEl?.getDataset("product-tracking-info");
         if (productTrackingInfo) {
-            productTrackingInfo = JSON.parse(productTrackingInfo);
             productTrackingInfo.quantity = params.quantity;
             productEl.dispatchEvent(
                 new CustomEvent("add_to_cart_event", { detail: [productTrackingInfo] })
@@ -483,29 +482,28 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onChangeCartQuantity: function (ev) {
-        const input = ev.currentTarget;
-        if (input.dataset.updateChange) {
+        const inputEl = ev.currentTarget;
+        if (inputEl.dataset.updateChange) {
             return;
         }
-        let value = parseInt(input.value || 0, 10);
+        let value = parseInt(inputEl.value || 0, 10);
         if (isNaN(value)) {
             value = 1;
         }
-        const domEl = input.closest("tr");
+        const domEl = inputEl.closest("tr");
         // var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
         const dom_optional = [];
-        let sibling = domEl?.nextElementSibling;
+        let siblingEl = domEl?.nextElementSibling;
         while (
-            sibling &&
-            sibling.classList.contains("optional_product") &&
-            sibling.classList.contains("info")
+            siblingEl &&
+            siblingEl.matches(".optional_product.info")
         ) {
-            dom_optional.push(sibling);
-            sibling = sibling.nextElementSibling;
+            dom_optional.push(siblingEl);
+            siblingEl = siblingEl.nextElementSibling;
         }
-        const line_id = parseInt(input.dataset.lineId, 10);
-        const productIDs = [parseInt(input.dataset.productId, 10)];
-        this._changeCartQuantity(input, value, dom_optional, line_id, productIDs);
+        const line_id = parseInt(inputEl.dataset.lineId, 10);
+        const productIDs = [parseInt(inputEl.dataset.productId, 10)];
+        this._changeCartQuantity(inputEl, value, dom_optional, line_id, productIDs);
     },
     /**
      * @private
@@ -526,23 +524,22 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         if (ev.currentTarget.matches("#add_to_cart, #products_grid .a-submit") && !forceSubmit) {
             return;
         }
-        var aSubmit = ev.currentTarget;
-        if (!ev.isDefaultPrevented() && !aSubmit.classList.contains("disabled")) {
+        var aSubmitEl = ev.currentTarget;
+        if (!ev.isDefaultPrevented() && !aSubmitEl.classList.contains("disabled")) {
             ev.preventDefault();
-            aSubmit.closest("form").submit();
+            aSubmitEl.closest("form").submit();
         }
-        if (aSubmit.classList.contains("a-submit-disable")) {
-            aSubmit.classList.add("disabled");
+        if (aSubmitEl.classList.contains("a-submit-disable")) {
+            aSubmitEl.classList.add("disabled");
         }
-        if (aSubmit.classList.contains("a-submit-loading")) {
+        if (aSubmitEl.classList.contains("a-submit-loading")) {
             const loadingEl = document.createElement("SPAN");
             loadingEl.className = "fa fa-cog fa-spin";
-
-            const fa_spanEl = aSubmit.querySelector('span[class*="fa"]');
+            const fa_spanEl = aSubmitEl.querySelector('span[class*="fa"]');
             if (fa_spanEl) {
-                fa_spanEl.replaceWith(loadingEl);
+                fa_spanEl.parentNode.replaceChild(loadingEl, fa_spanEl);
             } else {
-                aSubmit.append(loadingEl);
+                aSubmitEl.append(loadingEl);
             }
         }
     },
@@ -565,16 +562,16 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * @param {Event} ev
      */
     _onMouseupAddCartLabel: function (ev) { // change price when they are variants
-        const label = ev.currentTarge;
-        const priceEl = label.closest("form").querySelector(".oe_price .oe_currency_value");
+        const labelEl = ev.currentTarge;
+        const priceEl = labelEl.closest("form").querySelector(".oe_price .oe_currency_value");
         if (!priceEl.dataset.price) {
             priceEl.dataset.price = parseFloat(priceEl.textContent);
         }
         const value =
-        priceEl.dataset.price + parseFloat(label.querySelector(".badge span").textContent || 0);
+            priceEl.dataset.price + parseFloat(labelEl.querySelector(".badge span").textContent || 0);
 
         const dec = value % 1;
-        priceEl.innerHTML = value + (dec < 0.01 ? ".00" : dec < 1 ? "0" : "");
+        priceEl.textContent = value + (dec < 0.01 ? ".00" : dec < 1 ? "0" : "");
     },
     /**
      * @private
@@ -584,21 +581,22 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         if (!this.el.querySelector(".dropdown_sorty_by")) {
             return;
         }
-        const target = ev.currentTarget;
-        if (!ev.isDefaultPrevented() && !target.classList.contains("disabled")) {
+        const targetEl = ev.currentTarget;
+        if (!ev.isDefaultPrevented() && !targetEl.classList.contains("disabled")) {
             ev.preventDefault();
-            let oldurl = target.getAttribute("action");
+            let oldurl = targetEl.getAttribute("action");
             oldurl += (oldurl.indexOf("?")===-1) ? "?" : "";
-            if (target.querySelector("[name=noFuzzy]")?.value === "true") {
+            if (targetEl.querySelector("[name=noFuzzy]")?.value === "true") {
                 oldurl += '&noFuzzy=true';
             }
-            const searchEl = target.querySelector("input.search-query");
-            window.location =
+            const searchEl = targetEl.querySelector("input.search-query");
+            const url =
                 oldurl +
                 "&" +
                 searchEl.getAttribute("name") +
                 "=" +
                 encodeURIComponent(searchEl.value);
+            redirect(url);
         }
     },
     /**
@@ -607,13 +605,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      *
      * @override
      */
-    _toggleDisable: function (parent, isCombinationPossible) {
+    _toggleDisable: function (parentEl, isCombinationPossible) {
         VariantMixin._toggleDisable.apply(this, arguments);
-        if (!parent) {
+        if (!parentEl) {
             return;
         }
-        parent.querySelector("#add_to_cart").classList.toggle("disabled", !isCombinationPossible);
-        parent.querySelector(".o_we_buy_now")?.classList.toggle("disabled", !isCombinationPossible);
+        parentEl.querySelector("#add_to_cart").classList.toggle("disabled", !isCombinationPossible);
+        parentEl.querySelector(".o_we_buy_now")?.classList.toggle("disabled", !isCombinationPossible);
     },
     /**
      * Write the properties of the form elements in the DOM to prevent the
@@ -672,19 +670,19 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
      * Update the root product during an Add process.
      *
      * @private
-     * @param {Object} form
+     * @param {Object} formEl
      * @param {Number} productId
      */
-    _updateRootProduct(form, productId) {
+    _updateRootProduct(formEl, productId) {
         this.rootProduct = {
             product_id: productId,
-            quantity: parseFloat(form.querySelector('input[name="add_qty"]')?.value || 1),
+            quantity: parseFloat(formEl.querySelector('input[name="add_qty"]')?.value || 1),
             product_custom_attribute_values: this.getCustomVariantValues(
-                form.querySelector(".js_product")
+                formEl.querySelector(".js_product")
             ),
-            variant_values: this.getSelectedVariantValues(form.querySelector(".js_product")),
+            variant_values: this.getSelectedVariantValues(formEl.querySelector(".js_product")),
             no_variant_attribute_values: this.getNoVariantAttributeValues(
-                form.querySelector(".js_product")
+                formEl.querySelector(".js_product")
             ),
         };
     },
@@ -795,7 +793,7 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     _updateCarouselPosition() {
         let size = 5;
         for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            size += el.style.outerHeight;
+            size += el.style.offsetHeight;
         }
         this.el.style.top = size;
     },
@@ -825,14 +823,12 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
                       this.el.querySelector("li.active")
                   );
         const indicatorEl = indicatorsDivEl.querySelector("[data-bs-slide-to=" + indicatorIndex + "]");
-        const indicatorElOffset = indicatorEl.getBoundingClientRect();
-        const indicatorsDivElOffset = indicatorsDivEl.getBoundingClientRect();
         const indicatorsDivSize =
             isLeftIndicators && !isReversed
-                ? indicatorsDivElOffset.height
-                : indicatorsDivElOffset.width;
-        const indicatorSize = isLeftIndicators && !isReversed ? indicatorElOffset.height : indicatorElOffset.width;
-        const indicatorPosition = isLeftIndicators && !isReversed ? indicatorElOffset.top : indicatorElOffset.left;
+                ? indicatorsDivEl.offsetHeight
+                : indicatorsDivEl.offsetWidth;
+        const indicatorSize = isLeftIndicators && !isReversed ? indicatorEl.offsetHeight : indicatorEl.offsetWidth;
+        const indicatorPosition = isLeftIndicators && !isReversed ? indicatorEl.top : indicatorEl.left;
         const scrollSize =
             isLeftIndicators && !isReversed
                 ? indicatorsDivEl.scrollHeight
@@ -850,12 +846,12 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
      */
      _updateJustifyContent: function () {
         const indicatorsDivEl = this.el.querySelector(".carousel-indicators");
-        const indicatorsDivElOffset = indicatorsDivEl.getBoundingClientRect();
         indicatorsDivEl.style.justifyContent = "start";
         if (uiUtils.getSize() <= SIZES.MD) {
             const lastChild = indicatorsDivEl.lastElementChild.getBoundingClientRect();
-            const liWidth = this.el.querySelector("li").getBoundingClientRect().width;
-            if (lastChild.left + liWidth < indicatorsDivElOffset.width) {
+            const liWidth = this.el.querySelector("li").offsetWidth;
+            const indicatorsWidth = indicatorsDivEl.offsetWidth;
+            if (lastChild.left + liWidth < indicatorsWidth) {
                 indicatorsDivEl.style.justifyContent = "center";
             }
         }

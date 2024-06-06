@@ -93,10 +93,10 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         })
         .then(function (modalContent) {
             if (modalContent) {
-                // TODO-VISP : remove this
-                var $modalContent = $(modalContent);
-                $modalContent = self._postProcessContent($modalContent);
-                self.$content = $modalContent;
+                const parser = new DOMParser()
+                let modalContentEl = parser.parseFromString(modalContent, "text/html").querySelector("main");
+                // Note: Here $content defines in Dialog class.
+                self.$content = self._postProcessContent(modalContentEl);
             } else {
                 self.trigger('options_empty');
                 self.preventOpening = true;
@@ -194,36 +194,28 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         const products = [];
         let productCustomVariantValues;
         let noVariantAttributeValues;
-        for (const product of self.$modal[0].querySelectorAll(".js_product.in_cart")) {
-            const item = product;
+        for (const productEl of self.$modal[0].querySelectorAll(".js_product.in_cart")) {
             const quantity = parseFloat(
-                item.querySelector('input[name="add_qty"]').value.replace(",", ".") || 1
+                productEl.querySelector('input[name="add_qty"]').value.replace(",", ".") || 1
             );
-            const parentUniqueId = product.dataset.parentUniqueId;
-            const uniqueId = product.dataset.uniqueId;
+            const parentUniqueId = productEl.dataset.parentUniqueId;
+            const uniqueId = productEl.dataset.uniqueId;
             productCustomVariantValues =
-                item.querySelector(".custom-attribute-info")?.dataset.attributeValue ||
-                self.getCustomVariantValues(item);
+                productEl.querySelector(".custom-attribute-info")?.getDataset("attribute-value")
+                || self.getCustomVariantValues(productEl);
             noVariantAttributeValues =
-                item.querySelector(".no-attribute-info")?.dataset.attributeValue ||
-                self.getNoVariantAttributeValues(item);
+                productEl.querySelector(".no-attribute-info")?.getDataset("attribute-value")
+                || self.getNoVariantAttributeValues(productEl);
 
             const productID = await self.selectOrCreateProduct(
-                item,
-                parseInt(item.querySelector("input.product_id").value, 10),
-                parseInt(item.querySelector("input.product_template_id").value, 10)
+                productEl,
+                parseInt(productEl.querySelector("input.product_id").value, 10),
+                parseInt(productEl.querySelector("input.product_template_id").value, 10)
             );
-
-            if (isNaN(productCustomVariantValues)) {
-                productCustomVariantValues = JSON.parse(productCustomVariantValues);
-            }
-            if (isNaN(noVariantAttributeValues)) {
-                noVariantAttributeValues = JSON.parse(noVariantAttributeValues);
-            }
 
             products.push({
                 'product_id': productID,
-                "product_template_id": parseInt(item.querySelector("input.product_template_id").value,10),
+                "product_template_id": parseInt(productEl.querySelector("input.product_template_id").value,10),
                 'quantity': quantity,
                 'parent_unique_id': parentUniqueId,
                 'unique_id': uniqueId,
@@ -244,26 +236,25 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
      *
      * @private
      */
-    _postProcessContent: function (modalContent) {
+    _postProcessContent: function (modalContentEl) {
         // TODO_VISP: remove this
-        modalContent = modalContent[0];
         const productId = this.rootProduct.product_id;
-        const firstImgEL = modalContent.querySelector("img:first-child");
+        const firstImgEL = modalContentEl.querySelector("img:first-child");
         firstImgEL.src = "/web/image/product.product/" + productId + "/image_128";
 
 
         if (this.rootProduct &&
                 (this.rootProduct.product_custom_attribute_values ||
                  this.rootProduct.no_variant_attribute_values)) {
-                const productDescription = modalContent
+                const productDescriptionEl = modalContentEl
                     .querySelector(".main_product td.td-product_name div.text-muted.small > div:first-child");
                 const updatedDescriptionEl = document.createElement("div");
                 const pElement = document.createElement("p");
-                pElement.textContent = productDescription.textContent;
+                pElement.textContent = productDescriptionEl.textContent;
                 updatedDescriptionEl.append(pElement);
                 this.rootProduct.product_custom_attribute_values.forEach(() => {
                 if (this.custom_value) {
-                    const customInputEl = modalContent
+                    const customInputEl = modalContentEl
                         .querySelector(".main_product [data-is_custom='True']")
                         .closest(
                             `[data-value_id='${this.custom_product_template_attribute_value_id.res_id}']`
@@ -281,18 +272,18 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                     if (currentDescriptionEl) {// one row per multicheckbox
                         currentDescriptionEl.textContent += ", " + this.attribute_value_name;
                     } else {
-                        const newDiv = document.createElement("div");
-                        newDiv.textContent = this.attribute_name + ": " + this.attribute_value_name;
-                        newDiv.setAttribute("name", `ptal-${this.id}`);
-                        updatedDescriptionEl.appendChild(newDiv);
+                        const newDivEl = document.createElement("div");
+                        newDivEl.textContent = this.attribute_name + ": " + this.attribute_value_name;
+                        newDivEl.setAttribute("name", `ptal-${this.id}`);
+                        updatedDescriptionEl.appendChild(newDivEl);
                     }
                 }
             });
 
-            productDescription.parentNode.replaceChild(updatedDescriptionEl, productDescription);
+            productDescriptionEl.parentNode.replaceChild(updatedDescriptionEl, productDescriptionEl);
         }
 
-        return modalContent;
+        return modalContentEl;
     },
 
     /**
@@ -327,15 +318,15 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     _onAddOrRemoveOption: function (ev) {
         ev.preventDefault();
         const self = this;
-        const target = ev.currentTarget;
-        const modalEl = target.closest(".oe_advanced_configurator_modal");
-        const parentEl = target.closest(".js_product");
+        const targetEl = ev.currentTarget;
+        const modalEl = targetEl.closest(".oe_advanced_configurator_modal");
+        const parentEl = targetEl.closest(".js_product");
         parentEl
             .querySelectorAll("a.js_add, span.js_remove")
             .forEach((el) => el.classList.toggle("d-none"));
 
         const productTemplateId = parentEl.querySelector(".product_template_id").value;
-        if (target.classList.contains("js_add")) {
+        if (targetEl.classList.contains("js_add")) {
             self._onAddOption(modalEl, parentEl, productTemplateId);
         } else {
             self._onRemoveOption(modalEl, parentEl);
@@ -347,29 +338,29 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     /**
      * @private
      * @see _onAddOrRemoveOption
-     * @param {Element} modal
-     * @param {Element} parent
+     * @param {Element} modalEl
+     * @param {Element} parentEl
      * @param {integer} productTemplateId
      */
-    _onAddOption: function (modal, parent, productTemplateId) {
+    _onAddOption: function (modalEl, parentEl, productTemplateId) {
         var self = this;
-        const selectOptionsTextEl = modal.querySelector(".o_select_options");
-        const parentUniqueId = parent.dataset.parentUniqueId;
-        let optionParentEl = modal.querySelector(
+        const selectOptionsTextEl = modalEl.querySelector(".o_select_options");
+        const parentUniqueId = parentEl.dataset.parentUniqueId;
+        let optionParentEl = modalEl.querySelector(
             'tr.js_product[data-unique-id="' + parentUniqueId + '"]'
         );
 
         // remove attribute values selection and update + show quantity input
-        parent.querySelectorAll(".td-product_name").forEach((prodName) => {
-            prodName.removeAttribute("colspan");
+        parentEl.querySelectorAll(".td-product_name").forEach((prodNameEl) => {
+            prodNameEl.removeAttribute("colspan");
         });
-        parent.querySelectorAll(".td-qty").forEach((prodQty) => {
-            prodQty.classList.remove("d-none");
+        parentEl.querySelectorAll(".td-qty").forEach((prodQtyEl) => {
+            prodQtyEl.classList.remove("d-none");
         });
-        const productCustomVariantValues = self.getCustomVariantValues(parent);
-        const noVariantAttributeValues = self.getNoVariantAttributeValues(parent);
+        const productCustomVariantValues = self.getCustomVariantValues(parentEl);
+        const noVariantAttributeValues = self.getNoVariantAttributeValues(parentEl);
         if (productCustomVariantValues || noVariantAttributeValues) {
-            const productDescriptionEl = parent.querySelector("td.td-product_name div.float-start");
+            const productDescriptionEl = parentEl.querySelector("td.td-product_name div.float-start");
 
             const customAttributeValuesDescriptionEl = document.createElement("div");
             customAttributeValuesDescriptionEl.className =
@@ -408,19 +399,19 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
         let tmpOptionParent = optionParentEl;
         while (tmpOptionParent) {
             optionParentEl = tmpOptionParent;
-            tmpOptionParent = [...modal.querySelectorAll("tr.js_product.in_cart")]
+            tmpOptionParent = [...modalEl.querySelectorAll("tr.js_product.in_cart")]
                 .filter((el) => el.dataset.parentUniqueId === optionParentEl.dataset.uniqueId)
                 .slice(-1)[0];
         }
-        optionParentEl?.parentNode.insertBefore(parent, optionParentEl.nextSibling);
-        parent.classList.add("in_cart");
+        optionParentEl?.parentNode.insertBefore(parentEl, optionParentEl.nextSibling);
+        parentEl.classList.add("in_cart");
 
         this.selectOrCreateProduct(
-            parent,
-            parent.querySelector(".product_id").value,
+            parentEl,
+            parentEl.querySelector(".product_id").value,
             productTemplateId,
         ).then(function (productId) {
-            parent.querySelector(".product_id").value = productId;
+            parentEl.querySelector(".product_id").value = productId;
 
             rpc("/sale_product_configurator/optional_product_items", {
                 'product_id': productId,
@@ -434,9 +425,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
 
                     const elemReferences = [];
                     addedItemEls.querySelectorAll("tr.js_product").forEach((rowEl) => {
-                        const trEls = modal.querySelectorAll("tr");
-                        const lastTr = trEls[trEls.length - 1];
-                        lastTr?.parentNode.insertBefore(rowEl, lastTr.nextSibling);
+                        const trEl = modalEl.querySelector("tr:last-child");
+                        trEl.parentNode.insertBefore(rowEl, trEl.nextSibling);
                         elemReferences.push(rowEl);
                     });
 
@@ -451,8 +441,8 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
                     }
 
                     // add a unique id to the new products
-                    const parentUniqueId = parent.dataset.uniqueId;
-                    const parentQty = parent.querySelector('input[name="add_qty"]').value;
+                    const parentUniqueId = parentEl.dataset.uniqueId;
+                    const parentQty = parentEl.querySelector('input[name="add_qty"]').value;
                     elemReferences.forEach(function (item) {
                         var uniqueId = self._getUniqueId(item);
                         item.dataset.uniqueId = uniqueId;
@@ -471,56 +461,55 @@ export const OptionalProductsModal = Dialog.extend(VariantMixin, {
     /**
      * @private
      * @see _onAddOrRemoveOption
-     * @param {Element} modal
-     * @param {Element} parent
+     * @param {Element} modalEl
+     * @param {Element} parentEl
      */
-    _onRemoveOption: function (modal, parent) {
+    _onRemoveOption: function (modalEl, parentEl) {
         // restore attribute values selection
-        const uniqueId = parent.dataset.parentUniqueId;
-        const qty = modal
+        const uniqueId = parentEl.dataset.parentUniqueId;
+        const qty = modalEl
             .querySelector(`tr.js_product.in_cart[data-unique-id="${uniqueId}"]`)
             .querySelector('input[name="add_qty"]').value;
-        parent.classList.remove("in_cart");
-        parent.querySelectorAll(".td-product_name").forEach((el) => {
+        parentEl.classList.remove("in_cart");
+        parentEl.querySelectorAll(".td-product_name").forEach((el) => {
             el.setAttribute("colspan", 2);
         });
         parent.querySelectorAll(".td-qty").forEach((el) => {
             el.classList.add("d-none");
         });
-        parent.querySelector('input[name="add_qty"]').value = qty;
-        parent.querySelector(".custom_attribute_values_description")?.remove();
-        modal.querySelector(".o_select_options").style.display = "";
+        parentEl.querySelector('input[name="add_qty"]').value = qty;
+        parentEl.querySelector(".custom_attribute_values_description")?.remove();
+        modalEl.querySelector(".o_select_options").style.display = "";
 
-        const productUniqueId = parent.dataset.uniqueId;
-        this._removeOptionOption(modal, productUniqueId);
+        const productUniqueId = parentEl.dataset.uniqueId;
+        this._removeOptionOption(modalEl, productUniqueId);
 
-        const trEls = modal.querySelectorAll("tr");
-        const lastTr = trEls[trEls.length - 1];
-        lastTr?.parentNode.insertBefore(parent, lastTr.nextSibling);
+        const trEl = modalEl.querySelectorAll("tr:last-child");
+        trEl?.parentNode.insertBefore(parentEl, trEl.nextSibling);
     },
 
     /**
      * If the removed product had optional products, remove them as well
      *
      * @private
-     * @param {Element} modal
+     * @param {Element} modalEl
      * @param {integer} optionUniqueId The removed optional product id
      */
-    _removeOptionOption: function (modal, optionUniqueId) {
+    _removeOptionOption: function (modalEl, optionUniqueId) {
         const self = this;
-        modal
+        modalEl
             .querySelectorAll('tr.js_product[data-parent-unique-id="' + optionUniqueId + '"]')
             .forEach((el) => {
                 const uniqueId = el.dataset.uniqueId;
                 el.remove();
-                self._removeOptionOption(modal, uniqueId);
+                self._removeOptionOption(modalEl, uniqueId);
             });
     },
     /**
      * @override
      */
-    _onChangeCombination: function (ev, parent, combination) {
-        parent.querySelectorAll(".td-product_name .product-name")[0].textContent =
+    _onChangeCombination: function (ev, parentEl, combination) {
+        parentEl.querySelectorAll(".td-product_name .product-name")[0].textContent =
             combination.display_name;
 
         VariantMixin._onChangeCombination.apply(this, arguments);

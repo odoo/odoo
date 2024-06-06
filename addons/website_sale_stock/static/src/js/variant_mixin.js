@@ -24,27 +24,27 @@ import { markup } from "@odoo/owl";
  * @param {Element} parent
  * @param {Array} combination
  */
-VariantMixin._onChangeCombinationStock = function (ev, parent, combination) {
+VariantMixin._onChangeCombinationStock = function (ev, parentEl, combination) {
     let product_id = 0;
     // needed for list view of variants
-    if (parent.querySelector("input.product_id:checked")) {
-        product_id = parent.querySelector("input.product_id:checked").value;
+    if (parentEl.querySelector("input.product_id:checked")) {
+        product_id = parentEl.querySelector("input.product_id:checked").value;
     } else {
-        product_id = parent.querySelector(".product_id").value;
+        product_id = parentEl.querySelector(".product_id").value;
     }
     const isMainProduct =
         combination.product_id &&
-        (parent.classList.contains("js_main_product") ||
-            parent.classList.contains("main_product")) &&
+        (parentEl.classList.contains("js_main_product") ||
+        parentEl.classList.contains("main_product")) &&
         combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct) {
         return;
     }
 
-    const addQtyInputEl = parent.querySelector('input[name="add_qty"]');
+    const addQtyInputEl = parentEl.querySelector('input[name="add_qty"]');
     let qty = addQtyInputEl.value;
-    const ctaWrapperEl = parent.querySelector("#o_wsale_cta_wrapper");
+    const ctaWrapperEl = parentEl.querySelector("#o_wsale_cta_wrapper");
     ctaWrapperEl.classList.replace('d-none', 'd-flex');
     ctaWrapperEl.classList.remove('out_of_stock');
 

@@ -27,10 +27,10 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
     /**
      * Debounced method that wait some time before marking the product as viewed.
      * @private
-     * @param {HTMLInputElement} input
+     * @param {HTMLInputElement} inputEl
      */
-    _updateProductView: function (input) {
-        var productId = parseInt(input.value);
+    _updateProductView: function (inputEl) {
+        var productId = parseInt(inputEl.value);
         var cookieName = 'seen_product_id_' + productId;
         if (! parseInt(this.el.dataset.viewTrack, 10)) {
             return; // Is not tracked
