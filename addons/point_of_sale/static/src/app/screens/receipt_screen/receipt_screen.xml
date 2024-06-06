@@ -20,15 +20,15 @@
                                     <i t-attf-class="fa {{doPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Receipt
                                 </button>
                             </div>
-                            <div t-att-class="{'d-flex': !this.ui.isSmall}">
+                            <div class="d-flex gap-1" t-att-class="{'flex-column-reverse': this.ui.isSmall}">
                                 <div class="flex-grow-1 p-0 border-0 position-relative send-receipt-input">
                                     <input type="text" class="border p-3 bg-view w-100 pe-5" t-attf-placeholder="eg.: john.doe@mail.com" t-model="state.input" />
                                     <div t-att-class="{'opacity-25': !isValidInput}"  t-on-click="() => this.actionSendReceipt()" class="position-absolute end-0 top-0 h-100 d-flex align-items-center text-primary cursor-pointer">
                                         <i class="fa fa-arrow-circle-right fs-1 pe-3" aria-hidden="true" />
                                     </div>
                                 </div>
-                                <div t-att-class="{'mt-1 gap-1': this.ui.isSmall}" class="d-flex sending-receipt-management justify-content-center">
-                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary px-5 rounded-0" >
+                                <div t-att-class="{'mt-1': this.ui.isSmall}" class="gap-1 d-flex sending-receipt-management justify-content-center">
+                                    <button t-att-class="{'opacity-50': state.mode !== 'email', 'py-3': this.ui.isSmall, 'px-5': !this.ui.isSmall}" t-on-click="() => this.changeMode('email')" class="btn btn-primary d-flex align-items-center justify-content-center" >
                                         <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ?  'fa-fw fa-spin fa-circle-o-notch' : 'fa-envelope'}}" aria-hidden="true" />
                                     </button>
                                 </div>
