@@ -14,20 +14,19 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         const post = this._getPost();
         const noTicketsOrdered = Object.values(post).map((value) => parseInt(value)).every(value => value === 0);
         var res = this._super.apply(this.arguments).then(function () {
-            $('#registration_form .a-submit')
-                .off('click')
-                .click(function (ev) {
-                    self.on_click(ev);
-                })
-                .prop('disabled', noTicketsOrdered);
+            const submitButtonEl = document.querySelector("#registration_form .a-submit");
+            submitButtonEl.removeEventListener("click", self.on_click);
+            submitButtonEl.addEventListener("click", self.on_click.bind(self));
+            submitButtonEl.disabled = noTicketsOrdered;
         });
         return res;
     },
 
     _getPost: function () {
         var post = {};
-        $('#registration_form select').each(function () {
-            post[$(this).attr('name')] = $(this).val();
+        const selectEls = document.querySelectorAll("#registration_form select");
+        selectEls.forEach(function (selectEl) {
+            post[selectEl.name] = selectEl.value;
         });
         return post;
     },
@@ -43,23 +42,25 @@ var EventRegistrationForm = publicWidget.Widget.extend({
     on_click: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        var $form = $(ev.currentTarget).closest('form');
-        var $button = $(ev.currentTarget).closest('[type="submit"]');
+        const formEl = ev.currentTarget.closest("form");
+        const buttonEl = ev.currentTarget.closest("[type='submit']");
         const post = this._getPost();
-        $button.attr('disabled', true);
-        return rpc($form.attr('action'), post).then(function (modal) {
-            var $modal = $(modal);
-            $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
-            $modal.appendTo(document.body);
-            const modalBS = new Modal($modal[0], {backdrop: 'static', keyboard: false});
-            modalBS.show();
-            $modal.appendTo('body').modal('show');
-            $modal.on('click', '.js_goto_event', function () {
-                $modal.modal('hide');
-                $button.prop('disabled', false);
+        buttonEl.disabled = true;
+        return rpc(formEl.action, post).then(function (modal) {
+            const modalEl = new DOMParser().parseFromString(modal, "text/html").body.firstChild;
+            modalEl.querySelector(".modal-body > div").classList.remove("container"); // retrocompatibility - REMOVE ME in master / saas-19
+            document.body.append(modalEl);
+            const formModal = Modal.getOrCreateInstance(modalEl, {
+                backdrop: "static",
+                keyboard: false,
             });
-            $modal.on('click', '.btn-close', function () {
-                $button.prop('disabled', false);
+            formModal.show();
+            modalEl.querySelector(".js_goto_event").addEventListener("click", function () {
+                formModal.hide();
+                buttonEl.disabled = false;
+            });
+            modalEl.querySelector(".btn-close").addEventListener("click", function () {
+                buttonEl.disabled = false;
             });
         });
     },
@@ -74,7 +75,7 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     start: function () {
         var def = this._super.apply(this, arguments);
         this.instance = new EventRegistrationForm(this);
-        return Promise.all([def, this.instance.attachTo(this.$el)]);
+        return Promise.all([def, this.instance.attachTo(this.el)]);
     },
     /**
      * @override
@@ -82,7 +83,7 @@ publicWidget.registry.EventRegistrationFormInstance = publicWidget.Widget.extend
     destroy: function () {
         this.instance.setElement(null);
         this._super.apply(this, arguments);
-        this.instance.setElement(this.$el);
+        this.instance.setElement(this.el);
     },
 });
 

@@ -18,7 +18,7 @@ publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        const message = this.$el.data('message');
+        const message = this.el.dataset.message;
         if (message && message.length) {
             this.notification.add(message, {
                 title: _t("Register"),
