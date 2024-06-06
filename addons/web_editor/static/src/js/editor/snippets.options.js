@@ -4690,11 +4690,30 @@ registry.sizing = SnippetOptionWidget.extend({
             // front of the other elements.
             const rowEl = self.$target[0].parentNode;
             let backgroundGridEl;
+            let heightDiffAfterAdjust = 0;
             if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
                 self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
+                // Adjusting the grid and computing the height difference to
+                // take it into account for the mouse position.
+                const heightBefore = self.$target[0].getBoundingClientRect().bottom;
+                gridUtils._adjustGrid(rowEl);
+                self.trigger_up("cover_update");
+                const heightAfter = self.$target[0].getBoundingClientRect().bottom;
+                heightDiffAfterAdjust = Math.round(heightAfter - heightBefore);
+
+                // Locking the grid row size so it is fixed during the resize.
+                rowEl.style.gridAutoRows = `${gridUtils.rowSize}px`;
+                // Adding the background grid.
                 backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
                 gridUtils._setElementToMaxZindex(backgroundGridEl, rowEl);
                 self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
+
+                // Storing useful information.
+                self.resizeState = {
+                    rowStartAtCursor: parseInt(self.$target[0].style.gridRowStart),
+                    rowEndAtCursor: parseInt(self.$target[0].style.gridRowEnd),
+                    fullCompass: compass,
+                };
             }
 
             // For loop to handle the cases where it is ne, nw, se or sw. Since
@@ -4719,7 +4738,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 props.begin = current;
                 props.beginClass = self.$target.attr('class');
                 props.regClass = new RegExp('\\s*' + resize[0][current].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
-                props.xy = ev['page' + XY[i]];
+                props.xy = ev['page' + XY[i]] + heightDiffAfterAdjust;
                 props.XY = XY[i];
                 props.compass = compass[i];
 
@@ -4788,6 +4807,11 @@ registry.sizing = SnippetOptionWidget.extend({
                 if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
                     self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
                     backgroundGridEl.remove();
+                    rowEl.style.removeProperty("grid-auto-rows");
+                    // Remove the "blocked resizing" class from the handles.
+                    self.$overlay[0].querySelectorAll(".o_resizing_blocked").forEach(gridHandleEl => {
+                        gridHandleEl.classList.remove("o_resizing_blocked");
+                    })
                     self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
                     gridUtils._resizeGrid(rowEl);
 
@@ -4795,6 +4819,8 @@ registry.sizing = SnippetOptionWidget.extend({
                     const gColClass = [...self.$target[0].classList].find(c => /^g-col-/.test(c));
                     self.$target[0].classList.remove(colClass);
                     self.$target[0].classList.add(gColClass.substring(2));
+
+                    delete self.resizeState;
                 }
 
                 self.options.wysiwyg.odooEditor.automaticStepActive('resizing');
@@ -5157,67 +5183,128 @@ registry['sizing_grid'] = registry.sizing.extend({
      * @override
      */
     _onResize(compass, beginClass, current) {
+        const rowEl = this.$target[0].parentNode;
+        const rowEnd = parseInt(this.$target[0].style.gridRowEnd);
+        const rowStart = parseInt(this.$target[0].style.gridRowStart);
+        const columnStart = parseInt(this.$target[0].style.gridColumnStart);
+        const columnEnd = parseInt(this.$target[0].style.gridColumnEnd);
+        // Tell if the resizing is blocked in the current direction.
+        let isResizeBlocked = false;
+
         if (compass === 'n') {
-            const rowEnd = parseInt(this.$target[0].style.gridRowEnd);
             if (current < 0) {
                 this.$target[0].style.gridRowStart = 1;
             } else if (current + 1 >= rowEnd) {
                 this.$target[0].style.gridRowStart = rowEnd - 1;
+                isResizeBlocked = true;
             } else {
                 this.$target[0].style.gridRowStart = current + 1;
             }
+            // Storing the `rowStart` matching the mouse position.
+            this.resizeState.rowStartAtCursor = parseInt(this.$target[0].style.gridRowStart);
+            // If the content is overflowing the grid item, re-set `rowStart` to
+            // the previous one.
+            if (gridUtils.isContentOverflowing(this.$target[0])) {
+                this.$target[0].style.gridRowStart = rowStart;
+                isResizeBlocked = true;
+            }
         } else if (compass === 's') {
-            const rowStart = parseInt(this.$target[0].style.gridRowStart);
-            const rowEnd = parseInt(this.$target[0].style.gridRowEnd);
             if (current + 2 <= rowStart) {
                 this.$target[0].style.gridRowEnd = rowStart + 1;
+                isResizeBlocked = true;
             } else {
                 this.$target[0].style.gridRowEnd = current + 2;
             }
-
-            // Updating the grid height.
-            const rowEl = this.$target[0].parentNode;
-            const rowCount = parseInt(rowEl.dataset.rowCount);
-            const backgroundGridEl = rowEl.querySelector('.o_we_background_grid');
-            const backgroundGridRowEnd = parseInt(backgroundGridEl.style.gridRowEnd);
-            let rowMove = 0;
-            if (this.$target[0].style.gridRowEnd > rowEnd && this.$target[0].style.gridRowEnd > rowCount + 1) {
-                rowMove = this.$target[0].style.gridRowEnd - rowEnd;
-            } else if (this.$target[0].style.gridRowEnd < rowEnd && this.$target[0].style.gridRowEnd >= rowCount + 1) {
-                rowMove = this.$target[0].style.gridRowEnd - rowEnd;
+            // Storing the `rowStart` matching the mouse position.
+            this.resizeState.rowEndAtCursor = parseInt(this.$target[0].style.gridRowEnd);
+            // If the content is overflowing the grid item, re-set `rowEnd` to
+            // the previous one.
+            if (gridUtils.isContentOverflowing(this.$target[0])) {
+                this.$target[0].style.gridRowEnd = rowEnd;
+                isResizeBlocked = true;
             }
-            backgroundGridEl.style.gridRowEnd = backgroundGridRowEnd + rowMove;
         } else if (compass === 'w') {
-            const columnEnd = parseInt(this.$target[0].style.gridColumnEnd);
             if (current < 0) {
                 this.$target[0].style.gridColumnStart = 1;
             } else if (current + 1 >= columnEnd) {
                 this.$target[0].style.gridColumnStart = columnEnd - 1;
+                isResizeBlocked = true;
             } else {
                 this.$target[0].style.gridColumnStart = current + 1;
             }
         } else if (compass === 'e') {
-            const columnStart = parseInt(this.$target[0].style.gridColumnStart);
             if (current + 2 > 13) {
                 this.$target[0].style.gridColumnEnd = 13;
             } else if (current + 2 <= columnStart) {
                 this.$target[0].style.gridColumnEnd = columnStart + 1;
+                isResizeBlocked = true;
             } else {
                 this.$target[0].style.gridColumnEnd = current + 2;
             }
         }
 
-        if (compass === 'n' || compass === 's') {
-            const numberRows = this.$target[0].style.gridRowEnd - this.$target[0].style.gridRowStart;
-            this.$target.attr('class', this.$target.attr('class').replace(/\s*(g-height-)([0-9-]+)/g, ''));
-            this.$target.addClass('g-height-' + numberRows);
+        // Adapting the grid item height when resizing horizontally.
+        if (compass === "w" || compass === "e") {
+            // If the content is bigger than the grid item, increase the height.
+            let overflow = gridUtils.isContentOverflowing(this.$target[0]);
+            if (overflow) {
+                const gridProp = gridUtils._getGridProperties(rowEl);
+                overflow = Math.ceil((overflow + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap));
+                this.$target[0].style.gridRowEnd = rowEnd + overflow;
+            } else {
+                // If there is no overflow, check the underflow.
+
+                // Check if we can reduce the grid item `rowEnd` without causing
+                // an overflow and without making it smaller that the starting
+                // one (or the current one if we are resizing diagonally).
+                let currentRowEnd = parseInt(this.$target[0].style.gridRowEnd);
+                while (currentRowEnd > this.resizeState.rowEndAtCursor) {
+                    this.$target[0].style.gridRowEnd = currentRowEnd - 1;
+                    if (gridUtils.isContentOverflowing(this.$target[0])) {
+                        this.$target[0].style.gridRowEnd = currentRowEnd;
+                        break;
+                    }
+                    currentRowEnd--;
+                }
+                // If we are resizing from "nw" or "ne", check if we can set
+                // `rowStart` closer to where the mouse is without causing an
+                // overflow.
+                if (["nw", "ne"].includes(this.resizeState.fullCompass)) {
+                    let currentRowStart = parseInt(this.$target[0].style.gridRowStart);
+                    while (currentRowStart < this.resizeState.rowStartAtCursor) {
+                        this.$target[0].style.gridRowStart = currentRowStart + 1;
+                        if (gridUtils.isContentOverflowing(this.$target[0])) {
+                            this.$target[0].style.gridRowStart = currentRowStart;
+                            break;
+                        }
+                        currentRowStart++;
+                    }
+                }
+            }
         }
+
+        // Updating the background grid height.
+        if (["s", "w", "e"].includes(compass)) {
+            const rowCount = parseInt(rowEl.dataset.rowCount);
+            const backgroundGridEl = rowEl.querySelector('.o_we_background_grid');
+            backgroundGridEl.style.gridRowEnd = Math.max(rowCount + 1, this.$target[0].style.gridRowEnd);
+        }
+
+        // Updating the grid classes.
+        const numberRows = this.$target[0].style.gridRowEnd - this.$target[0].style.gridRowStart;
+        this.$target.attr('class', this.$target.attr('class').replace(/\s*(g-height-)([0-9-]+)/g, ''));
+        this.$target.addClass('g-height-' + numberRows);
 
         if (compass === 'w' || compass === 'e') {
             const numberColumns = this.$target[0].style.gridColumnEnd - this.$target[0].style.gridColumnStart;
             this.$target.attr('class', this.$target.attr('class').replace(/\s*(g-col-lg-)([0-9-]+)/g, ''));
             this.$target.addClass('g-col-lg-' + numberColumns);
         }
+
+        // Changing the grid handles color, in order to show if it is possible
+        // to resize in that direction.
+        const gridHandleEls = this.$overlay[0].querySelectorAll(`.o_grid_handle.${compass}, .o_grid_handle.o_active`);
+        gridHandleEls.forEach(gridHandleEl => gridHandleEl.classList.toggle("o_resizing_blocked", isResizeBlocked));
     },
 });
 

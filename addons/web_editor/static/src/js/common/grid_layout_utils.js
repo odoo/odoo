@@ -385,3 +385,31 @@ export function _adjustGrid(rowEl, isDragging = false, draggedColumnEl = undefin
     [...columnEls].forEach((columnEl, i) => columnEl.style.gridArea = newGridAreas[i]);
     rowEl.dataset.rowCount = newRowCount - 1;
 }
+/**
+ * Checks if the content of the given grid item overflows it and returns the
+ * overflow amount (in pixels) if it does.
+ *
+ * @param {HTMLElement} columnEl the grid item
+ * @returns {Boolean|Number} - false if there is no overflow,
+ *                           - the overflow amount otherwise.
+ */
+export function isContentOverflowing(columnEl) {
+    const columnContentEls = [...columnEl.children];
+    // No overflow if the grid item is empty.
+    if (columnContentEls.length === 0) {
+        return false;
+    }
+    // Computing the maximum bottom position to not exceed.
+    const columnPaddingBottom = parseFloat(window.getComputedStyle(columnEl).getPropertyValue("--grid-item-padding-y"));
+    const columnBottom = columnEl.getBoundingClientRect().bottom;
+    const columnLimit = columnBottom - columnPaddingBottom;
+    // Computing the bottom position of the last grid item content.
+    const lastContentEl = columnContentEls[columnContentEls.length - 1];
+    const lastContentMarginBottom = parseFloat(window.getComputedStyle(lastContentEl).marginBottom);
+    const lastContentBottom = lastContentEl.getBoundingClientRect().bottom;
+    const contentEnd = lastContentBottom + lastContentMarginBottom;
+
+    // Computing the overflow.
+    const overflow = contentEnd - columnLimit;
+    return overflow > 0 ? overflow : false;
+}
