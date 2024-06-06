@@ -4,7 +4,7 @@ import time
 
 from odoo.exceptions import UserError
 from odoo.http import _request_stack
-from odoo.tools import DotDict
+from odoo.tools import DotDict, SQL
 
 from odoo.tests.common import TransactionCase, get_db_name
 from odoo.addons.website.tools import MockRequest
@@ -28,22 +28,32 @@ class PasskeyTest(TransactionCase):
         self.admin_user = self.env.ref('base.user_admin')
         self.demo_user = self.env.ref('base.user_demo')
 
-        admin_key = self.env['auth.passkey.key.name'].with_user(self.admin_user).sudo().create({'name': 'test_passkey_1'})
-        admin_key.make_key(
-            credential_identifier='wtw0u7D8rp7nq7WBWFCt_FRhEHpU6EHvEgTn3BBid5N-UE5a9XCzS8NaVuh7ydFz',
-            public_key='pQECAyYgASFYIMLcNLuw_K6e56u1gVioLcAJF8v8eUw7kfqTOqDdl7nFIlggFSs_nZWewd_JqzeWzXmJ6Wmn_nKuo82rCdoOZ-oewOU='
-        )
+        query = '''
+        INSERT INTO auth_passkey_key (name, credential_identifier, public_key, create_uid, write_date, create_date)
+        VALUES (%s, %s, %s, %s, NOW() AT TIME ZONE 'UTC', NOW() AT TIME ZONE 'UTC')
+        '''
 
-        demo_key = self.env['auth.passkey.key.name'].with_user(self.demo_user).sudo().create({'name': 'test_passkey_2'})
-        demo_key.make_key(
-            credential_identifier='y6aJVJsvvSSkbwTeGZ1FbQP_jCDho7EBPwZq-3lAjQ0',
-            public_key='pQECAyYgASFYICjw-NoCHMkYYbRo8Q4SgJ4tZc8BSEmuEI0XmA6hUqR_IlggjtuBgyhwnr7PqABF2o8vCniMVa7_mTG6_l9Pc4eI4mo=',
-        )
+        self.cr.execute(SQL(
+            query,
+            'test_passkey_1',
+            'c2dc34bbb0fcae9ee7abb5815850adfc5461107a54e841ef1204e7dc106277937e504e5af570b34bc35a56e87bc9d173',
+            'pQECAyYgASFYIMLcNLuw_K6e56u1gVioLcAJF8v8eUw7kfqTOqDdl7nFIlggFSs_nZWewd_JqzeWzXmJ6Wmn_nKuo82rCdoOZ-oewOU=',
+            self.admin_user.id,
+        ))
+
+        self.cr.execute(SQL(
+            query,
+            'test_passkey_2',
+            'cba689549b2fbd24a46f04de199d456d03ff8c20e1a3b1013f066afb79408d0d',
+            'pQECAyYgASFYICjw-NoCHMkYYbRo8Q4SgJ4tZc8BSEmuEI0XmA6hUqR_IlggjtuBgyhwnr7PqABF2o8vCniMVa7_mTG6_l9Pc4eI4mo=',
+            self.demo_user.id,
+        ))
 
         _request_stack.pop()
 
     def setUp(self):
         super().setUp()
+        # _login uses with registry(db).cursor() as cr
         self.env.registry.enter_test_mode(self.cr)
         self.addCleanup(self.registry.leave_test_mode)
 

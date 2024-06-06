@@ -30,7 +30,7 @@ class TestXMLRPC(common.HttpCase):
     def test_01_xmlrpc_login(self):
         """ Try to login on the common service. """
         db_name = common.get_db_name()
-        uid = self.xmlrpc_common.login(db_name, 'admin', 'admin')
+        uid = self.xmlrpc_common.login(db_name, 'admin', 'admin')['uid']
         self.assertEqual(uid, self.admin_uid)
 
     def test_xmlrpc_ir_model_search(self):
@@ -168,7 +168,7 @@ class TestAPIKeys(common.HttpCase):
 
     def test_wrongpw(self):
         # User.authenticate raises but RPC.authenticate returns False
-        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'aws', {}])['uid']
+        uid = auth.dispatch('authenticate', [self.env.cr.dbname, 'byl', 'aws', {}])
         self.assertFalse(uid)
         with self.assertRaises(AccessDenied):
             model.dispatch('execute_kw', [

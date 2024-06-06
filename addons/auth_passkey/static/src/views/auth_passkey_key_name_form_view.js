@@ -4,7 +4,6 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { FormController } from "@web/views/form/form_controller";
 import { formView } from "@web/views/form/form_view";
-
 import { startRegistration } from "../../lib/simplewebauthn.js"
 
 export class PassKeyNameFormController extends FormController {
