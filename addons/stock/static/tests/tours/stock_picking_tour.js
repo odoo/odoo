@@ -156,3 +156,19 @@ registry.category("web_tour.tours").add('test_edit_existing_line', {
         },
     ]
 });
+
+registry.category("web_tour.tours").add('test_onchange_twice_lot_ids', {
+    test: true,
+    steps: () => [
+        { trigger: ".o_optional_columns_dropdown_toggle" },
+        { trigger: ".dropdown-item:contains('Serial Numbers')"},
+        { trigger: ".o_data_cell.o_many2many_tags_cell"},
+        { trigger: ".oi-close:first"},
+        { trigger: ".oi-close:first"},
+        { trigger: ".o_form_button_save"},
+        {
+            trigger: ".o_form_renderer.o_form_saved",
+            isCheck: true,
+        },
+    ]
+});
