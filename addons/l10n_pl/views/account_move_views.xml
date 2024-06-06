@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page id="pl_extra" string="PL Extra" name="page_pl_extra" invisible="move_type not in ('out_invoice', 'out_refund') and country_code != 'PL'">
+                <page id="pl_extra" string="PL Extra" name="page_pl_extra" invisible="move_type not in ('out_invoice', 'out_refund') or country_code != 'PL'">
                     <group>
                         <group>
                             <field name="l10n_pl_vat_b_spv_dostawa" readonly="state != 'draft'"/>
