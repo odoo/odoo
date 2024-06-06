@@ -622,7 +622,7 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
     });
 });
 
-test("action is removed while waiting for another action with selectMenu", async () => {
+test.tags("desktop")("action is removed while waiting for another action with selectMenu", async () => {
     let def;
     class SlowClientAction extends Component {
         static template = xml`<div>My client action</div>`;
