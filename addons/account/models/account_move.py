@@ -3126,20 +3126,26 @@ class AccountMove(models.Model):
             passed_file_data_list.append(file_data)
             attachment = file_data.get('attachment') or file_data.get('originator_pdf')
             if attachment:
-                if attachments_by_invoice[attachment]:
+                if attachments_by_invoice.get(attachment):
                     attachments_by_invoice[attachment] |= invoice
                 else:
                     attachments_by_invoice[attachment] = invoice
 
         file_data_list = attachments._unwrap_edi_attachments()
-        attachments_by_invoice = {
-            attachment: None
-            for attachment in attachments
-        }
+        attachments_by_invoice = {}
         invoices = self
         current_invoice = self
         passed_file_data_list = []
         for file_data in file_data_list:
+
+            # Rogue binaries from mail alias are skipped and unlinked.
+            if (
+                file_data['type'] == 'binary'
+                and self._context.get('from_alias')
+                and not attachments_by_invoice.get(file_data['attachment'])
+            ):
+                close_file(file_data)
+                continue
 
             # The invoice has already been decoded by an embedded file.
             if attachments_by_invoice.get(file_data['attachment']):
@@ -4724,10 +4730,15 @@ class AccountMove(models.Model):
         # will enhance the invoice thanks to EDI / OCR / .. capabilities
         results = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
         attachments_per_invoice = defaultdict(self.env['ir.attachment'].browse)
+        attachments_in_invoices = self.env['ir.attachment']
         for attachment, invoices in results.items():
+            attachments_in_invoices += attachment
             invoices = invoices or self
             for invoice in invoices:
                 attachments_per_invoice[invoice] |= attachment
+
+        # Unlink the unused attachments
+        (attachments - attachments_in_invoices).unlink()
 
         for invoice, attachments in attachments_per_invoice.items():
             if invoice == self:
