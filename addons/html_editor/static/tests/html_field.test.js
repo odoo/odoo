@@ -679,8 +679,75 @@ test("isDirty should be false when the content is being transformed by the edito
     expect(`.o_form_button_save`).not.toBeVisible();
 });
 
-test.todo("media dialog: upload", async function () {
-    throw new Error("To imp");
+test("link preview in Link Dialog", async () => {
+    Partner._records = [
+        {
+            id: 1,
+            txt: "<p class='test_target'><a href='/test'>This website</a></p>",
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    expect(".test_target a").toHaveText("This website");
+
+    // Open the popover option to edit the link
+    let anchorNode = queryOne(".test_target a");
+    setSelection({ anchorNode, anchorOffset: 0 });
+    // Click on the edit link icon
+    await contains("a.o_we_edit_link").click();
+    expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
+        message: "The label input field should match the link's content",
+    });
+    expect(".o-we-linkpopover a#link-preview").toHaveText("This website", {
+        message: "Link label in preview should match label input field",
+    });
+
+    await contains(".o-we-linkpopover input.o_we_label_link").edit("Bad new label");
+    expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("Bad new label", {
+        message: "The label input field should match the link's content",
+    });
+    expect(".o-we-linkpopover a#link-preview").toHaveText("Bad new label", {
+        message: "Link label in preview should match label input field",
+    });
+    // Move selection outside to discard
+    anchorNode = queryOne(".test_target");
+    setSelection({ anchorNode, anchorOffset: 0 });
+    await animationFrame();
+    expect(".o-we-linkpopover").toHaveCount(0);
+    expect(".test_target a").toHaveText("This website");
+
+    anchorNode = queryOne(".test_target a");
+    // Select link label to open the floating toolbar.
+    setSelection({ anchorNode, anchorOffset: 0 });
+    await animationFrame();
+    // Click on the edit link icon
+    await contains("a.o_we_edit_link").click();
+    expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
+        message: "The label input field should match the link's content",
+    });
+    expect(".o-we-linkpopover a#link-preview").toHaveText("This website", {
+        message: "Link label in preview should match label input field",
+    });
+
+    // Open the popover option to edit the link
+    await contains(".o-we-linkpopover input.o_we_label_link").edit("New label");
+    expect(".o-we-linkpopover a#link-preview").toHaveText("New label", {
+        message: "Preview should be updated on label input field change",
+    });
+
+    // Click "Save".
+    await contains(".o-we-linkpopover .o_we_apply_link").click();
+    expect(".test_target").toHaveText("New label", {
+        message: "The link's label should be updated",
+    });
 });
 
 describe("sandbox", () => {
@@ -953,84 +1020,3 @@ describe("sandbox", () => {
         );
     });
 });
-
-// test("link preview in Link Dialog", async () => {
-//     Partner._records = [
-//         {
-//             id: 1,
-//             txt: "<p class='test_target'><a href='/test'>This website</a></p>",
-//         },
-//     ];
-//     await mountView({
-//         type: "form",
-//         resId: 1,
-//         resModel: "partner",
-//         arch: `
-//             <form>
-//                 <field name="txt" widget="html"/>
-//             </form>`,
-//     });
-
-//     // Test the popover option to edit the link
-//     click(".test_target a")
-//     const a = document.querySelector(".test_target a");
-//     // Wait for the popover to appear
-//     await nextTick();
-//     a.click();
-//     await nextTick();
-//     // Click on the edit link icon
-//     document.querySelector("a.mx-1.o_we_edit_link.text-dark").click();
-//     // Make sure popover is closed
-//     await new Promise((resolve) => $(a).on("hidden.bs.popover.link_popover", resolve));
-//     let labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
-//     let linkPreview = document.querySelector(".modal a#link-preview");
-//     assert.strictEqual(
-//         labelInputField.value,
-//         "This website",
-//         "The label input field should match the link's content"
-//     );
-//     assert.strictEqual(
-//         linkPreview.innerText.replaceAll("\u200B", ""),
-//         "This website",
-//         "Link label in preview should match label input field"
-//     );
-
-//     // Click on discard
-//     await click(document, ".modal .modal-footer button.btn-secondary");
-
-//     const p = document.querySelector(".test_target");
-//     // Select link label to open the floating toolbar.
-//     setSelection(p, 0, p, 1);
-//     await nextTick();
-//     // Click on create-link button to open the Link Dialog.
-//     document.querySelector("#toolbar #create-link").click();
-//     await nextTick();
-
-//     labelInputField = document.querySelector(".modal input#o_link_dialog_label_input");
-//     linkPreview = document.querySelector(".modal a#link-preview");
-//     assert.strictEqual(
-//         labelInputField.value,
-//         "This website",
-//         "The label input field should match the link's content"
-//     );
-//     assert.strictEqual(
-//         linkPreview.innerText,
-//         "This website",
-//         "Link label in preview should match label input field"
-//     );
-
-//     // Edit link label.
-//     await editInput(labelInputField, null, "New label");
-//     assert.strictEqual(
-//         linkPreview.innerText,
-//         "New label",
-//         "Preview should be updated on label input field change"
-//     );
-//     // Click "Save".
-//     await click(document, ".modal .modal-footer button.btn-primary");
-//     assert.strictEqual(
-//         p.innerText.replaceAll("\u200B", ""),
-//         "New label",
-//         "The link's label should be updated"
-//     );
-// });
