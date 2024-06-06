@@ -1006,3 +1006,62 @@ class TestSalePrices(SaleCommon):
             line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision))
         self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
         self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))
+
+    def test_pricelist_price_round_and_surcharge(self):
+        """Test for discount rounding errors.
+        Make sure prices remain the same when using a pricelist formula
+        with percentage discount, rounding and surcharge.
+        """
+        self._enable_pricelists()
+
+        sale_order = self.empty_order
+        sale_order.pricelist_id = self.env['product.pricelist'].create({
+            'name': "Pricelist w/ formula",
+            'discount_policy': 'without_discount',
+            'company_id': self.env.company.id,
+            'item_ids': [
+                Command.create({
+                    'applied_on': '3_global',
+                    'compute_price': 'formula',
+                    'base': 'pricelist',
+                    'base_pricelist_id': self.pricelist.id,
+                    'price_discount': 5,
+                    'price_round': 1,
+                    'price_surcharge': -0.02,
+                }),
+            ],
+        })
+
+        self.product.list_price = 2306
+        self.service_product.list_price = 821.72
+        sale_order.order_line = [
+            Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 1
+            }),
+            Command.create({
+                'product_id': self.service_product.id,
+                'product_uom_qty': 3,
+            }),
+        ]
+
+        # Assert that Sale Order prices are equal to Pricelist prices based on a formula
+        precision = self.env['decimal.precision'].precision_get('Product Price')
+        for line in sale_order.order_line:
+            self.assertAlmostEqual(
+                line.price_subtotal,
+                line._get_pricelist_price() * line.product_uom_qty,
+                precision,
+                "Subtotal should equal pricelist price * uom qty",
+            )
+
+        # Assert that manual discounts override pricelist discounts
+        manual_discount = 5
+        sale_order.order_line.discount = manual_discount
+        for line in sale_order.order_line:
+            self.assertAlmostEqual(
+                line.price_subtotal,
+                line.price_unit * line.product_uom_qty * (100 - manual_discount) / 100,
+                precision,
+                "Subtotal should use manual discount",
+            )

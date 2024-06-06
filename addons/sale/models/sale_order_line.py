@@ -564,33 +564,46 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):
         for line in self:
-            if not line.product_id or line.display_type:
-                line.discount = 0.0
+            line.discount = line._get_real_discount()
 
-            if not (
-                line.order_id.pricelist_id
-                and line.order_id.pricelist_id.discount_policy == 'without_discount'
-            ):
-                continue
+    def _get_real_discount(self, line_discount=None):
+        """ Get real pricelist discount without rounding.
+            Takes an optional parameter to compare the pricelist discount to.
+            Returns the given discount if it doesn't correspond to the
+            pricelist discount, i.e. when a discount was applied manually.
+        """
+        self.ensure_one()
 
-            line.discount = 0.0
+        if self.display_type or not self.product_id:
+            return 0.0
 
-            if not line.pricelist_item_id:
-                # No pricelist rule was found for the product
-                # therefore, the pricelist didn't apply any discount/change
-                # to the existing sales price.
-                continue
+        if not (
+            self.pricelist_item_id
+            and self.order_id.pricelist_id.discount_policy == 'without_discount'
+        ):
+            return self.discount if line_discount is None else line_discount
 
-            line = line.with_company(line.company_id)
-            pricelist_price = line._get_pricelist_price()
-            base_price = line._get_pricelist_price_before_discount()
+        base_price = self._get_pricelist_price_before_discount()
+        if base_price == 0:  # Avoid division by zero
+            return self.discount if line_discount is None else line_discount
 
-            if base_price != 0:  # Avoid division by zero
-                discount = (base_price - pricelist_price) / base_price * 100
-                if (discount > 0 and base_price > 0) or (discount < 0 and base_price < 0):
-                    # only show negative discounts if price is negative
-                    # otherwise it's a surcharge which shouldn't be shown to the customer
-                    line.discount = discount
+        if line_discount is not None and self.pricelist_item_id.compute_price == 'percentage':
+            return line_discount
+
+        pricelist_price = self._get_pricelist_price()
+        real_discount = (base_price - pricelist_price) / base_price * 100
+        if (real_discount < 0 < base_price) or (base_price < 0 < real_discount):
+            # only show negative discounts if price is negative
+            # otherwise it's a surcharge which shouldn't be shown to the customer
+            real_discount = 0.0
+
+        if line_discount is not None:
+            precision = self.env['decimal.precision'].precision_get('Discount')
+            # if given discount doesn't match real_discount, assume manual change
+            was_modified = float_compare(real_discount, line_discount, precision) != 0
+            return line_discount if was_modified else real_discount
+
+        return real_discount
 
     def _convert_to_tax_base_line_dict(self, **kwargs):
         """ Convert the current record to a dictionary in order to use the generic taxes computation method
@@ -607,7 +620,7 @@ class SaleOrderLine(models.Model):
             taxes=self.tax_id,
             price_unit=self.price_unit,
             quantity=self.product_uom_qty,
-            discount=self.discount,
+            discount=self._get_real_discount(self.discount),
             price_subtotal=self.price_subtotal,
             **kwargs,
         )
