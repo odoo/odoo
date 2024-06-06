@@ -147,7 +147,8 @@ export class ImageSelector extends FileSelector {
             // big deal.
             const originalId = this.props.media && this.props.media.dataset.originalId;
             if (originalId) {
-                subDomain.push(originalId);
+                // the dataset is a DOMStringMap, cast identifier to integer
+                subDomain.push(parseInt(originalId));
             }
 
             domain.push(['original_id', 'in', subDomain]);

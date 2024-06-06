@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import _, SQL
+from odoo.tools import SQL, OrderedSet, _
 
 
 class PhoneBlackList(models.Model):
@@ -72,8 +72,8 @@ class PhoneBlackList(models.Model):
             sanitize = self.env.user._phone_format
             if isinstance(value, str):
                 value = sanitize(number=value) or value
-            elif isinstance(value, list) and all(isinstance(number, str) for number in value):
-                value = [sanitize(number=number) or number for number in value]
+            elif isinstance(value, OrderedSet) and all(isinstance(number, str) for number in value):
+                value = OrderedSet([sanitize(number=number) or number for number in value])
         return super()._condition_to_sql(alias, fname, operator, value, query)
 
     def add(self, number, message=None):

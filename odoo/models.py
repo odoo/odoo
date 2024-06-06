@@ -52,8 +52,10 @@ from psycopg2.extras import Json
 import odoo
 from . import SUPERUSER_ID
 from . import api
+from . import domains
 from . import tools
 from .api import NewId
+from .domains import Domain, COLLECTION_TYPES, NEGATIVE_CONDITION_OPERATORS
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .tools import (
     clean_context, config, date_utils, discardattr,
@@ -102,7 +104,7 @@ UPDATE_BATCH_SIZE = 100
 SQL_DEFAULT = psycopg2.extensions.AsIs("DEFAULT")
 
 def parse_read_group_spec(spec: str) -> tuple:
-    """ Return a triplet corresponding to the given groupby/path/aggregate specification. """
+    """ Return a triplet corresponding to the given field/property_name/aggregate specification. """
     res_match = regex_read_group_spec.match(spec)
     if not res_match:
         raise ValueError(
@@ -158,6 +160,7 @@ def check_method_name(name):
 
 
 def check_property_field_value_name(property_name):
+    # TODO move to fields.py
     if not regex_alphanumeric.match(property_name) or len(property_name) > 512:
         raise ValueError(f"Wrong property field value name {property_name!r}.")
 
@@ -219,6 +222,12 @@ def check_companies_domain_parent_of(self, companies):
         for rec in self.env['res.company'].sudo().browse(companies)
         for parent in rec.parent_path.split('/')[:-1]
     ])]
+
+
+def get_field_name_from_expression(field_expr: str) -> str:
+    if (property_index := field_expr.find(".")) >= 0:
+        return field_expr[:property_index]
+    return field_expr
 
 
 class MetaModel(api.Meta):
@@ -343,6 +352,7 @@ READ_GROUP_TIME_GRANULARITY = {
     'year': dateutil.relativedelta.relativedelta(years=1)
 }
 
+# TODO move to field, it's about field properties and not read_group
 READ_GROUP_NUMBER_GRANULARITY = {
     'year_number': 'year',
     'quarter_number': 'quarter',
@@ -1787,13 +1797,13 @@ class BaseModel(metaclass=MetaModel):
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
             _logger.warning("Cannot search on display_name, no _rec_name or _rec_names_search defined on %s", self._name)
-            return expression.FALSE_DOMAIN
+            return Domain.FALSE
         if operator.endswith('like') and not value and '=' not in operator:
             # optimize out the default criterion of ``like ''`` that matches everything
             # return all when operator is positive
-            return expression.FALSE_DOMAIN if operator in expression.NEGATIVE_TERM_OPERATORS else expression.TRUE_DOMAIN
-        aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
+            return Domain.FALSE if operator in NEGATIVE_CONDITION_OPERATORS else Domain.TRUE
+        aggregator = Domain.AND if operator in NEGATIVE_CONDITION_OPERATORS else Domain.OR
+        return aggregator(*(Domain(field_name, operator, value) for field_name in search_fnames))
 
     @api.model
     def name_create(self, name) -> tuple[int, str] | typing.Literal[False]:
@@ -1843,7 +1853,7 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         :return: list of pairs ``(id, display_name)`` for all matching records.
         """
-        domain = expression.AND([[('display_name', operator, name)], args or []])
+        domain = Domain('display_name', operator, name) & Domain(args or [])
         records = self.search_fetch(domain, ['display_name'], limit=limit)
         return [(record.id, record.display_name) for record in records.sudo()]
 
@@ -1944,7 +1954,8 @@ class BaseModel(metaclass=MetaModel):
         """
         self.browse().check_access('read')
 
-        if expression.is_false(self, domain):
+        query = self._search(domain)
+        if query.is_empty():
             if not groupby:
                 # when there is no group, postgresql always return a row
                 return [tuple(
@@ -1952,8 +1963,6 @@ class BaseModel(metaclass=MetaModel):
                     for spec in itertools.chain(groupby, aggregates)
                 )]
             return []
-
-        query = self._search(domain)
 
         groupby_terms: dict[str, SQL] = {
             spec: self._read_group_groupby(spec, query)
@@ -2048,7 +2057,7 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[fname]
 
         if field.type == 'properties':
-            sql_expr = self._read_group_groupby_properties(fname, property_name, query)
+            sql_expr = self._read_group_groupby_properties(field, property_name, query)
 
         elif property_name:
             raise ValueError(f"Property access on non-property field: {groupby_spec!r}")
@@ -2059,7 +2068,7 @@ class BaseModel(metaclass=MetaModel):
         elif field.type == 'many2many':
             alias = self._table
             if field.related and not field.store:
-                __, field, alias = self._traverse_related_sql(alias, field, query)
+                _model, field, alias = self._traverse_related_sql(alias, field, query)
 
             if not field.store:
                 raise ValueError(f"Group by non-stored many2many field: {groupby_spec!r}")
@@ -2089,13 +2098,7 @@ class BaseModel(metaclass=MetaModel):
             return SQL.identifier(rel_alias, field.column2)
 
         else:
-            sql_expr = self._field_to_sql(self._table, fname, query)
-
-        if field.type == 'datetime' and (tz := self.env.context.get('tz')):
-            if tz in pytz.all_timezones_set:
-                sql_expr = SQL("timezone(%s, timezone('UTC', %s))", self.env.context['tz'], sql_expr)
-            else:
-                _logger.warning("Grouping in unknown / legacy timezone %r", tz)
+            sql_expr = field.field_expr_to_sql(self, self._table, fname, query)
 
         if field.type in ('datetime', 'date') or (field.type == 'properties' and granularity):
             if not granularity:
@@ -2103,6 +2106,11 @@ class BaseModel(metaclass=MetaModel):
             if granularity not in READ_GROUP_ALL_TIME_GRANULARITY:
                 raise ValueError(f"Granularity specification isn't correct: {granularity!r}")
 
+            if granularity in READ_GROUP_NUMBER_GRANULARITY:
+                sql_expr = fields.Date.sql_expression_for_property(self, sql_expr, granularity, field.type == 'datetime')
+            elif field.type == 'datetime':
+                # set the timezone only
+                sql_expr = fields.Date.sql_expression_for_property(self, sql_expr, '', is_datetime=True)
             if granularity == 'week':
                 # first_week_day: 0=Monday, 1=Tuesday, ...
                 first_week_day = int(get_lang(self.env).week_start) - 1
@@ -2112,27 +2120,7 @@ class BaseModel(metaclass=MetaModel):
                     "(date_trunc('week', %s::timestamp - INTERVAL %s) + INTERVAL %s)",
                     sql_expr, interval, interval,
                 )
-            elif spec := READ_GROUP_NUMBER_GRANULARITY.get(granularity):
-                if granularity == 'day_of_week':
-                    """
-                    formula: ((7 - first_day_of_week_in_odoo) + result_from_SQL) %  --> 0 based first day of week
-                                    week start on
-                                monday   sunday    sat
-                                  1     |  7    |  6   <-- first day of week in odoo
-                           SQL | -----------------------
-                    Monday  1  |  0     |  1    |  2
-                    tuesday 2  |  1     |  2    |  3
-                    wed     3  |  2     |  3    |  4
-                    thurs   4  |  3     |  4    |  5
-                    friday  5  |  4     |  5    |  6
-                    sat     6  |  5     |  6    |  0
-                    sun     7  |  6     |  0    |  1
-                    """
-                    first_week_day = int(get_lang(self.env, self.env.context.get('tz')).week_start)
-                    sql_expr = SQL("mod(7 - %s + date_part(%s, %s)::int, 7)", first_week_day, spec, sql_expr)
-                else:
-                    sql_expr = SQL("date_part(%s, %s)::int", spec, sql_expr)
-            else:
+            elif granularity in READ_GROUP_TIME_GRANULARITY:
                 sql_expr = SQL("date_trunc(%s, %s::timestamp)", granularity, sql_expr)
 
             # If the granularity is a part number, the result is a number (double) so no conversion is needed
@@ -2165,8 +2153,8 @@ class BaseModel(metaclass=MetaModel):
                 if operator not in SUPPORTED:
                     raise ValueError(f"Invalid having clause {item!r}: supported comparators are {SUPPORTED}")
                 sql_left = self._read_group_select(left, query)
-                sql_operator = expression.SQL_OPERATORS[operator]
-                stack.append(SQL("%s %s %s", sql_left, sql_operator, right))
+                sql_operator = fields._SQL_OPERATORS[operator]
+                stack.append(SQL("%s%s%s", sql_left, sql_operator, right))
             else:
                 raise ValueError(f"Invalid having clause {item!r}: it should be a domain-like clause")
 
@@ -2639,7 +2627,17 @@ class BaseModel(metaclass=MetaModel):
                         # date/datetime field value to False.
                         row.setdefault('__range', {})[group] = False
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
+        # normalize resulting '__domain',
+        # it is already a concatenation of normalized domains
+        for row in rows_dict:
+            domain = row['__domain']
+            condition_count = len(domain) - sum(
+                1 if d == '!' else 2
+                for d in domain
+                if isinstance(d, str)
+            )
+            row['__domain'] = ['&'] * (condition_count - 1) + domain
 
     def _read_group_format_result_properties(self, rows_dict, group):
         """Modify the final read group properties result.
@@ -2664,14 +2662,15 @@ class BaseModel(metaclass=MetaModel):
                 if not row[fullname]:
                     # can not do ('selection', '=', False) because we might have
                     # option in database that does not exist anymore
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        [(fullname, 'not in', options)],
-                    ])
+                    additional_domain = [
+                        '|',
+                        (fullname, '=', False),
+                        (fullname, 'not in', options),
+                    ]
                 else:
                     additional_domain = [(fullname, '=', row[fullname])]
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type == 'many2one':
             comodel = definition.get('comodel')
@@ -2681,16 +2680,17 @@ class BaseModel(metaclass=MetaModel):
                 if not row[fullname]:
                     # can not only do ('many2one', '=', False) because we might have
                     # record in database that does not exist anymore
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        [(fullname, 'not in', all_groups)],
-                    ])
+                    additional_domain = [
+                        '|',
+                        (fullname, '=', False),
+                        (fullname, 'not in', all_groups),
+                    ]
                 else:
                     additional_domain = [(fullname, '=', row[fullname])]
                     record = self.env[comodel].browse(row[fullname]).with_prefetch(prefetch_ids)
                     row[fullname] = (row[fullname], record.display_name)
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type == 'many2many':
             comodel = definition.get('comodel')
@@ -2698,38 +2698,38 @@ class BaseModel(metaclass=MetaModel):
             all_groups = tuple(row[fullname] for row in rows_dict if row[fullname])
             for row in rows_dict:
                 if not row[fullname]:
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        expression.AND([[(fullname, 'not in', group)] for group in all_groups]),
-                    ]) if all_groups else []
+                    if all_groups:
+                        additional_domain = list(Domain(fullname, '=', False) | Domain.AND(*([(fullname, 'not in', group)] for group in all_groups)))
+                    else:
+                        additional_domain = list(Domain.TRUE)
                 else:
                     additional_domain = [(fullname, 'in', row[fullname])]
                     record = self.env[comodel].browse(row[fullname]).with_prefetch(prefetch_ids)
                     row[fullname] = (row[fullname], record.display_name)
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type == 'tags':
             tags = definition.get('tags') or []
             tags = {tag[0]: tag for tag in tags}
             for row in rows_dict:
                 if not row[fullname]:
-                    additional_domain = expression.OR([
-                        [(fullname, '=', False)],
-                        expression.AND([[(fullname, 'not in', tag)] for tag in tags]),
-                    ]) if tags else []
+                    if tags:
+                        additional_domain = list(Domain(fullname, '=', False) | Domain.AND(*([(fullname, 'not in', tag)] for tag in tags)))
+                    else:
+                        additional_domain = list(Domain.TRUE)
                 else:
                     additional_domain = [(fullname, 'in', row[fullname])]
                     # replace tag raw value with list of raw value, label and color
                     row[fullname] = tags.get(row[fullname])
 
-                row['__domain'] = expression.AND([row['__domain'], additional_domain])
+                row['__domain'].extend(additional_domain)
 
         elif property_type in ('date', 'datetime'):
             for row in rows_dict:
                 if not row[group]:
                     row[group] = False
-                    row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', False)]])
+                    row['__domain'].append((fullname, '=', False))
                     row['__range'] = {}
                     continue
 
@@ -2744,9 +2744,8 @@ class BaseModel(metaclass=MetaModel):
                     start = (date_utils.start_of(row[group], func)).strftime(db_format)
                     end = (date_utils.end_of(row[group], func) + datetime.timedelta(minutes=1)).strftime(db_format)
 
-                row['__domain'] = expression.AND([
-                    row['__domain'],
-                    [(fullname, '>=', start), (fullname, '<', end)],
+                row['__domain'].extend([
+                    '&', (fullname, '>=', start), (fullname, '<', end),
                 ])
                 row['__range'] = {group: {'from': start, 'to': end}}
                 row[group] = babel.dates.format_date(
@@ -2756,7 +2755,7 @@ class BaseModel(metaclass=MetaModel):
                 )
         else:
             for row in rows_dict:
-                row['__domain'] = expression.AND([row['__domain'], [(fullname, '=', row[fullname])]])
+                row['__domain'].append((fullname, '=', row[fullname]))
 
     @api.model
     def _read_group_get_annotated_groupby(self, groupby, lazy):
@@ -2866,6 +2865,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             orderby = ','.join(annotated_groupby.values())
 
+        domain = Domain(domain)
         rows = self._read_group(domain, annotated_groupby.values(), annotated_aggregates.values(), offset=offset, limit=limit, order=orderby)
         rows_dict = [
             dict(zip(itertools.chain(annotated_groupby, annotated_aggregates), row))
@@ -2896,8 +2896,9 @@ class BaseModel(metaclass=MetaModel):
                 annotated_aggregates, rows_dict, read_group_order=orderby,
             )
 
+        domain_list = [] if domain.is_true() else list(domain)
         for row in rows_dict:
-            row['__domain'] = domain
+            row['__domain'] = domain_list[:]  # make a copy for each row
             if len(lazy_groupby) < len(groupby):
                 row['__context'] = {'group_by': groupby[len(lazy_groupby):]}
 
@@ -2905,8 +2906,11 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
-    def _traverse_related_sql(self, alias: str, field: Field, query: Query):
-        """ Traverse the related `field` and add needed join to the `query`. """
+    def _traverse_related_sql(self, alias: str, field: Field, query: Query) -> tuple[BaseModel, Field, str]:
+        """ Traverse the related `field` and add needed join to the `query`.
+
+        :returns: tuple of model, alias, last field name
+        """
         assert field.related and not field.store
         if not (self.env.su or field.compute_sudo or field.inherited):
             raise ValueError(f'Cannot convert {field} to SQL because it is not a sudoed related or inherited field')
@@ -2941,67 +2945,23 @@ class BaseModel(metaclass=MetaModel):
         result to make method :meth:`~odoo.api.Environment.execute_query` flush
         the field before executing the query.
         """
-        property_name = None
-        if '.' in fname:
-            fname, property_name = fname.split('.', 1)
-
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
 
         if field.related and not field.store:
             model, field, alias = self._traverse_related_sql(alias, field, query)
-            return model._field_to_sql(alias, field.name, query)
-
-        if not field.store or not field.column_type:
-            raise ValueError(f"Cannot convert {field} to SQL because it is not stored")
-
-        if field.type == 'properties' and property_name:
-            return SQL("%s -> %s", self._field_to_sql(alias, fname, query, flush), property_name)
-
-        if property_name:
-            fname = f"{fname}.{property_name}"
-            raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
+            field_name = field.name
+            return model._field_to_sql(alias, field_name, query)
 
         self.check_field_access_rights('read', [field.name])
+        return field.field_to_sql(self, alias, flush)
 
-        field_to_flush = field if flush and fname != 'id' else None
-        sql_field = SQL.identifier(alias, fname, to_flush=field_to_flush)
-
-        if field.translate:
-            langs = field.get_translation_fallback_langs(self.env)
-            sql_field_langs = [SQL("%s->>%s", sql_field, lang) for lang in langs]
-            if len(sql_field_langs) == 1:
-                return sql_field_langs[0]
-            return SQL("COALESCE(%s)", SQL(", ").join(sql_field_langs))
-
-        if field.company_dependent:
-            fallback = field.get_company_dependent_fallback(self)
-            fallback = field.convert_to_column(field.convert_to_write(fallback, self), self)
-            # in _read_group_orderby the result of field to sql will be mogrified and split to
-            # e.g SQL('COALESCE(%s->%s') and SQL('to_jsonb(%s))::boolean') as 2 orderby values
-            # and concatenated by SQL(',') in the final result, which works in an unexpected way
-            sql_field = SQL(
-                "COALESCE(%(column)s->%(company_id)s,to_jsonb(%(fallback)s::%(column_type)s))",
-                column=sql_field,
-                company_id=str(self.env.company.id),
-                fallback=fallback,
-                column_type=SQL(field._column_type[1]),
-            )
-            if field.type in ('boolean', 'integer', 'float', 'monetary'):
-                return SQL('(%s)::%s', sql_field, SQL(field._column_type[1]))
-            # here the specified value for a company might be NULL e.g. '{"1": null}'::jsonb
-            # the result of current sql_field might be 'null'::jsonb
-            # ('null'::jsonb)::text == 'null'
-            # ('null'::jsonb->>0)::text IS NULL
-            return SQL('(%s->>0)::%s', sql_field, SQL(field._column_type[1]))
-
-        return sql_field
-
-    def _read_group_groupby_properties(self, fname: str, property_name: str, query: Query) -> SQL:
+    def _read_group_groupby_properties(self, field: Field, property_name: str, query: Query) -> SQL:
+        fname = field.name
         definition = self.get_property_definition(f"{fname}.{property_name}")
         property_type = definition.get('type')
-        sql_property = self._field_to_sql(self._table, f'{fname}.{property_name}', query)
+        sql_property = field.field_expr_to_sql(self, self._table, f'{fname}.{property_name}', query)
 
         # JOIN on the JSON array
         if property_type in ('tags', 'many2many'):
@@ -3101,155 +3061,21 @@ class BaseModel(metaclass=MetaModel):
         # if the key is not present in the dict, fallback to false instead of none
         return SQL("COALESCE(%s, 'false')", sql_property)
 
-    def _condition_to_sql(self, alias: str, fname: str, operator: str, value, query: Query) -> SQL:
+    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
         """ Return an :class:`SQL` object that represents the domain condition
-        given by the triple ``(fname, operator, value)`` with the given table
-        alias, and in the context of the given query.
+        given by the triple ``(field_expr, operator, value)`` with the given
+        table alias, and in the context of the given query.
 
         The method is also responsible for checking that the field is accessible
         for reading, and should include metadata in the result object to make
         sure that the necessary fields are flushed before executing the final
         SQL query.
         """
-        # sanity checks - should never fail
-        assert operator in expression.TERM_OPERATORS, \
-            f"Invalid operator {operator!r} in domain term {(fname, operator, value)!r}"
-        assert fname in self._fields, \
-            f"Invalid field {fname!r} in domain term {(fname, operator, value)!r}"
-        assert not isinstance(value, BaseModel), \
-            f"Invalid value {value!r} in domain term {(fname, operator, value)!r}"
+        assert operator in domains.STANDARD_CONDITION_OPERATORS, \
+            f"Invalid operator {operator!r} in domain term {(field_expr, operator, value)!r}"
 
-        if operator == '=?':
-            if value is False or value is None:
-                # '=?' is a short-circuit that makes the term TRUE if value is None or False
-                return SQL("TRUE")
-            else:
-                # '=?' behaves like '=' in other cases
-                return self._condition_to_sql(alias, fname, '=', value, query)
-
-        sql_field = self._field_to_sql(alias, fname, query)
-
-        field = self._fields[fname]
-        is_number_field = field.type in ('integer', 'float', 'monetary') and field.name != 'id'
-        is_char_field = field.type in ('char', 'text', 'html')
-        sql_operator = expression.SQL_OPERATORS[operator]
-
-        if operator in ('in', 'not in'):
-            # Two cases: value is a boolean or a list. The boolean case is an
-            # abuse and handled for backward compatibility.
-            if isinstance(value, bool):
-                _logger.warning("The domain term '%s' should use the '=' or '!=' operator.", (fname, operator, value))
-                if (operator == 'in' and value) or (operator == 'not in' and not value):
-                    return SQL("(%s IS NOT NULL)", sql_field)
-                else:
-                    return SQL("(%s IS NULL)", sql_field)
-
-            elif isinstance(value, SQL):
-                return SQL("(%s %s %s)", sql_field, sql_operator, value)
-
-            elif isinstance(value, Query):
-                return SQL("(%s %s %s)", sql_field, sql_operator, value.subselect())
-
-            elif isinstance(value, (list, tuple)):
-                params = [it for it in value if it is not False and it is not None]
-                check_null = len(params) < len(value)
-                if field.type == 'boolean':
-                    # just replace instead of casting, only truthy values remain
-                    params = [True] if any(params) else []
-                    if check_null:
-                        params.append(False)
-                elif is_number_field:
-                    if check_null and 0 not in params:
-                        params.append(0)
-                    check_null = check_null or (0 in params)
-                elif is_char_field:
-                    if check_null and '' not in params:
-                        params.append('')
-                    check_null = check_null or ('' in params)
-
-                if params:
-                    if fname != 'id':
-                        params = [field.convert_to_column(p, self, validate=False) for p in params]
-                    sql = SQL("(%s %s %s)", sql_field, sql_operator, tuple(params))
-                else:
-                    # The case for (fname, 'in', []) or (fname, 'not in', []).
-                    sql = SQL("FALSE") if operator == 'in' else SQL("TRUE")
-
-                if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
-                    sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-                elif operator == 'not in' and check_null:
-                    sql = SQL("(%s AND %s IS NOT NULL)", sql, sql_field)  # needed only for TRUE
-                return sql
-
-            else:  # Must not happen
-                raise ValueError(f"Invalid domain term {(fname, operator, value)!r}")
-
-        if field.type == 'boolean' and operator in ('=', '!=') and isinstance(value, bool):
-            value = (not value) if operator in expression.NEGATIVE_TERM_OPERATORS else value
-            if value:
-                return SQL("(%s = TRUE)", sql_field)
-            else:
-                return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
-
-        if (field.relational or field.name == 'id') and operator in ('=', '!=') and isinstance(value, NewId):
-            _logger.warning("_condition_to_sql: ignored (%r, %r, NewId), did you mean (%r, 'in', recs.ids)?", fname, operator, fname)
-            return SQL("TRUE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("FALSE")
-
-        # comparison with null
-        # except for some basic types, where we need to check the empty value
-        if (field.relational or field.name == 'id') and operator in ('=', '!=') and not value:
-            # if we compare a relation to 0, then compare only to False
-            value = False
-
-        if operator in ('=', '!=') and (value is False or value is None):
-            if is_number_field:
-                value = 0  # generates (fname = 0 OR fname IS NULL)
-            elif is_char_field:
-                value = ''  # generates (fname = '' OR fname IS NULL)
-            elif operator == '=':
-                return SQL("%s IS NULL", sql_field)
-            elif operator == '!=':
-                return SQL("%s IS NOT NULL", sql_field)
-
-        # general case
-        need_wildcard = operator in expression.WILDCARD_OPERATORS
-
-        if isinstance(value, SQL):
-            sql_value = value
-        elif need_wildcard:
-            sql_value = SQL("%s", f"%{value}%")
-        else:
-            sql_value = SQL("%s", field.convert_to_column(value, self, validate=False))
-
-        sql_left = sql_field
-        if operator.endswith('like') and field.type not in ('char', 'text', 'html'):
-            sql_left = SQL("(%s)::text", sql_field)
-        if operator.endswith('ilike'):
-            sql_left = self.env.registry.unaccent(sql_left)
-            sql_value = self.env.registry.unaccent(sql_value)
-
-        if need_wildcard and not value:
-            return SQL("FALSE") if operator in expression.NEGATIVE_TERM_OPERATORS else SQL("TRUE")
-
-        sql = SQL("(%s %s %s)", sql_left, sql_operator, sql_value)
-        if (
-            bool(value) == (operator in expression.NEGATIVE_TERM_OPERATORS)
-            # exception: don't add for inequalities
-            and operator[:1] not in ('>', '<')
-        ):
-            sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-
-        if not need_wildcard and is_number_field and not field.company_dependent:
-            cmp_value = field.convert_to_record(field.convert_to_cache(value, self), self)
-            if (
-                operator == '>=' and cmp_value <= 0
-                or operator == '<=' and cmp_value >= 0
-                or operator == '<' and cmp_value > 0
-                or operator == '>' and cmp_value < 0
-            ):
-                sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
-
-        return sql
+        field = self._fields[get_field_name_from_expression(field_expr)]
+        return field.condition_to_sql(self, alias, field_expr, operator, value, query)
 
     @api.model
     def get_property_definition(self, full_name):
@@ -4183,7 +4009,7 @@ class BaseModel(metaclass=MetaModel):
                     sql = self._field_to_sql(self._table, field.name, query)
                     sql = SQL("pg_size_pretty(length(%s)::bigint)", sql)
                 elif field.translate and self.env.context.get('prefetch_langs'):
-                    sql = SQL.identifier(self._table, field.name, to_flush=field)
+                    sql = field.field_to_sql_raw(self, self._table)
                 else:
                     # flushing is necessary to retrieve the en_US value of fields without a translation
                     sql = self._field_to_sql(self._table, field.name, query, flush=field.translate)
@@ -5493,8 +5319,8 @@ class BaseModel(metaclass=MetaModel):
         return original_self.concat(*(data['record'] for data in data_list))
 
     @api.model
-    def _where_calc(self, domain, active_test=True):
-        """Computes the WHERE clause needed to implement an OpenERP domain.
+    def _where_calc(self, domain, active_test=True) -> Query:
+        """Computes the WHERE clause similarly to what _search does.
 
         :param list domain: the domain to compute
         :param bool active_test: whether the default filtering of records with
@@ -5502,18 +5328,25 @@ class BaseModel(metaclass=MetaModel):
         :return: the query expressing the given domain as provided in domain
         :rtype: Query
         """
+        domain = Domain(domain)
+
         # if the object has an active field ('active', 'x_active'), filter out all
         # inactive records unless they were explicitly asked for
-        if self._active_name and active_test and self._context.get('active_test', True):
-            # the item[0] trick below works for domain items and '&'/'|'/'!'
-            # operators too
-            if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
+        if (
+            self._active_name
+            and active_test
+            and self.env.context.get('active_test', True)
+            and not any(leaf.field == self._active_name for leaf in domain.iter_conditions())
+        ):
+            domain &= Domain(self._active_name, '=', True)
 
-        if domain:
-            return expression.expression(domain, self).query
-        else:
-            return Query(self.env, self._table, self._table_sql)
+        domain = domain.optimize(self)
+        if domain.is_false():
+            return self.browse()._as_query()
+        query = Query(self.env, self._table, self._table_sql)
+        if not domain.is_true():
+            query.add_where(domain._to_sql(self, self._table, query))
+        return query
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -5536,10 +5369,11 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # apply main rules on the object
-        Rule = self.env['ir.rule']
-        domain = Rule._compute_domain(self._name, mode)
+        domain = self.env['ir.rule']._compute_domain(self._name, mode)
         if domain:
-            expression.expression(domain, self.sudo(), self._table, query)
+            model = self.sudo()
+            domain = domain.optimize(model)
+            query.add_where(domain._to_sql(model, query.table, query))
 
     def _order_to_sql(self, order: str, query: Query, alias: (str | None) = None,
                       reverse: bool = False) -> SQL:
@@ -5559,10 +5393,6 @@ class BaseModel(metaclass=MetaModel):
             order_match = regex_order.match(order_part)
             field_name = order_match['field']
 
-            property_name = order_match['property']
-            if property_name:
-                field_name = f"{field_name}.{property_name}"
-
             direction = (order_match['direction'] or '').upper()
             nulls = (order_match['nulls'] or '').upper()
             if reverse:
@@ -5573,6 +5403,9 @@ class BaseModel(metaclass=MetaModel):
             sql_direction = SQL(direction) if direction in ('ASC', 'DESC') else SQL()
             sql_nulls = SQL(nulls) if nulls in ('NULLS FIRST', 'NULLS LAST') else SQL()
 
+            property_name = order_match['property']
+            if property_name:
+                field_name = f"{field_name}.{property_name}"
             term = self._order_field_to_sql(alias, field_name, sql_direction, sql_nulls, query)
             if term:
                 terms.append(term)
@@ -5588,8 +5421,8 @@ class BaseModel(metaclass=MetaModel):
         :param direction: one of ``SQL("ASC")``, ``SQL("DESC")``, ``SQL()``
         :param nulls: one of ``SQL("NULLS FIRST")``, ``SQL("NULLS LAST")``, ``SQL()``
         """
-        # field_name can be a path (for properties by example)
-        fname = field_name.split('.', 1)[0] if '.' in field_name else field_name
+        # field_name is an expression
+        fname = get_field_name_from_expression(field_name)
         field = self._fields.get(fname)
         if not field:
             raise ValueError(f"Invalid field {fname!r} on model {self._name!r}")
@@ -5605,10 +5438,10 @@ class BaseModel(metaclass=MetaModel):
             comodel = self.env[field.comodel_name]
             if field_name.endswith('.id'):
                 coorder = 'id'
-                sql_field = self._field_to_sql(alias, fname, query)
+                sql_field = field.field_expr_to_sql(self, alias, fname, query)
             else:
                 coorder = comodel._order
-                sql_field = self._field_to_sql(alias, field_name, query)
+                sql_field = field.field_expr_to_sql(self, alias, field_name, query)
 
             if coorder == 'id':
                 return SQL("%s %s %s", sql_field, direction, nulls)
@@ -5636,7 +5469,7 @@ class BaseModel(metaclass=MetaModel):
                 terms.append(term)
             return SQL(", ").join(terms)
 
-        sql_field = self._field_to_sql(alias, field_name, query)
+        sql_field = field.field_expr_to_sql(self, alias, field_name, query)
         if field.type == 'boolean':
             sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
 
@@ -5752,21 +5585,34 @@ class BaseModel(metaclass=MetaModel):
         """
         self.browse().check_access('read')
 
-        if expression.is_false(self, domain):
-            # optimization: no need to query, as no record satisfies the domain
-            return self.browse()._as_query()
-
+        # deletegate to _where_calc
         query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
+        if query.is_empty():
+            return query
+
+        # security access domain
+        if self.env.su:
+            sec_domain = Domain.TRUE
+        else:
+            sec_domain = self.env['ir.rule']._compute_domain(self._name, 'read')
+            sec_domain = sec_domain.optimize(self.sudo())
+
+        # build the query
+        if sec_domain.is_false() or (not limit and limit is not None and limit is not False):
+            return self.browse()._as_query()
+        if not sec_domain.is_true():
+            query.add_where(sec_domain._to_sql(self.sudo(), self._table, query))
 
         if order:
             query.order = self._order_to_sql(order, query)
-        query.limit = limit
-        query.offset = offset
+        if limit is not None:
+            query.limit = limit
+        if offset is not None:
+            query.offset = offset
 
         return query
 
-    def _as_query(self, ordered=True):
+    def _as_query(self, ordered: bool = True) -> Query:
         """ Return a :class:`Query` that corresponds to the recordset ``self``.
         This method is convenient for making a query object with a known result.
 
@@ -6508,6 +6354,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param domain: :ref:`A search domain <reference/orm/domains>`.
         """
+        domain = list(domain)  # as for now, we can pass a Domain object TODO
         if not domain or not self:
             return self
 
@@ -6519,9 +6366,9 @@ class BaseModel(metaclass=MetaModel):
                 stack.append(set(self._ids) - stack.pop())
             elif leaf == '&':
                 stack.append(stack.pop() & stack.pop())
-            elif leaf == expression.TRUE_LEAF:
+            elif leaf == domains._TRUE_LEAF:
                 stack.append(set(self._ids))
-            elif leaf == expression.FALSE_LEAF:
+            elif leaf == domains._FALSE_LEAF:
                 stack.append(set())
             else:
                 (key, comparator, value) = leaf
@@ -6539,18 +6386,25 @@ class BaseModel(metaclass=MetaModel):
                 # determine the field with the final type for values
                 if key.endswith('.id'):
                     key = key[:-3]
-                if '.' in key:
-                    fname, rest = key.split('.', 1)
-                    field = self._fields[fname]
-                    if field.relational:
-                        # for relational fields, evaluate as 'any'
-                        # so that negations are applied on the result of 'any' instead
-                        # of on the mapped value
-                        key, comparator, value = fname, 'any', [(rest, comparator, value)]
-                else:
-                    field = self._fields[key]
-                    if key == 'id':
-                        key = ''
+                try:
+                    if '.' in key:
+                        fname, rest = key.split('.', 1)
+                        field = self._fields[fname]
+                        if field.relational:
+                            # for relational fields, evaluate as 'any'
+                            # so that negations are applied on the result of 'any' instead
+                            # of on the mapped value
+                            key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                    else:
+                        field = self._fields[key]
+                        if key == 'id':
+                            key = ''
+                except KeyError as e:
+                    raise ValueError(f"Invalid field in filter of {self._name}: {domain!r}") from e
+
+                if comparator in ('any', 'not any') and isinstance(value, Query):
+                    comparator = 'in' if comparator == 'any' else 'not in'
+                    value = set(value)
 
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     if comparator.endswith('ilike'):
@@ -6589,7 +6443,7 @@ class BaseModel(metaclass=MetaModel):
                     comparator = 'in' if comparator == '=' else 'not in'
                     value = ['', False]
                 if comparator in ('in', 'not in'):
-                    if isinstance(value, (list, tuple)):
+                    if isinstance(value, COLLECTION_TYPES):
                         value = set(value)
                     else:
                         value = {value}
@@ -6606,7 +6460,7 @@ class BaseModel(metaclass=MetaModel):
                     data = record.mapped(key)
                     if isinstance(data, BaseModel) and comparator not in ('any', 'not any'):
                         v = value
-                        if isinstance(value, (list, tuple, set)) and value:
+                        if isinstance(value, COLLECTION_TYPES) and value:
                             v = next(iter(value))
                         if isinstance(v, str):
                             try:
@@ -7549,5 +7403,4 @@ PGERROR_TO_OE = defaultdict(
 # keep those imports here to avoid dependency cycle errors
 # pylint: disable=wrong-import-position
 from . import fields
-from .osv import expression
 from .fields import Field, Datetime, Command

@@ -69,6 +69,7 @@ from . import tools
 # ----------------------------------------------------------
 from . import models
 from . import fields
+from .domains import Domain
 from . import api
 from odoo.tools.translate import _, _lt
 from odoo.fields import Command

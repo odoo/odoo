@@ -2,11 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
+from odoo.domains import Domain
 from odoo.exceptions import AccessError, ValidationError
-from odoo.osv import expression
 from odoo.tools import config, SQL
 from odoo.tools.safe_eval import safe_eval, time
+
 
 _logger = logging.getLogger(__name__)
 class IrRule(models.Model):
@@ -67,7 +68,8 @@ class IrRule(models.Model):
             if rule.active and rule.domain_force:
                 try:
                     domain = safe_eval(rule.domain_force, eval_context)
-                    expression.expression(domain, self.env[rule.model_id.model].sudo())
+                    model = self.env[rule.model_id.model].sudo()
+                    Domain(domain).validate(model)
                 except Exception as e:
                     raise ValidationError(_('Invalid domain: %s', e))
 
@@ -91,21 +93,18 @@ class IrRule(models.Model):
         # first check if the group rules fail for any record (aka if
         # searching on (records, group_rules) filters out some of the records)
         group_rules = all_rules.filtered(lambda r: r.groups and r.groups & self.env.user.groups_id)
-        group_domains = expression.OR([
+        group_domains = Domain.OR(*[
             safe_eval(r.domain_force, eval_context) if r.domain_force else []
             for r in group_rules
         ])
         # if all records get returned, the group rules are not failing
-        if Model.search_count(expression.AND([[('id', 'in', for_records.ids)], group_domains])) == len(for_records):
+        if Model.search_count(group_domains & Domain('id', 'in', for_records.ids)) == len(for_records):
             group_rules = self.browse(())
 
         # failing rules are previously selected group rules or any failing global rule
         def is_failing(r, ids=for_records.ids):
-            dom = safe_eval(r.domain_force, eval_context) if r.domain_force else []
-            return Model.search_count(expression.AND([
-                [('id', 'in', ids)],
-                expression.normalize_domain(dom)
-            ])) < len(ids)
+            dom = Domain(safe_eval(r.domain_force, eval_context) if r.domain_force else [])
+            return Model.search_count(dom & Domain('id', 'in', ids)) < len(ids)
 
         return all_rules.filtered(lambda r: r in group_rules or (not r.groups and is_failing(r))).with_user(self.env.user)
 
@@ -137,35 +136,37 @@ class IrRule(models.Model):
         tools.ormcache('self.env.uid', 'self.env.su', 'model_name', 'mode',
                        'tuple(self._compute_domain_context_values())'),
     )
-    def _compute_domain(self, model_name, mode="read"):
-        global_domains = []                     # list of domains
+    def _compute_domain(self, model_name: str, mode: str = "read") -> Domain:
+        model = self.env[model_name]
 
         # add rules for parent models
-        for parent_model_name, parent_field_name in self.env[model_name]._inherits.items():
+        global_domains: list[Domain] = []
+        for parent_model_name, parent_field_name in model._inherits.items():
             if domain := self._compute_domain(parent_model_name, mode):
-                global_domains.append([(parent_field_name, 'any', domain)])
+                global_domains.append(Domain(parent_field_name, 'any', domain))
 
         rules = self._get_rules(model_name, mode=mode)
         if not rules:
-            return expression.AND(global_domains) if global_domains else []
+            return Domain.AND(*global_domains)
 
         # browse user and rules with sudo to avoid access errors!
         eval_context = self._eval_context()
         user_groups = self.env.user.groups_id
-        group_domains = []                      # list of domains
+        group_domains: list[Domain] = []
         for rule in rules.sudo():
+            if rule.groups and not (rule.groups & user_groups):
+                continue
             # evaluate the domain for the current user
-            dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
-            dom = expression.normalize_domain(dom)
-            if not rule.groups:
-                global_domains.append(dom)
-            elif rule.groups & user_groups:
+            dom = Domain(safe_eval(rule.domain_force, eval_context)) if rule.domain_force else Domain.TRUE
+            if rule.groups:
                 group_domains.append(dom)
+            else:
+                global_domains.append(dom)
 
         # combine global domains and group domains
         if not group_domains:
-            return expression.AND(global_domains)
-        return expression.AND(global_domains + [expression.OR(group_domains)])
+            return Domain.AND(*global_domains)
+        return Domain.AND(*global_domains, Domain.OR(*group_domains))
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():

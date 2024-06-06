@@ -72,6 +72,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         IrModelFieldsSudo = self.env['ir.model.fields'].sudo()
         field_id = IrModelFieldsSudo.search([('name', '=', 'stage_id'), ('model', '=', 'project.task')]).id
 
+        # The query must be executed with a context that is defined, otherwise we want the function to crash
         groupby = self.env.context['project_task_burndown_chart_report_groupby']
         date_groupby = [g for g in groupby if g.startswith('date')][0]
 
