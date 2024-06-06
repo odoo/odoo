@@ -44,7 +44,7 @@ class ResUsers(models.Model):
             body=message,
             message_type="comment",
             silent=True,
-            subtype_xmlid="mail.mt_comment",
+            subtype_xmlid="mail.odoobot_comment",
         )
         self.sudo().odoobot_state = 'onboarding_emoji'
         return channel
