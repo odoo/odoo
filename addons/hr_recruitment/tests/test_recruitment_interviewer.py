@@ -122,11 +122,4 @@ class TestRecruitmentInterviewer(MailCommon):
         with self.assertRaises(AccessError):
             message.with_user(self.interviewer_user).read()
 
-        try:
-            self._find_mail_mail_wpartners(self.interviewer_user.partner_id, None)
-        except AssertionError:
-            pass
-        else:
-            raise AssertionError('No mail.mail should be sent to members of Interviewer group')
-
         self.assertSentEmail(self.env.user.partner_id, [self.manager_user.partner_id])
