@@ -44,6 +44,12 @@ class ProductProduct(models.Model):
         params += ['self_order_available']
         return params
 
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        params = super()._load_pos_self_data_fields(config_id)
+        params += ['description_self_order']
+        return params
+
     def _get_name(self) -> str:
         """
         Returns the name of the product without the code.
