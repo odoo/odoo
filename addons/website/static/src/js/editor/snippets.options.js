@@ -43,11 +43,14 @@ import {
     LayoutColumn,
     legacyRegistry,
     owlRegistry,
+    SelectUserValue,
     SnippetOption,
     UnitUserValue,
     UserValue,
     UserValueComponent,
+    WeButton,
     WeInput,
+    WeSelect,
 } from '@web_editor/js/editor/snippets.options'; 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
@@ -159,24 +162,9 @@ class WeUrlPicker extends WeInput {
 }
 registry.category("snippet_widgets").add("WeUrlPicker", WeUrlPicker);
 
-const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
-    events: Object.assign({}, SelectUserValueWidget.prototype.events || {}, {
-        'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
-        'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
-    }),
-    fontVariables: [], // Filled by editor menu when all options are loaded
-
-    /**
-     * @override
-     */
-    init() {
-        this.dialog = this.bindService("dialog");
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    start: async function () {
+class FontFamilyUserValue extends SelectUserValue {
+    constructor() {
+        super(...arguments);
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
         // User fonts served by google server.
@@ -196,8 +184,6 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         });
         this.allFonts = [];
 
-        await this._super(...arguments);
-
         const fontsToLoad = [];
         for (const font of this.googleFonts) {
             const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(font).replace(/%20/g, '+')}`;
@@ -208,16 +194,12 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             const fontURL = `/web/content/${encodeURIComponent(attachmentId)}`;
             fontsToLoad.push(fontURL);
         }
-        // TODO ideally, remove the <link> elements created once this widget
-        // instance is destroyed (although it should not hurt to keep them for
-        // the whole backend lifecycle).
         const proms = fontsToLoad.map(async fontURL => loadCSS(fontURL));
         const fontsLoadingProm = Promise.all(proms);
 
-        const fontEls = [];
-        const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
-        const variable = this.el.dataset.variable;
+        this._fonts = [];
         const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length);
+        const googleLocalFontsOffset = nbFonts - this.googleLocalFonts.length;
         for (let fontNb = 0; fontNb < nbFonts; fontNb++) {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
@@ -229,66 +211,40 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 fontName = _t("System Fonts");
                 fontFamily = 'var(--o-system-fonts)';
             }
-            const fontEl = document.createElement('we-button');
-            fontEl.setAttribute('string', fontName);
-            fontEl.dataset.variable = variable;
-            fontEl.dataset[methodName] = fontKey;
-            fontEl.dataset.fontFamily = fontFamily;
-            if ((realFontNb <= themeFontsNb) && !isSystemFonts) {
-                // Add the "cloud" icon next to the theme's default fonts
-                // because they are served by Google.
-                fontEl.appendChild(Object.assign(document.createElement('i'), {
-                    role: 'button',
-                    className: 'text-info me-2 fa fa-cloud',
-                    title: _t("This font is hosted and served to your visitors by Google servers"),
-                }));
-            }
-            fontEls.push(fontEl);
-            this.menuEl.appendChild(fontEl);
-        }
-
-        if (this.googleLocalFonts.length) {
-            const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
-            googleLocalFontsEls.forEach((el, index) => {
-                $(el).append(renderToFragment('website.delete_google_font_btn', {
-                    index: index,
-                    local: "true",
-                }));
+            this._fonts.push({
+                indexForType: fontNb >= googleLocalFontsOffset ? fontNb - googleLocalFontsOffset : fontNb - themeFontsNb,
+                string: fontName,
+                fontFamily: fontFamily,
+                isCloud: (fontNb < googleLocalFontsOffset) && !isSystemFonts,
+                isLocal: fontNb >= googleLocalFontsOffset,
             });
         }
+    }
+    
+    get fonts() {
+        return this._fonts;
+    }
+}
 
-        if (this.googleFonts.length) {
-            const googleFontsEls = fontEls.splice(-this.googleFonts.length);
-            googleFontsEls.forEach((el, index) => {
-                $(el).append(renderToFragment('website.delete_google_font_btn', {
-                    index: index,
-                }));
-            });
-        }
+const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({});
+class WeFontFamilyPicker extends WeSelect {
+    static isContainer = true;
+    static StateModel = FontFamilyUserValue;
+    static template = "website.WeFontFamilyPicker";
+    static components = { WeSelect, WeButton };
+    static defaultProps = {
+        ...WeSelect.defaultProps,
+        selectMethod: "customizeWebsiteVariable",
+    };
+    fontVariables = []; // Filled by editor menu when all options are loaded
 
-        $(this.menuEl).append($(renderToElement('website.add_google_font_btn', {
-            variable: variable,
-        })));
-
-        return fontsLoadingProm;
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async setValue() {
-        await this._super(...arguments);
-
-        this.menuTogglerEl.style.fontFamily = '';
-        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        if (activeWidget) {
-            this.menuTogglerEl.style.fontFamily = activeWidget.el.dataset.fontFamily;
-        }
-    },
+    forwardProps(fontValue) {
+        const result = Object.assign({}, this.props, {
+            [this.props.selectMethod]: fontValue.fontFamily,
+        });
+        delete result.selectMethod;
+        return result;
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -297,7 +253,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     /**
      * @private
      */
-    _onAddGoogleFontClick: function (ev) {
+    _onAddGoogleFontClick() {
         const addGoogleFontDialog = class extends Component {
             static template = "website.dialog.addGoogleFont";
             static components = { Dialog };
@@ -321,8 +277,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 this.props.close();
             }
         };
-        const variable = $(ev.currentTarget).data('variable');
-        this.dialog.add(addGoogleFontDialog, {
+        this.env.services.dialog.add(addGoogleFontDialog, {
             title: _t("Add a Google Font"),
             onClickSave: async (state, inputEl) => {
                 // if font page link (what is expected)
@@ -361,8 +316,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 // If the font already exists, it will only be added if
                 // the user chooses to add it locally when it is already
                 // imported from the Google Fonts server.
-                const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
-                const fontExistsOnServer = this.allFonts.includes(fontName);
+                const fontExistsLocally = this.state.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
+                const fontExistsOnServer = this.state.allFonts.includes(fontName);
                 const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
                 if (preventFontAddition) {
                     inputEl.classList.add('is-invalid');
@@ -372,29 +327,29 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                     return;
                 }
                 if (googleFontServe) {
-                    this.googleFonts.push(font);
+                    this.state.googleFonts.push(font);
                 } else {
-                    this.googleLocalFonts.push(`'${font}': ''`);
+                    this.state.googleLocalFonts.push(`'${font}': ''`);
                 }
-                this.trigger_up('google_fonts_custo_request', {
-                    values: {[variable]: `'${font}'`},
-                    googleFonts: this.googleFonts,
-                    googleLocalFonts: this.googleLocalFonts,
+                this.state.option.instance._onGoogleFontsCustoRequest({
+                    // TODO: @owl-options should we allow something else that "variable" ? (most likely not)
+                    values: {[this.props.variable]: `'${font}'`},
+                    googleFonts: this.state.googleFonts,
+                    googleLocalFonts: this.state.googleLocalFonts,
                 });
                 return true;
             },
         });
-    },
+    }
     /**
      * @private
-     * @param {Event} ev
+     * @param {Event} ev TODO update
      */
-    _onDeleteGoogleFontClick: async function (ev) {
-        ev.preventDefault();
+    async _onDeleteGoogleFontClick(font) {
         const values = {};
 
         const save = await new Promise(resolve => {
-            this.dialog.add(ConfirmationDialog, {
+            this.env.services.dialog.add(ConfirmationDialog, {
                 body: _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"),
                 confirm: () => resolve(true),
                 cancel: () => resolve(false),
@@ -405,23 +360,22 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
 
         // Remove Google font
-        const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
-        const isLocalFont = ev.target.dataset.localFont;
         let googleFontName;
-        if (isLocalFont) {
-            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
+        const googleFontIndex = font.indexForType;
+        if (font.isLocal) {
+            const googleFont = this.state.googleLocalFonts[googleFontIndex].split(':');
             // Remove double quotes
             googleFontName = googleFont[0].substring(1, googleFont[0].length - 1);
             values['delete-font-attachment-id'] = googleFont[1];
-            this.googleLocalFonts.splice(googleFontIndex, 1);
+            this.state.googleLocalFonts.splice(googleFontIndex, 1);
         } else {
-            googleFontName = this.googleFonts[googleFontIndex];
-            this.googleFonts.splice(googleFontIndex, 1);
+            googleFontName = this.state.googleFonts[googleFontIndex];
+            this.state.googleFonts.splice(googleFontIndex, 1);
         }
 
         // Adapt font variable indexes to the removal
-        const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
-        FontFamilyPickerUserValueWidget.prototype.fontVariables.forEach((variable) => {
+        const style = window.getComputedStyle(this.state.$target[0].ownerDocument.documentElement);
+        this.fontVariables.forEach((variable) => {
             const value = weUtils.getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
@@ -429,14 +383,14 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                 values[variable] = 'null';
             }
         });
-
-        this.trigger_up('google_fonts_custo_request', {
+        this.state.option.instance._onGoogleFontsCustoRequest({
             values: values,
-            googleFonts: this.googleFonts,
-            googleLocalFonts: this.googleLocalFonts,
+            googleFonts: this.state.googleFonts,
+            googleLocalFonts: this.state.googleLocalFonts,
         });
-    },
-});
+    }
+}
+registry.category("snippet_widgets").add("WeFontFamilyPicker", WeFontFamilyPicker);
 
 class GpsUserValue extends UserValue {
     _gmapCacheGPSToPlace = {};
@@ -654,9 +608,6 @@ options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 patch(SnippetOption.prototype, {
-    custom_events: Object.assign({}, SnippetOption.prototype.custom_events || {}, {
-        'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
-    }),
     specialCheckAndReloadMethodsNames: ['customizeWebsiteViews', 'customizeWebsiteVariable', 'customizeWebsiteColor'],
 
     /**
@@ -985,12 +936,11 @@ patch(SnippetOption.prototype, {
 
     /**
      * @private
-     * @param {OdooEvent} ev
+     * TODO: @owl-options update doc
+     * @param {Object}
      */
-    _onGoogleFontsCustoRequest: function (ev) {
-        const values = ev.data.values ? Object.assign({}, ev.data.values) : {};
-        const googleFonts = ev.data.googleFonts;
-        const googleLocalFonts = ev.data.googleLocalFonts;
+    _onGoogleFontsCustoRequest({values, googleFonts, googleLocalFonts}) {
+        values = values ? Object.assign({}, values) : {};
         if (googleFonts.length) {
             values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
         } else {
@@ -1001,12 +951,12 @@ patch(SnippetOption.prototype, {
         } else {
             values['google-local-fonts'] = 'null';
         }
-        this.trigger_up('snippet_edition_request', {exec: async () => {
+        this.options.snippetEditionRequest({exec: async () => {
             return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
         }});
-        this.trigger_up('request_save', {
+        this.env.requestSave({data: {
             reloadEditor: true,
-        });
+        }});
     },
 });
 

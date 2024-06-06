@@ -121,6 +121,10 @@
                 noPreview="'true'"/>
         </WeRow>
         -->
+        <WeRow>
+            <t t-set-slot="title">Font</t>
+            <WeFontFamilyPicker selectMethod="'selectDataAttribute'" attributeName="'font'"/>
+        </WeRow>
     </xpath>
 </t>
 
@@ -156,5 +160,37 @@
             />
         </div>
     </we-input>
+</t>
+<t t-name="website.WeFontFamilyPicker">
+    <we-select class="o_we_user_value_widget" t-att-class="getAllClasses()" t-on-click="_onClick">
+        <div>
+            <we-toggler t-out="state.toggler.textContent" t-att-class="{ 'active': state.opened }"/>
+            <we-selection-items t-ref="menu">
+                <t t-foreach="state.fonts" t-as="font" t-key="font_index">
+                    <WeButton class="'o_we_user_value_widget'" t-props="forwardProps(font)">
+                        <t t-set="style">font-family: <t t-out="font.fontFamily"/>;</t>
+                        <we-title t-att-style="style" t-out="font.string"></we-title>
+                        <div>
+                            <i t-if="font.isCloud" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"></i>
+                            <span t-out="font.typeIndex"/>
+                            <t t-if="font.indexForType >= 0">
+                                <t t-set="delete_font_title">Delete this font</t>
+                                <i role="button"
+                                   t-on-click.prevent="() => this._onDeleteGoogleFontClick(font)"
+                                   class="text-danger fa fa-trash-o o_we_delete_google_font_btn"
+                                   t-att-aria-label="delete_font_title"
+                                   t-att-title="delete_font_title"
+                                   t-att-data-local-font="!font.isCloud"
+                                   t-att-data-font-index="font_index"/>
+                            </t>
+                        </div>
+                    </WeButton>
+                </t>
+                <WeButton class="'o_we_user_value_widget o_we_add_google_font_btn'" t-on-click="() => this._onAddGoogleFontClick()">Add a Google Font</WeButton>
+                <t t-slot="default"/>
+            </we-selection-items>
+            <span class="o_we_dropdown_caret"/>
+        </div>
+    </we-select>
 </t>
 </templates>
