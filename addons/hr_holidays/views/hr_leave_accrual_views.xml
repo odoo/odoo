@@ -48,8 +48,18 @@
                         </div>
                         <div name="yearly" invisible="frequency != 'yearly'">
                             <field name="frequency" style="width: 4rem"/>
-                            <label for="yearly_day_display" string="on the" class="me-1"/>
-                            <field name="yearly_day_display" required="1" style="width: 4rem"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
+                        </div>
+                        <div  invisible="frequency != 'yearly'" colspan="2">
+                            <label for="accrual_date_ref" string="Accrual date based on" class="me-2" style="width: 6rem" />
+                            <field name="accrual_date_ref" style="width: 10.5rem"/>
+                            <div name="accrual_reference_date" invisible="accrual_date_ref != 'reference'">
+                                <label for="yearly_day_display" string="Accrue days on the" class="me-1"/>
+                                <field name="yearly_day_display" required="1" style="width: 4rem"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
+                            </div>
+                            <div name="allocation_date_offset" invisible="accrual_date_ref != 'allocation'">
+                                <label for="allocation_date_offset" string="Accrue days after" class="me-1"/>
+                                <field name="allocation_date_offset" required="1" style="width: 4rem"/> <field name="allocation_date_offset_type" required="1" style="white-space: nowrap;width: 5rem"/> from allocation start date
+                            </div>
                         </div>
                     </group>
                     <group name="maximum_leave">
