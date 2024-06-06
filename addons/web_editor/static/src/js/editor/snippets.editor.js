@@ -2706,6 +2706,13 @@ var SnippetsMenu = Widget.extend({
             // we create editors for invisible elements when translating them,
             // we only want to toggle their visibility when the related sidebar
             // buttons are clicked).
+
+            // Before returning we still want to ensure existing editors are
+            // destroyed so we only create the ones we need within translate mode.
+            for (let i = this.snippetEditors.length; i--;) {
+                const editor = this.snippetEditors[i];
+                editor.destroy();
+            }
             return;
         }
         const exec = previewMode

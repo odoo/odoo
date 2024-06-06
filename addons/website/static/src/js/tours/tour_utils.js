@@ -143,7 +143,7 @@ function changePaddingSize(direction) {
 /**
  * Checks if an element is visible on the screen, i.e., not masked by another
  * element.
- * 
+ *
  * @param {String} elementSelector The selector of the element to be checked.
  * @returns {Object} The steps required to check if the element is visible.
  */
@@ -493,6 +493,72 @@ function toggleMobilePreview(toggleOn) {
     }];
 }
 
+/**
+ * Change the specified language in the website. Then enter the translation mode and wait for it to be activated.
+ *
+ * @param lang {string} The language to change to. Default is "fr".
+ * /*\ Lang should be installed /*\
+ * @returns {Array}
+ */
+function enterTranslateMode(lang = "fr") {
+    return [
+        {
+            content: "Change the language to French",
+            trigger: "iframe .js_language_selector .js_change_lang[data-url_code=\"" + lang + "\"]",
+        },
+        {
+            content: "activate translate mode",
+            trigger: ".o_translate_website_container a",
+        },
+        {
+            content: "Close the dialog",
+            trigger: ".modal-footer .btn-primary",
+            run: function () {
+                if (document.querySelector(".modal-footer .btn-primary")) {
+                    document.querySelector(".modal-footer .btn-primary").click();
+                }
+            },
+        },
+        {
+            content: "Check that we are in translate mode", // Same as classic edit mode
+            trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+            auto: true, // Checking step only for automated tests
+            isCheck: true,
+        },
+    ];
+}
+
+/**
+ * Selects an element and clicks on it.
+ * Particularly useful in translate mode when you need to activate a text snippet
+ * see addons/website/static/src/tests/tours/translate_text_options.js for the use case
+ *
+ * @param content
+ * @param selector
+ * @returns {Array}
+ */
+function selectAndClick(content, selector) {
+    return [
+        {
+            content: content + " - Step 1 : select",
+            trigger: selector,
+            run: function () {
+                const iframeDOC = document.querySelector(".o_iframe").contentDocument;
+                const range = iframeDOC.createRange();
+                const selection = iframeDOC.getSelection();
+                range.selectNodeContents(this.$anchor[0]);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            },
+        },
+        {
+            content: content + " - Step 2 : click",
+            trigger: selector,
+            run: "click",
+        },
+    ];
+}
+
 export default {
     addMedia,
     assertCssVariable,
@@ -525,4 +591,6 @@ export default {
     selectSnippetColumn,
     switchWebsite,
     toggleMobilePreview,
+    enterTranslateMode,
+    selectAndClick,
 };
