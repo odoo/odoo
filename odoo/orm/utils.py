@@ -88,11 +88,6 @@ def check_object_name(name):
     return regex_object_name.match(name) is not None
 
 
-def check_property_field_value_name(property_name):
-    if not regex_alphanumeric.match(property_name) or len(property_name) > 512:
-        raise ValueError(f"Wrong property field value name {property_name!r}.")
-
-
 def check_pg_name(name):
     """ Check whether the given name is a valid PostgreSQL identifier name. """
     if not regex_pg_name.match(name):
@@ -104,7 +99,6 @@ def check_pg_name(name):
 def parse_field_expr(field_expr: str) -> tuple[str, str]:
     if (property_index := field_expr.find(".")) >= 0:
         property_name = field_expr[property_index + 1:]
-        check_property_field_value_name(property_name)
         field_expr = field_expr[:property_index]
     else:
         property_name = None

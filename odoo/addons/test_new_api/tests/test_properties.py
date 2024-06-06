@@ -8,10 +8,8 @@ import unittest
 
 from unittest.mock import patch
 
-from odoo import Command
-
+from odoo.fields import Command, Domain
 from odoo.exceptions import AccessError, UserError
-from odoo.osv import expression
 from odoo.tests import Form, TransactionCase, users
 from odoo.tools import mute_logger, get_lang
 
@@ -2710,7 +2708,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
+                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
             ],
         )
 
@@ -2727,7 +2725,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
+                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
             ],
         )
 
@@ -2811,7 +2809,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
                 ('discussion', '!=', self.wrong_discussion_id),
                 '|',
                 ('attributes.myselection', '=', False),
-                ('attributes.myselection', 'not in', ('optionA', 'optionB')),
+                ('attributes.myselection', 'not in', ['optionA', 'optionB']),
             ],
         )
         self.assertEqual(result[1]['attributes.myselection'], False)
@@ -2962,7 +2960,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         falsy_group = result[-1]
         self.assertFalse(falsy_group[f'attributes.{property_name}'])
         falsy_records = Model.search(falsy_group['__domain'])
-        nonfalsy_records = Model.search(expression.OR([line['__domain'] for line in result[:-1]]))
+        nonfalsy_records = Model.search(Domain.OR(line['__domain'] for line in result[:-1]))
         self.assertEqual(Model.search_count([]), len(falsy_records) + len(nonfalsy_records))
         for falsy_record in falsy_records:
             self.assertNotIn(falsy_record, nonfalsy_records)
