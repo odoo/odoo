@@ -25,9 +25,13 @@ class ProductDocument(models.Model):
         ondelete={'inside': 'set default'},
     )
 
-    @api.constrains('attached_on_sale', 'datas')
+    @api.constrains('attached_on_sale', 'datas', 'type')
     def _check_attached_on_and_datas_compatibility(self):
         for doc in self.filtered(lambda doc: doc.attached_on_sale == 'inside'):
+            if doc.type != 'binary':
+                raise ValidationError(_(
+                    "When attached inside a quote, the document must be a file, not a URL."
+                ))
             if doc.datas and not doc.mimetype.endswith('pdf'):
                 raise ValidationError(_("Only PDF documents can be attached inside a quote."))
             utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
