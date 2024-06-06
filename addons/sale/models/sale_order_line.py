@@ -398,7 +398,9 @@ class SaleOrderLine(models.Model):
         elif dp_state == 'cancel':
             name = _("Down Payment (Cancelled)")
         else:
-            invoice = self._get_invoice_lines().move_id
+            invoice = line._get_invoice_lines().filtered(
+                lambda aml: aml.quantity >= 0  # Original downpayment invoice
+            ).move_id
             if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
                 name = _(
                     "Down Payment (ref: %(reference)s on %(date)s)",
