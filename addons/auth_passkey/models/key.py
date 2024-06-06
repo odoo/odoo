@@ -1,4 +1,5 @@
 import base64
+import json
 import logging
 from werkzeug.urls import url_parse
 
@@ -7,7 +8,7 @@ from odoo.http import request
 from odoo.tools import sql, SQL
 from odoo.addons.base.models.res_users import check_identity
 
-from ..lib.duo_labs.webauthn import base64url_to_bytes, generate_authentication_options, verify_authentication_response, generate_registration_options, verify_registration_response
+from ..lib.duo_labs.webauthn import base64url_to_bytes, generate_authentication_options, generate_registration_options, options_to_json, verify_authentication_response, verify_registration_response
 from ..lib.duo_labs.webauthn.helpers.structs import AuthenticatorSelectionCriteria, ResidentKeyRequirement, UserVerificationRequirement
 
 _logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ class PassKey(models.Model):
 
     @api.model
     def _start_auth(self):
+        # This needs to be called by a controller because public users don't have an account
         return generate_authentication_options(
             rp_id=url_parse(self.get_base_url()).host,
             user_verification=UserVerificationRequirement.REQUIRED,
@@ -63,8 +65,9 @@ class PassKey(models.Model):
         return auth_verification.new_sign_count
 
     @api.model
-    def _create_registration_options(self):
-        return generate_registration_options(
+    def start_registration(self):
+        assert request
+        registration_options = generate_registration_options(
             rp_id=url_parse(self.get_base_url()).host,
             rp_name='Odoo',
             user_id=str(self.env.user.id).encode(),
@@ -74,6 +77,8 @@ class PassKey(models.Model):
                 user_verification=UserVerificationRequirement.REQUIRED
             )
         )
+        request.session.webauthn_challenge = registration_options.challenge
+        return json.loads(options_to_json(registration_options))
 
     @api.model
     def _verify_registration_options(self, registration, challenge):
@@ -132,22 +137,25 @@ class PassKeyName(models.TransientModel):
     name = fields.Char('Name', required=True)
 
     @check_identity
-    def make_key(self, credential_identifier=None, public_key=None):
+    def make_key(self, registration=None):
         # We add in these fields with JS, if we didn't give them default values we would get a XML validation warning.
-        if credential_identifier and public_key:
+        if registration:
             self.ensure_one()
+            verification = request.env['auth.passkey.key']._verify_registration_options(
+                registration,
+                request.session.pop('webauthn_challenge'),
+            )
             query = '''
             INSERT INTO %s (name, credential_identifier, public_key, create_uid, write_date, create_date)
             VALUES (%s, %s, %s, %s, NOW() AT TIME ZONE 'UTC', NOW() AT TIME ZONE 'UTC')
             '''
-            # Base64 can have different levels of padding depending on the platform / key.
-            credential_identifier = base64.urlsafe_b64decode(credential_identifier + '===').hex()
+            credential_identifier = verification.credential_id.hex()
             self.env.cr.execute(SQL(
                 query,
                 SQL.identifier(self.env['auth.passkey.key']._table),
                 self.name,
                 credential_identifier,
-                public_key,
+                base64.urlsafe_b64encode(verification.credential_public_key).decode('utf-8'),
                 self.env.user.id,
             ))
             passkey = self.env['auth.passkey.key'].sudo().search([('credential_identifier', '=', credential_identifier)])

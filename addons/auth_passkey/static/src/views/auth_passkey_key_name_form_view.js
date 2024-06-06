@@ -10,7 +10,7 @@ import { startRegistration } from "../../lib/simplewebauthn.js"
 export class PassKeyNameFormController extends FormController {
     setup() {
         super.setup();
-        this.rpc = useService("rpc");
+        this.orm = useService("orm");
     }
 
     /**
@@ -20,12 +20,11 @@ export class PassKeyNameFormController extends FormController {
         if (clickParams.name === "make_key") {
             const name = document.querySelector("div[name='name'].o_field_widget input").value
             if(name.length > 0) {
-                const serverOptions = await this.rpc("/auth/passkey/start-registration");
+                const serverOptions = await this.orm.call("auth.passkey.key", "start_registration");
                 const registration = await startRegistration(serverOptions).catch(e => console.error(e));
                 // In case the user cancelled the passkey browser check, just interrupt.
                 if(!registration) return false;
-                const verification = await this.rpc("/auth/passkey/verify-registration", { registration });
-                clickParams.args = JSON.stringify([verification.credentialId, verification.credentialPublicKey]);
+                clickParams.args = JSON.stringify([registration]);
             }
         }
         return super.beforeExecuteActionButton(...arguments);
