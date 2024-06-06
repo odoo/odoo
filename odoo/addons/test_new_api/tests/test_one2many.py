@@ -445,9 +445,8 @@ class One2manyCase(TransactionExpressionCase):
         # In this specific case...
         self.assertEqual(member2.id, member2.team_id.parent_id.id)
 
-        # ...we had an infinite recursion on making the following search.
-        with self.assertRaises(ValueError):
-            Team.search([('member_ids', 'child_of', member2.id)])
+        # ...we had an infinite recursion on making the following search, but not anymore
+        Team.search([('member_ids', 'child_of', member2.id)])
 
         # Also, test a simple infinite loop if record is marked as a parent of itself
         team1.parent_id = team1.id
@@ -455,9 +454,9 @@ class One2manyCase(TransactionExpressionCase):
         self._search(Team, [('id', 'parent_of', team1.id)])
         self._search(Team, [('id', 'child_of', team1.id)])
 
-    @mute_logger('odoo.osv.expression')
+    @mute_logger('odoo.domains')
     def test_create_one2many_with_unsearchable_field(self):
-        # odoo.osv.expression is muted as reading a non-stored and unsearchable field will log an error and makes the runbot red
+        # odoo.domains is muted as reading a non-stored and unsearchable field will log an error and makes the runbot red
 
         unsearchableO2M = self.env['test_new_api.unsearchable.o2m']
 

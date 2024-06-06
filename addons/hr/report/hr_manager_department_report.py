@@ -22,7 +22,7 @@ class HrManagerDepartmentReport(models.AbstractModel):
         return [
             '|',
                 ('employee_id.user_id', '=', self.env.user.id),
-                ('employee_id.department_id', 'child_of', department_ids),
+                ('employee_id.department_id', 'child_of', tuple(department_ids)),
         ]
 
     def _compute_has_department_manager_access(self):
@@ -30,7 +30,7 @@ class HrManagerDepartmentReport(models.AbstractModel):
         employees = self.env['hr.employee'].search([
             '|',
                 ('user_id', '=', self.env.user.id),
-                ('department_id', 'child_of', department_ids),
+                ('department_id', 'child_of', tuple(department_ids)),
             ])
         for report in self:
             report.has_department_manager_access = report.employee_id in employees

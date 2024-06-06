@@ -2,6 +2,7 @@
 import typing
 from collections.abc import Mapping
 
+from .domains import Domain
 from .environments import Environment
 from .fields import Field
 from .identifiers import IdType, NewId
@@ -15,6 +16,6 @@ except ImportError:
     except ImportError:
         Self = typing.TypeVar("Self")
 
-DomainType = list[str | tuple[str, str, typing.Any]]
+DomainType = Domain | list[str | tuple[str, str, typing.Any]]
 ContextType = Mapping[str, typing.Any]
 ValuesType = dict[str, typing.Any]

@@ -96,9 +96,9 @@ class TestDateRange(common.TransactionCase):
         self.Model.create({'date': '1916-02-11', 'value': 1})
 
         expected = [{
-            '__domain': ['&',
-                '&', ('date', '>=', '1916-01-01'), ('date', '<', '1916-04-01'),
-                '&', ('date', '>=', '1916-02-11'), ('date', '<', '1916-02-12')
+            '__domain': ['&', '&', '&',
+                ('date', '>=', '1916-01-01'), ('date', '<', '1916-04-01'),
+                ('date', '>=', '1916-02-11'), ('date', '<', '1916-02-12')
             ],
             '__range': {
                 'date:quarter': {'from': '1916-01-01', 'to': '1916-04-01'},
@@ -117,7 +117,7 @@ class TestDateRange(common.TransactionCase):
         records = self.Model.create([
             {'date': '2022-01-29', 'value': 1}])
         expected = [{
-            '__domain': ['&', '&', ('id', 'in', records.ids), '&', ('date', '>=', '2022-01-01'), ('date', '<', '2022-02-01'), ('date', '=', 'January 2022')],
+            '__domain': ['&', '&', '&', ('id', 'in', records.ids), ('date', '>=', '2022-01-01'), ('date', '<', '2022-02-01'), ('date', '=', 'January 2022')],
             '__count': 1,
             '__range': {'date:month': {'from': '2022-01-01', 'to': '2022-02-01'}},
             'value': 1,

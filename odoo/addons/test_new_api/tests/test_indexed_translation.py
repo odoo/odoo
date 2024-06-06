@@ -56,12 +56,6 @@ class TestIndexedTranslation(TransactionExpressionCase):
         """, """
             SELECT "test_new_api_indexed_translation"."id"
             FROM "test_new_api_indexed_translation"
-            WHERE TRUE
-            ORDER BY "test_new_api_indexed_translation"."id"
-        """, """
-            SELECT "test_new_api_indexed_translation"."id"
-            FROM "test_new_api_indexed_translation"
-            WHERE FALSE
             ORDER BY "test_new_api_indexed_translation"."id"
         """]):
             record_en.search([('name', 'ilike', 'foo')])

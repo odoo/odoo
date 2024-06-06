@@ -12,12 +12,12 @@ from operator import attrgetter
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo import SUPERUSER_ID
-from odoo.osv import expression
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import Query, SQL, lazy_property, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel
 
+from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, expand_ids
 
 if typing.TYPE_CHECKING:
@@ -684,9 +684,10 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     def _search_related(self, records, operator, value):
         """ Determine the domain to search on field ``self``. """
 
-        # This should never happen to avoid bypassing security checks
-        # and should already be converted to (..., 'in', subquery)
-        assert operator not in ('any', 'not any')
+        # Compute the new domain for ('x.y.z', op, value)
+        # as ('x', 'any', [('y', 'any', [('z', op, value)])])
+        # If the followed relation is a nullable many2one, we accept null
+        # for that path as well.
 
         # determine whether the related field can be null
         falsy_value = self.falsy_value
@@ -695,27 +696,40 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         else:
             value_is_null = value is False or value is None or value == falsy_value
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
-            (operator not in expression.NEGATIVE_TERM_OPERATORS) == value_is_null
+            (operator not in NEGATIVE_CONDITION_OPERATORS) == value_is_null
         )
 
-        def make_domain(path, model):
-            if '.' not in path:
-                return [(path, operator, value)]
-
-            prefix, suffix = path.split('.', 1)
-            field = model._fields[prefix]
-            comodel = model.env[field.comodel_name]
-
-            domain = [(prefix, 'in', comodel._search(make_domain(suffix, comodel)))]
-            if can_be_null and field.type == 'many2one' and not field.required:
-                return expression.OR([domain, [(prefix, '=', False)]])
-
-            return domain
-
+        # build the domain
+        # Note that the access of many2one fields in the path is done using sudo
+        # (see compute_sudo), but the given value may have a different context
         model = records.env[self.model_name].with_context(active_test=False)
         model = model.sudo(records.env.su or self.compute_sudo)
 
-        return make_domain(self.related, model)
+        # parse the path
+        path = self.related.split('.')
+        path_fields = []  # [(field, comodel | None)]
+        comodel = model
+        for fname in path:
+            field = comodel._fields[fname]
+            if field.relational:
+                comodel = model.env[field.comodel_name]
+            else:
+                comodel = None
+            path_fields.append((field, comodel))
+
+        # if the value is a domain, resolve it using records' environment
+        if isinstance(value, Domain):
+            field, comodel = path_fields[-1]
+            value = comodel.with_env(records.env)._search(value)
+
+        # build the domain backwards with the any operator
+        field, comodel = path_fields[-1]
+        domain = Domain(field.name, operator, value)
+        for field, comodel in reversed(path_fields[:-1]):
+            domain = Domain(field.name, 'any', comodel._search(domain))
+            if can_be_null and field.type == 'many2one' and not field.required:
+                domain |= Domain(field.name, '=', False)
+        return domain
 
     # properties used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
@@ -1191,8 +1205,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES), \
                 f"condition_to_sql() 'in' operator expects a collection, not a {value!r}"
-            if not value:
-                return SQL("FALSE") if operator == 'in' else SQL("TRUE")
             params = tuple(_value_to_column(v) for v in value if v is not False and v is not None)
             null_in_condition = len(params) < len(value)
             # if we have a value treated as null
@@ -1226,8 +1238,6 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
 
         # operator: like
         if operator.endswith('like'):
-            if not value and '=' not in operator:
-                return SQL("FALSE") if operator.startswith('not') else SQL("TRUE")
             # cast value to text for any like comparison
             sql_left = sql_field if self.is_text else SQL("%s::text", sql_field)
 
@@ -1242,7 +1252,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
                 sql_value = model.env.registry.unaccent(sql_value)
 
             sql = SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], sql_value)
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
+            if operator in NEGATIVE_CONDITION_OPERATORS:
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
             return sql
 
