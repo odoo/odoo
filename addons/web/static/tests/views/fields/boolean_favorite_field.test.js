@@ -1,7 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { click } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { defineModels, fields, models, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     bar = fields.Boolean({ default: true });
@@ -42,8 +47,7 @@ test("FavoriteField in kanban view", async () => {
     });
 
     // click on favorite
-    click(`.o_field_widget .o_favorite`);
-    await animationFrame();
+    await contains(`.o_field_widget .o_favorite`).click();
     expect(`.o_kanban_record .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(0, {
         message: "should not be favorite",
     });
@@ -76,8 +80,7 @@ test("FavoriteField saves changes by default", async () => {
     });
 
     // click on favorite
-    click(`.o_field_widget .o_favorite`);
-    await animationFrame();
+    await contains(`.o_field_widget .o_favorite`).click();
     expect(`.o_kanban_record .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(0, {
         message: "should not be favorite",
     });
@@ -110,8 +113,7 @@ test("FavoriteField does not save if autosave option is set to false", async () 
     });
 
     // click on favorite
-    click(`.o_field_widget .o_favorite`);
-    await animationFrame();
+    await contains(`.o_field_widget .o_favorite`).click();
     expect(`.o_kanban_record .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(0, {
         message: "should not be favorite",
     });
@@ -140,8 +142,7 @@ test("FavoriteField in form view", async () => {
     });
 
     // click on favorite
-    click(`.o_field_widget .o_favorite`);
-    await animationFrame();
+    await contains(`.o_field_widget .o_favorite`).click();
     expect(["save"]).toVerifySteps();
     expect(`.o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(0, {
         message: "should not be favorite",
@@ -154,8 +155,7 @@ test("FavoriteField in form view", async () => {
     });
 
     // click on favorite
-    click(`.o_field_widget .o_favorite`);
-    await animationFrame();
+    await contains(`.o_field_widget .o_favorite`).click();
     expect(["save"]).toVerifySteps();
     expect(`.o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(1, {
         message: "should be favorite",
@@ -165,7 +165,7 @@ test("FavoriteField in form view", async () => {
     });
 });
 
-test("FavoriteField in editable list view without label", async () => {
+test.tags("desktop")("FavoriteField in editable list view without label", async () => {
     onRpc("has_group", () => true);
 
     await mountView({
@@ -182,23 +182,55 @@ test("FavoriteField in editable list view without label", async () => {
     });
 
     // switch to edit mode
-    click(`tbody td:not(.o_list_record_selector)`);
-    await animationFrame();
+    await contains(`tbody td:not(.o_list_record_selector)`).click();
     expect(`.o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(1, {
         message: "should be favorite",
     });
 
     // click on favorite
-    click(`.o_data_row .o_field_widget .o_favorite`);
-    await animationFrame();
+    await contains(`.o_data_row .o_field_widget .o_favorite > a`).click();
     expect(`.o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(0, {
         message: "should not be favorite",
     });
 
     // save
-    click(`.o_list_button_save`);
-    await animationFrame();
+    await contains(`.o_list_button_save`).click();
     expect(`.o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star-o`).toHaveCount(1, {
         message: "should not be favorite",
     });
+});
+
+test("FavoriteField in kanban view with readonly attribute", async () => {
+    onRpc("web_save", () => {
+        expect.step("should not save");
+    });
+    await mountView({
+        resModel: "partner",
+        domain: [["id", "=", 1]],
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="bar" widget="boolean_favorite" readonly="1"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        `,
+    });
+    expect(`.o_kanban_record .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(1, {
+        message: "should be favorite",
+    });
+    expect(`.o_kanban_record .o_field_widget .o_favorite > a`).toHaveClass("pe-none");
+    expect(`.o_kanban_record .o_field_widget`).toHaveText("");
+
+    // click on favorite
+    await contains(`.o_field_widget .o_favorite`).click();
+    // expect nothing to change since its readonly
+    expect(`.o_kanban_record .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(1, {
+        message: "should remain favorite",
+    });
+    expect([]).toVerifySteps();
 });

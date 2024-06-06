@@ -54,7 +54,7 @@
                         <label for="name" string="Product"/>
                         <h1>
                             <div class="d-flex">
-                                <field name="is_favorite" widget="boolean_favorite" class="me-3" nolabel="1"/>
+                                <field name="is_favorite" widget="boolean_favorite" class="me-3" nolabel="1" readonly="1"/>
                                 <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cheese Burger"/>
                             </div>
                         </h1>
@@ -618,7 +618,12 @@ action = {
                                 <div class="o_kanban_record_top flex-column m-0"
                                      t-attf-id="product-{{record.id.raw_value}}">
                                     <div class="d-flex">
-                                        <field style="margin-top: 2px;" class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                        <field style="margin-top: 2px;"
+                                            class="me-1"
+                                            name="is_favorite"
+                                            widget="boolean_favorite"
+                                            nolabel="1"
+                                            readonly="1"/>
                                         <h4 class="text-reset">
                                             <strong class="o_kanban_record_title"><field name="name"/></strong>
                                         </h4>
