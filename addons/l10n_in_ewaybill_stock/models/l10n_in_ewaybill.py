@@ -391,6 +391,12 @@ class Ewaybill(models.Model):
         self._write_successfully_response({'state': 'cancel'})
         self._cr.commit()
 
+    def _l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(self, response):
+        if self.distance == 0 and (alert := response.get('data').get('alert')):
+            pattern = r", Distance between these two pincodes is \d+, "
+            if re.fullmatch(pattern, alert) and (dist := int(re.search(r'\d+', alert).group())) > 0:
+                self.distance = dist
+
     def _generate_ewaybill_direct(self):
         ewb_api = EWayBillApi(self.company_id)
         generate_json = self._ewaybill_generate_direct_json()
@@ -402,7 +408,7 @@ class Ewaybill(models.Model):
             return False
         self._handle_internal_warning_if_present(response)  # In case of error 604
         response_data = response.get("data")
-        self._write_successfully_response({
+        response_values = {
             'name': response_data.get("ewayBillNo"),
             'state': 'generated',
             'ewaybill_date': self._indian_timezone_to_odoo_utc(
@@ -411,7 +417,9 @@ class Ewaybill(models.Model):
             'ewaybill_expiry_date': self._indian_timezone_to_odoo_utc(
                 response_data.get('validUpto')
             ),
-        })
+        }
+        self._l10n_in_ewaybill_stock_handle_zero_distance_alert_if_present(response)
+        self._write_successfully_response(response_values)
         self._cr.commit()
 
     @api.model
