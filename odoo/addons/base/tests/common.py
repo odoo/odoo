@@ -107,25 +107,26 @@ class TransactionCaseWithUserDemo(TransactionCase):
 
 class HttpCaseWithUserDemo(HttpCase):
 
-    def setUp(self):
-        super(HttpCaseWithUserDemo, self).setUp()
-        self.user_admin = self.env.ref('base.user_admin')
-        self.user_admin.write({'name': 'Mitchell Admin'})
-        self.partner_admin = self.user_admin.partner_id
-        self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
-        self.partner_demo = self.user_demo.partner_id
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.user_admin.write({'name': 'Mitchell Admin'})
+        cls.partner_admin = cls.user_admin.partner_id
+        cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
+        cls.partner_demo = cls.user_demo.partner_id
 
-        if not self.user_demo:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            self.partner_demo = self.env['res.partner'].create({
+        if not cls.user_demo:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.partner_demo = cls.env['res.partner'].create({
                 'name': 'Marc Demo',
                 'email': 'mark.brown23@example.com',
             })
-            self.user_demo = self.env['res.users'].create({
+            cls.user_demo = cls.env['res.users'].create({
                 'login': 'demo',
                 'password': 'demo',
-                'partner_id': self.partner_demo.id,
-                'groups_id': [Command.set([self.env.ref('base.group_user').id, self.env.ref('base.group_partner_manager').id])],
+                'partner_id': cls.partner_demo.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
@@ -133,7 +134,7 @@ class SavepointCaseWithUserDemo(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(SavepointCaseWithUserDemo, cls).setUpClass()
+        super().setUpClass()
 
         cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
         cls.partner_demo = cls.user_demo.partner_id
@@ -254,24 +255,48 @@ class SavepointCaseWithUserDemo(TransactionCase):
             }
         ])
 
-class HttpCaseWithUserPortal(HttpCase):
 
-    def setUp(self):
-        super(HttpCaseWithUserPortal, self).setUp()
-        self.user_portal = self.env['res.users'].search([('login', '=', 'portal')])
-        self.partner_portal = self.user_portal.partner_id
+class TransactionCaseWithUserPortal(TransactionCase):
 
-        if not self.user_portal:
-            self.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
-            self.partner_portal = self.env['res.partner'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_portal = cls.env['res.users'].sudo().search([('login', '=', 'portal')])
+        cls.partner_portal = cls.user_portal.partner_id
+
+        if not cls.user_portal:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.partner_portal = cls.env['res.partner'].create({
                 'name': 'Joel Willis',
                 'email': 'joel.willis63@example.com',
             })
-            self.user_portal = self.env['res.users'].with_context(no_reset_password=True).create({
+            cls.user_portal = cls.env['res.users'].with_context(no_reset_password=True).create({
                 'login': 'portal',
                 'password': 'portal',
-                'partner_id': self.partner_portal.id,
-                'groups_id': [Command.set([self.env.ref('base.group_portal').id])],
+                'partner_id': cls.partner_portal.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
+            })
+
+
+class HttpCaseWithUserPortal(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_portal = cls.env['res.users'].sudo().search([('login', '=', 'portal')])
+        cls.partner_portal = cls.user_portal.partner_id
+
+        if not cls.user_portal:
+            cls.env['ir.config_parameter'].sudo().set_param('auth_password_policy.minlength', 4)
+            cls.partner_portal = cls.env['res.partner'].create({
+                'name': 'Joel Willis',
+                'email': 'joel.willis63@example.com',
+            })
+            cls.user_portal = cls.env['res.users'].with_context(no_reset_password=True).create({
+                'login': 'portal',
+                'password': 'portal',
+                'partner_id': cls.partner_portal.id,
+                'groups_id': [Command.set([cls.env.ref('base.group_portal').id])],
             })
 
 

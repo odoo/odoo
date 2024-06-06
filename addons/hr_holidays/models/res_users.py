@@ -51,7 +51,7 @@ class User(models.Model):
         self.env['hr.leave'].flush_model(['user_id', 'state', 'date_from', 'date_to'])
         self.env.cr.execute('''SELECT res_users.%s FROM res_users
                             JOIN hr_leave ON hr_leave.user_id = res_users.id
-                            AND state = 'validate'
+                            AND hr_leave.state = 'validate'
                             AND hr_leave.active = 't'
                             AND res_users.active = 't'
                             AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))

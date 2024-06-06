@@ -6,6 +6,9 @@ from markupsafe import Markup
 
 from odoo import api, models, tools, _
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class BaseModel(models.AbstractModel):
     _inherit = 'base'
@@ -74,14 +77,20 @@ class BaseModel(models.AbstractModel):
             recipient_ids, email_to, email_cc = [], False, False
             if 'partner_id' in record and record.partner_id:
                 recipient_ids.append(record.partner_id.id)
-            elif 'email_normalized' in record and record.email_normalized:
-                email_to = record.email_normalized
-            elif 'email_from' in record and record.email_from:
-                email_to = record.email_from
-            elif 'partner_email' in record and record.partner_email:
-                email_to = record.partner_email
-            elif 'email' in record and record.email:
-                email_to = record.email
+            else:
+                found_email = False
+                if 'email_from' in record and record.email_from:
+                    found_email = record.email_from
+                elif 'partner_email' in record and record.partner_email:
+                    found_email = record.partner_email
+                elif 'email' in record and record.email:
+                    found_email = record.email
+                elif 'email_normalized' in record and record.email_normalized:
+                    found_email = record.email_normalized
+                if found_email:
+                    email_to = ','.join(tools.email_normalize_all(found_email))
+                if not email_to:  # keep value to ease debug / trace update
+                    email_to = found_email
             res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
@@ -156,15 +165,25 @@ class BaseModel(models.AbstractModel):
         a bad management of quotes (missing quotes after refold). This appears
         therefore only when having quotes (aka not simple names, and not when
         being unicode encoded).
+        Another edge-case produces a linebreak (CRLF) immediately after the
+        colon character separating the header name from the header value.
+        This creates an issue in certain DKIM tech stacks that will
+        incorrectly read the reply-to value as empty and fail the verification.
 
-        To avoid that issue when formataddr would return more than 78 chars we
-        return a simplified name/email to try to stay under 78 chars. If not
+        To avoid that issue when formataddr would return more than 68 chars we
+        return a simplified name/email to try to stay under 68 chars. If not
         possible we return only the email and skip the formataddr which causes
         the issue in python. We do not use hacks like crop the name part as
         encoding and quoting would be error prone.
         """
-        # address itself is too long for 78 chars limit: return only email
-        if len(record_email) >= 78:
+        length_limit = 68  # 78 - len('Reply-To: '), 78 per RFC
+        # address itself is too long : return only email and log warning
+        if len(record_email) >= length_limit:
+            _logger.warning('Notification email address for reply-to is longer than 68 characters. '
+                'This might create non-compliant folding in the email header in certain DKIM '
+                'verification tech stacks. It is advised to shorten it if possible. '
+                'Record name (if set): %s '
+                'Reply-To: %s ', record_name, record_email)
             return record_email
 
         if 'company_id' in self and len(self.company_id) == 1:
@@ -176,9 +195,9 @@ class BaseModel(models.AbstractModel):
         name = f"{company_name} {record_name}" if record_name else company_name
 
         formatted_email = tools.formataddr((name, record_email))
-        if len(formatted_email) > 78:
+        if len(formatted_email) > length_limit:
             formatted_email = tools.formataddr((record_name or company_name, record_email))
-        if len(formatted_email) > 78:
+        if len(formatted_email) > length_limit:
             formatted_email = record_email
         return formatted_email
 
@@ -251,3 +270,21 @@ class BaseModel(models.AbstractModel):
         self.ensure_one()
         return Markup("<a href=# data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
             self._name, self.id, title or self.display_name)
+
+    # ------------------------------------------------------
+    # CONTROLLERS
+    # ------------------------------------------------------
+
+    def _get_mail_redirect_suggested_company(self):
+        """ Return the suggested company to be set on the context
+        in case of a mail redirection to the record. To avoid multi
+        company issues when clicking on a link sent by email, this
+        could be called to try setting the most suited company on
+        the allowed_company_ids in the context. This method can be
+        overridden, for example on the hr.leave model, where the
+        most suited company is the company of the leave type, as
+        specified by the ir.rule.
+        """
+        if 'company_id' in self:
+            return self.company_id
+        return False

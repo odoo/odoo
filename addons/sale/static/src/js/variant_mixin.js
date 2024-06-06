@@ -5,12 +5,13 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var utils = require('web.utils');
 var ajax = require('web.ajax');
+var session = require('web.session');
 var _t = core._t;
 
 var VariantMixin = {
     events: {
         'change .css_attribute_color input': '_onChangeColorAttribute',
-        'change .o_variant_pills input' :'_onChangePillsAttribute',
+        'click .o_variant_pills': '_onChangePillsAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
@@ -76,8 +77,12 @@ var VariantMixin = {
                     'add_qty': parseInt($currentOptionalProduct.find('input[name="add_qty"]').val()),
                     'pricelist_id': this.pricelistId || false,
                     'parent_combination': combination,
+                    'context': session.user_context,
                     ...this._getOptionalCombinationInfoParam($currentOptionalProduct),
                 }).then((combinationData) => {
+                    if (this._shouldIgnoreRpcResult()) {
+                        return;
+                    }
                     this._onChangeCombination(ev, $currentOptionalProduct, combinationData);
                     this._checkExclusions($currentOptionalProduct, childCombination, combinationData.parent_exclusions);
                 });
@@ -95,8 +100,12 @@ var VariantMixin = {
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
             'pricelist_id': this.pricelistId || false,
             'parent_combination': parentCombination,
+            'context': session.user_context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
+            if (this._shouldIgnoreRpcResult()) {
+                return;
+            }
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination, combinationData.parent_exclusions);
         });
@@ -712,11 +721,25 @@ var VariantMixin = {
     },
 
     _onChangePillsAttribute: function (ev) {
+        const radio = ev.target.closest('.o_variant_pills').querySelector("input");
+        radio.click();  // Trigger onChangeVariant.
         var $parent = $(ev.target).closest('.js_product');
         $parent.find('.o_variant_pills')
             .removeClass("active")
             .filter(':has(input:checked)')
             .addClass("active");
+    },
+
+    /**
+     * Return true if the current object has been destroyed.
+     * This function has been added as a fix to know if the result of a rpc
+     * should be handled. Indeed, "this._rpc()" can not be used as it is not
+     * supported by some elements that use this mixin.
+     *
+     * @private
+     */
+    _shouldIgnoreRpcResult() {
+        return (typeof this.isDestroyed === "function" && this.isDestroyed());
     },
 
     /**

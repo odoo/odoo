@@ -22,6 +22,21 @@ $o-line-height-base: 1.5 !default; // This is BS default
 // automatically added.
 $o-system-fonts: (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
 
+
+// Font weights
+// Caution: These values represent the desired font weights, but they may vary
+// depending on the user's operating system.
+// Because we rely on system fonts, the browser will interpret these values
+// based on the available fonts on the user's device.
+// If the exact font weight is unavailable, the browser will attempt to assign
+// a suitable weight using the fallowing fallback scheme.
+// https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#fallback_weights
+
+$o-font-weight-normal: 400 !default;
+$o-font-weight-medium: 500 !default;
+$o-font-weight-bold: 700 !default;
+$o-font-weight-extrabold: 800 !default;
+
 // Colors
 // This is BS default
 $o-white: #FFFFFF !default;

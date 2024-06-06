@@ -4,6 +4,7 @@ odoo.define('crm.partner_assign', function (require) {
 const {_t} = require('web.core');
 var publicWidget = require('web.public.widget');
 var time = require('web.time');
+require('portal.portal') //force dependencies;
 
 publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.interested_partner_assign_form, .desinterested_partner_assign_form, .opp-stage-button, .new_opp_form)',
@@ -285,5 +286,17 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             return false;
         }
     },
+});
+
+publicWidget.registry.PortalHomeCounters.include({
+    /**
+     * @override
+     */
+    _getCountersAlwaysDisplayed() {
+        if (document.getElementById("force_opportunities_display")) {
+            return this._super(...arguments).concat(['opp_count']);
+        }
+        return this._super(...arguments);
+    }
 });
 });

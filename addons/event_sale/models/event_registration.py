@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
         for record in self:
             so = record.sale_order_id
             so_line = record.sale_order_line_id
-            if not so or float_is_zero(so_line.price_total, precision_digits=so.currency_id.rounding):
+            if not so or float_is_zero(so_line.price_total, precision_rounding=so.currency_id.rounding):
                 record.payment_status = 'free'
             elif record.is_paid:
                 record.payment_status = 'paid'
@@ -100,7 +100,8 @@ class EventRegistration(models.Model):
     def _synchronize_so_line_values(self, so_line):
         if so_line:
             return {
-                'partner_id': False if self.env.user._is_public() else so_line.order_id.partner_id.id,
+                # Avoid registering public users but respect the portal workflows
+                'partner_id': False if self.env.user._is_public() and self.env.user.partner_id == so_line.order_id.partner_id else so_line.order_id.partner_id.id,
                 'event_id': so_line.event_id.id,
                 'event_ticket_id': so_line.event_ticket_id.id,
                 'sale_order_id': so_line.order_id.id,

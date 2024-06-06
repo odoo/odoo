@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-02 11:00+0000\n"
-"PO-Revision-Date: 2022-12-02 11:00+0000\n"
+"POT-Creation-Date: 2023-11-22 17:41+0000\n"
+"PO-Revision-Date: 2023-11-22 17:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,11 +56,6 @@ msgstr ""
 #: code:addons/l10n_latam_check/wizards/l10n_latam_payment_mass_transfer.py:0
 #, python-format
 msgid "All the selected checks must be posted"
-msgstr ""
-
-#. module: l10n_latam_check
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
-msgid "Bank Unmatched"
 msgstr ""
 
 #. module: l10n_latam_check
@@ -117,6 +112,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_check_payment_date
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_check_payment_date
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
+#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
 msgid "Check Cash-In Date"
 msgstr ""
 
@@ -169,7 +165,7 @@ msgid "Checks Mass Transfers"
 msgstr ""
 
 #. module: l10n_latam_check
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
+#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
 msgid "Checks on hand"
 msgstr ""
 
@@ -194,6 +190,7 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_latam_check
+#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_third_party_check_tree
 msgid "Current Journal"
 msgstr ""
@@ -355,6 +352,24 @@ msgstr ""
 
 #. module: l10n_latam_check
 #. odoo-python
+#: code:addons/l10n_latam_check/models/account_payment.py:0
+#, python-format
+msgid ""
+"The check(s) '%s' is already used on another payment. Please select another "
+"check or deselect the check on this payment."
+msgstr ""
+
+#. module: l10n_latam_check
+#. odoo-python
+#: code:addons/l10n_latam_check/models/account_payment.py:0
+#, python-format
+msgid ""
+"The currency of the payment (%s) and the currency of the check (%s) must be "
+"the same."
+msgstr ""
+
+#. module: l10n_latam_check
+#. odoo-python
 #: code:addons/l10n_latam_check/wizards/l10n_latam_payment_mass_transfer.py:0
 #, python-format
 msgid ""
@@ -369,11 +384,6 @@ msgstr ""
 #: model:ir.ui.menu,name:l10n_latam_check.menu_third_party_check
 #, python-format
 msgid "Third Party Checks"
-msgstr ""
-
-#. module: l10n_latam_check
-#: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
-msgid "Third party check Current Journal"
 msgstr ""
 
 #. module: l10n_latam_check

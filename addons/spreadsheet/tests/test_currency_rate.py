@@ -117,7 +117,7 @@ class TestCurrencyRates(TransactionCase):
                 "rate": CAD_UTC,
             }
         )
-        self.env.user.tz = "Australia/ACT"
+        self.env.user.tz = "Australia/Sydney"
         self.env["res.currency.rate"].create(
             {
                 "currency_id": cad.id,

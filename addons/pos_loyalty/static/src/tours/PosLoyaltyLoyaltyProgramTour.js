@@ -162,3 +162,44 @@ PosLoyalty.check.orderTotalIs('10.2');
 PosLoyalty.exec.finalizeOrder('Cash', '10.2');
 
 Tour.register('PosLoyaltyLoyaltyProgram3', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+ProductScreen.check.totalAmountIs('80.00');
+
+Tour.register('PosLoyaltyPromotion', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+// Generates 10.2 points and use points to get the reward product with zero sale price
+ProductScreen.exec.addOrderline('Desk Organizer', '3');
+PosLoyalty.exec.finalizeOrder('Cash', '15.3');
+
+Tour.register('PosLoyaltyNextOrderCouponExpirationDate', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('Test Partner');
+
+ProductScreen.exec.addOrderline('Desk Organizer', '1');
+ProductScreen.exec.addOrderline('Whiteboard Pen', '1');
+
+PosLoyalty.do.clickRewardButton();
+
+PosLoyalty.check.orderTotalIs('5.10');
+PosLoyalty.exec.finalizeOrder('Cash', '5.10');
+
+Tour.register('PosLoyaltyDontGrantPointsForRewardOrderLines', { test: true, url: '/pos/web' }, getSteps());

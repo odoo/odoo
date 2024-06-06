@@ -47,19 +47,18 @@ export class ConcretePolicy extends Policy {
         // because JS will add an empty string when matching a leading or
         // trailing pattern e.g. " foo ".split(/\W+/) will return ['', 'foo', '']
         // by splitting on the words, we should always get wordscount + 1
-        const wordscore = Math.min(
-            // \w includes _ which we don't want, so combine \W and _ then
-            // invert it to know what "word" is
-            //
-            // Sadly JS is absolute garbage, so this splitting is basically
-            // solely ascii-based unless we want to include cset
-            // (http://inimino.org/~inimino/blog/javascript_cset) which can
-            // generate non-trivial character-class-set-based regex patterns
-            // for us. We could generate the regex statically but they're huge
-            // and gnarly as hell.
-            (password.split(/[^\W_]+/).length - 1) / this.minwords,
-            1.0
-        );
+
+        // \w includes _ which we don't want, so combine \W and _ then
+        // invert it to know what "word" is
+        //
+        // Sadly JS is absolute garbage, so this splitting is basically
+        // solely ascii-based unless we want to include cset
+        // (http://inimino.org/~inimino/blog/javascript_cset) which can
+        // generate non-trivial character-class-set-based regex patterns
+        // for us. We could generate the regex statically but they're huge
+        // and gnarly as hell.
+        const wordCount = password.split(/[^\W_]+/).length - 1;
+        const wordscore = this.minwords !== 0 ? Math.min(wordCount / this.minwords, 1.0) : 1.0;
         // See above for issues pertaining to character classification:
         // we'll classify using the ascii range because that's basically our
         // only option

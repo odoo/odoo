@@ -30,7 +30,7 @@ odoo.define('point_of_sale.AbstractReceiptScreen', function (require) {
                     });
                     const { confirmed } = await this.showPopup('ConfirmPopup', {
                         title: printResult.message.title,
-                        body: 'Do you want to print using the web printer?',
+                        body: this.env._t('Do you want to print using the web printer?'),
                     });
                     if (confirmed) {
                         // We want to call the _printWeb when the popup is fully gone

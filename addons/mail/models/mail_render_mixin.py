@@ -5,6 +5,7 @@ import babel
 import copy
 import logging
 import re
+import traceback
 
 from lxml import html
 from markupsafe import Markup
@@ -153,9 +154,9 @@ class MailRenderMixin(models.AbstractModel):
             r"""( # Group 1: element up to url in style
                 <[^>]+\bstyle=" # Element with a style attribute
                 [^"]+\burl\( # Style attribute contains "url(" style
-                (?:&\#34;|'|&quot;)?) # url style may start with (escaped) quote: capture it
+                (?:&\#34;|'|&quot;|&\#39;)?) # url style may start with (escaped) quote: capture it
             ( # Group 2: url itself
-                /(?:[^'")]|(?!&\#34;))+ # stop at the first closing quote
+                /(?:[^'")]|(?!&\#34;)|(?!&\#39;))+ # stop at the first closing quote
         )""", re.VERBOSE), _sub_relative2absolute, html)
 
         return wrapper(html)
@@ -313,7 +314,7 @@ class MailRenderMixin(models.AbstractModel):
                     group = self.env.ref('mail.group_mail_template_editor')
                     raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name)) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
-                raise UserError(_("Failed to render QWeb template : %s)", template_src)) from e
+                raise UserError(_("Failed to render QWeb template : %s\n\n%s)", template_src, traceback.format_exc())) from e
             results[record.id] = render_result
 
         return results

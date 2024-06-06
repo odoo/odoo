@@ -37,7 +37,7 @@ class ProductTemplate(models.Model):
     project_template_id = fields.Many2one(
         'project.project', 'Project Template', company_dependent=True, copy=True,
         domain="[('company_id', '=', current_company_id)]")
-    service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    service_policy = fields.Selection('_selection_service_policy', string="Service Invoicing Policy", compute_sudo=True, compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('milestones', 'Project Milestones'),
     ])
@@ -193,6 +193,12 @@ class ProductProduct(models.Model):
             self.project_template_id = False
         elif self.service_tracking in ['task_in_project', 'project_only']:
             self.project_id = False
+
+    def _inverse_service_policy(self):
+        for product in self:
+            if product.service_policy:
+
+                product.invoice_policy, product.service_type = self.product_tmpl_id._get_service_to_general(product.service_policy)
 
     @api.onchange('type')
     def _onchange_type(self):

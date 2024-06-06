@@ -108,6 +108,8 @@ class ReturnPicking(models.TransientModel):
             'origin_returned_move_id': return_line.move_id.id,
             'procure_method': 'make_to_stock',
         }
+        if new_picking.picking_type_id.code == 'outgoing':
+            vals['partner_id'] = new_picking.partner_id.id
         return vals
 
     def _prepare_picking_default_values(self):

@@ -9,7 +9,7 @@ import {WebsiteDialog} from './dialog';
 import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
 import { qweb } from 'web.core';
 
-const {Component, onWillStart, useState, xml, useRef} = owl;
+const { Component, useEffect, useState, xml, useRef } = owl;
 
 export class PageDependencies extends Component {
     setup() {
@@ -22,22 +22,44 @@ export class PageDependencies extends Component {
             this.orm = useWowlService('orm');
         }
 
-        this.dependencies = {};
-        this.depText = '...';
         this.action = useRef('action');
         this.sprintf = sprintf;
 
-        onWillStart(() => this.onWillStart());
+        useEffect(
+            () => {
+                this.onWillStart();
+            },
+            () => []
+        );
+        this.state = useState({
+            dependencies: {},
+            depText: "...",
+        });
     }
 
     async onWillStart() {
-        this.dependencies = await this.orm.call(
+        // TODO Remove in master: call fetchDependencies in useEffect.
+        return this.fetchDependencies();
+    }
+
+    // TODO Remove in master: use state from template.
+    get dependencies() {
+        return this.state.dependencies;
+    }
+
+    // TODO Remove in master: use state from template.
+    get depText() {
+        return this.state.depText;
+    }
+
+    async fetchDependencies() {
+        this.state.dependencies = await this.orm.call(
             'website',
             'search_url_dependencies',
             [this.props.resModel, this.props.resIds],
         );
         if (this.props.mode === 'popover') {
-            this.depText = Object.entries(this.dependencies)
+            this.state.depText = Object.entries(this.state.dependencies)
                 .map(dependency => `${dependency[1].length} ${dependency[0].toLowerCase()}`)
                 .join(', ');
         }
@@ -49,7 +71,9 @@ export class PageDependencies extends Component {
             boundary: 'viewport',
             placement: 'right',
             trigger: 'focus',
-            content: qweb.render('website.PageDependencies.Tooltip', {dependencies: this.dependencies}),
+            content: qweb.render("website.PageDependencies.Tooltip", {
+                dependencies: this.state.dependencies,
+            }),
         }).popover('toggle');
     }
 }
@@ -125,20 +149,9 @@ export class DuplicatePageDialog extends Component {
     }
 }
 DuplicatePageDialog.components = {WebsiteDialog};
-DuplicatePageDialog.template = xml`
-<WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
-    <div class="mb-3 row">
-        <label class="col-form-label col-md-3">
-            Page Name
-        </label>
-        <div class="col-md-9">
-            <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
-        </div>
-    </div>
-</WebsiteDialog>
-`;
+DuplicatePageDialog.template = "website.DuplicatePageDialog";
 DuplicatePageDialog.props = {
-    onDuplicate: {type: Function, optional: true},
+    onDuplicate: Function,
     close: Function,
     pageId: Number,
 };

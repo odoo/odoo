@@ -5,7 +5,7 @@
         <Dropdown class="'o_user_menu d-none d-md-block pe-0'" togglerClass="'py-1 py-lg-0'">
             <t t-set-slot="toggler">
                 <img class="rounded-circle o_user_avatar h-75 py-1" t-att-src="source" alt="User"/>
-                <span class="oe_topbar_name d-none d-lg-block ms-1"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
+                <span class="oe_topbar_name d-none d-lg-block ms-1 text-truncate"><t t-esc="user.name"/><t t-if="env.debug" t-esc="' (' + user.db.name + ')'"/></span>
             </t>
             <t t-foreach="getElements()" t-as="element" t-key="element_index">
                 <t t-if="!element.hide">

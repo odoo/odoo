@@ -2,6 +2,7 @@ odoo.define('website_sale_stock.VariantMixin', function (require) {
 'use strict';
 
 const {Markup} = require('web.utils');
+const field_utils = require('web.field_utils');
 var VariantMixin = require('sale.VariantMixin');
 var publicWidget = require('web.public.widget');
 var core = require('web.core');
@@ -59,6 +60,19 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         if (combination.free_qty < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
+        }
+    }
+
+    // needed xml-side for formatting of remaining qty
+    combination.formatQuantity = (qty) => {
+        if (Number.isInteger(qty)) {
+            return qty;
+        } else {
+            const decimals = Math.max(
+                0,
+                Math.ceil(-Math.log10(combination.uom_rounding))
+            );
+            return field_utils.format.float(qty, {digits: [false, decimals]});
         }
     }
 

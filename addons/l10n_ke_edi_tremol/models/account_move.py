@@ -68,15 +68,12 @@ class AccountMove(models.Model):
                 move_errors.append(_("This credit note must reference the previous invoice, and this previous invoice must have already been submitted."))
 
             for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product'):
-                if not line.tax_ids or len(line.tax_ids) > 1:
-                    move_errors.append(_("On line %s, you must select one and only one tax.", line.name))
+                vat_taxes = line.tax_ids.filtered(lambda tax: tax.amount in (16, 8, 0))
+                if not vat_taxes or len(vat_taxes) > 1:
+                    move_errors.append(_("On line %s, you must select one and only one VAT tax.", line.name))
                 else:
-                    if line.tax_ids.amount == 0 and not (line.product_id and line.product_id.l10n_ke_hsn_code and line.product_id.l10n_ke_hsn_name):
+                    if vat_taxes[0].amount == 0 and not (line.product_id and line.product_id.l10n_ke_hsn_code and line.product_id.l10n_ke_hsn_name):
                         move_errors.append(_("On line %s, a product with a HS Code and HS Name must be selected, since the tax is 0%% or exempt.", line.name))
-
-            for tax in move.invoice_line_ids.tax_ids:
-                if tax.amount not in (16, 8, 0):
-                    move_errors.append(_("Tax '%s' is used, but only taxes of 16%%, 8%%, 0%% or Exempt can be sent. Please reconfigure or change the tax.", tax.name))
 
             if move_errors:
                 errors.append((move.name, move_errors))
@@ -96,13 +93,14 @@ class AccountMove(models.Model):
         headquarter_address = (self.commercial_partner_id.street or '') + (self.commercial_partner_id.street2 or '')
         customer_address = (self.partner_id.street or '') + (self.partner_id.street2 or '')
         postcode_and_city = (self.partner_id.zip or '') + '' +  (self.partner_id.city or '')
+        vat = (self.commercial_partner_id.vat or '').strip() if self.commercial_partner_id.country_id.code == 'KE' else ''
         invoice_elements = [
             b'1',                                                   # Reserved - 1 symbol with value '1'
             b'     0',                                              # Reserved - 6 symbols with value ‘     0’
             b'0',                                                   # Reserved - 1 symbol with value '0'
             b'1' if self.move_type == 'out_invoice' else b'A',      # 1 symbol with value '1' (new invoice), 'A' (credit note), or '@' (debit note)
             self._l10n_ke_fmt(self.commercial_partner_id.name, 30), # 30 symbols for Company name
-            self._l10n_ke_fmt(self.commercial_partner_id.vat, 14),  # 14 Symbols for the client PIN number
+            self._l10n_ke_fmt(vat, 14),                             # 14 Symbols for the client PIN number
             self._l10n_ke_fmt(headquarter_address, 30),             # 30 Symbols for customer headquarters
             self._l10n_ke_fmt(customer_address, 30),                # 30 Symbols for the address
             self._l10n_ke_fmt(postcode_and_city, 30),               # 30 symbols for the customer post code and city
@@ -141,8 +139,11 @@ class AccountMove(models.Model):
         # The device expects all monetary values in Kenyan Shillings
         if self.currency_id == self.company_id.currency_id:
             currency_rate = 1
+        # In the case of a refund, use the currency rate of the original invoice
+        elif self.move_type == 'out_refund' and self.reversed_entry_id:
+            currency_rate = abs(self.reversed_entry_id.amount_total_signed / self.reversed_entry_id.amount_total)
         else:
-            currency_rate = abs(lines[0].balance / lines[0].price_subtotal)
+            currency_rate = abs(self.amount_total_signed / self.amount_total)
 
         discount_dict = {line.id: line.discount for line in lines if line.price_total > 0}
         for line in lines:
@@ -164,10 +165,19 @@ class AccountMove(models.Model):
 
         vat_class = {16.0: 'A', 8.0: 'B'}
         msgs = []
+        tax_details = self._prepare_invoice_aggregated_taxes()
         for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product' and l.quantity and l.price_total > 0 and not discount_dict.get(l.id) >= 100):
             # Here we use the original discount of the line, since it the distributed discount has not been applied in the price_total
-            price = round(line.price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate
-            percentage = line.tax_ids[0].amount
+            price_total = 0
+            percentage = 0
+            for tax in tax_details['tax_details_per_record'][line]['tax_details']:
+                if tax['tax'].amount in (16, 8, 0): # This should only occur once
+                    line_tax_details = tax_details['tax_details_per_record'][line]['tax_details'][tax]
+                    price_total = abs(line_tax_details['base_amount_currency']) + abs(line_tax_details['tax_amount_currency'])
+                    percentage = tax['tax'].amount
+
+            price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate
+            price = ('%.5f' % price).rstrip('0').rstrip('.')
 
             # Letter to classify tax, 0% taxes are handled conditionally, as the tax can be zero-rated or exempt
             letter = ''
@@ -187,7 +197,7 @@ class AccountMove(models.Model):
             line_data = b';'.join([
                 self._l10n_ke_fmt(line.name, 36),               # 36 symbols for the article's name
                 self._l10n_ke_fmt(letter, 1),                   # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
-                str(price)[:13].encode('cp1251'),               # 1 to 13 symbols for article's price
+                price[:15].encode('cp1251'),                    # 1 to 15 symbols for article's price with up to 5 digits after decimal point
                 self._l10n_ke_fmt(uom, 3),                      # 3 symbols for unit of measure
                 hscode,                                         # 10 symbols for HS code in the format xxxx.xx.xx (can be empty)
                 hsname,                                         # 20 symbols for the HS name (can be empty)

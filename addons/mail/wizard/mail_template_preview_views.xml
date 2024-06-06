@@ -8,7 +8,7 @@
                 <form string="Email Preview">
                     <h3>Preview of <field name="mail_template_id" readonly="1" nolabel="1" options="{'no_open' : True}"/></h3>
                     <div class="alert alert-danger" role="alert" attrs="{'invisible' : [('error_msg', '=', False)]}">
-                        <field name="error_msg" />
+                        <field name="error_msg" widget="text"/>
                     </div>
                     <field name="no_record" invisible="1"/>
                     <div class="container">

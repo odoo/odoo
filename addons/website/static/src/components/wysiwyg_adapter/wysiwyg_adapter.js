@@ -6,6 +6,7 @@ import { useWowlService } from '@web/legacy/utils';
 import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { setEditableWindow } from 'web_editor.utils';
 import { useBus } from "@web/core/utils/hooks";
+import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -36,7 +37,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
 
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
         this.oeFieldSelector = '#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])';
-        this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
+        this.oeRecordCoverSelector = "#wrapwrap .o_record_cover_container[data-res-model]";
+        this.oeCoverSelector = `#wrapwrap .s_cover[data-res-model], ${this.oeRecordCoverSelector}`;
         if (this.props.savableSelector) {
             this.savableSelector = this.props.savableSelector;
         } else {
@@ -76,6 +78,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 }
                 // The jquery instance inside the iframe needs to be aware of the wysiwyg.
                 this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
+                // grep: RESTART_WIDGETS_EDIT_MODE
                 await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
                     editableMode: true,
                     onSuccess: resolve,
@@ -136,6 +139,9 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @override
      */
     onWillStart() {
+        // Destroy the widgets before instantiating the wysiwyg.
+        // grep: RESTART_WIDGETS_EDIT_MODE
+        this._websiteRootEvent("widgets_stop_request");
         this.props.removeWelcomeMessage();
         return super.onWillStart();
     }
@@ -299,11 +305,27 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             // generated a new stack and break the "redo" of the editor.
             this.widget.odooEditor.automaticStepSkipStack();
             for (const record of records) {
-                const $savable = $(record.target).closest(this.savableSelector);
-
                 if (record.attributeName === 'contenteditable') {
                     continue;
                 }
+
+                const $savable = $(record.target).closest(this.savableSelector);
+                if (!$savable.length) {
+                    continue;
+                }
+
+                // Do not mark the editable dirty when simply adding/removing
+                // link zwnbsp since these are just technical nodes that aren't
+                // part of the user's editing of the document.
+                if (record.type === 'childList' &&
+                    [...record.addedNodes, ...record.removedNodes].every(node => (
+                        node.nodeType === Node.TEXT_NODE && node.textContent === '\ufeff')
+                    )) {
+                    continue;
+                }
+
+                // Mark any savable element dirty if any tracked mutation occurs
+                // inside of it.
                 $savable.not('.o_dirty').each(function () {
                     if (!this.hasAttribute('data-oe-readonly')) {
                         this.classList.add('o_dirty');
@@ -362,22 +384,40 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             .not('input, [data-oe-readonly], ' +
                  '[data-oe-type="monetary"], [data-oe-many2one-id], [data-oe-field="arch"]:empty')
             .filter((_, el) => {
-                return !$(el).closest('.o_not_editable').length;
+                // The whole record cover is considered editable by the editor,
+                // which makes it possible to add content (text, images,...)
+                // from the text tools. To fix this issue, we need to reduce the
+                // editable area to its editable fields only, but first, we need
+                // to remove the cover along with its descendants from the
+                // initial editable zones.
+                return !$(el).closest('.o_not_editable').length && !el.closest(this.oeRecordCoverSelector);
             });
 
-        // TODO review in master. This stable fix restores the possibility to
+        // TODO migrate in master. This stable fix restores the possibility to
         // edit the company team snippet images on subsequent editions. Indeed
-        // this badly relies on the contenteditable="true" attribute being on
-        // those images but it is rightfully lost after the first save.
-        // grep: COMPANY_TEAM_CONTENTEDITABLE
-        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+        // this badly relied on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save. Later,
+        // the o_editable_media class system was implemented and the class was
+        // added in the snippet template but this did not solve existing
+        // snippets in user databases.
+        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable *')
+            .filter((i, el) => isMediaElement(el) || el.tagName === 'IMG');
+        // Same as above for social media icons.
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_social_media a > i'));
+
+        // TODO find a similar system for texts.
+        // grep: SOCIAL_MEDIA_TITLE_CONTENTEDITABLE
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones
+            .find('.s_social_media .s_social_media_title'));
 
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested
         // oe_structure editable. This avoids having a selection range span
         // over all further inactive tabs when using Chrome.
         // grep: .s_tabs
-        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'));
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'))
+            .add(this.websiteService.pageDocument.querySelectorAll(`${this.oeRecordCoverSelector} [data-oe-field]:not([data-oe-field="arch"])`));
 
         return $editableSavableZones.add($extraEditableZones).toArray();
     }
@@ -518,6 +558,10 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         await Promise.all(proms).then(() => {
             $allLinksIframe.remove();
         });
+
+        // TODO review naming in master (to not call an event handler like that)
+        this._onColorPreviewsUpdate();
+
         if (event.data.onSuccess) {
             return event.data.onSuccess();
         }
@@ -656,6 +700,13 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @returns {boolean} true if the page has been altered.
      */
     _isDirty() {
+        // TODO improve in master: the way we check if the page is dirty should
+        // match the fact the save will actually do something or not. Right now,
+        // this check checks the whole page, including the non editable parts,
+        // regardless of the fact something can be saved inside or not. It is
+        // also thus of course considering the page dirty too often by mistake
+        // since non editable parts can have their DOM changed without impacting
+        // the save (e.g. menus being folded into the "+" menu for example).
         return this.widget.isDirty() || Object.values(this.pageOptions).some(option => option.isDirty);
     }
 

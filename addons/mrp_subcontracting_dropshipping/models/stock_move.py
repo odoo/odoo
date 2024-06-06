@@ -7,6 +7,13 @@ from odoo import models
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    def _prepare_procurement_values(self):
+        vals = super()._prepare_procurement_values()
+        partner = self.group_id.partner_id
+        if not vals.get('partner_id') and partner and self.location_id.is_subcontracting_location:
+            vals['partner_id'] = partner.id
+        return vals
+
     def _is_purchase_return(self):
         res = super()._is_purchase_return()
         return res or self._is_dropshipped_returned()

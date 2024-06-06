@@ -4,9 +4,12 @@
 from odoo import fields, models
 
 _TYPE_EC = [
+    ("vat05", "VAT 5%"),
     ("vat08", "VAT 8%"),
     ("vat12", "VAT 12%"),
+    ("vat13", "VAT 13%"),
     ("vat14", "VAT 14%"),
+    ("vat15", "VAT 15%"),
     ("zero_vat", "VAT 0%"),
     ("not_charged_vat", "VAT Not Charged"),
     ("exempt_vat", "VAT Exempt"),

@@ -29,6 +29,11 @@
     margin: 0 auto;
 }
 
+.pos-receipt .pos-receipt-qrcode {
+    display: block;
+    margin: 0 auto;
+}
+
 .pos-receipt .pos-receipt-contact {
     text-align: center;
     font-size: 75%;
@@ -76,4 +81,16 @@
 
 .responsive-price > .pos-receipt-right-align {
     margin-left: auto;
+}
+
+.pos-receipt .pos-receipt-taxes {
+    display: grid;
+    grid-template-columns: min-content min-content auto auto auto;
+    width: 100%;
+    justify-items: end;
+}
+
+.pos-receipt-qty-per-price {
+    /*rtl:ignore*/
+    direction: ltr;
 }

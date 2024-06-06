@@ -127,6 +127,8 @@ class AccountBankStatementLine(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+        if not company_ids:
+            return []
 
         journal_ids = self.env['account.journal'].search([
             ('company_id', 'in', company_ids.ids),

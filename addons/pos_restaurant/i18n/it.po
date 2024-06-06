@@ -5,13 +5,14 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
+# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr " Utilizza una stampante collegata all'IoT Box"
+msgstr " Utilizzare una stampante collegata al box IoT"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -94,12 +95,12 @@ msgstr "Aggiungi pulsante"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "Aggiungi note interne nelle righe degli ordini per la cucina"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add tip after payment (North America specific)"
-msgstr "Aggiungi mancia dopo pagamento (America del Nord)"
+msgstr "Aggiungere mancia dopo il pagamento (America del Nord)"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -107,7 +108,7 @@ msgstr "Aggiungi mancia dopo pagamento (America del Nord)"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Adjust Amount"
-msgstr "Regola l'importo"
+msgstr "Rettifica importo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -115,13 +116,13 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
-"Regola l'importo autorizzato dai terminali di pagamento per aggiungere una "
-"mancia dopo che i clienti sono andati via o alla fine della giornata."
+"Rettifica l'importo autorizzato dai terminali di pagamento per aggiungere "
+"una mancia, dopo l'uscita dei clienti o al termine della giornata."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Consenti divisione del conto"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -131,7 +132,7 @@ msgstr "Permetti note interne personalizzate sulle linee d'ordine."
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Permetti di stampare lo scontrino prima del pagamento"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -148,12 +149,12 @@ msgstr "Importo"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
 msgid "An internal identification of a table"
-msgstr "Un identificativo interno di un tavolo"
+msgstr "Identificativo interno di un tavolo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
 msgid "An internal identification of the printer"
-msgstr "Un identificativo interno per la stampante"
+msgstr "Identificativo interno per la stampante"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -232,7 +233,7 @@ msgstr "Divisione del conto"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "Azione bloccata"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -255,8 +256,15 @@ msgstr "ANNULLATO"
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
+msgid "Cash %s"
+msgstr "Contanti %s"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
 msgid "Cash Bar"
-msgstr ""
+msgstr "Monete bar"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -310,7 +318,7 @@ msgstr "Impostazioni di configurazione"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
 msgid "Created by"
-msgstr "Creata da"
+msgstr "Creato da"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_date
@@ -350,6 +358,8 @@ msgstr "Bevande"
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
 msgstr ""
+"A causa di un errore di connessione, gli ordini non sono stati "
+"sincronizzati."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -357,7 +367,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Duplicate"
-msgstr "Duplicazione"
+msgstr "Duplica"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -367,15 +377,15 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
-"Ogni stampante ordine ha un indirizzo IP che identifica il box IoT/Proxy\n"
-"                hardware dove può essere trovata e un elenco di categorie di prodotto.\n"
-"                Una stampante ordine stamperà gli aggiornamenti dei soli prodotti che\n"
+"Ciascuna stampante ordini possiede un indirizzo IP, che identifica il box IoT/Proxy\n"
+"                hardware nella quale si trova, e un elenco di categorie di prodotto.\n"
+"                Una stampante ordini stampa gli aggiornamenti per i soli prodotti che\n"
 "                appartengono a una delle sue categorie."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Stampa scontrino in anticipo"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -433,19 +443,19 @@ msgstr "Piani e tavoli"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Mappa piani e tavoli"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
 msgid "Food"
-msgstr "Alimentare"
+msgstr "Alimenti"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "For convenience, we are providing the following gratuity calculations:"
-msgstr "Per comodità, forniamo i seguenti calcoli di mancia:"
+msgstr "Per comodità, forniamo i seguenti calcoli relativi alle mance:"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -546,17 +556,17 @@ msgstr "È un bar/ristorante"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Keep Open"
-msgstr "Lasciare aperto"
+msgstr "Tieni aperto"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Notes"
-msgstr ""
+msgstr "Note cucina"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Printers"
-msgstr ""
+msgstr "Stampanti cucina"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
@@ -582,7 +592,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Ultimo stato di stampa dell'ordine"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -755,7 +765,7 @@ msgstr "Stampante POS"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "PRO FORMA"
-msgstr "PRO FORMA"
+msgstr "PROFORMA"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
@@ -807,32 +817,32 @@ msgstr "Sessione punto vendita"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "Note ordini Iface POS"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "POS stampa conto Iface"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "POS divisione conto Iface"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "POS stampante ordine"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
 msgid "Pos Is Table Management"
-msgstr ""
+msgstr "POS gestione tavoli"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "POS Configura mancia dopo il pagamento"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -889,9 +899,9 @@ msgid ""
 "protocol is available. It is possible to print your tickets by making use of"
 " an IoT Box."
 msgstr ""
-"La stampa non è supportata su alcuni browser perché non è disponibile un "
-"protocollo di stampa predefinito. È possibile stampare i biglietti "
-"utilizzando una IoT Box."
+"In alcuni browser la stampa non è supportata a causa della non disponibilità"
+" di un protocollo di stampa predefinito. È possibile stampare i tagliandi "
+"utilizzando un box IoT."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -943,7 +953,7 @@ msgstr "Ristampa ricevute"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant &amp; Bar"
-msgstr ""
+msgstr "Ristorante e bar"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1030,7 +1040,7 @@ msgstr "Servito da"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
 msgid "Set Tip After Payment"
-msgstr "Imposta mancia dopo pagamento"
+msgstr "Imposta mancia dopo il pagamento"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1038,7 +1048,7 @@ msgstr "Imposta mancia dopo pagamento"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Settle"
-msgstr "Regola"
+msgstr "Salda"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -1055,7 +1065,8 @@ msgstr "Firma"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_skip
 msgid "Skip line when sending ticket to kitchen printers."
-msgstr "Salta la riga quando si invia il biglietto alle stampanti di cucina."
+msgstr ""
+"Salta la riga quando il tagliando viene inviato alle stampanti della cucina."
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1067,7 +1078,7 @@ msgstr "Panino con tonno piccante"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/SplitBillButton.xml:0
 #, python-format
 msgid "Split"
-msgstr "Dividi"
+msgstr "Suddividi"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -1102,7 +1113,7 @@ msgstr "Totale parziale"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 #, python-format
 msgid "Table"
-msgstr "Tabella"
+msgstr "Tavolo"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
@@ -1134,7 +1145,7 @@ msgstr "Tel:"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "The %s is already used in another Pos Config."
-msgstr ""
+msgstr "Il %s è già utilizzato in un'altra config. POS."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1149,7 +1160,7 @@ msgstr "Il numero di clienti che sono stati serviti da quest'ordine."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Colore di sfondo del piano in un formato compatibile con html"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1256,7 +1267,7 @@ msgstr "Mancia:"
 #: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
 #, python-format
 msgid "Tipping"
-msgstr "Lasciare una mancia"
+msgstr "Mancia"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1294,7 +1305,7 @@ msgstr "Impossibile cambiare il colore di sfondo"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to create table because you are offline."
-msgstr "Impossibile creare la tabella perché sei offline."
+msgstr "Impossibile creare la tabella perché fuori rete."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1308,7 +1319,7 @@ msgstr "Impossibile eliminare il tavolo"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
-msgstr ""
+msgstr "Impossibile recuperare gli ordini"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1346,7 +1357,7 @@ msgstr "Partita IVA:"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_vege_product_template
 msgid "Vegetarian"
-msgstr "Vegetariano"
+msgstr "Pizza vegetariana"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
@@ -1385,7 +1396,7 @@ msgstr "Giallo"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "Non è possibile inserire un numero superiore a %s"
 
 #. module: pos_restaurant
 #. odoo-python

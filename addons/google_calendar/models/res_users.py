@@ -66,8 +66,17 @@ class User(models.Model):
         send_updates = not full_sync
         events.clear_type_ambiguity(self.env)
         recurrences = events.filter(lambda e: e.is_recurrence())
-        synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
-        synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
+
+        # We apply Google updates only if their write date is later than the write date in Odoo.
+        # It's possible that multiple updates affect the same record, maybe not directly.
+        # To handle this, we preserve the write dates in Odoo before applying any updates,
+        # and use these dates instead of the current live dates.
+        odoo_events = self.env['calendar.event'].browse((events - recurrences).odoo_ids(self.env))
+        odoo_recurrences = self.env['calendar.recurrence'].browse(recurrences.odoo_ids(self.env))
+        recurrences_write_dates = {r.id: r.write_date for r in odoo_recurrences}
+        events_write_dates = {e.id: e.write_date for e in odoo_events}
+        synced_recurrences = self.env['calendar.recurrence'].with_context(write_dates=recurrences_write_dates)._sync_google2odoo(recurrences)
+        synced_events = self.env['calendar.event'].with_context(write_dates=events_write_dates)._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
         # Odoo -> Google
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)

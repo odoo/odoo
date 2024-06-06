@@ -18,3 +18,16 @@ class ResPartner(models.Model):
         return super(ResPartner, self)._commercial_fields() + ['nrc']
 
     nrc = fields.Char(string='NRC', help='Registration number at the Registry of Commerce')
+
+    @api.depends('vat', 'country_id')
+    def _compute_company_registry(self):
+        # OVERRIDE
+        # In Romania, if you have a VAT number, it's also your company registry (CUI) number
+        super()._compute_company_registry()
+        for partner in self.filtered(lambda p: p.country_id.code == 'RO' and p.vat):
+            vat_country, vat_number = self._split_vat(partner.vat)
+            if vat_country.isnumeric():
+                vat_country = 'ro'
+                vat_number = partner.vat
+            if vat_country == 'ro' and self.simple_vat_check(vat_country, vat_number):
+                partner.company_registry = vat_number

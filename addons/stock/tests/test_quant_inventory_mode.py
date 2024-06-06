@@ -302,12 +302,12 @@ class TestEditableQuant(TransactionCase):
         quant = self.Quant.create({
             'product_id': self.product.id,
             'location_id': default_stock_location.id,
-            'inventory_quantity': 100,
+            'inventory_quantity': 0.4,
         })
         quant.action_apply_inventory()
         move_lines = self.env['stock.move.line'].search([('product_id', '=', self.product.id), ('is_inventory', '=', True)])
         self.assertEqual(len(move_lines), 1, "One inventory adjustment move lines should have been created")
-        self.assertEqual(self.product.qty_available, 100, "Before revert inventory adjustment qty is 100")
+        self.assertEqual(self.product.qty_available, 0.4, "Before revert inventory adjustment qty is 0.4")
         move_lines.action_revert_inventory()
         self.assertEqual(self.product.qty_available, 0, "After revert inventory adjustment qty is not zero")
 

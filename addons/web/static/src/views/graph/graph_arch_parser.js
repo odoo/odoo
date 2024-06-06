@@ -9,7 +9,7 @@ const ORDERS = ["ASC", "DESC", "asc", "desc", null];
 
 export class GraphArchParser extends XMLParser {
     parse(arch, fields = {}) {
-        const archInfo = { fields, fieldAttrs: {}, groupBy: [] };
+        const archInfo = { fields, fieldAttrs: {}, groupBy: [], measures: [] };
         this.visitXML(arch, (node) => {
             switch (node.tagName) {
                 case "graph": {
@@ -60,6 +60,7 @@ export class GraphArchParser extends XMLParser {
                     }
                     const isMeasure = node.getAttribute("type") === "measure";
                     if (isMeasure) {
+                        archInfo.measures.push(fieldName);
                         // the last field with type="measure" (if any) will be used as measure else __count
                         archInfo.measure = fieldName;
                     } else {

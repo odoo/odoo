@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.osv import expression
-from odoo.exceptions import UserError
 
 
 class AccountPaymentMethod(models.Model):
@@ -100,7 +99,8 @@ class AccountPaymentMethodLine(models.Model):
         string='Payment Method',
         comodel_name='account.payment.method',
         domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
-        required=True
+        required=True,
+        ondelete='cascade'
     )
     payment_account_id = fields.Many2one(
         comodel_name='account.account',
@@ -128,21 +128,7 @@ class AccountPaymentMethodLine(models.Model):
 
     @api.constrains('name')
     def _ensure_unique_name_for_journal(self):
-        self.flush_model(['name', 'journal_id', 'payment_method_id'])
-        self.env['account.payment.method'].flush_model(['payment_type'])
-        self._cr.execute('''
-            SELECT apml.name, apm.payment_type
-            FROM account_payment_method_line apml
-            JOIN account_payment_method apm ON apml.payment_method_id = apm.id
-            WHERE apml.journal_id IS NOT NULL
-            GROUP BY apml.name, journal_id, apm.payment_type
-            HAVING count(apml.id) > 1
-        ''')
-        res = self._cr.fetchall()
-        if res:
-            (name, payment_type) = res[0]
-            raise UserError(_("You can't have two payment method lines of the same payment type (%s) "
-                              "and with the same name (%s) on a single journal.", payment_type, name))
+        self.journal_id._check_payment_method_line_ids_multiplicity()
 
     def unlink(self):
         """
@@ -151,7 +137,7 @@ class AccountPaymentMethodLine(models.Model):
         """
         unused_payment_method_lines = self
         for line in self:
-            payment_count = self.env['account.payment'].search_count([('payment_method_line_id', '=', line.id)])
+            payment_count = self.env['account.payment'].sudo().search_count([('payment_method_line_id', '=', line.id)])
             if payment_count > 0:
                 unused_payment_method_lines -= line
 

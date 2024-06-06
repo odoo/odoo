@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.addons.mail.tools.credentials import get_twilio_credentials
 import requests
 
 
@@ -32,21 +33,13 @@ class MailIceServer(models.Model):
             formatted_ice_servers.append(formatted_ice_server)
         return formatted_ice_servers
 
-    def _get_twilio_credentials(self):
-        """ To be overridable if we need to obtain credentials from another source.
-        :return: tuple
-        """
-        account_sid = self.env['ir.config_parameter'].sudo().get_param('mail.twilio_account_sid')
-        auth_token = self.env['ir.config_parameter'].sudo().get_param('mail.twilio_account_token')
-        return account_sid, auth_token
-
     def _get_ice_servers(self):
         """
         :return: List of dict, each of which representing a stun or turn server,
                 formatted as expected by the specifications of RTCConfiguration.iceServers
         """
         if self.env['ir.config_parameter'].sudo().get_param('mail.use_twilio_rtc_servers'):
-            (account_sid, auth_token) = self._get_twilio_credentials()
+            (account_sid, auth_token) = get_twilio_credentials(self.env)
             if account_sid and auth_token:
                 url = f'https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Tokens.json'
                 response = requests.post(url, auth=(account_sid, auth_token), timeout=60)

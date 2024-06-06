@@ -12,5 +12,6 @@ class LoyaltyReward(models.Model):
             vals.update({
                 'taxes_id': False,
                 'supplier_taxes_id': False,
+                'invoice_policy': 'order',
             })
         return res

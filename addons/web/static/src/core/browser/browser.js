@@ -76,8 +76,9 @@ export function makeRAMLocalStorage() {
     let store = {};
     return {
         setItem(key, value) {
-            store[key] = value;
-            window.dispatchEvent(new StorageEvent("storage", { key, newValue: value }));
+            const newValue = String(value);
+            store[key] = newValue;
+            window.dispatchEvent(new StorageEvent("storage", { key, newValue }));
         },
         getItem(key) {
             return store[key];

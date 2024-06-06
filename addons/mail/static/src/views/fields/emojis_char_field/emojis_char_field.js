@@ -20,6 +20,9 @@ export class EmojisCharField extends CharField {
     }
 };
 
+EmojisCharField.extractProps = ({ attrs, field }) => {
+    return {...CharField.extractProps({attrs, field}), shouldTrim: false};
+};
 patch(EmojisCharField.prototype, 'emojis_char_field_mail_mixin', MailEmojisMixin);
 patch(EmojisCharField.prototype, 'emojis_char_field_field_mixin', EmojisFieldCommon);
 EmojisCharField.template = 'mail.EmojisCharField';

@@ -86,8 +86,9 @@ export class DatePicker extends Component {
          * static format just before bootstrap parses it.
          */
         this.isPickerOpen = false;
+        this.isPickerChanged = false;
         /** @type {DateTime | null} */
-        this.pickerDate = null;
+        this.pickerDate = this.props.date;
         this.ignorePickerEvents = true;
 
         this.initFormat();
@@ -113,6 +114,7 @@ export class DatePicker extends Component {
         this.addPickerListener("change", ({ date }) => {
             if (date && this.isPickerOpen) {
                 const { locale } = this.getOptions();
+                this.isPickerChanged = true;
                 this.pickerDate = momentToLuxon(date).setLocale(locale);
                 this.updateInput(this.pickerDate);
             }
@@ -120,7 +122,7 @@ export class DatePicker extends Component {
         this.addPickerListener("hide", () => {
             this.isPickerOpen = false;
             this.onDateChange();
-            this.pickerDate = null;
+            this.isPickerChanged = false;
         });
         this.addPickerListener("error", () => false);
 
@@ -130,9 +132,18 @@ export class DatePicker extends Component {
     onWillUpdateProps(nextProps) {
         this.ignorePickerEvents = true;
         this.setDateAndFormat(nextProps);
-        const shouldUpdate = Object.entries(pick(nextProps, "date", "format")).some(
-            ([key, val]) => !areEqual(this.props[key], val)
-        );
+        const shouldUpdate =
+            this.props.revId !== nextProps.revId ||
+            Object.entries(pick(nextProps, "date", "format")).some(
+                ([key, val]) => !areEqual(this.props[key], val)
+            );
+        if (shouldUpdate && !areEqual(this.pickerDate, nextProps.date)) {
+            if (nextProps.date) {
+                this.bootstrapDateTimePicker("date", luxonToMoment(nextProps.date));
+            } else {
+                this.bootstrapDateTimePicker("clear");
+            }
+        }
         if (shouldUpdate) {
             this.updateInput(this.date);
         }
@@ -226,7 +237,7 @@ export class DatePicker extends Component {
      * Handles bootstrap datetimepicker calls.
      * @param {string | Object} commandOrParams
      */
-    bootstrapDateTimePicker(commandOrParams) {
+    bootstrapDateTimePicker(commandOrParams, ...commandArgs) {
         if (typeof commandOrParams === "object") {
             const params = {
                 ...commandOrParams,
@@ -242,7 +253,7 @@ export class DatePicker extends Component {
             commandOrParams = params;
         }
 
-        window.$(this.rootRef.el).datetimepicker(commandOrParams);
+        window.$(this.rootRef.el).datetimepicker(commandOrParams, ...commandArgs);
     }
 
     //---------------------------------------------------------------------
@@ -255,7 +266,7 @@ export class DatePicker extends Component {
      * date value has changed.
      */
     onDateChange() {
-        const [value, error] = this.pickerDate
+        const [value, error] = this.isPickerChanged
             ? [this.pickerDate, null]
             : this.parseValue(this.inputRef.el.value, this.getOptions());
 
@@ -281,7 +292,7 @@ export class DatePicker extends Component {
      * @param {InputEvent} ev
      */
     onInputInput(ev) {
-        this.pickerDate = null;
+        this.isPickerChanged = false;
         return this.props.onInput(ev);
     }
 
@@ -301,6 +312,10 @@ export class DatePicker extends Component {
             }
             case "Tab": {
                 this.bootstrapDateTimePicker("hide");
+                break;
+            }
+            case "Enter": {
+                this.onInputChange();
                 break;
             }
         }
@@ -349,6 +364,7 @@ DatePicker.defaultProps = {
     widgetParent: "body",
     onInput: () => {},
     onUpdateInput: () => {},
+    revId: 0,
 };
 DatePicker.props = {
     // Components props
@@ -394,6 +410,7 @@ DatePicker.props = {
     placeholder: { type: String, optional: true },
     onInput: { type: Function, optional: true },
     onUpdateInput: { type: Function, optional: true },
+    revId: { type: Number, optional: true },
 };
 DatePicker.template = "web.DatePicker";
 

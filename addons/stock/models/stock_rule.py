@@ -7,7 +7,7 @@ from collections import defaultdict, namedtuple
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero, html_escape
 from odoo.tools.misc import split_every
@@ -99,6 +99,13 @@ class StockRule(models.Model):
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
+
+    @api.constrains('company_id')
+    def _check_company_consistency(self):
+        for rule in self:
+            route = rule.route_id
+            if route.company_id and rule.company_id.id != route.company_id.id:
+                raise ValidationError(_("Rule %s belongs to %s while the route belongs to %s.", rule.display_name, rule.company_id.display_name, route.company_id.display_name))
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -204,6 +211,7 @@ class StockRule(models.Model):
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id,
+            'rule_id': self.id,
             'date': new_date,
             'date_deadline': move_to_copy.date_deadline,
             'company_id': company_id,
@@ -314,6 +322,10 @@ class StockRule(models.Model):
                 if len(partners) == 1:
                     partner = partners
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
+
+        # If the quantity is negative the move should be considered as a refund
+        if float_compare(product_qty, 0.0, precision_rounding=product_uom.rounding) < 0:
+            values['to_refund'] = True
 
         move_values = {
             'name': name[:2000],

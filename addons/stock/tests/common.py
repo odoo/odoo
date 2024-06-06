@@ -17,6 +17,7 @@ class TestStockCommon(common.TransactionCase):
         cls.PickingObj = cls.env['stock.picking']
         cls.MoveObj = cls.env['stock.move']
         cls.LotObj = cls.env['stock.lot']
+        cls.StockLocationObj = cls.env['stock.location']
 
         # Model Data
         cls.picking_type_in = cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in')
@@ -24,6 +25,15 @@ class TestStockCommon(common.TransactionCase):
         cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
         cls.supplier_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_suppliers')
         cls.stock_location = cls.ModelDataObj._xmlid_to_res_id('stock.stock_location_stock')
+        location = cls.StockLocationObj.browse(cls.stock_location)
+        if not location.child_ids:
+            cls.StockLocationObj.create([{
+                'name': 'Shelf 1',
+                'location_id': location.id,
+            }, {
+                'name': 'Shelf 2',
+                'location_id': location.id,
+            }])
         pack_location = cls.env.ref('stock.location_pack_zone')
         pack_location.active = True
         cls.pack_location = pack_location.id
@@ -95,3 +105,8 @@ class TestStockCommon(common.TransactionCase):
         cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'type': 'product'})
         cls.kgB = cls.ProductObj.create({'name': 'kg-B', 'type': 'product', 'uom_id': cls.uom_kg.id, 'uom_po_id': cls.uom_kg.id})
         cls.gB = cls.ProductObj.create({'name': 'g-B', 'type': 'product', 'uom_id': cls.uom_gm.id, 'uom_po_id': cls.uom_gm.id})
+
+        cls.env.ref('base.group_user').write({'implied_ids': [
+            (4, cls.env.ref('base.group_multi_company').id),
+            (4, cls.env.ref('stock.group_production_lot').id),
+        ]})

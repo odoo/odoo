@@ -228,6 +228,8 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/message/post', methods=['POST'], type='json', auth='public')
     def mail_message_post(self, thread_model, thread_id, post_data, **kwargs):
+        guest = request.env['mail.guest']._get_guest_from_request(request)
+        guest.env['ir.attachment'].browse(post_data.get('attachment_ids', []))._check_attachments_access(post_data.get('attachment_tokens'))
         if thread_model == 'mail.channel':
             channel_member_sudo = request.env['mail.channel.member']._get_as_sudo_from_request_or_raise(request=request, channel_id=int(thread_id))
             thread = channel_member_sudo.channel_id
@@ -236,14 +238,15 @@ class DiscussController(http.Controller):
         return thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
 
     @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
-    def mail_message_update_content(self, message_id, body, attachment_ids):
+    def mail_message_update_content(self, message_id, body, attachment_ids, attachment_tokens=None, **kwargs):
         guest = request.env['mail.guest']._get_guest_from_request(request)
+        guest.env['ir.attachment'].browse(attachment_ids)._check_attachments_access(attachment_tokens)
         message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
         if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
             raise NotFound()
         if not message_sudo.model or not message_sudo.res_id:
             raise NotFound()
-        request.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
+        guest.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo,
             body,
             attachment_ids=attachment_ids
@@ -251,7 +254,7 @@ class DiscussController(http.Controller):
         return {
             'id': message_sudo.id,
             'body': message_sudo.body,
-            'attachments': message_sudo.attachment_ids._attachment_format(),
+            'attachments': message_sudo.attachment_ids.sorted()._attachment_format(),
         }
 
     @http.route('/mail/attachment/upload', methods=['POST'], type='http', auth='public')

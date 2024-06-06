@@ -22,6 +22,6 @@ except ImportError:
         global _flanker_lib_warning
         if not _flanker_lib_warning:
             _flanker_lib_warning = True
-            _logger.info("The `flanker` Python module is not installed,"
-                           "so email validation fallback to email_normalize. Use 'pip install flanker' to install it")
+            _logger.info("The (optional) `flanker` Python module is not installed,"
+                         "so email validation will fallback to email_normalize.")
         return tools.email_normalize(email)

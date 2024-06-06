@@ -26,6 +26,10 @@ class ReportBomStructure(models.AbstractModel):
         return res
 
     @api.model
+    def _is_resupply_rules(self, rules, bom):
+        return super()._is_resupply_rules(rules, bom) or any(rule.action == 'buy' for rule in rules)
+
+    @api.model
     def _is_buy_route(self, rules, product, bom):
         return any(rule for rule in rules if rule.action == 'buy' and product.seller_ids)
 

@@ -386,3 +386,24 @@ class TestMrpByProduct(common.TransactionCase):
             byproduct_1.cost_share = 60
             byproduct_2.cost_share = 70
             mo.write({'move_byproduct_ids': [(6, 0, [byproduct_1.id, byproduct_2.id])]})
+
+    def test_check_byproducts_cost_share_02(self):
+        """
+        Test that byproducts with total cost_share < 100% with a cancelled moves will don't throw a ValidationError
+        """
+        self.bom_byproduct.byproduct_ids[0].cost_share = 70
+        self.bom_byproduct.byproduct_ids[0].product_qty = 2
+        mo = self.env["mrp.production"].create({
+            'product_id': self.product_a.id,
+            'product_qty': 1.0,
+            'bom_id': self.bom_byproduct.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        self.assertEqual(mo.state, 'to_close')
+        mo.move_byproduct_ids[0].quantity_done = 1
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')

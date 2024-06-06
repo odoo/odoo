@@ -342,6 +342,12 @@ class ChatbotScriptStep(models.Model):
                 open_chat_window=True,
                 post_joined_message=False)
 
+            # rename the channel to include the operator's name
+            mail_channel.sudo().name = ' '.join([
+                self.env.user.display_name if not self.env.user._is_public() else mail_channel.anonymous_name,
+                human_operator.livechat_username if human_operator.livechat_username else human_operator.name
+            ])
+
             if self.message:
                 # first post the message of the step (if we have one)
                 posted_message = mail_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))

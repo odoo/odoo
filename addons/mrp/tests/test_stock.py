@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 
@@ -179,6 +180,40 @@ class TestWarehouseMrp(common.TestMrpCommon):
         location_dest = move.move_line_ids.location_dest_id
         self.assertEqual(location_dest.id, self.depot_location.id)
         self.assertNotEqual(location_dest.id, self.stock_location.id)
+
+    def test_backorder_unpacking(self):
+        """ Test that movement of pack in backorder is correctly handled. """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.write({'manufacture_steps': 'pbm'})
+
+        self.product_1.type = 'product'
+        self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo_form.product_qty = 100
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        package = self.env['stock.quant.package'].create({})
+
+        picking = mo.picking_ids
+        picking.move_line_ids.write({
+            'qty_done': 20,
+            'result_package_id': package.id,
+        })
+
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        backorder = picking.backorder_ids
+        backorder.move_line_ids.qty_done = 80
+        backorder.button_validate()
+
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(backorder.state, 'done')
+        self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('reserved_qty'), [20, 80])
 
 class TestKitPicking(common.TestMrpCommon):
     @classmethod
@@ -393,3 +428,62 @@ class TestKitPicking(common.TestMrpCommon):
             {'product_id': product.id, 'quantity_done': 1, 'state': 'done'},
             {'product_id': compo.id, 'quantity_done': 1, 'state': 'done'},
         ])
+
+    def test_move_line_aggregated_product_quantities_with_kit(self):
+        """ Test the `stock.move.line` method `_get_aggregated_product_quantities`,
+        who returns data used to print delivery slips, using kits.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        kit, kit_component_1, kit_component_2, not_kit_1, not_kit_2 = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'uom_id': uom_unit.id,
+        } for name in ['Kit', 'Kit Component 1', 'Kit Component 2', 'Not Kit 1', 'Not Kit 2']])
+
+        bom_kit = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.product_tmpl_id.uom_id.id,
+            'product_id': kit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': kit_component_1.id,
+                    'product_qty': 1,
+                }),
+                Command.create({
+                    'product_id': kit_component_2.id,
+                    'product_qty': 1,
+                }),
+            ]
+        })
+
+        delivery_form = Form(self.env['stock.picking'])
+        delivery_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = bom_kit.product_id
+            move.product_uom_qty = 4
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = not_kit_1
+            move.product_uom_qty = 4
+        with delivery_form.move_ids_without_package.new() as move:
+            move.product_id = not_kit_2
+            move.product_uom_qty = 3
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == kit_component_1).qty_done = 3
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == kit_component_2).qty_done = 3
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == not_kit_1).qty_done = 4
+        delivery.move_line_ids.filtered(lambda ml: ml.product_id == not_kit_2).qty_done = 2
+        backorder_wizard_dict = delivery.button_validate()
+        backorder_wizard_form = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context']))
+        backorder_wizard_form.save().process_cancel_backorder()
+
+        aggregate_not_kit_values = delivery.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_not_kit_values.keys()), 2)
+        self.assertTrue(all('Not' in val for val in aggregate_not_kit_values), 'Only non kit products should be included')
+
+        aggregate_kit_values = delivery.move_line_ids._get_aggregated_product_quantities(kit_name=bom_kit.product_id.name)
+        self.assertEqual(len(aggregate_kit_values.keys()), 2)
+        self.assertTrue(all('Component' in val for val in aggregate_kit_values), 'Only kit products should be included')

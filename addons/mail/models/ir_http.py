@@ -13,7 +13,7 @@ class IrHttp(models.AbstractModel):
         result = super(IrHttp, self).session_info()
         if self.env.user._is_internal():
             result['notification_type'] = user.notification_type
-        guest = self.env.context.get('guest')
+        guest = self.env['mail.guest']._get_guest_from_context()
         if not request.session.uid and guest:
             user_context = {'lang': guest.lang}
             mods = odoo.conf.server_wide_modules or []

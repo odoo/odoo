@@ -12,6 +12,7 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
 
         # Adding sale users to test the access rights
         cls.salesman = mail_new_test_user(
@@ -26,6 +27,11 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         cls.env['res.partner'].create({'name': 'Tajine Saucisse'})
 
     def test_01_product_configurator(self):
+        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('product.group_product_variant').id)]})
+        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
+        self.product_product_custo_desk.taxes_id = tax
+        self.product_product_conf_chair_floor_protect.taxes_id = tax
+        self.product_product_conf_chair.taxes_id = tax
         self.start_tour("/web", 'sale_product_configurator_tour', login='salesman')
 
     def test_02_product_configurator_advanced(self):
@@ -133,6 +139,12 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         Also testing B2C setting: no impact on the backend configurator.
         """
 
+        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_pricelist').id)]})
+        self.env['res.partner'].create({
+            'name': 'Azure Interior',
+            'email': 'azure.Interior24@example.com',
+            'city': 'Fremont',
+        })
         # Add a 15% tax on desk
         tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
         self.product_product_custo_desk.taxes_id = tax
@@ -160,6 +172,8 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
                 (6, 0, [office_chair.product_tmpl_id.id, self.product_product_conf_chair.id])
             ]
         })
+        self.product_product_conf_chair.sale_line_warn = 'warning'
+        self.product_product_conf_chair.sale_line_warn_msg = 'sold'
         self.product_product_custo_desk.optional_product_ids = [
             (4, self.product_product_conf_chair.id)
         ]

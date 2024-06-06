@@ -287,27 +287,14 @@
                                         <span t-field="line.product_uom_id" groups="uom.group_uom"/>
                                     </td>
                                     <td name="account_invoice_line_name" class="text-end">
-                                        <t t-if="line.product_id">
-                                            <t t-set="arabic_name" t-value="line.with_context(lang='ar_001').product_id.display_name"/>
-                                            <t t-set="english_name" t-value="line.with_context(lang='en_US').product_id.display_name"/>
-
-                                            <span t-out="line.with_context(lang='ar_001').product_id.name"
-                                                  t-options="{'widget': 'text'}"/>
-
-                                            <t t-if="arabic_name != english_name">
-                                                <br/>
-                                                <span t-field="line.product_id.display_name"
-                                                      t-options="{'widget': 'text'}"/>
-                                            </t>
-
-                                            <t t-if="line.name != english_name and line.name != arabic_name">
-                                                <br/>
-                                                <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                                            </t>
-                                        </t>
-                                        <t t-else="">
-                                            <span t-field="line.name" t-options="{'widget': 'text'}"/>
-                                        </t>
+                                        <t t-set="line_name" t-value="
+                                            line.with_context(lang=o.partner_id.lang).product_id.display_name
+                                                if line.product_id and line.name in (
+                                                line.with_context(lang='ar_001').product_id.display_name,
+                                                line.with_context(lang='en_US').product_id.display_name
+                                            ) else line.name
+                                        "/>
+                                        <span t-out="line_name" t-options="{'widget': 'text'}"/>
                                     </td>
 
                                 </t>

@@ -70,7 +70,7 @@ class TestMessageValues(TestMailCommon):
         self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
 
         # Subtype content
-        note_subtype.write({'description': 'Very important discussions'})
+        note_subtype.sudo().write({'description': 'Very important discussions'})
         record._message_update_content(message, '', [])
         self.assertFalse(message.attachment_ids)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
@@ -78,7 +78,7 @@ class TestMessageValues(TestMailCommon):
         self.assertFalse(message.sudo()._filter_empty(), 'Subtype with description')
 
         # Completely void now
-        note_subtype.write({'description': ''})
+        note_subtype.sudo().write({'description': ''})
         self.assertEqual(message.sudo()._filter_empty(), message)
         record._message_update_content(message, '', [])
         self.assertFalse(message.notified_partner_ids)
@@ -140,11 +140,12 @@ class TestMessageValues(TestMailCommon):
             '<img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"></p>'.format(attachment=msg.attachment_ids[0])
         )
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.models')
     @users('employee')
     def test_mail_message_values_fromto_long_name(self):
-        """ Long headers may break in python if above 78 chars as folding is not
-        done correctly (see ``_notify_get_reply_to_formatted_email`` docstring
+        """ Long headers may break in python if above 68 chars for certain
+        DKIM verification stacks as folding is not done correctly
+        (see ``_notify_get_reply_to_formatted_email`` docstring
         + commit linked to this test). """
         # name would make it blow up: keep only email
         test_record = self.env['mail.test.container'].browse(self.alias_record.ids)
@@ -157,16 +158,17 @@ class TestMessageValues(TestMailCommon):
         })
         reply_to_email = f"{test_record.alias_name}@{self.alias_domain}"
         self.assertEqual(msg.reply_to, reply_to_email,
-                         'Reply-To: use only email when formataddr > 78 chars')
+                         'Reply-To: use only email when formataddr > 68 chars')
 
         # name + company_name would make it blow up: keep record_name in formatting
-        test_record.write({'name': 'Name that would be more than 78 with company name'})
+        self.company_admin.name = "Company name being about 33 chars"
+        test_record.write({'name': 'Name that would be more than 68 with company name'})
         msg = self.env['mail.message'].create({
             'model': test_record._name,
             'res_id': test_record.id
         })
         self.assertEqual(msg.reply_to, formataddr((test_record.name, reply_to_email)),
-                         'Reply-To: use recordname as name in format if recordname + company > 78 chars')
+                         'Reply-To: use recordname as name in format if recordname + company > 68 chars')
 
         # no record_name: keep company_name in formatting if ok
         test_record.write({'name': ''})
@@ -175,7 +177,7 @@ class TestMessageValues(TestMailCommon):
             'res_id': test_record.id
         })
         self.assertEqual(msg.reply_to, formataddr((self.env.user.company_id.name, reply_to_email)),
-                         'Reply-To: use company as name in format when no record name and still < 78 chars')
+                         'Reply-To: use company as name in format when no record name and still < 68 chars')
 
         # no record_name and company_name make it blow up: keep only email
         self.env.user.company_id.write({'name': 'Super Long Name That People May Enter "Even with an internal quoting of stuff"'})
@@ -184,15 +186,15 @@ class TestMessageValues(TestMailCommon):
             'res_id': test_record.id
         })
         self.assertEqual(msg.reply_to, reply_to_email,
-                         'Reply-To: use only email when formataddr > 78 chars')
+                         'Reply-To: use only email when formataddr > 68 chars')
 
         # whatever the record and company names, email is too long: keep only email
         test_record.write({
-            'alias_name': 'Waaaay too long alias name that should make any reply-to blow the 78 characters limit',
+            'alias_name': 'Waaaay too long alias name that should make any reply-to blow the 68 characters limit',
             'name': 'Short',
         })
         self.env.user.company_id.write({'name': 'Comp'})
-        sanitized_alias_name = 'waaaay-too-long-alias-name-that-should-make-any-reply-to-blow-the-78-characters-limit'
+        sanitized_alias_name = 'waaaay-too-long-alias-name-that-should-make-any-reply-to-blow-the-68-characters-limit'
         msg = self.env['mail.message'].create({
             'model': test_record._name,
             'res_id': test_record.id

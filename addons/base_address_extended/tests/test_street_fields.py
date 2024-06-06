@@ -36,3 +36,26 @@ class TestStreetFields(TransactionCase):
             partner.street_number = number
             partner.street_name = name
             self.assertEqual(partner.street, street.strip(), 'Wrongly formatted street: expected %s, received %s' % (street, partner.street))
+
+    def test_child_sync(self):
+        """ Test that city_id is propagated to (contact-type) children contacts. """
+        usa = self.env.ref('base.us')
+        new_york_city = self.env['res.city'].create({
+            'name': 'New York',
+            'country_id': usa.id,
+        })
+        parent = self.env['res.partner'].create({
+            'name': 'Parent Company',
+            'country_id': usa.id,
+            'city_id': new_york_city.id,
+        })
+        child = self.env['res.partner'].create({
+            'name': 'Child Contact',
+            'type': 'contact',
+            'parent_id': parent.id,
+        })
+        self.assertRecordValues(child, [{
+            'name': 'Child Contact',
+            'country_id': usa.id,
+            'city_id': new_york_city.id,
+        }])

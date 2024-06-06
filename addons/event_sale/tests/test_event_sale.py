@@ -40,7 +40,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         cls.sale_order = cls.env['sale.order'].create({
-            'partner_id': cls.env.ref('base.res_partner_2').id,
+            'partner_id': cls.env['res.partner'].create({'name': 'Test Partner'}).id,
             'note': 'Invoice after delivery',
             'payment_term_id': cls.env.ref('account.account_payment_term_end_following_month').id
         })
@@ -168,14 +168,16 @@ class TestEventSale(TestEventSaleCommon):
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('phone')),
-            set(['+32456111111', self.event_customer.phone])
+            set(['+32456111111', self.event_customer._phone_format(self.event_customer.phone)])
         )
         self.assertEqual(
             set(ticket1_new_reg.mapped('mobile')),
-            set(['+32456222222', self.event_customer.mobile])
+            set(['+32456222222', self.event_customer._phone_format(self.event_customer.mobile)])
         )
-        for field in ['name', 'email', 'phone', 'mobile']:
+        for field in ['name', 'email']:
             self.assertEqual(ticket2_new_reg[field], self.event_customer[field])
+        for field in ['phone', 'mobile']:
+            self.assertEqual(ticket2_new_reg[field], self.event_customer._phone_format(self.event_customer[field]))
 
         # ADDING MANUAL LINES ON SO
         # ------------------------------------------------------------
@@ -476,3 +478,15 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(event.seats_expected, 1)
         self.sale_order._action_cancel()
         self.assertEqual(event.seats_expected, 0)
+
+    @users('user_salesman')
+    def test_compute_payment_status(self):
+        self.register_person.action_make_registration()
+        registration = self.event_0.registration_ids
+        self.assertEqual(registration.payment_status, 'to_pay')
+        registration.sale_order_line_id.price_total = 0.0
+        self.assertEqual(registration.payment_status, 'free', "Price of $0.00 should be free")
+        registration.sale_order_line_id.price_total = 0.01
+        self.assertEqual(registration.payment_status, 'to_pay', "Price of $0.01 should be paid")
+        registration.is_paid = True
+        self.assertEqual(registration.payment_status, 'paid')

@@ -8,7 +8,7 @@
 
 {
     "name": "Mexico - Accounting",
-    "version": "2.0",
+    "version": "2.1",
     "author": "Vauxoo",
     'category': 'Accounting/Localizations/Account Charts',
     "description": """
@@ -48,6 +48,7 @@ With this module you will have:
         "views/res_bank_view.xml",
         "views/res_config_settings_views.xml",
         "views/account_views.xml",
+        "data/l10n_mx_uom.xml",
     ],
     'demo': [
         'demo/demo_company.xml',

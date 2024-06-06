@@ -498,7 +498,7 @@ class BaseAutomation(models.Model):
             """ Patch method `name` on `model`, unless it has been patched already. """
             if model not in patched_models[name]:
                 patched_models[name].add(model)
-                ModelClass = type(model)
+                ModelClass = model.env.registry[model._name]
                 origin = getattr(ModelClass, name)
                 method.origin = origin
                 wrapped = api.propagate(origin, method)
@@ -569,7 +569,7 @@ class BaseAutomation(models.Model):
         eval_context = self._get_eval_context()
         for action in self.with_context(active_test=True).search([('trigger', '=', 'on_time')]):
             _logger.info("Starting time-based automated action `%s`.", action.name)
-            last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.utcfromtimestamp(0)
+            last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.fromtimestamp(0, tz=None)
 
             # retrieve all the records that satisfy the action's condition
             domain = []

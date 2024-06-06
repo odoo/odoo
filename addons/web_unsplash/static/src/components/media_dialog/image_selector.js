@@ -126,7 +126,10 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
             const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_RECORDS_TO_DISPLAY, this.props.orientation);
             this.state.isFetchingUnsplash = false;
             this.state.unsplashError = false;
-            const records = images.map(record => {
+            // Ignore duplicates.
+            const existingIds = this.state.unsplashRecords.map(existing => existing.id);
+            const newImages = images.filter(record => !existingIds.includes(record.id));
+            const records = newImages.map(record => {
                 const url = new URL(record.urls.regular);
                 // In small windows, row height could get quite a bit larger than the min, so we keep some leeway.
                 url.searchParams.set('h', 2 * this.MIN_ROW_HEIGHT);

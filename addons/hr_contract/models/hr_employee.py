@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
@@ -13,7 +12,7 @@ class Employee(models.Model):
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
     contract_id = fields.Many2one(
         'hr.contract', string='Current Contract', groups="hr.group_hr_user",
-        domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee')
+        domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee', copy=False)
     calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
@@ -51,7 +50,7 @@ class Employee(models.Model):
             contracts = remove_gap(contracts)
         return min(contracts.mapped('date_start')) if contracts else False
 
-    @api.depends('contract_ids.state', 'contract_ids.date_start')
+    @api.depends('contract_ids.state', 'contract_ids.date_start', 'contract_ids.active')
     def _compute_first_contract_date(self):
         for employee in self:
             employee.first_contract_date = employee._get_first_contract_date()

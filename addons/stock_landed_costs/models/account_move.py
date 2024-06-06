@@ -25,7 +25,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         landed_costs_lines = self.line_ids.filtered(lambda line: line.is_landed_costs_line)
 
-        landed_costs = self.env['stock.landed.cost'].create({
+        landed_costs = self.env['stock.landed.cost'].with_company(self.company_id).create({
             'vendor_bill_id': self.id,
             'cost_lines': [(0, 0, {
                 'product_id': l.product_id.id,
@@ -45,6 +45,11 @@ class AccountMove(models.Model):
         context = dict(self.env.context, default_vendor_bill_id=self.id)
         views = [(self.env.ref('stock_landed_costs.view_stock_landed_cost_tree2').id, 'tree'), (False, 'form'), (False, 'kanban')]
         return dict(action, domain=domain, context=context, views=views)
+
+    def _post(self, soft=True):
+        posted = super()._post(soft)
+        posted.sudo().landed_costs_ids.reconcile_landed_cost()
+        return posted
 
 
 class AccountMoveLine(models.Model):

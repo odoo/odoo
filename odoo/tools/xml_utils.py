@@ -2,6 +2,7 @@
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import logging
+import re
 import requests
 import zipfile
 from io import BytesIO
@@ -12,6 +13,27 @@ from odoo.exceptions import UserError
 
 
 _logger = logging.getLogger(__name__)
+
+
+def remove_control_characters(byte_node):
+    """
+    The characters to be escaped are the control characters #x0 to #x1F and #x7F (most of which cannot appear in XML)
+    [...] XML processors must accept any character in the range specified for Char:
+    `Char	   :: =   	#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]`
+    source:https://www.w3.org/TR/xml/
+    """
+    return re.sub(
+        '[^'
+        '\u0009'
+        '\u000A'
+        '\u000D'
+        '\u0020-\uD7FF'
+        '\uE000-\uFFFD'
+        '\U00010000-\U0010FFFF'
+        ']'.encode(),
+        b'',
+        byte_node,
+    )
 
 
 class odoo_resolver(etree.Resolver):
@@ -118,7 +140,7 @@ def cleanup_xml_node(xml_node_or_string, remove_blank_text=True, remove_blank_no
     if isinstance(xml_node, str):
         xml_node = xml_node.encode()  # misnomer: fromstring actually reads bytes
     if isinstance(xml_node, bytes):
-        xml_node = etree.fromstring(xml_node)
+        xml_node = etree.fromstring(remove_control_characters(xml_node))
 
     # Process leaf nodes iteratively
     # Depth-first, so any inner node may become a leaf too (if children are removed)

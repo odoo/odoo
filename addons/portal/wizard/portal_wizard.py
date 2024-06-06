@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -99,11 +98,12 @@ class PortalWizardUser(models.TransientModel):
         portal_users_with_email = self.filtered(lambda user: email_normalize(user.email))
         (self - portal_users_with_email).email_state = 'ko'
 
-        normalized_emails = [email_normalize(portal_user.email) for portal_user in portal_users_with_email]
-        existing_users = self.env['res.users'].with_context(active_test=False).sudo().search_read([('login', 'in', normalized_emails)], ['id', 'login'])
-
+        existing_users = self.env['res.users'].with_context(active_test=False).sudo().search_read(
+            self._get_similar_users_domain(portal_users_with_email),
+            self._get_similar_users_fields()
+        )
         for portal_user in portal_users_with_email:
-            if next((user for user in existing_users if user['login'] == email_normalize(portal_user.email) and user['id'] != portal_user.user_id.id), None):
+            if next((user for user in existing_users if self._is_portal_similar_than_user(user, portal_user)), None):
                 portal_user.email_state = 'exist'
             else:
                 portal_user.email_state = 'ok'
@@ -184,11 +184,7 @@ class PortalWizardUser(models.TransientModel):
 
         # remove the user from the portal group
         if user_sudo and user_sudo.has_group('base.group_portal'):
-            # if user belongs to portal only, deactivate it
-            if len(user_sudo.groups_id) <= 1:
-                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
-            else:
-                user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)]})
+            user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
 
         return self.action_refresh_modal()
 
@@ -254,3 +250,22 @@ class PortalWizardUser(models.TransientModel):
         email_normalized = email_normalize(self.email)
         if self.email_state == 'ok' and email_normalize(self.partner_id.email) != email_normalized:
             self.partner_id.write({'email': email_normalized})
+
+    def _get_similar_users_domain(self, portal_users_with_email):
+        """ Returns the domain needed to find the users that have the same email
+        as portal users.
+        :param portal_users_with_email: portal users that have an email address.
+        """
+        normalized_emails = [email_normalize(portal_user.email) for portal_user in portal_users_with_email]
+        return [('login', 'in', normalized_emails)]
+
+    def _get_similar_users_fields(self):
+        """ Returns a list of field elements to extract from users.
+        """
+        return ['id', 'login']
+
+    def _is_portal_similar_than_user(self, user, portal_user):
+        """ Checks if the credentials of a portal user and a user are the same
+        (users are distinct and their emails are similar).
+        """
+        return user['login'] == email_normalize(portal_user.email) and user['id'] != portal_user.user_id.id

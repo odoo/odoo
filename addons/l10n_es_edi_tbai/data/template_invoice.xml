@@ -118,7 +118,7 @@
                     </IDDetalleFactura>
                 </DetallesFactura>
                 <ImporteTotalFactura t-out="format_float(amount_total)"/>
-                <!-- <RetencionSoportada/> NOTE (potentially has to be computed/decided manually) -->
+                <RetencionSoportada t-if="amount_retention != 0.0" t-out="format_float(amount_retention)"/>
                 <!-- <BaseImponibleACoste/> NOTE (only applicable with ClaveRegimenIvaOpTrascendencia 06, not supported yet) -->
                 <Claves>
                     <IDClave t-foreach="regime_key" t-as="key">

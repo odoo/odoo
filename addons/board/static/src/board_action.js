@@ -40,6 +40,11 @@ export class BoardAction extends Component {
             if (view) {
                 this.viewProps.viewId = view[0];
             }
+            const searchView = result.views.find((v) => v[1] === "search");
+            this.viewProps.views = [
+                [this.viewProps.viewId || false, viewMode],
+                [(searchView && searchView[0]) || false, "search"],
+            ];
 
             if (action.context) {
                 this.viewProps.context = makeContext([
@@ -49,6 +54,19 @@ export class BoardAction extends Component {
                 if ("group_by" in this.viewProps.context) {
                     const groupBy = this.viewProps.context.group_by;
                     this.viewProps.groupBy = typeof groupBy === "string" ? [groupBy] : groupBy;
+                }
+                if ("comparison" in this.viewProps.context) {
+                    const comparison = this.viewProps.context.comparison;
+                    if (
+                        comparison !== null &&
+                        typeof comparison === "object" &&
+                        "domains" in comparison &&
+                        "fieldName" in comparison
+                    ) {
+                        // Some comparison object with the wrong form might have been stored in db.
+                        // This is why we make the checks on the keys domains and fieldName
+                        this.viewProps.comparison = comparison;
+                    }
                 }
             }
             if (action.domain) {

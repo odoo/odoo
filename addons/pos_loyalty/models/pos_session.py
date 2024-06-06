@@ -3,6 +3,8 @@
 
 from odoo import models
 from odoo.osv.expression import OR
+import ast
+import json
 
 class PosSession(models.Model):
     _inherit = 'pos.session'
@@ -21,7 +23,7 @@ class PosSession(models.Model):
         return {
             'search_params': {
                 'domain': [('id', 'in', self.config_id._get_program_ids().ids)],
-                'fields': ['name', 'trigger', 'applies_on', 'program_type', 'date_to',
+                'fields': ['name', 'trigger', 'applies_on', 'program_type', 'date_to', 'total_order_count',
                     'limit_usage', 'max_usage', 'is_nominative', 'portal_visible', 'portal_point_name', 'trigger_product_ids'],
             },
         }
@@ -54,13 +56,40 @@ class PosSession(models.Model):
         return self.env['loyalty.rule'].search_read(**params['search_params'])
 
     def _get_pos_ui_loyalty_reward(self, params):
-        return self.env['loyalty.reward'].search_read(**params['search_params'])
+        rewards = self.env['loyalty.reward'].search_read(**params['search_params'])
+        for reward in rewards:
+            reward['reward_product_domain'] = self._replace_ilike_with_in(reward['reward_product_domain'])
+        return rewards
+
+    def _replace_ilike_with_in(self, domain_str):
+        if domain_str == "null":
+            return domain_str
+
+        domain = ast.literal_eval(domain_str)
+
+        for index, condition in enumerate(domain):
+            if isinstance(condition, (list, tuple)) and len(condition) == 3:
+                field_name, operator, value = condition
+                field = self.env['product.product']._fields.get(field_name)
+
+                if field and field.type == 'many2one' and operator in ('ilike', 'not ilike'):
+                    comodel = self.env[field.comodel_name]
+                    matching_ids = list(comodel._name_search(value, [], operator, limit=None))
+
+                    new_operator = 'in' if operator == 'ilike' else 'not in'
+                    domain[index] = [field_name, new_operator, matching_ids]
+
+        return json.dumps(domain)
 
     def _get_pos_ui_product_product(self, params):
         result = super()._get_pos_ui_product_product(params)
+        self = self.with_context(**params['context'])
         rewards = self.config_id._get_program_ids().reward_ids
         products = rewards.discount_line_product_id | rewards.reward_product_ids
-        products = self.env['product.product'].search_read([('id', 'in', products.ids)], fields=params['search_params']['fields'])
+        products |= self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'ewallet').trigger_product_ids
+        # Only load products that are not already in the result
+        products = list(set(products.ids) - set(product['id'] for product in result))
+        products = self.env['product.product'].search_read([('id', 'in', products)], fields=params['search_params']['fields'])
         self._process_pos_ui_product_product(products)
         result.extend(products)
         return result
@@ -110,6 +139,10 @@ class PosSession(models.Model):
                     product_id_to_program_ids[product['id']].append(program['id'])
 
         loaded_data['product_id_to_program_ids'] = product_id_to_program_ids
+        product_product_fields = self.env['product.product'].fields_get(self._loader_params_product_product()['search_params']['fields'])
+        loaded_data['field_types'] = {
+            'product.product': {f:v['type'] for f, v in product_product_fields.items()}
+        }
 
     def _loader_params_product_product(self):
         params = super()._loader_params_product_product()

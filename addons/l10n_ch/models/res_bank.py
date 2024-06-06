@@ -24,7 +24,7 @@ def _is_l10n_ch_postal(account_ref):
         ref_subparts = account_ref.split('-')
         account_ref = ref_subparts[0] + ref_subparts[1].rjust(6, '0') + ref_subparts[2]
 
-    if re.match('\d+$', account_ref or ''):
+    if re.match(r'\d+$', account_ref or ''):
         account_ref_without_check = account_ref[:-1]
         return mod10r(account_ref_without_check) == account_ref
     return False
@@ -332,7 +332,7 @@ class ResPartnerBank(models.Model):
         """
         return reference \
                and len(reference) == 27 \
-               and re.match('\d+$', reference) \
+               and re.match(r'\d+$', reference) \
                and reference == mod10r(reference[:-1])
 
     @api.model
@@ -347,14 +347,10 @@ class ResPartnerBank(models.Model):
                # see https://github.com/arthurdejong/python-stdnum/blob/master/stdnum/iso11649.py
 
     def _eligible_for_qr_code(self, qr_method, debtor_partner, currency, raises_error=True):
-        if qr_method == 'sct_qr' and debtor_partner.country_id.code == 'CH' and self.journal_id.country_code == 'CH':
-            return False
         if qr_method == 'ch_qr':
             error_messages = [_("The QR code could not be generated for the following reason(s):")]
             if self.acc_type != 'iban':
                 error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
-            if self.partner_id.country_id.code != 'CH':
-                error_messages.append(_("Your company isn't located in Switzerland."))
             if not debtor_partner or debtor_partner.country_id.code not in ('CH', 'LI'):
                 error_messages.append(_("The debtor partner's address isn't located in Switzerland."))
             if currency.id not in (self.env.ref('base.EUR').id, self.env.ref('base.CHF').id):

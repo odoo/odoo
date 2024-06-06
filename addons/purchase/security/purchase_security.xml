@@ -43,13 +43,13 @@
     <record model="ir.rule" id="purchase_order_comp_rule">
         <field name="name">Purchase Order multi-company</field>
         <field name="model_id" ref="model_purchase_order"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record model="ir.rule" id="purchase_order_line_comp_rule">
         <field name="name">Purchase Order Line multi-company</field>
         <field name="model_id" ref="model_purchase_order_line"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="portal_purchase_order_user_rule" model="ir.rule">
@@ -84,13 +84,13 @@
     <record model="ir.rule" id="purchase_bill_union_comp_rule">
         <field name="name">Purchases &amp; Bills Union multi-company</field>
         <field name="model_id" ref="model_purchase_bill_union"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="purchase_order_report_comp_rule" model="ir.rule">
         <field name="name">Purchase Order Report multi-company</field>
         <field name="model_id" ref="model_purchase_report"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
 </data>

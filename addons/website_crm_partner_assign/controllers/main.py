@@ -34,10 +34,19 @@ class WebsiteAccount(CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
+        CrmLead = request.env['crm.lead']
         if 'lead_count' in counters:
-            values['lead_count'] = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
+            values['lead_count'] = (
+                CrmLead.search_count(self.get_domain_my_lead(request.env.user))
+                if CrmLead.check_access_rights('read', raise_exception=False)
+                else 0
+            )
         if 'opp_count' in counters:
-            values['opp_count'] = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
+            values['opp_count'] = (
+                CrmLead.search_count(self.get_domain_my_opp(request.env.user))
+                if CrmLead.check_access_rights('read', raise_exception=False)
+                else 0
+            )
         return values
 
     @http.route(['/my/leads', '/my/leads/page/<int:page>'], type='http', auth="user", website=True)
@@ -313,6 +322,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
     # Do not use semantic controller due to sudo()
     @http.route(['/partners/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
+        current_slug = partner_id
         _, partner_id = unslug(partner_id)
         current_grade, current_country = None, None
         grade_id = post.get('grade_id')
@@ -325,6 +335,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             partner = request.env['res.partner'].sudo().browse(partner_id)
             is_website_restricted_editor = request.env['res.users'].has_group('website.group_website_restricted_editor')
             if partner.exists() and (partner.website_published or is_website_restricted_editor):
+                if slug(partner) != current_slug:
+                    return request.redirect('/partners/%s' % slug(partner))
                 values = {
                     'main_object': partner,
                     'partner': partner,
@@ -332,4 +344,4 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
                     'current_country': current_country
                 }
                 return request.render("website_crm_partner_assign.partner", values)
-        return self.partners(**post)
+        raise request.not_found()

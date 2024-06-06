@@ -8,7 +8,7 @@ class PosDailyReport(models.TransientModel):
     _name = 'pos.daily.sales.reports.wizard'
     _description = 'Point of Sale Daily Report'
 
-    pos_session_id = fields.Many2one('pos.session')
+    pos_session_id = fields.Many2one('pos.session', required=True)
 
     def generate_report(self):
         data = {'date_start': False, 'date_stop': False, 'config_ids': self.pos_session_id.config_id.ids, 'session_ids': self.pos_session_id.ids}

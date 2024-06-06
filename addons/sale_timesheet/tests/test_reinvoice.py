@@ -21,11 +21,13 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'service_type': 'timesheet',
             'service_tracking': 'task_in_project'
         }
+        cls.company_data['product_order_no'].write(service_values)
+        service_values['expense_policy'] = 'cost'
         cls.company_data['product_order_cost'].write(service_values)
         cls.company_data['product_delivery_cost'].write(service_values)
+        service_values['expense_policy'] = 'sales_price'
         cls.company_data['product_order_sales_price'].write(service_values)
         cls.company_data['product_delivery_sales_price'].write(service_values)
-        cls.company_data['product_order_no'].write(service_values)
 
         # create AA, SO and invoices
         cls.analytic_plan = cls.env['account.analytic.plan'].create({

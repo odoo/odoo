@@ -5,29 +5,38 @@ import { qweb } from "web.core";
 import { registry } from '@web/core/registry';
 import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { formatMonetary } from "@web/views/fields/formatters";
+import { useEffect } from '@odoo/owl';
 
-const { markup, onWillUpdateProps } = owl;
+const { markup } = owl;
 
 
 export class PurchaseOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
-
-        onWillUpdateProps(async (nextProps) => {
-            if (nextProps.record.mode === 'edit' && nextProps.value) {
-                if (
-                    !this.props.value ||
-                    this.props.value[0] != nextProps.value[0]
-                ) {
-                    // Field was updated if line was open in edit mode,
-                    //      field is not emptied,
-                    //      new value is different than existing value.
-
-                    this._onProductTemplateUpdate();
-                }
+        let isMounted = false;
+        let isInternalUpdate = false;
+        const super_update = this.update;
+        this.update = (recordlist) => {
+            isInternalUpdate = true;
+            super_update(recordlist);
+        };
+        if (this.props.canQuickCreate) {
+            this.quickCreate = (name) => {
+                isInternalUpdate = true;
+                return this.props.update([false, name]);
+            };
+        }
+        useEffect(value => {
+            if (!isMounted) {
+                isMounted = true;
+            } else if (value && isInternalUpdate) {
+                // we don't want to trigger product update when update comes from an external sources,
+                // such as an onchange, or the product configuration dialog itself
+                this._onProductTemplateUpdate();
             }
-        });
+            isInternalUpdate = false;
+        }, () => [Array.isArray(this.value) && this.value[0]]);
     }
 
     get configurationButtonHelp() {

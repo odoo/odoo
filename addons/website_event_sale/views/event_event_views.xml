@@ -5,7 +5,7 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='company_id']" position="attributes">
+            <xpath expr="//group//field[@name='company_id']" position="attributes">
                 <attribute name="required">1</attribute>
             </xpath>
         </field>

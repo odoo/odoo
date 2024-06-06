@@ -93,6 +93,25 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("soft_reload will refresh data", async (assert) => {
+        const mockRPC = async function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/web_search_read") {
+                assert.step("web_search_read");
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.verifySteps(["web_search_read"]);
+        await doAction(webClient, "soft_reload");
+        assert.verifySteps(["web_search_read"]);
+    });
+
+    QUnit.test("soft_reload when there is no controller", async (assert) => {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, "soft_reload");
+        assert.ok(true, "No ControllerNotFoundError when there is no controller to restore");
+    });
+
     QUnit.test("can execute client actions from tag name (legacy)", async function (assert) {
         // remove this test as soon as legacy Widgets are no longer supported
         assert.expect(4);

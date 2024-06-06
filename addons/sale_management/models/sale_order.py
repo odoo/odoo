@@ -92,6 +92,9 @@ class SaleOrder(models.Model):
 
     @api.onchange('sale_order_template_id')
     def _onchange_sale_order_template_id(self):
+        if not self.sale_order_template_id:
+            return
+
         sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
 
         order_lines_data = [fields.Command.clear()]

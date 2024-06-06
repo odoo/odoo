@@ -89,6 +89,11 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             case "SELECT_PIVOT":
                 this.selectedPivotId = cmd.pivotId;
                 break;
+            case "REMOVE_PIVOT":
+                if (this.selectedPivotId === cmd.pivotId) {
+                    this.selectedPivotId = undefined;
+                }
+                break;
             case "REFRESH_PIVOT":
                 this._refreshOdooPivot(cmd.id);
                 break;
@@ -114,6 +119,9 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
                     )
                 ) {
                     this._addDomains();
+                }
+                if (!this.getters.getPivotIds().length) {
+                    this.selectedPivotId = undefined;
                 }
                 break;
         }
@@ -146,7 +154,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         const cell = this.getters.getCell(sheetId, col, row);
         if (cell && cell.isFormula()) {
             const pivotFunction = getFirstPivotFunction(cell.content);
-            if (pivotFunction) {
+            if (pivotFunction && pivotFunction.args[0]) {
                 const content = astToFormula(pivotFunction.args[0]);
                 return this.getters.evaluateFormula(content).toString();
             }

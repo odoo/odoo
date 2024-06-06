@@ -16,11 +16,11 @@
                 },
             }).then(function (isPreview) {
                 if (isPreview) {
-                    $slideTarget.removeClass('bg-light bg-hide border');
-                    $slideTarget.addClass('bg-success');
+                    $slideTarget.removeClass('text-bg-light badge-hide border');
+                    $slideTarget.addClass('text-bg-success');
                 } else {
-                    $slideTarget.removeClass('bg-success');
-                    $slideTarget.addClass('bg-light bg-hide border');
+                    $slideTarget.removeClass('text-bg-success');
+                    $slideTarget.addClass('text-bg-light badge-hide border');
                 }
             });
         },

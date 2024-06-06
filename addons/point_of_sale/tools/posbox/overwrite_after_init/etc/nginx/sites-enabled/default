@@ -28,7 +28,10 @@ server {
      proxy_pass http://127.0.0.1:8069;
     }
 
-
+    error_page 502 /502.html;
+    location /502.html {
+        root /var/www/html;
+    }
         # SSL configuration
         #
         # listen 443 ssl default_server;
@@ -79,14 +82,17 @@ server {
 #
 server {
        listen 80;
-#       listen [::]:80;
-#
-#       server_name example.com;
-#
+       listen [::]:80;
+
        root /var/www/;
        index index.html;
-#
-       location /hw_drivers/ {
+
+       location / {
             proxy_pass http://127.0.0.1:8069;
+       }
+
+       error_page 502 /502.html;
+       location /502.html {
+           root /var/www/html;
        }
 }

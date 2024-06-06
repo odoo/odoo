@@ -5,7 +5,7 @@ import base64
 import logging
 
 from collections import defaultdict
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 
@@ -109,15 +109,17 @@ class Attendee(models.Model):
         ics_files = self.mapped('event_id')._get_ics_file()
 
         for attendee in self:
-            if attendee.email and attendee.partner_id != self.env.user.partner_id:
+            if attendee.email and attendee._should_notify_attendee():
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
-                attachment_values = []
+                attachment_values = [Command.set(mail_template.attachment_ids.ids)]
                 if ics_file:
-                    attachment_values = [
+                    attachment_values += [
                         (0, 0, {'name': 'invitation.ics',
                                 'mimetype': 'text/calendar',
+                                'res_id': event_id,
+                                'res_model': 'calendar.event',
                                 'datas': base64.b64encode(ics_file)})
                     ]
                 body = mail_template._render_field(
@@ -129,7 +131,7 @@ class Attendee(models.Model):
                     'subject',
                     attendee.ids,
                     compute_lang=True)[attendee.id]
-                attendee.event_id.with_context(no_document=True).message_notify(
+                attendee.event_id.with_context(no_document=True).sudo().message_notify(
                     email_from=attendee.event_id.user_id.email_formatted or self.env.user.email_formatted,
                     author_id=attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                     body=body,
@@ -137,7 +139,18 @@ class Attendee(models.Model):
                     partner_ids=attendee.partner_id.ids,
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_values,
-                    force_send=force_send)
+                    force_send=force_send,
+                    message_type='auto_comment',
+                )
+
+    def _should_notify_attendee(self):
+        """ Utility method that determines if the attendee should be notified.
+            By default, we do not want to notify (aka no message and no mail) the current user
+            if he is part of the attendees.
+            (Override in appointment to ignore that rule and notify all attendees if it's an appointment)
+        """
+        self.ensure_one()
+        return self.partner_id != self.env.user.partner_id
 
     def do_tentative(self):
         """ Makes event invitation as Tentative. """

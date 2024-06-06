@@ -134,11 +134,20 @@ export function makeLegacySessionService(legacyEnv, session) {
             function mapContext() {
                 return Object.assign({}, env.services.user.context);
             }
+            function setContext(update) {
+                env.services.user.updateContext(update);
+            }
             Object.defineProperty(legacyEnv.session, "userContext", {
                 get: () => mapContext(),
+                set: (update) => {
+                    setContext(update);
+                },
             });
             Object.defineProperty(session, "user_context", {
                 get: () => mapContext(),
+                set: (update) => {
+                    setContext(update);
+                },
             });
         },
     };
@@ -160,6 +169,16 @@ export function mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv) {
                     legacyEnv.session.user_context,
                     params.kwargs.context,
                 );
+                if (settings.noContextKeys) {
+                    const keys = settings.noContextKeys;
+                    if (typeof(keys) === 'string') {
+                        delete params.kwargs.context[keys];
+                    } else {
+                        for (const key of keys) {
+                            delete params.kwargs.context[key];
+                        }
+                    }
+                }
             }
             const jsonrpc = wowlEnv.services.rpc(route, params, {
                 silent: settings.shadow,

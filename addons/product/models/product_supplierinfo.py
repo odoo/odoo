@@ -42,7 +42,7 @@ class SupplierInfo(models.Model):
         'uom.uom', 'Unit of Measure',
         related='product_tmpl_id.uom_po_id')
     min_qty = fields.Float(
-        'Quantity', default=0.0, required=True, digits="Product Unit Of Measure",
+        'Quantity', default=0.0, required=True, digits="Product Unit of Measure",
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
         'Price', default=0.0, digits='Product Price',
@@ -70,7 +70,8 @@ class SupplierInfo(models.Model):
 
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):
-        if self.product_id and self.product_tmpl_id and self.product_id not in self.product_tmpl_id.product_variant_ids:
+        """Clear product variant if it no longer matches the product template."""
+        if self.product_id and self.product_id not in self.product_tmpl_id.product_variant_ids:
             self.product_id = False
 
     @api.model
@@ -79,3 +80,20 @@ class SupplierInfo(models.Model):
             'label': _('Import Template for Vendor Pricelists'),
             'template': '/product/static/xls/product_supplierinfo.xls'
         }]
+
+    def _sanitize_vals(self, vals):
+        """Sanitize vals to sync product variant & template on read/write."""
+        # add product's product_tmpl_id if none present in vals
+        if  vals.get('product_id') and not vals.get('product_tmpl_id'):
+            product = self.env['product.product'].browse(vals['product_id'])
+            vals['product_tmpl_id'] = product.product_tmpl_id.id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._sanitize_vals(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._sanitize_vals(vals)
+        return super().write(vals)

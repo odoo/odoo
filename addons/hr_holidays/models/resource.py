@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api, _
@@ -64,6 +63,7 @@ class CalendarLeaves(models.Model):
             'state': 'draft',
         })
         self.env.add_to_compute(self.env['hr.leave']._fields['number_of_days'], leaves)
+        self.env.add_to_compute(self.env['hr.leave']._fields['duration_display'], leaves)
         sick_time_status = self.env.ref('hr_holidays.holiday_status_sl')
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days

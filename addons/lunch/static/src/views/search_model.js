@@ -58,10 +58,10 @@ export class LunchSearchModel extends SearchModel {
         if (!this.lunchState.locationId) {
             return domain;
         }
-
-        return Domain.and([
+        const result = Domain.and([
             domain,
             [['is_available_at', '=', this.lunchState.locationId]]
-        ]).toList();
+        ]);
+        return params.raw ? result : result.toList();
     }
 }

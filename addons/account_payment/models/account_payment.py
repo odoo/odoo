@@ -40,6 +40,7 @@ class AccountPayment(models.Model):
         related='payment_transaction_id.source_transaction_id.payment_id',
         readonly=True,
         store=True,  # Stored for the group by in `_compute_refunds_count`
+        index='btree_not_null',
     )
     refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
 
@@ -53,7 +54,7 @@ class AccountPayment(models.Model):
                 # payments linked to such refund transactions. Indeed, should a refund transaction
                 # be stuck forever in a transient state (due to webhook failure, for example), the
                 # user would never be allowed to refund the source transaction again.
-                refund_payments = self.search([('source_payment_id', '=', self.id)])
+                refund_payments = self.search([('source_payment_id', '=', payment.id)])
                 refunded_amount = abs(sum(refund_payments.mapped('amount')))
                 payment.amount_available_for_refund = payment.amount - refunded_amount
             else:
@@ -204,13 +205,18 @@ class AccountPayment(models.Model):
         self.ensure_one()
         return {
             'provider_id': self.payment_token_id.provider_id.id,
-            'reference': self.ref,
+            'reference': self.env['payment.transaction']._compute_reference(
+                self.payment_token_id.provider_id.code, prefix=self.ref
+            ),
             'amount': self.amount,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'token_id': self.payment_token_id.id,
             'operation': 'offline',
             'payment_id': self.id,
+            **({'invoice_ids': [Command.set(self._context.get('active_ids', []))]}
+                if self._context.get('active_model') == 'account.move'
+                else {}),
             **extra_create_values,
         }
 

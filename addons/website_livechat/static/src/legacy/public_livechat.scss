@@ -1,3 +1,6 @@
+$o-website-livechat-margin: 30px;
+$o-website-livechat-size: 56px;
+
 @if o-website-value('header-template') == 'sidebar' and $-hamburger-right {
     @include media-breakpoint-up(lg) {
         .o_livechat_button, .o_thread_window {
@@ -12,13 +15,13 @@
     align-items: center;
     transition: filter 0.3s;
     padding: 0px;
-    margin: 0 30px 30px 0;
+    margin: 0 $o-website-livechat-margin $o-website-livechat-margin 0;
     box-shadow: $box-shadow;
     border: none;
     border-radius: 50%;
-    width: 56px;
-    height: 56px;
-    min-width: 56px;
+    width: $o-website-livechat-size;
+    height: $o-website-livechat-size;
+    min-width: $o-website-livechat-size;
     font-size: 24px;
     font-weight: normal;
     text-shadow: none;
@@ -30,4 +33,9 @@
     &:hover {
         filter: brightness(90%);
     }
+}
+
+.o_cookies_bar_toggle {
+    inset-inline-end: calc(1rem + #{$o-website-livechat-margin + $o-website-livechat-size});
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, $o-website-livechat-margin);
 }

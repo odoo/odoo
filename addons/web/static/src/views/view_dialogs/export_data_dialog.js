@@ -97,6 +97,7 @@ export class ExportDataDialog extends Component {
             selectedFormat: 0,
             templateId: null,
             isSmall: this.env.isSmall,
+            disabled: false,
         });
 
         this.title = this.env._t("Export Data");
@@ -202,6 +203,7 @@ export class ExportDataDialog extends Component {
     async fetchFields() {
         this.state.search = [];
         this.knownFields = {};
+        this.expandedFields = {};
         await this.loadFields();
         await this.setDefaultExportList();
         if (this.searchRef.el) {
@@ -344,11 +346,13 @@ export class ExportDataDialog extends Component {
                 }
             );
         }
+        this.state.disabled = true;
         await this.props.download(
             this.state.exportList,
             this.state.isCompatible,
             this.availableFormats[this.state.selectedFormat].tag
         );
+        this.state.disabled = false;
     }
 
     async onDeleteExportTemplate() {

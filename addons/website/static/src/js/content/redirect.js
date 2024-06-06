@@ -30,6 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const backendEditBtnEl = document.querySelector('.o_frontend_to_backend_edit_btn');
         if (backendEditBtnEl) {
             backendEditBtnEl.href = currentUrl.href;
+            document.addEventListener("keydown", ev => {
+                if (ev.key === "a" && ev.altKey) {
+                    currentUrl.searchParams.set('enable_editor', 1);
+                    window.location.replace(currentUrl.href);
+                }
+            }, true);
         }
     } else {
         const backendUserDropdownLinkEl = document.getElementById('o_backend_user_dropdown_link');

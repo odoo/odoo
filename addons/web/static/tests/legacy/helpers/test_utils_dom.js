@@ -138,6 +138,9 @@ odoo.define('web.test_utils_dom', function (require) {
         if (typeof el === 'string') {
             el = $(el);
         }
+        if (el.disabled || (el instanceof jQuery && el.get(0).disabled)) {
+            throw new Error("Can't click on a disabled button");
+        }
         if (_isEventTarget(el)) {
             // EventTarget
             matches = [el];

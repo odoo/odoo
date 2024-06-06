@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import Form, TransactionCase
+from datetime import timedelta
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
+from odoo.fields import Command
 
 
 @tagged('post_install', '-at_install')
-class TestPurchaseMrpFlow(TransactionCase):
+class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         # Useful models
         cls.UoM = cls.env['uom.uom']
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
         cls.categ_kgm = cls.env.ref('uom.product_uom_categ_kgm')
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
-        cls.warehouse = cls.env.ref('stock.warehouse0')
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)])
+        cls.stock_location = cls.warehouse.lot_stock_id
 
         grp_uom = cls.env.ref('uom.group_uom')
         group_user = cls.env.ref('base.group_user')
@@ -213,6 +217,80 @@ class TestPurchaseMrpFlow(TransactionCase):
             move_line = move.move_line_ids[0]
             move_line.qty_done = qty_to_process[comp][0]
             move._action_done()
+
+    def test_kit_component_cost(self):
+        # Set kit and componnet product to automated FIFO
+        self.kit_1.categ_id.property_cost_method = 'fifo'
+        self.kit_1.categ_id.property_valuation = 'real_time'
+
+        self.kit_1.bom_ids.product_qty = 3
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.env['res.partner'].create({'name': 'Testy'})
+        with po.order_line.new() as line:
+            line.product_id = self.kit_1
+            line.product_qty = 120
+            line.price_unit = 1260
+        po = po.save()
+        po.button_confirm()
+        po.picking_ids.action_set_quantities_to_reservation()
+        po.picking_ids.button_validate()
+
+        # Unit price equaly dived among bom lines (cost share not set)
+        # # price further divided by product qty of each component
+        components = [
+            self.component_a,
+            self.component_b,
+            self.component_c,
+        ]
+
+        self.assertEqual(sum([k.standard_price * k.qty_available for k in components]), 120 * 1260)
+
+    def test_kit_component_cost_multi_currency(self):
+        # Set kit and component product to automated FIFO
+        kit = self._create_product('Kit', self.uom_unit)
+        cmp = self._create_product('CMP', self.uom_unit)
+
+        bom_kit = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'
+        })
+        self.env['mrp.bom.line'].create({
+            'product_id': cmp.id,
+            'product_qty': 3.0,
+            'bom_id': bom_kit.id})
+
+        kit.categ_id.property_cost_method = 'fifo'
+        kit.categ_id.property_valuation = 'real_time'
+
+        mock_currency = self.env['res.currency'].create({
+            'name': 'MOCK',
+            'symbol': 'MC',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'company_rate': 100.0,
+            'currency_id': mock_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.env['res.partner'].create({'name': 'Testy'})
+        po.currency_id = mock_currency
+
+        with po.order_line.new() as line:
+            line.product_id = kit
+            line.product_qty = 1
+            line.price_unit = 300.00
+
+        po = po.save()
+        po.button_confirm()
+        po.picking_ids.action_set_quantities_to_reservation()
+        po.picking_ids.button_validate()
+
+        layer = po.picking_ids.move_ids.stock_valuation_layer_ids
+        self.assertEqual(layer.unit_cost, 1)
 
     def test_01_sale_mrp_kit_qty_delivered(self):
         """ Test that the quantities delivered are correct when
@@ -424,7 +502,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         replenish more that needed if others procurements have the same products
         than the production component. """
 
-        warehouse = self.env.ref('stock.warehouse0')
+        warehouse = self.warehouse
         buy_route = warehouse.buy_pull_id.route_id
         manufacture_route = warehouse.manufacture_pull_id.route_id
 
@@ -495,7 +573,7 @@ class TestPurchaseMrpFlow(TransactionCase):
         self.assertEqual(purchase.order_line.product_qty, 5)
 
     def test_01_purchase_mrp_kit_qty_change(self):
-        self.partner = self.env.ref('base.res_partner_1')
+        self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
 
         # Create a PO with one unit of the kit product
         self.po = self.env['purchase.order'].create({
@@ -671,3 +749,196 @@ class TestPurchaseMrpFlow(TransactionCase):
         kits.bom_ids.company_id = False
         self.kit_parent.action_compute_bom_days()
         self.assertEqual(self.kit_parent.days_to_prepare_mo, 1)
+
+    def test_orderpoint_with_manufacture_security_lead_time(self):
+        """
+        Test that a manufacturing order is created with the correct date_start
+        when we have an order point with the preferred route set to "manufacture"
+        and the current company has a manufacturing security lead time set.
+        """
+        # set purchase security lead time to 20 days
+        self.env.company.po_lead = 20
+        # set manufacturing security lead time to 25 days
+        self.env.company.manufacturing_lead = 25
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'type': 'product',
+            #set route to manufacture + buy
+            'route_ids': [
+                (4, self.env.ref('mrp.route_warehouse0_manufacture').id),
+                (4, self.env.ref('purchase_stock.route_warehouse0_buy').id)
+            ],
+            'produce_delay': 1,
+            'seller_ids': [(0, 0, {
+                'partner_id': self.env['res.partner'].create({'name': 'super vendor'}).id,
+                'min_qty': 1,
+                'price': 1,
+            })],
+        })
+        # create a orderpoint to generate a need of the product with perefered route manufacture
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'qty_to_order': 5,
+            'warehouse_id': self.warehouse.id,
+            'route_id': self.env.ref('mrp.route_warehouse0_manufacture').id,
+        })
+        # lead_days_date should be today + manufacturing security lead time + product manufacturing lead time
+        self.assertEqual(orderpoint.lead_days_date, (fields.Date.today() + timedelta(days=25) + timedelta(days=1)))
+        orderpoint.action_replenish()
+        mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertEqual(mo.product_uom_qty, 5)
+        self.assertEqual(mo.date_planned_start.date(), fields.Date.today())
+
+    def test_bom_report_incoming_po(self):
+        """ Test report bom structure with duplicated components
+            With enough stock for the first line and two incoming
+            POs for the second line and third line.
+        """
+        location = self.stock_location
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'type': 'product'})
+        component_product = self.env['product.product'].create({'name': 'Compo 1', 'type': 'product'})
+
+        self.env['stock.quant']._update_available_quantity(component_product, location, 3.0)
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final_product_tmpl.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 3,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 3,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 4,
+                    'product_uom_id': uom_unit.id,
+                })
+            ]
+        })
+        def create_order(product_id, partner_id, date_order):
+            f = Form(self.env['purchase.order'])
+            f.partner_id = partner_id
+            f.date_order = date_order
+            with f.order_line.new() as line:
+                line.product_id = product_id
+                line.product_qty = 3.0
+                line.price_unit = 10
+            return f.save()
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        # Create and confirm two POs with 3 component_product at different date
+        po_today = create_order(component_product, partner, fields.Datetime.now())
+        po_5days = create_order(component_product, partner, fields.Datetime.now() + timedelta(days=5))
+
+        po_today.button_confirm()
+        po_5days.button_confirm()
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        line1_values = report_values['lines']['components'][0]
+        line2_values = report_values['lines']['components'][1]
+        line3_values = report_values['lines']['components'][2]
+        self.assertEqual(line1_values['availability_state'], 'available', 'The first component should be available.')
+        self.assertEqual(line2_values['availability_state'], 'expected', 'The second component should be expected as there is an incoming PO.')
+        self.assertEqual(line3_values['availability_state'], 'estimated', 'The third component should be estimated')
+        self.assertEqual(line2_values['availability_delay'], 0, 'The second component should be expected for today.')
+
+    def test_bom_report_incoming_po2(self):
+        """ Test report bom structure with duplicated components
+            With an incoming PO for the first and second line.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        final_product_tmpl = self.env['product.template'].create({'name': 'Final Product', 'type': 'product'})
+        component_product = self.env['product.product'].create({'name': 'Compo 1', 'type': 'product'})
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final_product_tmpl.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 3,
+                    'product_uom_id': uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': component_product.id,
+                    'product_qty': 3,
+                    'product_uom_id': uom_unit.id,
+                }),
+            ]
+        })
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        # Create and confirm one PO with 6 component_products.
+        f = Form(self.env['purchase.order'])
+        f.partner_id = partner
+        f.date_order = fields.Datetime.now()
+        with f.order_line.new() as line:
+            line.product_id = component_product
+            line.product_qty = 6.0
+            line.price_unit = 10
+        po_today = f.save()
+        po_today.button_confirm()
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+        line1_values = report_values['lines']['components'][0]
+        line2_values = report_values['lines']['components'][1]
+        self.assertEqual(line1_values['availability_state'], 'expected', 'The first component should be expected as there is an incoming PO.')
+        self.assertEqual(line2_values['availability_state'], 'expected', 'The second component should be expected as there is an incoming PO.')
+
+    def test_valuation_with_backorder(self):
+        fifo_category = self.env['product.category'].create({
+            'name': 'FIFO',
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time'
+        })
+        kit, cmp1, cmp2 = self.env['product.product'].create([{
+            'name': name,
+            'standard_price': 0,
+            'type': 'product',
+            'categ_id': fifo_category.id,
+        } for name in ['Kit', 'Cmp1', 'Cmp2']])
+        kit.uom_id = self.uom_gm.id
+        cmp1.uom_id = self.uom_gm.id
+        cmp2.uom_id = self.uom_kg.id
+
+        self.env['mrp.bom'].create({
+            'product_uom_id': self.uom_kg.id,
+            'product_qty': 3,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cmp1.id, 'product_qty': 2, 'product_uom_id': self.uom_kg.id}),
+                (0, 0, {'product_id': cmp2.id, 'product_qty': 1, 'product_uom_id': self.uom_gm.id})]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        partner = self.env['res.partner'].create({'name': 'My Test Partner'})
+        po_form.partner_id = partner
+        with po_form.order_line.new() as pol_form:
+            pol_form.product_id = kit
+            pol_form.product_qty = 30
+            pol_form.product_uom = self.uom_kg
+            pol_form.price_unit = 90000
+            pol_form.taxes_id.clear()
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_line_ids[0].qty_done = 4
+        receipt.move_line_ids[1].qty_done = 2
+        action = receipt.button_validate()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+        # Price Unit for 1 gm of the kit = 90000/1000 = 90
+        # unit_cost for cmp1 = 90 *1000* 3 / 2 / 2 / 1000 = 67.5
+        # unit_cost for cmp2  = 90 *1000* 3 / 2 / 1  * 1000 = 135000000
+        svl = po.picking_ids[0].move_ids.stock_valuation_layer_ids
+        self.assertEqual(svl[0].unit_cost, 67.5)
+        self.assertEqual(svl[1].unit_cost, 135000000)

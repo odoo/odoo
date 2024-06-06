@@ -21,7 +21,6 @@ import {
     getRangePosition
 } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { toInline } from 'web_editor.convertInline';
-import { loadJS } from '@web/core/assets';
 import {
     markup,
     Component,
@@ -95,7 +94,7 @@ export class HtmlField extends Component {
         });
 
         useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
-        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
+        useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({ detail }) => detail.proms.push(this.commitChanges({ shouldInline: true })));
 
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
 
@@ -105,7 +104,6 @@ export class HtmlField extends Component {
                 this.cssReadonlyAsset = await ajax.loadAsset(this.props.cssReadonlyAssetId);
             }
             if (this.props.cssEditAssetId || this.props.isInlineStyle) {
-                await loadJS('/web_editor/static/lib/html2canvas.js');
                 this.cssEditAsset = await ajax.loadAsset(this.props.cssEditAssetId || 'web_editor.assets_edit_html_field');
             }
         });
@@ -158,6 +156,13 @@ export class HtmlField extends Component {
             })();
         });
         onWillUnmount(() => {
+            if (!this.props.readonly && this._isDirty()) {
+                // If we still have uncommited changes, commit them with the
+                // urgent flag to avoid losing them. Urgent flag is used to be
+                // able to save the changes before the component is destroyed
+                // by the owl component manager.
+                this.commitChanges({ urgent: true });
+            }
             if (this._qwebPlugin) {
                 this._qwebPlugin.destroy();
             }
@@ -239,11 +244,6 @@ export class HtmlField extends Component {
                 collaborationModelName: this.props.record.resModel,
                 collaborationFieldName: this.props.fieldName,
                 collaborationResId: parseInt(this.props.record.resId),
-            },
-            mediaModalParams: {
-                ...this.props.wysiwygOptions.mediaModalParams,
-                res_model: this.props.record.resModel,
-                res_id: this.props.record.resId,
             },
             fieldId: this.props.id,
         };
@@ -368,30 +368,35 @@ export class HtmlField extends Component {
      * @param {Object} position
      */
     positionDynamicPlaceholder(popover, position) {
-        let topPosition = this.wysiwygRangePosition.top;
+        // make sure the popover won't be out(below) of the page
+        const enoughSpaceBelow = window.innerHeight - popover.clientHeight - this.wysiwygRangePosition.top;
+        let topPosition = (enoughSpaceBelow > 0) ? this.wysiwygRangePosition.top : this.wysiwygRangePosition.top + enoughSpaceBelow;
+
         // Offset the popover to ensure the arrow is pointing at
         // the precise range location.
         let leftPosition = this.wysiwygRangePosition.left - 14;
+        // make sure the popover won't be out(right) of the page
+        const enoughSpaceRight = window.innerWidth - popover.clientWidth - leftPosition;
+        leftPosition = (enoughSpaceRight > 0) ? leftPosition : leftPosition + enoughSpaceRight;
 
         // Apply the position back to the element.
         popover.style.top = topPosition + 'px';
         popover.style.left = leftPosition + 'px';
     }
-    async commitChanges({ urgent } = {}) {
-        if (this._isDirty() || urgent) {
-            let toInlinePromise;
-            if (this.wysiwyg) {
+    async commitChanges({ urgent, shouldInline } = {}) {
+        if (this._isDirty() || urgent || (shouldInline && this.props.isInlineStyle)) {
+            let saveModifiedImagesPromise, toInlinePromise;
+            if (this.wysiwyg && this.wysiwyg.odooEditor) {
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                await this.wysiwyg.saveModifiedImages();
+                saveModifiedImagesPromise = this.wysiwyg.saveModifiedImages();
                 if (this.props.isInlineStyle) {
                     // Avoid listening to changes made during the _toInline process.
                     toInlinePromise = this._toInline();
                 }
-            }
-            if (urgent) {
-                await this.updateValue();
-            }
-            if (this.wysiwyg) {
+                if (urgent) {
+                    await this.updateValue();
+                }
+                await saveModifiedImagesPromise;
                 if (this.props.isInlineStyle) {
                     await toInlinePromise;
                 }
@@ -405,7 +410,10 @@ export class HtmlField extends Component {
     _isDirty() {
         const strippedPropValue = stripHistoryIds(String(this.props.value));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
-        return !this.props.readonly && (strippedPropValue || '<p><br></p>') !== strippedEditingValue;
+        const domParser = new DOMParser();
+        const parsedPropValue = domParser.parseFromString(strippedPropValue || '<p><br></p>', 'text/html').body;
+        const parsedEditingValue = domParser.parseFromString(strippedEditingValue, 'text/html').body;
+        return !this.props.readonly && parsedPropValue.innerHTML !== parsedEditingValue.innerHTML;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
@@ -567,7 +575,7 @@ export class HtmlField extends Component {
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
 
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
+        await toInline($editable, undefined, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor-editable');
 
         this.wysiwyg.setValue($editable.html());
@@ -588,7 +596,9 @@ export class HtmlField extends Component {
     }
     _onWysiwygBlur() {
         // Avoid save on blur if the html field is in inline mode.
-        if (!this.props.isInlineStyle) {
+        if (this.props.isInlineStyle) {
+            this.updateValue();
+        } else {
             this.commitChanges();
         }
     }
@@ -730,7 +740,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
 
 registry.category("fields").add("html", HtmlField, { force: true });
 
-function stripHistoryIds(value) {
+export function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;
 }
 

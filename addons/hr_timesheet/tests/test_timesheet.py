@@ -13,7 +13,8 @@ class TestCommonTimesheet(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestCommonTimesheet, cls).setUpClass()
-
+        cls.env.user.tz = "Europe/Brussels"
+        cls.env.company.resource_calendar_id.tz = "Europe/Brussels"
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.
         # but there is an ir.rule about it, crashing during its evaluation
@@ -455,9 +456,10 @@ class TestTimesheet(TestCommonTimesheet):
     def test_create_timesheet_with_multi_company(self):
         """ Always set the current company in the timesheet, not the employee company """
         company_4 = self.env['res.company'].create({'name': 'Company 4'})
-        empl_employee = self.env['hr.employee'].with_company(company_4).create({
-            'name': 'Employee 3',
-        })
+        empl_employee, archived_employee = self.env['hr.employee'].with_company(company_4).create([
+            {'name': 'Employee 3'},
+            {'name': 'Employee 4', 'active': False},
+        ])
 
         Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_4.id, self.env.company.id])
 
@@ -468,8 +470,16 @@ class TestTimesheet(TestCommonTimesheet):
             'unit_amount': 4,
             'employee_id': empl_employee.id,
         })
-
         self.assertEqual(timesheet.company_id.id, self.env.company.id)
+
+        with self.assertRaises(UserError, msg="The employee must be active to encode a timesheet"):
+            Timesheet.create({
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'name': 'my first timesheet',
+                'unit_amount': 4,
+                'employee_id': archived_employee.id,
+            })
 
     def test_subtask_log_timesheet(self):
         """ Test parent task takes into account the timesheets of its sub-tasks.

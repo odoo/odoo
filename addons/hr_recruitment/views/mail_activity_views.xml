@@ -7,6 +7,14 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'hr.applicant')]</field>
         <field name="context">{'default_res_model': 'hr.applicant'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No data to display
+            </p>
+            <p>
+                Try to add some records, or make sure that there is no active filter in the search bar.
+            </p>
+        </field>
     </record>
     <menuitem id="hr_recruitment_menu_config_activity_type"
         action="mail_activity_type_action_config_hr_applicant"

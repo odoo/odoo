@@ -3,8 +3,9 @@
 # 	* website_payment
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Martin Trigaux, 2023
+# Levi Siuzdak (sile), 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -31,9 +32,10 @@ msgid ""
 "                        Regards."
 msgstr ""
 ".\n"
-"                        <br/>我們真摯的感謝您對我們的支持。\n"
 "                        <br/>\n"
-"                        至上最高的祝福"
+"                        感謝你支持我們公司！\n"
+"                        <br/>\n"
+"                        順祝 安康"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -68,7 +70,7 @@ msgstr "<b>付款方式:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">國家...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -99,12 +101,12 @@ msgstr "文化覺醒的一年。"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
-msgstr ""
+msgstr "啟用付款功能"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Stripe"
-msgstr ""
+msgstr "啟用 Stripe"
 
 #. module: website_payment
 #. odoo-javascript
@@ -160,7 +162,7 @@ msgstr "配置設定"
 #: code:addons/website_payment/models/res_config_settings.py:0
 #, python-format
 msgid "Configure %s"
-msgstr ""
+msgstr "%s 配置"
 
 #. module: website_payment
 #: model:ir.actions.server,name:website_payment.action_stripe_connect_account
@@ -263,7 +265,7 @@ msgstr "捐贈通知"
 #: code:addons/website_payment/static/src/js/website_payment_form.js:0
 #, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "電郵"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -298,7 +300,7 @@ msgstr "欄位“%s”必須填入"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr ""
+msgstr "首名服務商標籤"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -314,7 +316,7 @@ msgstr "為捐贈"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 #: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "是支援 Stripe 國家/地區"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -378,7 +380,7 @@ msgstr "高中一年級。"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
+msgstr "除 PayPal 以外"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -415,7 +417,7 @@ msgstr ""
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
-msgstr ""
+msgstr "只用 PayPal"
 
 #. module: website_payment
 #. odoo-javascript
@@ -432,7 +434,7 @@ msgstr "預填選項"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
 msgid "Providers State"
-msgstr ""
+msgstr "服務商狀態"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -449,12 +451,12 @@ msgstr "伺服器錯誤"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
-msgstr ""
+msgstr "網店 － 付款"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Slider"
-msgstr ""
+msgstr "滑動選擇器"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation
@@ -478,14 +480,14 @@ msgstr "跳號"
 msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
-msgstr ""
+msgstr "你所在的國家/地區未有 Stripe Connect 服務。請使用其他付款服務商。"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid ""
 "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
 "Pay, etc. as well as recurring charges."
-msgstr ""
+msgstr "支援大多數付款方法； Visa、Mastercard、Maestro、Google Pay、Apple Pay 等，以及經常性費用。"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -514,12 +516,12 @@ msgstr "驗證錯誤"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
-msgstr ""
+msgstr "查看替代方案"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
-msgstr ""
+msgstr "查看其他服務商"
 
 #. module: website_payment
 #. odoo-javascript
@@ -536,7 +538,7 @@ msgstr "網站"
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
 msgid "Website: Donation"
-msgstr ""
+msgstr "網站：捐款"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout

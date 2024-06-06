@@ -9,7 +9,7 @@
 
 {
     'name': 'Honduras - Accounting',
-    'version': '0.2',
+    'version': '0.3',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Honduras.
@@ -26,6 +26,7 @@ and the Lempira currency.""",
         'data/account.account.template.csv',
         'data/l10n_hn_chart_post_data.xml',
         'data/account_tax_group_data.xml',
+        'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
     ],
     'demo': [

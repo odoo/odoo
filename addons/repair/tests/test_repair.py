@@ -403,3 +403,90 @@ class TestRepair(AccountTestInvoicingCommon):
         self.assertEqual(mail_message.author_id, repair_order.partner_id, 'Repair: author should be same as customer')
         self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Repair: author should be in composer recipients thanks to "partner_to" field set on template')
         self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Repair: author should receive mail due to presence in composer recipients')
+
+    def test_repair_from_return(self):
+        """
+        create a repair order from a return delivery and ensure that the stock.move
+        resulting from the repair is not associated with the return picking.
+        """
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_14, 1)
+        picking_form = Form(self.env['stock.picking'])
+        #create a delivery order
+        picking_form.picking_type_id = self.stock_warehouse.out_type_id
+        picking_form.partner_id = self.res_partner_1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 1.0
+        picking = picking_form.save()
+        picking.action_confirm()
+        picking.action_assign()
+        res_dict = picking.button_validate()
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(picking.state, 'done')
+        # Create a return
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.ids[0],
+            active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        res_dict = return_picking.action_repair_return()
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+        repair_form.product_id = product
+        repair = repair_form.save()
+        repair.action_repair_confirm()
+        repair.action_repair_start()
+        repair.action_repair_end()
+        self.assertEqual(repair.state, 'done')
+        self.assertFalse(repair.move_id.picking_id)
+
+    def test_repair_with_product_in_package(self):
+        """
+        Test That a repair order can be validated when the repaired product is tracked and in a package
+        """
+        self.product_a.tracking = 'serial'
+        self.product_a.type = 'product'
+        # Create two serial numbers
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_a.id})
+        sn_2 = self.env['stock.lot'].create({'name': 'sn_2', 'product_id': self.product_a.id})
+
+        # Create two packages
+        package_1 = self.env['stock.quant.package'].create({'name': 'Package-test-1'})
+        package_2 = self.env['stock.quant.package'].create({'name': 'Package-test-2'})
+
+        # update the quantity of the product in the stock
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_1, package_id=package_1)
+        self.env['stock.quant']._update_available_quantity(self.product_a, self.stock_warehouse.lot_stock_id, 1, lot_id=sn_2, package_id=package_2)
+        self.assertEqual(self.product_a.qty_available, 2)
+        # create a repair order
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_a.id,
+            'product_uom': self.product_a.uom_id.id,
+            'guarantee_limit': '2019-01-01',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'lot_id': sn_1.id,
+            'operations': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': self.product_b.id,
+                    'product_uom': self.product_b.uom_id.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 50.0,
+                    'location_id': self.stock_warehouse.lot_stock_id.id,
+                    'location_dest_id': self.product_b.property_stock_production.id,
+                })
+            ],
+        })
+        # Validate and complete the repair order
+        repair_order.action_validate()
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        self.assertEqual(repair_order.state, 'done')

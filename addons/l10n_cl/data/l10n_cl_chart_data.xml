@@ -391,7 +391,6 @@
         <field name="account_type">asset_current</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_cl_remanente_cf')])]"/>
     </record>
 
     <record id="account_110730" model="account.account.template">
@@ -520,8 +519,6 @@
         <field name="account_type">asset_fixed</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="account_121120" model="account.account.template">
@@ -530,8 +527,6 @@
         <field name="account_type">asset_fixed</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="account_121130" model="account.account.template">
@@ -540,8 +535,6 @@
         <field name="account_type">asset_fixed</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="account_121140" model="account.account.template">
@@ -550,8 +543,6 @@
         <field name="account_type">asset_fixed</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="account_121210" model="account.account.template">
@@ -560,8 +551,6 @@
         <field name="account_type">asset_fixed</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="account_121310" model="account.account.template">
@@ -586,8 +575,6 @@
         <field name="account_type">asset_fixed</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_actf')])]"/>
     </record>
 
     <record id="account_130110" model="account.account.template">
@@ -933,7 +920,6 @@
         <field name="account_type">liability_current</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tag_cl_impuesto_unico_trabajadores')])]"/>
     </record>
 
     <record id="account_210740" model="account.account.template">
@@ -962,9 +948,9 @@
 
     <record id="account_210760" model="account.account.template">
         <field name="code">210760</field>
-        <field name="name">Impuesto Mensuales por Pagar</field>
+        <field name="name">Impuestos Mensuales por Pagar</field>
         <field name="account_type">liability_current</field>
-        <field name="reconcile" eval="False"/>
+        <field name="reconcile" eval="True"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
     </record>
 
@@ -1190,11 +1176,6 @@
         <field name="account_type">income</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[
-                         ref('tag_cl_sale_mnt_neto'),
-                         ref('tag_cl_sale_valor_neto_comis')
-               ])]"/>
     </record>
 
     <record id="account_310120" model="account.account.template">
@@ -1203,14 +1184,15 @@
         <field name="account_type">income</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[
-                         ref('tag_cl_sale_mnt_exe'),
-                         ref('tag_cl_sale_valor_comisiones_no_afecto'),
-                         ref('tag_cl_sale_exento_vta_pasajes_nacional'),
-                         ref('tag_cl_sale_exento_vta_pasajes_internacional')
-               ])]"/>
     </record>
+
+     <record id="account_310122" model="account.account.template">
+        <field name="code">310122</field>
+        <field name="name">Ventas de Pasajes Nacionales/Internacionales y/o Comisiones No Afectas</field>
+        <field name="account_type">income</field>
+        <field name="reconcile" eval="False"/>
+        <field name="chart_template_id" ref="cl_chart_template"/>
+     </record>
 
     <record id="account_310125" model="account.account.template">
         <field name="code">310125</field>
@@ -1310,7 +1292,7 @@
 
     <record id="account_320265" model="account.account.template">
         <field name="code">320265</field>
-        <field name="name">Diferencia tipo de cambio</field>
+        <field name="name">Diferencia tipo de cambio Ganancia</field>
         <field name="account_type">income</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1486,7 +1468,7 @@
 
     <record id="account_410195" model="account.account.template">
         <field name="code">410195</field>
-        <field name="name">Diferencia Tipo de Cambio</field>
+        <field name="name">Diferencia Tipo de Cambio Pérdida</field>
         <field name="account_type">expense</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
@@ -1546,8 +1528,6 @@
         <field name="account_type">expense</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto'), ref('tag_cl_purchase_tab_puros'), ref('tag_cl_purchase_tab_cigar')])]"/>
     </record>
     <record id="account_410231" model="account.account.template">
         <field name="code">410231</field>
@@ -1555,8 +1535,6 @@
         <field name="account_type">expense</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_uso_comun')])]"/>
     </record>
     <record id="account_410232" model="account.account.template">
         <field name="code">410232</field>
@@ -1564,8 +1542,6 @@
         <field name="account_type">expense</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_no_recup')])]"/>
     </record>
     <record id="account_410233" model="account.account.template">
         <field name="code">410233</field>
@@ -1573,8 +1549,6 @@
         <field name="account_type">expense</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto_supermercado')])]"/>
     </record>
 
     <record id="account_410235" model="account.account.template">
@@ -1583,8 +1557,6 @@
         <field name="account_type">expense_direct_cost</field>
         <field name="reconcile" eval="False"/>
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="tag_ids"
-               eval="[(6,0,[ref('tag_cl_purchase_mnt_neto'), ref('tag_cl_purchase_tab_puros'), ref('tag_cl_purchase_tab_cigar')])]"/>
     </record>
 
     <record id="account_410240" model="account.account.template">
@@ -1679,7 +1651,7 @@
         <field name="property_account_payable_id" ref="account_210210"/>
         <field name="property_account_expense_categ_id" ref="account_410235"/>
         <field name="property_account_income_categ_id" ref="account_310115"/>
-        <field name="income_currency_exchange_account_id" ref="account_410195"/>
+        <field name="income_currency_exchange_account_id" ref="account_320265"/>
         <field name="expense_currency_exchange_account_id" ref="account_410195"/>
         <field name="default_pos_receivable_account_id" ref="account_110421"/>
         <field name="property_stock_account_input_categ_id" ref="account_210230"/>

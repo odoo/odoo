@@ -247,6 +247,27 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         # self.assertEqual(convert.partner_id, customer)
 
     @users('user_sales_manager')
+    def test_lead_convert_no_lang(self):
+        """ Ensure converting a lead with an archived language correctly falls back on the default partner language. """
+        inactive_lang = self.env["res.lang"].sudo().create({
+            'code': 'en_ZZ',
+            'name': 'Inactive Lang',
+            'active': False,
+        })
+
+        lead = self.lead_1.with_user(self.env.user)
+        lead.lang_id = inactive_lang
+
+        convert = self.env['crm.lead2opportunity.partner'].with_context({
+            'active_model': 'crm.lead',
+            'active_id': self.lead_1.id,
+            'active_ids': self.lead_1.ids,
+        }).create({'action': 'create'})
+        convert.action_apply()
+        self.assertTrue(lead.partner_id)
+        self.assertEqual(lead.partner_id.lang, 'en_US')
+
+    @users('user_sales_manager')
     def test_lead_convert_internals(self):
         """ Test internals of convert wizard """
         convert = self.env['crm.lead2opportunity.partner'].with_context({

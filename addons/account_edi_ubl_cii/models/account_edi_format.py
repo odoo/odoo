@@ -36,7 +36,7 @@ class AccountEdiFormat(models.Model):
         if ubl_version is not None:
             if ubl_version.text == '2.0':
                 return self.env['account.edi.xml.ubl_20']
-            if ubl_version.text == '2.1':
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
                 return self.env['account.edi.xml.ubl_21']
         if customization_id is not None:
             if 'xrechnung' in customization_id.text:

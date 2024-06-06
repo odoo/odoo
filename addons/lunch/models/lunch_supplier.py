@@ -8,6 +8,7 @@ from datetime import datetime, time, timedelta
 from textwrap import dedent
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import float_round
 
@@ -201,6 +202,9 @@ class LunchSupplier(models.Model):
             self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
         super().write(values)
         if not CRON_DEPENDS.isdisjoint(values):
+            # flush automatic_email_time field to call _sql_constraints
+            if 'automatic_email_time' in values:
+                self.flush_model(['automatic_email_time'])
             self._sync_cron()
 
     def unlink(self):
@@ -242,7 +246,7 @@ class LunchSupplier(models.Model):
             return
 
         if self.send_by != 'mail':
-            raise ValueError("Cannot send an email to this supplier")
+            raise UserError(_("Cannot send an email to this supplier!"))
 
         orders = self._get_current_orders()
         if not orders:

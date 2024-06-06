@@ -611,16 +611,16 @@ class TestResMixin(TestResourceCommon):
     def test_adjust_calendar_timezone_before(self):
         # Calendar:
         # Every day 8-16
-        self.jean.tz = 'Japan'
+        self.jean.tz = 'Asia/Tokyo'
         self.calendar_jean.tz = 'Europe/Brussels'
 
         result = self.jean._adjust_to_calendar(
-            datetime_tz(2020, 4, 1, 0, 0, 0, tzinfo='Japan'),
-            datetime_tz(2020, 4, 1, 23, 59, 59, tzinfo='Japan'),
+            datetime_tz(2020, 4, 1, 0, 0, 0, tzinfo='Asia/Tokyo'),
+            datetime_tz(2020, 4, 1, 23, 59, 59, tzinfo='Asia/Tokyo'),
         )
         self.assertEqual(result[self.jean], (
-            datetime_tz(2020, 4, 1, 8, 0, 0, tzinfo='Japan'),
-            datetime_tz(2020, 4, 1, 16, 0, 0, tzinfo='Japan'),
+            datetime_tz(2020, 4, 1, 8, 0, 0, tzinfo='Asia/Tokyo'),
+            datetime_tz(2020, 4, 1, 16, 0, 0, tzinfo='Asia/Tokyo'),
         ), "It should have found a starting time the 1st")
 
     def test_adjust_calendar_timezone_after(self):
@@ -1320,3 +1320,21 @@ class TestResource(TestResourceCommon):
         self.assertEqual(31, sum_work_intervals_jules, "Sum of the work intervals for the calendar of jules should be Wodd:15h+Wpair:16h = 31h")
         sum_work_intervals_patel = sum_intervals(calendars_intervals[self.calendar_patel.id])
         self.assertEqual(49, sum_work_intervals_patel, "Sum of the work intervals for the calendar of patel should be 14+35h = 49h")
+
+    def test_switch_two_weeks_resource(self):
+        """
+            Check that it is possible to switch the company's default calendar
+        """
+        self.env.company.resource_calendar_id = self.two_weeks_resource
+        company_resource = self.env.company.resource_calendar_id
+        # Switch two times to be sure to test both cases
+        company_resource.switch_calendar_type()
+        company_resource.switch_calendar_type()
+
+    def test_create_company_using_two_weeks_resource(self):
+        """
+            Check that we can create a new company
+            if the default company calendar is two weeks
+        """
+        self.env.company.resource_calendar_id = self.two_weeks_resource
+        self.env['res.company'].create({'name': 'New Company'})

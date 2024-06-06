@@ -38,7 +38,7 @@
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
                         </t>
                         <t t-else="">
-                            <t t-if="not answer.is_session_answer">
+                            <t t-if="not answer.is_session_answer and survey.questions_selection == 'random'">
                                 <t t-set="page_ids" t-value="answer.predefined_question_ids.ids"/>
                             </t>
                             <t t-else="">

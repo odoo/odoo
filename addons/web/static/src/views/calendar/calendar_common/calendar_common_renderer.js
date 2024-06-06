@@ -84,7 +84,7 @@ export class CalendarCommonRenderer extends Component {
             eventResize: this.onEventResize,
             eventResizeStart: this.onEventResizeStart,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
-            firstDay: this.props.model.firstDayOfWeek % 7,
+            firstDay: this.props.model.firstDayOfWeek,
             header: false,
             height: "parent",
             locale: luxon.Settings.defaultLocale,
@@ -153,10 +153,11 @@ export class CalendarCommonRenderer extends Component {
         };
     }
     openPopover(target, record) {
+        const color = getColor(record.colorIndex);
         this.popover.open(
             target,
             this.getPopoverProps(record),
-            `o_cw_popover o_calendar_color_${record.colorIndex}`
+            `o_cw_popover o_calendar_color_${typeof(color) === "number" ? color : 0}`
         );
     }
     updateSize() {
@@ -170,13 +171,6 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (this.env.isSmall && this.props.model.scale === "month") {
-            this.props.model.load({
-                date: luxon.DateTime.fromISO(info.dateStr),
-                scale: "day",
-            });
-            return;
-        }
         this.props.createRecord(this.fcEventToRecord(info));
     }
     onDayRender(info) {

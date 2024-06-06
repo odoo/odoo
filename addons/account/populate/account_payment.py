@@ -61,7 +61,7 @@ class AccountPayment(models.Model):
             :return list<int>: list of ids of payment methods of the selected type
             """
             need_bank_account = self._get_method_codes_needing_bank_account()
-            other_blacklist = ['sdd']
+            other_blacklist = ['sdd', 'bacs_dd']
             return self.env['account.payment.method.line'].search([
                 ('journal_id', '=', journal),
                 ('payment_method_id.payment_type', '=', payment_type),
@@ -108,6 +108,8 @@ class AccountPayment(models.Model):
             ('chart_template_id', '!=', False),
             ('id', 'in', self.env.registry.populated_models['res.company']),
         ])
+        if not company_ids:
+            return []
         return [
             ('company_id', populate.cartesian(company_ids.ids)),
             ('payment_type', populate.cartesian(['inbound', 'outbound'])),

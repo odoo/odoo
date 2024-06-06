@@ -66,7 +66,7 @@
     <record model="ir.rule" id="mrp_workcenter_rule">
         <field name="name">mrp_workcenter multi-company</field>
         <field name="model_id" search="[('model','=','mrp.workcenter')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="mrp_workorder_rule">
@@ -78,25 +78,25 @@
     <record model="ir.rule" id="mrp_bom_rule">
         <field name="name">mrp_bom multi-company</field>
         <field name="model_id" search="[('model','=','mrp.bom')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="mrp_bom_line_rule">
         <field name="name">mrp_bom_line multi-company</field>
         <field name="model_id" search="[('model','=','mrp.bom.line')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="mrp_bom_byproduct_rule">
         <field name="name">mrp_bom_byproduct multi-company</field>
         <field name="model_id" search="[('model','=','mrp.bom.byproduct')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="mrp_routing_workcenter_rule">
         <field name="name">mrp_routing_workcenter multi-company</field>
         <field name="model_id" search="[('model','=','mrp.routing.workcenter')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="mrp_workcenter_productivity">

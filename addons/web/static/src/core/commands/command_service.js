@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { CommandPalette } from "./command_palette";
 
-import { Component, xml, EventBus } from "@odoo/owl";
+import { Component, EventBus } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
@@ -47,18 +47,7 @@ class DefaultFooter extends Component {
         this.props.switchNamespace(namespace);
     }
 }
-DefaultFooter.template = xml`
-<span>
-    <span class="fw-bolder text-primary">TIP</span> — search for
-    <t t-foreach="elements" t-as="element" t-key="element.namespace">
-        <t t-if="!(element_first || element_last)">, </t>
-        <t t-if="element_last and !element_first"> and </t>
-        <span class="o_namespace btn-link text-primary cursor-pointer" t-on-click="() => this.onClick(element.namespace)">
-            <span t-out="element.namespace" class="fw-bolder text-primary"/><t t-out="element.name"/>
-        </span>
-    </t>
-</span>
-`;
+DefaultFooter.template = "web.DefaultFooter";
 
 export const commandService = {
     dependencies: ["dialog", "hotkey", "ui"],

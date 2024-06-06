@@ -350,7 +350,7 @@
             <!-- Only shown if in the first 3 icons -->
             <t t-foreach="provider.payment_icon_ids.filtered(lambda r: r.image_payment_form)" t-as="icon">
                 <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
-                    <span t-esc="icon.image_payment_form"
+                    <span t-field="icon.image_payment_form"
                           t-options="{'widget': 'image', 'alt-field': 'name'}"
                           data-bs-toggle="tooltip"
                           t-att-title="icon.name"/>
@@ -418,29 +418,29 @@
             - 'tx' - The transaction whose status must be displayed
         -->
         <t t-if="tx.state == 'draft'">
-            <t t-set="alert_style">info</t>
+            <t t-set="alert_style" t-value="'info'"/>
             <t t-set="status_message">
                 <p>Your payment has not been processed yet.</p>
             </t>
         </t>
         <t t-elif="tx.state == 'pending'">
-            <t t-set="alert_style">warning</t>
+            <t t-set="alert_style" t-value="'warning'"/>
             <t t-set="status_message" t-value="tx.provider_id.sudo().pending_msg"/>
         </t>
         <t t-elif="tx.state == 'authorized'">
-            <t t-set="alert_style">success</t>
+            <t t-set="alert_style" t-value="'success'"/>
             <t t-set="status_message" t-value="tx.provider_id.sudo().auth_msg"/>
         </t>
         <t t-elif="tx.state == 'done'">
-            <t t-set="alert_style">success</t>
+            <t t-set="alert_style" t-value="'success'"/>
             <t t-set="status_message" t-value="tx.provider_id.sudo().done_msg"/>
         </t>
         <t t-elif="tx.state == 'cancel'">
-            <t t-set="alert_style">danger</t>
+            <t t-set="alert_style" t-value="'danger'"/>
             <t t-set="status_message" t-value="tx.provider_id.sudo().cancel_msg"/>
         </t>
         <t t-elif="tx.state == 'error'">
-            <t t-set="alert_style">danger</t>
+            <t t-set="alert_style" t-value="'danger'"/>
             <t t-set="status_message">
                 <p>An error occurred during the processing of your payment.</p>
             </t>

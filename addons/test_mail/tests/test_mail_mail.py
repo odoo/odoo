@@ -696,6 +696,114 @@ class TestMailMail(TestMailCommon):
         self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
         self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain.from_filter)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_values_email_formatted(self):
+        """ Test outgoing email values, with formatting """
+        customer = self.env['res.partner'].create({
+            'name': 'Tony Customer',
+            'email': '"Formatted Emails" <tony.customer@test.example.com>',
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': '"Ignasse, le Poilu" <test.cc.1@test.example.com>',
+            'email_to': '"Raoul, le Grand" <test.email.1@test.example.com>, "Micheline, l\'immense" <test.email.2@test.example.com>',
+            'recipient_ids': [(4, self.user_employee.partner_id.id), (4, customer.id)]
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 3, 'Mail: sent 3 emails: 1 for email_to, 1 / recipient')
+        self.assertEqual(
+            sorted(sorted(_mail['email_to']) for _mail in self._mails),
+            sorted([sorted(['"Raoul, le Grand" <test.email.1@test.example.com>', '"Micheline, l\'immense" <test.email.2@test.example.com>']),
+                    [tools.formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    [tools.formataddr(("Tony Customer", 'tony.customer@test.example.com'))]
+                   ]),
+            'Mail: formatting issues should have been removed as much as possible'
+        )
+        # Currently broken: CC are added to ALL emails (spammy)
+        self.assertEqual(
+            [_mail['email_cc'] for _mail in self._mails],
+            [['test.cc.1@test.example.com']] * 3,
+            'Mail: currently always removing formatting in email_cc'
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_values_email_multi(self):
+        """ Test outgoing email values, with email field holding multi emails """
+        # Multi
+        customer = self.env['res.partner'].create({
+            'name': 'Tony Customer',
+            'email': 'tony.customer@test.example.com, norbert.customer@test.example.com',
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.cc.1@test.example.com, test.cc.2@test.example.com',
+            'email_to': 'test.email.1@test.example.com, test.email.2@test.example.com',
+            'recipient_ids': [(4, self.user_employee.partner_id.id), (4, customer.id)]
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 3, 'Mail: sent 3 emails: 1 for email_to, 1 / recipient')
+        self.assertEqual(
+            sorted(sorted(_mail['email_to']) for _mail in self._mails),
+            sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
+                    [tools.formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    sorted([tools.formataddr(("Tony Customer", 'tony.customer@test.example.com')),
+                            tools.formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
+                   ]),
+            'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
+            'like separate emails when sending with recipient_ids'
+        )
+        # Currently broken: CC are added to ALL emails (spammy)
+        self.assertEqual(
+            [_mail['email_cc'] for _mail in self._mails],
+            [['test.cc.1@test.example.com', 'test.cc.2@test.example.com']] * 3,
+        )
+
+        # Multi + formatting
+        customer = self.env['res.partner'].create({
+            'name': 'Tony Customer',
+            'email': 'tony.customer@test.example.com, "Norbert Customer" <norbert.customer@test.example.com>',
+        })
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.cc.1@test.example.com, test.cc.2@test.example.com',
+            'email_to': 'test.email.1@test.example.com, test.email.2@test.example.com',
+            'recipient_ids': [(4, self.user_employee.partner_id.id), (4, customer.id)]
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 3, 'Mail: sent 3 emails: 1 for email_to, 1 / recipient')
+        self.assertEqual(
+            sorted(sorted(_mail['email_to']) for _mail in self._mails),
+            sorted([sorted(['test.email.1@test.example.com', 'test.email.2@test.example.com']),
+                    [tools.formataddr((self.user_employee.name, self.user_employee.email_normalized))],
+                    sorted([tools.formataddr(("Tony Customer", 'tony.customer@test.example.com')),
+                            tools.formataddr(("Tony Customer", 'norbert.customer@test.example.com'))]),
+                   ]),
+            'Mail: formatting issues should have been removed as much as possible (multi emails in a single address are managed '
+            'like separate emails when sending with recipient_ids (and partner name is always used as name part)'
+        )
+        # Currently broken: CC are added to ALL emails (spammy)
+        self.assertEqual(
+            [_mail['email_cc'] for _mail in self._mails],
+            [['test.cc.1@test.example.com', 'test.cc.2@test.example.com']] * 3,
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mail_mail_values_unicode(self):
+        """ Unicode should be fine. """
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_cc': 'test.😊.cc@example.com',
+            'email_to': 'test.😊@example.com',
+        })
+        with self.mock_mail_gateway():
+            mail.send()
+        self.assertEqual(len(self._mails), 1)
+        self.assertEqual(self._mails[0]['email_cc'], ['test.😊.cc@example.com'])
+        self.assertEqual(self._mails[0]['email_to'], ['test.😊@example.com'])
+
 
 @tagged('mail_mail')
 class TestMailMailRace(common.TransactionCase):

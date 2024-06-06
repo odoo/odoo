@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-class PayULatamCommon(PaymentCommon):
+class PayULatamCommon(AccountTestInvoicingCommon, PaymentCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.payulatam = cls._prepare_provider('payulatam', update_values={
             'payulatam_account_id': 'dummy',

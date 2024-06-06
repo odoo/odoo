@@ -18,22 +18,20 @@
                 </t>
             </div>
             <t t-else="">There is no available image to be set as cover.</t>
-            <FileInput t-if="state.selectFile"
-                acceptedFileExtensions="'image/*'"
-                autoOpen="true"
-                hidden="true"
-                onUpload.bind="onUpload"
-                resModel="props.record.resModel"
-                resId="props.record.resId"
-            />
             <t t-set-slot="footer" t-slot-scope="dialog">
                 <button t-if="attachments.length" class="btn btn-primary" t-on-click="setCover" t-att-disabled="!state.selectedAttachmentId">
                     Select
                 </button>
-                <button class="btn btn-primary" t-on-click="uploadImage">
-                    Upload and Set
-                </button>
-                <button t-if="coverId" class="btn btn-secondary" t-on-click="removeCover">
+                <FileInput
+                    acceptedFileExtensions="'image/*'"
+                    onUpload.bind="onUpload"
+                    resModel="props.record.resModel"
+                    resId="props.record.resId">
+                        <button class="btn btn-primary" t-on-click="uploadImage">
+                            Upload and Set
+                        </button>
+                </FileInput>
+                <button t-if="hasCoverImage" class="btn btn-secondary" t-on-click="removeCover">
                     Remove Cover Image
                 </button>
                 <button class="btn btn-secondary" t-on-click="dialog.close">

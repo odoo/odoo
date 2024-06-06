@@ -7,6 +7,11 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 @tagged('post_install', '-at_install')
 class TestRepairTraceability(TestMrpCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+
     def test_tracking_repair_production(self):
         """
         Test that removing a tracked component with a repair does not block the flow of using that component in another
@@ -135,3 +140,153 @@ class TestRepairTraceability(TestMrpCommon):
         mo = produce_one(finished, component)
         self.assertEqual(mo.state, 'done')
         self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+    def test_mo_with_used_sn_component_02(self):
+        """
+        Suppose a tracked-by-usn component has been remvoed in a repair order. Then, using to produce a product,
+        but this product has been unbuild. The user should be able to use the component in a new MO
+        """
+        finished, component = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+        }, {
+            'name': 'SN Componentt',
+            'type': 'product',
+            'tracking': 'serial',
+        }])
+
+        sn_lot = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': 'USN01',
+            'company_id': self.env.company.id,
+        })
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+        self.assertEqual(component.qty_available, 1)
+
+        # create a repair order
+        ro_form = Form(self.env['repair.order'])
+        ro_form.product_id = self.product_1
+        with ro_form.operations.new() as ro_line:
+            ro_line.type = 'remove'
+            ro_line.product_id = component
+            ro_line.lot_id = sn_lot
+        ro = ro_form.save()
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        # create a manufacturing order
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        with mo_form.move_raw_ids.new() as raw_line:
+            raw_line.product_id = component
+            raw_line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.move_raw_ids.move_line_ids.qty_done = 1
+        action = mo.button_mark_done()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+        # unbuild the mo
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        unbuild_form.save().action_unbuild()
+        # create another mo and use the same SN
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        with mo_form.move_raw_ids.new() as raw_line:
+            raw_line.product_id = component
+            raw_line.product_uom_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        mo.move_raw_ids.move_line_ids.qty_done = 1
+        action = mo.button_mark_done()
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_raw_ids.lot_ids, sn_lot)
+
+    def test_mo_with_unscrapped_tracked_component(self):
+        """
+        Tracked-by-sn component
+        Use it in a MO
+        Repair the finished product:
+            Remove the component, destination: scrap location
+        Move the component back to the stock
+        Use it in a MO
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        scrap_location = self.env['stock.location'].search([('company_id', '=', self.env.company.id), ('scrap_location', '=', True)], limit=1)
+        internal_type = self.env.ref('stock.picking_type_internal')
+
+        finished = self.bom_4.product_id
+        component = self.bom_4.bom_line_ids.product_id
+        component.write({
+            'type': 'product',
+            'tracking': 'serial',
+        })
+
+        sn_lot = self.env['stock.lot'].create({
+            'product_id': component.id,
+            'name': 'SN01',
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(component, stock_location, 1, lot_id=sn_lot)
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.qty_done = 1
+        mo.button_mark_done()
+
+        ro = self.env['repair.order'].create({
+            'product_id': finished.id,
+            'operations': [
+                (0, 0, {
+                    'name': 'foo',
+                    'product_id': component.id,
+                    'lot_id': sn_lot.id,
+                    'type': 'remove',
+                    'location_dest_id': scrap_location.id,
+                    'price_unit': 0,
+                })
+            ],
+        })
+        ro.action_validate()
+        ro.action_repair_start()
+        ro.action_repair_end()
+
+        sm = self.env['stock.move'].create({
+            'name': component.name,
+            'product_id': component.id,
+            'product_uom_qty': 1,
+            'product_uom': component.uom_id.id,
+            'picking_id': internal_type.id,
+            'location_id': scrap_location.id,
+            'location_dest_id': stock_location.id,
+        })
+        sm._action_confirm()
+        sm.move_line_ids.write({
+            'qty_done': 1.0,
+            'lot_id': sn_lot.id,
+        })
+        sm._action_done()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.qty_producing = 1
+        mo.move_raw_ids.move_line_ids.qty_done = 1
+        mo.button_mark_done()
+
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'product_id': component.id, 'lot_id': sn_lot.id, 'qty_done': 1.0, 'state': 'done'},
+        ])

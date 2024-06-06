@@ -43,6 +43,7 @@ registerModel({
                 return;
             }
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').show();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').show();
             this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
         },
@@ -179,7 +180,7 @@ registerModel({
             }
 
             if (!this.hasRestartButton) {
-                this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+                this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').hide();
             }
         },
         /**
@@ -407,6 +408,12 @@ registerModel({
             compute() {
                 const { publicLivechat } = this.messaging.publicLivechatGlobal;
                 if (publicLivechat && !publicLivechat.operator) {
+                    return false;
+                }
+                if (
+                    !this.messaging.publicLivechatGlobal.publicLivechat ||
+                    !this.messaging.publicLivechatGlobal.publicLivechat.uuid
+                ) {
                     return false;
                 }
                 if (publicLivechat && !publicLivechat.data.chatbot_script_id) {

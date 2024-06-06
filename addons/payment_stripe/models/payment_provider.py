@@ -329,18 +329,24 @@ class PaymentProvider(models.Model):
 
         return {
             'type': 'standard',
-            'country': self.company_id.country_id.code,
+            'country': const.COUNTRY_MAPPING.get(
+                self.company_id.country_id.code, self.company_id.country_id.code
+            ),
             'email': self.company_id.email,
             'business_type': 'individual',
             'company[address][city]': self.company_id.city or '',
-            'company[address][country]': self.company_id.country_id.code or '',
+            'company[address][country]': const.COUNTRY_MAPPING.get(
+                self.company_id.country_id.code, self.company_id.country_id.code or ''
+            ),
             'company[address][line1]': self.company_id.street or '',
             'company[address][line2]': self.company_id.street2 or '',
             'company[address][postal_code]': self.company_id.zip or '',
             'company[address][state]': self.company_id.state_id.name or '',
             'company[name]': self.company_id.name,
             'individual[address][city]': self.company_id.city or '',
-            'individual[address][country]': self.company_id.country_id.code or '',
+            'individual[address][country]': const.COUNTRY_MAPPING.get(
+                self.company_id.country_id.code, self.company_id.country_id.code or ''
+            ),
             'individual[address][line1]': self.company_id.street or '',
             'individual[address][line2]': self.company_id.street2 or '',
             'individual[address][postal_code]': self.company_id.zip or '',
@@ -450,3 +456,15 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         return stripe_utils.get_publishable_key(self.sudo())
+
+    def _stripe_get_country(self, country_code):
+        """ Return the mapped country code of the company.
+
+        Businesses in supported outlying territories should register for a Stripe account with the
+        parent territory selected as the Country.
+
+        :param str country_code: The country code of the company.
+        :return: The mapped country code.
+        :rtype: str
+        """
+        return const.COUNTRY_MAPPING.get(country_code, country_code)

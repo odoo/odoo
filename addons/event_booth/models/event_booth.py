@@ -66,7 +66,7 @@ class EventBooth(models.Model):
         return [('state', '=', 'available')]
 
     def _group_expand_states(self, states, domain, order):
-        return [key for key, val in type(self).state.selection]
+        return [key for key, val in self._fields['state'].selection]
 
     @api.model_create_multi
     def create(self, vals_list):

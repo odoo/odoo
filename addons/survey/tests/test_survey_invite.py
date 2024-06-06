@@ -5,14 +5,15 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import etree
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.addons.survey.tests import common
+from odoo.addons.test_mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import users
 
 
-class TestSurveyInvite(common.TestSurveyCommon):
+class TestSurveyInvite(common.TestSurveyCommon, MailCommon):
 
     def setUp(self):
         res = super(TestSurveyInvite, self).setUp()
@@ -147,6 +148,21 @@ class TestSurveyInvite(common.TestSurveyCommon):
         self.assertEqual(answers.mapped('partner_id'), self.customer | self.user_emp.partner_id | self.user_portal.partner_id)
 
     @users('survey_manager')
+    def test_survey_invite_email_from(self):
+        # Verifies whether changing the value of the "email_from" field reflects on the receiving end.
+        action = self.survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.partner_ids.add(self.survey_user.partner_id)
+        invite_form.template_id.write({'email_from':'{{ object.partner_id.email_formatted }}'})
+        invite = invite_form.save()
+        with self.mock_mail_gateway():
+            invite.action_invite()
+
+        self.assertEqual(len(self._new_mails), 1, "A new mail.mail should have been created")
+        mail = self._new_mails[0]
+        self.assertEqual(mail.email_from, self.survey_user.email_formatted)
+
+    @users('survey_manager')
     def test_survey_invite_public(self):
         Answer = self.env['survey.user_input']
 
@@ -242,3 +258,51 @@ class TestSurveyInvite(common.TestSurveyCommon):
         answers = self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
         self.assertEqual(len(answers), 1)
         self.assertEqual(answers.partner_id.display_name, first_partner.display_name)
+
+    @users('survey_user')
+    def test_survey_invite_with_template_attachment(self):
+        """
+        Test that a group_survey_user can send a survey that includes an attachment from the survey invite's
+            email template
+        """
+        mail_template = self.env['mail.template'].create({
+            'name': 'test mail template',
+            'attachment_ids': [Command.create({
+                'name': 'some_attachment.pdf',
+                'res_model': 'mail.template',
+                'datas': 'test',
+                'type': 'binary',
+            })],
+        })
+
+        user_survey = self.env['survey.survey'].create({
+            'title': 'User Created Survey',
+            'access_mode': 'public',
+            'users_login_required': False,
+            'users_can_go_back': False,
+            'question_and_page_ids': [
+                Command.create({
+                    'title': 'First page',
+                    'sequence': 1,
+                    'is_page': True,
+                    'question_type': False,
+                }),
+                Command.create({
+                    'title': 'Test Free Text',
+                    'sequence': 2,
+                    'question_type': 'text_box',
+                }),
+            ]
+        })
+
+        action = user_survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.template_id = mail_template
+        invite_form.emails = 'test_survey_invite_with_template_attachment@odoo.gov'
+        invite = invite_form.save()
+        with self.mock_mail_gateway():
+            invite.action_invite()
+
+        self.assertEqual(self.env['mail.mail'].sudo().search([
+            ('email_to', '=', 'test_survey_invite_with_template_attachment@odoo.gov')
+        ]).attachment_ids, mail_template.attachment_ids)

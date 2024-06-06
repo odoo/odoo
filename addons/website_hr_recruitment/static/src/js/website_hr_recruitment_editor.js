@@ -4,7 +4,7 @@ odoo.define('website_hr_recruitment.form', function (require) {
 var core = require('web.core');
 var FormEditorRegistry = require('website.form_editor_registry');
 
-var _t = core._t;
+const _lt = core._lt;
 
 FormEditorRegistry.add('apply_job', {
     formFields: [{
@@ -12,27 +12,27 @@ FormEditorRegistry.add('apply_job', {
         modelRequired: true,
         name: 'partner_name',
         fillWith: 'name',
-        string: 'Your Name',
+        string: _lt('Your Name'),
     }, {
         type: 'email',
         required: true,
         fillWith: 'email',
         name: 'email_from',
-        string: 'Your Email',
+        string: _lt('Your Email'),
     }, {
         type: 'char',
         required: true,
         fillWith: 'phone',
         name: 'partner_mobile',
-        string: 'Phone Number',
+        string: _lt('Phone Number'),
     }, {
         type: 'char',
         name: 'linkedin_profile',
-        string: 'LinkedIn Profile',
+        string: _lt('LinkedIn Profile'),
     }, {
         type: 'text',
         name: 'description',
-        string: 'Short Introduction',
+        string: _lt('Short Introduction'),
     }, {
         type: 'binary',
         custom: true,
@@ -42,12 +42,12 @@ FormEditorRegistry.add('apply_job', {
         name: 'job_id',
         type: 'many2one',
         relation: 'hr.job',
-        string: _t('Applied Job'),
+        string: _lt('Applied Job'),
     }, {
         name: 'department_id',
         type: 'many2one',
         relation: 'hr.department',
-        string: _t('Department'),
+        string: _lt('Department'),
     }],
     successPage: '/job-thank-you',
 });

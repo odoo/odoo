@@ -130,3 +130,127 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         self.assertEqual(product_cable_management_box.qty_available, 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock')
         self.assertEqual(round(product_cable_management_box.standard_price, 2), 78.05,
             'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(product_cable_management_box.standard_price, 2)))
+
+    def test_inventory_user_svl_access(self):
+        """ Test to check if Inventory/User is able to validate a
+        transfer when the product has been invoiced already """
+
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'purchase_method': 'purchase',
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+
+        bill.invoice_date = time.strftime('%Y-%m-%d')
+        bill.invoice_line_ids[0].quantity = 1.0
+        bill.action_post()
+
+        self.assertEqual(purchase_order.order_line[0].qty_invoiced, 1.0, 'QTY invoiced should have been set to 1 on the purchase order line')
+
+        picking = purchase_order.picking_ids[0]
+        picking.action_set_quantities_to_reservation()
+        # clear cash to ensure access rights verification
+        self.env.invalidate_all()
+        picking.with_user(self.res_users_stock_user).button_validate()
+
+        self.assertEqual(picking.state, 'done', 'Transfer should be in the DONE state')
+
+    def test_inventory_user_fifo_vacuum_svl_access(self):
+        """ Test to check if Inventory/User is able to validate a
+        transfer when the product has been invoiced already """
+
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+        avco_product.standard_price = 300
+
+        # Add a previous move to triger "run_fifo_vaccum"
+        out_move = self.env['stock.move'].create({
+            'name': 'out move',
+            'product_id': avco_product.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'product_uom_qty': 10,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.quantity_done = 10
+        out_move._action_done()
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 1.0,
+                'price_unit': 750.00,
+            })]
+        })
+        purchase_order.button_confirm()
+
+        picking = purchase_order.picking_ids[0]
+        picking.action_set_quantities_to_reservation()
+
+        # clear cash to ensure access rights verification
+        self.env.invalidate_all()
+        picking.with_user(self.res_users_stock_user).button_validate()
+
+        self.assertEqual(picking.state, 'done', 'Transfer should be in the DONE state')
+
+    def test_bill_before_reciept(self):
+        """ Check unit price of recieved product that has been invoiced already """
+
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'purchase_method': 'purchase',
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 1.0,
+            })]
+        })
+
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[0]
+
+        bill.invoice_date = time.strftime('%Y-%m-%d')
+        bill.invoice_line_ids[0].price_unit = 100.0
+        bill.button_cancel()
+
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids[1]
+
+        bill.invoice_date = time.strftime('%Y-%m-%d')
+        bill.invoice_line_ids[0].price_unit = 300.0
+        bill.invoice_line_ids[0].quantity = 1.0
+        bill.action_post()
+
+        picking = purchase_order.picking_ids[0]
+        picking.action_set_quantities_to_reservation()
+        picking.button_validate()
+
+        self.assertEqual(avco_product.avg_cost, 300)

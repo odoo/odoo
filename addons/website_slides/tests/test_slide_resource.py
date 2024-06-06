@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from psycopg2 import IntegrityError
-from werkzeug.urls import url_quote
+from werkzeug.urls import url_unquote_plus
 
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import ValidationError
@@ -71,6 +71,7 @@ class TestResources(common.SlidesCase, HttpCase):
         })
         self.authenticate(self.env.user.login, self.env.user.login)
 
+        filename_star_prefix = """filename*=UTF-8''"""
         for name, file_name, expected_download_name in (
                 # The extension is determined from the file name extension
                 (resource_name, 'test.xlsx', f'{resource_name}.xlsx'),
@@ -84,5 +85,8 @@ class TestResources(common.SlidesCase, HttpCase):
         ):
             resource.write({'name': name, 'file_name': file_name})
             with self.subTest(name=name, file_name=file_name, expected_download_name=expected_download_name):
-                self.assertIn(f"filename*=UTF-8''{url_quote(expected_download_name)}",
-                              self.url_open(resource._get_download_url()).headers['Content-Disposition'])
+                content_disposition = self.url_open(resource._get_download_url()).headers['Content-Disposition']
+                filename_star = content_disposition.split('; ')[-1]
+                if filename_star.startswith(filename_star_prefix):
+                    filename_star = filename_star[len(filename_star_prefix):]
+                self.assertEqual(url_unquote_plus(filename_star), expected_download_name)

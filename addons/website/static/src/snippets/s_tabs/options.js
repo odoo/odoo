@@ -25,6 +25,22 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
     onClone: function () {
         this._generateUniqueIDs();
     },
+    /**
+     * @override
+     */
+    async addItem(previewMode, widgetValue, params) {
+        // TODO: In master, change the template instead.
+        params.item = ".tab-content:first > .tab-pane.active";
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async removeItem(previewMode, widgetValue, params) {
+        // TODO: In master, change the template instead.
+        params.item = ".tab-content:first > .tab-pane.active";
+        return this._super(...arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -44,7 +60,7 @@ options.registry.NavTabs = options.registry.MultipleItems.extend({
      */
     _findLinksAndPanes: function () {
         this.$navLinks = this.$target.find('.nav:first .nav-link');
-        this.$tabPanes = this.$target.find('.tab-content:first .tab-pane');
+        this.$tabPanes = this.$target.find(".tab-content:first > .tab-pane");
     },
     /**
      * @private

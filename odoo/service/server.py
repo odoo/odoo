@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from io import BytesIO
 from itertools import chain
 
 import psutil
@@ -148,6 +149,16 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             return
         super().send_header(keyword, value)
 
+    def end_headers(self, *a, **kw):
+        super().end_headers(*a, **kw)
+        # At this point, Werkzeug assumes the connection is closed and will discard any incoming
+        # data. In the case of WebSocket connections, data should not be discarded. Replace the
+        # rfile/wfile of this handler to prevent any further action (compatibility with werkzeug >= 2.3.x).
+        # See: https://github.com/pallets/werkzeug/blob/2.3.x/src/werkzeug/serving.py#L334
+        if self.headers.get('Upgrade') == 'websocket':
+            self.rfile = BytesIO()
+            self.wfile = BytesIO()
+
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
     given by the environment, this is used by autoreload to keep the listen
@@ -264,7 +275,7 @@ class FSWatcherWatchdog(FSWatcherBase):
     def dispatch(self, event):
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
-                path = getattr(event, 'dest_path', event.src_path)
+                path = getattr(event, 'dest_path', '') or event.src_path
                 self.handle_file(path)
 
     def start(self):
@@ -362,7 +373,7 @@ class CommonServer(object):
         cls._on_stop_funcs.append(func)
 
     def stop(self):
-        for func in type(self)._on_stop_funcs:
+        for func in self._on_stop_funcs:
             try:
                 _logger.debug("on_close call %s", func)
                 func()

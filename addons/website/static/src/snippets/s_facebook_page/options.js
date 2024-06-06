@@ -121,7 +121,8 @@ options.registry.facebookPage = options.Class.extend({
                     return this.fbData.tabs.split(',').includes(optionName.replace(/^tab./, ''));
                 } else {
                     if (optionName === 'show_cover') {
-                        return !this.fbData.hide_cover;
+                        // Sometimes a string, sometimes a boolean.
+                        return String(this.fbData.hide_cover) === "false";
                     }
                     return this.fbData[optionName];
                 }

@@ -87,7 +87,7 @@ registry.category('website_custom_menus').add('website.menu_optimize_seo', {
     Component: OptimizeSEODialog,
     isDisplayed: (env) => env.services.website.currentWebsite
         && env.services.website.isDesigner
-        && !!env.services.website.currentWebsite.metadata.mainObject,
+        && !!env.services.website.currentWebsite.metadata.canOptimizeSeo,
 });
 registry.category('website_custom_menus').add('website.menu_ace_editor', {
     openWidget: (services) => services.website.context.showAceEditor = true,

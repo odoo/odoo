@@ -16,52 +16,66 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__code
+msgid "Code"
+msgstr ""
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Connect Stripe"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr ""
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Delivery"
+msgstr ""
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
+msgid "Enable Apple Pay"
+msgstr ""
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
 msgstr ""
 
 #. module: payment_stripe
-#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model,name:payment_stripe.model_payment_acquirer
-msgid "Payment Acquirer"
+#: model:ir.model,name:payment_stripe.model_payment_provider
+msgid "Payment Provider"
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
-msgid "Payment Acquirers"
-msgstr ""
-
-#. module: payment_stripe
-#: model:ir.model,name:payment_stripe.model_account_payment_method
-msgid "Payment Methods"
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_provider_onboarding
+msgid "Payment Providers"
 msgstr ""
 
 #. module: payment_stripe
@@ -75,41 +89,45 @@ msgid "Payment Transaction"
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
-msgid "Provider"
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Please use live credentials to enable Apple Pay."
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "Publishable Key"
 msgstr ""
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
 msgstr ""
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
 msgstr ""
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
 msgid "Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: model:account.payment.method,name:payment_stripe.payment_method_stripe
-#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_provider__code__stripe
 msgid "Stripe"
 msgstr ""
 
@@ -124,30 +142,29 @@ msgid "Stripe Payment Method ID"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -157,11 +174,19 @@ msgid ""
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "The customer left the payment page."
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
 msgstr ""
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid ""
@@ -170,37 +195,47 @@ msgid ""
 msgstr ""
 
 #. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
 msgstr ""
 
 #. module: payment_stripe
+#. odoo-python
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe"
@@ -208,15 +243,31 @@ msgid ""
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid ""
-"You cannot set the acquirer to Test Mode while it is linked with your Stripe"
+"You cannot set the provider to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
+msgstr ""
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Your order"
+msgstr ""
+
+#. module: payment_stripe
+#. odoo-python
+#: code:addons/payment_stripe/models/payment_provider.py:0
+#, python-format
+msgid "Your web domain was successfully verified."
 msgstr ""

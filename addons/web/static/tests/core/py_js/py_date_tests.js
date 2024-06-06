@@ -16,15 +16,15 @@ QUnit.module("py", {}, () => {
         }
         const format = (n) => String(n).padStart(2, "0");
         const formatDate = (d) => {
-            const year = d.getUTCFullYear();
-            const month = format(d.getUTCMonth() + 1);
-            const day = format(d.getUTCDate());
+            const year = d.getFullYear();
+            const month = format(d.getMonth() + 1);
+            const day = format(d.getDate());
             return `${year}-${month}-${day}`;
         };
         const formatDateTime = (d) => {
-            const h = format(d.getUTCHours());
-            const m = format(d.getUTCMinutes());
-            const s = format(d.getUTCSeconds());
+            const h = format(d.getHours());
+            const m = format(d.getMinutes());
+            const s = format(d.getSeconds());
             return `${formatDate(d)} ${h}:${m}:${s}`;
         };
 
@@ -39,12 +39,12 @@ QUnit.module("py", {}, () => {
         QUnit.module("datetime.datetime");
 
         QUnit.test("datetime.datetime.now", (assert) => {
-            assert.ok(check("datetime.datetime.now().year", (d) => d.getUTCFullYear()));
-            assert.ok(check("datetime.datetime.now().month", (d) => d.getUTCMonth() + 1));
-            assert.ok(check("datetime.datetime.now().day", (d) => d.getUTCDate()));
-            assert.ok(check("datetime.datetime.now().hour", (d) => d.getUTCHours()));
-            assert.ok(check("datetime.datetime.now().minute", (d) => d.getUTCMinutes()));
-            assert.ok(check("datetime.datetime.now().second", (d) => d.getUTCSeconds()));
+            assert.ok(check("datetime.datetime.now().year", (d) => d.getFullYear()));
+            assert.ok(check("datetime.datetime.now().month", (d) => d.getMonth() + 1));
+            assert.ok(check("datetime.datetime.now().day", (d) => d.getDate()));
+            assert.ok(check("datetime.datetime.now().hour", (d) => d.getHours()));
+            assert.ok(check("datetime.datetime.now().minute", (d) => d.getMinutes()));
+            assert.ok(check("datetime.datetime.now().second", (d) => d.getSeconds()));
         });
 
         QUnit.test("various operations", (assert) => {

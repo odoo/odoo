@@ -14,7 +14,7 @@
             <div class="carousel-inner" style="padding: 0;">
                  <t t-foreach="images" t-as="image">
                     <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
-                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image"/>
+                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image" data-o-main-image="true"/>
                     </div>
                  </t>
             </div>
@@ -31,11 +31,11 @@
                 </li>
             </ul>
 
-            <a class="carousel-control-prev o_we_no_overlay" t-attf-href="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+            <a class="carousel-control-prev o_we_no_overlay o_not_editable" t-attf-href="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
                 <span class="fa fa-chevron-left fa-2x text-white"></span>
                 <span class="visually-hidden">Previous</span>
             </a>
-            <a class="carousel-control-next o_we_no_overlay" t-attf-href="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
+            <a class="carousel-control-next o_we_no_overlay o_not_editable" t-attf-href="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
                 <span class="fa fa-chevron-right fa-2x text-white"></span>
                 <span class="visually-hidden">Next</span>
             </a>
@@ -53,7 +53,7 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow.lightbox">
-        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-label="Image Gallery Dialog">
+        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-label="Image Gallery Dialog" tabindex="-1">
             <div class="modal-dialog m-0" role="Picture Gallery"
                 t-attf-style="">
                 <div class="modal-content bg-transparent modal-fullscreen">

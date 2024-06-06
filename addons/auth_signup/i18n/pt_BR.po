@@ -5,8 +5,10 @@
 # Translators:
 # Martin Trigaux, 2022
 # Luis Bispo, 2023
-# Layna Nascimento, 2023
 # Diego Sayron, 2023
+# Éder Brito <britoederr@gmail.com>, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Maitê Dietze, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Diego Sayron, 2023\n"
+"Last-Translator: Maitê Dietze, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -745,6 +747,12 @@ msgid "Let your customers log in to see their documents"
 msgstr "Permitir seus clientes conectarem para ver os documentos deles"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this login"
+msgstr "Várias contas encontradas para este login"
+
+#. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
 msgstr "Nunca Conectado"
@@ -766,7 +774,7 @@ msgstr "Nenhum login fornecido."
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
-msgstr "A convite"
+msgstr "Com convite"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -818,7 +826,7 @@ msgstr "Redefinir Senha"
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset Instructions"
-msgstr "Enviar Instruções de Restauro de Senha"
+msgstr "Enviar instruções de redefinição de senha"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -987,7 +995,7 @@ msgstr "Usuários: notificar sobre usuários não registrados"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr "Bem-vindo(a) {{ object.company_id.name }}!"
+msgstr "Bem vindo à {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #. odoo-python

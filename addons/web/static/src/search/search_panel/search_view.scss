@@ -48,7 +48,10 @@
 
             .o_facet_values_sep {
                 font-style: italic;
-                margin: 0 0.3rem;
+
+                &::before, &::after {
+                    content: " ";
+                }
             }
         }
 

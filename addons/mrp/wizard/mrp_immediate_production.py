@@ -58,7 +58,9 @@ class MrpImmediateProduction(models.TransientModel):
             else:
                 production.qty_producing = production.product_qty - production.qty_produced
             production._set_qty_producing()
-            for move in production.move_raw_ids.filtered(lambda m: m.state not in ['done', 'cancel']):
+            for move in production.move_raw_ids:
+                if move.state in ('done', 'cancel') or not move.product_uom_qty:
+                    continue
                 rounding = move.product_uom.rounding
                 if move.has_tracking in ('serial', 'lot') and float_is_zero(move.quantity_done, precision_rounding=rounding):
                     error_msg += "\n  - %s" % move.product_id.display_name

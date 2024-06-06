@@ -33,7 +33,7 @@ class MergeOpportunity(models.TransientModel):
         return result
 
     opportunity_ids = fields.Many2many('crm.lead', 'merge_opportunity_rel', 'merge_id', 'opportunity_id', string='Leads/Opportunities')
-    user_id = fields.Many2one('res.users', 'Salesperson')
+    user_id = fields.Many2one('res.users', 'Salesperson', domain="[('share', '=', False)]")
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
         compute='_compute_team_id', readonly=False, store=True)

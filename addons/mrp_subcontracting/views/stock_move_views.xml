@@ -23,10 +23,11 @@
                     attrs="{'invisible': [('tracking', 'not in', ('serial', 'lot'))], 'required': [('tracking', 'in', ('serial', 'lot'))]}"
                     context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
                 <field name="reserved_uom_qty" readonly="1" force_save="1"/>
-                <field name="qty_done" 
+                <field name="qty_done"
                     decoration-warning="reserved_uom_qty &lt; qty_done"
                     decoration-success="reserved_uom_qty == qty_done"/>
-                <field name="product_uom_id" groups="uom.group_uom"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+			        attrs="{'readonly': ['|', ('reserved_uom_qty', '!=', 0.0), '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>
             </tree>
         </field>
     </record>

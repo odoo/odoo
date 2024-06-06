@@ -7,6 +7,7 @@ import werkzeug
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.addons.website.tools import add_form_signature
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -459,7 +460,19 @@ class View(models.Model):
                 ('website_id', '=', current_website.id)
             ], limit=1)
             if website_specific_view:
-                self = website_specific_view
+                if (
+                    website_specific_view.first_page_id
+                    and website_specific_view.first_page_id.url != self.first_page_id.url
+                ):
+                    # The case here is when a generic page is edited after its
+                    # specific page has a different URL. In this case, the
+                    # generic page can still be accessed since the specific one
+                    # does not shadow it anymore. In such a case, we need the
+                    # write to be done on the edited generic page and not target
+                    # the specific one.
+                    self = self.with_context(no_cow=True)
+                else:
+                    self = website_specific_view
         super(View, self).save(value, xpath=xpath)
 
     @api.model
@@ -469,6 +482,11 @@ class View(models.Model):
         return super()._get_allowed_root_attrs() + [
             'data-bg-video-src', 'data-shape', 'data-scroll-background-ratio',
         ]
+
+    def _get_combined_arch(self):
+        root = super()._get_combined_arch()
+        add_form_signature(root, self.sudo().env)
+        return root
 
     # --------------------------------------------------------------------------
     # Snippet saving
@@ -484,3 +502,11 @@ class View(models.Model):
 
     def _update_field_translations(self, fname, translations, digest=None):
         return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)
+
+    def _get_base_lang(self):
+        """ Returns the default language of the website as the base language if the record is bound to it """
+        self.ensure_one()
+        website = self.website_id
+        if website:
+            return website.default_lang_id.code
+        return super()._get_base_lang()

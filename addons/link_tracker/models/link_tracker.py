@@ -104,7 +104,7 @@ class LinkTracker(models.Model):
             utms = {}
             for key, field_name, cook in self.env['utm.mixin'].tracking_fields():
                 field = self._fields[field_name]
-                attr = getattr(tracker, field_name)
+                attr = tracker[field_name]
                 if field.type == 'many2one':
                     attr = attr.name
                 if attr:
@@ -172,6 +172,8 @@ class LinkTracker(models.Model):
             if 'url' not in vals:
                 raise ValueError(_('Creating a Link Tracker without URL is not possible'))
 
+            if vals['url'].startswith(('?', '#')):
+                raise UserError(_("%r is not a valid link, links cannot redirect to the current page.", vals['url']))
             vals['url'] = tools.validate_url(vals['url'])
 
             if not vals.get('title'):
@@ -199,6 +201,8 @@ class LinkTracker(models.Model):
     def search_or_create(self, vals):
         if 'url' not in vals:
             raise ValueError(_('Creating a Link Tracker without URL is not possible'))
+        if vals['url'].startswith(('?', '#')):
+            raise UserError(_("%r is not a valid link, links cannot redirect to the current page.", vals['url']))
         vals['url'] = tools.validate_url(vals['url'])
 
         search_domain = [

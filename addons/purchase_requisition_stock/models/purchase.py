@@ -12,7 +12,7 @@ class PurchaseOrder(models.Model):
     @api.depends('on_time_rate')
     def _compute_on_time_rate_perc(self):
         for po in self:
-            if po.on_time_rate > 0:
+            if po.on_time_rate >= 0:
                 po.on_time_rate_perc = po.on_time_rate / 100
             else:
                 po.on_time_rate_perc = -1

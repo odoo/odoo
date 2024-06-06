@@ -49,7 +49,7 @@ tour.register('configurator_translation', {
     // Features screen
     {
         content: "select confidentialité",
-        trigger: '.card:contains(confidentialité)',
+        trigger: '.card:contains(Parseltongue_privacy)',
     }, {
         content: "Click on build my website",
         trigger: 'button.btn-primary',
@@ -63,16 +63,10 @@ tour.register('configurator_translation', {
         timeout: 30000,
     }, {
         // Check the content of the save button to make sure the website is in
-        // French. (The editor should be in the website's default language,
-        // which should be french in this test.)
-        // Also note that sometimes the translation is being changed on
-        // Transifex from "Sauvegarder" to "Sauver" or the other way around.
-        // TODO: Strengthen this tour by creating a new fake language and some
-        //       translations for the checked terms. See what's done in `Sign`
-        //       `test_translate_sign_instructions` tour with the `Parseltongue`
-        //       language.
+        // Parseltongue. (The editor should be in the website's default language,
+        // which should be parseltongue in this test.)
         content: "exit edit mode",
-        trigger: '.o_we_website_top_actions button.btn-primary:contains("Sauvegarder"), .o_we_website_top_actions button.btn-primary:contains("Sauver")',
+        trigger: '.o_we_website_top_actions button.btn-primary:contains("Save_Parseltongue")',
     }, {
          content: "wait for editor to be closed",
          trigger: 'iframe body:not(.editor_enable)',

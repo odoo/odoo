@@ -13,14 +13,7 @@
                 }"
                 t-att-title="formatted"
             >
-                <t t-if="days !== null">
-                    <t t-if="Math.abs(days) gt 99"><t t-esc="formatted" /></t>
-                    <t t-elif="days lt -1"><t t-esc="-days" /> days ago</t>
-                    <t t-elif="days === -1">Yesterday</t>
-                    <t t-elif="days === 0">Today</t>
-                    <t t-elif="days === 1">Tomorrow</t>
-                    <t t-elif="days gt 1">In <t t-esc="days" /> days</t>
-                </t>
+                <t t-esc="diffString"/>
             </div>
         </t>
         <t t-else="">

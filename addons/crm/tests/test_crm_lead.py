@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.addons.base.tests.test_format_address_mixin import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
@@ -345,9 +346,9 @@ class TestCRMLead(TestCrmCommon):
 
             # reset partner phone to a local number and prepare formatted / sanitized values
             partner_phone, partner_mobile = self.test_phone_data[2], self.test_phone_data[1]
-            partner_phone_formatted = phone_format(partner_phone, 'US', '1')
+            partner_phone_formatted = phone_format(partner_phone, 'US', '1', force_format='INTERNATIONAL')
             partner_phone_sanitized = phone_format(partner_phone, 'US', '1', force_format='E164')
-            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1')
+            partner_mobile_formatted = phone_format(partner_mobile, 'US', '1', force_format='INTERNATIONAL')
             partner_mobile_sanitized = phone_format(partner_mobile, 'US', '1', force_format='E164')
             partner_email, partner_email_normalized = self.test_email_data[2], self.test_email_data_normalized[2]
             self.assertEqual(partner_phone_formatted, '+1 202-555-0888')
@@ -404,7 +405,7 @@ class TestCRMLead(TestCrmCommon):
             lead_form.email_from = new_email
             self.assertTrue(lead_form.partner_email_update)
             new_phone = '+1 202 555 7799'
-            new_phone_formatted = phone_format(new_phone, 'US', '1')
+            new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="INTERNATIONAL")
             lead_form.phone = new_phone
             self.assertEqual(lead_form.phone, new_phone_formatted)
             self.assertTrue(lead_form.partner_email_update)
@@ -417,7 +418,7 @@ class TestCRMLead(TestCrmCommon):
 
             # LEAD/PARTNER SYNC: mobile does not update partner
             new_mobile = '+1 202 555 6543'
-            new_mobile_formatted = phone_format(new_mobile, 'US', '1')
+            new_mobile_formatted = phone_format(new_mobile, 'US', '1', force_format="INTERNATIONAL")
             lead_form.mobile = new_mobile
             lead_form.save()
             self.assertEqual(lead.mobile, new_mobile_formatted)
@@ -527,11 +528,23 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_stages(self):
-        lead = self.lead_1.with_user(self.env.user)
-        self.assertEqual(lead.team_id, self.sales_team_1)
+        first_now = datetime(2023, 11, 6, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: first_now), \
+             freeze_time(first_now):
+            self.lead_1.write({'date_open': first_now})
 
-        lead.convert_opportunity(self.contact_1)
+        lead = self.lead_1.with_user(self.env.user)
+        self.assertEqual(lead.date_open, first_now)
         self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_leads)
+
+        second_now = datetime(2023, 11, 8, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: second_now), \
+             freeze_time(second_now):
+            lead.convert_opportunity(self.contact_1)
+        self.assertEqual(lead.date_open, first_now)
+        self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(lead.user_id, self.user_sales_leads)
 
         lead.action_set_won()
         self.assertEqual(lead.probability, 100.0)
@@ -603,6 +616,96 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(self.contact_company_1.phone, 'alsobroken')
 
     @users('user_sales_manager')
+    def test_crm_lead_update_dates(self):
+        """ Test date_open / date_last_stage_update update, check those dates
+        are not erased too often """
+        first_now = datetime(2023, 11, 6, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: first_now), \
+             freeze_time(first_now):
+            leads = self.env['crm.lead'].create([
+                {
+                    'email_from': 'testlead@customer.company.com',
+                    'name': 'Lead_1',
+                    'team_id': self.sales_team_1.id,
+                    'type': 'lead',
+                    'user_id': False,
+                }, {
+                    'email_from': 'testopp@customer.company.com',
+                    'name': 'Opp_1',
+                    'type': 'opportunity',
+                    'user_id': self.user_sales_salesman.id,
+                },
+            ])
+            leads.flush_recordset()
+        for lead in leads:
+            self.assertEqual(lead.date_last_stage_update, first_now,
+                             "Stage updated at create time with default value")
+            self.assertEqual(lead.stage_id, self.stage_team1_1)
+            self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertFalse(leads[0].date_open, "No user -> no assign date")
+        self.assertFalse(leads[0].user_id)
+        self.assertEqual(leads[1].date_open, first_now, "Default user assigned")
+        self.assertEqual(leads[1].user_id, self.user_sales_salesman, "Default user assigned")
+
+        # changing user_id may change team_id / stage_id; update date_open and
+        # maybe date_last_stage_update
+        updated_time = datetime(2023, 11, 23, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: updated_time), \
+             freeze_time(updated_time):
+            leads.write({"user_id": self.user_sales_salesman.id})
+            leads.flush_recordset()
+        for lead in leads:
+            self.assertEqual(lead.stage_id, self.stage_team1_1)
+            self.assertEqual(lead.team_id, self.sales_team_1)
+        self.assertEqual(
+            leads[0].date_last_stage_update, first_now,
+            'Setting same stage when changing user_id, should not update')
+        self.assertEqual(
+            leads[0].date_open, updated_time,
+            'User assigned -> assign date updated')
+        self.assertEqual(
+            leads[1].date_last_stage_update, first_now,
+            'Setting same stage when changing user_id, should not update')
+        self.assertEqual(
+            leads[1].date_open, updated_time,
+            'Should not update date_open, was already the same user_id, but done in batch so ...')
+
+        # set won changes stage -> update date_last_stage_update
+        newer_time = datetime(2023, 11, 26, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: newer_time), \
+             freeze_time(newer_time):
+            leads[1].action_set_won()
+            leads[1].flush_recordset()
+        self.assertEqual(
+            leads[1].date_last_stage_update, newer_time,
+            'Mark as won updates stage hence stage update date')
+        self.assertEqual(leads[1].stage_id, self.stage_gen_won)
+
+        # merge may change user_id and then may change team_id / stage_id; in this
+        # case no real value change is happening
+        last_time = datetime(2023, 11, 29, 8, 0, 0)
+        with patch.object(self.env.cr, 'now', lambda: last_time), \
+             freeze_time(last_time):
+            leads.merge_opportunity(
+                user_id=self.user_sales_salesman.id,
+                auto_unlink=False,
+            )
+            leads.flush_recordset()
+        self.assertEqual(leads[0].date_last_stage_update, first_now)
+        self.assertEqual(leads[0].date_open, updated_time)
+        self.assertEqual(leads[0].stage_id, self.stage_team1_1)
+        self.assertEqual(leads[0].team_id, self.sales_team_1)
+        self.assertEqual(
+            leads[1].date_last_stage_update, newer_time,
+            'Should not rewrite when setting same stage')
+        self.assertEqual(
+            leads[1].date_open, updated_time,
+            'Should not rewrite when setting same user_id')
+        self.assertEqual(leads[1].stage_id, self.stage_gen_won)
+        self.assertEqual(leads[1].team_id, self.sales_team_1)
+        self.assertEqual(leads[1].user_id, self.user_sales_salesman)
+
+    @users('user_sales_manager')
     def test_crm_team_alias(self):
         new_team = self.env['crm.team'].create({
             'name': 'TestAlias',
@@ -619,6 +722,71 @@ class TestCRMLead(TestCrmCommon):
         })
         # self.assertFalse(new_team.alias_id.alias_name)
         # self.assertFalse(new_team.alias_name)
+
+    @users('user_sales_manager')
+    def test_crm_team_alias_helper(self):
+        """Test that the help message is the right one if we are on multiple team with different settings."""
+        # archive other teams
+        self.env['crm.team'].search([]).active = False
+
+        self._activate_multi_company()
+        team_other_comp = self.team_company2
+
+        user_team_leads, team_leads, user_team_opport, team_opport = self.env['crm.team'].create([{
+            'name': 'UserTeamLeads',
+            'use_leads': True,
+            'member_ids': [(6, 0, [self.env.user.id])],
+        }, {
+            'name': 'TeamLeads',
+            'use_leads': True,
+            'member_ids': [],
+        }, {
+            'name': 'UserTeamOpportunities',
+            'use_leads': False,
+            'member_ids': [(6, 0, [self.env.user.id])],
+        }, {
+            'name': 'TeamOpportunities',
+            'use_leads': False,
+            'member_ids': [],
+        }])
+
+        self.env['crm.lead'].create([{
+            'name': 'LeadOurTeam',
+            'team_id': user_team_leads.id,
+            'type': 'lead',
+        }, {
+            'name': 'LeadTeam',
+            'team_id': team_leads.id,
+            'type': 'lead',
+        }, {
+            'name': 'OpportunityOurTeam',
+            'team_id': user_team_opport.id,
+            'type': 'opportunity',
+        }, {
+            'name': 'OpportunityTeam',
+            'team_id': team_opport.id,
+            'type': 'opportunity',
+        }])
+        self.env['crm.lead'].with_user(self.user_sales_manager_mc).create({
+            'name': 'LeadOtherComp',
+            'team_id': team_other_comp.id,
+            'type': 'lead',
+            'company_id': self.company_2.id,
+        })
+
+        # archive our team one by one and check that we have the correct help message
+        teams = [user_team_leads, team_leads, user_team_opport, team_opport, team_other_comp]
+        for team in teams:
+            team.alias_id.sudo().write({'alias_name': team.name})
+
+        for team in teams:
+            with self.subTest(team=team):
+                team_mail = f"{team.alias_name}@{team.alias_domain}"
+                if team != team_other_comp:
+                    self.assertIn(f"<a href='mailto:{team_mail}'>{team_mail}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                else:
+                    self.assertNotIn(f"<a href='mailto:{team_mail}'>{team_mail}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                team.active = False
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailgateway(self):
@@ -814,4 +982,5 @@ class TestCRMLead(TestCrmCommon):
 
 class TestLeadFormatAddress(FormatAddressCase):
     def test_address_view(self):
+        self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('crm.lead')

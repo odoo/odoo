@@ -64,8 +64,8 @@ class RecurrenceRule(models.Model):
 
     def _write_events(self, values, dtstart=None):
         values.pop('google_id', False)
-        # If only some events are updated, sync those events.
-        values['need_sync'] = bool(dtstart)
+        # Events will be updated by patch requests, do not sync events for avoiding spam.
+        values['need_sync'] = False
         return super()._write_events(values, dtstart=dtstart)
 
     def _cancel(self):
@@ -111,13 +111,13 @@ class RecurrenceRule(models.Model):
                 if attendee[2].get('displayName') and not partner.name:
                     partner.name = attendee[2].get('displayName')
 
+        organizers_partner_ids = [event.user_id.partner_id for event in self.calendar_event_ids if event.user_id]
         for odoo_attendee_email in set(existing_attendees.mapped('email')):
-            # Remove old attendees. Sometimes, several partners have the same email.
+            # Sometimes, several partners have the same email. Remove old attendees except organizer, otherwise the events will disappear.
             if email_normalize(odoo_attendee_email) not in emails:
-                attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email))
+                attendees = existing_attendees.exists().filtered(lambda att: att.email == email_normalize(odoo_attendee_email) and att.partner_id not in organizers_partner_ids)
                 self.calendar_event_ids.write({'need_sync': False, 'partner_ids': [Command.unlink(att.partner_id.id) for att in attendees]})
 
-        # Update the recurrence values
         old_event_values = self.base_event_id and self.base_event_id.read(base_event_time_fields)[0]
         if old_event_values and any(new_event_values[key] != old_event_values[key] for key in base_event_time_fields):
             # we need to recreate the recurrence, time_fields were modified.

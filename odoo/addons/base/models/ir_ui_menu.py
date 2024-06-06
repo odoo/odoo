@@ -21,6 +21,7 @@ class IrUiMenu(models.Model):
     _description = 'Menu'
     _order = "sequence,id"
     _parent_store = True
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Menu', required=True, translate=True)
     active = fields.Boolean(default=True)

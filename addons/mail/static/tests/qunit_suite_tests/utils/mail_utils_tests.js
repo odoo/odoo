@@ -8,7 +8,7 @@ QUnit.module('mail', {}, function () {
 QUnit.module('Mail utils');
 
 QUnit.test('add_link utility function', function (assert) {
-    assert.expect(19);
+    assert.expect(27);
 
     var testInputs = {
         'http://admin:password@example.com:8/%2020': true,
@@ -22,6 +22,14 @@ QUnit.test('add_link utility function', function (assert) {
         'https://www.transifex.com/odoo/odoo-11/translate/#fr/$/119303430?q=text%3ATartiflette': true,
         'https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250': true,
         'http://www.boîtenoire.be': true,
+        // Subdomain different than `www` with long domain name
+        'https://xyz.veryveryveryveryverylongdomainname.com/example': true,
+        // Two subdomains
+        'https://abc.xyz.veryveryveryveryverylongdomainname.com/example': true,
+        // Long domain name with www
+        'https://www.veryveryveryveryverylongdomainname.com/example': true,
+        // Subdomain with numbers
+        'https://www.45017478-master-all.runbot134.odoo.com/web': true,
     };
 
     _.each(testInputs, function (willLinkify, content) {

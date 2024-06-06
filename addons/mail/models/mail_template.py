@@ -221,7 +221,7 @@ class MailTemplate(models.Model):
             partner_to = values.pop('partner_to', '')
             if partner_to:
                 # placeholders could generate '', 3, 2 due to some empty field values
-                tpl_partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
+                tpl_partner_ids = [int(pid.strip()) for pid in partner_to.split(',') if (pid and pid.strip().isdigit())]
                 partner_ids += self.env['res.partner'].sudo().browse(tpl_partner_ids).exists().ids
             results[res_id]['partner_ids'] = partner_ids
         return results

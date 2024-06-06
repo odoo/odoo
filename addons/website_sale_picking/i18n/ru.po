@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Evgeniia Kotova, 2022
-# Irina Fedulova <istartlin@gmail.com>, 2022
 # ILMIR <karamov@it-projects.info>, 2022
 # Martin Trigaux, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,11 +29,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
+"<i>Ваш заказ сохранен.</i> Пожалуйста, приходите в магазин, чтобы оплатить "
+"товар"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Сбор на месте)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -43,24 +45,26 @@ msgstr "Конфигурационные настройки"
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_payment_provider__custom_mode
 msgid "Custom Mode"
-msgstr ""
+msgstr "Пользовательский режим"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr ""
+msgstr "Настройте места сбора"
 
 #. module: website_sale_picking
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
 msgstr ""
+"Если вы считаете, что это ошибка, пожалуйста, свяжитесь с администратором "
+"сайта."
 
 #. module: website_sale_picking
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
@@ -69,17 +73,15 @@ msgstr ""
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
 msgid "On Site"
-msgstr ""
+msgstr "Сайт %d"
 
 #. module: website_sale_picking
-#: model:product.product,name:website_sale_picking.onsite_delivery_product
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Сбор на месте"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
-#: model_terms:product.product,description:website_sale_picking.onsite_delivery_product
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in store when picking the product"
 msgstr ""
@@ -94,12 +96,12 @@ msgstr "Платежный агент"
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr ""
+msgstr "Выбор мест"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Забрать в магазине"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
@@ -112,16 +114,11 @@ msgid "Shipping Methods"
 msgstr "Методы доставки"
 
 #. module: website_sale_picking
+#. odoo-python
 #: code:addons/website_sale_picking/models/delivery_carrier.py:0
 #, python-format
 msgid "The picking site and warehouse must share the same company"
-msgstr ""
-
-#. module: website_sale_picking
-#: model:product.product,uom_name:website_sale_picking.onsite_delivery_product
-#: model:product.template,uom_name:website_sale_picking.onsite_delivery_product_product_template
-msgid "Units"
-msgstr "Единицы"
+msgstr "Место комплектации и склад должны находиться в одной компании"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__warehouse_id
@@ -134,10 +131,12 @@ msgid "Website"
 msgstr "Вебсайт"
 
 #. module: website_sale_picking
+#. odoo-python
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
 msgstr ""
+"Вы не можете оплатить на месте, если доставка осуществляется не на месте"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -147,7 +146,7 @@ msgstr "Ваш платеж был подтвержден."
 #. module: website_sale_picking
 #: model_terms:payment.provider,cancel_msg:website_sale_picking.payment_provider_onsite
 msgid "Your payment has been cancelled."
-msgstr ""
+msgstr "Ваш платеж был отменен."
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,done_msg:website_sale_picking.payment_provider_onsite
@@ -157,4 +156,4 @@ msgstr ""
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[На сайте Pick] Мой магазин 1"

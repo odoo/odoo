@@ -8,6 +8,7 @@ import requests
 from werkzeug.urls import url_quote
 from base64 import b64encode
 from odoo.addons.account.tools import LegacyHTTPAdapter
+from json.decoder import JSONDecodeError
 
 from odoo import api, models, _
 from odoo.tools.float_utils import json_float_round
@@ -54,16 +55,18 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'warning'
             }
         if not request_response.ok:
-            response_data = request_response.json()
-            if isinstance(response_data, dict) and response_data.get('error'):
+            try:
+                response_data = request_response.json()
+            except JSONDecodeError as ex:
                 return {
-                    'error': response_data.get('error', _('Unknown error')),
+                    'error': str(ex),
                     'blocking_level': 'error'
                 }
-            return {
-                'error': request_response.reason,
-                'blocking_level': 'error'
-            }
+            if response_data and response_data.get('error'):
+                return {
+                    'error': response_data.get('error'),
+                    'blocking_level': 'error'
+                }
         return {'response': request_response}
 
     @api.model
@@ -246,7 +249,7 @@ class AccountEdiFormat(models.Model):
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
             line_tax_details = tax_data.get(line, {})
             price_unit = self._l10n_eg_edi_round(abs((line.balance / line.quantity) / (1 - (line.discount / 100.0)))) if line.quantity and line.discount != 100.0 else line.price_unit
-            price_subtotal_before_discount = self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100)))) if line.discount != 100.0 else price_unit * line.quantity
+            price_subtotal_before_discount = self._l10n_eg_edi_round(abs(line.balance / (1 - (line.discount / 100)))) if line.discount != 100.0 else self._l10n_eg_edi_round(price_unit * line.quantity)
             discount_amount = self._l10n_eg_edi_round(price_subtotal_before_discount - abs(line.balance))
             item_code = line.product_id.l10n_eg_eta_code or line.product_id.barcode
             lines.append({
@@ -272,7 +275,7 @@ class AccountEdiFormat(models.Model):
                         'taxType': tax['tax_repartition_line'].tax_id.l10n_eg_eta_code.split('_')[0].upper().upper(),
                         'amount': self._l10n_eg_edi_round(abs(tax['tax_amount'])),
                         'subType': tax['tax_repartition_line'].tax_id.l10n_eg_eta_code.split('_')[1].upper(),
-                        'rate': abs(tax['tax_repartition_line'].tax_id.amount),
+                        **({'rate': abs(tax['tax_repartition_line'].tax_id.amount)} if tax['tax_repartition_line'].tax_id.amount_type != 'fixed' else {}),
                     }
                 for tax_details in line_tax_details.get('tax_details', {}).values() for tax in tax_details.get('group_tax_details')
                 ],

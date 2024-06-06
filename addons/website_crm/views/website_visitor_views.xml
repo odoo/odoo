@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@id='w_visitor_visit_counter']" position="before">
                 <button name="%(website_crm.crm_lead_action_from_visitor)d" type="action" class="oe_stat_button" icon="fa-star"
-                        attrs="{'invisible': [('lead_count', '=', 0)]}">
+                        groups="sales_team.group_sale_salesman" attrs="{'invisible': [('lead_count', '=', 0)]}">
                     <field name="lead_count" widget="statinfo" string="Leads"/>
                 </button>
             </xpath>
@@ -48,7 +48,7 @@
                 <field name="lead_count"/>
             </field>
             <xpath expr="//div[@id='o_page_count']" position="after">
-                <div t-if="record.lead_count.raw_value">
+                <div t-if="record.lead_count.raw_value" groups="sales_team.group_sale_salesman">
                     Leads / Opportunities
                     <span class="float-end fw-bold">
                         <field name="lead_count"/>
@@ -56,7 +56,7 @@
                 </div>
             </xpath>
             <xpath expr="//div[@id='wvisitor_visited_page']" position="after">
-                <div class="col-lg col-sm-4 col-6 py-0 my-2">
+                <div class="col-lg col-sm-4 col-6 py-0 my-2" groups="sales_team.group_sale_salesman">
                     <span t-att-class="record.lead_count.raw_value ? 'fw-bold' : 'text-muted'">
                         <field name="lead_count"/>
                     </span>

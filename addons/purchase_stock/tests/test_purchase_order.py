@@ -4,8 +4,10 @@ import re
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
@@ -212,6 +214,9 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         self.assertEqual(po1.order_line.qty_received, 5)
 
+        with self.assertRaises(UserError, msg="Shouldn't allow ordered qty be lower than received"):
+            po1.order_line.product_qty = po1.order_line.qty_received - 0.01
+
         # Deliver 15 instead of 10.
         po1.write({
             'order_line': [
@@ -222,6 +227,16 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # A new move of 10 unit (15 - 5 units)
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_ids.product_qty, 10)
+
+        # Modify after invoicing
+        po1.action_create_invoice()
+        self.assertEqual(po1.order_line.qty_invoiced, 15)
+        self.assertFalse(po1.invoice_ids.activity_ids)
+        po1.order_line.product_qty = 14.99
+        self.assertTrue(
+            po1.invoice_ids.activity_ids,
+            "Lowering product qty below invoiced qty should schedule an activity",
+        )
 
     def test_04_update_date_planned(self):
         today = datetime.today().replace(hour=9, microsecond=0)
@@ -398,7 +413,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
 
         purchase_order = self.env['purchase.order'].create({
-            'partner_id': self.env.ref('base.res_partner_3').id,
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
                 'name': super_product.name,
                 'product_id': super_product.id,
@@ -630,3 +645,117 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quant})
         wizard.action_apply()
         self.assertEqual(quant.quantity, 5)
+
+    def test_po_edit_after_receive(self):
+        self.po = self.env['purchase.order'].create(self.po_vals)
+        self.po.button_confirm()
+        self.po.picking_ids.move_ids.quantity_done = 5
+        self.po.picking_ids.button_validate()
+        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0])
+        self.po.with_context(import_file=True).order_line[0].product_qty = 10
+        self.assertEqual(self.po.picking_ids.move_ids.mapped('product_uom_qty'), [5.0, 5.0, 5.0])
+
+    def test_receive_returned_product_without_po_update(self):
+        """
+        Receive again the returned qty, but with the option "Update PO" disabled
+        At the end, the received qty of the POL should be correct
+        """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.quantity_done = 5
+        receipt01.button_validate()
+
+        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=receipt01.ids, active_id=receipt01.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.to_refund = False
+        res = wizard.create_returns()
+
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        return_pick.move_ids.quantity_done = 5
+        return_pick.button_validate()
+
+        wizard = Form(self.env['stock.return.picking'].with_context(active_ids=return_pick.ids, active_id=return_pick.id, active_model='stock.picking')).save()
+        wizard.product_return_moves.to_refund = False
+        res = wizard.create_returns()
+
+        receipt02 = self.env['stock.picking'].browse(res['res_id'])
+        receipt02.move_ids.quantity_done = 5
+        receipt02.button_validate()
+
+        self.assertEqual(po.order_line[0].qty_received, 5)
+        self.assertEqual(po.order_line[1].qty_received, 5)
+
+    def test_receive_qty_invoiced_but_no_posted(self):
+        """
+        Create a purchase order, confirm it, invoice it, but don't post the invoice.
+        Receive the products.
+        """
+        self.product_id_1.type = 'product'
+        self.product_id_1.categ_id.property_cost_method = 'average'
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.button_confirm()
+        self.assertEqual(po.order_line[0].product_id, self.product_id_1)
+        # Invoice the PO
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        self.assertTrue(invoice)
+        # Receive the products
+        receipt01 = po.picking_ids
+        action = receipt01.button_validate()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+        self.assertEqual(po.order_line[0].qty_received, 5)
+        self.assertEqual(po.order_line[0].price_unit, 500)
+        layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product_id_1.id)])
+        self.assertEqual(len(layers), 1)
+        self.assertEqual(layers.quantity, 5)
+        self.assertEqual(layers.value, 2500)
+
+    def test_stock_picking_type_for_deliveries_generated_from_po(self):
+        """
+        Checks that the stock picking type of a PO generated by an orderpoint
+        influence the destination of the delivery, if the stock picking type
+        is more precise than the orderpoint.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'type': 'product',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_a.id,
+                'price': 100.0,
+            })]
+        })
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        intermediate_location = self.env['stock.location'].create([{
+            'name': 'intermediate Location',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        }])
+        sub_location = self.env['stock.location'].create([{
+            'name': 'Sub Location',
+            'usage': 'internal',
+            'location_id': intermediate_location.id,
+        }])
+        super_receipt = self.env['stock.picking.type'].create({
+            'name': 'Super receipt',
+            'code': 'incoming',
+            'sequence_code': 'SR',
+            'default_location_src_id': self.env.ref("stock.stock_location_suppliers").id,
+            'default_location_dest_id': sub_location.id,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'qty_to_order': 1.0,
+            'location_id': stock_location.id
+        })
+        orderpoint.action_replenish()
+        po = self.env['purchase.order'].search([("product_id", "=", product.id)], limit=1)
+        po.picking_type_id = super_receipt
+        po.button_confirm()
+        picking = po.picking_ids
+        self.assertEqual(picking.location_dest_id, sub_location)
+        stock_move = picking.move_line_ids
+        self.assertEqual(stock_move.location_dest_id, sub_location)
+        stock_move.qty_done = 1.0
+        picking.button_validate()
+        self.assertEqual(picking.move_line_ids.location_dest_id, sub_location)

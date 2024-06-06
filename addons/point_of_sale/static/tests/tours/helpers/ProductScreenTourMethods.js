@@ -162,6 +162,55 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        scan_barcode(barcode) {
+            return [
+                {
+                    content: `input barcode '${barcode}'`,
+                    trigger: "input.ean",
+                    run: `text ${barcode}`,
+                },
+                {
+                    content: `button scan barcode '${barcode}'`,
+                    trigger: "li.barcode",
+                    run: 'click',
+                }
+            ];
+        }
+        scan_ean13_barcode(barcode) {
+            return [
+                {
+                    content: `input barcode '${barcode}'`,
+                    trigger: "input.ean",
+                    run: `text ${barcode}`,
+                },
+                {
+                    content: `button scan EAN-13 barcode '${barcode}'`,
+                    trigger: "li.custom_ean",
+                    run: 'click',
+                }
+            ];
+        }
+        clickLotIcon() {
+            return [
+                {
+                    content: 'click lot icon',
+                    trigger: '.line-lot-icon',
+                },
+            ];
+        }
+        enterLotNumber(number) {
+            return [
+                {
+                    content: 'enter lot number',
+                    trigger: '.list-line-input:first()',
+                    run: 'text ' + number,
+                },
+                {
+                    content: 'click validate lot number',
+                    trigger: '.popup .button.confirm',
+                }
+            ];
+        }
     }
 
     class Check {
@@ -287,6 +336,29 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     content: `discount original price is shown`,
                     trigger: `s:contains('${original_price}')`,
                     run: function () {},
+                },
+            ];
+        }
+        checkFirstLotNumber(number) {
+            return [
+                {
+                    content: 'Check lot number',
+                    trigger: `.list-line-input:propValue('${number}')`,
+                    run: () => {}, // it's a check
+                },
+            ];
+        }
+        checkOrderlinesNumber(number) {
+            return [
+                {
+                    content: `check orderlines number`,
+                    trigger: `.order .orderlines .orderline`,
+                    run: () => {
+                        const orderline_amount = $('.order .orderlines .orderline').length;
+                        if (orderline_amount !== number) {
+                            throw new Error(`Expected ${number} orderlines, got ${orderline_amount}`);
+                        }
+                    },
                 },
             ];
         }

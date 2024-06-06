@@ -78,10 +78,10 @@ odoo.define('hr_work_entry_contract.WorkEntryControllerMixin', function(require)
             var self = this;
             return this._rpc({
                 model: 'hr.employee',
-                method: 'generate_work_entries',
+                method: 'generate_work_entries_web',
                 args: [[], time.date_to_str(this.firstDay), time.date_to_str(this.lastDay)],
-            }).then(function (new_work_entries) {
-                if (new_work_entries) {
+            }).then(function (new_work_entries_ids) {
+                if (new_work_entries_ids.length > 0) {
                     self.reload();
                 }
             });

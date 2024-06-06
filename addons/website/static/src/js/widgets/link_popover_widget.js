@@ -2,7 +2,12 @@
 
 import weWidgets from 'wysiwyg.widgets';
 import {_t} from 'web.core';
+import { browser } from "@web/core/browser/browser";
+
 weWidgets.LinkPopoverWidget.include({
+    events: Object.assign({}, weWidgets.LinkPopoverWidget.prototype.events, {
+        'click .o_we_full_url, .o_we_url_link': '_onPreviewLinkClick',
+    }),
     /**
      * @override
      */
@@ -19,6 +24,27 @@ weWidgets.LinkPopoverWidget.include({
 
         return this._super(...arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Opens website page links in backend mode by forcing the '/@/' controller.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    async _onPreviewLinkClick(ev) {
+        if (this.target.href) {
+            const currentUrl = new URL(this.target.href);
+            if (window.location.hostname === currentUrl.hostname && !currentUrl.pathname.startsWith('/@/')) {
+                ev.preventDefault();
+                currentUrl.pathname = `/@${currentUrl.pathname}`;
+                browser.open(currentUrl);
+            }
+        }
+    }
 });
 
 const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({

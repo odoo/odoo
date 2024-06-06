@@ -269,6 +269,13 @@ export class Dropdown extends Component {
     }
 
     /**
+     * Return true if both active element are same.
+     */
+    isInActiveElement() {
+        return this.ui.activeElement === this.myActiveEl;
+    }
+
+    /**
      * Used to close ourself on outside click.
      *
      * @param {MouseEvent} ev
@@ -279,7 +286,7 @@ export class Dropdown extends Component {
             return;
         }
         // Return if it's a different ui active element
-        if (this.ui.activeElement !== this.myActiveEl) {
+        if (!this.isInActiveElement()) {
             return;
         }
 
