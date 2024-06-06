@@ -255,7 +255,7 @@ QUnit.test("PIVOT with multiple row groups", async function (assert) {
     // prettier-ignore
     assert.deepEqual(getEvaluatedGrid(model, "A1:D11", firstSheetId), [
         [null,          "xphone",       "xpad",         "Total"],
-        ["Foo",         "Probability",  "Probability",  "Probability"],
+        [null,         "Probability",  "Probability",  "Probability"],
         [1,             "",             11,             11],
         [2,             "",             11,             11],
         [2,             "",             15,             15],
