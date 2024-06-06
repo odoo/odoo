@@ -1,6 +1,7 @@
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
+import { Transition } from "@web/core/transition";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
@@ -12,17 +13,20 @@ import {
     useExternalListener,
     useEffect,
     useRef,
+    useState,
     onWillUnmount,
 } from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
 
+const SWIPE_ACTIVATION_THRESHOLD = 100;
+
 export class MenuDropdown extends Dropdown {}
 
 export class NavBar extends Component {
     static template = "web.NavBar";
-    static components = { Dropdown, DropdownItem, DropdownGroup, MenuDropdown, ErrorHandler };
+    static components = { Dropdown, DropdownItem, DropdownGroup, MenuDropdown, ErrorHandler, Transition };
     static props = {};
 
     setup() {
@@ -58,6 +62,11 @@ export class NavBar extends Component {
             },
             () => [adaptCounter]
         );
+
+        this.state = useState({
+            isAllAppsMenuOpened: false,
+            isAppMenuSidebarOpened: false,
+        });
     }
 
     handleItemError(error, item) {
@@ -193,5 +202,34 @@ export class NavBar extends Component {
 
     getMenuItemHref(payload) {
         return `/odoo/${payload.actionPath || "action-" + payload.actionID}`;
+    }
+
+    _closeAppMenuSidebar() {
+        this.state.isAllAppsMenuOpened = false;
+        this.state.isAppMenuSidebarOpened = false;
+    }
+    _openAppMenuSidebar() {
+        this.state.isAppMenuSidebarOpened = !this.state.isAppMenuSidebarOpened;
+    }
+    onAllAppsBtnClick() {
+        this.state.isAllAppsMenuOpened = !this.state.isAllAppsMenuOpened;
+    }
+    async _onMenuClicked(menu) {
+        await this.menuService.selectMenu(menu);
+        this._closeAppMenuSidebar();
+    }
+    _onSwipeStart(ev) {
+        this.swipeStartX = ev.changedTouches[0].clientX;
+    }
+    _onSwipeEnd(ev) {
+        if (!this.swipeStartX) {
+            return;
+        }
+        const deltaX = this.swipeStartX - ev.changedTouches[0].clientX;
+        if (deltaX < SWIPE_ACTIVATION_THRESHOLD) {
+            return;
+        }
+        this._closeAppMenuSidebar();
+        this.swipeStartX = null;
     }
 }
