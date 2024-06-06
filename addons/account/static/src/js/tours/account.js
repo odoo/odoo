@@ -18,6 +18,7 @@ export const accountTourSteps = {
             {
                 trigger: "button.o_list_button_add",
                 content: _t("Now, we'll create your first invoice"),
+                run: "click",
             },
         ];
     },
