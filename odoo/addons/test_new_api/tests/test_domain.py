@@ -1,13 +1,15 @@
+from datetime import date, datetime
 from itertools import combinations
 
-from odoo import Command
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
-from odoo.tools import SQL
+from odoo.fields import Command, Domain
+from odoo.tests import TransactionCase
+from odoo.tools import SQL, OrderedSet
 
 
 class TestDomain(TransactionExpressionCase):
 
-    def _search(self, model, domain, init_domain=None, test_complement=False):
+    def _search(self, model, domain, init_domain=Domain.TRUE, test_complement=False):
         # just overwrite the defaults here, because we test complements manually
         return super()._search(model, domain, init_domain, test_complement)
 
@@ -354,3 +356,372 @@ class TestDomainComplement(TransactionExpressionCase):
         self._search(Model, [('number2', '>', 3)])
         self._search(Model, [('number2', '<', 1)])
         self._search(Model, [('number2', '<=', 1)])
+
+
+class TestDomainOptimize(TransactionCase):
+    number_domain = Domain('number', '>', 5)
+
+    def test_bool_optimize(self):
+        model = self.env['test_new_api.mixed']
+        self.assertIs(Domain.TRUE._optimize(model), Domain.TRUE)
+        self.assertIs(Domain.FALSE._optimize(model), Domain.FALSE)
+
+    def test_condition_build(self):
+        # the terms do not change during the build of the condition
+        dom = Domain('a', '=', 1)
+        self.assertEqual((dom.field_expr, dom.operator, dom.value), ('a', '=', 1))
+
+        dom = Domain('a', '=', [1, 2])
+        self.assertEqual((dom.field_expr, dom.operator, dom.value), ('a', '=', [1, 2]))
+        self.assertEqual(Domain('a', 'in', 5).value, 5)
+        self.assertEqual(Domain('a', '=', []).value, [], "Edge-case, caller probably meant =False")
+
+        self.assertEqual(Domain('a', 'in', Domain.TRUE).operator, 'in')
+        self.assertIsInstance(Domain('a', 'any', [('x', '>', 1)]).value, list)
+
+    def test_condition_optimize_optimal(self):
+        model = self.env['test_new_api.mixed']
+        domain = self.number_domain
+        self.assertIs(domain._optimize(model), domain, "Domain is already optimized")
+
+    def test_condition_optimize_invalid_field(self):
+        model = self.env['test_new_api.mixed']
+        domain = Domain("xxx_inexisting", "=", False)
+        with self.assertRaises(ValueError):
+            # fields must be validated
+            domain._optimize(model)
+
+    def test_condition_optimize_search(self):
+        model = self.env['test_new_api.bar']
+        foo = model.foo.create({"name": "ok"})
+        self.assertEqual(
+            Domain('foo', '=', foo.id)._optimize(model),
+            Domain('name', 'in', ["ok"])._optimize(model),
+        )
+        self.assertEqual(
+            Domain('foo', 'in', foo.browse().ids)._optimize(model),
+            Domain.FALSE,
+            "search should be further optimized",
+        )
+
+    def test_condition_optimize_traverse(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain('currency_id.id', '>', 5)._optimize(model),
+            Domain('currency_id', 'any', Domain('id', '>', 5)),
+        )
+        self.assertEqual(
+            (~Domain('currency_id.id', '>', 5))._optimize(model),
+            Domain('currency_id', 'not any', Domain('id', '>', 5)),
+        )
+
+    def test_condition_optimize_in(self):
+        model = self.env['test_new_api.mixed']
+        domain = Domain('id', 'in', range(5))._optimize(model)
+        self.assertIsInstance(domain.value, OrderedSet)
+        domain = Domain('id', 'in', [9, 99])._optimize(model)
+        self.assertIsInstance(domain.value, list)
+        self.assertIs(domain._optimize(model), domain, "Idempotent")
+
+        self.assertEqual(
+            Domain('id', 'in', [])._optimize(model),
+            Domain.FALSE,
+        )
+        self.assertEqual(
+            Domain('id', 'not in', [])._optimize(model),
+            Domain.TRUE,
+        )
+
+    def test_condition_optimize_any(self):
+        model = self.env['test_new_api.mixed']
+
+        domain = Domain('currency_id', 'any', model.currency_id._search([]))
+        self.assertIs(domain._optimize(model), domain, "Idempotent with a Query value")
+
+        self.assertEqual(
+            Domain('currency_id', 'any', Domain.FALSE)._optimize(model),
+            Domain.FALSE,
+        )
+        self.assertEqual(
+            Domain('currency_id', 'not any', Domain.FALSE)._optimize(model),
+            Domain.TRUE,
+        )
+        self.assertEqual(
+            Domain('currency_id', 'any', Domain('id', 'not in', []))._optimize(model),
+            Domain('currency_id', 'any', Domain.TRUE),
+            "optimize the domain"
+        )
+
+        domain = Domain('currency_id', 'any', Domain('id', 'in', [1]))._optimize(model)
+        self.assertIs(domain._optimize(model), domain, "Idempotent")
+
+    def test_condition_optimize_any_non_relational(self):
+        model = self.env['test_new_api.mixed']
+        domain = Domain('number', 'any', Domain('id', '>', 0))
+        with self.assertRaises(ValueError):
+            domain._optimize(model)
+
+    def test_condition_optimize_any_id(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain('id', 'any', self.number_domain)._optimize(model),
+            self.number_domain,
+        )
+        self.assertEqual(
+            Domain('id', 'not any', self.number_domain)._optimize(model),
+            (~self.number_domain)._optimize(model),
+        )
+
+    def test_condition_optimize_like(self):
+        model = self.env['test_new_api.message']
+        domain = Domain('name', 'like', 'ok')
+        self.assertIs(
+            domain._optimize(model),
+            domain, "Idempotent"
+        )
+
+        self.assertEqual(
+            Domain('name', 'like', '')._optimize(model),
+            Domain.TRUE, "Matching anything"
+        )
+        self.assertEqual(
+            Domain('name', 'not like', '')._optimize(model),
+            Domain.FALSE, "Matching nothing"
+        )
+        self.assertEqual(
+            Domain('name', '=like', '')._optimize(model),
+            Domain('name', '=', False)._optimize(model),
+            "Matching empty string only"
+        )
+        self.assertEqual(
+            Domain('name', 'like', 5)._optimize(model),
+            Domain('name', 'like', "5"),
+            "Convert to str type for like matching"
+        )
+
+    def test_condition_optimize_like_relational(self):
+        model = self.env['test_new_api.message']
+        self.assertEqual(
+            Domain('discussion', 'like', '')._optimize(model),
+            Domain('discussion', '!=', False),
+            "Matching anything in relation",
+        )
+        query = model.discussion._search([('display_name', 'like', 'ok')])
+        domain = Domain('discussion', 'like', 'ok')._optimize(model)
+        self.assertEqual(domain.operator, 'any')
+        self.assertEqual(domain.value.select().code, query.select().code)
+
+        domain = Domain('discussion', 'not like', 'ok')._optimize(model)
+        self.assertEqual(
+            domain.operator, 'not any',
+            f"Always use positive operator when searching on display_name; in {domain}"
+        )
+
+    def test_condition_optimize_bool(self):
+        model = self.env['test_new_api.message']
+        is_important = Domain('important', 'in', OrderedSet([True]))
+        self.assertIs(
+            is_important._optimize(model),
+            is_important, "Idempotent optimization"
+        )
+        self.assertEqual(
+            Domain('important', '=', True)._optimize(model),
+            Domain('important', '=', True),
+        )
+        self.assertEqual(
+            Domain('important', 'not in', [True, False])._optimize(model),
+            Domain.FALSE,
+        )
+        self.assertEqual(
+            Domain('important', 'in', [True, "yes"])._optimize(model),
+            is_important,
+        )
+        self.assertEqual(
+            Domain('important', 'in', ["yes"])._optimize(model),
+            is_important,
+        )
+        self.assertEqual(
+            Domain('important', 'in', [0, 2])._optimize(model),
+            Domain.TRUE,
+        )
+
+    def test_condition_optimize_date(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain('date', '=', '2024-01-05')._optimize(model),
+            Domain('date', '=', date(2024, 1, 5)),
+        )
+        self.assertEqual(
+            Domain('date', '=like', '2024%')._optimize(model),
+            Domain('date', '=like', '2024%'),
+        )
+        self.assertEqual(
+            Domain('date', '>', '2024-01-01')._optimize(model),
+            Domain('date', '>', date(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('date', '>', False)._optimize(model),
+            Domain.FALSE,
+        )
+        # TODO should >= False become = False?
+        self.assertEqual(
+            Domain('date', 'not in', ['2024-01-05', date(2023, 1, 1)])._optimize(model),
+            Domain('date', 'not in', OrderedSet([date(2024, 1, 5), date(2023, 1, 1)])),
+        )
+
+        with self.assertRaises(ValueError):
+            Domain('date', '>', 'hello')._optimize(model)
+
+    def test_condition_optimize_datetime(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain('moment', '=', '2024-01-05')._optimize(model),
+            Domain('moment', '=', datetime(2024, 1, 5)),
+        )
+        self.assertEqual(
+            Domain('moment', '=like', '2024%')._optimize(model),
+            Domain('moment', '=like', '2024%'),
+        )
+        self.assertEqual(
+            Domain('moment', '>', '2024-01-01 10:00:00')._optimize(model),
+            Domain('moment', '>', datetime(2024, 1, 1, 10)),
+        )
+        self.assertEqual(
+            Domain('moment', '>', '2024-01-01')._optimize(model),
+            Domain('moment', '>=', datetime(2024, 1, 2)),
+        )
+        self.assertEqual(
+            Domain('moment', '<', '2024-01-01')._optimize(model),
+            Domain('moment', '<', datetime(2024, 1, 1)),
+        )
+        self.assertEqual(
+            Domain('moment', '<=', '2024-01-01')._optimize(model),
+            Domain('moment', '<', datetime(2024, 1, 2)),
+        )
+        self.assertEqual(
+            Domain('moment', '>', False)._optimize(model),
+            Domain.FALSE,
+        )
+        self.assertEqual(
+            Domain('moment', 'not in', ['2024-01-05', datetime(2023, 1, 1)])._optimize(model),
+            Domain('moment', 'not in', OrderedSet([datetime(2024, 1, 5), datetime(2023, 1, 1)])),
+        )
+
+        with self.assertRaises(ValueError):
+            Domain('moment', '>', 'hello')._optimize(model)
+
+    def test_condition_optimize_maybe_eq(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain('number', '=?', 5)._optimize(model),
+            Domain('number', '=', 5)._optimize(model),
+        )
+        self.assertEqual(
+            Domain('number', '=?', 0)._optimize(model),
+            Domain.TRUE,
+        )
+
+    def test_condition_optimize_child_parent_of(self):
+        model = self.env['test_new_api.category']
+        categ = model.create({'name': 'parent'})
+        categ_child = model.create({'name': 'child', 'parent': categ.id})
+        self.assertEqual(
+            Domain('id', 'child_of', categ.ids)._optimize(model),
+            Domain('parent_path', '=like', f"{categ.parent_path}%"),
+        )
+        self.assertEqual(
+            Domain('id', 'parent_of', categ_child.ids)._optimize(model),
+            Domain('id', 'in', OrderedSet([categ_child.id, categ.id])),
+        )
+
+    def test_not_optimize(self):
+        # optimizations are tested with nary
+        self.assertEqual(
+            ~~self.number_domain,
+            self.number_domain,
+        )
+
+    def test_nary_build(self):
+        self.assertEqual(
+            ~(self.number_domain & self.number_domain),
+            ~self.number_domain | ~self.number_domain
+        )
+        self.assertEqual(
+            ~(self.number_domain | self.number_domain),
+            ~self.number_domain & ~self.number_domain
+        )
+
+    def test_nary_optimize_sort(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            Domain.AND([
+                Domain('number', '=', 5),
+                Domain('date', 'like', "2024"),
+                Domain('date', '!=', False),
+                Domain('number', '<', 99),
+                Domain('comment1', 'like', 'ok'),
+            ])._optimize(model),
+            Domain.AND([
+                Domain('comment1', 'like', 'ok'),
+                Domain('date', '!=', False),
+                Domain('date', 'like', "2024"),
+                Domain('number', '=', 5),
+                Domain('number', '<', 99),
+            ]),
+            "Optimization sorts by field and operator",
+        )
+
+    def test_nary_optimize_any(self):
+        model = self.env['test_new_api.discussion']
+
+        for field_name, left, right in [
+            # many2one
+            ('moderator', Domain('id', '>', 5), Domain('login', 'like', 'one')),
+            # many2many
+            ('categories', Domain('id', '>', 5), Domain('name', 'like', 'these')),
+            # one2many
+            ('messages', Domain('id', '>', 5), Domain('name', 'like', 'hello')),
+        ]:
+            field_type = model._fields[field_name].type
+            m2o = field_type == 'many2one'
+            left = left._optimize(model[field_name])
+            right = right._optimize(model[field_name])
+
+            with self.subTest(field_type=field_type):
+                self.assertEqual(
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', right))._optimize(model),
+                    Domain(field_name, 'any', left | right),
+                )
+                self.assertEqual(
+                    (Domain(field_name, 'any', left) & Domain(field_name, 'any', right))._optimize(model),
+                    Domain(field_name, 'any', left & right) if m2o
+                    else Domain(field_name, 'any', left) & Domain(field_name, 'any', right),
+                )
+                query = model[field_name]._search([])
+                self.assertEqual(
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right))._optimize(model),
+                    Domain(field_name, 'any', left | right) | Domain(field_name, 'any', query),
+                    "Don't merge query with domains",
+                )
+                self.assertEqual(
+                    (Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right))._optimize(model),
+                    Domain(field_name, 'not any', left & right) if m2o
+                    else Domain(field_name, 'not any', left) | Domain(field_name, 'not any', right),
+                )
+                self.assertEqual(
+                    (Domain(field_name, 'not any', left) & Domain(field_name, 'not any', right))._optimize(model),
+                    Domain(field_name, 'not any', left | right),
+                )
+
+                self.assertEqual(
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right))._optimize(model),
+                    (Domain(field_name, 'any', left) | Domain(field_name, 'not any', right)),
+                    "Do not merge any and not any",
+                )
+
+    def test_nary_optimize_same(self):
+        model = self.env['test_new_api.mixed']
+        self.assertEqual(
+            (self.number_domain & self.number_domain)._optimize(model),
+            self.number_domain
+        )

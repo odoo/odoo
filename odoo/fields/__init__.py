@@ -17,4 +17,6 @@ from odoo.orm.fields_properties import Properties, PropertiesDefinition
 from odoo.orm.fields_binary import Binary, Image
 
 from odoo.orm.commands import Command
+from odoo.orm.domains import Domain
 from odoo.orm.models import NO_ACCESS
+from odoo.orm.utils import get_field_name_from_expression
