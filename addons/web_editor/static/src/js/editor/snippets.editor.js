@@ -2781,6 +2781,10 @@ class SnippetsMenu extends Component {
             // we create editors for invisible elements when translating them,
             // we only want to toggle their visibility when the related sidebar
             // buttons are clicked).
+
+            // Before returning we still want to ensure existing editors are
+            // disabled. (Just as it is done within the Promise below.)
+            await this._disableAllEditors(previewMode);
             return;
         }
         const exec = previewMode
@@ -2808,19 +2812,7 @@ class SnippetsMenu extends Component {
                 }
 
                 // First disable all editors...
-                for (let i = this.snippetEditors.length; i--;) {
-                    const editor = this.snippetEditors[i];
-                    editor.toggleOverlay(false, previewMode);
-                    if (!previewMode) {
-                        const wasShown = !!await editor.toggleOptions(false);
-                        if (wasShown) {
-                            this._updateRightPanelContent({
-                                content: [],
-                                tab: SnippetsMenu.tabs.BLOCKS,
-                            });
-                        }
-                    }
-                }
+                await this._disableAllEditors(previewMode);
                 // ... then enable the right editor or look if some have been
                 // enabled previously by a click
                 let customize$Elements;
@@ -2860,6 +2852,25 @@ class SnippetsMenu extends Component {
                 return editorToEnable;
             });
         });
+    }
+
+    /**
+     * @private
+     */
+    async _disableAllEditors(previewMode) {
+        for (let i = this.snippetEditors.length; i--;) {
+            const editor = this.snippetEditors[i];
+            editor.toggleOverlay(false, previewMode);
+            if (!previewMode) {
+                const wasShown = !!await editor.toggleOptions(false);
+                if (wasShown) {
+                    this._updateRightPanelContent({
+                        content: [],
+                        tab: SnippetsMenu.tabs.BLOCKS,
+                    });
+                }
+            }
+        }
     }
     /**
      * @private

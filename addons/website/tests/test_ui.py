@@ -182,6 +182,34 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
         self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
 
+    def test_translate_hide_options(self):
+        lang_en = self.env.ref('base.lang_en')
+        french = self.env['res.lang'].create({
+            'name': 'French',
+            'code': 'fr_FR',
+            'iso_code': 'fr_FR',
+            'url_code': 'fr_FR',
+        })
+        self.env['res.lang']._activate_lang(french.code)
+        default_website = self.env.ref('website.default_website')
+        default_website.write({
+            'default_lang_id': lang_en.id,
+            'language_ids': [(6, 0, (lang_en + french).ids)],
+        })
+        new_menu = self.env['website.menu'].create({
+            'name': 'Menu to edit',
+            'parent_id': default_website.menu_id.id,
+            'website_id': default_website.id,
+            'url': '/englishURL',
+        })
+
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_hide_options', login='admin')
+
+        self.assertNotEqual(new_menu.name, 'value fr-FR',
+                            msg="The new menu should not have its value edited, only its translation")
+        self.assertEqual(new_menu.with_context(lang=french.code).name, 'value fr-FR',
+                         msg="The new translation should be set")
+
     def test_snippet_translation(self):
         ResLang = self.env['res.lang']
         parseltongue, fake_user_lang = ResLang.create([{
