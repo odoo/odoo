@@ -27,10 +27,7 @@ class AccountMove(models.Model):
                 and not move.l10n_ke_cu_qrcode
                 and move.state == 'posted'
                 and move.move_type in ['out_invoice', 'out_refund']
-                and (
-                    'l10n_ke_oscu_is_active' not in move.company_id
-                    or not move.company_id.l10n_ke_oscu_is_active
-                )
+                and not move.company_id.l10n_ke_oscu_is_active
             )
 
     # -------------------------------------------------------------------------
