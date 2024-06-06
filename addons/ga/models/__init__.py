@@ -12,3 +12,8 @@ from . import ga_paralelo
 from . import ga_paralelo_profesor
 from . import ga_ruta
 from . import ga_actividad_academica
+from . import ga_alumno
+from . import ga_apoderado
+from . import ga_registro_academico
+from . import ga_ruta_chofer
+from . import ga_inscripcion_alumno

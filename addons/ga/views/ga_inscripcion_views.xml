@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Define la vista tree para mostrar una lista de estudiantes -->
+        <record id="view_colegio_estudiante_tree" model="ir.ui.view">
+            <field name="name">colegio.estudiante.tree</field>
+            <field name="model">colegio.estudiante</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="edad"/>
+                    <field name="direccion"/>
+                    <!-- Agrega más campos si es necesario -->
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Define la acción para abrir la vista tree de estudiantes -->
+        <record id="action_colegio_estudiante_tree" model="ir.actions.act_window">
+            <field name="name">Estudiantes</field>
+            <field name="res_model">colegio.estudiante</field>
+            <field name="view_mode">tree</field>
+        </record>
+    </data>
+</odoo>
