@@ -2400,6 +2400,22 @@ we-select.o_we_border_preview_aligned_select {
                         display: none;
                     }
                 }
+
+                &.o_resizing_blocked {
+                    &::before {
+                        background: $o-we-color-danger
+                    }
+
+                    .o_handle_indicator {
+                        border-color: $o-we-color-danger;
+                    }
+
+                    &:hover, &:active {
+                        .o_handle_indicator {
+                            outline-color: $o-we-color-danger;
+                        }
+                    }
+                }
             }
 
             > .o_overlay_options_wrap {
