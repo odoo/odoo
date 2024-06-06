@@ -51,8 +51,11 @@ class AnalyticMixin(models.AbstractModel):
         if operator not in ('=', '!=', 'ilike', 'not ilike', 'in', 'not in'):
             raise UserError(_('Operation not supported'))
 
-        if operator in ('=', '!=') and isinstance(value, bool):
-            return super()._condition_to_sql(alias, fname, operator, value, query)
+        if operator in ('=', '!='):
+            if isinstance(value, bool):
+                return super()._condition_to_sql(alias, fname, operator, value, query)
+            value = [value]
+            operator = 'in' if operator == '=' else 'not in'
 
         if isinstance(value, str) and operator in ('=', '!=', 'ilike', 'not ilike'):
             value = list(self.env['account.analytic.account']._name_search(
