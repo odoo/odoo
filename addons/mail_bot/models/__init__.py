@@ -3,3 +3,4 @@
 from . import mail_bot
 from . import discuss_channel
 from . import res_users
+from . import mail_message

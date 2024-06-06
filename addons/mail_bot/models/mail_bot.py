@@ -31,7 +31,7 @@ class MailBot(models.AbstractModel):
                 body=answer,
                 message_type="comment",
                 silent=True,
-                subtype_xmlid="mail.mt_comment",
+                subtype_xmlid="mail.odoobot_comment",
             )
 
     @staticmethod
