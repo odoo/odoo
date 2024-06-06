@@ -127,4 +127,11 @@ export class ProductCard extends Component {
             },
         });
     }
+
+    get isHtmlEmpty() {
+        const div = Object.assign(document.createElement("div"), {
+            innerHTML: this.props.product.description_self_order,
+        });
+        return div.innerText.trim() === "";
+    }
 }
