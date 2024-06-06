@@ -32,7 +32,8 @@ tourUtils.checkSOLDescriptionContains("Service Product (Prepaid Hours)", ""),
 }, {
     content: 'Wait for the confirmation to finish. State should be "Sales Order"',
     trigger: '.o_field_widget[name=state] .o_arrow_button_current:contains("Sales Order")',
-}, stepUtils.toggleHomeMenu(),
+},
+...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 {
     trigger: 'button.o-kanban-button-new',
@@ -347,6 +348,6 @@ tourUtils.checkSOLDescriptionContains("Service Product (Prepaid Hours)", ""),
     trigger: '.o_controller_with_rightpanel',
     content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
 },
-stepUtils.toggleHomeMenu(),
+...stepUtils.toggleHomeMenu(),
 ...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 ]});

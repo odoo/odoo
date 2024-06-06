@@ -42,14 +42,14 @@ beforeEach(async () => {
     };
 });
 
-test("can be rendered", async () => {
+test.tags("desktop")("can be rendered", async () => {
     await mountWithCleanup(NavBar);
     expect(".o_navbar_apps_menu button.dropdown-toggle").toHaveCount(1, {
         message: "1 apps menu toggler present",
     });
 });
 
-test("dropdown menu can be toggled", async () => {
+test.tags("desktop")("dropdown menu can be toggled", async () => {
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".dropdown-menu").toHaveCount(1);
@@ -57,7 +57,7 @@ test("dropdown menu can be toggled", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 });
 
-test("href attribute on apps menu items", async () => {
+test.tags("desktop")("href attribute on apps menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -71,7 +71,7 @@ test("href attribute on apps menu items", async () => {
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/action-339");
 });
 
-test("href attribute with paht on apps menu items", async () => {
+test.tags("desktop")("href attribute with path on apps menu items", async () => {
     defineMenus([
         {
             id: "root",
@@ -246,7 +246,7 @@ test.tags("desktop")("data-menu-xmlid attribute on AppsMenu items", async () => 
     expect(".o-dropdown--menu .dropdown-item[data-menu-xmlid=menu_5]").toHaveCount(1);
 });
 
-test("navbar can display current active app", async () => {
+test.tags("desktop")("navbar can display current active app", async () => {
     await mountWithCleanup(NavBar);
     // Open apps menu
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();

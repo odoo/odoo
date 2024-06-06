@@ -1,6 +1,5 @@
 /** @odoo-module **/
 import * as hoot from "@odoo/hoot-dom";
-import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 /**
@@ -75,13 +74,21 @@ export const stepUtils = {
     },
 
     toggleHomeMenu() {
-        return {
-            isActive: ["enterprise"],
-            trigger: ".o_main_navbar .o_menu_toggle",
-            content: markup(_t("Click on the <i>Home icon</i> to navigate across apps.")),
-            tooltipPosition: "bottom",
-            run: "click",
-        };
+        return [
+            {
+                isActive: ["enterprise"],
+                trigger: ".o_main_navbar .o_menu_toggle",
+                content: _t("Click the top left corner to navigate across apps."),
+                tooltipPosition: "bottom",
+                run: "click",
+            },
+            {
+                isActive: ["mobile"],
+                trigger: ".o_sidebar_topbar a.btn-primary",
+                tooltipPosition: "right",
+                run: "click",
+            },
+        ];
     },
 
     autoExpandMoreButtons() {

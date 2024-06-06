@@ -46,7 +46,7 @@ export function computeAppsAndMenuItems(menuTree) {
                     // Could split in three parts?
                     item.webIcon = { iconClass, color, backgroundColor };
                 } else {
-                    item.webIconData = "/web_enterprise/static/img/default_icon_app.png";
+                    item.webIconData = "/web/static/img/default_icon_app.png";
                 }
             }
         } else {

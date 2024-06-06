@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import models
 
 
@@ -38,6 +40,8 @@ class IrUiMenu(models.Model):
                 }
             else:
                 action = menu['action']
+                web_icon = menu['web_icon']
+                web_icon_data = menu['web_icon_data']
 
                 if menu['id'] == menu['app_id']:
                     # if it's an app take action of first (sub)child having one defined
@@ -45,6 +49,22 @@ class IrUiMenu(models.Model):
                     while child and not action:
                         action = child['action']
                         child = menus[child['children'][0]] if child['children'] else False
+
+                    webIcon = menu.get('web_icon', '')
+                    webIconlist = webIcon and webIcon.split(',')
+                    iconClass = color = backgroundColor = None
+                    if webIconlist:
+                        if len(webIconlist) >= 2:
+                            iconClass, color = webIconlist[:2]
+                        if len(webIconlist) == 3:
+                            backgroundColor = webIconlist[2]
+
+                    if menu.get('web_icon_data'):
+                        web_icon_data = re.sub(r'\s/g', "", ('data:%s;base64,%s' % (menu['web_icon_data_mimetype'], menu['web_icon_data'])))
+                    elif backgroundColor is not None:  # Could split in three parts?
+                        web_icon = ",".join([iconClass or "", color or "", backgroundColor])
+                    else:
+                        web_icon_data = '/web/static/img/default_icon_app.png'
 
                 action_model, action_id = action.split(',') if action else (False, False)
                 action_id = int(action_id) if action_id else False
@@ -62,8 +82,8 @@ class IrUiMenu(models.Model):
                     "actionID": action_id,
                     "actionModel": action_model,
                     "actionPath": action_path,
-                    "webIcon": menu['web_icon'],
-                    "webIconData": menu['web_icon_data'],
+                    "webIcon": web_icon,
+                    "webIconData": web_icon_data,
                     "webIconDataMimetype": menu['web_icon_data_mimetype'],
                 }
 

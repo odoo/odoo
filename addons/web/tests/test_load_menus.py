@@ -27,7 +27,7 @@ class LoadMenusTests(HttpCase):
                 "id": self.menu.id,
                 "name": "test_menu",
                 "webIcon": False,
-                "webIconData": False,
+                "webIconData": "/web/static/img/default_icon_app.png",
                 "webIconDataMimetype": False,
                 "xmlid": ""
             },
