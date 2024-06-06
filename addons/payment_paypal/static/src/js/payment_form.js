@@ -93,10 +93,10 @@ paymentForm.include({
                     onApprove: function (data, actions) {
                         let order_id = data.orderID;
                         console.log("onApprove", data)
-                        return rpc("/payment/paypal/complete_order", JSON.stringify({
+                        return rpc("/payment/paypal/complete_order", {
                             "intent": intent,
                             "order_id": order_id
-                        }))
+                        })
                             .then((response) => response.json())
                             .then((order_details) => {
                                 console.log(order_details); //https://developer.paypal.com/docs/api/orders/v2/#orders_capture!c=201&path=create_time&t=response

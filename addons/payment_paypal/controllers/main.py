@@ -24,7 +24,8 @@ class PaypalController(http.Controller):
     _cancel_url = '/payment/paypal/cancel/'
     _webhook_url = '/payment/paypal/webhook/'
     _create_url = '/payment/paypal/create_order'
-    
+    _complete_url = '/payment/paypal/complete_order'
+
     @http.route(
         _create_url, type='json', auth='public', methods=['POST'], csrf=False,
         save_session=False
@@ -50,6 +51,26 @@ class PaypalController(http.Controller):
             response_content = paypal._paypal_make_request(
                 endpoint='/v2/checkout/orders',
                 payload=data,                
+            )
+        except Forbidden:
+            _logger.exception("Could not create transaction")
+
+        return response_content
+
+    @http.route(
+        _complete_url, type='json', auth='public', methods=['POST'], csrf=False,
+        save_session=False
+    )
+    def paypal_complete_order(self, **kwargs):
+        """ 
+         Creates an order and returns it as a JSON response.
+        """
+        # Make the payment request to Paypal
+        try:
+            paypal = request.env['payment.provider'].search([('code','=','paypal')],limit=1)
+            response_content = paypal._paypal_make_request(
+                endpoint='/v2/checkout/orders/' + kwargs['order_id'] + '/' + kwargs['intent'],
+                payload={},
             )
         except Forbidden:
             _logger.exception("Could not create transaction")
