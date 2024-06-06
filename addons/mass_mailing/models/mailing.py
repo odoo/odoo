@@ -732,8 +732,11 @@ class MassMailing(models.Model):
 
     def _action_view_documents_filtered(self, view_filter):
         def _fetch_trace_res_ids(trace_domain):
-            result = self.env['mailing.trace'].search_read(
-                domain=trace_domain, fields=['res_id'])
+            trace_domain = expression.AND([
+                trace_domain,
+                [('mass_mailing_id', '=', self.id)],
+            ])
+            result = self.env['mailing.trace'].search_read(domain=trace_domain, fields=['res_id'])
             return [line['res_id'] for line in result]
 
         model_name = self.env['ir.model']._get(self.mailing_model_real).display_name
