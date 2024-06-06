@@ -1,8 +1,12 @@
 /** @odoo-module */
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
-import { toNormalizedPivotValue } from "@spreadsheet/pivot/pivot_model";
 import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
-const { getFirstPivotFunction, getNumberOfPivotFunctions, pivotTimeAdapter } = helpers;
+const {
+    getFirstPivotFunction,
+    getNumberOfPivotFunctions,
+    pivotTimeAdapter,
+    toNormalizedPivotValue,
+} = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 function stringArg(value) {
