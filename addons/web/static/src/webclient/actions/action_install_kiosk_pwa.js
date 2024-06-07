@@ -8,7 +8,7 @@ import { Component, onWillStart } from "@odoo/owl";
  * Client action to use in a dialog to display the URL of a Kiosk, containing a
  * link to Install the corresponding PWA
  */
-class InstallKiosk extends Component {
+export class InstallKiosk extends Component {
     static template = "web.ActionInstallKioskPWA";
     static props = { ...standardActionServiceProps };
 

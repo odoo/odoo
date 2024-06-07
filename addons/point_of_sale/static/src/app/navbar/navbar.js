@@ -148,13 +148,15 @@ export class Navbar extends Component {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    action: "open",
-                    access_token: this.pos.config.access_token,
-                    id: this.pos.config.id,
+                    params: {
+                        action: "open",
+                        access_token: this.pos.config.access_token,
+                        pos_id: this.pos.config.id,
+                    },
                 }),
             })
                 .then(() => {
-                    this.notification.add("Connection successful");
+                    this.notification.add("Connection successful", { type: "success" });
                 })
                 .catch(() => {
                     this.notification.add("Connection failed", { type: "danger" });
