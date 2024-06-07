@@ -30,9 +30,7 @@ export const CustomerDisplayDataService = {
                             Accept: "application/json",
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({
-                            action: "get",
-                        }),
+                        body: JSON.stringify({ params: { action: "get" } }),
                     }
                 );
                 const payload = await response.json();

@@ -35,9 +35,13 @@ try:
 except ImportError:
     _logger.warning('Could not import library crypt')
 
-#----------------------------------------------------------
-# Helper
-#----------------------------------------------------------
+
+class Orientation(Enum):
+    """xrandr screen orientation for kiosk mode"""
+    NORMAL = 'normal'
+    INVERTED = 'inverted'
+    LEFT = 'left'
+    RIGHT = 'right'
 
 
 class CertificateStatus(Enum):
@@ -524,3 +528,25 @@ def disconnect_from_server():
     """Disconnect the IoT Box from the server"""
     unlink_file('odoo-remote-server.conf')
     get_odoo_server_url.cache_clear()
+
+
+def save_browser_state(url=None, orientation=None):
+    """
+    Save the browser state to the file
+    :param url: The URL the browser is on (if None, the URL is not saved)
+    :param orientation: The orientation of the screen (if None, the orientation is not saved)
+    """
+    if url:
+        write_file('browser-url.conf', url)
+    if orientation:
+        write_file('screen-orientation.conf', orientation.value)
+
+
+def load_browser_state():
+    """
+    Load the browser state from the file
+    :return: The URL the browser is on and the orientation of the screen (default to NORMAL)
+    """
+    url = read_file_first_line('browser-url.conf')
+    orientation = read_file_first_line('screen-orientation.conf') or Orientation.NORMAL
+    return url, Orientation(orientation)
