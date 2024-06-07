@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+
 import jinja2
 import platform
 import logging
@@ -17,7 +18,11 @@ from odoo.http import Response, request
 from odoo.addons.hw_drivers.connection_manager import connection_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.server_logger import check_and_update_odoo_config_log_to_server_option, close_server_log_sender_handler, get_odoo_config_log_to_server_option
+from odoo.addons.hw_drivers.server_logger import (
+    check_and_update_odoo_config_log_to_server_option,
+    close_server_log_sender_handler,
+    get_odoo_config_log_to_server_option,
+)
 from odoo.addons.web.controllers.home import Home
 from odoo.tools.misc import file_path
 
@@ -48,15 +53,18 @@ six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.htm
 list_credential_template = jinja_env.get_template('list_credential.html')
 upgrade_page_template = jinja_env.get_template('upgrade_page.html')
 
+
 class IoTboxHomepage(Home):
     def __init__(self):
         super(IoTboxHomepage,self).__init__()
         self.updating = threading.Lock()
 
-    def clean_partition(self):
+    @classmethod
+    def clean_partition(cls):
         subprocess.check_call(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; cleanup'])
 
-    def get_six_terminal(self):
+    @classmethod
+    def get_six_terminal(cls):
         terminal_id = helpers.read_file_first_line('odoo-six-payment-terminal.conf')
         return terminal_id or 'Not Configured'
 
@@ -258,14 +266,18 @@ class IoTboxHomepage(Home):
             token = credential[1]
             db_uuid = credential[2]
             enterprise_code = credential[3]
-            helpers.save_conf_server(url, token, db_uuid, enterprise_code)
+            try:
+                helpers.save_conf_server(url, token, db_uuid, enterprise_code)
+            except (subprocess.CalledProcessError, OSError, Exception):
+                return 'Failed to write server configuration files on IoTBox. Please try again.'
         else:
             url = helpers.get_odoo_server_url()
             token = helpers.get_token()
-        if iotname and platform.system() == 'Linux':
-            subprocess.check_call([file_path('point_of_sale/tools/posbox/configuration/rename_iot.sh'), iotname])
+        if iotname and platform.system() == 'Linux' and iotname != socket.gethostname():
+            subprocess.run([file_path('point_of_sale/tools/posbox/configuration/rename_iot.sh'), iotname], check=False)
+
         helpers.odoo_restart(5)
-        return 'http://' + helpers.get_ip() + ':8069'
+        return 'Successfully connected to db !'
 
     @http.route('/steps', type='http', auth='none', cors='*', csrf=False)
     def step_by_step_configure_page(self):

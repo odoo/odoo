@@ -6,10 +6,10 @@ import json
 import logging
 import netifaces as ni
 import os
+import socket
 import subprocess
 import threading
 import time
-
 import urllib3
 
 from odoo import http
@@ -73,13 +73,15 @@ class DisplayDriver(Driver):
     def update_url(self, url=None):
         os.environ['DISPLAY'] = ":0." + self._x_screen
         os.environ['XAUTHORITY'] = '/run/lightdm/pi/xauthority'
-        firefox_env = os.environ.copy()
-        firefox_env['HOME'] = '/tmp/' + self._x_screen
+        chromium_env = os.environ.copy()
+        chromium_env['HOME'] = '/tmp/' + self._x_screen
         self.url = url or 'http://localhost:8069/point_of_sale/display/' + self.device_identifier
-        new_window = subprocess.call(['xdotool', 'search', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox'])
-        subprocess.Popen(['firefox', self.url], env=firefox_env)
-        if new_window:
-            self.call_xdotools('F11')
+
+        subprocess.Popen(
+            ['chromium-browser', self.url, '--start-fullscreen'],
+            env=chromium_env,
+            stderr=subprocess.DEVNULL,
+        )
 
     def load_url(self):
         url = None
@@ -102,7 +104,18 @@ class DisplayDriver(Driver):
         os.environ['DISPLAY'] = ":0." + self._x_screen
         os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
         try:
-            subprocess.call(['xdotool', 'search', '--sync', '--onlyvisible', '--screen', self._x_screen, '--class', 'Firefox', 'key', keystroke])
+            subprocess.call([
+                'xdotool',
+                'search',
+                '--sync',
+                '--onlyvisible',
+                '--screen',
+                self._x_screen,
+                '--class',
+                'chromium-browser',
+                'key',
+                keystroke,
+            ])
             return "xdotool succeeded in stroking " + keystroke
         except:
             return "xdotool threw an error, maybe it is not installed on the IoTBox"
@@ -152,8 +165,8 @@ class DisplayDriver(Driver):
         }
         event_manager.device_changed(self)
 
-class DisplayController(http.Controller):
 
+class DisplayController(http.Controller):
     @http.route('/hw_proxy/display_refresh', type='json', auth='none', cors='*')
     def display_refresh(self):
         display = DisplayDriver.get_default_display()
@@ -232,6 +245,7 @@ class DisplayController(http.Controller):
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
             'pairing_code': connection_manager.pairing_code,
+            'hostname': socket.gethostname(),
         })
 
     @http.route('/point_of_sale/iot_devices', type='json', auth='none', methods=['POST'])
