@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("website_livechat_login_after_chat_start
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit Hello!",
+            run: "fill Hello!",
         },
         {
             trigger: ".o-mail-Composer-input",
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
         },
         {
             trigger: ".o-mail-Composer-input",
-            run: "edit Hello!",
+            run: "fill Hello!",
         },
         {
             trigger: ".o-mail-Composer-input",

@@ -13,7 +13,7 @@ export const start = [
     {
         content: "Say hello!",
         trigger: ".o-mail-Composer-input",
-        run: "edit Hello Sir!",
+        run: "fill Hello Sir!",
     },
     {
         content: "Send the message",

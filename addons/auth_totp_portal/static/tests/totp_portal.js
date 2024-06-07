@@ -55,11 +55,11 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: "edit portal",
+    run: "fill portal",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: "edit portal",
+    run: "fill portal",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -118,11 +118,11 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: "edit portal",
+    run: "fill portal",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: "edit portal",
+    run: "fill portal",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',

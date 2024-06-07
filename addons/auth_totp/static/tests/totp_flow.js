@@ -135,11 +135,11 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: "edit demo",
+    run: "fill demo",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: "edit demo",
+    run: "fill demo",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -178,11 +178,11 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: "edit demo",
+    run: "fill demo",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: "edit demo",
+    run: "fill demo",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',
@@ -200,7 +200,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: 'input[name=totp_token]',
     async run(helpers) {
         const token = await rpc('/totphook')
-        helpers.edit(token);
+        helpers.fill(token);
         helpers.click('button:contains("Log in")');
     }
 }, {
@@ -214,15 +214,15 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "check that we're back on the login page or go to it",
     trigger: 'input#login, a:contains(Log in)', 
-    run: "edit Test",
+    run: "clear && fill Test",
 }, {
     content: "input login again",
     trigger: 'input#login',
-    run: "edit demo",
+    run: "clear && fill demo",
 }, {
     content: 'input password again',
     trigger: 'input#password',
-    run: "edit demo",
+    run: "clear && fill demo",
 }, {
     content: "click da button again",
     trigger: 'button:contains("Log in")',
@@ -268,11 +268,11 @@ registry.category("web_tour.tours").add('totp_login_disabled', {
 }, {
     content: "input login",
     trigger: 'input#login',
-    run: "edit demo",
+    run: "fill demo",
 }, {
     content: 'input password',
     trigger: 'input#password',
-    run: "edit demo",
+    run: "fill demo",
 }, {
     content: "click da button",
     trigger: 'button:contains("Log in")',

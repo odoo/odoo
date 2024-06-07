@@ -70,7 +70,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Link tools, should be open, change the url",
         trigger: '#o_link_dialog_url_input',
-        run: "edit odoo.be && click body",
+        run: "edit odoo.be",
     },
 
     ...wTourUtils.clickOnSave(),
@@ -116,8 +116,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Set URL.",
         trigger: '.o_we_customize_panel we-input:contains("Your URL") input',
-        // TODO: remove && click 
-        run: "edit odoo.com && click(we-title:contains(Your URL))",
+        run: "edit odoo.com",
     },
     {
         content: "Deselect image.",
@@ -190,24 +189,11 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Enter an URL",
         trigger: "#o_link_dialog_url_input",
-        run: "edit https://www.odoo.com",
+        run: "clear && edit https://www.odoo.com",
     },
     {
         content: "Check nothing is lost",
         trigger: ":iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p)",
-        isCheck: true,
-    },
-    // 7. Create new a link from a URL-like text.
-    // TODO: the two following steps should be removed.
-    // Note that human couldn't replace text hidden by the mega menu.
-    {
-        content: "click on Mega menu item to hide Mega menu content",
-        trigger: `:iframe a[role="menuitem"]:contains(Mega)`,
-        run: "click",
-    },
-    {
-        content: "Be sure that mega menu is hidden",
-        trigger: `:iframe #wrapwrap:not(div[data-name="Mega Menu"])`,
         isCheck: true,
     },
     {
@@ -245,9 +231,9 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Change URL to https",
         trigger: "#o_link_dialog_url_input",
         run(helpers) {
-            // TODO: update the tour to use helpers.edit("https://odoo.com")
-            // To see what happens with edit, add `pause:true` to the previous step 
-            // and type yourself https://odoo.com in #o_link_dialog_url_input  
+            // TODO: There is a bug with the comportment of the input.
+            // To see what happens with this, add `pause:true` to the previous step 
+            // and type yourself letter by letter https://odoo.com in #o_link_dialog_url_input  
             // The label will be ohttps://
             this.anchor.value = "https://odoo.com";
             this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
@@ -263,7 +249,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "#o_link_dialog_url_input",
         extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
         run(helpers) {
-            // TODO: update the tour to use helpers.edit("http://odoo.com")
+            // TODO: Same bug as previous TODO comment
             this.anchor.value = "http://odoo.com";
             this.anchor.dispatchEvent(new InputEvent("input", { bubbles: true }));
         }
@@ -278,7 +264,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         content: "Change URL into an email address",
         trigger: "#o_link_dialog_url_input",
         extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
-        run: "edit callme@maybe.com",
+        run: "clear && fill callme@maybe.com && press Enter",
     },
     {
         content: "Check that link was updated and link content is synced with URL",
@@ -288,9 +274,8 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Change URL back into a http one",
         trigger: "#o_link_dialog_url_input",
-        // TODO: remove && click
         extra_trigger: "div#oe_snippets:not(div.o_we_ui_loading)",
-        run: "edit callmemaybe.com && click body",
+        run: "clear && edit callmemaybe.com",
     },
     {
         content: "Check that link was updated and link content is synced with URL",
@@ -315,9 +300,8 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     {
         content: "Edit link label",
         trigger: ":iframe .s_text_image p a",
-        run(actions) {
-            // TODO: use run: "click", instead
-            this.anchor.click();
+        run: "click",
+        // run(actions) {
             // See SHOPS_STEP_DISABLED. TODO. These steps do not consistently
             // update the link for some reason... to investigate.
             /*
@@ -330,7 +314,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
             // Trigger editor's '_onInput' handler, which leads to a history step.
             link.dispatchEvent(new InputEvent('input', {inputType: 'insertText', bubbles: true}));
             */
-        },
+        // },
     },
     // See SHOPS_STEP_DISABLED. TODO.
     /*
@@ -382,7 +366,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "input#o_link_dialog_url_input",
         // TODO: remove extra_trigger
         extra_trigger: 'body:not(:has(.o_we_ui_loading))',
-        run: "edit /contact",
+        run: "fill /contact",
     },
     {
         content: "Pick '/contactus",

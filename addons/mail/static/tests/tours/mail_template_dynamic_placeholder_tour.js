@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: 'Retry insert # inside "Subject" input',
             trigger: 'div[name="subject"] input[type="text"]',
-            run: "edit (yes_model_id ) && press #",
+            run: "clear && edit(yes_model_id #)",
         },
         {
             content: "Check if the dynamic placeholder popover is opened",
@@ -71,7 +71,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "filter the dph result",
             trigger: "div.o_model_field_selector_popover_search input[type='text']",
-            run: "edit name",
+            run: "fill name",
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
@@ -82,7 +82,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: "Enter a default value",
             trigger:
                 'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
-            run: "edit defValue",
+            run: "fill defValue",
         },
         {
             content: "Click on the the dynamic placeholder default value",
@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
         {
             content: "filter the dph result",
             trigger: "div.o_model_field_selector_popover_search input[type='text']",
-            run: "edit name",
+            run: "fill name",
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
@@ -144,7 +144,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_placeholder_tour"
             content: "Enter a default value",
             trigger:
                 'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
-            run: "edit defValue",
+            run: "fill defValue",
         },
         {
             content: "Click on the the dynamic placeholder default value",

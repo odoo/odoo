@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add('crm_tour', {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id'] input",
     content: markup(_t('<b>Write a few letters</b> to look for a company, or create a new one.')),
     position: "top",
-    run: "edit Brandon Freeman",
+    run: "fill Brandon Freeman",
 }, {
     trigger: ".ui-menu-item > a",
     auto: true,

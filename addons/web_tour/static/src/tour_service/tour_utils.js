@@ -286,9 +286,7 @@ export class RunningTourActionHelper {
      *  run: "edit Hello Mr. Doku",
      */
     edit(text, selector) {
-        const element = this._get_action_element(selector);
-        hoot.click(element);
-        hoot.edit(text);
+        this.fill(text, selector, "blur");
     }
 
     /**
@@ -313,14 +311,14 @@ export class RunningTourActionHelper {
      * @description This helper is intended for `<input>` and `<textarea>` elements,
      * with the exception of `"checkbox"` and `"radio"` types, which should be
      * selected using the {@link check} helper.
-     * In tour, it's mainly usefull for autocomplete components.
-     * @param {string} value
+     * @param {string} text
      * @param {Selector} selector
+     * @param {"blur"|"enter"|"tab"|null} confirm
      */
-    fill(value, selector) {
+    fill(text, selector, confirm = null) {
         const element = this._get_action_element(selector);
         hoot.click(element);
-        hoot.fill(value);
+        hoot.fill(text, { confirm });
     }
 
     /**
@@ -449,35 +447,6 @@ export class RunningTourActionHelper {
         range.setStart(node, length);
         range.setEnd(node, length);
         selection.addRange(range);
-    }
-
-    /**
-     * Helper to facilitate drag and drop debugging
-     */
-    _showCursor() {
-        const infoElement = document.createElement("div");
-        function getCursor(event) {
-            const x = event.clientX;
-            const y = event.clientY;
-            infoElement.textContent = `[ X: ${x} | Y: ${y} ]`;
-            infoElement.style.top = y + 3 + "px";
-            infoElement.style.left = x + 3 + "px";
-        }
-        if (!document.querySelector("div.o_tooltip_mouse_coordinates")) {
-            infoElement.classList.add(".o_tooltip_mouse_coordinates");
-            infoElement.style.backgroundColor = "red";
-            infoElement.style.position = "absolute";
-            infoElement.style.zIndex = 10e3;
-            document.body.appendChild(infoElement);
-            document.addEventListener("mousemove", (event) => {
-                getCursor(event);
-            });
-            hoot.queryAll(":iframe").forEach((iframe) => {
-                iframe.addEventListener("mousemove", (event) => {
-                    getCursor(event);
-                });
-            });
-        }
     }
 }
 
@@ -649,7 +618,7 @@ export const stepUtils = {
                 trigger: ".o_searchview_input",
                 extra_trigger: `.modal:not(.o_inactive_modal) .modal-title:contains('${modalTitle}')`,
                 position: "bottom",
-                run: `edit ${valueSearched}`,
+                run: `fill ${valueSearched}`,
             },
             this.simulateEnterKeyboardInSearchModal(),
             {

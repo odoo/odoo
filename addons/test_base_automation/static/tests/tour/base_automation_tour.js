@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add("test_base_automation", {
             content: "Input field name",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
-            run: "edit Job Position",
+            run: "fill Job Position",
             in_modal: false,
         },
         {
@@ -195,7 +195,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             content: "Input field name",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
-            run: "edit Name",
+            run: "fill Name",
             in_modal: false,
         },
         {
@@ -230,7 +230,7 @@ registry.category("web_tour.tours").add("test_base_automation_on_tag_added", {
             content: "Input field name",
             trigger:
                 '.o_model_field_selector_popover .o_model_field_selector_popover_search  input',
-            run: "edit Priority",
+            run: "fill Priority",
             in_modal: false,
         },
         {
@@ -305,7 +305,7 @@ registry.category("web_tour.tours").add("test_open_automation_from_grouped_kanba
         },
         {
             trigger: ".o_form_view .o_field_widget[name='name'] input",
-            run: "edit From Tour",
+            run: "clear && edit From Tour",
         },
         ...stepUtils.saveForm(),
     ],
@@ -489,7 +489,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "edit base.automation.line.test",
+            run: "fill base.automation.line.test",
         },
         {
             trigger: ".dropdown-menu li a:contains(Automated Rule Line Test)",
@@ -511,7 +511,7 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "edit test_base_automation.project",
+            run: "clear && fill test_base_automation.project",
         },
         {
             trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
@@ -558,7 +558,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "edit test_base_automation.project",
+            run: "fill test_base_automation.project",
         },
         {
             trigger: ".dropdown-menu li a:contains(test_base_automation.project)",
@@ -616,7 +616,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
     steps: () => [
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "edit base.automation.lead.test",
+            run: "fill base.automation.lead.test",
         },
         {
             trigger: ".dropdown-menu li a:contains(Automated Rule Test)",
@@ -635,7 +635,7 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: ".o_field_widget[name='model_id'] input",
-            run: "edit base.automation.lead.thread.test",
+            run: "clear && fill base.automation.lead.thread.test",
         },
         {
             trigger: ".dropdown-menu li a:contains(Threaded Lead Test)",

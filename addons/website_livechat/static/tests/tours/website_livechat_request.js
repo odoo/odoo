@@ -6,7 +6,7 @@ const chatRequest = [
     {
         content: "Answer the chat request!",
         trigger: ".o-mail-Composer-input",
-        run: "edit Hi ! What a coincidence! I need your help indeed.",
+        run: "fill Hi ! What a coincidence! I need your help indeed.",
     },
     {
         content: "Send the message",

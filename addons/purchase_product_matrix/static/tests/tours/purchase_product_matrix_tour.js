@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: "edit Matrix",
+    run: "fill Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
     run: "click",
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     run: "click",
 }, {
     trigger: 'div[name="product_template_id"] input',
-    run: "edit Matrix",
+    run: "fill Matrix",
 }, {
     trigger: 'ul.ui-autocomplete a:contains("Matrix")',
     run: "click",

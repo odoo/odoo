@@ -43,7 +43,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_header input",
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
     position: 'bottom',
-    run: "edit Test",
+    run: "fill Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     content: markup(_t('Let\'s create your first <b>stage</b>.')),
@@ -54,7 +54,7 @@ registry.category("web_tour.tours").add('project_tour', {
     extra_trigger: '.o_kanban_group',
     content: markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
     position: 'bottom',
-    run: "edit Test",
+    run: "fill Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     content: markup(_t('Let\'s create your second <b>stage</b>.')),
@@ -171,7 +171,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
     extra_trigger: ".subtask_create_input",
     content: markup(_t("Give the sub-task a <b>name</b>")),
-    run: "edit Newer Sub-task && click body",
+    run: "edit Newer Sub-task",
 }, {
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
     content: _t("You can change the sub-task state here!"),

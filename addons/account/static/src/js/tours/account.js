@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     }, {
         trigger: "div[name=partner_id] input",
-        run: "edit Test",
+        run: "fill Test",
         auto: true,
     }, {
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
@@ -63,13 +63,12 @@ registry.category("web_tour.tours").add('account_tour', {
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
         content: _t("Fill in the details of the line."),
         position: "bottom",
-        run: "edit Test",
+        run: "fill Test",
     }, {
         trigger: "div[name=invoice_line_ids] div[name=price_unit] input",
         extra_trigger: "[name=move_type] [raw-value=out_invoice]",
-        content: _t("Set a price"),
         position: "bottom",
-        run: "edit 100",
+        run: "fill 100",
     },
     ...stepUtils.saveForm(),
     {
@@ -97,7 +96,7 @@ registry.category("web_tour.tours").add('account_tour', {
     }, {
         trigger: ".o_field_widget[name=email] input, input[name=email]",
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
-        run: "edit customer@example.com",
+        run: "fill customer@example.com",
         auto: true,
     },
     ...stepUtils.saveForm(),

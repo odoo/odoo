@@ -66,7 +66,7 @@ selectSignImageStep,
     // buttons. However this is also the case in older versions. It
     // only crashes here because there is also a change in the tour framework
     // now using hoot.
-    run: "edit /contactus && click body",
+    run: "edit /contactus",
 }, {
     content: "Click on move to previous",
     trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",

@@ -64,7 +64,7 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
     {
         content: "set name",
         trigger: ".oe_snippet[name='Custom Banner'] input",
-        run: "edit Bruce Banner",
+        run: "clear && edit Bruce Banner",
     },
     {
         content: "confirm rename",
