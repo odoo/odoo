@@ -12,7 +12,7 @@ import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card
 import { Domain } from "@web/core/domain";
 
 
-class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
+export class AvatarResourceMany2XAutocomplete extends AvatarMany2XAutocomplete {
     get optionsSource() {
         return {
             ...super.optionsSource,
