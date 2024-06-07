@@ -752,6 +752,66 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'subtotals_order': ["Untaxed Amount"],
         })
 
+    def test_round_globally_price_included_tax(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        tax_1 = self.env['account.tax'].create({
+            'name': "tax_1",
+            'amount_type': 'fixed',
+            'tax_group_id': self.tax_group1.id,
+            'amount': 1.0,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+        tax_21 = self.env['account.tax'].create({
+            'name': "tax_21",
+            'amount_type': 'percent',
+            'tax_group_id': self.tax_group2.id,
+            'amount': 21.0,
+            'price_include': True,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': f'line{i}',
+                    'display_type': 'product',
+                    'price_unit': 21.53,
+                    'tax_ids': [Command.set((tax_1 + tax_21).ids)],
+                })
+                for i in range(2)
+            ],
+        })
+        self.assert_document_tax_totals(invoice, {
+            'amount_total': 43.050000000000004,
+            'amount_untaxed': 33.58,
+            'display_tax_base': True,
+            'groups_by_subtotal': {
+                'Untaxed Amount': [
+                    {
+                        'tax_group_name': self.tax_group1.name,
+                        'tax_group_amount': 2,
+                        'tax_group_base_amount': 33.59,
+                        'tax_group_id': self.tax_group1.id,
+                    },
+                    {
+                        'tax_group_name': self.tax_group2.name,
+                        'tax_group_amount': 7.47,
+                        'tax_group_base_amount': 35.59,
+                        'tax_group_id': self.tax_group2.id,
+                    }
+                ]
+            },
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'amount': 33.58,
+                }
+            ],
+            'subtotals_order': ["Untaxed Amount"],
+        })
+
     def test_cash_rounding_amount_total_rounded(self):
         tax_15 = self.env['account.tax'].create({
             'name': "tax_15",
