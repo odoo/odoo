@@ -685,6 +685,14 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_refuse(self, reason):
+        # Sudoed as approvers may not be accountants
+        draft_moves_sudo = self.sudo().account_move_ids.filtered(lambda move: move.state == 'draft')
+        if self.sudo().account_move_ids - draft_moves_sudo:
+            raise UserError(_("You cannot cancel an expense sheet linked to a posted journal entry"))
+
+        if draft_moves_sudo:
+            draft_moves_sudo.unlink()  # Else we have lingering moves
+
         self.approval_state = 'cancel'
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for sheet in self:
