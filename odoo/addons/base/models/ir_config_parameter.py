@@ -6,11 +6,10 @@ Store database-specific configuration parameters
 import uuid
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import config, ormcache, mute_logger
+from odoo.tools import config, ormcache, mute_logger, SQL, str2bool
 
-_logger = logging.getLogger(__name__)
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -34,12 +33,27 @@ class IrConfig_Parameter(models.Model):
     _allow_sudo_commands = False
 
     key = fields.Char(required=True)
-    value = fields.Text(required=True)
+    value = fields.Text()
+    type = fields.Selection([
+        ('str', 'String'),
+        ('bool', 'Boolean'),
+        ('int', 'Integer'),
+        ('float', 'Float'),
+    ], string='Parameter Type', default='str', required=True)
 
     _key_uniq = models.Constraint(
         'unique (key)',
         "Key must be unique.",
     )
+
+    @api.constrains('value', 'type')
+    def _check_type(self):
+        for param in self:
+            if param.value is not False:
+                try:
+                    self._convert_to_type(param.value, param.type)
+                except (ValueError, TypeError):
+                    raise ValidationError(_('value "%(value)s" and its type "%(type)s" are not consistent key "%(key)s"', value=param.value, type=param.type, key=param.key))
 
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
@@ -57,6 +71,48 @@ class IrConfig_Parameter(models.Model):
                 params.set_param(key, func())
 
     @api.model
+    def get(self, key) -> str | bool | int | float | None:
+        self.check_access('read')
+        return self._get(key)
+
+    @ormcache('key')
+    def _get(self, key):
+        # we bypass the ORM because get_param() is used in some field's depends,
+        # and must therefore work even when the ORM is not ready to work
+        self.flush_model()
+        self.env.cr.execute(SQL('SELECT "value", "type" FROM ir_config_parameter WHERE key = %s', key))
+        result = self.env.cr.fetchone()
+        if not result:
+            return None
+        value, type_ = result
+        return self._convert_to_type(value, type_)
+
+    def _convert_to_type(self, value, type_):
+        if type_ == 'bool':
+            if isinstance(value, str):
+                return str2bool(value, default=False)  # maybe with default or not
+            return bool(value)
+        if type_ == 'int':
+            return int(value or 0)  # this also handles empty strings
+        if type_ == 'float':
+            return float(value or 0.0)
+        if type_ == 'str':
+            return '' if value is None or value is False else str(value)
+        raise ValueError(f"Invalid type {type_} for ir.config_parameter.value")
+
+    @api.model
+    def set(self, key, value, type_=None):
+        if value is not None and value == self._get(key):
+            return
+        param = self.search_fetch([('key', '=', key)], ['type'])
+        type_ = type_ or param.type or 'str'
+        value = str(self._convert_to_type(value, type_))
+        if param:
+            param.write({'value': value, 'type': type_})
+        else:
+            self.create({'key': key, 'value': value, 'type': type_})
+
+    @api.model
     def get_param(self, key, default=False):
         """Retrieve the value for a given key.
 
@@ -69,14 +125,11 @@ class IrConfig_Parameter(models.Model):
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('key')
     def _get_param(self, key):
         # we bypass the ORM because get_param() is used in some field's depends,
         # and must therefore work even when the ORM is not ready to work
-        self.flush_model(['key', 'value'])
-        self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", [key])
-        result = self.env.cr.fetchone()
-        return result and result[0]
+        value = self._get(key)
+        return None if value is None or value == 0 else str(value)  # [None, 0, 0.0, False]
 
     @api.model
     def set_param(self, key, value):
@@ -94,8 +147,8 @@ class IrConfig_Parameter(models.Model):
             if value is not False and value is not None:
                 if str(value) != old:
                     param.write({'value': value})
-            else:
-                param.unlink()
+            elif old is not False:
+                param.write({'value': False})
             return old
         else:
             if value is not False and value is not None:
@@ -106,6 +159,19 @@ class IrConfig_Parameter(models.Model):
     def create(self, vals_list):
         self.env.registry.clear_cache()
         return super().create(vals_list)
+
+    def _load_records_create(self, vals_list):
+        # avoid re-creating the record in case the ir.model.data is missing
+        key_to_vals = {vals['key']: vals for vals in vals_list}
+        key_to_id = dict.fromkeys(key_to_vals, False)
+        existing_params = self.search([('key', 'in', list(key_to_vals))])
+        for param in existing_params:
+            param.write(key_to_vals.pop(param.key))
+            key_to_id[param.key] = param.id
+        new_params = self.create(list(key_to_vals.values()))
+        for param in new_params:
+            key_to_id[param.key] = param.id
+        return self.browse(key_to_id.values())
 
     def write(self, vals):
         if 'key' in vals:

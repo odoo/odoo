@@ -18,10 +18,10 @@ UPDATE ir_cron
 );
 
 -- neutralization flag for the database
-INSERT INTO ir_config_parameter (key, value)
-VALUES ('database.is_neutralized', true)
+INSERT INTO ir_config_parameter (key, value, type)
+VALUES ('database.is_neutralized', 'true', 'str')
     ON CONFLICT (key) DO
-       UPDATE SET value = true;
+       UPDATE SET value = 'true', type = 'str';
 
 -- deactivate webhooks
 UPDATE ir_act_server

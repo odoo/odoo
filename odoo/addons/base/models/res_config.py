@@ -5,6 +5,7 @@ from ast import literal_eval
 
 from odoo import api, models, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -148,6 +149,38 @@ class ResConfigSettings(models.TransientModel):
     _name = 'res.config.settings'
     _description = 'Config Settings'
 
+    def init(self):
+        module = self.env.context.get('module')
+        if not module:
+            return
+        config_parameters = []
+        for field in self._fields.values():
+            if module in field._modules and getattr(field, 'config_parameter', None):
+                value = False
+                if field.default:
+                    value = field.default(self)
+
+                if field.type in ('char', 'selection', 'datetime'):
+                    type_ = 'str'
+                elif field.type == 'boolean':
+                    type_ = 'bool'
+                elif field.type in ('integer', 'many2one'):
+                    type_ = 'int'
+                elif field.type == 'float':
+                    type_ = 'float'
+                else:
+                    raise ValueError(f'Invalid type {field.type} for field {field.name} with config_parameter')
+
+                value = str(self.env['ir.config_parameter']._convert_to_type(value, type_))
+                config_parameters.append((field.config_parameter, value, type_))
+        if config_parameters:
+            self.env.cr.execute(SQL("""
+            INSERT INTO ir_config_parameter ("key", "value", "type")
+            VALUES %s
+            ON CONFLICT ("key")
+            DO NOTHING
+            """, SQL(", ").join(config_parameters)))
+
     def _valid_field_parameter(self, field, name):
         return (
             name in ('default_model', 'config_parameter')
@@ -263,30 +296,11 @@ class ResConfigSettings(models.TransientModel):
         WARNING_MESSAGE = "Error when converting value %r of field %s for ir.config.parameter %r"
         for name, icp in classified['config']:
             field = self._fields[name]
-            value = IrConfigParameter.get_param(icp, field.default(self) if field.default else False)
-            if value is not False:
-                if field.type == 'many2one':
-                    try:
-                        # Special case when value is the id of a deleted record, we do not want to
-                        # block the settings screen
-                        value = self.env[field.comodel_name].browse(int(value)).exists().id
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = False
-                elif field.type == 'integer':
-                    try:
-                        value = int(value)
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = 0
-                elif field.type == 'float':
-                    try:
-                        value = float(value)
-                    except (ValueError, TypeError):
-                        _logger.warning(WARNING_MESSAGE, value, field, icp)
-                        value = 0.0
-                elif field.type == 'boolean':
-                    value = bool(value)
+            value = IrConfigParameter.get(icp)
+            if field.type == 'many2one':
+                # Special case when value is the id of a deleted record, we do not want to
+                # block the settings screen
+                value = self.env[field.comodel_name].browse(value).exists().id
             res[name] = value
 
         res.update(self.get_values())
@@ -330,21 +344,16 @@ class ResConfigSettings(models.TransientModel):
         for name, icp in classified['config']:
             field = self._fields[name]
             value = self[name]
-            current_value = IrConfigParameter.get_param(icp)
 
             if field.type == 'char':
                 # storing developer keys as ir.config_parameter may lead to nasty
                 # bugs when users leave spaces around them
-                value = (value or "").strip() or False
-            elif field.type in ('integer', 'float'):
-                value = repr(value) if value else False
+                value = (value or "").strip() or False  # TODO double check since it leads to fallback to default
             elif field.type == 'many2one':
                 # value is a (possibly empty) recordset
                 value = value.id
 
-            if current_value == str(value) or current_value == value:
-                continue
-            IrConfigParameter.set_param(icp, value)
+            IrConfigParameter.set(icp, value)
 
     def execute(self):
         """
