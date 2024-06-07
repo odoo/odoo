@@ -4,6 +4,10 @@
 # 
 # Translators:
 # Kseina Tyshchenko, 2024
+# Martin Trigaux, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2024
+# Yaroslav Husyar, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:05+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Kseina Tyshchenko, 2024\n"
+"Last-Translator: Yaroslav Husyar, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,22 +26,22 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Дані отримано"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "К-сть рядків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "Кількість замовлень на продаж"
 
 #. module: sale
 #. odoo-python
@@ -49,17 +53,17 @@ msgstr "%(attribute)s: %(values)s"
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "%s has been created"
-msgstr ""
+msgstr "%s створено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'РАХУНОК - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -67,21 +71,23 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('чернетці', 'відправлено') and 'Комерційна пропозиція - "
+"%s' % (object.name)) or 'Замовлення - %s' % (object.name)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023-12-31"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: sale
 #. odoo-javascript
@@ -90,6 +96,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Вітаємо</b>, вашу першу комерційну пропозицію надіслано!<br>Перевірте ваш"
+" email, щоби підтвердити комерційну пропозицію."
 
 #. module: sale
 #. odoo-javascript
@@ -97,12 +105,13 @@ msgstr ""
 msgid ""
 "<b>Send the quote</b> to yourself and check what the customer will receive."
 msgstr ""
+"<b>Надішліть комерційну пропозицію</b> собі та перевірте, що отримає клієнт."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "<b>Set a price</b>."
-msgstr ""
+msgstr "<b>Встановити ціну</b>."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
@@ -433,56 +442,80 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        Шановний <t t-out=\"object.partner_id.name or ''\">користувач</t>,\n"
+"        <br><br>\n"
+"        Майте на увазі, що ваша\n"
+"        <t t-out=\"doc_name or ''\">комерційна пропозиція</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (з референсом: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        скасовано. Тому з вас більше не стягується плата за це замовлення.\n"
+"        Якщо потрібне будь-яке відшкодування, це буде здійснено в найзручніший спосіб.\n"
+"        <br><br>\n"
+"        Не соромтеся звертатися до нас, якщо у вас виникли запитання.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
 msgstr ""
+"<i class=\"fa fa-comment\"/> Зв'яжіться з нами для отримання нової "
+"комерційної пропозиції."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Відгук"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/>Виконано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Authorized"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Авторизовано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Оплачено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Повернено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Минув"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Waiting Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Очікує оплати"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Комерційна пропозиція\" "
+"role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Скасовано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -490,6 +523,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
 "title=\"Sales orders\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-usd\" role=\"img\" aria-label=\"Sale orders\" "
+"title=\"Sales orders\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -497,26 +532,28 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                    Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                    Заблоковано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-print\"/> View Details"
-msgstr ""
+msgstr "<i class=\"fa fa-print\"/> Переглянути деталі"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> Відхилити"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small class=\"text-muted\">Your contact</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Ваш контакт</small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr ""
+msgstr "<small><b class=\"text-muted\">Ваша перевага</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -524,6 +561,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Замовлення на продаж №</span>\n"
+"                            <span class=\"d-block d-md-none\">Реф.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -535,18 +574,18 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">/ Місяць</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">з</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Продано</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -564,12 +603,16 @@ msgid ""
 "                            <i class=\"fa fa-warning\"/>\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" class=\"oe_inline\">% </span>\n"
+"                        <span invisible=\"not display_invoice_amount_warning\" class=\"oe_inline text-danger\" title=\"Попередня оплата перевищує суму, що залишилася до створення документа реалізації.\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Сума</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -579,38 +622,42 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Чи впевненні, що бажаєте скасувати це замовлення?<br/></span>\n"
+"                        <span id=\"display_invoice_alert\" invisible=\"not display_invoice_alert\">\n"
+"                            Чернетки документів реалізації для цього замовлення будуть скасовані.<br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Зниж.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Taxes</span>"
-msgstr ""
+msgstr "<span>Податки</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span>Visibility</span>"
-msgstr ""
+msgstr "<span>Видимість</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
-msgstr ""
+msgstr "<strong class=\"mr16\">Підсумок</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration:</strong><br/>"
-msgstr ""
+msgstr "<strong>Термін дії:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr ""
+msgstr "<strong>Опис схеми оподаткування:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -618,41 +665,43 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                        If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Не вдалося знайти відповідний варіант оплати.</strong><br/>\n"
+"                                       Якщо ви вважаєте, що це помилка, зверніться до адміністратора сайту."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong><br/>"
-msgstr ""
+msgstr "<strong>Продавець:</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>Адреса доставки:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>Підпис</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax excl.: </strong>"
-msgstr ""
+msgstr "<strong>Без ПДВ: </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<strong>Tax incl.: </strong>"
-msgstr ""
+msgstr "<strong>Включно з ПДВ: </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>Thank You!</strong><br/>"
-msgstr ""
+msgstr "<strong>Дякуємо!</strong><br/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This offer expired!</strong>"
-msgstr ""
+msgstr "<strong>Термін цієї пропозиції минув!</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -667,17 +716,17 @@ msgstr "<strong>Ваш референс:</strong><br/>"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr ""
+msgstr "Підтверджене замовлення на продаж вимагає дати підтвердження."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
+msgstr "Примітка, зміст якої зазвичай стосується розділу або товару вище."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A section title"
-msgstr ""
+msgstr "Назва розділу"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -686,6 +735,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"Стандартний рахунок-фактура виставляється з усіма рядками замовлення, "
+"готовими до виставлення рахунків, відповідно до їхньої політики виставлення "
+"рахунків (на основі замовленої чи доставленої кількості)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -694,11 +746,14 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Товар, що зберігається, - це товар, яким ви керуєте на складі. Необхідно встановити додаток Склад.\n"
+"Витратний товар - це товар, для якого склад не керується.\n"
+"Послуга - це нематеріальний товар, який ви надаєте."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr ""
+msgstr "Застереження може бути встановлене для товару або клієнта (Продаж)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -706,18 +761,20 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Можливість вибору типу пакунка в замовленнях на продаж та примусити "
+"кількість, яка дорівнює кількості одиниць на пакет."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Підтвердити та оплатити пропозицію"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Підтвердити та підписати пропозицію"
 
 #. module: sale
 #. odoo-python
@@ -731,17 +788,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Підтвердити та оплатити"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Прийняти та підписати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Попередження доступу"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -752,53 +809,58 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Відповідно до налаштування товару, доставлена кількість може автоматично обчислюватися за допомогою одного з механізмів:\n"
+"- Вручну: кількість встановлюється вручну на рядку\n"
+"- Аналітика з витрат: кількість - сума від проведених витрат\n"
+"- Табель: кількість - це сума годин, записаних на завданні, пов'язаному з цим рядком продажу\n"
+"- Складські переміщення: кількість надходить від підтверджених комплектувань\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
 msgid "Account Number"
-msgstr ""
+msgstr "Номер рахунку"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Запис нарахованого доходу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Необхідна дія"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
 #: model:ir.ui.menu,name:sale.sale_menu_config_activities
 msgid "Activities"
-msgstr ""
+msgstr "Дії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформлення виключення дії"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_plan
 msgid "Activity Plans"
-msgstr ""
+msgstr "Плани дій"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Статус дії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Іконка типу дії"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
-msgstr ""
+msgstr "Типи дії"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
@@ -810,32 +872,32 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a note"
-msgstr ""
+msgstr "Додати примітку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a product"
-msgstr ""
+msgstr "Додати товар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr ""
+msgstr "Додати розділ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Add several variants to an order from a grid"
-msgstr ""
+msgstr "Додайте кілька варіантів у замовлення із сітки"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr ""
+msgstr "Дозволяє вам відправляти рахунки клієнтам"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr ""
+msgstr "Дозволяє вам відправляти рахунки."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on
@@ -850,7 +912,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "Вже оплачено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
@@ -861,33 +923,33 @@ msgstr "Вже у рахунку"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
 msgid "Amazon Sync"
-msgstr ""
+msgstr "Синхронізація з Amazon"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_amount
 msgid "Amount"
-msgstr ""
+msgstr "Сума"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Сума до знижки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
 msgid "Amount Paid"
-msgstr ""
+msgstr "Сплачена сума"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Сума комерційної пропозиції для включення у рахунок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
 msgid "Amount to invoice"
-msgstr ""
+msgstr "Сума до виставлення в рахунку"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -895,47 +957,49 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Замовлення має створити дозамовлення, коли доставлені кількості перевищують\n"
+"замовлені, а політика виставлення рахунків базується на замовлених кількостях."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналітичний рахунок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Аналітичний розподіл"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Аналітика з витрат"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Рядок аналітики"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Застосовуваність аналітичного плану"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
 msgid "Analytic Precision"
-msgstr ""
+msgstr "Точність аналітики"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr ""
+msgstr "Рядки аналітики"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Apply"
-msgstr ""
+msgstr "Застосувати"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -943,6 +1007,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Застосовуйте знижки вручну на рядках замовлень на купівлю або покажіть "
+"знижки, розраховані з прайс-листів (можливість активувати в налаштуваннях "
+"прайс-листа)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -960,6 +1027,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Ви дійсно хочете анулювати авторизовану транзакцію? Цю дію не можна "
+"скасувати."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -967,73 +1036,75 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"Наприклад, якщо ви продаєте попередньо оплачені години послуг, Odoo рекомендує вам \n"
+"продавати додаткові години, коли всі замовлені години будуть витрачені."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
 msgid "At cost"
-msgstr ""
+msgstr "За вартістю"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Підрахунок прикріплення"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_value
 msgid "Attribute Value"
-msgstr ""
+msgstr "Значення атрибутів"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_attribute_action
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
-msgstr ""
+msgstr "Атрибути"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__author_id
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Авторизовані операції"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
 msgid "Automatic Invoice"
-msgstr ""
+msgstr "Автоматичний рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Бургер з беконом"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
-msgstr ""
+msgstr "Назва банку"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__partner
 msgid "Based on Customer ID"
-msgstr ""
+msgstr "На основі ID клієнта"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__payment_provider__so_reference_type__so_name
 msgid "Based on Document Reference"
-msgstr ""
+msgstr "На основі референса документу"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__block
 msgid "Blocking Message"
-msgstr ""
+msgstr "Блокування повідомлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "Основний вміст такий самий, як і шаблон"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1043,6 +1114,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Збільшіть продажі за допомогою різноманітних програм: купонів, акцій, "
+"подарункових карток, лояльності. Можуть бути встановлені конкретні умови "
+"(товари, клієнти, мінімальна сума покупки, період). Винагородою можуть бути "
+"знижки (% або сума) або безкоштовні товари."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1066,17 +1141,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__campaign_id
 msgid "Campaign"
-msgstr ""
+msgstr "Кампанія"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Можна редагувати тіло"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "Можна редагувати товар"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
@@ -1084,13 +1159,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr ""
+msgstr "Скасувати"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Cancel %s"
-msgstr ""
+msgstr "Скасувати %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
@@ -1107,7 +1182,7 @@ msgstr "Скасувати комерційну пропозицію"
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__cancel
 msgid "Cancelled"
-msgstr ""
+msgstr "Скасовано"
 
 #. module: sale
 #. odoo-python
@@ -1127,17 +1202,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Транзакція отримання"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "Каталог"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "Категорія"
 
 #. module: sale
 #. odoo-python
@@ -1151,45 +1226,47 @@ msgstr ""
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Choose between electronic signatures or online payments."
-msgstr ""
+msgstr "Оберіть між електронним підписом та онлайн оплатами."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 msgid "Choose how to confirm quotations"
-msgstr ""
+msgstr "Виберіть підтвердження комерційної пропозиції"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Click here to add some products or services to your quotation."
 msgstr ""
+"Натисніть тут, щоби додати деякі товари або послуги до вашої комерційної "
+"пропозиції."
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Натисніть, щоби визначити ціль виставлення рахунку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
-msgstr ""
+msgstr "Закрити"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_provider__so_reference_type
 msgid "Communication"
-msgstr ""
+msgstr "Зв'язок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Communication history"
-msgstr ""
+msgstr "Історія комунікації"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Компанії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__company_id
@@ -1200,38 +1277,38 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr ""
+msgstr "Компанія"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Complete your company's data"
-msgstr ""
+msgstr "Заповнить дані вашої компанії"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку та відправляйте з DHL"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку і відправляйте з компанією Easypost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку та відправляйте з FedEx"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "Обчисліть вартість доставки і доставляйте через Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
+msgstr "Розрахуйте витрати на доставку та надсилайте з Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1241,47 +1318,47 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку та відправляйте з UPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку та відправляйте з USPS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку та відправляйте з bpost"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "Обчислюйте витрати на доставку на замовленнях"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
 msgid "Configuration"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirm"
-msgstr ""
+msgstr "Підтвердити"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Підтвердження повідомлення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr ""
+msgstr "Конектори"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1292,12 +1369,12 @@ msgstr "Консолідований рахунок"
 #: model:ir.model,name:sale.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
 msgid "Contents"
-msgstr ""
+msgstr "Містить"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
@@ -1305,21 +1382,24 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку,"
+" якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"здійснюватися на основі співвідношення."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__country_code
 msgid "Country code"
-msgstr ""
+msgstr "Код країни"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr ""
+msgstr "Купони і Програма лояльності"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Create Date"
-msgstr ""
+msgstr "Дата створення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1330,7 +1410,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Create Invoice"
-msgstr ""
+msgstr "Створити рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -1345,12 +1425,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
 msgid "Create a customer invoice"
-msgstr ""
+msgstr "Створити рахунок клієнта"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
-msgstr ""
+msgstr "Створити новий товар"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1360,7 +1440,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Create a new quotation, the first step of a new sale!"
-msgstr ""
+msgstr "Створіть нову комерційну пропозицію, перший крок нового продажу!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1373,6 +1453,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
+"Створюйте рахунки-фактури, реєструйте платежі та стежте за обговореннями з "
+"клієнтами."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__consolidated_billing
@@ -1392,7 +1474,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Створив"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_date
@@ -1402,13 +1484,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Створено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Creation Date"
-msgstr ""
+msgstr "Дата створення"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__date_order
@@ -1416,11 +1498,13 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
+"Дата створення чернетки/надісланого замовлення,\n"
+"Дата підтвердження замовлення."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "Кредитова та дебетова картка (через Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1430,27 +1514,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__currency_id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
-msgstr ""
+msgstr "Курс валюти"
 
 #. module: sale
 #: model:product.attribute.value,name:sale.product_attribute_value_7
 msgid "Custom"
-msgstr ""
+msgstr "Кастомний"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Спеціальні значення"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Спеціальні платіжні інструкції"
 
 #. module: sale
 #. odoo-python
@@ -1461,39 +1545,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
-msgstr ""
+msgstr "Клієнт"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Country"
-msgstr ""
+msgstr "Країна клієнта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Особа клієнта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Industry"
-msgstr ""
+msgstr "Галузь клієнта"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL порталу клієнта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
 msgid "Customer Reference"
-msgstr ""
+msgstr "Посилання на клієнта"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "Підпис клієнта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
@@ -1516,28 +1600,28 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
-msgstr ""
+msgstr "Клієнти"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Customize your quotes and orders."
-msgstr ""
+msgstr "Налаштуйте ваші пропозиції та замовлення."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "Конектор DHL Express "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Date:"
-msgstr ""
+msgstr "Дата:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__quotation_validity_days
@@ -1553,13 +1637,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr ""
+msgstr "Відняти попередні платежі"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Термін дії комерційної пропозиції за замовчуванням"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1576,44 +1660,44 @@ msgstr "Товар за замовчуванням, який використо�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Deliver Content by Email"
-msgstr ""
+msgstr "Доставити вміст електронною поштою"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
-msgstr ""
+msgstr "Доставлено"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Delivered Quantity: %s"
-msgstr ""
+msgstr "Доставлена кількість: %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
 msgid "Delivered quantities"
-msgstr ""
+msgstr "По доставленій кількості"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_shipping_id
 msgid "Delivery Address"
-msgstr ""
+msgstr "Адреса доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivery Date"
-msgstr ""
+msgstr "Дата доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Способи доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Кількість доставки"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1625,26 +1709,26 @@ msgstr ""
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "Попередня оплата"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Зниж.%"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 msgid "Discard"
-msgstr ""
+msgstr "Відмінити"
 
 #. module: sale
 #. odoo-python
@@ -1653,32 +1737,32 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount"
-msgstr ""
+msgstr "Знижка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
 msgid "Discount %"
-msgstr ""
+msgstr "Знижка %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Знижка (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount_amount
 msgid "Discount Amount"
-msgstr ""
+msgstr "Сума знижки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
 msgid "Discount Product"
-msgstr ""
+msgstr "Товар знижки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
 msgid "Discount Type"
-msgstr ""
+msgstr "Тип знижки"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_discount
@@ -1688,12 +1772,12 @@ msgstr ""
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Знижка у рядках"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Discount:"
-msgstr ""
+msgstr "Знижка:"
 
 #. module: sale
 #. odoo-python
@@ -1711,12 +1795,12 @@ msgstr "Знижка: %(percent)s%%- На товарі з наступними �
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_discount_per_so_line
 msgid "Discounts"
-msgstr ""
+msgstr "Знижки"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr ""
+msgstr "Знижки, програма лояльності та подарункова картка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
@@ -1738,22 +1822,22 @@ msgstr "Відображати попередження про суму раху
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Тип відображення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Documents"
-msgstr ""
+msgstr "Документи"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_applicability__business_domain
 msgid "Domain"
-msgstr ""
+msgstr "Домен"
 
 #. module: sale
 #. odoo-python
@@ -1761,7 +1845,7 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment"
-msgstr ""
+msgstr "Попередня оплата"
 
 #. module: sale
 #. odoo-python
@@ -1778,7 +1862,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Сума попередньої оплати (Фіксована сума)"
 
 #. module: sale
 #. odoo-python
@@ -1791,17 +1875,17 @@ msgstr "Аванс: %(date)s (Чернетка)"
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Down Payments"
-msgstr ""
+msgstr "Попередня оплата"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "Попередня оплата (фіксована сума)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "Попередня оплата (відсоток)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1818,7 +1902,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "Попередня оплата для %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1826,54 +1910,56 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
+"Попередні платежі здійснюються при створенні рахунків-фактур із замовлення "
+"на продаж. Вони не копіюються при дублюванні замовлення на продаж."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Draft Invoices"
-msgstr ""
+msgstr "Чорнові рахунки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Конектор Easypost"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Редагувати налаштування"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__digital_signature
 msgid "Electronic signature"
-msgstr ""
+msgstr "Електронний підпис"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_email_account
 msgid "Email"
-msgstr ""
+msgstr "Ел. пошта"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "Клієнту надсилається електронний лист, як тільки доступний рахунок."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
 msgid "Expected Date"
-msgstr ""
+msgstr "Очікувана дата"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Expected:"
-msgstr ""
+msgstr "Очікується:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr ""
+msgstr "Термін дії"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1884,33 +1970,33 @@ msgstr "Термін дії:"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "Термін дії до %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "Розширені фільтри"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Додаткові значення"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Extra line with %s"
-msgstr ""
+msgstr "Додатковий рядок з %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "Конектор FedEx"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Схема оподаткування"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
@@ -1919,11 +2005,14 @@ msgid ""
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
 msgstr ""
+"Схема оподаткування використовуються для адаптації податків та рахунків для "
+"конкретних клієнтів чи замовлень на продаж/рахунків-фактур. Значення за "
+"замовчуванням надходить від замовника."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
 msgid "Fixed Amount"
-msgstr ""
+msgstr "Фіксована сума"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -1933,22 +2022,22 @@ msgstr "Відстежуйте, переглядайте або оплачуйт
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Підписники"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Підписники (Партнери)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Заборонені значення на невідповідному рядку замовлення на продаж"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1957,6 +2046,10 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"З цього звіту ви можете переглянути суму рахунка-фактури для вашого клієнта."
+" Інструмент пошуку також може використовуватися для персоналізації звітів "
+"рахунків-фактур, і, таким чином, може узгоджувати цей аналіз із вашими "
+"потребами."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1969,33 +2062,34 @@ msgstr "Повна сума <br/>"
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__invoiced
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Fully Invoiced"
-msgstr ""
+msgstr "Повністю включено в рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Майбутні дії"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Створити посилання платежу продажів"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Створити посилання платежу"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
 msgstr ""
+"Створіть рахунок-фактуру автоматично після підтвердження онлайн-платежу"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "Отримуйте попередження в замовленнях для товарів або клієнтів"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
@@ -2006,24 +2100,24 @@ msgstr "Загальна знижка"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Good job, let's continue."
-msgstr ""
+msgstr "Гарна робота, давайте продовжимо."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Великі знижки на рядках замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Вага"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
-msgstr ""
+msgstr "Групувати за"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_active_pricelist
@@ -2038,27 +2132,27 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Змінена схема оподаткування"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Є повідомлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
 msgid "Has Pricelist Changed"
-msgstr ""
+msgstr "Прайс-лист змінився"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr ""
+msgstr "Має попередні платежі"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on__hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Приховано"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__id
@@ -2070,28 +2164,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Значок"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Іконка для визначення виключення дії."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
@@ -2106,27 +2200,30 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Якщо продаж заблокований, ви більше не можете його змінити. Проте ви все "
+"одно зможете зарахувати рахунок або зробити доставку."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr ""
+msgstr "Якщо true, упаковку можна використовувати для замовлень на продаж"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
 msgid "If you change the pricelist, only newly added lines will be affected."
 msgstr ""
+"Якщо ви змінюєте прайс-лист, будуть позначатися лише нові додані рядки."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Імпортуйте замовлення з Amazon та синхронізуйте доставки"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Імпортувати шаблон для товарів"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2136,7 +2233,7 @@ msgstr "У замовленні"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Incl. tax)"
-msgstr ""
+msgstr "в т. ч. податки)"
 
 #. module: sale
 #. odoo-python
@@ -2148,71 +2245,73 @@ msgstr "Некоректна сума знижки"
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid order."
-msgstr ""
+msgstr "Недійсне замовлення."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Invalid signature data."
-msgstr ""
+msgstr "Недійсні дані підпису."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/account_move.py:0
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "Рахунок %s оплачено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
 msgid "Invoice Address"
-msgstr ""
+msgstr "Адреса рахунка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr ""
+msgstr "Сповіщення рахунку"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "Рахунок підтверджено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Підрахунок рахунку"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr ""
+msgstr "Рахунок створено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Invoice Email Template"
-msgstr ""
+msgstr "Шаблон електронного листа рахунка-фактури"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Рядки рахунку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Рахунок по замовленню"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_status
 #: model:ir.model.fields,field_description:sale.field_sale_report__invoice_status
 msgid "Invoice Status"
-msgstr ""
+msgstr "Статус рахунку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
 msgstr ""
+"Рахунок-фактура після доставки, виходячи з кількості доставленої, а не "
+"замовленої."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2221,37 +2320,40 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Дохід за рахунком на поточний місяць. Це сума, на яку в цьому місяці "
+"виставлено рахунок на продаж. Він використовується для обчислення "
+"коефіцієнта прогресії поточного та цільового доходу у вигляді канбану."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr ""
+msgstr "Рахунок, що доставляється"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr ""
+msgstr "Рахунок, що замовлено"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
-msgstr ""
+msgstr "Виставлено рахунок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "Кількість в рахунку"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Invoiced Quantity: %s"
-msgstr ""
+msgstr "К-сть виставлена у рахунку: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "Включено у рахунок цього місяця"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -2259,51 +2361,51 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr ""
+msgstr "Рахунки"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Аналіз рахунків"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Статистика рахунків"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Виставлення рахунків"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Адреса виставлення рахунку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "Адреса рахунка:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Журнал виставлення рахунків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Політика виставлення рахунків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Цільовий рахунок-фактура"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2313,43 +2415,45 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and Shipping Address:"
-msgstr ""
+msgstr "Адреса рахунка та доставки:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr ""
+msgstr "Аванс"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Редактор"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
 msgid "Is Expired"
-msgstr ""
+msgstr "Термін дії минув"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Стежить"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr ""
+msgstr "Є попередньою оплатою"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
 msgid "Is expense"
-msgstr ""
+msgstr "Є витратою"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Правильно, якщо рядок замовлення на продаж надходить з рахунків або рахунків"
+" постачальників"
 
 #. module: sale
 #. odoo-python
@@ -2358,21 +2462,23 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"У заблокованому порядку забороняється змінювати наступні поля:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Запис у журналі"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Елемент журналу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__lang
 msgid "Language"
-msgstr ""
+msgstr "Мова"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2388,7 +2494,7 @@ msgstr "Останні рахунки"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Востаннє оновив"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_date
@@ -2399,50 +2505,50 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Останнє оновлення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Останні дії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr ""
+msgstr "Термін виконання"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "Дозвольте вашим клієнтам увійти, щоби переглянути їх документи"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let's send the quote."
-msgstr ""
+msgstr "Давайте надішлемо комерційну пропозицію"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Lets keep electronic signature for now."
-msgstr ""
+msgstr "Давайте поки збережемо електронний підпис."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Заблокувати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Заблокувати підтверджені продажі"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__locked
 msgid "Locked"
-msgstr ""
+msgstr "Заблокований"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__locked
@@ -2453,12 +2559,12 @@ msgstr "Закриті замовлення не можуть бути змін�
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "Виглядає добре. Давайте продовжимо."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__template_id
 msgid "Mail Template"
-msgstr ""
+msgstr "Шаблон листа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2466,6 +2572,8 @@ msgid ""
 "Make your quote attractive by adding header pages, product descriptions and "
 "footer pages to your quote."
 msgstr ""
+"Зробіть вашу пропозицію привабливою додавши титульні сторінки, описи товарів"
+" та заключні сторінки до неї."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2477,17 +2585,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
 msgid "Manual"
-msgstr ""
+msgstr "Вручну"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
 msgid "Manual Payment"
-msgstr ""
+msgstr "Ручний платіж"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "Вручну вказувати кількість у замовленні"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__service_type
@@ -2497,21 +2605,24 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Вручну встановлювати величини на замовлення: рахунок-фактура на основі введеної вручну кількості, без створення аналітичного обліку.\n"
+"Табель на контракті: рахунок-фактура на основі годин, що відстежуються, у відповідному табелі.\n"
+"Створення завдання та відстеження годин: створіть завдання з перевірки замовлення на продаж та відстежуйте години роботи."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_margin
 msgid "Margins"
-msgstr ""
+msgstr "Маржі"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Позначити комерційну пропозицію, як надіслано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Marketing"
-msgstr ""
+msgstr "Маркетинг"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__medium_id
@@ -2520,75 +2631,75 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
-msgstr ""
+msgstr "Середній"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Message"
-msgstr ""
+msgstr "Повідомлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Помилка доставлення повідомлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "Повідомлення для замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr ""
+msgstr "Повідомлення для рядка замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Повідомлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_name
 msgid "Method"
-msgstr ""
+msgstr "Метод"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Метод оновлення доставленої кількості"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Відсутні необхідні поля на підзвітному рядку замовлення на продаж."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Mitchell Admin"
-msgstr ""
+msgstr "Mitchell Admin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Дедлайн моєї дії"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
-msgstr ""
+msgstr "Мої замовлення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "My Quotations"
-msgstr ""
+msgstr "Мої комерційні пропозиції"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
-msgstr ""
+msgstr "Мої рядки замовлення"
 
 #. module: sale
 #. odoo-python
@@ -2597,38 +2708,38 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "New"
-msgstr ""
+msgstr "Новий"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Нова пропозиція"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Дедлайн наступної дії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Підсумок наступної дії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Тип наступної дії"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
 msgid "No"
-msgstr ""
+msgstr "Ні"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__no-message
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__no-message
 msgid "No Message"
-msgstr ""
+msgstr "Немає повідомлення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2638,46 +2749,46 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "Більше не редагувати замовлення після підтвердження"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Не знайдено жодних замовлень на рахунок-фактуру"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr ""
+msgstr "Не знайдено замовлень для створення дозамовлення."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Note"
-msgstr ""
+msgstr "Примітка"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__no
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__no
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__no
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "Немає що включити у рахунок"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Now, we'll create a sample quote."
-msgstr ""
+msgstr "Тепер ми створимо приклад комерційної пропозиції."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Number"
-msgstr ""
+msgstr "Номер"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Кількість дій"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__customer_lead
@@ -2685,31 +2796,33 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"Кількість днів з моменту підтвердження замовлення та відправки товарів "
+"клієнту."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Кількість помилок"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Кількість повідомлень, які вимагають дії"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr ""
+msgstr "Кількість виставлених рахунків із комерційних пропозицій"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "Кількість виставлених рахунків з продажей"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -2729,7 +2842,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
 msgid "Onboarding"
-msgstr ""
+msgstr "Залучення"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -2744,7 +2857,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "Крок залучення"
 
 #. module: sale
 #. odoo-python
@@ -2766,6 +2879,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales "
 "order.<br> You will be able to create an invoice and collect the payment."
 msgstr ""
+"Як тільки комерційна пропозиція підтверджена клієнтом, вона стає замовленням"
+" на продаж. <br> Ви зможете створити рахунок-фактуру та отримати платіж."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -2773,23 +2888,25 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
+"Як тільки комерційна пропозиція підтверджена клієнтом, вона стає замовленням"
+" на продаж. <br> Ви зможете створити рахунок-фактуру та отримати платіж."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
 msgid "Online Payment"
-msgstr ""
+msgstr "Платіж онлайн"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_menu
 msgid "Online Payments"
-msgstr ""
+msgstr "Онлайн платежі"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
 msgid "Online Signature"
-msgstr ""
+msgstr "Онлайн-підпис"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__require_payment
@@ -2811,12 +2928,15 @@ msgstr "Враховуються лише підтверджені авансо�
 #: code:addons/sale/models/sale_order.py:0
 msgid "Only draft orders can be marked as sent directly."
 msgstr ""
+"Лише чернетки замовлень можуть позначатися як надіслати безпосередньо."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
 msgstr ""
+"Дозволене лише одне кастомне значення на значення атрибуту на рядок "
+"замовлення на продаж."
 
 #. module: sale
 #. odoo-javascript
@@ -2824,12 +2944,14 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
+"Відкрийте додаток Продажі, щоби відправити вашу першу комерційну пропозицію "
+"лише у кілька кліків."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_product.py:0
 msgid "Operation not supported"
-msgstr ""
+msgstr "Операція не підтримується"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -2839,27 +2961,31 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Додаткова мова перекладу (код ISO), яку можна вибрати під час надсилання "
+"електронного листа. Якщо не встановлено, використовуватиметься англійська "
+"версія. Зазвичай це має бути вираз-заповнювач, який забезпечує відповідну "
+"мову, напр. {{ object.partner_id.lang }}."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
-msgstr ""
+msgstr "Замовлення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "Замовлення №"
 
 #. module: sale
 #: model:onboarding.onboarding.step,title:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Order Confirmation"
-msgstr ""
+msgstr "Підтвердження замовлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "Підрахунок замовлень"
 
 #. module: sale
 #. odoo-python
@@ -2872,58 +2998,58 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Date"
-msgstr ""
+msgstr "Дата замовлення"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Order Date:"
-msgstr ""
+msgstr "Дата замовлення:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Дата замовлення: Останні 365 днів"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
-msgstr ""
+msgstr "Рядки замовлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__name
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__order_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__name
 msgid "Order Reference"
-msgstr ""
+msgstr "Посилання на замовлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__state
 msgid "Order Status"
-msgstr ""
+msgstr "Статус замовлення"
 
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr ""
+msgstr "Допродаж замовлень"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Order signed by %s"
-msgstr ""
+msgstr "Замовлення підписано: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Order to Invoice"
-msgstr ""
+msgstr "Замовлення до рахунку"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Ordered Quantity: %(old_qty)s -> %(new_qty)s"
-msgstr ""
+msgstr "Замовлена кількість: %(old_qty)s -> %(new_qty)s"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__invoice_policy
@@ -2932,30 +3058,32 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
+"Замовлена кількість: кількість рахунків-фактур змовлених клієнтом.\n"
+"Доставлена кількість: кількість рахунків, доставлених клієнту."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
 msgid "Ordered quantities"
-msgstr ""
+msgstr "По замовленій кількості"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_order
 #: model:ir.ui.menu,name:sale.sale_order_menu
 msgid "Orders"
-msgstr ""
+msgstr "Замовлення"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Замовлення для рахунку"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "Замовлення на допродаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2965,191 +3093,191 @@ msgstr "Оскар Морган"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Info"
-msgstr ""
+msgstr "Інша інформація"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
-msgstr ""
+msgstr "Конструктор комерційних пропозицій у форматі PDF"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Токен ідентифікації PDT"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr ""
+msgstr "Рахунок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
 msgid "Packaging"
-msgstr ""
+msgstr "Упаковка"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Кількість упаковок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr ""
+msgstr "Попередження про кредит партнера"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay Now"
-msgstr ""
+msgstr "Оплатити зараз"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment provider"
-msgstr ""
+msgstr "Оплачуйте через інший платіжний провайдер"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment"
-msgstr ""
+msgstr "Оплата"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Інструкції оплати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Спосіб оплати"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_method_menu
 msgid "Payment Methods"
-msgstr ""
+msgstr "Способи оплати"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Провайдер платежу"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_provider_menu
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Providers"
-msgstr ""
+msgstr "Провайдери платежу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Референс оплати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
 msgid "Payment Terms"
-msgstr ""
+msgstr "Термін оплати"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_token_menu
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Токени оплати"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платіжна операція"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_transaction_menu
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Платіжні операції"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr ""
+msgstr "Терміни оплати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_percentage
 msgid "Percentage"
-msgstr ""
+msgstr "Відсоток"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL доступу до порталу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "Відсоток передоплати"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "Prepayment percentage must be a valid percentage."
-msgstr ""
+msgstr "Відсоток передоплати має бути коректним."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Preview"
-msgstr ""
+msgstr "Попередній перегляд"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Ціна зниження податку без урахування"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Ціна зниження з включеним податком"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__pricelist_id
 msgid "Pricelist"
-msgstr ""
+msgstr "Прайс-лист"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__pricelist_item_id
 msgid "Pricelist Item"
-msgstr ""
+msgstr "Елемент прайс-листа"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricelists"
-msgstr ""
+msgstr "Прайс-листи"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
-msgstr ""
+msgstr "Ціноутворення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr ""
+msgstr "Рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "Рахунок #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr ""
+msgstr "Рахунки"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3161,22 +3289,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
-msgstr ""
+msgstr "Товар"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute
 msgid "Product Attribute"
-msgstr ""
+msgstr "Атрибут товару"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Власне значення атрибуту товару"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
-msgstr ""
+msgstr "Каталог товарів"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
@@ -3186,61 +3314,61 @@ msgstr "Каталог товарів Товар є у замовленні на
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_categories
 msgid "Product Categories"
-msgstr ""
+msgstr "Категорії товару"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr ""
+msgstr "Категорія товару"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Документ товару"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_packaging
 msgid "Product Packaging"
-msgstr ""
+msgstr "Пакування товару"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_tags
 msgid "Product Tags"
-msgstr ""
+msgstr "Теги товару"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_template_id
 msgid "Product Template"
-msgstr ""
+msgstr "Шаблон товару"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_type
 msgid "Product Type"
-msgstr ""
+msgstr "Тип товару"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Од. вим. товару лише для читання"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Variant"
-msgstr ""
+msgstr "Варіант товару"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr ""
+msgstr "Варіанти товару"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed according to pricelist %s."
-msgstr ""
+msgstr "Ціни було переобчислено відповідно до прайс-листа %s."
 
 #. module: sale
 #. odoo-python
@@ -3252,7 +3380,7 @@ msgstr "Ціни товару були переобчислені."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product taxes have been recomputed according to fiscal position %s."
-msgstr ""
+msgstr "Податки товару переобчислено згідно схеми оподаткування %s."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.product_template_action
@@ -3262,59 +3390,59 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.product_menu_catalog
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Products"
-msgstr ""
+msgstr "Товари"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Qty"
-msgstr ""
+msgstr "К-сть"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr ""
+msgstr "Доставлена к-сть"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr ""
+msgstr "К-сть в рахунку"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
-msgstr ""
+msgstr "Кількість замовлень"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr ""
+msgstr "К-сть для доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
 msgid "Qty To Invoice"
-msgstr ""
+msgstr "К-сть до включення в рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr ""
+msgstr "Кількість рахунків-фактур із замовлень на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quantity"
-msgstr ""
+msgstr "Кількість"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Кількість до виставлення у рахунку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
-msgstr ""
+msgstr "Кількість:"
 
 #. module: sale
 #. odoo-python
@@ -3324,40 +3452,40 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.product_document_search
 msgid "Quotation"
-msgstr ""
+msgstr "Комерційна пропозиція"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "Комерційна пропозиція №"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Пропозиція / Замовлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr ""
+msgstr "Підрахунок комерційних пропозицій"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr ""
+msgstr "Дата комерційної пропозиції"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Дата комерційної пропозиції:"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__sent
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Пропозицію відправлено"
 
 #. module: sale
 #. odoo-python
@@ -3368,20 +3496,20 @@ msgstr ""
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr ""
+msgstr "Пропозицію підтверджено"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Пропозицію відправлено"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Клієнт переглянув комерційну пропозицію %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3397,22 +3525,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotations"
-msgstr ""
+msgstr "Комерційні пропозиції"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Комерційні пропозиції та Замовлення на продаж"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Аналіз пропозицій"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr ""
+msgstr "Пропозиції та продаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -3423,69 +3551,69 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Повторне виставлення рахунку на витрати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr ""
+msgstr "Видима політика повторного виставлення рахунків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__recipient_ids
 msgid "Recipients"
-msgstr ""
+msgstr "Одержувачі"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all prices based on this pricelist"
-msgstr ""
+msgstr "Переобчислити всі ціни на основі цього прайс-листа"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Перерахуйте всі податки на основі цієї схеми оподаткування"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Reference"
-msgstr ""
+msgstr "Референс"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "Референс документу, який створив цей запит на замовлення на продаж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
 msgid "Register Payment"
-msgstr ""
+msgstr "Зареєструвати платіж"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr ""
+msgstr "Регулярне виставлення рахунків"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Відхилити цю комерційну пропозицію"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__order_reference
 msgid "Related Order"
-msgstr ""
+msgstr "Повʼязане замовлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Модель рендеру"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
 msgid "Reporting"
-msgstr ""
+msgstr "Звітність"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
@@ -3515,12 +3643,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "Запрошена дата занадто рання."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Відповідальний користувач"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
@@ -3531,17 +3659,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
-msgstr ""
+msgstr "Доходи"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__invoiced_amount
 msgid "Revenues generated by the campaign"
-msgstr ""
+msgstr "Доходи створюються кампаніями"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Помилка доставки SMS"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3559,7 +3687,7 @@ msgstr "Інформація про продаж"
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__sale_order_id
 #: model:ir.model.fields.selection,name:sale.selection__account_analytic_applicability__business_domain__sale_order
 msgid "Sale Order"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__sale_order_count
@@ -3568,7 +3696,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Підрахунок замовлення на продаж"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
@@ -3578,12 +3706,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Попередження замовлення на продаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Sale Orders"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
@@ -3593,7 +3721,7 @@ msgstr "Підрахунок замовлень на продаж"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Помічник залучення провайдера платежу на Продажах"
 
 #. module: sale
 #: model:onboarding.onboarding,name:sale.onboarding_onboarding_sale_quotation
@@ -3603,12 +3731,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Попередження продажу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr ""
+msgstr "Метод залучення обраного способу оплати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
@@ -3625,12 +3753,12 @@ msgstr "Замовлення на продаж до скасування"
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales"
-msgstr ""
+msgstr "Продажі"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "Рахунок на попередню оплату замовлення"
 
 #. module: sale
 #. odoo-python
@@ -3643,7 +3771,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_pivot
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr ""
+msgstr "Аналіз продажу"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
@@ -3663,12 +3791,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Звіт аналізу продажів"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Запис сітки продажів"
 
 #. module: sale
 #. odoo-python
@@ -3683,24 +3811,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_activity
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Order"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Замовлення на продаж скасовано"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr ""
+msgstr "Замовлення підтверджено"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Елемент замовлення на продаж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -3708,31 +3836,31 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Рядок замовлення"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr ""
+msgstr "Рядки замовлення на продаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr ""
+msgstr "Рядки замовлення готові до включення у рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
+msgstr "Рядки замовлення на продаж, пов'язані з моїм замовленням на продаж"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -3751,7 +3879,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_graph
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
 msgid "Sales Orders"
-msgstr ""
+msgstr "Замовлення на продаж"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -3766,34 +3894,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr ""
+msgstr "Команда продажу"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.report_sales_team
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Sales Teams"
-msgstr ""
+msgstr "Команди продажу"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
-msgstr ""
+msgstr "Попередження про продаж"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
 msgid "Sales price"
-msgstr ""
+msgstr "Ціна продажу"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "Продажі: Скасування замовлення"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Продажі: Підтвердження замовлення"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
@@ -3803,13 +3931,13 @@ msgstr "Продажі: Оплата виконана"
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Продажі: Надіслати комерційну пропозицію"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/crm_team.py:0
 msgid "Sales: Untaxed Total"
-msgstr ""
+msgstr "Продажі: всього без податків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__user_id
@@ -3819,56 +3947,56 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr ""
+msgstr "Продавець"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr ""
+msgstr "Продавці"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Зразок рядка замовлення"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/onboarding_onboarding_step.py:0
 msgid "Sample Product"
-msgstr ""
+msgstr "Зразок товару"
 
 #. module: sale
 #: model:onboarding.onboarding.step,title:sale.onboarding_onboarding_step_sample_quotation
 msgid "Sample Quotation"
-msgstr ""
+msgstr "Зразок комерційної пропозиції"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Пошук замовлення на продаж"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
 msgid "Section"
-msgstr ""
+msgstr "Розділ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr ""
+msgstr "Назва розділу (наприклад, товари, послуги)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Токен безпеки"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Виберіть товар або створіть новий на льоту."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3880,61 +4008,67 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Обираючи \"Попередження\", ви надішлете повідомлення користувачу. Якщо "
+"обрати \"Повідомлення блокування\", то буде запущено виключення з "
+"відповідним повідомленням користувачу та процес зупиниться. Повідомлення "
+"потрібно вказати у наступному полі."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Продаж та купівля товарів у різних одиницях вимірювання"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr ""
+msgstr "Продаж товарів по кілька одиниць на пакунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Продавайте варіанти товару, використовуючи (розмір, колір тощо.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "Відправити рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
 msgstr ""
+"Надішліть електронну пошту, що відповідає конкретному товару, після "
+"підтвердження рахунку"
 
 #. module: sale
 #: model:onboarding.onboarding.step,description:sale.onboarding_onboarding_step_sample_quotation
 msgid "Send a quotation to test the customer portal."
-msgstr ""
+msgstr "Надішліть пропозицію для перевірки порталу клієнтів."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "Надіслати та скасувати"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Надіслати поштою"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Send message"
-msgstr ""
+msgstr "Надіслати повідомлення"
 
 #. module: sale
 #: model:onboarding.onboarding.step,button_text:sale.onboarding_onboarding_step_sample_quotation
 msgid "Send sample"
-msgstr ""
+msgstr "Надіслати зразок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Конектор Sendcloud"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3948,11 +4082,12 @@ msgstr ""
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
 msgstr ""
+"Автоматично надсилається вашим клієнтам, під час скасування замовлення"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "Надсилається клієнтам під час підтвердження замовлення"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_payment_executed
@@ -3964,109 +4099,109 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Послідовність"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr ""
+msgstr "Встановлення кількох цін на товар, автоматичні знижки тощо."
 
 #. module: sale
 #: model:onboarding.onboarding.step,button_text:sale.onboarding_onboarding_step_sale_order_confirmation
 msgid "Set payments"
-msgstr ""
+msgstr "Встановіть платежі"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "Зробити пропозицією"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_config_settings
 #: model:ir.ui.menu,name:sale.menu_sale_general_settings
 msgid "Settings"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_share
 msgid "Share"
-msgstr ""
+msgstr "Поділитися"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Shipping"
-msgstr ""
+msgstr "Доставка"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Shipping Address"
-msgstr ""
+msgstr "Адреса доставки"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
 msgid "Shiprocket Connector"
-msgstr ""
+msgstr "Конектор Shiprocket"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Показати всі записи, які мають дату наступної дії до сьогоднішньої"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr ""
+msgstr "Показувати маржу на замовлення"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Підписати та оплатити пропозицію"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Підписати та оплатити"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
 msgid "Sign online"
-msgstr ""
+msgstr "Підпис онлайн"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
-msgstr ""
+msgstr "Підпис"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Signature is missing."
-msgstr ""
+msgstr "Підпис відсутній."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
 msgid "Signed By"
-msgstr ""
+msgstr "Підписано"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_on
 msgid "Signed On"
-msgstr ""
+msgstr "Підписано на"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template__sales_count
 msgid "Sold"
-msgstr ""
+msgstr "Продано"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Продано за останні 365 днів"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -4082,23 +4217,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__source_id
 msgid "Source"
-msgstr ""
+msgstr "Джерело"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__origin
 msgid "Source Document"
-msgstr ""
+msgstr "Початковий документ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr ""
+msgstr "Конкретний Email"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Stage"
-msgstr ""
+msgstr "Етап"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
@@ -4109,14 +4244,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "Почніть перевірку даних вашої компанії."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
 #: model:ir.model.fields,field_description:sale.field_sale_report__state
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_state
@@ -4126,97 +4261,101 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Етап заснований на діях\n"
+"Протерміновано: термін виконання вже минув\n"
+"Сьогодні: дата дії сьогодні\n"
+"Заплановано: майбутні дії."
 
 #. module: sale
 #: model:onboarding.onboarding.step,done_text:sale.onboarding_onboarding_step_sale_order_confirmation
 #: model:onboarding.onboarding.step,done_text:sale.onboarding_onboarding_step_sample_quotation
 msgid "Step Completed!"
-msgstr ""
+msgstr "Крок завершено!"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__subject
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Subject"
-msgstr ""
+msgstr "Тема"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
 msgid "Subtotal"
-msgstr ""
+msgstr "Підсумок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Total"
-msgstr ""
+msgstr "Сума всього"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Сума без податків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
-msgstr ""
+msgstr "Мітки"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax 15%"
-msgstr ""
+msgstr "Податок 15%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Метод округлення для податків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_country_id
 msgid "Tax Country"
-msgstr ""
+msgstr "Країна податку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
-msgstr ""
+msgstr "ІПН"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Tax Total"
-msgstr ""
+msgstr "Сума податку"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Всього податків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Метод округлення для податків"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax excl."
-msgstr ""
+msgstr "Без ПДВ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tax incl."
-msgstr ""
+msgstr "З ПДВ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr ""
+msgstr "Податки"
 
 #. module: sale
 #. odoo-python
@@ -4232,37 +4371,39 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Розкажіть нам, чому ви відмовляєтеся від цієї комерційної пропозиції, це "
+"допоможе нам вдосконалити наші послуги."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Формат термінів та умов"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Терміни та умови: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Терміни та умови"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions:"
-msgstr ""
+msgstr "Терміни та умови:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Терміни та умови"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Терміни та умови..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__country_code
@@ -4270,6 +4411,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"Код країни ISO у двох символах.\n"
+"Ви можете використовувати це поле для швидкого пошуку."
 
 #. module: sale
 #. odoo-python
@@ -4300,7 +4443,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Токен доступу недійсний."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
@@ -4316,6 +4459,8 @@ msgid ""
 "The delivery date is sooner than the expected date. You may be unable to "
 "honor the delivery date."
 msgstr ""
+"Дата доставки настає раніше, ніж очікувана дата. Можливо, ви не зможете "
+"врахувати дату доставки."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
@@ -4336,6 +4481,9 @@ msgid ""
 "%s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
+"Наступні товари не можуть бути обмежені для компанії %s тому що вони вже використовуються у комерційних пропозиціях, замовленнях на продаж іншої компанії:\n"
+"%s\n"
+"Ви можете архівувати ці товари та відтворити їх із обмеженням вашої компанії або залишити їх як спільні товари."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4344,6 +4492,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"Рахунок-фактура генерується автоматично та доступний на клієнтському порталі, коли транзакцію підтверджує провайдер платежів.\n"
+"Рахунок-фактура позначається як оплачений, а платіж реєструється в журналі платежів, визначеному в конфігурації провайдера платежів.\n"
+"Цей режим рекомендований, якщо ви виставляєте остаточний рахунок під час замовлення, а не після доставки."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4351,6 +4502,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Маржа розраховується як сума цін реалізації продукції за вирахуванням "
+"вартості, встановленої у їх детальній формі."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -4367,18 +4520,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Замовлення не знаходиться в стані, що вимагає підпису клієнта."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Замовлену кількість було оновлено."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Платіжне повідомлення цього замовлення на продаж."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4402,36 +4555,38 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
+"Відсоток від суми, який необхідно сплатити для підтвердження комерційної "
+"пропозиції."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "The product (%s) has incompatible values: %s"
-msgstr ""
+msgstr "Товар (%s) має необчислювальні значення: %s"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 #: code:addons/sale/controllers/portal.py:0
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Надані параметри недійсні."
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "The value of the down payment amount must be positive."
-msgstr ""
+msgstr "Вартість суми першого внеску повинна бути позитивною."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr ""
+msgstr "На даний момент для вас немає замовлень."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "Зараз немає комерційних пропозицій для вашого обліку."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4449,6 +4604,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Це значення за замовчуванням застосовується до будь-якого нового створеного "
+"товару. Це можна змінити у формі детальної інформації про товар."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -4459,6 +4616,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Це ім'я, яке допомагає вам стежити за різними зусиллями кампанії, напр. "
+"Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -4466,6 +4625,8 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
+"Це дата доставки, обіцяна замовнику. Якщо встановлено, замовлення на "
+"доставку буде заплановано на основі цієї дати, а не часу виконання товару."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4474,6 +4635,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Це спосіб доставки, наприклад, листівка, електронна пошта або банерна "
+"реклама"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
@@ -4484,6 +4647,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Це джерело посилання, наприклад, пошукова система, інший домен або ім'я "
+"списку листів"
 
 #. module: sale
 #. odoo-python
@@ -4498,6 +4663,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"Цей товар запаковано %(pack_size).2f %(pack_name)s. Вам потрібно продати "
+"%(quantity).2f %(unit)s."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4511,6 +4678,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"Цей звіт виконує аналіз ваших комерційних пропозицій та замовлень на продаж."
+" Аналіз перевіряє ваші доходи від продажів та сортує їх за різними "
+"критеріями групи (продавець, партнер, товар тощо). Використовуйте цей звіт "
+"для аналізу продажів, які ще не нарахували рахунки. Якщо ви хочете "
+"проаналізувати ваш оборот, ви повинні використовувати звіт \"Аналіз "
+"рахунків-фактур\" у модулі Бухоблік."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -4521,6 +4694,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Цей звіт виконує аналіз ваших комерційних пропозицій. Аналіз перевіряє ваші "
+"доходи від продажів та сортує їх за різними критеріями групи (продавець, "
+"партнер, товар тощо). Використовуйте цей звіт для аналізу продажів, які ще "
+"не нарахували рахунки. Якщо ви хочете проаналізувати ваш оборот, ви повинні "
+"використовувати звіт \"Аналіз рахунків-фактур\" у модулі Бухоблік."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4531,12 +4709,18 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Цей звіт виконує аналіз ваших замовлень на продаж. Аналіз перевіряє ваші "
+"доходи від продажів та сортує їх за різними критеріями групи (продавець, "
+"партнер, товар тощо). Використовуйте цей звіт для аналізу продажів, які ще "
+"не нарахували рахунки. Якщо ви хочете проаналізувати ваш оборот, ви повинні "
+"використовувати звіт \"Аналіз рахунків-фактур\" у модулі Бухоблік."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "This will update all taxes based on the currently selected fiscal position."
 msgstr ""
+"Це оновить усі податки на основі встановленої поточної схеми оподаткування."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4553,12 +4737,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "To Invoice"
-msgstr ""
+msgstr "До включення у рахунок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr ""
+msgstr "Зробити допродаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4567,6 +4751,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Щоб надіслати запрошення в режимі B2B, відкрийте контакт або виберіть кілька"
+" у списку та натисніть на 'Управління доступом до порталу' у випадаючому "
+"меню *Дія*."
 
 #. module: sale
 #. odoo-javascript
@@ -4575,11 +4762,13 @@ msgid ""
 "To speed up order confirmation, we can activate electronic signatures or "
 "payments."
 msgstr ""
+"Щоби пришвидшити підтвердження замовлень, ми можемо активувати електронні "
+"підписи чи оплати."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Сьогоднішні дії"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_total
@@ -4589,54 +4778,54 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr ""
+msgstr "Разом"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
 msgid "Total Tax"
-msgstr ""
+msgstr "Загальний податок"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Без суми податку"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Всього з податками"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "Відслідковування послуг"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Tracking"
-msgstr ""
+msgstr "Відстеження"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
-msgstr ""
+msgstr "Операції"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Назва типу"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Type a message..."
-msgstr ""
+msgstr "Введіть повідомлення..."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип дії виключення на записі."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4651,122 +4840,124 @@ msgstr "Введіть, щоб знайти товар..."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "Конектор UPS"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "Конектор USPS"
 
 #. module: sale
 #: model:ir.model,name:sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr ""
+msgstr "Кампанія UTM"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_unit
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr ""
+msgstr "Ціна одиниці"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr ""
+msgstr "Ціна за одиницю:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Одиниця вимірювання"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units of Measure"
-msgstr ""
+msgstr "Одиниці вимірювання"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Категорії одиниць вимірювання"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "Розблокувати"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Сума без податків"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr ""
+msgstr "Неоподатковувана сума, що виставляється на рахунку"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_to_invoice
 msgid "Untaxed Amount To Invoice"
-msgstr ""
+msgstr "Неоподатковувана сума для виставлення в рахунку-фактурі"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr ""
+msgstr "Неоподатковувана сума рахунка-фактури"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
-msgstr ""
+msgstr "Всього без податків"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
-msgstr ""
+msgstr "Одиниця вимірювання"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Prices"
-msgstr ""
+msgstr "Оновити ціни"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Оновити податки"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr ""
+msgstr "Допродаж %(order)s для клієнта %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "Можливість допродажу"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Використовується продавцями, коли вони відправляють комерційні пропозиції "
+"або рахунки-проформи лідам"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
-msgstr ""
+msgstr "Дійсний до"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Validate Order"
-msgstr ""
+msgstr "Підтвердити замовлення"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__expense_policy
@@ -4779,18 +4970,18 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Запис варіанту у таблиці"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
-msgstr ""
+msgstr "Переглянути деталі"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "View Order"
-msgstr ""
+msgstr "Переглянути замовлення"
 
 #. module: sale
 #. odoo-python
@@ -4798,22 +4989,22 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "View Quotation"
-msgstr ""
+msgstr "Переглянути комерційну пропозицію"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on
 msgid "Visibility"
-msgstr ""
+msgstr "Доступність"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Недійсна транзакція"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume
 msgid "Volume"
-msgstr ""
+msgstr "Об'єм"
 
 #. module: sale
 #. odoo-python
@@ -4825,14 +5016,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__res_partner__sale_warn__warning
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning"
-msgstr ""
+msgstr "Попередження"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Warning for %s"
-msgstr ""
+msgstr "Попередження для %s"
 
 #. module: sale
 #. odoo-python
@@ -4843,33 +5034,33 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
-msgstr ""
+msgstr "Попередження у замовленні на продаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning when Selling this Product"
-msgstr ""
+msgstr "Попередження при продажі цього товару"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Повідомлення з веб-сайту"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Історія бесіди на сайті"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Write a company name to create one, or see suggestions."
-msgstr ""
+msgstr "Напишіть назву компанії, щоб створити її, або перегляньте пропозиції."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "You can invoice them before they are delivered."
-msgstr ""
+msgstr "Ви можете виставити рахунок до доставки."
 
 #. module: sale
 #. odoo-python
@@ -4878,6 +5069,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Ви не можете видалити надіслану пропозицію або підтверджене замовлення на "
+"продаж. Спочатку його потрібно скасувати."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -4885,6 +5078,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Ви можете обрати всі замовлення та виставити на них рахунок групою,<br>\n"
+"            або позначити кожне замовлення і виставити на них рахунок окремо."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -4893,6 +5088,8 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Тут можна встановити тип зв'язку, який буде відображатися в замовленнях на "
+"продаж. Зв'язок буде наданий клієнту, коли він вибере спосіб оплати."
 
 #. module: sale
 #. odoo-python
@@ -4915,6 +5112,8 @@ msgid ""
 "You cannot change the product's type because it is already used in sales "
 "orders."
 msgstr ""
+"Ви не можете змінити тип товару, оскільки він уже використовується в "
+"замовленнях на продаж."
 
 #. module: sale
 #. odoo-python
@@ -4923,6 +5122,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
+"Ви не можете змінити тип рядка замовлення на продаж. Натомість вам необхідно"
+" видалити поточний рядок та створити новий належного типу."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
@@ -4937,6 +5138,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Ви повинні визначити товар для всього, що ви продаєте або купуєте, \n"
+"будь то товар, що зберігається, витратний матеріал або послуга."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4951,27 +5154,29 @@ msgstr "Ваш референс:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr ""
+msgstr "Ваш відгук..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been confirmed."
-msgstr ""
+msgstr "Ваше замовлення підтверджено."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed but still needs to be paid to be confirmed."
 msgstr ""
+"Ваше замовлення було підписано, але його ще потрібно сплатити для "
+"підтвердження."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order has been signed."
-msgstr ""
+msgstr "Ваше замовлення підписано."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your order is not in a state to be rejected."
-msgstr ""
+msgstr "Ваше замовлення не знаходиться в стані, яке буде відхилено."
 
 #. module: sale
 #. odoo-python
@@ -4980,32 +5185,34 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Ваша комерційна пропозиція містить товари від компанії %(product_company)s у той час, як комерційна пропозиція належить компанії %(quote_company)s. \n"
+" Змініть компанію на комерційній пропозиції або вилучіть товари з іншої компанії (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
 msgid "automatic invoicing: send ready invoice"
-msgstr ""
+msgstr "автоматичне виставлення рахунку: надіслати готовий рахунок"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "Конектор bpost "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "close"
-msgstr ""
+msgstr "закрити"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
-msgstr ""
+msgstr "дні"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "for the"
-msgstr ""
+msgstr "для"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -5021,7 +5228,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "sale order"
-msgstr ""
+msgstr "замовлення на продаж"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5035,7 +5242,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
-msgstr ""
+msgstr "одиниці"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5050,6 +5257,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5058,6 +5268,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5065,3 +5278,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Скасовано (Ref {{ "
+"object.name or 'n/a' }})"
