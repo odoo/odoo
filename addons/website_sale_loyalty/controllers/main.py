@@ -23,7 +23,7 @@ class WebsiteSale(main.WebsiteSale):
             reward_successfully_applied = True
             if len(coupon_status) == 1:
                 coupon, rewards = next(iter(coupon_status.items()))
-                if len(rewards) == 1 and not rewards.multi_product:
+                if request.env.context.get('product_id') or (len(rewards) == 1 and not rewards.multi_product):
                     reward_successfully_applied = self._apply_reward(order, rewards, coupon)
 
             if reward_successfully_applied:
@@ -84,8 +84,13 @@ class WebsiteSale(main.WebsiteSale):
             reward_id = None
 
         reward_sudo = request.env['loyalty.reward'].sudo().browse(reward_id).exists()
-        if not reward_sudo or reward_sudo.multi_product:
+        if not reward_sudo:
             return request.redirect(redirect)
+
+        if reward_sudo.multi_product and 'product_id' in post:
+            request.update_context(product_id=int(post['product_id']))
+        else:
+            request.redirect(redirect)
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
@@ -110,8 +115,10 @@ class WebsiteSale(main.WebsiteSale):
         :returns: whether the reward was successfully applied
         :rtype: bool
         """
+        product_id = request.env.context.get('product_id')
+        product = product_id and request.env['product.product'].sudo().browse(product_id)
         try:
-            reward_status = order._apply_program_reward(reward, coupon)
+            reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
             return False
