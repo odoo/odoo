@@ -409,6 +409,7 @@ export class DiscussChannel extends models.ServerModel {
                 ["res_id", "=", channel.id],
             ]);
             const res = this.channel_basic_info([channel.id]);
+            res.fetchChannelInfoState = "fetched";
             if (this.env.user) {
                 const message_needaction_counter = MailNotification._filter([
                     ["res_partner_id", "=", this.env.user.partner_id],
@@ -416,7 +417,6 @@ export class DiscussChannel extends models.ServerModel {
                     ["mail_message_id", "in", messages.map((message) => message.id)],
                 ]).length;
                 Object.assign(res, {
-                    fetchChannelInfoState: "fetched",
                     message_needaction_counter,
                     message_needaction_counter_bus_id: bus_last_id,
                 });
