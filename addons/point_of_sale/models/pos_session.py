@@ -160,6 +160,24 @@ class PosSession(models.Model):
             'fields': fields
         }
 
+    def load_data_batched(self, model, number, offset):
+        domain = self.config_id._get_available_product_domain()
+        fields = self.env[model]._load_pos_data_fields(self.config_id.id)
+        records = self.env[model].search_read(
+            domain,
+            fields,
+            offset=offset,
+            limit=number,
+            order='sequence,default_code,name',
+            load=False)
+
+        if model == 'product.product':
+            self.env[model]._process_pos_ui_product_product(records, self.config_id)
+
+        return {
+            model: records
+        }
+
     def load_data(self, models_to_load, only_data=False):
         response = {}
         response['pos.session'] = self._load_pos_data(response)

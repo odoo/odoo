@@ -628,7 +628,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 if (!(model in this.records)) {
                     return;
                 }
-                return this.orderedRecords[model][0];
+                return Object.values(this.records[model])[0];
             },
             readBy(key, val) {
                 if (!indexes[model].includes(key)) {
@@ -637,7 +637,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                 return this.indexedRecords[model][key][val];
             },
             readAll() {
-                return this.orderedRecords[model];
+                return Object.values(this.records[model]);
             },
             readAllBy(key) {
                 if (!this.indexes[model].includes(key)) {
@@ -694,34 +694,34 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             },
             // array prototype
             map(fn) {
-                return this.orderedRecords[model].map(fn);
+                return Object.values(this.records[model]).map(fn);
             },
             reduce(fn, initialValue) {
-                return this.orderedRecords[model].reduce(fn, initialValue);
+                return Object.values(this.records[model]).reduce(fn, initialValue);
             },
             flatMap(fn) {
-                return this.orderedRecords[model].flatMap(fn);
+                return Object.values(this.records[model]).flatMap(fn);
             },
             forEach(fn) {
-                return this.orderedRecords[model].forEach(fn);
+                return Object.values(this.records[model]).forEach(fn);
             },
             some(fn) {
-                return this.orderedRecords[model].some(fn);
+                return Object.values(this.records[model]).some(fn);
             },
             every(fn) {
-                return this.orderedRecords[model].every(fn);
+                return Object.values(this.records[model]).every(fn);
             },
             find(fn) {
-                return this.orderedRecords[model].find(fn);
+                return Object.values(this.records[model]).find(fn);
             },
             filter(fn) {
-                return this.orderedRecords[model].filter(fn);
+                return Object.values(this.records[model]).filter(fn);
             },
             sort(fn) {
-                return this.orderedRecords[model].sort(fn);
+                return Object.values(this.records[model]).sort(fn);
             },
             indexOf(record) {
-                return this.orderedRecords[model].indexOf(record);
+                return Object.values(this.records[model]).indexOf(record);
             },
             get length() {
                 return Object.keys(this.records[model]).length;
@@ -925,32 +925,12 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
 
         for (const [model, values] of Object.entries(results)) {
             const valuesToAdd = [];
-            const valuesToUpdate = [];
 
             if (!(model in orderedRecords)) {
                 continue;
             }
 
             indexRecord(model, values);
-            if (orderedRecords[model].length === 0) {
-                orderedRecords[model] = values;
-            } else {
-                for (const value of values) {
-                    const index = orderedRecords[model].findIndex((or) => or.id === value.id);
-
-                    if (index === -1) {
-                        valuesToAdd.push(value);
-                    } else {
-                        valuesToUpdate.push([index, value]);
-                    }
-                }
-
-                for (const [index, value] of valuesToUpdate) {
-                    orderedRecords[model][index] = value;
-                }
-                orderedRecords[model].unshift(...valuesToAdd);
-            }
-
             const event = valuesToAdd.length > 0 ? "create" : "update";
             models[model].triggerEvents(event, values);
         }

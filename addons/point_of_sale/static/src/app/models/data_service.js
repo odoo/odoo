@@ -190,6 +190,49 @@ export class PosData extends Reactive {
             PosData.modelToLoad,
         ]);
     }
+
+    async loadInitialDataBatched(model, offset, number) {
+        const data = await this.orm.call("pos.session", "load_data_batched", [
+            odoo.pos_session_id,
+            model,
+            number,
+            offset,
+        ]);
+
+        const allData = await this.missingRecursive(data);
+        this.models.loadData(allData);
+        await this.processProductAttributes();
+        if (data[model].length > 0) {
+            return this.loadInitialDataBatched(model, offset + number, number);
+        }
+    }
+
+    async processProductAttributes() {
+        const productIds = [];
+        const productTmplIds = [];
+
+        for (const product of this.models["product.product"].getAll()) {
+            if (product.product_template_variant_value_ids.length > 0) {
+                productTmplIds.push(product.raw.product_tmpl_id);
+                productIds.push(product.id);
+            }
+        }
+
+        if (productIds.length) {
+            await this.searchRead("product.product", [
+                "&",
+                ["id", "not in", productIds],
+                ["product_tmpl_id", "in", productTmplIds],
+            ]);
+        }
+
+        for (const product of this.models["product.product"].getAll()) {
+            if (!product.isConfigurable() && productTmplIds.includes(product.raw.product_tmpl_id)) {
+                product.available_in_pos = false;
+            }
+        }
+    }
+
     async initData() {
         const modelClasses = {};
         const relations = {};
@@ -237,6 +280,8 @@ export class PosData extends Reactive {
         await this.loadIndexedDBData();
 
         this.network.loading = false;
+
+        this.loadInitialDataBatched("product.product", 0, 500);
     }
 
     async execute({

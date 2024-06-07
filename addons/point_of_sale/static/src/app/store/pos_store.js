@@ -196,33 +196,6 @@ export class PosStore extends Reactive {
         );
 
         this.computeProductPricelistCache();
-        await this.processProductAttributes();
-    }
-
-    async processProductAttributes() {
-        const productIds = [];
-        const productTmplIds = [];
-
-        for (const product of this.models["product.product"].getAll()) {
-            if (product.product_template_variant_value_ids.length > 0) {
-                productTmplIds.push(product.raw.product_tmpl_id);
-                productIds.push(product.id);
-            }
-        }
-
-        if (productIds.length) {
-            await this.data.searchRead("product.product", [
-                "&",
-                ["id", "not in", productIds],
-                ["product_tmpl_id", "in", productTmplIds],
-            ]);
-        }
-
-        for (const product of this.models["product.product"].getAll()) {
-            if (!product.isConfigurable() && productTmplIds.includes(product.raw.product_tmpl_id)) {
-                product.available_in_pos = false;
-            }
-        }
     }
 
     computeProductPricelistCache(data) {
