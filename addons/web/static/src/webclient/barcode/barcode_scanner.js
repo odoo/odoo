@@ -27,18 +27,21 @@ export class BarcodeDialog extends Component {
         });
 
         onWillStart(async () => {
-            let DetectorClass;
             // Use Barcode Detection API if available.
             // As support is still bleeding edge (mainly Chrome on Android),
             // also provides a fallback using ZXing library.
-            if ("BarcodeDetector" in window) {
-                DetectorClass = BarcodeDetector;
-            } else {
+            try {
+                if (!("BarcodeDetector" in window)) {
+                    return Promise.reject(Error(_t("BarcodeDetector not set")));
+                }
+                await this._setDetector(BarcodeDetector);
+            } catch(err) {
+                const barcodeErrorPrefix = _t("Failed to initialize BarcodeScanner: ");
+                const barcodeErrorSuffix = _t("Trying again with ZX library.")
+                console.log(barcodeErrorPrefix + err.message + barcodeErrorSuffix);
                 await loadJS("/web/static/lib/zxing-library/zxing-library.js");
-                DetectorClass = buildZXingBarcodeDetector(window.ZXing);
+                await this._setDetector(buildZXingBarcodeDetector(window.ZXing))
             }
-            const formats = await DetectorClass.getSupportedFormats();
-            this.detector = new DetectorClass({ formats });
         });
 
         onMounted(async () => {
@@ -81,6 +84,11 @@ export class BarcodeDialog extends Component {
                 this.stream = null;
             }
         });
+    }
+
+    async _setDetector(DetectorClass) {
+        const formats = await DetectorClass.getSupportedFormats();
+        this.detector = new DetectorClass({ formats });
     }
 
     isZXingBarcodeDetector() {
