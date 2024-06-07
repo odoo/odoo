@@ -135,5 +135,22 @@
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
+        <!-- Invoice mail gateway failed -->
+        <template id="email_template_mail_gateway_failed">
+<p>
+    Hi,
+    <br/><br/>
+    Your email has been discarded. the e-mail address you have used only accepts new invoices:
+    <ul>
+        <li>For new invoices, please ensure a PDF or electronic invoice file is attached</li>
+        <li>To add information to a previously sent invoice, reply to your "sent" email</li>
+    </ul>
+    For any other question, write to <t t-esc="company_email"/>.
+    <br/>
+    --
+    <br/>
+    <t t-esc="company_name"/>
+</p>
+        </template>
     </data>
 </odoo>
