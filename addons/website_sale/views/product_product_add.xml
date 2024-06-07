@@ -12,6 +12,9 @@
             <xpath expr="//field[@name='company_id']" position="before">
                 <field name="website_url" invisible="1"/>
             </xpath>
+            <xpath expr="//div[@name='tax_info']" position="after">
+                <field name="public_categ_ids" string="Website Category" widget="many2many_tags" placeholder="Unpublished"/>
+            </xpath>
         </field>
     </record>
 
@@ -20,6 +23,7 @@
         <field name="res_model">product.product</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="context" eval="{'dialog_size': 'medium', 'website_published': True}"/>
         <field name="view_id" ref="product_product_view_form_normalized_website_sale"/>
     </record>
 

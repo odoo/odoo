@@ -16,13 +16,14 @@
          <field name="model">product.product</field>
          <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
          <field name="arch" type="xml">
-             <xpath expr="//div[@name='sales_price']" position="inside">
-                 <field name="tax_string"/>
-             </xpath>
-             <xpath expr="//div[@name='sales_price']" position="after">
-                 <field name="taxes_id" widget="many2many_tags"
+            <xpath expr="//field[@name='list_price']" position="after">
+                <label for="taxes_id" class="mt-1"/>
+                <div name="tax_info" class="d-flex">
+                    <field name="taxes_id" widget="many2many_tags"
                         context="{'default_type_tax_use': 'sale', 'search_default_sale': 1}"
                         options="{'create': false, 'create_edit': false}"/>
+                    <field name="tax_string"/>
+                </div>
              </xpath>
          </field>
      </record>

@@ -214,15 +214,10 @@
     <record id="product_product_view_form_normalized_pos" model="ir.ui.view">
         <field name="name">product.product.view.form.normalized.inherit</field>
         <field name="model">product.product</field>
-        <field name="mode">primary</field>
         <field name="inherit_id" ref="product.product_product_view_form_normalized"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='barcode']" position="attributes">
-                <attribute name="widget">productScanner</attribute>
-            </xpath>
-            <xpath expr="//div[@name='sales_price']" position="after">
-                <field name="available_in_pos"/>
-                <field name="pos_categ_ids" widget="many2many_tags"/>
+            <xpath expr="//div[@name='tax_info']" position="after">
+                <field name="pos_categ_ids" string="POS Category" widget="many2many_tags" placeholder="Unsaleable"/>
             </xpath>
         </field>
     </record>
@@ -232,7 +227,7 @@
         <field name="res_model">product.product</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="context" eval="{'default_available_in_pos': True, 'create_variant_never': 'no_variant', 'dialog_size': 'medium'}"/>
+        <field name="context" eval="{'default_available_in_pos': True, 'create_variant_never': 'no_variant', 'dialog_size': 'medium', 'can_be_sold': True}"/>
         <field name="view_id" ref="product_product_view_form_normalized_pos"/>
     </record>
     <record id="product_product_action_edit_pos" model="ir.actions.act_window">
@@ -240,6 +235,7 @@
         <field name="res_model">product.product</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
+        <field name="context" eval="{'dialog_size': 'medium'}"/>
         <field name="view_id" ref="point_of_sale.product_product_view_form_normalized_pos"/>
     </record>
 </odoo>
