@@ -59,9 +59,6 @@ const threadPatch = {
             this.isLoadingAttachments = false;
         }
     },
-    incrementUnreadCounter() {
-        this.message_unread_counter++;
-    },
     async mute({ minutes = false } = {}) {
         await rpc("/discuss/channel/mute", { channel_id: this.id, minutes });
     },
