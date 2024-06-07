@@ -3041,8 +3041,14 @@ class TestViews(ViewCase):
             '<form><button icon="fa-warning"/></form>',
             'A button with icon attribute (fa-warning) must have title in its tag, parents, descendants or have text'
         )
+        self.assertWarning(
+            '<form><span class="fa fa-warning"/><label for="key"/><field name="key"/></form>',
+            'A <span> with fa class (fa fa-warning) must have title in its tag, parents, descendants or have text'
+        )
         self.assertValid('<form><button icon="fa-warning"/>text</form>')
         self.assertValid('<form><span class="fa fa-warning"/>text</form>')
+        self.assertValid('<form><span class="fa fa-warning"/><label for="key" string="Some Text"/><field name="key"/></form>')
+        self.assertValid('<form><span class="fa fa-warning"/><field name="key" string="Some Text"/></form>')
         self.assertValid('<form>text<span class="fa fa-warning"/></form>')
         self.assertValid('<form><span class="fa fa-warning">text</span></form>')
         self.assertValid('<form><span title="text" class="fa fa-warning"/></form>')
