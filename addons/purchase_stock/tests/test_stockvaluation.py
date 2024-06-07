@@ -3468,3 +3468,75 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         move_line.qty_done = 2.
         delivery.button_validate()
         self.assertEqual(delivery.state, 'done')
+
+    def test_avco_and_returns_currency(self):
+        """AVCO Auto
+        Receive 5 @90$ (450$)
+        rate as 0.654065014062
+        Receive 3 @25€ & Bill
+        Return and Credit Note
+        Ensure the reconcialiation
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        self.env.company.currency_id = self.usd_currency
+
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'rate': 0.654065014062,
+            'currency_id': self.eur_currency.id,
+            'company_id': self.env.company.id
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 5
+            po_line.price_unit = 90.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = 5
+        receipt.button_validate()
+        self._bill(po)
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        po_form.currency_id = self.eur_currency
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 3
+            po_line.price_unit = 25.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = 3
+        receipt.button_validate()
+        self._bill(po)
+
+        # 450$ + 75€(25*3/0.654065014062) 114.67$
+        self.assertEqual(self.product1.value_svl, 564.67)
+        self.assertEqual(self.product1.standard_price, 70.58)
+        self._return(receipt)
+        self._bill(po)
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receive and bill 5 @ 90
+            {'debit': 0.0, 'credit': 450.0, 'reconciled': True},
+            {'debit': 450.0, 'credit': 0.0, 'reconciled': True},
+            # Receive 3 @ 25
+            {'debit': 0.0, 'credit': 114.67, 'reconciled': True},
+            # Bill
+            {'debit': 114.67, 'credit': 0.0, 'reconciled': True},
+            # Return (211.75 with valo, 97.08 with expense)
+            # 211.75 instead of 211.74 due to rounding error smoothing
+            {'debit': 211.75, 'credit': 0.0, 'reconciled': True},
+            {'debit': 0.0, 'credit': 97.08, 'reconciled': True},
+            # Refund
+            {'debit': 0.0, 'credit': 114.67, 'reconciled': True},
+        ])
