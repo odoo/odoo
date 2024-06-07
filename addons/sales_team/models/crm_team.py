@@ -64,6 +64,8 @@ class CrmTeam(models.Model):
             filtered_teams = teams.filtered_domain(domain)
             if default_team and default_team in filtered_teams:
                 team = default_team
+            elif user and user.company_id and len(filtered_teams) > 1:
+                team = filtered_teams.filtered(lambda team: team.company_id == user.company_id)[:1]
             else:
                 team = filtered_teams[:1]
 
