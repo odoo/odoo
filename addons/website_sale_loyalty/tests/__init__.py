@@ -7,3 +7,4 @@ from . import test_website_sale_loyalty_delivery
 from . import test_free_product_reward
 from . import test_ewallet
 from . import test_website_sale_auto_invoice
+from . import test_shop_multi_reward
