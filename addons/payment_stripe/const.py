@@ -33,6 +33,21 @@ PAYMENT_METHODS_MAPPING = {
     'unknown': 'card',  # For express checkout.
 }
 
+INDIAN_MANDATES_SUPPORTED_CURRENCIES = [
+    'USD',
+    'EUR',
+    'GBP',
+    'SGD',
+    'CAD',
+    'CHF',
+    'SEK',
+    'AED',
+    'JPY',
+    'NOK',
+    'MYR',
+    'HKD',
+]
+
 # Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Refund) statuses.
 # For each object's exhaustive status list, see:
 # https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
