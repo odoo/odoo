@@ -12,13 +12,12 @@ import { addGlobalFilter } from "@spreadsheet/../tests/utils/commands";
 import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_pivot";
 import { registries } from "@odoo/o-spreadsheet";
 
-const { pivotRegistry, supportedPivotExplodedFormulaRegistry } = registries;
+const { pivotRegistry } = registries;
 
 import { registry } from "@web/core/registry";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { spreadsheetLinkMenuCellService } from "@spreadsheet/ir_ui_menu/index";
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
-
 
 QUnit.module("freezing spreadsheet", {}, function () {
     QUnit.test("odoo pivot functions are replaced with their value", async function (assert) {
@@ -48,7 +47,6 @@ QUnit.module("freezing spreadsheet", {}, function () {
             isMeasureCandidate: () => false,
             isGroupable: () => false,
         });
-        supportedPivotExplodedFormulaRegistry.add("NEW_KIND_OF_PIVOT", true);
         const spreadsheetData = {
             pivots: {
                 1: {
@@ -218,9 +216,9 @@ QUnit.module("freezing spreadsheet", {}, function () {
         const data = await freezeOdooData(model);
         const filterSheet = data.sheets[1];
         assert.strictEqual(filterSheet.cells.A2.content, "Date Filter");
-        assert.deepEqual(filterSheet.cells.B2, { content: "", format: 1});
-        assert.deepEqual(filterSheet.cells.C2, { content: "", format: 1});
-        assert.strictEqual(data.formats[1], "m/d/yyyy")
+        assert.deepEqual(filterSheet.cells.B2, { content: "", format: 1 });
+        assert.deepEqual(filterSheet.cells.C2, { content: "", format: 1 });
+        assert.strictEqual(data.formats[1], "m/d/yyyy");
         assert.strictEqual(data.globalFilters.length, 1);
         assert.strictEqual(data.globalFilters[0].label, "Date Filter");
         assert.strictEqual(data.globalFilters[0].value, "");
