@@ -42,6 +42,7 @@ import { Component, markup, onWillUnmount, useEffect, useRef, useState } from "@
 import {
     LayoutColumn,
     legacyRegistry,
+    Many2oneUserValue,
     owlRegistry,
     SelectUserValue,
     SnippetOption,
@@ -74,13 +75,17 @@ options.UserValueWidget.include({
     },
 });
 
-const Many2oneUserValueWidget = {include: () => null};
-Many2oneUserValueWidget.include({
-    init() {
-        this._super(...arguments);
-        this.fields = this.bindService("field");
+patch(Many2oneUserValue.prototype, {
+    /**
+     * @override
+     */
+    constructorPatch() {
+        // We can't do that with `constructor()` because super calls a static
+        // property with `this.constructor.prop`. Overriding the constructor in
+        // a patch makes it impossible to call such static properties.
+        super.constructorPatch(...arguments);
+        this.fields = this.env.services.field;
     },
-
     /**
      * @override
      */

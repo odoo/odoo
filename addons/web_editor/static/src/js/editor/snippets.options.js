@@ -5,6 +5,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { registry } from "@web/core/registry";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { camelToKebab } from "@web/core/utils/strings";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
@@ -51,6 +52,7 @@ import {
     markup,
     onMounted,
     onWillStart,
+    onWillUpdateProps,
     onPatched,
     onWillDestroy,
     reactive,
@@ -111,8 +113,7 @@ function serviceCached(service) {
                 : "rpc";
             const cacheId = JSON.stringify(arguments);
             if (!cache[serviceName][cacheId]) {
-                cache[serviceName][cacheId] =
-                    serviceName == "rpc" ? service(...arguments) : service.call(...arguments);
+                cache[serviceName][cacheId] = service.call(...arguments);
             }
             return cache[serviceName][cacheId];
         },
@@ -3079,150 +3080,105 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     }
 });
 
-const Many2oneUserValueWidget = SelectUserValueWidget.extend({
-    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
-    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
-        'input .o_we_m2o_search input': '_onSearchInput',
-        'keydown .o_we_m2o_search input': '_onSearchKeydown',
-        'click .o_we_m2o_search_more': '_onSearchMoreClick',
-    }),
-    // Data-attributes that will be read into `this.options` on init and not
+const Many2oneUserValueWidget = SelectUserValueWidget.extend({});
+
+export class Many2oneUserValue extends SelectUserValue {
+    // Props that will be read into `this.options` on setup and not
     // transfered to inner buttons.
     // `domain` is the static part of the domain used in searches, not
     // depending on already selected ids and other filters.
-    configAttributes: [
+    static configProps = [
         "model", "fields", "limit", "domain",
         "callWith", "createMethod", "filterInModel", "filterInField", "nullText",
         "defaultMessage",
-    ],
+    ];
 
-    /**
-     * @override
-     */
-    init(parent, title, options, $target) {
-        this.afterSearch = [];
+    constructor() {
+        super(...arguments);
+        this.orm = serviceCached(this.env.services.orm);
+        this._state.records = [];
+        this._state.hasMore = false;
+
         this.displayNameCache = {};
-        const {dataAttributes} = options;
-        Object.assign(options, {
+        this.options = Object.assign({}, this._data, {
             limit: '5',
             fields: '[]',
             domain: '[]',
             callWith: 'id',
+            dataAttributes: {},
         });
-        this.configAttributes.forEach(attr => {
-            if (dataAttributes.hasOwnProperty(attr)) {
-                options[attr] = dataAttributes[attr];
-                delete dataAttributes[attr];
-            }
-        });
-        options.limit = parseInt(options.limit);
-        options.fields = JSON.parse(options.fields);
-        if (!options.fields.includes('display_name')) {
-            options.fields.push('display_name');
-        }
-        options.domain = JSON.parse(options.domain);
-        options.domainComponents = {};
-        options.nullText = $target[0].dataset.nullText ||
-            JSON.parse($target[0].dataset.oeContactOptions || '{}')['null_text'];
+        this._updateOptions(this._data);
+        this.options.domainComponents = {};
 
-        this.orm = serviceCached(this.bindService("orm"));
-
-        return this._super(...arguments);
-    },
+        this.constructorPatch();
+    }
+    constructorPatch() {}
     /**
-     * @override
+     * @type {Object[]}
      */
-    async start() {
-        await this._super(...arguments);
+    get records() {
+        return this._state.records;
+    }
+    set records(value) {
+        this._state.records = value;
+    }
+    /**
+     * @type {boolean}
+     */
+    get hasMore() {
+        return this._state.hasMore;
+    }
 
-        this.inputEl = document.createElement('input');
-        this.inputEl.setAttribute('placeholder', _t("Search for records..."));
-        const searchEl = document.createElement('div');
-        searchEl.classList.add('o_we_m2o_search');
-        searchEl.appendChild(this.inputEl);
-        this.menuEl.appendChild(searchEl);
-
-        this.searchMore = document.createElement('div');
-        this.searchMore.classList.add('o_we_m2o_search_more');
-        this.searchMore.textContent = _t("Search more...");
-        this.searchMore.title = _t("Search to show more records");
-
-        if (this.options.createMethod) {
-            this.createInput = new InputUserValueWidget(this, undefined, {
-                classes: ['o_we_large'],
-                dataAttributes: { noPreview: 'true' },
-            }, this.$target);
-            this.createButton = new ButtonUserValueWidget(this, undefined, {
-                classes: ['flex-grow-0'],
-                dataAttributes: {
-                    noPreview: 'true',
-                    [this.options.createMethod]: '', // Value through getValue.
-                },
-                childNodes: [document.createTextNode(_t("Create"))],
-            }, this.$target);
-            // Override isActive so it doesn't show up in toggler
-            this.createButton.isActive = () => false;
-
-            await Promise.all([
-                this.createInput.appendTo(document.createDocumentFragment()),
-                this.createButton.appendTo(document.createDocumentFragment()),
-            ]);
-            this.registerSubWidget(this.createInput);
-            this.registerSubWidget(this.createButton);
-            // TODO @owl-options: rename `createWidget` once m2o and m2m widgets are
-            // refactored, into something OWL-y (probably `createTemplate`?).
-            this.createWidget = _buildRowElement('', {
-                classes: ['o_we_full_row', 'o_we_m2o_create', 'p-1'],
-                childNodes: [this.createInput.el, this.createButton.el],
-            });
-        }
-
-        return this._search('');
-    },
     /**
      * @override
      */
     async setValue(value, methodName) {
-        await this._super(...arguments);
-        if (this.menuTogglerEl.textContent === this.PLACEHOLDER_TEXT.toString()) {
+        await super.setValue(...arguments);
+        if (this._state.toggler.textContent === this.constructor.PLACEHOLDER_TEXT.toString()) {
             // The currently selected value is not present in the search, need to read
             // its display name.
             if (value !== '') {
                 // FIXME: value may not be an id if callWith is specified!
-                this.menuTogglerEl.textContent = await this._getDisplayName(parseInt(value));
+                this._state.toggler.textContent = await this._getDisplayName(parseInt(value));
             } else {
-                this.menuTogglerEl.textContent = this.options.defaultMessage || _t("Choose a record...");
+                this._state.toggler.textContent = this.options.defaultMessage || _t("Choose a record...");
             }
         }
-    },
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        if (methodName === this.options.createMethod && this.createInput) {
-            return this.createInput._value;
+        if (methodName === this.options.createMethod && this.createInputValue) {
+            return this.createInputValue;
         }
-        return this._super(...arguments);
-    },
-    /**
-     * Prevents double widget instanciation for we-buttons that have been
-     * created manually by _search (container widgets will have their innner
-     * html searched for userValueWidgets to instanciate during option startup)
-     *
-     * @override
-     */
-    isContainer() {
-        return false;
-    },
+        return super.getValue(...arguments);
+    }
     /**
      * @override
      */
-    open() {
-        if (this.createInput) {
-            this.createInput.setValue('');
+    registerUserValue(userValue) {
+        // Get a reference to the createButton and make sure it is always
+        // inactive.
+        if (this._data.createMethod) {
+            if (
+                !this.createButton
+                && userValue instanceof ButtonUserValue
+                && userValue._data[this._data.createMethod] !== undefined
+            ) {
+                this.createButton = userValue;
+                this.createButton.isActive = () => false;
+            }
         }
-        return this._super(...arguments);
-    },
+        super.registerUserValue(userValue);
+    }
+    /**
+     * @override
+     */
+    close() {
+        super.close(...arguments);
+        this._search("");
+    }
     /**
      * Updates the domain with defined inclusive filter to make sure that only
      * records that are linked to specific records are retrieved.
@@ -3249,12 +3205,37 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         if (allowedIds.size) {
             this.options.domainComponents.filterInModel = ['id', 'in', [...allowedIds]];
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    _updateOptions(props) {
+        for (const prop in props) {
+            // TODO: @owl-options: remove undefined props in UserValue directly?
+            if (props[prop] === undefined) {
+                continue;
+            }
+            if (this.constructor.configProps.includes(prop)) {
+                this.options[prop] = props[prop];
+            } else {
+                this.options.dataAttributes[prop] = props[prop];
+            }
+        }
+        this.options.limit = parseInt(this.options.limit);
+        if (typeof this.options.fields === "string") {
+            this.options.fields = JSON.parse(this.options.fields);
+        }
+        if (!this.options.fields.includes('display_name')) {
+            this.options.fields.push('display_name');
+        }
+        if (typeof this.options.domain === "string") {
+            this.options.domain = JSON.parse(this.options.domain);
+        }
+        this.options.nullText = this.$target[0].dataset.nullText ||
+            JSON.parse(this.$target[0].dataset.oeContactOptions || '{}')['null_text'];
+    }
     /**
      * Searches the database for corresponding records and updates the dropdown
      *
@@ -3274,18 +3255,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             recTuples.map(([id, _name]) => id),
             this.options.fields
         );
-        // Remove select options.
-        this._userValueWidgets.filter(widget => {
-            return widget instanceof ButtonUserValueWidget &&
-                !widget.isDestroyed() &&
-                widget.el.parentElement.matches('we-selection-items');
-        }).forEach(button => {
-            if (button.isPreviewed()) {
-                button.notifyValueChange('reset');
-            }
-            button.destroy();
-        });
-        this._userValueWidgets = this._userValueWidgets.filter(widget => !widget.isDestroyed());
+
         if (this.options.nullText &&
                 this.options.nullText.toLowerCase().includes(needle.toLowerCase())) {
             // Beware of RPC cache.
@@ -3297,55 +3267,13 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             this.displayNameCache[record.id] = record.display_name;
         });
 
-        await Promise.all(records.slice(0, this.options.limit).map(async record => {
-            // Copy over the data-attributes from the main element, and default the value
-            // to the callWith field of the record so that if it's a method, it will
-            // be called with that value
-            const buttonDataAttributes = Object.assign({}, this.options.dataAttributes);
-            Object.keys(buttonDataAttributes).forEach(key => {
-                buttonDataAttributes[key] = buttonDataAttributes[key] || record[this.options.callWith];
-            });
-            // REMARK: this syntax is very similar to React.createComponent, maybe we could
-            // write a transformer like there is for JSX?
-            const buttonWidget = new ButtonUserValueWidget(this, undefined, {
-                dataAttributes: Object.assign({recordData: JSON.stringify(record)}, buttonDataAttributes),
-                childNodes: [document.createTextNode(record.display_name)],
-            }, this.$target);
-            this.registerSubWidget(buttonWidget);
-            await buttonWidget.appendTo(this.menuEl);
-            if (this._methodsNames) {
-                buttonWidget.loadMethodsData(this._methodsNames);
-            }
-        }));
-        // Load methodsData for new buttons if possible. It will not be possible
-        // when the widget is first created (as this._methodsNames will be undefined)
-        // but the snippetOption lifecycle will load the methods data explicitely
-        // just after creating the widget
-        if (this._methodsNames) {
-            this._methodsNames.forEach(methodName => {
-                this.setValue(this._value, methodName);
-            });
-        }
+        this.records = records.slice(0, this.options.limit);
+        this._state.hasMore = records.length > this.options.limit;
 
-        const hasMore = records.length > this.options.limit;
-        if (hasMore) {
-            this.menuEl.appendChild(this.searchMore);
-            this.searchMore.classList.remove('d-none');
-        } else {
-            this.searchMore.classList.add('d-none');
-        }
-
-        if (this.createWidget) {
-            this.menuEl.appendChild(this.createWidget);
-        }
-
-        this.waitingForSearch = false;
-        this.afterSearch.forEach(cb => cb());
-        this.afterSearch = [];
         if (this.options.nullText && !this.getValue()) {
             this.setValue(0);
         }
-    },
+    }
     /**
      * Returns the domain to use for the search.
      *
@@ -3353,7 +3281,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
      */
     async _getSearchDomain() {
         return this.options.domain;
-    },
+    }
     /**
      * Returns the display name for a given record.
      *
@@ -3364,7 +3292,136 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             this.displayNameCache[recordId] = (await this.orm.read(this.options.model, [recordId], ['display_name']))[0].display_name;
         }
         return this.displayNameCache[recordId];
-    },
+    }
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    userValueNotification(params) {
+        const { widget } = params;
+        if (widget && widget === this.createButton && !params.previewMode) {
+            // When the create button is clicked, make sure the state value
+            // matches the value of the input element because it might have been
+            // removed after closing the dropdown.
+            if (this.displayedValue && !this.createInputValue) {
+                this.createInputValue = this.displayedValue;
+                delete this.displayedValue;
+            }
+            // Prevent creating a record if the input is empty.
+            if (!this.createInputValue) {
+                return;
+            }
+        }
+        if (widget !== this.createButton && this.createInputValue) {
+            // Remove the createInputValue if something else than the
+            // createButton was clicked or hovered, so that it doesn't create a
+            // record. We reset it after the value handling.
+            this.displayedValue = this.createInputValue;
+            this.createInputValue = "";
+        }
+        super.userValueNotification(...arguments);
+        // Reset the createInputValue after value handling, only with
+        // previewMode === true or 'reset'.
+        if (this.displayedValue && params.previewMode) {
+            this.createInputValue = this.displayedValue;
+            delete this.displayedValue;
+        }
+    }
+}
+
+class WeMany2one extends WeSelect {
+    static template = "web_editor.WeMany2one";
+    static StateModel = Many2oneUserValue;
+    static components = { ...WeSelect.components, WeRow, WeInput, WeButton };
+    static configProps = {
+        model: { type: String },
+        domain: { type: String, optional: true },
+        fields: { type: String, optional: true },
+        limit: { type: String, optional: true },
+        callWith: { type: String, optional: true },
+        createMethod: { type: String, optional: true },
+        filterInModel: { type: String, optional: true },
+        filterInField: { type: String, optional: true },
+        nullText: { type: String, optional: true },
+        defaultMessage: { type: String, optional: true },
+    };
+    static props = {
+        ...WeSelect.props,
+        ...this.configProps,
+    };
+
+    setup() {
+        super.setup();
+        const keepLast = new KeepLast();
+        this.afterSearch = [];
+
+        onWillStart(async () => {
+            await this.state._search("");
+        });
+
+        onWillUpdateProps(async (nextProps) => {
+            this.state._updateOptions(nextProps);
+            // Make sure the update is reflected in the prefetched records.
+            await this.state._search("");
+        });
+
+        useEffect(
+            () => {
+                // Load methodsData for WeButtons generated from
+                // this.state.records.
+                if (this.state._methodsNames) {
+                    Object.values(this.state._subValues).forEach(widget => {
+                        if (widget instanceof ButtonUserValue && widget._data.recordData) {
+                            widget.loadMethodsData([...this.state._methodsNames]);
+                        }
+                    });
+                    if (this.state.value !== undefined) {
+                        this.state._methodsNames.forEach(async (methodName) =>
+                            await keepLast.add(this.state.setValue(this.state.value, methodName))
+                        );
+                    }
+                }
+                this.waitingForSearch = false;
+                this.afterSearch.forEach(cb => cb());
+                this.afterSearch = [];
+            },
+            () => [this.state.records]
+        );
+    }
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getAllClasses() {
+        return {
+            ...super.getAllClasses(),
+            "position-static": this.props.createUserValue,
+        };
+    }
+    /**
+     * Copy over the props from the main element, and default the value
+     * to the callWith field of the record so that if it's a method, it will
+     * be called with that value
+     *
+     * @param {Object} record
+     * @returns {Object}
+     */
+    getButtonProps(record) {
+        const buttonProps = Object.assign({}, this.state.options.dataAttributes);
+        Object.keys(buttonProps).forEach((key) => {
+            buttonProps[key] = buttonProps[key] || record[this.state.options.callWith].toString();
+        });
+        buttonProps.recordData = JSON.stringify(record);
+        return buttonProps;
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -3380,8 +3437,16 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             ev.stopPropagation();
             return;
         }
-        return this._super(...arguments);
-    },
+        if (ev.target.closest("we-button")) {
+            this.menuRef.el.querySelector(".o_we_m2o_search input").value = "";
+        }
+        // Reset the input value when creating a new record. The state value is
+        // reset on `setValue` of the ListUserValue.
+        if (ev.target.closest(".o_we_m2o_create") && ev.target.closest("we-button")) {
+            this.menuRef.el.querySelector(".o_we_m2o_create input").value = "";
+        }
+        return super._onClick(...arguments);
+    }
     /**
      * Handles changes to the search bar.
      *
@@ -3393,10 +3458,10 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         // is one that is ongoing (ie currently waiting for the debounce or RPC)
         clearTimeout(this.searchIntent);
         this.waitingForSearch = true;
-        this.searchIntent = setTimeout(() => {
-            this._search(ev.target.value);
+        this.searchIntent = setTimeout(async () => {
+            await this.state._search(ev.target.value);
         }, 500);
-    },
+    }
     /**
      * Selects the first option when pressing enter in the search input.
      *
@@ -3407,7 +3472,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             return;
         }
         const action = () => {
-            const firstButton = this.menuEl.querySelector(':scope > we-button');
+            const firstButton = this.menuRef.el.querySelector(':scope > we-button');
             if (firstButton) {
                 firstButton.click();
             }
@@ -3417,164 +3482,107 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         } else {
             action();
         }
-    },
+    }
     /**
      * Focuses the search input when clicking on the "Search more..." button.
      *
      * @private
      */
     _onSearchMoreClick(ev) {
-        this.inputEl.focus();
-    },
+        this.menuRef.el.querySelector(".o_we_m2o_search input").focus();
+    }
     /**
-     * @override
+     * @private
      */
-    _onUserValueNotification(ev) {
-        const { widget } = ev.data;
-        if (widget && widget === this.createInput) {
-            ev.stopPropagation();
-            return;
-        }
-        if (widget && widget === this.createButton) {
-            // When the create button is clicked, make sure the text
-            // value is restored from the actual input element because
-            // it might have been removed when hovering existing tags.
-            // TODO review this, there is probably better to do
-            this.createInput._value = this.createInput.el.querySelector('input').value;
-            if (!this.createInput._value) {
-                ev.stopPropagation();
-            }
-            return;
-        }
-        if (widget !== this.createButton && this.createInput) {
-            this.createInput._value = '';
-        }
-        return this._super(ev);
-    },
-});
+    _onCreateInputInput(ev) {
+        this.state.createInputValue = ev.currentTarget.value;
+    }
+}
+registry.category("snippet_widgets").add("WeMany2one", WeMany2one);
 
-const Many2manyUserValueWidget = UserValueWidget.extend({
-    configAttributes: ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'],
 
-    /**
-     * @override
-     */
-    init(parent, title, options, $target) {
-        const { dataAttributes } = options;
-        this.configAttributes.forEach(attr => {
-            if (dataAttributes.hasOwnProperty(attr)) {
-                options[attr] = dataAttributes[attr];
-                delete dataAttributes[attr];
+const Many2manyUserValueWidget = UserValueWidget.extend({});
+
+class Many2manyUserValue extends UserValue {
+    static configProps = ['model', 'recordId', 'm2oField', 'createMethod', 'fakem2m', 'filterIn'];
+
+    constructor() {
+        super(...arguments);
+        this._state.m2oProps = {};
+
+        for (const prop in this._data) {
+            if (
+                !this.constructor.configProps.includes(prop)
+                && Many2oneUserValue.configProps.includes(prop)
+            ) {
+                this.m2oProps[prop] = this._data[prop];
             }
-        });
-        this.filterIn = options.filterIn !== undefined;
+        }
+
+        this.filterIn = this._data.filterIn !== undefined;
         if (this.filterIn) {
             // Transfer filter-in values to child m2o.
-            dataAttributes.filterInModel = options.model;
-            dataAttributes.filterInField = options.m2oField;
+            this.m2oProps.filterInModel = this._data.model;
+            this.m2oProps.filterInField = this._data.m2oField;
         }
-        this.orm = this.bindService("orm");
-        this.fields = this.bindService("field");
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    async willStart() {
-        await this._super(...arguments);
-        // If the widget does not have a real m2m field in the database
-        // We do not need to fetch anything from the DB
-        if (this.options.fakem2m) {
-            this.m2oModel = this.options.model;
-            return;
-        }
-        const { model, recordId, m2oField } = this.options;
-        const [record] = await this.orm.read(model, [parseInt(recordId)], [m2oField]);
-        const selectedRecordIds = record[m2oField];
-        // TODO: handle no record
-        const modelData = await this.fields.loadFields(model, { fieldNames: [m2oField] });
-        // TODO: simultaneously fly both RPCs
-        this.m2oModel = modelData[m2oField].relation;
-        this.m2oName = modelData[m2oField].field_description; // Use as string attr?
+    }
+    get m2oProps() {
+        return this._state.m2oProps;
+    }
+    set m2oProps(value) {
+        this._state.m2oProps = value;
+    }
 
-        const selectedRecords = await this.orm.read(this.m2oModel, selectedRecordIds, ['display_name']);
-        // TODO: reconcile the fact that this widget sets its own initial value
-        // instead of it coming through setValue(_computeWidgetState)
-        this._value = JSON.stringify(selectedRecords);
-    },
-    /**
-     * @override
-     */
-    async start() {
-        this.el.classList.add('o_we_m2m');
-        const m2oDataAttributes = Object.entries(this.options.dataAttributes).filter(([attrName]) => {
-            return Many2oneUserValueWidget.prototype.configAttributes.includes(attrName);
-        });
-        m2oDataAttributes.push(
-            ['model', this.m2oModel],
-            ['addRecord', ''],
-            ['createMethod', this.options.createMethod],
-        );
-        // Don't register this one as a subWidget because it will be a subWidget
-        // of the listWidget
-        // TODO @owl-options: rename `createWidget` once m2o and m2m widgets are
-        // refactored, into something OWL-y (probably `createTemplate`?).
-        this.createWidget = new Many2oneUserValueWidget(null, undefined, {
-            dataAttributes: Object.fromEntries(m2oDataAttributes),
-        }, this.$target);
-
-        this.listWidget = registerUserValueWidget('we-list', this, undefined, {
-            dataAttributes: { unsortable: 'true', notEditable: 'true', allowEmpty: 'true' },
-            createWidget: this.createWidget,
-        }, this.$target);
-        await this.listWidget.appendTo(this.containerEl);
-
-        // Make this.el the select's offsetParent so the we-selection-items has
-        // the correct width
-        this.listWidget.el.querySelector('we-select').style.position = 'static';
-        this.el.style.position = 'relative';
-    },
     /**
      * Only allow to fetch/select records which are linked (via `m2oField`) to the
      * specified records.
      *
      * @param {integer[]} linkedRecordsIds
      * @returns {Promise}
-     * @see Many2oneUserValueWidget.setFilterInDomainIds
+     * @see Many2oneUserValue.setFilterInDomainIds
      */
     async setFilterInDomainIds(linkedRecordsIds) {
         if (this.filterIn) {
-            return this.listWidget.createWidget.setFilterInDomainIds(linkedRecordsIds);
+            return this.listUserValue.createUserValue.setFilterInDomainIds(linkedRecordsIds);
         }
-    },
+    }
     /**
      * @override
      */
     loadMethodsData(validMethodNames, ...rest) {
         // TODO: check that addRecord is still needed.
-        this._super(['addRecord', ...validMethodNames], ...rest);
-        this._methodsNames = this._methodsNames.filter(name => name !== 'addRecord');
-    },
+        super.loadMethodsData(['addRecord', ...validMethodNames], ...rest);
+    }
     /**
      * @override
      */
     setValue(value, methodName) {
-        if (methodName === this.options.createMethod) {
-            return this.createWidget.setValue(value, methodName);
+        if (methodName === this._data.createMethod) {
+            return this.listUserValue?.createUserValue.setValue(value, methodName);
         }
         if (!value) {
             // TODO: why do we need this.
-            value = this._value;
+            value = this.value;
         }
-        this._super(value, methodName);
-        this.listWidget.setValue(this._value);
-    },
+        super.setValue(value, methodName);
+        this.listUserValue?.setValue(this.value);
+    }
     /**
      * @override
      */
     getValue(methodName) {
-        return this.listWidget.getValue(methodName);
-    },
+        return this.listUserValue.getValue(methodName);
+    }
+    /**
+     * @override
+     */
+    registerUserValue(userValue) {
+        if (!this.listUserValue && userValue instanceof ListUserValue) {
+            this.listUserValue = userValue;
+        }
+        super.registerUserValue(userValue);
+        this._methodsNames.delete("addRecord");
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -3583,18 +3591,68 @@ const Many2manyUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    _onUserValueNotification(ev) {
-        const { widget, previewMode } = ev.data;
+    userValueNotification(params) {
+        const { widget, previewMode } = params;
         if (!widget) {
-            return this._super(ev);
+            return super.userValueNotification(...arguments);
         }
-        if (widget === this.listWidget) {
-            ev.stopPropagation();
-            this._value = widget._value;
+        if (widget === this.listUserValue) {
+            this.value = widget.value;
             this.notifyValueChange(previewMode);
         }
-    },
-});
+    }
+}
+
+class WeMany2many extends UserValueComponent {
+    static isContainer = true;
+    static template = "web_editor.WeMany2many";
+    static StateModel = Many2manyUserValue;
+    static components = { WeList, WeMany2one, WeTitle };
+    static configProps = {
+        // "model" and "createMethod" are already part of the WeMany2one props.
+        fakem2m: { type: String, optional: true },
+        filterIn: { type: String, optional: true },
+        m2oField: { type: String, optional: true },
+        recordId: { type: String, optional: true },
+    };
+    static props = {
+        ...UserValueComponent.props,
+        ...WeMany2one.configProps,
+        ...this.configProps,
+    };
+
+    setup() {
+        super.setup(...arguments);
+        this.orm = useService("orm");
+        this.field = useService("field");
+
+        onWillStart(async () => {
+            let m2oModel;
+            // If the widget does not have a real m2m field in the database
+            // We do not need to fetch anything from the DB
+            if (this.props.fakem2m) {
+                m2oModel = this.props.model;
+            } else {
+                const { model, recordId, m2oField } = this.props;
+                const [record] = await this.orm.read(model, [parseInt(recordId)], [m2oField]);
+                const selectedRecordIds = record[m2oField];
+                // TODO: handle no record
+                const modelData = await this.field.loadFields(model, { fieldNames: [m2oField] });
+                m2oModel = modelData[m2oField].relation;
+
+                const selectedRecords = await this.orm.read(m2oModel, selectedRecordIds, ['display_name']);
+                this.state.value = JSON.stringify(selectedRecords);
+            }
+
+            Object.assign(this.state.m2oProps, {
+                model: m2oModel,
+                addRecord: '',
+                createMethod: this.props.createMethod,
+            });
+        });
+    }
+}
+registry.category("snippet_widgets").add("WeMany2many", WeMany2many);
 
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,

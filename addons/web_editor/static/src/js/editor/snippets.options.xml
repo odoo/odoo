@@ -82,6 +82,19 @@
     <!-- <WeList addItemTitle="'Add new item to list'" renderListItems="''" hasDefault="'multiple'" defaultValue="'Something'"> -->
         <t t-set-slot="title">A wonderful WeList</t>
     </WeList>
+    <WeMany2one title="'Menu'"
+                setPageTemplate="''"
+                model="'website.page'"
+                noPreview="'true'"
+                domain='`[["is_published", "=", true]]`'
+                createMethod="'createPage'"/>
+    <WeMany2many noPreview="'true'"
+            model="'website.menu'"
+            m2oField="'group_ids'"
+            setGroups="''"
+            createMethod="'createGroup'">
+        <t t-set-slot="title">Menu groups</t>
+    </WeMany2many>
 </t>
 
 <t t-name="web_editor.container_width">
@@ -354,5 +367,48 @@
             </t>
         </div>
     </we-list>
+</t>
+
+<t t-name="web_editor.WeMany2one" t-inherit="web_editor.WeSelect" t-inherit-mode="primary">
+    <!-- The component already extends WeSelect: we can't use <WeSelect> here,
+        we have to xpath it. -->
+    <xpath expr="//we-select" position="attributes">
+        <attribute name="class" add="o_we_many2one" separator=" "/>
+    </xpath>
+    <xpath expr="//we-selection-items/t" position="replace">
+        <div class="o_we_m2o_search">
+            <t t-set="input_placeholder">Search for records</t>
+            <input t-att-placeholder="input_placeholder" t-on-input="_onSearchInput" t-on-keydown="_onSearchKeydown"/>
+        </div>
+        <t t-foreach="state.records" t-as="record" t-key="record.id">
+            <WeButton t-props="getButtonProps(record)" t-esc="record.display_name"/>
+        </t>
+        <t t-set="search_more_title">Search to show more records</t>
+        <div t-if="state.hasMore" class="o_we_m2o_search_more" t-att-title="search_more_title" t-on-click="_onSearchMoreClick">
+            Search more...
+        </div>
+        <t t-if="props.createMethod">
+            <WeRow class="'o_we_full_row o_we_m2o_create p-1'">
+                <input type="text" class="o_we_large" t-on-input="_onCreateInputInput"/>
+                <WeButton class="'flex-grow-0 flex-shrink-0'" noPreview="'true'" t-props="{[props.createMethod]: ''}">
+                    Create
+                </WeButton>
+            </WeRow>
+        </t>
+    </xpath>
+</t>
+<t t-name="web_editor.WeMany2many">
+    <div class="o_we_user_value_widget o_we_m2m position-relative" t-att-class="getAllClasses()">
+        <WeTitle t-if="props.slots?.title || props.title"
+                title="props.title" slots="{title: props.slots?.title}"/>
+        <div>
+            <WeList unsortable="'true'" notEditable="'true'" allowEmpty="'true'">
+                <t t-set-slot="createUserValue">
+                    <WeMany2one createUserValue="'true'" t-props="state.m2oProps"/>
+                </t>
+            </WeList>
+
+        </div>
+    </div>
 </t>
 </templates>

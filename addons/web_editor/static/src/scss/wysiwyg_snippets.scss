@@ -1690,22 +1690,22 @@
                 padding-right: .5em;
                 font-family: FontAwesome;
             }
+        }
 
-            input {
-                flex: 1 1 auto;
-                color: inherit;
-                border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-                border-radius: $o-we-sidebar-content-field-border-radius;
-                background-color: $o-we-sidebar-content-field-input-bg;
-                padding: 1px $o-we-sidebar-content-field-clickable-spacing;
+        :is(.o_we_m2o_search, .o_we_m2o_create) input {
+            flex: 1 1 auto;
+            color: inherit;
+            border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+            border-radius: $o-we-sidebar-content-field-border-radius;
+            background-color: $o-we-sidebar-content-field-input-bg;
+            padding: 1px $o-we-sidebar-content-field-clickable-spacing;
 
-                &:focus {
-                    outline: none;
-                    border-color: $o-we-sidebar-content-field-input-border-color;
-                }
-                &::placeholder {
-                    color: $o-we-sidebar-content-field-control-item-color;
-                }
+            &:focus {
+                outline: none;
+                border-color: $o-we-sidebar-content-field-input-border-color;
+            }
+            &::placeholder {
+                color: $o-we-sidebar-content-field-control-item-color;
             }
         }
 
