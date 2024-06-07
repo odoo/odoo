@@ -148,6 +148,7 @@ class SaleOrderOption(models.Model):
             raise UserError(_('You cannot add options to a confirmed order.'))
 
         values = self._get_values_to_add_to_order()
+        values['sequence'] = max(self.order_id.order_line.mapped('sequence'), default=0) + 1
         order_line = self.env['sale.order.line'].create(values)
 
         self.write({'line_id': order_line.id})
