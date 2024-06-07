@@ -18,6 +18,7 @@ import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_
 import { ProductConfiguratorPopup } from "./product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "./combo_configurator_popup/combo_configurator_popup";
 import { makeAwaitable, ask } from "@point_of_sale/app/store/make_awaitable_dialog";
+import { deserializeDate } from "@web/core/l10n/dates";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboLines } from "../models/utils/compute_combo_lines";
@@ -300,30 +301,53 @@ export class PosStore extends Reactive {
             }
         }
 
-        for (const product of products) {
-            const applicableRules = {};
-
-            for (const item of pricelistItems) {
-                if (!applicableRules[item.pricelist_id.id]) {
-                    applicableRules[item.pricelist_id.id] = [];
-                }
-
-                if (!product.isPricelistItemUsable(item, date)) {
-                    continue;
-                }
-
-                if (item.raw.product_id && product.id === item.raw.product_id) {
-                    applicableRules[item.pricelist_id.id].push(item);
-                } else if (
-                    !item.raw.product_id &&
-                    item.raw.product_tmpl_id &&
-                    product.raw?.product_tmpl_id === item.raw.product_tmpl_id
-                ) {
-                    applicableRules[item.pricelist_id.id].push(item);
-                } else if (!item.raw.product_tmpl_id && !item.raw.product_id) {
-                    applicableRules[item.pricelist_id.id].push(item);
-                }
+        const pushItem = (targetArray, key, item) => {
+            if (!targetArray[key]) {
+                targetArray[key] = [];
             }
+            targetArray[key].push(item);
+        };
+
+        const pricelistRules = {};
+
+        for (const item of pricelistItems) {
+            if (
+                (item.date_start && deserializeDate(item.date_start) > date) ||
+                (item.date_end && deserializeDate(item.date_end) < date)
+            ) {
+                continue;
+            }
+            const pricelistId = item.pricelist_id.id;
+
+            if (!pricelistRules[pricelistId]) {
+                pricelistRules[pricelistId] = {
+                    productItems: {},
+                    productTmlpItems: {},
+                    categoryItems: {},
+                    globalItems: [],
+                };
+            }
+
+            const productId = item.raw.product_id;
+            if (productId) {
+                pushItem(pricelistRules[pricelistId].productItems, productId, item);
+                continue;
+            }
+            const productTmplId = item.raw.product_tmpl_id;
+            if (productTmplId) {
+                pushItem(pricelistRules[pricelistId].productTmlpItems, productTmplId, item);
+                continue;
+            }
+            const categId = item.raw.categ_id;
+            if (categId) {
+                pushItem(pricelistRules[pricelistId].categoryItems, categId, item);
+            } else {
+                pricelistRules[pricelistId].globalItems.push(item);
+            }
+        }
+
+        for (const product of products) {
+            const applicableRules = product.getApplicablePricelistRules(pricelistRules);
             for (const pricelistId in applicableRules) {
                 if (product.cachedPricelistRules[pricelistId]) {
                     const existingRuleIds = product.cachedPricelistRules[pricelistId].map(
