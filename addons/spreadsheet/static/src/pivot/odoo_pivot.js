@@ -8,13 +8,14 @@ import { OdooPivotModel } from "./pivot_model";
 import { EvaluationError, PivotRuntimeDefinition, registries, helpers } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 
-const { pivotRegistry, supportedPivotExplodedFormulaRegistry } = registries;
+const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
 const { pivotTimeAdapter } = helpers;
 
 /**
  * @typedef {import("@odoo/o-spreadsheet").FPayload} FPayload
  * @typedef {import("@odoo/o-spreadsheet").PivotMeasure} PivotMeasure
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
+ * @typedef {import("@odoo/o-spreadsheet").PivotDimension} PivotDimension
  * @typedef {import("@spreadsheet").WebPivotModelParams} WebPivotModelParams
  * @typedef {import("@spreadsheet").OdooPivot<OdooPivotRuntimeDefinition>} IPivot
  * @typedef {import("@spreadsheet").OdooFields} OdooFields
@@ -231,12 +232,12 @@ export class OdooPivot extends OdooViewsDataSource {
     }
 
     /**
-     * @param {string} fieldName
+     * @param {PivotDimension} dimension
      * @returns {{ value: string | number | boolean, label: string }[]}
      */
-    getPossibleFieldValues(fieldName) {
+    getPossibleFieldValues(dimension) {
         this.assertIsValid();
-        return this._model.getPossibleFieldValues(fieldName);
+        return this._model.getPossibleFieldValues(dimension);
     }
 
     async copyModelWithOriginalDomain() {
@@ -282,13 +283,19 @@ export class OdooPivotRuntimeDefinition extends PivotRuntimeDefinition {
         this._model = definition.model;
         /** @type {SortedColumn} */
         this._sortedColumn = definition.sortedColumn;
-        /**
-         * month_number is currently not supported in Odoo, remove it
-         */
         for (const dimension of this.columns.concat(this.rows)) {
+            /**
+             * month_number is currently not supported in Odoo, remove it
+             */
             if (dimension.granularity === "month_number") {
                 dimension.granularity = undefined;
                 dimension.nameWithGranularity = dimension.name;
+            }
+            if (
+                (dimension.type === "date" || dimension.type === "datetime") &&
+                !dimension.granularity
+            ) {
+                dimension.granularity = "month";
             }
         }
     }
@@ -352,4 +359,4 @@ pivotRegistry.add("ODOO", {
     isGroupable: (field) => field.groupable,
 });
 
-supportedPivotExplodedFormulaRegistry.add("ODOO", true);
+supportedPivotPositionalFormulaRegistry.add("ODOO", true);

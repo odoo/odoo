@@ -1,8 +1,12 @@
 /** @odoo-module */
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
-import { toNormalizedPivotValue } from "@spreadsheet/pivot/pivot_model";
 import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
-const { getFirstPivotFunction, getNumberOfPivotFunctions, pivotTimeAdapter } = helpers;
+const {
+    getFirstPivotFunction,
+    getNumberOfPivotFunctions,
+    pivotTimeAdapter,
+    toNormalizedPivotValue,
+} = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 function stringArg(value) {
@@ -64,115 +68,123 @@ QUnit.module("spreadsheet > pivot_helpers", {}, () => {
 QUnit.module("spreadsheet > toNormalizedPivotValue", {}, () => {
     QUnit.test("parse values of a selection, char or text field", (assert) => {
         for (const fieldType of ["selection", "text", "char"]) {
-            const field = {
+            const dimension = {
                 type: fieldType,
-                string: "A field",
+                displayName: "A field",
+                name: "my_field_name",
             };
-            assert.strictEqual(toNormalizedPivotValue(field, "won"), "won");
-            assert.strictEqual(toNormalizedPivotValue(field, "1"), "1");
-            assert.strictEqual(toNormalizedPivotValue(field, 1), "1");
-            assert.strictEqual(toNormalizedPivotValue(field, "11/2020"), "11/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "2020"), "2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "01/11/2020"), "01/11/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "false"), false);
-            assert.strictEqual(toNormalizedPivotValue(field, false), false);
-            assert.strictEqual(toNormalizedPivotValue(field, "true"), "true");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "won"), "won");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "1"), "1");
+            assert.strictEqual(toNormalizedPivotValue(dimension, 1), "1");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "11/2020"), "11/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "2020"), "2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "01/11/2020"), "01/11/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, "true"), "true");
         }
     });
 
     QUnit.test("parse values of time fields", (assert) => {
         for (const fieldType of ["date", "datetime"]) {
-            const field = {
+            const dimension = {
                 type: fieldType,
-                string: "A field",
+                displayName: "A field",
+                name: "my_field_name",
             };
-            // day
-            assert.strictEqual(toNormalizedPivotValue(field, "1/11/2020", "day"), "01/11/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "01/11/2020", "day"), "01/11/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "11/2020", "day"), "11/01/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "1", "day"), "12/31/1899");
-            assert.strictEqual(toNormalizedPivotValue(field, 1, "day"), "12/31/1899");
-            assert.strictEqual(toNormalizedPivotValue(field, "false", "day"), false);
-            assert.strictEqual(toNormalizedPivotValue(field, false, "day"), false);
-            // week
-            assert.strictEqual(toNormalizedPivotValue(field, "11/2020", "week"), "11/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "1/2020", "week"), "1/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "01/2020", "week"), "1/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "false", "week"), false);
-            assert.strictEqual(toNormalizedPivotValue(field, false, "week"), false);
-            // month
-            assert.strictEqual(toNormalizedPivotValue(field, "11/2020", "month"), "11/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "1/2020", "month"), "01/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "01/2020", "month"), "01/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "2/11/2020", "month"), "02/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, "2/1/2020", "month"), "02/2020");
-            assert.strictEqual(toNormalizedPivotValue(field, 1, "month"), "12/1899");
-            assert.strictEqual(toNormalizedPivotValue(field, "false", "month"), false);
-            assert.strictEqual(toNormalizedPivotValue(field, false, "month"), false);
-            // year
-            assert.strictEqual(toNormalizedPivotValue(field, "2020", "year"), 2020);
-            assert.strictEqual(toNormalizedPivotValue(field, 2020, "year"), 2020);
-            assert.strictEqual(toNormalizedPivotValue(field, "false", "year"), false);
-            assert.strictEqual(toNormalizedPivotValue(field, false, "year"), false);
 
-            assert.throws(() => toNormalizedPivotValue(field, "true", "month"));
-            assert.throws(() => toNormalizedPivotValue(field, true, "month"));
-            assert.throws(() => toNormalizedPivotValue(field, "won", "month"));
+            dimension.granularity = "day";
+            assert.strictEqual(toNormalizedPivotValue(dimension, "1/11/2020"), "01/11/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "01/11/2020"), "01/11/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "11/2020"), "11/01/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "1"), "12/31/1899");
+            assert.strictEqual(toNormalizedPivotValue(dimension, 1), "12/31/1899");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
+
+            dimension.granularity = "week";
+            assert.strictEqual(toNormalizedPivotValue(dimension, "11/2020"), "11/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "1/2020"), "1/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "01/2020"), "1/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
+
+            dimension.granularity = "month";
+            assert.strictEqual(toNormalizedPivotValue(dimension, "11/2020"), "11/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "1/2020"), "01/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "01/2020"), "01/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "2/11/2020"), "02/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "2/1/2020"), "02/2020");
+            assert.strictEqual(toNormalizedPivotValue(dimension, 1), "12/1899");
+            assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
+            assert.throws(() => toNormalizedPivotValue(dimension, "true"));
+            assert.throws(() => toNormalizedPivotValue(dimension, true));
+            assert.throws(() => toNormalizedPivotValue(dimension, "won"));
+
+            dimension.granularity = "year";
+            assert.strictEqual(toNormalizedPivotValue(dimension, "2020"), 2020);
+            assert.strictEqual(toNormalizedPivotValue(dimension, 2020), 2020);
+            assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
         }
     });
 
     QUnit.test("parse values of boolean field", (assert) => {
-        const field = {
+        const dimension = {
             type: "boolean",
-            string: "A field",
+            displayName: "A field",
+            name: "my_field_name",
         };
-        assert.strictEqual(toNormalizedPivotValue(field, "false"), false);
-        assert.strictEqual(toNormalizedPivotValue(field, false), false);
-        assert.strictEqual(toNormalizedPivotValue(field, "true"), true);
-        assert.strictEqual(toNormalizedPivotValue(field, true), true);
-        assert.throws(() => toNormalizedPivotValue(field, "11/2020"));
-        assert.throws(() => toNormalizedPivotValue(field, "2020"));
-        assert.throws(() => toNormalizedPivotValue(field, "01/11/2020"));
-        assert.throws(() => toNormalizedPivotValue(field, "1"));
-        assert.throws(() => toNormalizedPivotValue(field, 1));
-        assert.throws(() => toNormalizedPivotValue(field, "won"));
+        assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+        assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
+        assert.strictEqual(toNormalizedPivotValue(dimension, "true"), true);
+        assert.strictEqual(toNormalizedPivotValue(dimension, true), true);
+        assert.throws(() => toNormalizedPivotValue(dimension, "11/2020"));
+        assert.throws(() => toNormalizedPivotValue(dimension, "2020"));
+        assert.throws(() => toNormalizedPivotValue(dimension, "01/11/2020"));
+        assert.throws(() => toNormalizedPivotValue(dimension, "1"));
+        assert.throws(() => toNormalizedPivotValue(dimension, 1));
+        assert.throws(() => toNormalizedPivotValue(dimension, "won"));
     });
 
     QUnit.test("parse values of numeric fields", (assert) => {
         for (const fieldType of ["float", "integer", "monetary", "many2one", "many2many"]) {
-            const field = {
+            const dimension = {
                 type: fieldType,
-                string: "A field",
+                displayName: "A field",
+                name: "my_field_name",
             };
-            assert.strictEqual(toNormalizedPivotValue(field, "2020"), 2020);
-            assert.strictEqual(toNormalizedPivotValue(field, "01/11/2020"), 43841); // a date is actually a number in a spreadsheet
-            assert.strictEqual(toNormalizedPivotValue(field, "11/2020"), 44136); // 1st of november 2020
-            assert.strictEqual(toNormalizedPivotValue(field, "1"), 1);
-            assert.strictEqual(toNormalizedPivotValue(field, 1), 1);
-            assert.strictEqual(toNormalizedPivotValue(field, "false"), false);
-            assert.strictEqual(toNormalizedPivotValue(field, false), false);
-            assert.throws(() => toNormalizedPivotValue(field, "true"));
-            assert.throws(() => toNormalizedPivotValue(field, true));
-            assert.throws(() => toNormalizedPivotValue(field, "won"));
+            assert.strictEqual(toNormalizedPivotValue(dimension, "2020"), 2020);
+            assert.strictEqual(toNormalizedPivotValue(dimension, "01/11/2020"), 43841); // a date is actually a number in a spreadsheet
+            assert.strictEqual(toNormalizedPivotValue(dimension, "11/2020"), 44136); // 1st of november 2020
+            assert.strictEqual(toNormalizedPivotValue(dimension, "1"), 1);
+            assert.strictEqual(toNormalizedPivotValue(dimension, 1), 1);
+            assert.strictEqual(toNormalizedPivotValue(dimension, "false"), false);
+            assert.strictEqual(toNormalizedPivotValue(dimension, false), false);
+            assert.throws(() => toNormalizedPivotValue(dimension, "true"));
+            assert.throws(() => toNormalizedPivotValue(dimension, true));
+            assert.throws(() => toNormalizedPivotValue(dimension, "won"));
         }
     });
 
     QUnit.test("parse values of unsupported fields", (assert) => {
         for (const fieldType of ["one2many", "binary", "html"]) {
-            const field = {
+            const dimension = {
                 type: fieldType,
-                string: "A field",
+                displayName: "A field",
+                name: "my_field_name",
             };
-            assert.throws(() => toNormalizedPivotValue(field, "false"));
-            assert.throws(() => toNormalizedPivotValue(field, false));
-            assert.throws(() => toNormalizedPivotValue(field, "true"));
-            assert.throws(() => toNormalizedPivotValue(field, true));
-            assert.throws(() => toNormalizedPivotValue(field, "11/2020"));
-            assert.throws(() => toNormalizedPivotValue(field, "2020"));
-            assert.throws(() => toNormalizedPivotValue(field, "01/11/2020"));
-            assert.throws(() => toNormalizedPivotValue(field, "1"));
-            assert.throws(() => toNormalizedPivotValue(field, 1));
-            assert.throws(() => toNormalizedPivotValue(field, "won"));
+            assert.throws(() => toNormalizedPivotValue(dimension, "false"));
+            assert.throws(() => toNormalizedPivotValue(dimension, false));
+            assert.throws(() => toNormalizedPivotValue(dimension, "true"));
+            assert.throws(() => toNormalizedPivotValue(dimension, true));
+            assert.throws(() => toNormalizedPivotValue(dimension, "11/2020"));
+            assert.throws(() => toNormalizedPivotValue(dimension, "2020"));
+            assert.throws(() => toNormalizedPivotValue(dimension, "01/11/2020"));
+            assert.throws(() => toNormalizedPivotValue(dimension, "1"));
+            assert.throws(() => toNormalizedPivotValue(dimension, 1));
+            assert.throws(() => toNormalizedPivotValue(dimension, "won"));
         }
     });
 });
