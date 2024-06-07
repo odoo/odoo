@@ -93,8 +93,13 @@ class WebsiteSale(main.WebsiteSale):
             if reward_id in rewards:
                 coupon_id = coupon
         redirect = post.get('r', '/shop/cart')
-        if not coupon_id or not reward_id.exists() or reward_id.multi_product:
+        if not coupon_id or not reward_id.exists():
             return request.redirect(redirect)
+        if reward_id.multi_product and 'product_id' in post:
+            request.update_context(product_id=int(post['product_id']))
+        else:
+            request.redirect(redirect)
+
         self._apply_reward(order, reward_id, coupon_id)
         return request.redirect(redirect)
 
@@ -104,8 +109,10 @@ class WebsiteSale(main.WebsiteSale):
         :returns: whether the reward was successfully applied
         :rtype: bool
         """
+        product_id = request.env.context.get('product_id')
+        product = product_id and request.env['product.product'].sudo().browse(product_id)
         try:
-            reward_status = order._apply_program_reward(reward, coupon)
+            reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
             return False
