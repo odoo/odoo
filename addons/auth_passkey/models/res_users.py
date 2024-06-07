@@ -29,6 +29,7 @@ class UsersPasskey(models.Model):
             'target': 'new',
             'context': {
                 'dialog_size': 'medium',
+                'registration': self.env['auth.passkey.key']._start_registration(),
             }
         }
 

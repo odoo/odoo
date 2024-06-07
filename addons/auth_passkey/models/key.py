@@ -65,7 +65,7 @@ class PassKey(models.Model):
         return auth_verification.new_sign_count
 
     @api.model
-    def start_registration(self):
+    def _start_registration(self):
         assert request
         registration_options = generate_registration_options(
             rp_id=url_parse(self.get_base_url()).host,
