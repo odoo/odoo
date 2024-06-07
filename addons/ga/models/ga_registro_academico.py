@@ -6,5 +6,5 @@ class RegistroAcademico(models.Model):
 
     fecha_entrega = fields.Datetime()
     calificacion = fields.Float()
-    alumno_id = fields.Many2one("ga.alumno", string="Alumno",required=True)
-    actividad_academica_id = fields.Many2one("ga.actividad.academica", string="ActividadAcademica",required=True)
+    alumno_id = fields.Many2one("ga.alumno",required=True)
+    actividad_academica_id = fields.Many2one("ga.actividad.academica",required=True)

@@ -6,4 +6,4 @@ class CicloAcademico(models.Model):
     descripcion = fields.Text()
     fecha_inicio = fields.Date()
     fecha_fin = fields.Date()
-    gestion_id = fields.Many2one("ga.gestion", string="Gestion",required=True)
+    gestion_id = fields.Many2one("ga.gestion",required=True)

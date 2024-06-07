@@ -4,4 +4,4 @@ class Grado(models.Model):
     _description = "GA grado"
     codigo = fields.Char(required = True)
     descripcion = fields.Text()
-    nivel_id = fields.Many2one("ga.nivel", string="Nivel",required=True)
+    nivel_id = fields.Many2one("ga.nivel",required=True)
