@@ -58,13 +58,10 @@ if [ -z "${WIRED_IP}" ] ; then
 		ip addr add 10.11.12.1/24 dev wlan0
 
 		service dnsmasq restart
-
-		service odoo restart
 	fi
 # wired
 else
 	killall nginx
 	service nginx restart
 	service dnsmasq stop
-	service odoo restart
 fi
