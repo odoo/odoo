@@ -67,7 +67,7 @@ function createOdooChartRuntime(chart, getters) {
         locale: getters.getLocale(),
         trendDataSetsValues,
     };
-
+    // config.options.plugins.customHtmlLegend = false;
     const config = {
         type: "bar",
         data: {

@@ -71,7 +71,7 @@ function createOdooChartRuntime(chart, getters) {
         locale,
         trendDataSetsValues,
     };
-
+    // config.options.plugins.customHtmlLegend = false;
     const chartJsDatasets = getLineChartDatasets(definition, chartData);
     const config = {
         type: "line",

@@ -51,7 +51,7 @@ function createOdooChartRuntime(chart, getters) {
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale: getters.getLocale(),
     };
-
+    // config.options.plugins.customHtmlLegend = false;
     const config = {
         type: definition.isDoughnut ? "doughnut" : "pie",
         data: {
