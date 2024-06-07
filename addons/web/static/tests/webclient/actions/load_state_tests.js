@@ -241,6 +241,63 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/web/webclient/load_menus", "load_views", "read"]);
     });
 
+    QUnit.test("properly load default view if record is not available", async function (assert) {
+        assert.expect(12);
+        serverData.actions[6] = {
+            id: 6,
+            xml_id: "action_6",
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "kanban"], [false, "form"]],
+        };
+        serverData.menus[2] = {
+            id: 2,
+            children: [],
+            name: "App1",
+            appID: 1,
+            actionID: 6,
+        };
+        const mockRPC = async function (route, args) {
+            assert.step((args && args.method) || route);
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 6);
+        await testUtils.dom.click($(webClient.el).find(".o_kanban_view .o_kanban_record:first"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view");
+        assert.strictEqual(
+            $(webClient.el).find(".o_control_panel .breadcrumb-item:last").text(),
+            "First record",
+            "should have opened the first record"
+        );
+        // enter wrong record id in url
+        webClient.env.bus.trigger("test:hashchange", {
+            id: 1001,
+            model: "partner",
+            action: 6,
+            menu_id: 2,
+
+        });
+        await testUtils.nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_kanban_view");
+        assert.strictEqual(
+            $(webClient.el).find(".o_control_panel .breadcrumb-item").text(),
+            "Partner",
+            "should have opened the partner kanban view"
+        );
+        assert.verifySteps([
+            "/web/webclient/load_menus",
+            "/web/action/load",
+            "load_views",
+            "/web/dataset/search_read",
+            "read",
+            "read",
+            "/web/dataset/search_read"
+        ]);
+    });
+
     QUnit.test("properly load records with existing first APP", async function (assert) {
         assert.expect(7);
         const mockRPC = async function (route, args) {

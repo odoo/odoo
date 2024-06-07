@@ -1337,8 +1337,11 @@ function makeActionManager(env) {
             const view = _getView(viewType);
             if (view) {
                 // Params valid and view found => performs a "switchView"
-                await switchView(viewType, props);
-                return true;
+                return new Promise(function (resolve) {
+                    switchView(viewType, props)
+                        .then(resolve.bind(this, true))
+                        .catch(resolve.bind(this, false));
+                });
             }
         } else {
             const actionParams = _getActionParams();
