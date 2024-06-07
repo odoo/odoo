@@ -69,7 +69,7 @@ export class ControlButtons extends Component {
         }
 
         this.currentOrder.update({
-            fiscal_position_id: selectedFiscalPosition ? selectedFiscalPosition.id : false,
+            fiscal_position_id: selectedFiscalPosition ? selectedFiscalPosition : false,
         });
     }
     async clickPricelist() {

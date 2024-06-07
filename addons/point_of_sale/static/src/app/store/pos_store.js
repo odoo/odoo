@@ -564,10 +564,9 @@ export class PosStore extends Reactive {
                             return [
                                 "create",
                                 {
-                                    custom_product_template_attribute_value_id:
-                                        this.data.models["product.template.attribute.value"].get(
-                                            id
-                                        ),
+                                    custom_product_template_attribute_value_id: this.data.models[
+                                        "product.template.attribute.value"
+                                    ].get(parseInt(id)),
                                     custom_value: cus,
                                 },
                             ];
@@ -976,22 +975,7 @@ export class PosStore extends Reactive {
                 context,
             });
 
-            const modelToAdd = {};
-            const newData = {};
-            for (const [model, records] of Object.entries(data)) {
-                const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
-
-                if (!modelKey) {
-                    modelToAdd[model] = records;
-                    continue;
-                }
-
-                Object.assign(
-                    newData,
-                    this.models.replaceDataByKey(modelKey, { [model]: records })
-                );
-            }
-
+            const newData = this.models.loadData(data);
             for (const order of [...orders, ...newData["pos.order"]]) {
                 if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
                     this.addPendingOrder([order.id]);
@@ -1010,7 +994,6 @@ export class PosStore extends Reactive {
                 }
             }
 
-            this.models.loadData(modelToAdd);
             this.postSyncAllOrders(newData["pos.order"]);
             return newData["pos.order"];
         } catch (error) {

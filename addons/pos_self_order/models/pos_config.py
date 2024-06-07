@@ -259,7 +259,6 @@ class PosConfig(models.Model):
         for model in self._load_self_data_models():
             try:
                 response[model] = self.env[model]._load_pos_self_data(response)
-                self.env['pos.session']._load_pos_data_relations(model, response)
             except AccessError as e:
                 response[model] = {
                     'data': [],
@@ -267,7 +266,10 @@ class PosConfig(models.Model):
                     'error': e.args[0]
                 }
 
-                self.env['pos.session']._load_pos_data_relations(model, response)
+            if 'id' not in response[model]['fields']:
+                response[model]['fields'] += ['id']
+
+            self.env['pos.session']._load_pos_data_relations(model, response)
 
         return response
 

@@ -80,7 +80,7 @@ export class FloorScreen extends Component {
         this.alert = useService("alert");
         const getPosTable = (el) => {
             return this.pos.models["restaurant.table"].get(
-                [...el.classList].find((c) => c.includes("tableId")).split("-")[1]
+                parseInt([...el.classList].find((c) => c.includes("tableId")).split("-")[1])
             );
         };
         const areElementsIntersecting = (el1, el2) => {

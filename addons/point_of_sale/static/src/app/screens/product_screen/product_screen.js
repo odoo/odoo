@@ -305,6 +305,7 @@ export class ProductScreen extends Component {
         }
 
         list = list
+            .slice(0, 110)
             .filter(
                 (product) =>
                     ![
@@ -312,8 +313,7 @@ export class ProductScreen extends Component {
                         ...this.pos.hiddenProductIds,
                         ...this.pos.session._pos_special_products_ids,
                     ].includes(product.id) && product.available_in_pos
-            )
-            .slice(0, 100);
+            );
 
         return this.searchWord !== ""
             ? list

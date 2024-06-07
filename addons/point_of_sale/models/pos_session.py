@@ -178,6 +178,9 @@ class PosSession(models.Model):
                     'error': e.args[0]
                 }
 
+            if 'id' not in response[model]['fields']:
+                response[model]['fields'] += ['id']
+
             if not only_data:
                 self._load_pos_data_relations(model, response)
 
