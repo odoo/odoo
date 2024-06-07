@@ -21,6 +21,10 @@ class TestMrpOrder(TestMrpCommon):
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
 
     def test_access_rights_manager(self):
+        # Avoid hiding the product_id if the configurator is installed
+        grp_configurator = self.env.ref('mrp.group_mrp_configurator')
+        grp_configurator.write({'users': [(3, self.user_mrp_manager.id)]})
+
         """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
         man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))
         man_order_form.product_id = self.product_4

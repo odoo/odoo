@@ -13,7 +13,7 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
     def request_get_values(self, product_template, ptav_ids=None):
         base_url = product_template.get_base_url()
         response = self.opener.post(
-            url=base_url + '/sale_product_configurator/get_values',
+            url=base_url + '/product_configurator/get_values',
             json={
                 'params': {
                     'product_template_id': product_template.id,

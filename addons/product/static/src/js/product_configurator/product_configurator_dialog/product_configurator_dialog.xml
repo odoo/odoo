@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="product.product_configurator.configuratorDialog">
+        <Dialog size="size" title="title">
+            <table class="o_product_configurator_table table table-sm position-relative mb-0">
+                <thead>
+                    <th class="o_product_configurator_img"><span class="label">Product</span></th>
+                    <th><span class="label"></span></th>
+                    <th t-if="this.env.options.showQty" class="text-center o_product_configurator_qty">
+                        <span class="label">Quantity</span>
+                    </th>
+                </thead>
+                <tbody>
+                    <Product t-props="this.state.products[0]"/>
+                 </tbody>
+            </table>
+            <t t-set-slot="footer">
+                <button
+                    class="btn btn-primary"
+                    t-on-click="onConfirm"
+                    t-att-disabled="!isPossibleConfiguration()">
+                    Confirm
+                </button>
+                <button class="btn btn-secondary" t-on-click="onDiscard">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

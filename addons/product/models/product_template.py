@@ -178,14 +178,18 @@ class ProductTemplate(models.Model):
         for template in self:
             template.can_image_1024_be_zoomed = template.image_1920 and tools.is_image_size_above(template.image_1920, template.image_1024)
 
-    @api.depends('attribute_line_ids', 'attribute_line_ids.value_ids', 'attribute_line_ids.attribute_id.create_variant')
+    @api.depends('attribute_line_ids.value_ids.is_custom', 'attribute_line_ids.attribute_id.create_variant')
     def _compute_has_configurable_attributes(self):
-        """A product is considered configurable if:
+        """ A product is considered configurable if:
         - It has dynamic attributes
         - It has any attribute line with at least 2 attribute values configured
-        """
+        - It has at least one custom attribute value """
         for product in self:
-            product.has_configurable_attributes = product.has_dynamic_attributes() or any(len(ptal.value_ids) >= 2 for ptal in product.attribute_line_ids)
+            product.has_configurable_attributes = (
+                any(attribute.create_variant == 'dynamic' for attribute in product.attribute_line_ids.attribute_id)
+                or any(len(attribute_line_id.value_ids) >= 2 for attribute_line_id in product.attribute_line_ids)
+                or any(attribute_value.is_custom for attribute_value in product.attribute_line_ids.value_ids)
+            )
 
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):

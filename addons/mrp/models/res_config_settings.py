@@ -21,6 +21,7 @@ class ResConfigSettings(models.TransientModel):
     group_unlocked_by_default = fields.Boolean("Unlock Manufacturing Orders", implied_group='mrp.group_unlocked_by_default')
     group_mrp_reception_report = fields.Boolean("Allocation Report for Manufacturing Orders", implied_group='mrp.group_mrp_reception_report')
     group_mrp_workorder_dependencies = fields.Boolean("Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies")
+    group_mrp_configurator = fields.Boolean("Product Configurator", implied_group="mrp.group_mrp_configurator")
 
     def set_values(self):
         routing_before = self.env.user.has_group('mrp.group_mrp_routings')
@@ -49,3 +50,9 @@ class ResConfigSettings(models.TransientModel):
             self.env['mrp.production'].search([('state', 'not in', ('cancel', 'done')), ('is_locked', '=', True)]).is_locked = False
         else:
             self.env['mrp.production'].search([('state', 'not in', ('cancel', 'done')), ('is_locked', '=', False)]).is_locked = True
+
+    @api.onchange('group_mrp_configurator')
+    def _onchange_group_product_variant(self):
+        """The product Configurator requires the product variants activated."""
+        if self.group_mrp_configurator and not self.group_product_variant:
+            self.group_product_variant = True

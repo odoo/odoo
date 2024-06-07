@@ -27,7 +27,7 @@ class MrpProduction(models.Model):
     _name = 'mrp.production'
     _description = 'Production Order'
     _date_name = 'date_start'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'product.catalog.mixin', 'product.description.mixin']
     _order = 'priority desc, date_start asc,id'
 
     @api.model
@@ -64,7 +64,6 @@ class MrpProduction(models.Model):
         domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, copy=True, precompute=True,
         readonly=False, required=True, check_company=True)
-    product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
     workcenter_id = fields.Many2one('mrp.workcenter', store=False)  # Only used for search in view_mrp_production_filter
     product_tracking = fields.Selection(related='product_id.tracking')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
@@ -196,7 +195,6 @@ class MrpProduction(models.Model):
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
         copy=False)
-    product_description_variants = fields.Char('Custom Description')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split',
