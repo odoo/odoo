@@ -1,6 +1,8 @@
 $o-default-report-font: 'Lato' !default;
 $o-default-report-primary-color: $o-gray-900 !default;
 $o-default-report-secondary-color: $o-default-report-primary-color !default;
+$o-default-report-margins:  11mm !default; // 7mm + container padding
+
 
 html, body {
     height: 100%;
@@ -12,6 +14,22 @@ body {
     word-wrap: break-word;
     font-family: $o-default-report-font;
     line-height: 1.5;
+}
+
+
+// Layout spacing in css instead of relying on paperformat using padding instead
+// of margins to override the .container padding while keeping its margin.
+
+.o_body_html, .o_body_pdf.o_css_margins {
+    padding: 0 $o-default-report-margins;
+
+    .header {
+        padding-top: $o-default-report-margins;
+    }
+
+    .footer > div {
+        padding-bottom: $o-default-report-margins;
+    }
 }
 
 span.o_force_ltr {

@@ -26,7 +26,7 @@
                     });
                 </script>
             </head>
-            <body t-att-class="'container' if not full_width else 'container-fluid'" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+            <body t-attf-class="o_body_html {{'container' if not full_width else 'container-fluid'}} overflow-x-hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
                 <div id="wrapwrap">
                     <main>
                         <t t-out="0"/>
@@ -273,7 +273,7 @@
                     }
                 </script>
             </head>
-            <body class="container" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" style="overflow:hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+            <body t-attf-class="o_body_pdf {{env['ir.actions.report'].get_paperformat_by_xmlid(report_xml_id).css_margins and 'o_css_margins'}} container overflow-hidden" t-att-data-report-id="report_xml_id" t-att-onload="subst and 'subst()'" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
                 <t t-out="body"/>
             </body>
         </html>

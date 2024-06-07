@@ -187,6 +187,7 @@ class report_paperformat(models.Model):
     report_ids = fields.One2many('ir.actions.report', 'paperformat_id', 'Associated reports', help="Explicitly associated reports")
     print_page_width = fields.Float('Print page width (mm)', compute='_compute_print_page_size')
     print_page_height = fields.Float('Print page height (mm)', compute='_compute_print_page_size')
+    css_margins = fields.Boolean('Use css margins', default=False)
 
     @api.constrains('format')
     def _check_format_or_page(self):
