@@ -36,7 +36,7 @@ class WebsiteEventMeetController(EventCommunityController):
         """
         return request.render(
             "website_event_meet.event_meet",
-            self._event_meeting_rooms_get_values(event, lang=lang)
+            self._event_meeting_rooms_get_values(event, lang=lang) | {'seo_object': event.community_menu_ids}
         )
 
     def _event_meeting_rooms_get_values(self, event, lang=None):

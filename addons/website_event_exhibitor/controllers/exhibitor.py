@@ -37,7 +37,7 @@ class ExhibitorController(WebsiteEventController):
     def event_exhibitors(self, event, **searches):
         return request.render(
             "website_event_exhibitor.event_exhibitors",
-            self._event_exhibitors_get_values(event, **searches)
+            self._event_exhibitors_get_values(event, **searches) | {'seo_object': event.exhibitor_menu_ids}
         )
 
     def _event_exhibitors_get_values(self, event, **searches):
