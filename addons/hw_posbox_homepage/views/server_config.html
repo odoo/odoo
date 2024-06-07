@@ -2,26 +2,44 @@
 {% from "loading.html" import loading_block_ui %}
 {% block head %}
     <script>
-        $(document).ready(function () {
-            $('#server-config').submit(function(e){
+        function displayMessage(message, alert, error=false) {
+            alert
+                .toggleClass('text-red', error)
+                .toggleClass('text-green', !error)
+                .html(message);
+        }
+
+        $(function () {
+            $('#server-config').on("submit", (function(e){
+                const server_token = $('#server-token').val().split('|')[0]; // only url
                 e.preventDefault();
                 $('.loading-block').removeClass('o_hide');
                 $.ajax({
                     url: '/server_connect',
                     type: 'post',
                     data: $('#server-config').serialize(),
-                }).fail(function () {
+                })
+                .done(function (response) {
+                    const success = response.toString().toLowerCase().includes('success');
+                    setTimeout(() => {
+                        $('.loading-block').addClass('o_hide')
+                        displayMessage(response, $('.alert'), !success);
+                        if (success) $('#server-status').html(server_token);
+                    }, success ? 2000 : 0);  // Add little delay if success
+                })
+                .fail(function () {
+                    let rebootTime = 100000;
+                    const name = $('#iotname')[0];
                     $('.message-status').html('Configure Domain Server <br> Redirect to IoT Box');
-                    if ($('#iotname')[0].defaultValue == $('#iotname')[0].value){
-                        var rebootTime = 30000;
-                    }else{
-                        var rebootTime = 100000;
+
+                    if (name.defaultValue === name.value) {
+                        rebootTime = 30000;
                     }
                     setTimeout(function () {
                             location.reload(true);
                     }, rebootTime);
                 });
-            });
+            }));
         });
     </script>
 {% endblock %}
@@ -39,7 +57,7 @@
             </tr>
             <tr>
                 <td>Server Token</td>
-                <td><input type="text" name="token"></td>
+                <td><input type="text" name="token" id="server-token"></td>
             </tr>
             <tr>
                 <td/>
@@ -47,8 +65,9 @@
             </tr>
         </table>
         <p class="text-center font-small">
-            Your current server <strong>{{ server_status }}</strong>
+            Your current server <strong id="server-status">{{ server_status }}</strong>
         </p>
+        <div class="alert text-center" role="alert"></div>
         {{ loading_block_ui(loading_message) }}
     </form>
     <div class="text-center font-small" style="margin: 10px auto;">
