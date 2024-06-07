@@ -64,8 +64,16 @@ class ProductAttribute(models.Model):
 
     @api.depends('product_tmpl_ids')
     def _compute_number_related_products(self):
+        res = {
+            attribute.id: count
+            for attribute, count in self.env['product.template.attribute.line']._read_group(
+                domain=[('attribute_id', 'in', self.ids)],
+                groupby=['attribute_id'],
+                aggregates=['product_tmpl_id:count_distinct'],
+            )
+        }
         for pa in self:
-            pa.number_related_products = len(pa.product_tmpl_ids)
+            pa.number_related_products = res.get(pa.id, 0)
 
     @api.depends('attribute_line_ids.active', 'attribute_line_ids.product_tmpl_id')
     def _compute_products(self):
