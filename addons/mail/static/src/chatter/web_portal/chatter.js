@@ -227,13 +227,13 @@ export class Chatter extends Component {
      */
     get toRecipientsText() {
         if (this.state.thread?.recipients.length === 0) {
-            return _t("No recipient");
+            return undefined;
         }
         const recipients = [...(this.state.thread?.recipients ?? [])]
             .slice(0, 5)
             .map(({ partner }) => {
                 const text = partner.email ? partner.emailWithoutDomain : partner.name;
-                return `<span class="text-muted" title="${escape(
+                return `<span class="text-muted ps-1" title="${escape(
                     partner.email || _t("no email address")
                 )}">${escape(text)}</span>`;
             });
