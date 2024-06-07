@@ -37,7 +37,7 @@ class IrAttachment(models.Model):
         try:
             xml_tree = etree.fromstring(content)
         except Exception as e:
-            _logger.exception("Error when converting the xml content to etree: %s", e)
+            _logger.warning("Error when converting the xml content to etree: %s", e)
             return []
 
         to_process = []
