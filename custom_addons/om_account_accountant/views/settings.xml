@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.accountant</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="attributes">
+                <attribute name="data-string">Accounting</attribute>
+                <attribute name="string">Accounting</attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_show_sale_receipts']" position="attributes">
+                <attribute name="widget"></attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_show_purchase_receipts']" position="attributes">
+                <attribute name="widget"></attribute>
+            </xpath>
+            <app name="account" position="inside">
+                <h2>Anglo-Saxon Accounting</h2>
+                <div class="row mt16 o_settings_container"
+                    name="anglo_saxon_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box" id="anglo_saxon">
+                        <div class="o_setting_left_pane">
+                            <field name="anglo_saxon_accounting" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Anglo-Saxon Accounting"
+                                for="anglo_saxon_accounting"/>
+                            <div class="text-muted">
+                                Record the cost of a good as an expense when this good is
+                                invoiced to a final customer (instead of recording the cost as soon
+                                as the product is received in stock).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </app>
+        </field>
+    </record>
+
+</odoo>
