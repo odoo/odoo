@@ -271,9 +271,11 @@ class MrpWorkorder(models.Model):
             wo.barcode = f"{wo.production_id.name}/{wo.id}"
 
     @api.depends('production_id', 'product_id')
+    @api.depends_context('within_gantt')
     def _compute_display_name(self):
+        fct = (lambda w: f"{w.product_id.name} - {w.production_id.name} - {w.name}") if self.env.context.get('within_gantt') else (lambda w: f"{w.production_id.name} - {w.name}")
         for wo in self:
-            wo.display_name = f"{wo.production_id.name} - {wo.name}"
+            wo.display_name = fct(wo)
 
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
@@ -553,7 +555,7 @@ class MrpWorkorder(models.Model):
 
     @api.model
     def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=[], progress_bar_fields=None, start_date=None, stop_date=None, scale=None):
-        gantt_data = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, progress_bar_fields=progress_bar_fields, start_date=start_date, stop_date=stop_date, scale=scale)
+        gantt_data = super(MrpWorkorder, self.with_context(within_gantt=True)).get_gantt_data(domain, groupby, read_specification, limit, offset, unavailability_fields, progress_bar_fields, start_date, stop_date, scale)
         if 'workcenter_id' not in gantt_data['unavailabilities']:
             workcenter_ids = set()
             if groupby and 'workcenter_id' in groupby:
