@@ -1213,7 +1213,7 @@ class Channel(models.Model):
         self.env['mail.message'].flush_model()
         self.env.cr.execute(
             """
-                   SELECT ARRAY_AGG(last_message_id)
+                   SELECT last_message_id
                      FROM discuss_channel
         LEFT JOIN LATERAL (
                               SELECT id
@@ -1224,11 +1224,12 @@ class Channel(models.Model):
                                LIMIT 1
                           ) AS t(last_message_id) ON TRUE
                     WHERE discuss_channel.id IN %(ids)s
+                 GROUP BY discuss_channel.id, t.last_message_id
+                 ORDER BY discuss_channel.id
             """,
             {"ids": tuple(self.ids)},
         )
-        message_ids, = self.env.cr.fetchone()
-        return self.env["mail.message"].browse([mid for mid in message_ids if mid])
+        return self.env["mail.message"].browse([mid for (mid,) in self.env.cr.fetchall() if mid])
 
     def load_more_members(self, known_member_ids):
         self.ensure_one()
