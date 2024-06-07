@@ -159,9 +159,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         for test_move in test_moves:
             self.assertFalse(test_move.is_move_sent)
 
-        composer = self.env['account.move.send']\
-            .with_context(active_model='account.move', active_ids=test_moves.ids)\
-            .create({'mail_template_id': move_template.id})
+        options = self.env['account.move.send']._get_wizard_vals_restrict_to({'mail_template_id': move_template.id, 'checkbox_send_mail': True})
+        composer = self.env['account.move.send'].with_context(active_model='account.move', active_ids=test_moves.ids).create(options)
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print(force_synchronous=True)
@@ -231,9 +230,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_customer = self.test_customers[0].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        composer = self.env['account.move.send']\
-            .with_context(active_model='account.move', active_ids=test_move.ids)\
-            .create({'mail_template_id': move_template.id})
+        options = self.env['account.move.send']._get_wizard_vals_restrict_to({'mail_template_id': move_template.id, 'checkbox_send_mail': True})
+        composer = self.env['account.move.send'].with_context(active_model='account.move', active_ids=test_move.ids).create(options)
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
              self.mock_mail_app():
@@ -318,9 +316,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_customer = self.test_customers[1].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        composer = self.env['account.move.send']\
-            .with_context(active_model='account.move', active_ids=test_move.ids)\
-            .create({'mail_template_id': move_template.id})
+        options = self.env['account.move.send']._get_wizard_vals_restrict_to({'mail_template_id': move_template.id, 'checkbox_send_mail': True})
+        composer = self.env['account.move.send'].with_context(active_model='account.move', active_ids=test_move.ids).create(options)
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
              self.mock_mail_app():
@@ -412,9 +409,12 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             'email': "additional@example.com",
         })
 
-        composer = self.env['account.move.send']\
-            .with_context(active_model='account.move', active_ids=test_move.ids)\
-            .create({'mail_template_id': move_template.id, 'mail_partner_ids': additional_partner.ids})
+        options = self.env['account.move.send']._get_wizard_vals_restrict_to({
+            'mail_template_id': move_template.id,
+            'mail_partner_ids': additional_partner.ids,
+            'checkbox_send_mail': True,
+        })
+        composer = self.env['account.move.send'].with_context(active_model='account.move', active_ids=test_move.ids).create(options)
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print()
