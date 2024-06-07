@@ -6,7 +6,7 @@ from . import test_ir_ui_menu
 from . import test_link_preview
 from . import test_mail_activity
 from . import test_mail_composer
-from . import test_mail_mail_stable_selection
+from . import test_mail_message_translate
 from . import test_mail_render
 from . import test_mail_template
 from . import test_mail_tools
@@ -14,7 +14,6 @@ from . import test_res_company
 from . import test_res_partner
 from . import test_res_users
 from . import test_res_users_settings
-from . import test_translation_controller
 from . import test_uninstall
 from . import test_update_notification
 
