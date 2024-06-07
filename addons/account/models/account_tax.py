@@ -2078,7 +2078,7 @@ class AccountTax(models.Model):
         amount_untaxed_currency = 0.0
         for base_line, tax_details_results in to_process:
             amount_untaxed += comp_curr.round(tax_details_results['total_excluded'] / base_line['rate'])
-            amount_untaxed_currency += tax_details_results['total_excluded']
+            amount_untaxed_currency += currency.round(tax_details_results['total_excluded'])
 
         def grouping_key_generator(base_line, tax_data):
             return {'tax_group': tax_data['tax'].tax_group_id}
@@ -2119,8 +2119,8 @@ class AccountTax(models.Model):
                 'tax_group_name': tax_group.name,
                 'tax_group_amount': tax_detail['tax_amount_currency'],
                 'tax_group_amount_company_currency': tax_detail['tax_amount'],
-                'tax_group_base_amount': tax_detail['display_base_amount_currency'],
-                'tax_group_base_amount_company_currency': tax_detail['display_base_amount'],
+                'tax_group_base_amount': currency.round(tax_detail['display_base_amount_currency']),
+                'tax_group_base_amount_company_currency': company.currency_id.round(tax_detail['display_base_amount']),
                 'formatted_tax_group_amount': formatLang(self.env, tax_detail['tax_amount_currency'], currency_obj=currency),
                 'formatted_tax_group_base_amount': formatLang(self.env, tax_detail['display_base_amount_currency'], currency_obj=currency),
             })
