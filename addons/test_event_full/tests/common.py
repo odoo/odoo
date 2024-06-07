@@ -54,6 +54,16 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             signature='--\nErnest',
         )
 
+        cls.user_event_web_manager = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='crm_manager@test.example.com',
+            groups='event.group_event_manager,website.group_website_designer',
+            login='user_event_web_manager',
+            name='Martin Sales Manager',
+            notification_type='inbox',
+        )
+
         cls.customer = cls.env['res.partner'].create({
             'country_id': cls.env.ref('base.be').id,
             'email': 'customer.test@example.com',
@@ -301,6 +311,20 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                     self.assertIn(answer.value_answer_id.name, lead.description)
                 else:
                     self.assertIn(answer.value_text_box, lead.description)  # better: check multi line
+
+    def assert_seo_data(self, event, page_name, meta_title):
+        """ This helper function asserts seo data of event and different ir.ui.view records """
+        view_model = self.env['ir.ui.view'].search([('name', '=', f'{page_name} {event.name}')])
+        self.assertFalse(view_model.website_meta_title, f'{page_name} page should initially have no meta title')
+
+        view_model.write({
+            'website_meta_title': meta_title,
+        })
+
+        self.assertTrue(view_model.website_meta_title, f'{page_name} page should have a meta title after writing')
+        self.assertNotEqual(event.website_meta_title, view_model.website_meta_title, f'Event and {page_name} page should have different meta titles')
+
+        return view_model
 
 
 class TestEventMailCommon(EventCase, SMSCase, MailCommon, CronMixinCase):

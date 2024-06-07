@@ -35,12 +35,16 @@ class ExhibitorController(WebsiteEventController):
         '/event/<model("event.event"):event>/exhibitor'
     ], type='http', auth="public", website=True, sitemap=False, methods=['GET', 'POST'])
     def event_exhibitors(self, event, **searches):
+        menu = request.env["website.menu"].search([('url', '=', request.httprequest.path)])
+        view = request.env["website.event.menu"].sudo().search([('event_id', '=', event.id), ('menu_id', '=', menu.id)]).view_id
+        page = view.key if view else "website_event_exhibitor.event_exhibitors"
+        seo_object = request.website.get_template(page)
         return request.render(
             "website_event_exhibitor.event_exhibitors",
-            self._event_exhibitors_get_values(event, **searches)
+            self._event_exhibitors_get_values(event, seo_object, **searches)
         )
 
-    def _event_exhibitors_get_values(self, event, **searches):
+    def _event_exhibitors_get_values(self, event, seo_object, **searches):
         # init and process search terms
         searches.setdefault('search', '')
         searches.setdefault('countries', '')
@@ -106,6 +110,7 @@ class ExhibitorController(WebsiteEventController):
             # event information
             'event': event,
             'main_object': event,
+            'seo_object': seo_object,
             'sponsor_categories': sponsor_categories,
             'hide_sponsors': True,
             # search information
