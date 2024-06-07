@@ -373,12 +373,13 @@ class HrEmployeePrivate(models.Model):
 
     def write(self, vals):
         if 'address_home_id' in vals:
+            address_home_id = vals['address_home_id']
             account_ids = vals.get('bank_account_id') or self.bank_account_id.ids
-            if account_ids:
-                self.env['res.partner.bank'].browse(account_ids).partner_id = vals['address_home_id']
+            if account_ids and address_home_id:
+                self.env['res.partner.bank'].browse(account_ids).partner_id = address_home_id
             self.message_unsubscribe(self.address_home_id.ids)
-            if vals['address_home_id']:
-                self._message_subscribe([vals['address_home_id']])
+            if address_home_id:
+                self._message_subscribe([address_home_id])
         if 'user_id' in vals:
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
