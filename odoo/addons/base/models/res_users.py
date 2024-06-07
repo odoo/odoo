@@ -883,18 +883,6 @@ class Users(models.Model):
             with self._assert_can_auth(user=uid):
                 if not self.env.user.active:
                     raise AccessDenied()
-                print('UOUI'*30)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
-                print(uid)
                 credential = {'login': uid, 'password': passwd, 'type': 'password'}
                 self._check_credentials(credential, {'interactive': False})
 

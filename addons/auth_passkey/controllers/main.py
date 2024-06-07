@@ -1,9 +1,8 @@
 import json
-from base64 import urlsafe_b64encode
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.home import Home, CREDENTIAL_PARAMS
+from odoo.addons.web.controllers.home import CREDENTIAL_PARAMS
 
 from ..lib.duo_labs.webauthn import options_to_json
 
