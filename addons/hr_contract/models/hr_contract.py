@@ -63,9 +63,9 @@ class Contract(models.Model):
             * red = Shows a warning on the employees kanban view
     """
     kanban_state = fields.Selection([
-        ('normal', 'Grey'),
-        ('done', 'Green'),
-        ('blocked', 'Red')
+        ('normal', 'Ongoing'),
+        ('done', 'Ready'),
+        ('blocked', 'Warning')
     ], string='Kanban State', default='normal', tracking=True, copy=False)
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
