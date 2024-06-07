@@ -29,18 +29,19 @@ class WebsiteEventMeetController(EventCommunityController):
     # ------------------------------------------------------------
 
     @http.route()
-    def community(self, event, page=1, lang=None, **kwargs):
+    def community(self, event, page_seo, page=1, lang=None, **kwargs):
         """Display the meeting rooms of the event on the frontend side.
 
         :param event: event for which we display the meeting rooms
         :param lang: lang id used to perform a search
         """
+        seo_object = request.website.get_template('website_event_meet.' + page_seo)
         return request.render(
             "website_event_meet.event_meet",
-            self._event_meeting_rooms_get_values(event, lang=lang)
+            self._event_meeting_rooms_get_values(event, seo_object, page_seo, lang=lang)
         )
 
-    def _event_meeting_rooms_get_values(self, event, lang=None):
+    def _event_meeting_rooms_get_values(self, event, seo_object, page_seo, lang=None):
         search_domain = self._get_event_rooms_base_domain(event)
         meeting_rooms_all = request.env['event.meeting.room'].sudo().search(search_domain)
         if lang:
@@ -61,6 +62,8 @@ class WebsiteEventMeetController(EventCommunityController):
             # event information
             "event": event,
             'main_object': event,
+            'seo_object': seo_object,
+            'page': page_seo,
             # rooms
             "meeting_rooms": meeting_rooms,
             "current_lang": request.env["res.lang"].browse(int(lang)) if lang else False,

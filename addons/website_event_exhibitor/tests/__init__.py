@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from . import test_event_seo_data
 from . import test_sponsor_internals

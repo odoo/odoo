@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class Event(models.Model):
@@ -50,3 +51,30 @@ class Event(models.Model):
                 event.meeting_room_allow_creation = True
             elif not event.community_menu or not event.meeting_room_allow_creation:
                 event.meeting_room_allow_creation = False
+
+    # ------------------------------------------------------------
+    # WEBSITE MENU MANAGEMENT
+    # ------------------------------------------------------------
+
+    def toggle_community_menu(self, val):
+        self.community_menu = val
+
+    def _get_menu_update_fields(self):
+        return super()._get_menu_update_fields() + ['community_menu']
+
+    def _update_website_menus(self, menus_update_by_field=None):
+        super()._update_website_menus(menus_update_by_field=menus_update_by_field)
+        for event in self:
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('community_menu')):
+                event._update_website_menu_entry('community_menu', 'community_menu_ids', 'community')
+
+    def _get_menu_type_field_matching(self):
+        res = super()._get_menu_type_field_matching()
+        res['community'] = 'community_menu'
+        return res
+
+    def _get_website_menu_entries(self):
+        self.ensure_one()
+        return super()._get_website_menu_entries() + [
+            (_('Community'), '/event/%s/community' % slug(self), 'website_event_meet.event_meet', 80, 'community')
+        ]

@@ -276,11 +276,10 @@ class Event(models.Model):
 
         :return list: list of fields, each of which triggering a menu update
           like website_menu, website_track, ... """
-        return ['community_menu', 'introduction_menu', 'location_menu', 'register_menu']
+        return ['introduction_menu', 'location_menu', 'register_menu']
 
     def _get_menu_type_field_matching(self):
         return {
-            'community': 'community_menu',
             'introduction': 'introduction_menu',
             'location': 'location_menu',
             'register': 'register_menu',
@@ -346,7 +345,6 @@ class Event(models.Model):
             (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
             (_('Location'), False, 'website_event.template_location', 50, 'location'),
             (_('Info'), '/event/%s/register' % slug(self), False, 100, 'register'),
-            (_('Community'), '/event/%s/community' % slug(self), False, 80, 'community'),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -361,8 +359,6 @@ class Event(models.Model):
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
-            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('community_menu')):
-                event._update_website_menu_entry('community_menu', 'community_menu_ids', 'community')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('introduction_menu')):
                 event._update_website_menu_entry('introduction_menu', 'introduction_menu_ids', 'introduction')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('location_menu')):
@@ -414,6 +410,13 @@ class Event(models.Model):
         """
         self.check_access_rights('write')
         view_id = False
+
+        if url and xml_id:
+            page_result = self.env['website'].sudo().new_page(
+                name=f'{name} {self.name}', template=xml_id,
+                add_menu=False, ispage=False)
+            url = url + page_result['url']
+
         if not url:
             # add_menu=False, ispage=False -> simply create a new ir.ui.view with name
             # and template

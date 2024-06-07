@@ -30,17 +30,20 @@ class ExhibitorController(WebsiteEventController):
 
     @http.route([
         # TDE BACKWARD: exhibitors is actually a typo
-        '/event/<model("event.event"):event>/exhibitors',
+        '/event/<model("event.event"):event>/exhibitors/<path:page>',
         # TDE BACKWARD: matches event/event-1/exhibitor/exhib-1 sub domain
-        '/event/<model("event.event"):event>/exhibitor'
+        '/event/<model("event.event"):event>/exhibitor/<path:page>'
     ], type='http', auth="public", website=True, sitemap=False, methods=['GET', 'POST'])
-    def event_exhibitors(self, event, **searches):
+    def event_exhibitors(self, event, page, **searches):
+
+        seo_object = request.website.get_template('website_event_exhibitor.' + page)
+
         return request.render(
             "website_event_exhibitor.event_exhibitors",
-            self._event_exhibitors_get_values(event, **searches)
+            self._event_exhibitors_get_values(event, seo_object, **searches)
         )
 
-    def _event_exhibitors_get_values(self, event, **searches):
+    def _event_exhibitors_get_values(self, event, seo_object, **searches):
         # init and process search terms
         searches.setdefault('search', '')
         searches.setdefault('countries', '')
@@ -106,6 +109,7 @@ class ExhibitorController(WebsiteEventController):
             # event information
             'event': event,
             'main_object': event,
+            'seo_object': seo_object,
             'sponsor_categories': sponsor_categories,
             'hide_sponsors': True,
             # search information

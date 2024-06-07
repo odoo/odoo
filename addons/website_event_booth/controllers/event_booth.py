@@ -12,18 +12,19 @@ from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 class WebsiteEventBoothController(WebsiteEventController):
 
-    @http.route('/event/<model("event.event"):event>/booth', type='http', auth='public', website=True, sitemap=False)
-    def event_booth_main(self, event, booth_category_id=False, booth_ids=False):
+    @http.route('/event/<model("event.event"):event>/booth/<path:page>', type='http', auth='public', website=True, sitemap=False)
+    def event_booth_main(self, event, page, booth_category_id=False, booth_ids=False):
         try:
             event.check_access_rights('read')
             event.check_access_rule('read')
         except exceptions.AccessError:
             raise Forbidden()
 
+        seo_object = request.website.get_template('website_event_booth.' + page)
         booth_category_id = int(booth_category_id) if booth_category_id else False
         return request.render(
             'website_event_booth.event_booth_registration',
-            self._prepare_booth_main_values(event, booth_category_id=booth_category_id, booth_ids=booth_ids)
+            self._prepare_booth_main_values(event, seo_object, booth_category_id=booth_category_id, booth_ids=booth_ids)
         )
 
     @http.route('/event/<model("event.event"):event>/booth/register',
@@ -101,7 +102,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             return request.env['event.booth']
         return booths
 
-    def _prepare_booth_main_values(self, event, booth_category_id=False, booth_ids=False):
+    def _prepare_booth_main_values(self, event, seo_object, booth_category_id=False, booth_ids=False):
         event_sudo = event.sudo()
         available_booth_categories = event_sudo.event_booth_category_available_ids
         chosen_booth_category = available_booth_categories.filtered(lambda cat: cat.id == booth_category_id)
@@ -112,6 +113,7 @@ class WebsiteEventBoothController(WebsiteEventController):
             'event_booths': event_sudo.event_booth_ids,
             'hide_sponsors': True,
             'main_object': event_sudo,
+            'seo_object': seo_object,
             'selected_booth_category_id': (chosen_booth_category or default_booth_category).id,
             'selected_booth_ids': booth_ids if booth_category_id == chosen_booth_category.id and booth_ids else False,
         }

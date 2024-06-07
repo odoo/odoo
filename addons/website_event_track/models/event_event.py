@@ -85,7 +85,7 @@ class Event(models.Model):
     def _get_website_menu_entries(self):
         self.ensure_one()
         return super(Event, self)._get_website_menu_entries() + [
-            (_('Talks'), '/event/%s/track' % slug(self), False, 10, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, 'track'),
-            (_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 15, 'track_proposal')
+            (_('Talks'), '/event/%s/track' % slug(self), 'website_event_track.tracks_session', 10, 'track'),
+            (_('Agenda'), '/event/%s/agenda' % slug(self), 'website_event_track.agenda_online', 70, 'track'),
+            (_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), 'website_event_track.event_track_proposal', 15, 'track_proposal')
         ]
