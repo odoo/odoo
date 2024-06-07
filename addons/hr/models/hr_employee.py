@@ -421,8 +421,16 @@ class HrEmployeePrivate(models.Model):
         return employees
 
     def write(self, vals):
+<<<<<<< HEAD
         if 'work_contact_id' in vals:
+||||||| parent of 3e70da3963dd (temp)
+        if 'address_home_id' in vals:
+=======
+        if 'address_home_id' in vals:
+            address_home_id = vals['address_home_id']
+>>>>>>> 3e70da3963dd (temp)
             account_ids = vals.get('bank_account_id') or self.bank_account_id.ids
+<<<<<<< HEAD
             if account_ids:
                 bank_accounts = self.env['res.partner.bank'].sudo().browse(account_ids)
                 for bank_account in bank_accounts:
@@ -434,6 +442,19 @@ class HrEmployeePrivate(models.Model):
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
+||||||| parent of 3e70da3963dd (temp)
+            if account_ids:
+                self.env['res.partner.bank'].browse(account_ids).partner_id = vals['address_home_id']
+            self.message_unsubscribe(self.address_home_id.ids)
+            if vals['address_home_id']:
+                self._message_subscribe([vals['address_home_id']])
+=======
+            if account_ids and address_home_id:
+                self.env['res.partner.bank'].browse(account_ids).partner_id = address_home_id
+            self.message_unsubscribe(self.address_home_id.ids)
+            if address_home_id:
+                self._message_subscribe([address_home_id])
+>>>>>>> 3e70da3963dd (temp)
         if 'user_id' in vals:
             # Update the profile pictures with user, except if provided
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),

@@ -232,6 +232,7 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(employee_A.work_email, 'employee_A@example.com')
         self.assertEqual(employee_B.work_email, 'new_email@example.com')
 
+<<<<<<< HEAD
     @users('admin')
     def test_change_user_on_employee(self):
         test_other_user = self.env['res.users'].create({
@@ -284,3 +285,22 @@ class TestHrEmployee(TestHrCommon):
         employee_norbert = self.env['hr.employee'].create({'name': 'Norbert Employee', 'user_id': user_norbert.id})
         self.assertEqual(employee_norbert.image_1920, user_norbert.image_1920)
         self.assertEqual(employee_norbert.avatar_1920, user_norbert.avatar_1920)
+||||||| parent of 3e70da3963dd (temp)
+=======
+    def test_unlink_address(self):
+        employee = self.employee_without_image
+        partner = self.env["res.partner"].create({
+            "name": "Mr. Bean",
+            "street": "12 Arbour Road",
+            "city": "London"
+        })
+        employee.address_home_id = partner.id
+        bank = self.env['res.partner.bank'].create({
+            "acc_number": "123",
+            "partner_id": partner.id
+        })
+        employee.bank_account_id = bank.id
+
+        employee.address_home_id = False
+        self.assertFalse(employee.address_home_id)
+>>>>>>> 3e70da3963dd (temp)
