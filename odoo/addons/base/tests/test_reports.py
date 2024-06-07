@@ -455,24 +455,45 @@ class TestReportsRendering(TestReportsRenderingCommon):
         pdf_content = self.create_pdf(page_content=page_content)
         pages = self._parse_pdf(pdf_content)
 
-        self.assertEqual(len(pages), 4, '4 pages are expected, 2 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)')
-        page_break_at = int(pages[1][2][1].split('\n')[0])  # This element should be the first line, 61 when this test was written
+        self.assertEqual(len(pages), 6,
+                        '6 pages are expected, 3 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)')
+        first_page_break_at = int(
+            pages[1][2][1].split('\n')[0])  # This element should be the first line, 61 when this test was written
+        second_page_break_at = int(pages[2][2][1].split('\n')[0])
+
+        # There is some inconsistency caused by the pdfminer library when \n are placed, to be sure we don't have issues
+        # We put one element per line
+        pages_contents = []
+        for page in pages:
+            page_content = []
+            for elem in page:
+                if '\n' in elem[1]:
+                    page_content.extend(elem[1].split('\n'))
+                else:
+                    page_content.append(elem[1])
+            pages_contents.append(page_content)
 
         expected_pages_contents = []
+        # Thoses changes are needed to format the page content and the expected page the same due to the inconsistency
+        # With the pdfminer library
         for partner in self.partners:
-            expected_pages_contents.append([
-                'LTFigure', #logo
-                'Some header Text',
-                f'Name: {partner.name}\n' + '\n'.join([str(i) for i in range(page_break_at)]),
-                f'Footer for {partner.name} Page: 1 / 2',
+            def create_page_content(start, end, page_number, include_name=False):
+                content = [
+                    'LTFigure',  # logo
+                    'Some header Text',
+                ]
+                if include_name:
+                    content.append(f'Name: {partner.name}')
+                content.extend([str(i) for i in range(start, end)])
+                content.append(f'Footer for {partner.name} Page: {page_number} / 3')
+                return content
+
+            expected_pages_contents.extend([
+                create_page_content(0, first_page_break_at, 1, include_name=True),
+                create_page_content(first_page_break_at, second_page_break_at, 2),
+                create_page_content(second_page_break_at, nb_lines, 3)
             ])
-            expected_pages_contents.append([
-                'LTFigure', #logo
-                'Some header Text',
-                '\n'.join([str(i) for i in range(page_break_at, nb_lines)]),
-                f'Footer for {partner.name} Page: 2 / 2',
-            ])
-        pages_contents = [[elem[1] for elem in page] for page in pages]
+
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_thead_tbody_repeat(self):
@@ -497,8 +518,11 @@ class TestReportsRendering(TestReportsRenderingCommon):
         pdf_content = self.create_pdf(page_content=page_content)
         pages = self._parse_pdf(pdf_content)
 
-        self.assertEqual(len(pages), 4, '4 pages are expected, 2 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)')
-        page_break_at = int(pages[1][5][1])  # This element should be the first line of the table, 28 when this test was written
+        self.assertEqual(len(pages), 6, '6 pages are expected, 3 per record (you may ensure `nb_lines` has a correct value to generate an oveflow)')
+
+        # This element should be the first line of the table, 28 when this test was written
+        first_page_break_at = int(pages[1][5][1])
+        second_page_break_at = int(pages[2][5][1])
 
         def expected_table(start, end):
             table = ['T1', 'T2', 'T3'] # thead
@@ -512,14 +536,20 @@ class TestReportsRendering(TestReportsRenderingCommon):
             expected_pages_contents.append([
                 'LTFigure', #logo
                 'Some header Text',
-                * expected_table(0, page_break_at),
-                f'Footer for {partner.name} Page: 1 / 2',
+                * expected_table(0, first_page_break_at),
+                f'Footer for {partner.name} Page: 1 / 3',
             ])
             expected_pages_contents.append([
                 'LTFigure', #logo
                 'Some header Text',
-                * expected_table(page_break_at, nb_lines),
-                f'Footer for {partner.name} Page: 2 / 2',
+                * expected_table(first_page_break_at, second_page_break_at),
+                f'Footer for {partner.name} Page: 2 / 3',
+            ])
+            expected_pages_contents.append([
+                'LTFigure',  # logo
+                'Some header Text',
+                *expected_table(second_page_break_at, nb_lines),
+                f'Footer for {partner.name} Page: 3 / 3',
             ])
 
         pages_contents = [[elem[1] for elem in page] for page in pages]
