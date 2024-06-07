@@ -327,3 +327,37 @@ class TestMrpStockReports(TestReportsCommon):
 
 
         self.assertFalse(keys, "All keys should be in the report with the defined order")
+
+    def test_mo_overview(self):
+        """ Test that the overview does not traceback when the final produced qty is 0
+        """
+        product_chocolate = self.env['product.product'].create({
+            'name': 'Chocolate',
+            'type': 'consu',
+        })
+        product_chococake = self.env['product.product'].create({
+            'name': 'Choco Cake',
+            'type': 'product',
+        })
+        self.env['mrp.bom'].create({
+            'product_id': product_chococake.id,
+            'product_tmpl_id': product_chococake.product_tmpl_id.id,
+            'product_uom_id': product_chococake.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_chocolate.id, 'product_qty': 4}),
+            ],
+        })
+        mo = self.env['mrp.production'].create({
+            'name': 'MO',
+            'product_qty': 1.0,
+            'product_id': product_chococake.id,
+        })
+
+        mo.action_confirm()
+        mo.button_mark_done()
+        mo.qty_produced = 0.
+
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(overview_values['data']['id'], mo.id, "computing overview value should work")
