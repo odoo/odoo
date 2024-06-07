@@ -657,7 +657,9 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_refuse(self, reason):
-        self.write({'state': 'cancel'})
+        if self.account_move_ids:  # Todo: in 17.3+, edit it to allow draft entries
+            raise UserError(_("You cannot cancel an expense sheet linked to a journal entry"))
+        self.approval_state = 'cancel'
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for sheet in self:
             sheet.message_post_with_source(
