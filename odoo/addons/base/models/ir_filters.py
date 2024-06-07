@@ -67,7 +67,7 @@ class IrFilters(models.Model):
            same context (menu/view) as the given action."""
         action_condition = ('action_id', 'in', [action_id, False]) if action_id else ('action_id', '=', False)
         embedded_condition = ('embedded_action_id', '=', embedded_action_id) if embedded_action_id else ('embedded_action_id', '=', False)
-        embedded_parent_res_id_condition = ('embedded_parent_res_id', '=', embedded_parent_res_id) if embedded_action_id and embedded_parent_res_id else ('embedded_parent_res_id', '=', False)
+        embedded_parent_res_id_condition = ('embedded_parent_res_id', '=', embedded_parent_res_id) if embedded_action_id and embedded_parent_res_id else ('embedded_parent_res_id', 'in', [0, False])
 
         return [action_condition, embedded_condition, embedded_parent_res_id_condition]
 
