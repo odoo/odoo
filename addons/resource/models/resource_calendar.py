@@ -19,7 +19,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 
 from odoo.tools import date_utils, float_utils
-from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime, ROUNDING_FACTOR
+from .utils import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 
 
 class ResourceCalendar(models.Model):
@@ -500,7 +500,7 @@ class ResourceCalendar(models.Model):
 
         return {
             # Round the number of days to the closest 16th of a day.
-            'days': sum(float_utils.round(ROUNDING_FACTOR * day_days[day]) / ROUNDING_FACTOR for day in day_days),
+            'days': float_round(sum(day_days[day] for day in day_days), precision_rounding=0.01),
             'hours': sum(day_hours.values()),
         }
 
@@ -515,10 +515,10 @@ class ResourceCalendar(models.Model):
             day_hours[start.date()] += (stop - start).total_seconds() / 3600
 
         # compute number of days as quarters
-        days = sum(
-            float_utils.round(ROUNDING_FACTOR * day_hours[day] / day_total[day]) / ROUNDING_FACTOR if day_total[day] else 0
+        days = float_round(sum(
+            day_hours[day] / day_total[day] if day_total[day] else 0
             for day in day_hours
-        )
+        ), precision_rounding=0.01)
         return {
             'days': days,
             'hours': sum(day_hours.values()),
