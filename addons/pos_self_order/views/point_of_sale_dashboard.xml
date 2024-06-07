@@ -5,9 +5,11 @@
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
             <form>
-                <div class="text-center">
+                <div>
                     <div class="fs-2 mb-2">From your Kiosk, open this URL:</div>
-                    <field name="self_ordering_url" readonly="1" />
+                    <group>
+                        <field name="self_ordering_url"  widget="CopyClipboardChar" readonly="1" string="Kiosk URL" />
+                    </group>
                 </div>
                 <footer class="justify-content-end">
                     <button class="btn btn-secondary" special="cancel">Close</button>
