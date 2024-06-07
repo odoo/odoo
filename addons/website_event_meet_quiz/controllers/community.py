@@ -15,5 +15,5 @@ class WebsiteEventTrackQuizMeetController(EventCommunityController):
         values = self._get_community_leaderboard_render_values(event, kwargs.get('search'), page)
 
         # website_event_meet
-        values.update(self._event_meeting_rooms_get_values(event, lang=lang))
+        values.update(self._event_meeting_rooms_get_values(event, lang=lang) | {'seo_object': event.community_menu_ids})
         return request.render('website_event_meet.event_meet', values)
