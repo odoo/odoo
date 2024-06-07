@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.TooltipLabel">
+        Available between
+        <sup class="text-info p-1" data-tooltip-template="pos_self_order.Tooltip" t-att-data-tooltip-info="tooltipInfo">?</sup>
+    </t>
+    <t t-name="pos_self_order.Tooltip">
+        <p class="o-tooltip--help" role="tooltip">
+            <t t-esc="tooltip" />
+        </p>
+    </t>
+</templates>
