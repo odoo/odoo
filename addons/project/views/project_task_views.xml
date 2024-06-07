@@ -54,14 +54,14 @@
             <field name="priority">999</field>
             <field name="arch" type="xml">
                 <field name="stage_id" position="after">
-                    <field name="project_id" string="Project"/>
+                    <field name="project_id" string="Project" groups="base.group_user"/>
                 </field>
                 <field name="partner_id" position="after">
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]" groups="base.group_user"/>
                 </field>
                 <filter name="stage" position="after">
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" groups="base.group_user"/>
                 </filter>
             </field>
         </record>
@@ -80,7 +80,7 @@
                 <filter name="last_stage_update" position="after">
                     <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
                     <separator/>
-                    <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}"/>
+                    <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}" groups="base.group_user"/>
                 </filter>
             </field>
         </record>
