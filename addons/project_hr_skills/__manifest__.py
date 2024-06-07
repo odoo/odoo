@@ -12,7 +12,6 @@
     'auto_install': True,
     'data': [
         'views/project_task_views.xml',
-        'views/project_sharing_project_task_views.xml',
     ],
     'license': 'OEEL-1',
 }
