@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
-import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
 
@@ -80,12 +79,31 @@ export class ProductProduct extends Base {
         return current;
     }
 
-    isPricelistItemUsable(item, date) {
-        return (
-            (!item.categ_id || this.parentCategories.includes(item.categ_id.id)) &&
-            (!item.date_start || deserializeDate(item.date_start) <= date) &&
-            (!item.date_end || deserializeDate(item.date_end) >= date)
-        );
+    getApplicablePricelistRules(pricelistRules) {
+        const applicableRules = {};
+        for (const pricelistId in pricelistRules) {
+            if (pricelistRules[pricelistId].productItems[this.id]) {
+                applicableRules[pricelistId] = pricelistRules[pricelistId].productItems[this.id];
+                continue;
+            }
+            const productTmplId = this.raw.product_tmpl_id;
+            if (pricelistRules[pricelistId].productTmlpItems[productTmplId]) {
+                applicableRules[pricelistId] =
+                    pricelistRules[pricelistId].productTmlpItems[productTmplId];
+                continue;
+            }
+            for (const category of this.parentCategories) {
+                if (pricelistRules[pricelistId].categoryItems[category]) {
+                    applicableRules[pricelistId] =
+                        pricelistRules[pricelistId].categoryItems[category];
+                    break;
+                }
+            }
+            if (!applicableRules[pricelistId]) {
+                applicableRules[pricelistId] = pricelistRules[pricelistId].globalItems;
+            }
+        }
+        return applicableRules;
     }
 
     // Port of _get_product_price on product.pricelist.
