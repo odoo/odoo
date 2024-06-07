@@ -53,7 +53,7 @@ function createOdooChartRuntime(chart, getters) {
         locale: getters.getLocale(),
         topPadding: getTopPaddingForDashboard(definition, getters),
     };
-
+    // config.options.plugins.customHtmlLegend = false;
     const config = {
         type: definition.isDoughnut ? "doughnut" : "pie",
         data: {
