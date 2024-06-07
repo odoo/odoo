@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
@@ -69,7 +70,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
                 refuse_bodies[duplicate.id] = message
 
             duplicates_ids._message_log_batch(refuse_bodies)
-        refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False})
+        refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False, 'refuse_date': datetime.now()})
 
         if self.send_mail:
             applicants = self.applicant_ids.filtered(lambda x: x.email_from or x.partner_id.email)

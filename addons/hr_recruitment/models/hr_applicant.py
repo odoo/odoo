@@ -3,11 +3,13 @@ import re
 
 from markupsafe import Markup
 from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools.translate import _
+
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -113,6 +115,7 @@ class Applicant(models.Model):
         ('archived', 'Archived'),
     ], compute="_compute_application_status", search="_search_application_status")
     applicant_properties = fields.Properties('Properties', definition='job_id.applicant_properties_definition', copy=True)
+    refuse_date = fields.Datetime('Refuse Date')
 
     def init(self):
         super().init()
@@ -777,3 +780,11 @@ class Applicant(models.Model):
                 'default_applicant_ids': self.ids,
             }
         }
+
+    def _get_duration_from_tracking(self, trackings):
+        json = super()._get_duration_from_tracking(trackings)
+        now = datetime.now()
+        for applicant in self:
+            if applicant.refuse_reason_id and applicant.refuse_date:
+                json[applicant.stage_id.id] -= (now - applicant.refuse_date).total_seconds()
+        return json
