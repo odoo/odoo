@@ -343,10 +343,11 @@ class Event(models.Model):
         """
         self.ensure_one()
         return [
-            (_('Introduction'), False, 'website_event.template_intro', 1, 'introduction'),
-            (_('Location'), False, 'website_event.template_location', 50, 'location'),
-            (_('Info'), '/event/%s/register' % slug(self), False, 100, 'register'),
-            (_('Community'), '/event/%s/community' % slug(self), False, 80, 'community'),
+            (_('Home'), '/event/%s/register' % slug(self), False, 1, 'introduction', False),
+            (_('Practical information'), '#', False, 50, 'location', False),
+            (_('Community'), '#', False, 80, 'community', False),
+            (_('Location'), False, 'website_event.template_location', 50, 'location', 'location'),
+            (_('Rooms'), '/event/%s/community' % slug(self), False, 80, 'community', 'community'),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -389,15 +390,26 @@ class Event(models.Model):
                      if menu_info[4] == fmenu_type]
         if self[fname_bool] and not self[fname_o2m]:
             # menus not found but boolean True: get menus to create
-            for name, url, xml_id, menu_sequence, menu_type in menu_data:
-                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type)
+            for name, url, xml_id, menu_sequence, menu_type, parent_menu_type in menu_data:
+                new_menu = self._create_menu(menu_sequence, name, url, xml_id, menu_type, parent_menu_type)
         elif not self[fname_bool]:
-            # will cascade delete to the website.event.menu
-            self[fname_o2m].mapped('menu_id').sudo().unlink()
+            # Get the menus that are being unlinked
+            menus_to_unlink = self[fname_o2m].mapped('menu_id')
+
+            # Iterate through each menu being unlinked
+            for menu in menus_to_unlink:
+                # Check if the menu has any child menus
+                has_child_menus = self.env['website.menu'].search_count([('parent_id', '=', menu.id)])
+                if has_child_menus:
+                    child_menus = self.env['website.menu'].search([('parent_id', '=', menu.id)])
+                    child_menus.write({'parent_id': menu.parent_id.id})
+
+            # Unlink the menu entries
+            menus_to_unlink.sudo().unlink()
 
         return new_menu
 
-    def _create_menu(self, sequence, name, url, xml_id, menu_type):
+    def _create_menu(self, sequence, name, url, xml_id, menu_type, parent_menu_type=False):
         """ Create a new menu for the current event.
 
         If url: create a website menu. Menu leads directly to the URL that
@@ -411,6 +423,9 @@ class Event(models.Model):
 
         :param menu_type: type of menu. Mainly used for inheritance purpose
           allowing more fine-grain tuning of menus.
+
+        :param parent_menu_type: The type of the parent menu. If specified, the
+          menu will be created as a child of the parent menu with the given type.
         """
         self.check_access_rights('write')
         view_id = False
@@ -424,10 +439,18 @@ class Event(models.Model):
             view = self.env["ir.ui.view"].browse(view_id)
             url = f"/event/{slug(self)}/page/{view.key.split('.')[-1]}"  # url contains starting "/"
 
+        parent_id = self.menu_id.id
+        if parent_menu_type:
+            parent_menu = self.env['website.event.menu'].search([
+                ('event_id', '=', self.id),
+                ('menu_type', '=', parent_menu_type)
+            ], limit=1)
+            if parent_menu:
+                parent_id = parent_menu.menu_id.id
         website_menu = self.env['website.menu'].sudo().create({
             'name': name,
             'url': url,
-            'parent_id': self.menu_id.id,
+            'parent_id': parent_id,
             'sequence': sequence,
             'website_id': self.website_id.id,
         })

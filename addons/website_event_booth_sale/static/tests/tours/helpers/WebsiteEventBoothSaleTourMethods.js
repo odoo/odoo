@@ -15,6 +15,11 @@
                 run: "click",
             },
             {
+                content: 'Go to "Exhibitor" menu',
+                trigger: 'a:contains("Exhibitor")',
+                run: "click",
+            },
+            {
                 content: 'Go to "Get A Booth" page',
                 trigger: 'li.nav-item a:has(span:contains("Get A Booth"))',
                 run: "click",

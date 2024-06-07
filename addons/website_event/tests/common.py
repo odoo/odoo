@@ -32,7 +32,7 @@ class OnlineEventCase(EventCase):
         })
 
     def _get_menus(self):
-        return {'Introduction', 'Community', 'Info', 'Location'}
+        return {'Introduction', 'Community', 'Info', 'Practical information'}
 
     def _assert_website_menus(self, event, menus_in=None, menus_out=None):
         self.assertTrue(event.menu_id)
@@ -46,7 +46,8 @@ class OnlineEventCase(EventCase):
         if menus_out:
             self.assertTrue(all(menu_name not in menus.mapped('name') for menu_name in menus_out))
 
-        for page_specific in ['Introduction', 'Location']:
+        for page_specific in ['Introduction']:
+            # 'Practical information' can't be found becuase it doesn't have view
             view = self.env['ir.ui.view'].search(
                 [('name', '=', f'{page_specific} {event.name}')]
             )

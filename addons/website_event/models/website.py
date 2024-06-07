@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models, _, api
+from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 
 class Website(models.Model):
@@ -24,3 +25,15 @@ class Website(models.Model):
         if search_type in ['events', 'all']:
             result.append(self.env['event.event']._search_get_detail(self, order, options))
         return result
+
+    @api.model
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None):
+        is_event = False
+        if template.startswith('website_event.') and template != 'website_event.template_location':
+            add_menu = False
+            ispage = False
+            is_event = True
+        event_page = super().new_page(name=name, add_menu=add_menu, template=template, ispage=ispage, namespace=namespace, page_values=page_values, menu_values=menu_values, sections_arch=sections_arch)
+        if is_event and request:
+            event_page['url'] = f"/event/{request.params.get('event_id')}/page" + event_page['url']
+        return event_page

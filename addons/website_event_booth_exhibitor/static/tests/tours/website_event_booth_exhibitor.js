@@ -12,6 +12,10 @@
         trigger: 'a[href*="/event"]:contains("Online Reveal"):first',
         run: "click",
     }, {
+        content: 'Browse Exhibitor Menu',
+        trigger: 'a:contains("Exhibitor")',
+        run: "click",
+    }, {
         content: 'Browse Booths',
         trigger: 'a:contains("Get A Booth")',
         run: "click",

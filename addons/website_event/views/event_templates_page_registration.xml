@@ -129,15 +129,35 @@
                             <small itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
                         </div>
                         <!-- Social -->
-                        <div class="o_wevent_sidebar_block">
-                            <h6 class="o_wevent_sidebar_title">Share</h6>
-                            <p>Find out what people see and say about this event, and join the conversation.</p>
-                            <t t-snippet-call="website.s_share">
-                                <t t-set="_no_title" t-value="True"/>
-                                <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
-                                <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
-                            </t>
+                        <div class="oe_structure">
+                            <section>
+                                <div class="o_wevent_sidebar_block">
+                                    <h6 class="o_wevent_sidebar_title">Share</h6>
+                                    <p>Find out what people see and say about this event, and join the conversation.</p>
+                                </div>
+                                <div class="s_share text-start o_editable" data-snippet="s_share">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank" aria-label="Facebook">
+                                        <i class="fa fa-facebook rounded-circle shadow-sm o_editable_media"/>
+                                    </a>
+                                    <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank" aria-label="X">
+                                        <i class="fa fa-twitter rounded-circle shadow-sm o_editable_media"/>
+                                    </a>
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" class="s_share_linkedin" target="_blank" aria-label="LinkedIn">
+                                        <i class="fa fa-linkedin rounded-circle shadow-sm o_editable_media"/>
+                                    </a>
+                                    <a href="https://wa.me/?text={title}" class="s_share_whatsapp" target="_blank" aria-label="WhatsApp">
+                                        <i class="fa fa-whatsapp rounded-circle shadow-sm o_editable_media"/>
+                                    </a>
+                                    <a href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}" class="s_share_pinterest" target="_blank" aria-label="Pinterest">
+                                        <i class="fa fa-pinterest rounded-circle shadow-sm o_editable_media"/>
+                                    </a>
+                                    <a href="mailto:?body={url}&amp;subject={title}" class="s_share_email" aria-label="Email">
+                                        <i class="fa fa-envelope rounded-circle shadow-sm o_editable_media"/>
+                                    </a>
+                                </div>
+                            </section>
                         </div>
+                        <div class="oe_structure oe_empty" id="oe_structure_website_event_side_snippet_1"/>
                     </aside>
                 </div>
             </div>

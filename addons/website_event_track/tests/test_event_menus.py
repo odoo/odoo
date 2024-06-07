@@ -11,9 +11,9 @@ from odoo.tests.common import users
 class TestEventWebsiteTrack(OnlineEventCase):
 
     def _get_menus(self):
-        return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals'])
+        return super()._get_menus() | {'Talks', 'Practical information'}
 
-    @users('user_eventmanager')
+    @users('user_event_web_manager')
     def test_create_menu(self):
         vals = {
             'name': 'TestEvent',
@@ -35,7 +35,7 @@ class TestEventWebsiteTrack(OnlineEventCase):
             'website_track': False,
             'website_track_proposal': False,
         })
-        self._assert_website_menus(event, ['Introduction', 'Location', 'Info', 'Community'], menus_out=['Talks', 'Agenda', 'Talk Proposals'])
+        self._assert_website_menus(event, ['Introduction', 'Practical information', 'Community', 'Info'], menus_out=['Talks'])
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
@@ -55,26 +55,26 @@ class TestEventWebsiteTrack(OnlineEventCase):
 
         introduction_menu = event.menu_id.child_id.filtered(lambda menu: menu.name == 'Introduction')
         introduction_menu.unlink()
-        self._assert_website_menus(event, ['Location', 'Info', 'Community', 'Talks', 'Agenda', 'Talk Proposals'], menus_out=["Introduction"])
+        self._assert_website_menus(event, ['Practical information', 'Info', 'Community', 'Talks'], menus_out=["Introduction"])
 
-        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Talk Proposals'])
+        menus = event.menu_id.child_id.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Propose a talk'])
         menus.unlink()
         self.assertTrue(event.website_track)
         self.assertFalse(event.website_track_proposal)
 
-        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Talks'])
+        menus = event.menu_id.child_id.child_id.filtered(lambda menu: menu.name == 'Talks')
         menus.unlink()
         self.assertFalse(event.website_track)
         self.assertFalse(event.website_track_proposal)
 
-        self._assert_website_menus(event, ['Location', 'Info', 'Community'], menus_out=["Introduction", "Talks", "Agenda", "Talk Proposals"])
-
-        event.write({'website_track_proposal': True})
-        self.assertFalse(event.website_track)
-        self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, ['Location', 'Info', 'Community', 'Talk Proposals'], menus_out=["Introduction", "Talks", "Agenda"])
+        self._assert_website_menus(event, ['Practical information', 'Info', 'Community'], menus_out=["Introduction", "Talks"])
 
         event.write({'website_track': True})
         self.assertTrue(event.website_track)
         self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, ['Location', 'Info', 'Community', 'Talks', 'Agenda', 'Talk Proposals'], menus_out=["Introduction"])
+        self._assert_website_menus(event, ['Practical information', 'Info', 'Community', 'Talks'], menus_out=["Introduction"])
+
+        event.write({'website_track_proposal': False})
+        self.assertTrue(event.website_track)
+        self.assertFalse(event.website_track_proposal)
+        self._assert_website_menus(event, ['Practical information', 'Info', 'Community', "Talks"], menus_out=["Introduction"])

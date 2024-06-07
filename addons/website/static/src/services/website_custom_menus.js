@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { EditMenuDialog } from '@website/components/dialog/edit_menu';
+import { EditMenuDialog, MenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
 import {PagePropertiesDialog} from '@website/components/dialog/page_properties';
 
@@ -108,8 +108,46 @@ registry.category('website_custom_menus').add('website.menu_page_properties', {
         },
     })
 });
+
+class CustomEditMenuDialog extends EditMenuDialog {
+     /**
+     * @override
+     *
+     * Add event's page path in url if it's an event
+     */
+    addMenu(isMegaMenu) {
+        const currentUrl = window.location.href;
+        const eventIndex = currentUrl.indexOf('/event/');
+        let eventUrl = '';
+        if (eventIndex !== -1) {
+            const eventName = currentUrl.substring(eventIndex + 7).split('/')[0];
+            eventUrl = `/event/${eventName}/page`;
+        }
+
+        this.dialogs.add(MenuDialog, {
+            isMegaMenu,
+            save: (name, url, isNewWindow) => {
+                const sanitizedUrl = !url.startsWith('/') ? '/' + url : url;
+                const newMenu = {
+                    fields: {
+                        id: `menu_${(new Date).toISOString()}`,
+                        name,
+                        url: isMegaMenu ? '#' : eventUrl + sanitizedUrl,
+                        new_window: isNewWindow,
+                        'is_mega_menu': isMegaMenu,
+                        sequence: 0,
+                        'parent_id': false,
+                    },
+                    'children': [],
+                };
+                this.map.set(newMenu.fields['id'], newMenu);
+                this.state.rootMenu.children.push(newMenu);
+            },
+        });
+    }
+}
 registry.category('website_custom_menus').add('website.custom_menu_edit_menu', {
-    Component: EditMenuDialog,
+    Component: CustomEditMenuDialog,
     // 'isDisplayed' === true => at least 1 content menu was found on the page. This
     // menuitem will be cloned (in 'addCustomMenus()') to edit every content menu using
     // the 'EditMenuDialog' component.
