@@ -12,7 +12,7 @@ from odoo.addons.website_sale.controllers import main
 class WebsiteSale(main.WebsiteSale):
 
     @route()
-    def pricelist(self, promo, **post):
+    def pricelist(self, promo, product=None, **post):
         order = request.website.sale_get_order()
         coupon_status = order._try_apply_code(promo)
         if coupon_status.get('not_found'):
@@ -23,8 +23,10 @@ class WebsiteSale(main.WebsiteSale):
             reward_successfully_applied = True
             if len(coupon_status) == 1:
                 coupon, rewards = next(iter(coupon_status.items()))
-                if len(rewards) == 1 and not rewards.multi_product:
+                if len(rewards) == 1 and rewards.reward_type != 'product':
                     reward_successfully_applied = self._apply_reward(order, rewards, coupon)
+                elif product:
+                    reward_successfully_applied = self._apply_reward(order, rewards, coupon, product=product)
 
             if reward_successfully_applied:
                 request.session['successful_code'] = promo
@@ -83,7 +85,7 @@ class WebsiteSale(main.WebsiteSale):
         product = None
         reward_sudo = request.env['loyalty.reward'].sudo().browse(reward_id).exists()
         if not reward_sudo or reward_sudo.multi_product:
-            if reward_sudo.multi_product and reward_sudo.program_id.program_type == "buy_x_get_y" and post["Product"]:
+            if reward_sudo.multi_product and reward_sudo.reward_type == "product" and post["Product"]:
                 product = request.env["product.product"].sudo().browse(int(post["Product"]))
             else:
                 return request.redirect(redirect)
@@ -99,7 +101,7 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.applies_on == 'future'
                         and program_sudo.program_type not in ('ewallet', 'loyalty'))
                 ):
-                    return self.pricelist(code)
+                    return self.pricelist(code, product=product)
         if coupon:
             self._apply_reward(order_sudo, reward_sudo, coupon, product)
         return request.redirect(redirect)
@@ -111,10 +113,7 @@ class WebsiteSale(main.WebsiteSale):
         :rtype: bool
         """
         try:
-            if product:
-                reward_status = order._apply_program_reward(reward, coupon, product=product)
-            else:
-                reward_status = order._apply_program_reward(reward, coupon)
+            reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
             return False
