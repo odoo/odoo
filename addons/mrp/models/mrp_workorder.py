@@ -276,9 +276,12 @@ class MrpWorkorder(models.Model):
             wo.barcode = f"{wo.production_id.name}/{wo.id}"
 
     @api.depends('production_id', 'product_id')
+    @api.depends_context('prefix_product')
     def _compute_display_name(self):
         for wo in self:
             wo.display_name = f"{wo.production_id.name} - {wo.name}"
+            if self.env.context.get('prefix_product'):
+                wo.display_name = f"{wo.product_id.name} - {wo.production_id.name} - {wo.name}"
 
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
