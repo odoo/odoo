@@ -307,7 +307,7 @@ class AccountJournal(models.Model):
             for payment_type in ('inbound', 'outbound'):
                 lines = journal[f'{payment_type}_payment_method_line_ids']
                 for line in lines:
-                    if line.payment_method_id:
+                    if line.payment_method_id.id in method_information_mapping:
                         protected_payment_method_ids.add(line.payment_method_id.id)
                         if manage_acquirers and method_information_mapping[line.payment_method_id.id]['mode'] == 'electronic':
                             protected_acquirer_ids.add(line.payment_acquirer_id.id)
