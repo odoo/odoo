@@ -454,7 +454,7 @@ def main(args):
             except Exception as e:
                 logging.error("Won't publish the tgz release.\n Exception: %s" % str(e))
         if args.build_rpm:
-            _prepare_build_dir(args)
+            _prepare_build_dir(args, move_addons=False)
             docker_rpm = DockerRpm(args)
             docker_rpm.build()
             try:
