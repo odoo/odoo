@@ -9,7 +9,7 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_stripe.const import STATUS_MAPPING
+from odoo.addons.payment_stripe.const import INDIAN_MANDATES_SUPPORTED_CURRENCIES, STATUS_MAPPING
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
 
@@ -123,12 +123,14 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         customer = self._stripe_create_customer()
-        return {
+        setup_intent_payload = {
             'customer': customer['id'],
             'description': self.reference,
             'automatic_payment_methods[enabled]': True,
-            **self._stripe_prepare_mandate_options(),
         }
+        if self.currency_id.name in INDIAN_MANDATES_SUPPORTED_CURRENCIES:
+            setup_intent_payload.update(**self._stripe_prepare_mandate_options())
+        return setup_intent_payload
 
     def _stripe_prepare_payment_intent_payload(self):
         """ Prepare the payload for the creation of a PaymentIntent in Stripe format.
@@ -160,10 +162,9 @@ class PaymentTransaction(models.Model):
             customer = self._stripe_create_customer()
             payment_intent_payload['customer'] = customer['id']
             if self.tokenize:
-                payment_intent_payload.update(
-                    setup_future_usage='off_session',
-                    **self._stripe_prepare_mandate_options(),
-                )
+                payment_intent_payload['setup_future_usage'] = 'off_session'
+                if self.currency_id.name in INDIAN_MANDATES_SUPPORTED_CURRENCIES:
+                    payment_intent_payload.update(**self._stripe_prepare_mandate_options())
         return payment_intent_payload
 
     def _stripe_create_customer(self):
