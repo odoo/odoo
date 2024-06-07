@@ -19,6 +19,13 @@
             <field name="target">fullscreen</field>
         </record>
 
+        <record id="action_stock_report_production" model="ir.actions.client">
+            <field name="name">Traceability Report</field>
+            <field name="tag">stock_report_generic</field>
+            <field name="res_model">mrp.production</field>
+            <field name="context" eval="{'url': '/stock/output_format/stock?active_id=:active_id&amp;active_model=mrp.production', 'model': 'stock.traceability.report'}"/>
+        </record>
+
         <record id="mrp_production_view_activity" model="ir.ui.view">
             <field name="name">mrp.production.view.activity</field>
             <field name="model">mrp.production</field>
@@ -247,7 +254,7 @@
                         <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck"  groups="base.group_user" invisible="delivery_count == 0">
                             <field name="delivery_count" widget="statinfo" string="Transfers"/>
                         </button>
-                        <button name="%(stock.action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" string="Traceability" type="action" invisible="state != 'done'" groups="stock.group_production_lot">
+                        <button name="%(action_stock_report_production)d" icon="oi-arrow-up" class="oe_stat_button" string="Traceability" type="action" invisible="state != 'done'" groups="stock.group_production_lot">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Traceability</span>
                             </div>
