@@ -442,7 +442,7 @@ msgstr "<span class=\"o_stat_text\">Mở tài liệu</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_form
 msgid "<span class=\"o_stat_text\">Open Parent Document</span>"
-msgstr "<span class=\"o_stat_text\">Mở tài liệu cha</span>"
+msgstr "<span class=\"o_stat_text\">Mở tài liệu chính</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
@@ -1888,7 +1888,7 @@ msgstr "Loại kênh"
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Channel full"
-msgstr "Channel full"
+msgstr "Kênh đã đủ"
 
 #. module: mail
 #. odoo-python
@@ -1937,8 +1937,9 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited"
 " persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"Chat là riêng tư và chỉ giữa 2 người. Nhóm là riêng tư cho một nhóm người "
-"được mời. Kênh có thể tham dự tự do (tùy theo cấu hình)."
+"Cuộc trò chuyện là riêng tư và chỉ diễn ra giữa 2 người. Nhóm là riêng tư và"
+" dành cho một nhóm người được mời. Kênh có thể được tham gia tự do (tùy theo"
+" cấu hình)."
 
 #. module: mail
 #. odoo-javascript
@@ -1956,7 +1957,7 @@ msgstr "Kiểm tra danh sách loại trừ"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
 msgid "Child Messages"
-msgstr "Các thông điệp con"
+msgstr "Nội dung phụ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -3664,14 +3665,14 @@ msgstr ""
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
-msgstr "Field \"Mail Activity\" cannot be changed to \"False\"."
+msgstr "Không thể đổi trường \"Hoạt động thư\" thành \"Sai\"."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 #, python-format
 msgid "Field \"Mail Blacklist\" cannot be changed to \"False\"."
-msgstr "Field \"Mail Blacklist\" cannot be changed to \"False\"."
+msgstr "Không thể đổi trường \"Danh hạn chế thư\" thành \"Sai\"."
 
 #. module: mail
 #. odoo-python
@@ -3698,8 +3699,8 @@ msgid ""
 "getattr(related_document.relation_field)."
 msgstr ""
 "Trường được sử dụng để liên kết với một mô hình liên quan đến một mô hình "
-"kiểu con khi sử dụng đăng ký tự động trên một tài liệu liên quan. Trường này"
-" được dùng để tính toán getattr(related_document.relation_field)."
+"của kiểu phụ khi sử dụng đăng ký tự động trên một tài liệu liên quan. Trường"
+" này được dùng để tính toán getattr(related_document.relation_field)."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -4308,7 +4309,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID của tập dữ liệu cha chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm vụ)"
+"ID của tập dữ liệu chính chứa bí danh (ví dụ: dự án chứa bí danh tạo nhiệm "
+"vụ)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__im_status
@@ -5882,11 +5884,11 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
-"Kiểu thư phụ cung cấp loại chính xác hơn trên thư, đặc biệt là đối với thông"
-" báo hệ thống. Ví dụ, nó có thể là một thông báo liên quan đến một tập dữ "
-"liệu mới (Mới) hoặc thay đổi giai đoạn trong một quy trình (Thay đổi giai "
-"đoạn). Các kiểu con tin nhắn cho phép điều chỉnh chính xác các thông báo mà "
-"người dùng muốn nhận trên tường của nó."
+"Kiểu phụ của tin nhắn cung cấp kiểu chính xác hơn cho tin nhắn, đặc biệt "
+"thông báo hệ thống. Ví dụ: đó có thể là thông báo liên quan tới tập dữ liệu "
+"mới (Mới), hoặc với thay đổi giai đoạn trong một quá trình (Thay đổi giai "
+"đoạn). Kiểu phụ của tin nhắn cho phép tinh chỉnh chính xác thông báo mà "
+"người dùng muốn nhận."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -5899,7 +5901,7 @@ msgid ""
 "Message subtypes followed, meaning subtypes that will be pushed onto the "
 "user's Wall."
 msgstr ""
-"Các kiểu Thông điệp phụ theo dõi, có nghĩa là các kiểu con sẽ được đẩy lên "
+"Kiểu phụ của tin nhắn đang theo dõi, có nghĩa là kiểu phụ sẽ được đẩy lên "
 "Tường của người dùng."
 
 #. module: mail
@@ -6927,24 +6929,24 @@ msgstr "Gói đã gửi:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
 msgid "Parent"
-msgstr "Cha"
+msgstr "Chính"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__parent_id
 msgid "Parent Message"
-msgstr "Thông báo cha"
+msgstr "Thông báo chính"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Mô hình cha"
+msgstr "Mô hình chính"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID luồng tập dữ liệu cha"
+msgstr "ID luồng tập dữ liệu chính"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -6953,7 +6955,7 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Mô hình cha chứa bí danh này. Mô hình chứa tham chiếu bí danh không nhất "
+"Mô hình chính chứa bí danh này. Mô hình chứa tham chiếu bí danh không nhất "
 "thiết phải là mô hình được đưa ra bởi alias_model_id (Ví dụ: dự án "
 "(parent_model) và nhiệm vụ (model))"
 
@@ -6964,9 +6966,9 @@ msgid ""
 " named. For example on a project, the parent_id of project subtypes refers "
 "to task-related subtypes."
 msgstr ""
-"Phụ đề con, được sử dụng để đăng ký tự động. Trường này không được đặt tên "
-"chính xác. Ví dụ về một dự án, parent_id của các kiểu con dự án là các kiểu "
-"con liên quan đến nhiệm vụ."
+"Kiểu phụ của phần tử chính, được sử dụng để đăng ký tự động. Trường này "
+"không được đặt tên chính xác. Ví dụ về một dự án, parent_id của các kiểu phụ"
+" dự án là các kiểu phụ liên quan đến nhiệm vụ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__partner_id
@@ -8385,7 +8387,7 @@ msgstr "Kiểu máy chủ POP"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__active
 msgid "Set active to false to hide the channel without removing it."
-msgstr "Set active to false to hide the channel without removing it."
+msgstr "Đặt đang hoạt động thành sai để ẩn kênh và không cần xóa bỏ kênh. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form

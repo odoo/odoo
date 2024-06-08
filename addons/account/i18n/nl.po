@@ -6,9 +6,9 @@
 # Martin Trigaux, 2023
 # Dylan Kiss, 2023
 # Jolien De Paepe, 2024
-# Wil Odoo, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Larissa Manderfeld, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgstr "# Afgeletterde leveranciersfacturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "# Afgeletterde klantfacturen"
+msgstr "# Afgeletterde verkoopfacturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
@@ -535,12 +535,8 @@ msgstr "<b>Vroege betalingskorting toegepast.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
-"<br/>\n"
-"                            op deze rekening:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5211,7 +5207,7 @@ msgstr "Pas je lay-out aan."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr "Transitorisch"
+msgstr "Afsluiting"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -7816,7 +7812,7 @@ msgstr "Inkomende betaalmethodes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
 msgid "Include in Analytic Cost"
-msgstr "Toevoegen aan analytische kosten"
+msgstr "Toevoegen aan analytische kostprijs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
@@ -8335,7 +8331,7 @@ msgstr "Facturen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr "Verkoopfacturen &amp; Leveranciersfacturen"
+msgstr "Verkoopfacturen &amp; leveranciersfacturen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -9680,7 +9676,7 @@ msgstr "Maandelijks"
 #: model:ir.model.fields,field_description:account.field_account_move_send__move_ids
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__move_ids
 msgid "Move"
-msgstr "Factuur"
+msgstr "Boeking"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_data
@@ -9762,7 +9758,9 @@ msgstr "Naam doorzoekbaar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Navigeer eenvoudig door rapporten en zie wat er achter de cijfers zit"
+msgstr ""
+"Navigeer gemakkelijk doorheen rapportages en zie wat er achter de cijfers "
+"zit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__need_cancel_request
@@ -9960,7 +9958,7 @@ msgid ""
 msgstr ""
 "Geen enkele gebruiker, ook geen controllers, kunnen rekeningen wijzigen voor"
 " deze datum, met inbegrip van de dag zelf. Je kunt dit bijvoorbeeld "
-"gebruiken om je boekjaar te blokkeren."
+"gebruiken om je boekjaar te vergrendelen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -10405,7 +10403,7 @@ msgid ""
 msgstr ""
 "Enkel gebruikers met de rol 'Controller' kunnen rekeningen wijzigen voor "
 "deze datum, met inbegrip van de dag zelf. Je kunt dit bijvoorbeeld gebruiken"
-" om een periode binnen een open boekjaar te blokkeren."
+" om een periode binnen een open boekjaar te vergrendelen."
 
 #. module: account
 #. odoo-python
@@ -11819,7 +11817,7 @@ msgstr "Afgeletterde leveranciersfacturen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "Afgeletterde klantfacturen"
+msgstr "Afgeletterde facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
@@ -11969,7 +11967,7 @@ msgid ""
 " This action is irreversible."
 msgstr ""
 "Laad boekhoudgegevens (belastingen, rekeningen...) opnieuw als je "
-"tegenstrijdigheden opmerkt. Deze actie is onomkeerbaar."
+"tegenstredigheden opmerkt. Deze actie is onomkeerbaar."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
@@ -12214,7 +12212,7 @@ msgstr "Boekingen omkeren"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "Tegenboeken en factuur aanmaken"
+msgstr "Terugboeken en factuur aanmaken"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -12289,7 +12287,7 @@ msgstr "Afrondboom"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr "Regel om facturen/leveranciersfacturen te matchen"
+msgstr "Regel om facturen/inkoopfacturen te matchen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
@@ -13943,6 +13941,13 @@ msgid "Text Value"
 msgstr "Tekst Waarde"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Tekst gekopieerd"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Dat is de datum van de openingsboeking."
@@ -14042,9 +14047,9 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
-"Het Syscohada-rekeningschemasjabloon mag niet rechtstreeks worden "
-"geselecteerd. In plaats daarvan moet je rechtstreeks het "
-"rekeningschemasjabloon voor je land selecteren."
+"Het Syscohada-rekeningschemesjabloon mag niet rechtstreeks worden "
+"geselecteerd. In plaats daarvan moet u rechtstreeks de grafieksjabloon voor "
+"uw land selecteren."
 
 #. module: account
 #. odoo-python
@@ -15041,8 +15046,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"Er zijn nog steeds niet-afgeletterde rekeningafschriftregels in de periode "
-"die je wilt blokkeren. Je moet ze afletteren of verwijderen."
+"Er zijn nog steeds onafgeletterde rekeningafschriftregels in de periode die "
+"je wilt vergrendelen. Je moet ze afletteren of verwijderen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -15930,14 +15935,14 @@ msgstr "Onafgeletterd"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
-msgstr "Niet-afgeletterde boekingen"
+msgstr "Onafgeletterde boekingen"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unreconciled Transactions"
-msgstr "Niet-afgeletterde transacties"
+msgstr "Onafgeletterde transacties"
 
 #. module: account
 #. odoo-python
@@ -16831,7 +16836,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "

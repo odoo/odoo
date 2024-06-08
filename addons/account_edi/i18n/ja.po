@@ -3,8 +3,7 @@
 # 	* account_edi
 # 
 # Translators:
-# Wil Odoo, 2023
-# Junko Augias, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Junko Augias, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,14 +45,14 @@ msgstr "電子請求警告"
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
-msgstr "EDIの取消が要求されました。"
+msgstr "EDIのキャンセルが要求されました。"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "EDIの取消要求が中止されました。"
+msgstr "EDIのキャンセル要求が中止されました。"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move_send
@@ -87,7 +86,7 @@ msgstr ""
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Call off EDI Cancellation"
-msgstr "EDI取消の中止"
+msgstr "EDIキャンセルの中止"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
@@ -200,14 +199,14 @@ msgstr "Ediフォーマット"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
 msgid "Edi Show Abandon Cancel Button"
-msgstr "Edi放棄取消ボタンの表示"
+msgstr "Edi放棄キャンセルボタンの表示"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
 msgid "Edi Show Cancel Button"
-msgstr "Edi取消ボタンの表示"
+msgstr "Ediキャンセルボタンの表示"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -335,7 +334,7 @@ msgstr "レポートアクション"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "Request EDI Cancellation"
-msgstr "EDI取消要求"
+msgstr "EDIキャンセル要求"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -373,6 +372,13 @@ msgid ""
 msgstr "edi_format_idによって、請求書が計上される（このドキュメントが処理される）ときに生成されるファイル。"
 
 #. module: account_edi
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+
+#. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid "The invoice will soon be sent to"
 msgstr "請求書が以下宛にすぐに送信されます:"
@@ -400,7 +406,7 @@ msgstr "このドキュメントはすでに別の処理から送信されてい
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
 msgid "To Cancel"
-msgstr "取消する"
+msgstr "キャンセルする"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
@@ -422,7 +428,8 @@ msgid ""
 "You can't edit the following journal entry %s because an electronic document"
 " has already been sent. Please use the 'Request EDI Cancellation' button "
 "instead."
-msgstr "電子ドキュメントがすでに送信されているため、以下の仕訳%sを編集することができません。代わりに'EDI取消要求'ボタンを使用して下さい。"
+msgstr ""
+"電子ドキュメントがすでに送信されているため、以下の仕訳%sを編集することができません。代わりに「EDIキャンセル要求」ボタンを使用して下さい。"
 
 #. module: account_edi
 #. odoo-python

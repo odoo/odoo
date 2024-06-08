@@ -6,7 +6,7 @@
 # Fabien Pinckaers <fp@openerp.com>, 2023
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Rémi CAZENAVE, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rémi CAZENAVE, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -428,7 +428,7 @@ msgstr "<span class=\"d-block w-75 py-2\">Couleur de l'en-tête</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2120,6 +2120,7 @@ msgstr "Sociétés"
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
 msgstr ""
+"Les entreprises utilisent ce domaine par défaut pour envoyer des e-mails."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2704,6 +2705,10 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"Par défaut lorsqu'il n'y a pas de correspondance avec les filtres sortants "
+"du serveur. Il peut s'agir d'une partie locale, par ex. 'notifications' ou "
+"d'une adresse e-mail complète, par ex. 'notifications@example.com' pour "
+"outrepasser tous les e-mails sortants."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -3390,7 +3395,7 @@ msgstr "Assistant de composition d'emails"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "Domaine de l'email e.g. 'example.com' dans 'odoo@example.com'"
+msgstr "Domaine de messagerie par ex. 'example.com' dans 'odoo@example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3677,6 +3682,8 @@ msgid ""
 "Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
+"Le champ “%(field)s” sur le modèle “%(model)s” doit être du type Many2one et"
+" avoir tracking=True fpour le calcul de la durée."
 
 #. module: mail
 #. odoo-python
@@ -5342,6 +5349,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
+"Partie locale de l'e-mail utilisée pour obtenir une réponse par ex. "
+"'catchall' dans 'catchall@example.com'"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5349,6 +5358,8 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"Partie locale de l'e-mail utilisée pour le chemin de retour lorsque des "
+"e-mails rebondissent  par ex. 'bounce' dans 'bounce@example.com'"
 
 #. module: mail
 #. odoo-javascript
@@ -7983,7 +7994,7 @@ msgstr "Enregistrer comme un nouveau modèle"
 #: code:addons/mail/static/src/core/common/composer.js:0
 #, python-format
 msgid "Save editing"
-msgstr ""
+msgstr "Sauvegarder les modifications"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
@@ -10632,6 +10643,8 @@ msgid ""
 "You may not unlink or modify the content of attachments from other people's "
 "messages"
 msgstr ""
+"Vous ne pouvez pas délier ou modifier le contenu des pièces jointes de "
+"messages d'autres personnes."
 
 #. module: mail
 #. odoo-javascript
@@ -10747,7 +10760,7 @@ msgstr "Votre nom"
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 #, python-format
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (pas d'adresse e-mail)"
 
 #. module: mail
 #. odoo-python
@@ -10955,12 +10968,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "par ex. \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "par ex. \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10970,7 +10983,7 @@ msgstr "par exemple : \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "par ex. \"notifications\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form

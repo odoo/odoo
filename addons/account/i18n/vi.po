@@ -54,7 +54,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"    - Nhóm thuế: Thuế là tập hợp của các loại thuế con.\n"
+"    - Nhóm thuế: Thuế là tập hợp của các loại thuế phụ.\n"
 "    - Cố định: Số tiền thuế luôn không đổi dù giá có thay đổi.\n"
 "    - Phần trăm giá: Số tiền thuế được tính theo % giá cả:\n"
 "        VD: 100 * (1 + 10%) = 110 (chưa bao gồm trong giá)\n"
@@ -529,12 +529,8 @@ msgstr "<b>Đã áp dụng chiết khấu thanh toán sớm.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            trên tài khoản này:"
+msgid "<br/> on this account:"
+msgstr "<br/> trên tài khoản này:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -1631,7 +1627,7 @@ msgstr "Đơn vị tiền tệ tài khoản"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr "Hướng dẫn Trang tổng quan kế toán"
+msgstr "Hướng dẫn Trang chủ kế toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
@@ -1959,7 +1955,7 @@ msgstr "Kế toán"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_journal_dashboard_kanban
 msgid "Accounting Dashboard"
-msgstr "Trang tổng quan kế toán"
+msgstr "Trang chủ kế toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__accounting_date
@@ -5231,7 +5227,7 @@ msgstr "XUỐNG"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "Trang tổng quan"
+msgstr "Trang chủ"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_check_hash_integrity
@@ -7162,7 +7158,7 @@ msgstr "Nhận cảnh báo khi xuất hoá đơn cho một khách hàng nào đ�
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Go back"
-msgstr "Quay lại"
+msgstr "Trở lại"
 
 #. module: account
 #. odoo-python
@@ -8825,12 +8821,12 @@ msgstr "Tháng 6"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr "Trang tổng quan Kanban"
+msgstr "Trang chủ Kanban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr "Biểu đồ trang tổng quan Kanban"
+msgstr "Biểu đồ trang chủ Kanban"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
@@ -10274,8 +10270,8 @@ msgid ""
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
 "Sau khi cài đặt, thiết lập 'Phí ngân hàng' thành 'Nhập tệp' trong phần cài "
-"đặt tài khoản ngân hàng. Thao tác này sẽ thêm một nút để nhập từ trang tổng "
-"quan Kế toán."
+"đặt tài khoản ngân hàng. Thao tác này sẽ thêm một nút để nhập từ trang chủ "
+"Kế toán."
 
 #. module: account
 #. odoo-javascript
@@ -10754,7 +10750,7 @@ msgstr "Dòng cha"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
 msgid "Parent Path"
-msgstr "Tuyến cha"
+msgstr "Tuyến chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__report_id
@@ -13094,7 +13090,7 @@ msgstr "Hiển thị ngày trả góp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_on_dashboard
 msgid "Show journal on dashboard"
-msgstr "Hiển thị sổ nhật ký trên trang tổng quan"
+msgstr "Hiển thị sổ nhật ký trên trang chủ"
 
 #. module: account
 #. odoo-python
@@ -13888,6 +13884,13 @@ msgstr "Điều khoản và điều kiện"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__text_value
 msgid "Text Value"
 msgstr "Giá trị văn bản"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Văn bản đã được sao chép"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -15218,7 +15221,7 @@ msgstr "Hóa đơn này đang được gửi trong nền."
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
 msgid "This is the accounting dashboard"
-msgstr "Đây là trang tổng quan kế toán"
+msgstr "Đây là trang chủ kế toán"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_default_credit_limit
@@ -16050,7 +16053,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr "Được sử dụng để sắp xếp sổ nhật kí trong chế độ xem trang tổng quan"
+msgstr "Được sử dụng để sắp xếp sổ nhật kí trong chế độ xem trang chủ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -16436,7 +16439,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr "Liệu sổ nhật ký có được hiển thị trên trang tổng quan hay không"
+msgstr "Liệu sổ nhật ký có được hiển thị trên trang chủ hay không"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__new_journal_name
@@ -16742,7 +16745,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -17607,7 +17610,7 @@ msgstr "theo phần trăm"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "invoices"
-msgstr "hóa đơn"
+msgstr "hoá đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
