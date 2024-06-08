@@ -156,6 +156,21 @@ export async function clickOnDataset(graph) {
     });
 }
 
+export async function clickOnLegend(graph, text) {
+    const chart = getChart(graph);
+    const index = chart.legend.legendItems.findIndex((e) => e.text === text);
+    const { left, top, width, height } = chart.legend.legendHitBoxes[index];
+    const rectangle = chart.canvas.getBoundingClientRect();
+    const middle = {
+        x: left + width / 2,
+        y: top + height / 2,
+    };
+    await triggerEvent(chart.canvas, null, "click", {
+        pageX: rectangle.left + middle.x,
+        pageY: rectangle.top + middle.y,
+    });
+}
+
 let serverData;
 let target;
 QUnit.module("Views", (hooks) => {
@@ -2336,6 +2351,18 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("pie chart toggling dataset hides label", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `<graph type="pie"/>`,
+        });
+        checkLabels(assert, graph, ["Total"]);
+        await clickOnLegend(graph, "Total");
+        assert.ok(getChart(graph).legend.legendItems[0].hidden);
+    });
 
     QUnit.test("mode props", async function (assert) {
         assert.expect(2);
