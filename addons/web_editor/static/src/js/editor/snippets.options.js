@@ -2377,11 +2377,9 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @param {Boolean} [preview]
      */
     _notifyCurrentState(preview = false) {
+        const isIdModeName = this.el.dataset.idMode === "name" || !this.isCustom;
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            let id = this.isCustom ? el.value : el.name;
-            if (this.el.dataset.idMode && this.el.dataset.idMode === "name") {
-                id = el.name;
-            }
+            const id = isIdModeName ? el.name : el.value;
             return Object.assign({
                 id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
                 name: el.value,
@@ -2392,7 +2390,7 @@ const ListUserValueWidget = UserValueWidget.extend({
             const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
             this.selected = checkboxes.map(el => {
                 const input = el.parentElement.previousSibling.firstChild;
-                const id = input.name || input.value;
+                const id = isIdModeName ? input.name : input.value;
                 return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
             });
             values.forEach(v => {
@@ -7003,9 +7001,54 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _writeShape(svgText) {
         const img = this._getImg();
-        const initialImageWidth = img.naturalWidth;
         let needToRefreshPublicWidgets = false;
         let hasHoverEffect = false;
+
+        // Add shape animations on hover.
+        if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
+            // The "ImageShapeHoverEffet" public widget needs to restart
+            // (e.g. image replacement).
+            needToRefreshPublicWidgets = true;
+            hasHoverEffect = true;
+        }
+
+        const dataURL = await this.computeShape(svgText, img);
+
+        let clonedImgEl = null;
+        if (hasHoverEffect) {
+            // This is useful during hover effects previews. Without this, in
+            // Chrome, the 'mouse out' animation is triggered very briefly when
+            // previewMode === 'reset' (when transitioning from one hover effect
+            // to another), causing a visual glitch. To avoid this, we hide the
+            // image with its clone when the source is set.
+            clonedImgEl = img.cloneNode(true);
+            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
+            img.classList.add("d-none");
+            img.insertAdjacentElement("afterend", clonedImgEl);
+            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
+        }
+        const loadedImg = await loadImage(dataURL, img);
+        if (hasHoverEffect) {
+            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
+            clonedImgEl.remove();
+            img.classList.remove("d-none");
+            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
+        }
+        if (needToRefreshPublicWidgets) {
+            await this._refreshPublicWidgets();
+        }
+        return loadedImg;
+    },
+    /**
+     * Sets the image in the supplied SVG and replace the src with a dataURL
+     *
+     * @param {string} svgText svg text file
+     * @param img JQuery image
+     * @returns {Promise} resolved once the svg is properly loaded
+     * in the document
+     */
+    async computeShape(svgText, img) {
+        const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
 
@@ -7031,10 +7074,6 @@ registry.ImageTools = ImageHandlerOption.extend({
         // Add shape animations on hover.
         if (img.dataset.hoverEffect && this._canHaveHoverEffect()) {
             this._addImageShapeHoverEffect(svg, img);
-            // The "ImageShapeHoverEffet" public widget needs to restart
-            // (e.g. image replacement).
-            needToRefreshPublicWidgets = true;
-            hasHoverEffect = true;
         }
 
         const svgAspectRatio = parseInt(svg.getAttribute('width')) / parseInt(svg.getAttribute('height'));
@@ -7074,30 +7113,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
-        let clonedImgEl = null;
-        if (hasHoverEffect) {
-            // This is useful during hover effects previews. Without this, in
-            // Chrome, the 'mouse out' animation is triggered very briefly when
-            // previewMode === 'reset' (when transitioning from one hover effect
-            // to another), causing a visual glitch. To avoid this, we hide the
-            // image with its clone when the source is set.
-            clonedImgEl = img.cloneNode(true);
-            this.options.wysiwyg.odooEditor.observerUnactive("addClonedImgForHoverEffectPreview");
-            img.classList.add("d-none");
-            img.insertAdjacentElement("afterend", clonedImgEl);
-            this.options.wysiwyg.odooEditor.observerActive("addClonedImgForHoverEffectPreview");
-        }
-        const loadedImg = await loadImage(dataURL, img);
-        if (hasHoverEffect) {
-            this.options.wysiwyg.odooEditor.observerUnactive("removeClonedImgForHoverEffectPreview");
-            clonedImgEl.remove();
-            img.classList.remove("d-none");
-            this.options.wysiwyg.odooEditor.observerActive("removeClonedImgForHoverEffectPreview");
-        }
-        if (needToRefreshPublicWidgets) {
-            await this._refreshPublicWidgets();
-        }
-        return loadedImg;
+        return dataURL;
     },
     /**
      * @override

@@ -79,8 +79,8 @@ msgid ""
 "% of timesheets that are billable compared to the total number of timesheets"
 " linked to the AA of the project, rounded to the unit."
 msgstr ""
-"% bảng chấm công có thể lập hóa đơn so với tổng số bảng chấm công được liên "
-"kết với tài khoản phân tích của dự án, được làm tròn đến hàng đơn vị."
+"% bảng chấm công có thể tính phí so với tổng số bảng chấm công được liên kết"
+" với tài khoản phân tích của dự án, được làm tròn đến hàng đơn vị."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -229,23 +229,23 @@ msgstr "Dựa theo bảng chấm công"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__allow_billable
 msgid "Billable"
-msgstr "Có thể lập hóa đơn"
+msgstr "Có thể tính phí"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Hours"
-msgstr "Giờ có thể lập hoá đơn"
+msgstr "Giờ có thể tính phí"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
 msgid "Billable Percentage"
-msgstr "Phần trăm có thể lập hóa đơn"
+msgstr "Phần trăm có thể tính phí"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_invoice_type
 msgid "Billable Type"
-msgstr "Loại có thể lập hoá đơn"
+msgstr "Loại có thể tính phí"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_manual
@@ -734,23 +734,23 @@ msgstr "Chưa có dữ liệu nào!"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__non_billable
 msgid "Non Billable Tasks"
-msgstr "Nhiệm vụ không xuất hóa đơn"
+msgstr "Nhiệm vụ không thể tính phí"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non-Billable"
-msgstr "Không thể lập hoá đơn"
+msgstr "Không thể tính phí"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_form_inherit
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_line_tree_inherit
 msgid "Non-billable"
-msgstr "Không thể xuất hoá đơn"
+msgstr "Không thể tính phí"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__non_billable_time
 msgid "Non-billable Hours"
-msgstr "Giờ không thể lập hoá đơn"
+msgstr "Giờ không thể tính phí"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -886,7 +886,7 @@ msgstr "Mức phí của dự án"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
 msgid "Project to make billable"
-msgstr "Dự án để tính phí"
+msgstr "Dự án cần tính phí"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -941,8 +941,8 @@ msgstr "Giờ còn lại)"
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
 msgstr ""
-"Xem lại bảng chấm công theo loại xuất hóa đơn và bảo đảm thời gian của bạn "
-"có thể xuất hóa đơn. "
+"Xem lại bảng chấm công theo loại hình tính phí và bảo đảm thời gian của bạn "
+"có thể tính phí."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1035,9 +1035,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
-"Hạng mục đơn đặt hàng mà thời gian sử dụng sẽ được thêm vào để lập hóa đơn "
-"cho khách hàng của bạn. Xóa hạng mục đơn bán hàng đối với mục nhập bảng chấm"
-" công không thể lập hóa đơn."
+"Hạng mục đơn bán hàng mà thời gian sử dụng sẽ được thêm vào để lập hóa đơn "
+"cho khách hàng của bạn. Xóa hạng mục đơn bán hàng nếu mục nhập bảng chấm "
+"công không thể tính phí."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -1073,8 +1073,7 @@ msgstr "Tìm kiếm trong hạng mục đơn bán hàng"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
-"Chọn một dự án không thể lập hóa đơn mà các nhiệm vụ có thể được tạo ra."
+msgstr "Chọn một dự án không thể tính phí mà từ đó có thể tạo nhiệm vụ."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1380,7 +1379,7 @@ msgstr "Bảng chấm công (giá cố định)"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Non Billable)"
-msgstr "Bảng chấm công (không thể lập hoá đơn)"
+msgstr "Bảng chấm công (không thể tính phí)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
@@ -1545,8 +1544,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
-"Bạn không thể liên kết dự án có thể lập hoá đơn với hạng mục đơn bán hàng "
-"đến từ chi phí hoặc hóa đơn mua hàng. "
+"Bạn không thể liên kết dự án có thể tính phí với hạng mục đơn bán hàng xuất "
+"phát từ chi phí hoặc hóa đơn mua hàng. "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1556,8 +1555,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
-"Bạn không thể liên kết dự án có thể lập hoá đơn với hạng mục đơn bán hàng "
-"không phải là dịch vụ. "
+"Bạn không thể liên kết dự án có thể tính phí với hạng mục đơn bán hàng không"
+" phải là dịch vụ. "
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1607,7 +1606,7 @@ msgstr "biên lợi nhuận ("
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__billing_type__not_billable
 msgid "not billable"
-msgstr "không thể lập hoá đơn"
+msgstr "không thể tính phí"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form

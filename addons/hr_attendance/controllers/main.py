@@ -111,8 +111,9 @@ class HrAttendance(http.Controller):
                         'employees': employee_list,
                         'departments': departement_list,
                         'kiosk_mode': company.attendance_kiosk_mode,
-                        'barcode_source': company.attendance_barcode_source
-                    }
+                        'barcode_source': company.attendance_barcode_source,
+                        'lang': company.partner_id.lang,
+                    },
                 }
             )
 

@@ -304,12 +304,8 @@ export class GraphRenderer extends Component {
         if (mode === "pie") {
             legendOptions.labels = {
                 generateLabels: (chart) => {
-                    const { data } = chart;
-                    const metaData = data.datasets.map(
-                        (_, index) => chart.getDatasetMeta(index).data
-                    );
-                    const labels = data.labels.map((label, index) => {
-                        const hidden = metaData.some((data) => data[index] && data[index].hidden);
+                    return chart.data.labels.map((label, index) => {
+                        const hidden = !chart.getDataVisibility(index);
                         const fullText = label;
                         const text = shortenLabel(fullText);
                         const fillStyle =
@@ -318,7 +314,6 @@ export class GraphRenderer extends Component {
                                 : getColor(index, cookie.get("color_scheme"));
                         return { text, fullText, fillStyle, hidden, index };
                     });
-                    return labels;
                 },
             };
         } else {

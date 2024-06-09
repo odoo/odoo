@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2023
 # Jolien De Paepe, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:45+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Jolien De Paepe, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,6 +192,11 @@ msgstr "Annulé"
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Impossible d'annuler une écriture qui a déjà été envoyée à PEPPOL"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "Impossible de recevoir ce format"
 
 #. module: account_peppol
 #. odoo-python
@@ -594,6 +600,13 @@ msgstr "Veuillez compléter le code EAS et le code ID du participant."
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+#, python-format
+msgid "Please install the phonenumbers library."
+msgstr "Veuillez installer la bibliothèque de numéros de téléphone."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
@@ -711,6 +724,13 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "Le service Peppol utilisé est probablement %s."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
@@ -806,6 +826,13 @@ msgstr "Le code de vérification doit contenir six chiffres."
 #, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr "Ce code de vérification a expiré. Veuillez en demander un nouveau."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate electronic invoices, also set a country and a bank account for "
+"this partner."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python

@@ -537,12 +537,8 @@ msgstr "<b>Se aplicó un descuento por pago anticipado.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            en esta cuenta:"
+msgid "<br/> on this account:"
+msgstr "<br/> en esta cuenta:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -10555,12 +10551,12 @@ msgstr "Facturas originales"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__group_tax_id
 msgid "Originator Group of Taxes"
-msgstr "Grupo de impuestos del emisor "
+msgstr "Grupo de impuestos del originador"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
 msgid "Originator Payment"
-msgstr "Emisor del pago"
+msgstr "Pago del originador"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
@@ -10573,7 +10569,7 @@ msgstr "Línea de extracto de cuenta del originador"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Originator Tax"
-msgstr "Impuesto (cuota)"
+msgstr "Impuesto del originador"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
@@ -13970,6 +13966,13 @@ msgid "Text Value"
 msgstr "Valor del texto"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Texto copiado"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Esa es la fecha del asiento de apertura."
@@ -15479,7 +15482,7 @@ msgid ""
 "Those options will be selected by default when clicking \"Send & Print\" on "
 "invoices"
 msgstr ""
-"Esas opciones se seleccionarán por defecto al hacer clic en  \"Enviar e "
+"Esas opciones se seleccionarán por defecto al hacer clic en \"Enviar e "
 "imprimir\" en las facturas "
 
 #. module: account
@@ -16869,7 +16872,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "

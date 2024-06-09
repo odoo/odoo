@@ -529,12 +529,8 @@ msgstr "<b>Potongan Pembayaran Awal diterapkan.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            di akun ini:"
+msgid "<br/> on this account:"
+msgstr "<br/> pada akun ini:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5012,7 +5008,7 @@ msgstr "Nilai tukar mata uang dari mata uang perusahaan ke mata uang dokumen."
 #: model:account.account,name:account.1_current_assets
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 msgid "Current Assets"
-msgstr "Aktiva Lancar"
+msgstr "Aktiva Terkini"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -5063,7 +5059,7 @@ msgstr "Alamat Pelanggan"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_sale_payment_items
 msgid "Customer Amounts to Settle"
-msgstr "Jumlah Pelanggan untuk Dilunasi"
+msgstr "Jumlah Pelanggan tunuk Dilunasi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -7203,7 +7199,7 @@ msgstr "Grup"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "Group By"
-msgstr "Kelompokkan berdasarkan"
+msgstr "Dikelompokkan berdasarkan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
@@ -8363,7 +8359,7 @@ msgstr "Faktur terhutang kepada Anda"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Invoices sent"
-msgstr "Faktur yang terkirim"
+msgstr "Faktur yang dikirim"
 
 #. module: account
 #. odoo-python
@@ -13901,6 +13897,13 @@ msgid "Text Value"
 msgstr "Text Value"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Teks disali"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Ini adalah tanggal untuk entri awal."
@@ -16767,7 +16770,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
