@@ -254,13 +254,7 @@ class TestWebsitePerformance(UtilPerf):
         _, menu_aa = self._create_page_with_menu('/aa')
         _, menu_b = self._create_page_with_menu('/b')
         _, menu_bb = self._create_page_with_menu('/bb')
-        _, menu_bbb = self._create_page_with_menu('/bbb')
-        _, menu_bbbb = self._create_page_with_menu('/bbbb')
-        _, menu_bbbbb = self._create_page_with_menu('/bbbbb')
         self._create_page_with_menu('c')
-        menu_bbbbb.parent_id = menu_bbbb
-        menu_bbbb.parent_id = menu_bbb
-        menu_bbb.parent_id = menu_bb
         menu_bb.parent_id = menu_b
         menu_aa.parent_id = menu_a
 
