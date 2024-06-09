@@ -19,8 +19,8 @@
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Jiří Podhorecký, 2023
 # Tomáš Píšek, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jakub Smolka, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1827,7 +1827,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
 msgid "Correct inconsistencies for reservation"
-msgstr ""
+msgstr "Opravte nesrovnalosti pro rezervaci"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2997,7 +2997,7 @@ msgstr "První SN"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Fix discrepancies"
-msgstr ""
+msgstr "Opravte nesrovnalosti"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -4062,6 +4062,11 @@ msgid ""
 "The correction will remove the reservation of the impacted operations on all companies.\n"
 "If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
+"Není možné rezervovat více produktů %s, než máte na skladě.\n"
+"\n"
+"Nesrovnalosti můžete opravit kliknutím na tlačítko níže.\n"
+"Oprava odstraní výhradu dotčených operací u všech společností.\n"
+"Pokud chyba přetrvává nebo se tato zpráva zobrazuje často, odešlete žádost o podporu na https://www.odoo.com/help"
 
 #. module: stock
 #. odoo-python
@@ -4071,6 +4076,8 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock.\n"
 "Please contact your system administrator to rectify this issue."
 msgstr ""
+"Není možné odrezervovat více produktů %s, než máte na skladě.\n"
+"Obraťte se na správce systému, aby tento problém napravil."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4500,6 +4507,13 @@ msgstr "Lokace: Kdy dorazí do"
 #, python-format
 msgid "Locations"
 msgstr "Lokace"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "Lokace k aktualizaci"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7169,7 +7183,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Pravidlo %s patří k %s, zatímco trasa patří k %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -10020,6 +10034,8 @@ msgid ""
 "You cannot pack products into the same package when they are from both "
 "immediate and planned transfers."
 msgstr ""
+"Nemůžete zabalit produkty do stejného balíku, pokud jsou z okamžitého i "
+"plánovaného převodu."
 
 #. module: stock
 #. odoo-python
@@ -10029,6 +10045,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Nemůžete zabalit produkty do stejného balíku, pokud pocházejí z různých "
+"převodů s různými typy operací."
 
 #. module: stock
 #. odoo-python
