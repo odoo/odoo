@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Sarah Park, 2024
-# Daye Jeong, 2024
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -507,10 +507,8 @@ msgstr "<b>선납 할인이 적용됩니다.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
+msgid "<br/> on this account:"
+msgstr "이 계정의 <br/>:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2336,7 +2334,7 @@ msgstr "당사의 모든 계약 관계는 전적으로 법률에 의거한 "
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
+msgstr "역분개를 위해 선택한 모든 회계 문서는 동일한 회사 코드에 속해야 합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -5885,14 +5883,6 @@ msgid "Duplicated Ref"
 msgstr "중복된 참조"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr "중복된 공급업체 참조 정보가 있습니다. 같은 공급업체 청구서/대변전표를 두 번 인코딩한 것 같습니다."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "동적 보고서"
@@ -6000,7 +5990,7 @@ msgstr "기본 이메일"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "이메일 도메인 예: 'odoo@example.com'의 'example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6145,7 +6135,7 @@ msgstr "자기 자본"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "첨부 파일 '%s'를 인보이스로 가져오는 동안 오류가 발생했습니다. (디코더=%s)"
 
 #. module: account
 #. odoo-python
@@ -6810,7 +6800,7 @@ msgstr "향후 활동"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated invoices will auto-confirm on their respective dates."
-msgstr ""
+msgstr "날짜가 지정된 청구서는 해당 날짜에 자동으로 확인됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7068,7 +7058,7 @@ msgstr "최고명"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "가로 분할면"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7354,29 +7344,29 @@ msgstr "'부외거래' 계정을 사용하려면 반드시 모든 전표 계정�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
 msgid "Ignore Abnormal Amount"
-msgstr ""
+msgstr "비정상적인 금액 무시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_date
 msgid "Ignore Abnormal Date"
-msgstr ""
+msgstr "비정상적인 날짜 무시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_amount
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_amount
 msgid "Ignore Abnormal Invoice Amount"
-msgstr ""
+msgstr "비정상적인 청구서 금액 무시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ignore_abnormal_invoice_date
 #: model:ir.model.fields,field_description:account.field_res_users__ignore_abnormal_invoice_date
 msgid "Ignore Abnormal Invoice Date"
-msgstr ""
+msgstr "비정상적인 청구서 날짜 무시하기"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr ""
+msgstr "향후 알림 무시하기"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -7902,7 +7892,7 @@ msgstr "청구서 총액"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Invoice amounts for"
-msgstr ""
+msgstr "다음에 대한 청구 금액"
 
 #. module: account
 #. odoo-python
@@ -7938,7 +7928,7 @@ msgstr "청구서 및 대변전표를 재분할하려면 세금 재분할 항목
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Invoice dates for"
-msgstr ""
+msgstr "청구서 날짜"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -9971,12 +9961,6 @@ msgid "Open"
 msgstr "제한 없음"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Open list"
-msgstr "목록 열기"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "기초 잔액"
@@ -10441,7 +10425,7 @@ msgstr "조정 모델용 협력사 매핑"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "파트너는 이메일 주소를 가지고 있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -10602,7 +10586,7 @@ msgstr "지불 영수증"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
-msgstr ""
+msgstr "결제 영수증 제목"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13344,6 +13328,12 @@ msgid "Text Value"
 msgstr "문자값"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "텍스트 복사됨"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "개시 입력 일자입니다."
@@ -13428,7 +13418,7 @@ msgstr "지급 조건에는 백분율 항목이 있어야 하며 백분율 합�
 msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
-msgstr ""
+msgstr "Syscohada 차트 템플릿을 직접 선택할 수 없습니다. 대신 해당 국가에 맞는 차트 템플릿을 선택하세요."
 
 #. module: account
 #. odoo-python
@@ -13507,6 +13497,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"%(partner_name)s의 금액이 비정상적인 것 같습니다. 기록된 데이터에 따르면 예상 금액은 %(mean)s (± %(wiggle)s)입니다.\n"
+"금액이 올바른지 다시 한번 확인해 주세요."
 
 #. module: account
 #. odoo-python
@@ -14110,7 +14102,7 @@ msgstr ""
 msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
-msgstr ""
+msgstr "선택하신 결제 방법은 이 결제에 사용하실 수 없습니다. 다른 결제 수단을 선택해 주세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15349,7 +15341,7 @@ msgstr "승인됨"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Validating invoices is a key action. Have you reviewed everything?"
-msgstr ""
+msgstr "청구서 확인은 매우 중요한 단계입니다. 모든 내용을 꼼꼼히 검토하셨나요?"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -15672,7 +15664,7 @@ msgstr "여기에 <b>이메일 주소</b>를 입력하면 진행 단계를 테�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "상각은 조정 계정입니다"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -15891,7 +15883,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
@@ -15935,7 +15927,7 @@ msgstr "결제를 등록할 수 없습니다. 선택한 전표에 결제할 항�
 msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
-msgstr ""
+msgstr "인바운드 및 아웃바운드 이동에 대한 결제를 동시에 등록할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -16006,7 +15998,7 @@ msgstr "발행 완료 상태에서는 작업을 생성할 수 없습니다. 나�
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "재귀 그룹은 만들 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -16028,7 +16020,7 @@ msgstr "세금신고서에 변동이 생길 수 있으므로 세금 내역은 �
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
+msgstr "이 계정 태그(%s)는 계정과목표 정의에서 사용 중이므로 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -16045,7 +16037,7 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
-msgstr ""
+msgstr "이 보고서 (%s)는 회계 PDF 생성 엔진에서 사용 중이므로 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -16124,6 +16116,8 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"기초 작업 (%s)이 이미 발행된 후에는 \"openning_balance\" 파일을 가져올 수 없습니다.                 "
+"계정의 기초 잔액을 꼭 수정해야만 한다면, 작업을 미결 상태로 초기화하세요."
 
 #. module: account
 #. odoo-python
@@ -16537,7 +16531,7 @@ msgstr "예: domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range."
-msgstr ""
+msgstr "일반적인 범위를 벗어납니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16781,6 +16775,8 @@ msgid ""
 "{amount} ({debit_credit}) from <strong>{account_source_name}</strong> were "
 "transferred to <strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"<strong>{account_source_name}</strong>의 {amount} ({debit_credit})이 {link}를 "
+"통해 <strong>{account_target_name}</strong>으로 이체되었습니다."
 
 #. module: account
 #. odoo-python

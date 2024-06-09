@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -513,12 +513,8 @@ msgstr "<b>Se aplicó un descuento de pago anticipado.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            en esta cuenta:"
+msgid "<br/> on this account:"
+msgstr "<br/> en esta cuenta"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -2220,7 +2216,7 @@ msgstr "Agregar un grupo de diarios"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a line"
-msgstr "Agregar línea"
+msgstr "Agregar una línea"
 
 #. module: account
 #. odoo-javascript
@@ -6982,8 +6978,8 @@ msgstr "Actividades futuras"
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Future-dated invoices will auto-confirm on their respective dates."
 msgstr ""
-"Las facturas con fechas en el futuro se confirmarán de forma automática en "
-"sus respectivas fechas."
+"Las facturas con fechas en el futuro se confirmarán de forma automática "
+"cuando llegue esa fecha."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12247,7 +12243,7 @@ msgstr "Referencia de muestra"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Sample data"
-msgstr "Datos muestra"
+msgstr "Datos de muestra"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
@@ -12619,12 +12615,12 @@ msgid ""
 "emails are compromised. Once verified, you can activate the ability to send "
 "money."
 msgstr ""
-"Frecuentemente se reciben correos que contienen facturas falsas con cuentas "
+"Con frecuencia se reciben correos que contienen facturas falsas con cuentas "
 "fraudulentas, a esta práctica se le llama phishing. Es importante verificar "
 "los nuevos números de cuenta y la mejor manera de hacerlo es llamar al "
-"proveedor, esto es importante porque si esto llega a pasar, quiere decir que"
-" el correo del proveedor está en peligro. Una vez que haya comprobado que la"
-" información es correcta puede activar la función de enviar dinero."
+"proveedor, esto es esencial porque si esto llega a pasar, quiere decir que "
+"el correo del proveedor está en peligro. Una vez que haya comprobado que la "
+"información es correcta puede activar la función de enviar dinero."
 
 #. module: account
 #. odoo-python
@@ -12980,7 +12976,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
 msgid "Sometimes called BIC or Swift."
-msgstr "En algunas ocasiones se le conoce como BIC o Swift."
+msgstr "También se le conoce como BIC o Swift."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__sortable
@@ -13245,7 +13241,7 @@ msgstr "Cambiar a factura/nota de crédito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 msgid "Tag Name"
-msgstr "Nombre de etiqueta"
+msgstr "Nombre de la etiqueta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -13715,6 +13711,12 @@ msgstr "Términos y condiciones"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__text_value
 msgid "Text Value"
 msgstr "Valor del texto"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "Texto copiado"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -16485,7 +16487,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

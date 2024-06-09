@@ -513,12 +513,8 @@ msgstr "<b>Sconto Pagamento Anticipato applicato.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
-"<br/>\n"
-"                            su questo conto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -13714,6 +13710,12 @@ msgid "Text Value"
 msgstr "Valore testo"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "Testo copiato"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Data della registrazione di apertura."
@@ -16487,7 +16489,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

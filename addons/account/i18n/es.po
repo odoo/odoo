@@ -6,8 +6,8 @@
 # Fernanda Alvarez, 2024
 # Richard Mouthier <rmo@odoo.com>, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -514,12 +514,8 @@ msgstr "<b>Descuento de Pago Temprano aplicado.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            en esta cuenta:"
+msgid "<br/> on this account:"
+msgstr "<br/> en esta cuenta:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -6031,16 +6027,6 @@ msgid "Duplicated Ref"
 msgstr "Referencia Duplicada"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Se detectó una referencia duplicada del proveedor. Es probable que haya "
-"codificado dos veces la misma factura / factura rectificativa del proveedor."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Informes dinámicos"
@@ -10272,12 +10258,6 @@ msgid "Open"
 msgstr "Abierto"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "Open list"
-msgstr "Abrir lista"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "Saldo de apertura"
@@ -13729,6 +13709,12 @@ msgid "Text Value"
 msgstr "Valor del texto"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "Texto copiado"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Esa es la fecha del asiento de apertura."
@@ -16504,7 +16490,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

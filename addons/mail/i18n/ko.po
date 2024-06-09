@@ -3,9 +3,9 @@
 # 	* mail
 # 
 # Translators:
-# Daye Jeong, 2024
 # Wil Odoo, 2024
 # Sarah Park, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:09+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,6 +109,9 @@ msgid ""
 "%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
 "%(bold_start)s/command%(bold_end)s to execute a command."
 msgstr ""
+"%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s을 입력하여 누군가를 태그하고 "
+"관심을 끌 수 있습니다. %(new_line)s%(bold_start)s#channel%(bold_end)s을 입력하여 채널을 "
+"멘션합니다.%(new_line)s%(bold_start)s/command%(bold_end)s를 입력하여 명령을 실행할 수 있습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -127,6 +130,10 @@ msgid ""
 "Enter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sESC%(close_samp)s %(open_em)s를 눌러 "
+"%(open_cancel)s취소하거나%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
+"엔터%(close_samp)s %(open_em)s버튼을 눌러 "
+"%(open_save)s저장합니다.%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -137,6 +144,10 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sESC%(close_samp)s %(open_em)s를 눌러 "
+"%(open_cancel)s취소하거나%(close_cancel)s%(close_em)s, "
+"%(open_samp)s엔터%(close_samp)s %(open_em)s버튼을 눌러 "
+"%(open_save)s저장합니다.%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -344,7 +355,7 @@ msgstr "<b invisible=\"not no_record\" class=\"text-warning\">이 모델에 대�
 msgid ""
 "<button>Change your preferences</button> to receive new notifications in "
 "your inbox."
-msgstr ""
+msgstr "받은 편지함에서 새 알림을 받으려면 <button>환경설정</button>을 변경하세요."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -370,7 +381,7 @@ msgstr "<span class=\"d-block w-75 py-2\">머리글 색상</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "<span class=\"me-1 oe_inline\">@</span>"
-msgstr ""
+msgstr "<span class=\"me-1 oe_inline\">@</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1763,7 +1774,7 @@ msgstr "채널 유형"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Channel full"
-msgstr ""
+msgstr "채널 가득참"
 
 #. module: mail
 #. odoo-python
@@ -1885,7 +1896,7 @@ msgstr "검색창 닫기"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/ptt_ad_banner.xml:0
 msgid "Close banner"
-msgstr ""
+msgstr "배너 닫기"
 
 #. module: mail
 #. odoo-javascript
@@ -1964,7 +1975,7 @@ msgstr "회사"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__company_ids
 msgid "Companies using this domain as default for sending mails"
-msgstr ""
+msgstr "이 도메인을 메일 발송에 기본값으로 사용하는 회사"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan__company_id
@@ -2072,14 +2083,14 @@ msgstr "연결 테스트에 실패했습니다 : %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Connection to SFU server closed by the server"
-msgstr ""
+msgstr "서버에 의해 SFU 서버 연결이 종료됨"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Connection type:"
-msgstr ""
+msgstr "연결 유형:"
 
 #. module: mail
 #. odoo-javascript
@@ -2518,6 +2529,8 @@ msgid ""
 " local-part e.g. 'notifications' either a complete email address e.g. "
 "'notifications@example.com' to override all outgoing emails."
 msgstr ""
+"발신 서버 필터와 일치하지 않는 경우 기본값입니다. 로컬 부분 (예: '알림')이나 전체 이메일 주소 (예: "
+"'notifications@example.com')로 모든 발신 이메일을 재설정할 수 있습니다."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__use_default_to
@@ -2868,7 +2881,7 @@ msgstr "다운로드 로그"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Download:"
-msgstr ""
+msgstr "다운로드:"
 
 #. module: mail
 #. odoo-javascript
@@ -3158,7 +3171,7 @@ msgstr "이메일 구성 마법사"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "이메일 도메인 예: 'odoo@example.com'의 'example.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -5872,7 +5885,7 @@ msgstr "메시지를 찾을 수 없습니다."
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "No recipient"
-msgstr ""
+msgstr "수신인 없음"
 
 #. module: mail
 #. odoo-python
@@ -6362,7 +6375,7 @@ msgstr "원본 메시지가 삭제되었습니다."
 #: code:addons/mail/models/res_users.py:0
 #: model:ir.actions.act_window,name:mail.mail_activity_without_access_action
 msgid "Other activities"
-msgstr ""
+msgstr "기타 작업"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__outgoing
@@ -7358,7 +7371,7 @@ msgstr "SFU 서버 키"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "SFU server"
-msgstr ""
+msgstr "SFU 서버"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -7401,7 +7414,7 @@ msgstr "새로운 서식으로 저장"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Save editing"
-msgstr ""
+msgstr "편집 내용 저장"
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_gif_favorite
@@ -9183,7 +9196,7 @@ msgstr "파일 업로드"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "Upload:"
-msgstr ""
+msgstr "업로드:"
 
 #. module: mail
 #. odoo-javascript
@@ -9973,7 +9986,7 @@ msgstr "이 이메일의 첨부 파일"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "available bitrate:"
-msgstr ""
+msgstr "사용 가능한 비트 전송률:"
 
 #. module: mail
 #. odoo-javascript
@@ -10028,7 +10041,7 @@ msgstr "채널"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "clock rate:"
-msgstr ""
+msgstr "클록 속도:"
 
 #. module: mail
 #. odoo-javascript
@@ -10042,7 +10055,7 @@ msgstr "닫기"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "codec:"
-msgstr ""
+msgstr "코덱:"
 
 #. module: mail
 #. odoo-python
@@ -10096,13 +10109,13 @@ msgstr "완료"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "down DTLS:"
-msgstr ""
+msgstr "다운 DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "down ICE:"
-msgstr ""
+msgstr "다운 ICE:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -10128,12 +10141,12 @@ msgstr "예. \"MyCompany에 오신 것을 환영합니다\" 또는 \"반갑습�
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"bounce\""
-msgstr ""
+msgstr "e.g. \"bounce\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"catchall\""
-msgstr ""
+msgstr "예: \"catchall\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -10143,7 +10156,7 @@ msgstr "예: \"mycompany.com\""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "e.g. \"notifications\""
-msgstr ""
+msgstr "예: \"알림\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10466,13 +10479,13 @@ msgstr "알 수없는 대상 모델 %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "up DTLS:"
-msgstr ""
+msgstr "업 DTLS:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 msgid "up ICE:"
-msgstr ""
+msgstr "업 ICE:"
 
 #. module: mail
 #. odoo-javascript

@@ -3,10 +3,11 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2024
 # Jolien De Paepe, 2024
 # Yassine KHATTABI, 2024
 # Rémi CAZENAVE, 2024
+# Manon Rondou, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-07 10:22+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Rémi CAZENAVE, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -512,12 +513,8 @@ msgstr "<b>Escompte appliqué.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
-"<br/>\n"
-"                            sur ce compte :"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -11018,7 +11015,7 @@ msgstr "Conditions de paiement : 21 jours"
 #: model_terms:account.payment.term,note:account.account_payment_term_30days
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
-msgstr "Condition de paiement : 30 jours "
+msgstr "Conditions de paiement : 30 jours "
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
@@ -11035,7 +11032,7 @@ msgstr "Conditions de paiement : 30 % d'acompte, fin du mois suivant"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Condition de paiement : 30% maintenant, solde à 60 jours"
+msgstr "Conditions de paiement : 30% maintenant, solde à 60 jours"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
@@ -13745,6 +13742,12 @@ msgid "Text Value"
 msgstr "Valeur texte"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "Texte copié"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "C'est la date de l'écriture d'ouverture."
@@ -13837,6 +13840,9 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"Ne sélectionnez pas directement le modèle de plan comptable Syscohada. À la "
+"place, il est conseillé de sélectionner directement le modèle de plan "
+"comptable correspondant à votre pays."
 
 #. module: account
 #. odoo-python
@@ -13927,6 +13933,8 @@ msgid ""
 "The amount for %(partner_name)s appears unusual. Based on your historical data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
+"Le montant pour %(partner_name)s semble inhabituel. Sur la base de vos données historiques, le montant attendu est de %(mean)s (± %(wiggle)s).\n"
+"Veuillez vérifier si ce montant est exact."
 
 #. module: account
 #. odoo-python
@@ -16261,7 +16269,7 @@ msgstr "Écrivez ici <b> votre adresse email </b> pour tester le flux"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "Annulation compte de change"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16510,7 +16518,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

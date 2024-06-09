@@ -4,6 +4,16 @@
 # 
 # Translators:
 # Gregor Flajs, 2024
+# Katja Deržič, 2024
+# matjaz k <matjaz@mentis.si>, 2024
+# Nejc G <nejc@luxim.si>, 2024
+# Tomaž Jug <tomaz@editor.si>, 2024
+# jl2035 <jaka.luthar@gmail.com>, 2024
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2024
+# Grega Vavtar <grega@hbs.si>, 2024
+# Martin Trigaux, 2024
+# Tadej Lupšina <tadej@hbs.si>, 2024
+# Jasmina Macur <jasmina@hbs.si>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-17 10:10+0000\n"
 "PO-Revision-Date: 2024-01-17 11:21+0000\n"
-"Last-Translator: Gregor Flajs, 2024\n"
+"Last-Translator: Jasmina Macur <jasmina@hbs.si>, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +56,7 @@ msgstr ""
 #: model:ir.model.fields,help:event_sale.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "Opis vstopnice, ki jo želite sporočiti svojim strankam."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product__detailed_type
@@ -56,6 +66,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Izdelek, ki ga je mogoče shraniti, je izdelek, pri katerem upravljate z zalogami. Namestiti je treba aplikacijo Inventory.\n"
+"Potrošni izdelek je izdelek, pri katerem se zaloge ne upravljajo.\n"
+"Storitev je nematerialni izdelek, ki ga ponujate."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_order_lines_ids
@@ -65,7 +78,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
 msgid "Attended"
-msgstr ""
+msgstr "Udeleženec"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order__attendee_count
@@ -75,12 +88,12 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_name
 msgid "Attendee Name"
-msgstr ""
+msgstr "Ime udeleženca"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.sale_order_view_form
 msgid "Attendees"
-msgstr ""
+msgstr "Udeleženci"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -90,12 +103,12 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Booked by"
-msgstr ""
+msgstr "Rezerviral"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_campaign_id
 msgid "Campaign"
-msgstr ""
+msgstr "Kampanja"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_configurator_view_form
@@ -106,14 +119,14 @@ msgstr "Prekliči"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__cancel
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__cancel
 msgid "Cancelled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
-msgstr ""
+msgstr "Izberite si dogodek in samodejno se ustvari prijava na ta dogodek."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -121,6 +134,8 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
+"Izberite vstopnice za dogodek in samodejno se ustvari prijava za te "
+"vstopnice na dogodek."
 
 #. module: event_sale
 #: model_terms:ir.actions.act_window,help:event_sale.event_sale_report_action
@@ -140,7 +155,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__open
 msgid "Confirmed"
-msgstr ""
+msgstr "Potrjeno"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -166,13 +181,13 @@ msgstr "Ustvarjeno"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__currency_id
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_partner_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Customer"
-msgstr ""
+msgstr "Stranka"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__description
@@ -228,13 +243,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_end
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event End Date"
-msgstr ""
+msgstr "Končni datum dogodka"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
 msgid "Event Registration"
-msgstr ""
+msgstr "Registracija dogodka"
 
 #. module: event_sale
 #: model:product.template,name:event_sale.product_product_event_standard_product_template
@@ -265,7 +280,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Start Date"
-msgstr ""
+msgstr "Datum pričetka dogodka"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type_ticket
@@ -280,18 +295,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 #: model:ir.model.fields.selection,name:event_sale.selection__product_template__detailed_type__event
 msgid "Event Ticket"
-msgstr ""
+msgstr "Vstopnica za dogodek"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Vstopnice za dogodek"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Type"
-msgstr ""
+msgstr "Vrsta dogodka"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -308,7 +323,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
-msgstr ""
+msgstr "Prosto"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -321,7 +336,7 @@ msgstr "Združi po"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event_sale
 #. odoo-python
@@ -332,7 +347,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__invoice_partner_id
 msgid "Invoice Address"
-msgstr ""
+msgstr "Naslov za račun"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -388,7 +403,7 @@ msgstr "V Redu"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_date
 msgid "Order Date"
-msgstr ""
+msgstr "Datum naročila"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
@@ -398,7 +413,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Participant"
-msgstr ""
+msgstr "Udeleženec"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -418,7 +433,7 @@ msgstr "Odprt znesek"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: event_sale
 #. odoo-python
@@ -432,18 +447,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "Znižanje cene"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Znižanje cene z DDV"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_incl
@@ -464,12 +479,12 @@ msgstr "Izdelek"
 #: model:ir.model.fields,field_description:event_sale.field_product_product__detailed_type
 #: model:ir.model.fields,field_description:event_sale.field_product_template__detailed_type
 msgid "Product Type"
-msgstr ""
+msgstr "Vrsta izdelka"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Različica izdelka"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__draft
@@ -479,19 +494,19 @@ msgstr "Ponudba"
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__sale_order_state__sent
 msgid "Quotation Sent"
-msgstr ""
+msgstr "Ponudba poslana"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Registration"
-msgstr ""
+msgstr "Registracija"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_create_date
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Date"
-msgstr ""
+msgstr "Datum registracije"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
@@ -507,7 +522,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__registration_ids
 msgid "Registrations"
-msgstr ""
+msgstr "Registracije"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
@@ -523,18 +538,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_tree
 msgid "Revenues"
-msgstr ""
+msgstr "Prihodki"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
 msgid "Sale Order"
-msgstr ""
+msgstr "Prodajni nalog"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Postavka prodajnega naloga"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
@@ -550,7 +565,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Sales"
-msgstr ""
+msgstr "Prodaja"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_subtotal
@@ -560,7 +575,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
 msgid "Sales End"
-msgstr ""
+msgstr "Konec prodaje"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -575,7 +590,7 @@ msgstr "Prodajni nalog"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Postavka naročila"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -585,12 +600,12 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_user_id
 msgid "Salesperson"
-msgstr ""
+msgstr "Prodajalec"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
-msgstr ""
+msgstr "Preskoči"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__sale_status__sold
@@ -598,22 +613,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Sold"
-msgstr ""
+msgstr "Prodano"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
 msgid "Source"
-msgstr ""
+msgstr "Vir"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__state
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Ticket"
-msgstr ""
+msgstr "Zahtevek"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
@@ -633,12 +648,12 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_ticket_view_form
 msgid "Transaction"
-msgstr ""
+msgstr "Transakcija"
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Nepotrjeno"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_registration__state
@@ -657,12 +672,12 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Prihajajoči dogodki od danes dalje"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Napovedano/V teku"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -672,4 +687,4 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_id_change_exception
 msgid "to"
-msgstr ""
+msgstr "do"
