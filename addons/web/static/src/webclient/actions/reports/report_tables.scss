@@ -40,6 +40,31 @@ div#total {
     }
 }
 
+.o_table_bold {
+    table {
+        thead th {
+            border-top: $border-width * 3 solid $o-default-report-secondary-color;
+            text-transform: uppercase;
+        }
+
+        tbody {
+            tr:last-child td {
+                border-bottom: $border-width * 3 solid $o-default-report-secondary-color;
+            }
+
+            tr td {
+                padding: $table-cell-padding-y * 2 $table-cell-padding-x;
+            }
+        }
+    }
+
+    .o_total_table {
+        & .o_total, & .o_price_total {
+            border-top: $border-width solid $gray-200;
+        }
+    }
+}
+
 .o_table_striped {
     table {
         tr:not(:first-child) {

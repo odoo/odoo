@@ -406,8 +406,9 @@
                     <span t-field="company.report_footer"/>
                 </div>
                 <div class="col-4 text-end">
-                    <span t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</span>
-                    <strong t-if="report_type == 'pdf'" class="page"></strong>
+                    <strong t-if="company.report_header" t-field="company.report_header" class="o_company_tagline">Company tagline</strong>
+                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
                 </div>
             </div>
         </div>
@@ -415,59 +416,54 @@
 
     <template id="external_layout_bold">
         <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
-            <div class="o_clean_header">
-                <div class="row">
-                    <div class="col-6">
-                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                    </div>
-                    <div class="col-5 offset-1" name="company_address">
-                        <ul class="list-unstyled" name='company_address_list'>
-                            <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+            <div class="row">
+                <div class="col-6">
+                    <img t-if="company.logo" class="o_company_logo_big" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                </div>
+                <div class="col-5 offset-1" name="company_address">
+                    <ul class="list-unstyled" name='company_address_list'>
+                        <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                            <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                <strong>Company address block</strong>
+                                <div>Contains the company address.</div>
+                            </div>
+                        </span></li>
+                        <li t-else="">
+                            <span t-field="company.company_details">
                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
-                                    <strong>Company address block</strong>
-                                    <div>Contains the company address.</div>
+                                    <strong>Company details block</strong>
+                                    <div>Contains the company details.</div>
                                 </div>
-                            </span></li>
-                            <li t-else="">
-                                <span t-field="company.company_details">
-                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
-                                        <strong>Company details block</strong>
-                                        <div>Contains the company details.</div>
-                                    </div>
-                                </span>
-                            </li>
-                            <li t-if="not forced_vat"/>
-                            <li t-else="">
-                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
-                                <span t-esc="forced_vat">US12345671</span>
-                            </li>
-                        </ul>
-                    </div>
+                            </span>
+                        </li>
+                        <li t-if="not forced_vat"/>
+                        <li t-else="">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-esc="forced_vat">US12345671</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
 
-        <div t-attf-class="article o_report_layout_bold o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else ('/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else '') }});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <div t-attf-class="article o_report_layout_bold o_table_bold o_company_#{company.id}_layout {{ 'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else ('/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else '') }});"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
             <t t-out="0"/>
         </div>
 
-        <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
-            <div class="row">
-                <div class="col-4">
+        <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+            <div class="o_footer_content row border-top pt-2">
+                <div class="col-8">
                     <span t-field="company.report_footer"/>
                 </div>
-                <div class="col-4">
-                    <span t-if="company.is_company_details_empty" t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                    <span t-else="" t-field="company.company_details"/>
-                </div>
-                <div class="col-3">
-                    <div class="mt0 mb0 h5" t-if="company.report_header" t-field="company.report_header">Company tagline</div>
-                </div>
-                <div class="col-1">
-                    <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-end text-center">
-                        <li class="list-inline-item"><strong><span class="page"/></strong></li>
-                    </ul>
+                <div class="col-4 text-end">
+                    <strong t-if="company.report_header" t-field="company.report_header" class="o_company_tagline">Company tagline</strong>
+                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
                 </div>
             </div>
         </div>
@@ -675,27 +671,14 @@
                 }
             </t>
             <t t-elif="layout == 'web.external_layout_bold'" >
-                &amp;.o_clean_footer {
-                    border-top: 3px solid <t t-esc='secondary'/>;
-                    h4 {
-                        color: <t t-esc='secondary'/>;
-                    }
-                    .pagenumber {
-                        border: 3px solid <t t-esc='primary'/>;
-                        background-color: <t t-esc='secondary'/>;
-                    }
-                }
                 &amp;.o_report_layout_bold {
-                    table {
-                       thead {
-                           th {
-                                border-top: 3px solid <t t-esc='secondary'/>;
-                            }
+                    .o_main_table {
+                        thead th {
+                            border-top: 3px solid <t t-esc='secondary'/>;
                         }
-                        tbody {
-                            tr:last-child td {
-                                border-bottom: 3px solid <t t-esc='secondary'/>;
-                            }
+
+                        tbody tr:last-child td {
+                            border-bottom: 3px solid <t t-esc='secondary'/>;
                         }
                     }
                 }
