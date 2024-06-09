@@ -62,6 +62,32 @@ class Menu(models.Model):
             res.append((menu.id, menu_name))
         return res
 
+    def _validate_parent_menu(self, values, record=None):
+        parent_menu = None
+        if 'parent_id' in values:
+            parent_menu = self.env['website.menu'].sudo().browse(values['parent_id'])
+        elif record and record.parent_id:
+            parent_menu = record.parent_id.sudo()
+
+        if parent_menu:
+            # Check hierarchy level
+            if parent_menu.parent_id and parent_menu.parent_id.parent_id:
+                raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+
+            # Check mega menu conditions
+            is_mega_menu = values.get('is_mega_menu', record.is_mega_menu if record else False)
+            if is_mega_menu:
+                if parent_menu.parent_id:
+                    raise UserError(_("A mega menu cannot have a parent menu."))
+                if record and record.child_id:
+                    raise UserError(_("A mega menu cannot have a child menu."))
+            elif parent_menu.is_mega_menu:
+                raise UserError(_("A mega menu cannot have a child menu."))
+
+            # Check for child menu condition
+            if 'parent_id' in values and record and record.child_id and (parent_menu.parent_id or record.child_id.child_id):
+                raise UserError(_("Menus with child menus cannot be added as a submenu."))
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' In case a menu without a website_id is trying to be created, we duplicate
@@ -75,6 +101,9 @@ class Menu(models.Model):
         # Only used when creating website_data.xml default menu
         menus = self.env['website.menu']
         for vals in vals_list:
+            if 'parent_id' in vals:
+                self._validate_parent_menu(vals, None)
+
             if vals.get('url') == '/default-main-menu':
                 menus |= super().create(vals)
                 continue
@@ -101,6 +130,10 @@ class Menu(models.Model):
         return menus
 
     def write(self, values):
+        for record in self:
+            if any(key in values for key in ('parent_id', 'is_mega_menu')):
+                self._validate_parent_menu(values, record)
+
         self.clear_caches()
         return super().write(values)
 
