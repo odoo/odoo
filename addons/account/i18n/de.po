@@ -453,12 +453,8 @@ msgstr "<b>Frühzahlerrabatt angewendet.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            auf dieses Konto:"
+msgid "<br/> on this account:"
+msgstr "<br/> auf folgendes Konto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5916,17 +5912,6 @@ msgid "Duplicated Ref"
 msgstr "Duplizierte Ref."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Duplizierte Lieferantenreferenz wurde erkannt. Wahrscheinlich haben Sie "
-"zweimal dieselbe Lieferantenrechnung/Gutschrift erfasst."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Dynamische Berichte"
@@ -10005,13 +9990,6 @@ msgstr "Hoppla"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "Offen"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Offene Liste"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -16240,7 +16218,7 @@ msgstr "Sie können keinen Bericht löschen, der Varianten hat."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
