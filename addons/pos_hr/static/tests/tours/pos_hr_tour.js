@@ -77,6 +77,10 @@ registry.category("web_tour.tours").add("PosHrTour", {
             TicketScreen.nthRowContains(4, "Mitchell Admin", false),
 
             // Close register should be accessible by the admin user.
+            Chrome.clickMenuOption("Cash In/Out"),
+            Dialog.discard(),
+
+            // Close register should be accessible by the admin user.
             Chrome.clickMenuOption("Close Register"),
             Dialog.is("Closing Register"),
         ].flat(),
