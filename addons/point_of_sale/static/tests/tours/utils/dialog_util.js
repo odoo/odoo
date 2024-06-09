@@ -20,6 +20,14 @@ export function cancel() {
         run: "click",
     };
 }
+export function discard() {
+    return {
+        content: "discard dialog",
+        trigger: `.modal-footer button:contains("Discard")`,
+        in_modal: true,
+        run: "click",
+    };
+}
 export function is({ title } = {}) {
     let trigger = ".modal-content";
     if (title) {

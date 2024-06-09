@@ -7,8 +7,7 @@ patch(Navbar.prototype, {
             return super.showCashMoveButton;
         }
 
-        const { cashier } = this.pos;
-        return super.showCashMoveButton && (!cashier || cashier._role == "manager");
+        return super.showCashMoveButton && this.employeeIsAdmin();
     },
     employeeIsAdmin() {
         if (!this.pos.config.module_pos_hr) {

@@ -53,5 +53,10 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 @tagged("post_install", "-at_install")
 class TestUi(TestPosHrHttpCommon):
     def test_01_pos_hr_tour(self):
+        self.pos_admin.write({
+            "groups_id": [
+                (4, self.env.ref('account.group_account_invoice').id)
+            ]
+        })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
