@@ -74,6 +74,16 @@ class Menu(models.Model):
                   of default main menus creation.
         '''
         self.clear_caches()
+
+        if 'parent_id' in vals:
+            parent_menu = self.env['website.menu'].sudo().browse(vals['parent_id'])
+            if vals.get('is_mega_menu') and parent_menu.parent_id:
+                raise UserError(_("A mega menu cannot have a parent menu."))
+            if parent_menu.parent_id and parent_menu.parent_id.parent_id:
+                raise UserError(_("Submenus cannot have more than two levels of hierarchy."))
+            if parent_menu.is_mega_menu:
+                raise UserError(_("Any menu cannot be a child menu of a mega menu."))
+
         # Only used when creating website_data.xml default menu
         if vals.get('url') == '/default-main-menu':
             return super(Menu, self).create(vals)
@@ -98,6 +108,26 @@ class Menu(models.Model):
         return res  # Only one record is returned but multiple could have been created
 
     def write(self, values):
+        for record in self:
+            parent_menu = None
+
+            if 'parent_id' in values:
+                parent_menu = self.env['website.menu'].sudo().browse(values['parent_id'])
+                if parent_menu.parent_id and parent_menu.parent_id.parent_id:
+                    raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+                if parent_menu.parent_id and record.is_mega_menu:
+                    raise UserError(_("A mega menu cannot have a parent menu."))
+                if parent_menu.parent_id and record.child_id:
+                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+
+            if 'is_mega_menu' in values:
+                if not parent_menu:
+                    parent_menu = record.parent_id.sudo()
+                if values['is_mega_menu'] and parent_menu.parent_id:
+                    raise UserError(_("A mega menu cannot be sub-menu."))
+                if values['is_mega_menu'] and record.child_id:
+                    raise UserError(_("A mega menu cannot have child menu."))
+
         res = super().write(values)
         if 'website_id' in values or 'group_ids' in values or 'sequence' in values or 'page_id' in values:
             self.clear_caches()
@@ -213,6 +243,9 @@ class Menu(models.Model):
                 if page:
                     menu['page_id'] = page.id
                     menu['url'] = page.url
+                    if isinstance(menu.get('parent_id'), str):
+                        # Avoid failure if parent_id is sent as a string from a customization.
+                        menu['parent_id'] = int(menu['parent_id'])
                 elif menu_id.page_id:
                     try:
                         # a page shouldn't have the same url as a controller
