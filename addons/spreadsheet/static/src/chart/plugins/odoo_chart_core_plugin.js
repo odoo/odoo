@@ -109,7 +109,7 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      */
     getOdooChartDisplayName(chartId) {
         return `(#${this.getOdooChartIds().indexOf(chartId) + 1}) ${
-            this.getters.getChart(chartId).title
+            this.getters.getChart(chartId).title.text
         }`;
     }
 
