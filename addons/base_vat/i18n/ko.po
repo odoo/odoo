@@ -7,6 +7,7 @@
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Sarah Park, 2023
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,13 +15,27 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
+msgstr ""
+"10XXXXXXXXY 또는 20XXXXXXXXY 또는 15XXXXXXXXY 또는 16XXXXXXXXY 또는 17XXXXXXXXY"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
+msgstr "310175397400003 [15자리, 앞자리와 뒷자리는 \"3\"이어야 합니다.]"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -39,6 +54,24 @@ msgid "<span class=\"o_vat_label\">VAT</span>"
 msgstr "<span class=\"o_vat_label\">부가가치세</span>"
 
 #. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "AR200-5536168-2 or 20055361682"
+msgstr "AR200-5536168-2 또는 20055361682"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
+msgstr "CHE-123.456.788 TVA 또는 CHE-123.456.788 MWST 또는 CHE-123.456.788 IVA"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "CO213123432-1 or CO213.123.432-1"
+msgstr "CO213123432-1 또는 CO213.123.432-1"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
 msgstr "회사"
@@ -54,9 +87,33 @@ msgid "Contact"
 msgstr "연락처"
 
 #. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "DE123456788 or 12/345/67890"
+msgstr "DE123456788 또는 12/345/67890"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "DO1-01-85004-3 or 101850043"
+msgstr "DO1-01-85004-3 또는 101850043"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "회계 포지션"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "GB123456782 or XI123456782"
+msgstr "GB123456782 또는 XI123456782"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "HU12345676 or 12345678-1-11 or 8071592153"
+msgstr "HU12345676 또는 12345678-1-11 또는 8071592153"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -66,12 +123,16 @@ msgid ""
 msgstr "이 체크 박스를 체크하면 유럽 VIES 서비스에서 부가가치세 번호를 확인할 수 없는 경우 연락처를 저장할 수 없습니다."
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
-msgstr "세금 식별 번호. 세금 납부가 필요한 경우 기입하십시오. 특정 법적 고지에 사용됩니다."
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "MXGODE561231GR8 or GODE561231GR8"
+msgstr "MXGODE561231GR8 또는 GODE561231GR8"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
+msgstr "TR1234567890 (VERGINO) 또는 TR17291716060 (TCKIMLIKNO)"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -93,6 +154,14 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr "세금 식별 번호. 세금 납부가 필요한 경우 기입하십시오. 특정 법적 고지에 사용됩니다."
+
+#. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -101,8 +170,10 @@ msgid ""
 msgstr "이 VAT 번호로 감지된 해외 국가가 해당 재정 상태에서 설정된 국가와 일치하지 않습니다."
 
 #. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+#, python-format
 msgid "VAT"
 msgstr "부가가치세"
 

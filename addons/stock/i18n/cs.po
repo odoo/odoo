@@ -20,8 +20,8 @@
 # Petr Hemza, 2023
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Jakub Smolka, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3762,6 +3762,11 @@ msgid ""
 "The correction will remove the reservation of the impacted operations on all companies.\n"
 "If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
+"Není možné rezervovat více produktů %s, než máte na skladě.\n"
+"\n"
+"Nesrovnalosti můžete opravit kliknutím na tlačítko níže.\n"
+"Oprava odstraní výhradu dotčených operací u všech společností.\n"
+"Pokud chyba přetrvává nebo se tato zpráva zobrazuje často, odešlete žádost o podporu na https://www.odoo.com/help"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3770,6 +3775,8 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock.\n"
 "Please contact your system administrator to rectify this issue."
 msgstr ""
+"Není možné odrezervovat více produktů %s, než máte na skladě.\n"
+"Obraťte se na správce systému, aby tento problém napravil."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -9284,6 +9291,8 @@ msgid ""
 "You cannot pack products into the same package when they are from both "
 "immediate and planned transfers."
 msgstr ""
+"Nemůžete zabalit produkty do stejného balíku, pokud jsou z okamžitého i "
+"plánovaného převodu."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -9292,6 +9301,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Nemůžete zabalit produkty do stejného balíku, pokud pocházejí z různých "
+"převodů s různými typy operací."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0

@@ -7,6 +7,7 @@
 # sejun huang <sejun.huang@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Tony Ng, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1114,7 +1115,7 @@ msgstr "作者"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr "訊息的作者。如果沒設定，email_from 可能儲存一個不匹配任何合作夥伴的 email地址."
+msgstr "訊息的作者。如果未設定，email_from 可能儲存一個不符合任何合作夥伴記錄的電郵地址。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__author_avatar
@@ -1296,7 +1297,7 @@ msgstr "瀏覽器預設值"
 #: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
-msgstr "CC Email"
+msgstr "副本抄送電郵"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
@@ -2444,7 +2445,7 @@ msgstr "電郵"
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
 msgid "Email Address"
-msgstr "Email地址"
+msgstr "電子郵件地址"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -2465,7 +2466,7 @@ msgstr "電郵別名"
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr "Email黑名單"
+msgstr "電郵黑名單"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -2496,7 +2497,7 @@ msgstr "電郵搜尋"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 #: model:ir.model.fields,field_description:mail.field_ir_cron__template_id
 msgid "Email Template"
-msgstr "Email範本"
+msgstr "電郵範本"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template_preview
@@ -2527,7 +2528,7 @@ msgstr "電子郵件地址已存在！"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr "發送者的Email地址。當找不到業務夥伴的匹配的信件時候，這個欄位就被設定。並且Chatter中的作者id被替換掉."
+msgstr "發送人的電郵地址。當找不到符合的合作夥伴時，這個欄位就會被設定，並在聊天工具中取代 author_id 欄位。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -3474,7 +3475,7 @@ msgstr "無效的電子郵件地址"
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr "無效的EMail地址 %r"
+msgstr "無效電郵地址 %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -4264,7 +4265,7 @@ msgstr "訊息引用，例如前一訊息的標識符"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Message should be a valid EmailMessage instance"
-msgstr "Message 應該是一個有效的 EmailMessage 實例"
+msgstr "訊息應該是有效的電子郵件訊息個體"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
@@ -5304,9 +5305,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
-"處理聊天通知的規則:\n"
-"- 通過EMail處理: 通知會發送至您的EMail地址\n"
-"- 系統內部處理: 通知會出現在Odoo收件箱"
+"聊天視窗通知的處理方式：\n"
+"- 透過電子郵件處理：通知將發送至你的電郵地址\n"
+"- 在 Odoo 中處理：通知會在 Odoo 收件箱中顯示"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -6092,7 +6093,7 @@ msgstr ""
 msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
-msgstr "選擇每個信件上的操作，並在需要時更正EMail地址。修改後的地址將儲存在相應的聯絡人上。"
+msgstr "選擇要對每個電郵執行的操作，並根據需要修正電郵地址。修改後的地址將儲存至相應的聯絡人記錄。"
 
 #. module: mail
 #. openerp-web
@@ -6734,7 +6735,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr "EMail發到"
+msgstr "電郵已傳送至"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -6840,7 +6841,7 @@ msgstr "此"
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "This action will send an email."
-msgstr "此操作將發出EMail。"
+msgstr "此操作會發送電郵。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -7140,7 +7141,7 @@ msgstr "無法連接到 SMTP 伺服器"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
-msgstr "無法記錄訊息，請配置發件人的EMail地址。"
+msgstr "未能記錄訊息，請配置寄件者電郵地址。"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0

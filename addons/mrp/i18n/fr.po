@@ -13,6 +13,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Wil Odoo, 2023
 # Jolien De Paepe, 2023
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3941,6 +3942,12 @@ msgid "Responsible User"
 msgstr "Responsable"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Revenir à l'inventaire"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Lignes de gamme"
@@ -5884,6 +5891,16 @@ msgstr "Vous avez produit moins que la demande initiale"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Vous devriez fournir un numéro de lot pour le produit fini."
+
+#. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"Il est préférable de mettre à jour la quantité de composants plutôt que de "
+"mettre directement à jour la quantité du produit en kit."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action

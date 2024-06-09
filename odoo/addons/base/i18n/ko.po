@@ -33790,6 +33790,14 @@ msgid "You cannot delete the %s record."
 msgstr "%s 레코드를 삭제할 수 없습니다."
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"You cannot delete the admin user because it is utilized in various places "
+"(such as security configurations,...). Instead, archive it."
+msgstr "관리자는 보안 설정 등 다양한 곳에서 사용되므로 삭제할 수 없습니다. 대신 보관함으로 이동할 수 있습니다."
+
+#. module: base
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid ""

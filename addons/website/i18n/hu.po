@@ -14,14 +14,14 @@
 # Istvan <leki69@gmail.com>, 2021
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2021
 # sixsix six, 2022
-# Tamás Dombos, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
 # Bognár István <f-b-i@freemail.hu>, 2023
-# Szabolcs Rádi, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
 # gezza <geza.nagy@oregional.hu>, 2023
 # Martin Trigaux, 2023
 # krnkris, 2023
+# Tamás Dombos, 2024
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: krnkris, 2023\n"
+"Last-Translator: Tamás Dombos, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2984,6 +2984,8 @@ msgid ""
 "Contact us about anything related to our company or services.<br/>\n"
 "                                    We'll do our best to get back to you as soon as possible."
 msgstr ""
+"Ha bármilyen kérdése lenne vállalatunkkal vagy a szolgáltatásainkkal kapcsolatban, itt felteheti.<br/>\n"
+"Próbálunk a lehető leghamarabb válaszolni."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -3797,6 +3799,15 @@ msgstr ""
 #: code:addons/website/static/src/js/backend/res_config_settings.js:0
 #, python-format
 msgid "Do not activate"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
 msgstr ""
 
 #. module: website
@@ -4861,6 +4872,16 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/backend/res_config_settings.js:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5119,6 +5140,13 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #, python-format
 msgid "Hide this page from search results"
@@ -5350,6 +5378,15 @@ msgid ""
 msgstr ""
 "Ha elveti a jelenlegi módosításokat, az összes el nem mentett változás "
 "elveszik. Az elvetés gombra kattintva visszatérhet a szerkesztéshez."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -8686,6 +8723,13 @@ msgid "Show reCaptcha Policy"
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Sidebar"
 msgstr "Oldalsáv"
@@ -9287,6 +9331,14 @@ msgstr "A választott név már létezik."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website belongs to"
+msgstr ""
+
+#. module: website
+#: code:addons/website/wizard/portal_wizard.py:0
+#, python-format
+msgid ""
+"The contact \"%s\" has the same email as an existing user (%s) and has "
+"access to the same website."
 msgstr ""
 
 #. module: website
@@ -11039,6 +11091,14 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "You do not have sufficient rights to perform that action."
@@ -11149,6 +11209,15 @@ msgstr "Az Ön e-mail címe"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "Your Measurement ID:"
@@ -11166,7 +11235,7 @@ msgstr "Az Ön neve"
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Question"
-msgstr ""
+msgstr "Az Ön kérdése"
 
 #. module: website
 #. openerp-web
