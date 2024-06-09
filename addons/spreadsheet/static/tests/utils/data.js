@@ -54,7 +54,7 @@ export function getBasicListArch() {
 
 export function getBasicGraphArch() {
     return /* xml */ `
-        <graph>
+        <graph string="PartnerGraph">
             <field name="bar" />
         </graph>
     `;
