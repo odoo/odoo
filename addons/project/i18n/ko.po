@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-26 15:04+0000\n"
 "PO-Revision-Date: 2024-03-27 13:34+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2015,7 +2016,7 @@ msgstr "이메일 참조"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "이메일 도메인 예: 'odoo@example.com'의 'example.com'"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
@@ -2456,7 +2457,7 @@ msgstr "수신함"
 #. module: project
 #: model:project.tags,name:project.project_tags_09
 msgid "Interior"
-msgstr ""
+msgstr "인테리어"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_04
@@ -3443,6 +3444,19 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"이 프로젝트 및 관련 작업을 볼 수 있는 사람.\n"
+"\n"
+"- 초대 받은 내부 사용자: 프로젝트를 팔로우하면 내부 사용자는 동등하게 어떤 작업에나 접근할 수 있습니다. 그렇지 않은 경우, 팔로우하는 특정 작업에만 접근할 수 있습니다.\n"
+" 프로젝트 > 관리자 접근 권한 수준을 가진 사용자는 직접 팔로우하지 않은 경우에도 여전히 이 프로젝트 및 관련 작업에 접근할 수 있습니다.\n"
+"\n"
+"- 모든 내부 사용자: 모든 내부 사용자는 동등하게 프로젝트 및 관련 작업에 접근할 수 있습니다.\n"
+"\n"
+"- 초대 받은 포털 사용자 및 모든 내부 사용자: 모든 내부 사용자는 프로젝트 및 모든 작업에 동등하게 접근할 수 있습니다.\n"
+"프로젝트를 팔로우하는 경우, 포털 사용자는 팔로우 중인 특정 작업에만 액세스할 수 있습니다.\n"
+"프로젝트가 읽기 전용으로 공유되면 포털 사용자는 해당 포털로 리디렉션됩니다. 팔로우 중인 작업을 볼 수는 있지만 편집할 수는 없습니다.\n"
+"프로젝트가 편집 모드로 공유되면 포털 사용자는 작업의 칸반 및 목록 보기로 리디렉션됩니다. 이들은 작업에서 선택한 수의 필드를 수정할 수 있습니다.\n"
+"\n"
+"어떤 경우든 프로젝트 접근 권한이 없는 내부 사용자는 해당 URL을 통하여 (또한 비공개 프로젝트인 경우에는 팔로우하는 경우에) 여전히 작업에 접근할 수 있습니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3956,7 +3970,7 @@ msgstr "달성한 날짜"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
 msgid "Read-only"
-msgstr ""
+msgstr "읽기 전용"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -5696,7 +5710,7 @@ msgstr "관리자가 어떤 피드백을 받아들일지 결정합니다."
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "alias"
-msgstr ""
+msgstr "별칭"
 
 #. module: project
 #. odoo-javascript
@@ -5780,7 +5794,7 @@ msgstr "예: To Do"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "예: mycompany.com"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -5838,7 +5852,7 @@ msgstr "주기적으로"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "others"
-msgstr ""
+msgstr "기타"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

@@ -96,12 +96,12 @@ msgstr "<span class=\"o_stat_text\">추적자</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<span class=\"text-bg-danger\">Refused</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">거부</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<span class=\"text-bg-secondary\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-secondary\">보관됨</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -686,6 +686,8 @@ msgid ""
 "Activity plans are used to assign a list of activities in just a few clicks\n"
 "                    (e.g. \"Language Test\", \"Prepare Offer\", ...)"
 msgstr ""
+"작업 계획은 몇 번의 클릭으로 작업 목록을 배정하는 데 사용됩니다.\n"
+"                    (예: \"언어 능력 시험\", \"채용 제안 준비\", ...)"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_mail_activity_schedule
@@ -1158,7 +1160,7 @@ msgstr "직무 영역 만들기"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr ""
+msgstr "채용 계획 생성"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1387,7 +1389,7 @@ msgstr "복사"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
 msgid "Duplicates Count"
-msgstr ""
+msgstr "중복 개수"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1425,7 +1427,7 @@ msgstr "이메일 참조"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "이메일 도메인 예: 'odoo@example.com'의 'example.com'"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2501,7 +2503,7 @@ msgstr "채용 분석"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Recruitment Plans"
-msgstr ""
+msgstr "채용 계획"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2583,7 +2585,7 @@ msgstr "거절 사유"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "Refuse the"
-msgstr ""
+msgstr "반려"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__refused
@@ -2599,7 +2601,7 @@ msgstr "반려됨"
 msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
-msgstr ""
+msgstr "이 지원서가 %(link)s와 중복되는 것으로 인식되었으므로 자동으로 거부되었습니다."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
@@ -2827,7 +2829,7 @@ msgstr "다음 행동 날짜가 오늘 이전 인 모든 기록보기"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "Some values do not exist in the application status"
-msgstr ""
+msgstr "일부 값이 신청서에 존재하지 않습니다."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -2987,7 +2989,7 @@ msgstr "UTM 캠페인'%s'은 채용 과정에서 사용되므로 삭제할 수 �
 msgid ""
 "The applicant is linked to an employee, to avoid losing information, archive"
 " it instead."
-msgstr ""
+msgstr "지원자가 이미 직원과 연결되어 있으므로 데이터 손실을 방지하려면 정보를 보관하세요."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -3282,7 +3284,7 @@ msgstr "예: domain.com"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "예: mycompany.com"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -3292,7 +3294,7 @@ msgstr "예: sales-manager"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
 msgid "other application(s)"
-msgstr ""
+msgstr "다른 지원자"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
