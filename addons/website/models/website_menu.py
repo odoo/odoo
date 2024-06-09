@@ -62,6 +62,41 @@ class Menu(models.Model):
             res.append((menu.id, menu_name))
         return res
 
+    @api.constrains("parent_id", "child_id", "is_mega_menu", "mega_menu_content")
+    def _validate_parent_menu(self):
+        for record in self:
+            parent_menu = record.parent_id.sudo() if record.parent_id else None
+
+            # Check hierarchy level
+            level = 0
+            current_menu = parent_menu
+            while current_menu:
+                level += 1
+                current_menu = current_menu.parent_id
+                if level > 2:
+                    raise UserError(_("Menus cannot have more than two levels of hierarchy."))
+
+            if parent_menu:
+                # Check mega menu conditions:
+                # We need to ensure that mega menus are only added to the top menu.
+                # Mega menus cannot be part of a parent-child menu structure.
+                # 1. A mega menu cannot be a child menu.
+                # 2. A mega menu cannot be a parent menu.
+                if parent_menu.is_mega_menu or (record.is_mega_menu and (parent_menu.parent_id or record.child_id)):
+                    raise UserError(_("A mega menu cannot have a parent or child menu."))
+
+                # Constraints for adding a child menu:
+                # We need to check two conditions to prevent creating an invalid submenu:
+                # 1. If the menu already has a submenu added to another menu with a parent_id,
+                #    we use `parent_menu.parent_id` to check this condition.
+                # 2. Follow these steps to ensure proper menu hierarchy:
+                #    a. First, create a three-level menu structure without setting a parent menu (main->child1->child2).
+                #    b. Save this menu structure.
+                #    c. After saving, assign the parent_menu to the main_menu.
+                #    We check this condition using `record.child_id.child_id`.
+                if record.child_id and (parent_menu.parent_id or record.child_id.child_id):
+                    raise UserError(_("Menus with child menus cannot be added as a submenu."))
+
     @api.model_create_multi
     def create(self, vals_list):
         ''' In case a menu without a website_id is trying to be created, we duplicate
