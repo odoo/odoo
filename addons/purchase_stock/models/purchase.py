@@ -320,7 +320,8 @@ class PurchaseOrderLine(models.Model):
             if values.get('date_planned'):
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
                 self._update_move_date_deadline(new_date)
-        lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+        lines = self.filtered(lambda l: l.order_id.state == 'purchase'
+                                        and not l.display_type)
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
