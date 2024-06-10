@@ -639,6 +639,7 @@
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="workcenter_id" string="Work Center" filter_domain="[('workorder_ids.workcenter_id', 'ilike', self)]"/>
                     <field name="origin"/>
+                    <field name="picking_type_id"/>
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
                     <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
@@ -649,16 +650,18 @@
                     <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Confirmed" name="filter_confirmed" domain="[('state', '=', 'confirmed')]"/>
                     <filter string="Planned" name="filter_planned" domain="[('is_planned', '=', True)]"/>
+                    <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <filter string="In Progress" name="filter_in_progress" domain="[('state', '=', 'progress')]"/>
                     <filter string="To Close" name="filter_to_close" domain="[('state', '=', 'to_close')]"/>
                     <separator/>
                     <filter string="MO Pending" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
-                    <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
                     <filter string="Delays" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
                     <filter string="Late Availability" name="late" domain="[('components_availability_state', '=', 'late')]"/>
+                    <separator/>
+                    <filter string="My MOs" name="my_mos" domain="[('user_id', '=', uid)]"/>
                     <separator/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
