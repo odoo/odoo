@@ -46,7 +46,7 @@ def check_access_token(access_token, *values):
 
 # Availability report.
 
-def add_to_report(report, records, available=True, reason=''):
+def add_to_report(report, records, available=True, reason='', filter_provider=False):
     """ Add records to the report with the provided values.
 
         Structure of the report:
@@ -73,6 +73,16 @@ def add_to_report(report, records, available=True, reason=''):
     :return: None
     """
     if report is None or not records:  # The report might not be initialized, or no records to add.
+        return
+
+    if filter_provider:
+        for provider in records:
+            for method in records[provider]:
+                report['payment_methods'][method] = {
+                    'available': available,
+                    'reason': reason,
+                }
+                report['payment_methods'][method].setdefault('supported_providers', []).append((provider, False))
         return
 
     category = 'providers' if records._name == 'payment.provider' else 'payment_methods'

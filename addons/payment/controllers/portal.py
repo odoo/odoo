@@ -125,6 +125,10 @@ class PaymentPortal(portal.CustomerPortal):
             report=availability_report,
             **kwargs,
         )  # In sudo mode to read the fields of providers.
+        supported_provider_per_method = request.env['payment.method'].sudo()._get_supported_provider_for_methods(
+            payment_methods_sudo,
+            providers_sudo,
+        )
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
             providers_sudo.ids, partner_sudo.id
         )  # In sudo mode to be able to read tokens of other partners and the fields of providers.
@@ -153,6 +157,7 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_id': partner_sudo.id,
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
+            'supported_methods': supported_provider_per_method,
             'tokens_sudo': tokens_sudo,
             'availability_report': availability_report,
             'transaction_route': '/payment/transaction',
@@ -217,6 +222,10 @@ class PaymentPortal(portal.CustomerPortal):
             force_tokenization=True,
             report=availability_report,
         )  # In sudo mode to read the fields of providers.
+        supported_provider_per_method = request.env['payment.method'].sudo()._get_supported_provider_for_methods(
+            payment_methods_sudo,
+            providers_sudo,
+        )
         tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
             None, partner_sudo.id, is_validation=True
         )  # In sudo mode to read the commercial partner's and providers' fields.
@@ -233,6 +242,7 @@ class PaymentPortal(portal.CustomerPortal):
             'partner_id': partner_sudo.id,
             'providers_sudo': providers_sudo,
             'payment_methods_sudo': payment_methods_sudo,
+            'supported_methods': supported_provider_per_method,
             'tokens_sudo': tokens_sudo,
             'availability_report': availability_report,
             'transaction_route': '/payment/transaction',

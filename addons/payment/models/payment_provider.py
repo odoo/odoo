@@ -246,6 +246,19 @@ class PaymentProvider(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
+    @api.onchange('capture_manually')
+    def _onchange_capture_manually(self):
+        if self.capture_manually:
+            unsupported_pms = self.payment_method_ids.filtered(
+                lambda method: not method.support_manual_capture and method.active
+                ).mapped('name')
+            pms = ' , '.join(unsupported_pms)
+            if unsupported_pms:
+                return {'warning': {
+                    'title': _("Warning"),
+                    'message': _("%s do not support manual capture", pms)
+                }}
+
     @api.onchange('state')
     def _onchange_state_switch_is_published(self):
         """ Automatically publish or unpublish the provider depending on its state.
