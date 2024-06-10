@@ -453,7 +453,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(leave1.number_of_hours_display, 24)
 
     def _test_leave_with_tz(self, tz, local_date_from, local_date_to, number_of_days):
-        self.user_employee.tz = tz
+        self.user_employee.resource_calendar_id.tz = tz
         tz = timezone(tz)
 
         # We use new instead of create to avoid the leaves generated for the

@@ -108,7 +108,12 @@ class HolidaysRequest(models.Model):
         # Note:
         # Without the application of the timezone, days based on UTC datetimes
         # will be returned (and will therefore not be correct for the client).
-        client_tz = timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        client_tz = timezone(
+            self.env.user.resource_calendar_id.tz
+            or self._context.get('tz')
+            or self.env.user.tz
+            or 'UTC'
+        )
         if values.get('date_from'):
             if not values.get('request_date_from'):
                 values['request_date_from'] = pytz.utc.localize(values['date_from']).astimezone(client_tz)
@@ -423,8 +428,8 @@ class HolidaysRequest(models.Model):
                     hour_from = attendance_from.hour_from
                     hour_to = attendance_to.hour_to
 
-                holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday.employee_id or holiday)
-                holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday.employee_id or holiday)
+                holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday)
+                holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday)
 
     @api.depends('holiday_status_id', 'request_unit_hours')
     def _compute_request_unit_half(self):
@@ -561,6 +566,10 @@ class HolidaysRequest(models.Model):
         """
         self.ensure_one()
         resource_calendar = resource_calendar or self.resource_calendar_id
+        resource_calendar = resource_calendar.with_context({
+            **self.env.context,
+            'employee_timezone': timezone(resource_calendar.tz),
+        })
 
         if not self.date_from or not self.date_to or not resource_calendar:
             return (0, 0)
