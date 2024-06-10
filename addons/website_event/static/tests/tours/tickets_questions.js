@@ -25,31 +25,31 @@ registry.category("web_tour.tours").add('test_tickets_questions', {
     trigger: 'div.modal-footer button:contains("Register")',
     run: 'click'
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body input[name*="name"]',
+    trigger: 'div:contains("Ticket #1").o_wevent_attendee_registration_line input[name*="name"]',
     run: "edit Attendee A",
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body input[name*="email"]',
+    trigger: 'div:contains("Ticket #1").o_wevent_attendee_registration_line input[name*="email"]',
     run: "edit attendee-a@gmail.com",
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body input[name*="phone"]',
+    trigger: 'div:contains("Ticket #1").o_wevent_attendee_registration_line input[name*="phone"]',
     run: "edit +32499123456",
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body select[name*="1-simple_choice"]',
+    trigger: 'div:contains("Ticket #1").o_wevent_attendee_registration_line select[name*="1-simple_choice"]',
     run: "selectByLabel Vegetarian",
 }, {
-    trigger: 'div:contains("Ticket #1").modal-body textarea[name*="1-text_box"]',
+    trigger: 'div:contains("Ticket #1").o_wevent_attendee_registration_line textarea[name*="1-text_box"]',
     run: "edit Fish and Nuts",
 }, {
-    trigger: 'div:contains("Ticket #2").modal-body input[name*="name"]',
+    trigger: 'div:contains("Ticket #2").o_wevent_attendee_registration_line input[name*="name"]',
     run: "edit Attendee B",
 }, {
-    trigger: 'div:contains("Ticket #2").modal-body input[name*="email"]',
+    trigger: 'div:contains("Ticket #2").o_wevent_attendee_registration_line input[name*="email"]',
     run: "edit attendee-b@gmail.com",
 }, {
-    trigger: 'div:contains("Ticket #2").modal-body input[name*="company_name"]',
+    trigger: 'div:contains("Ticket #2").o_wevent_attendee_registration_line input[name*="company_name"]',
     run: "edit My Company",
 }, {
-    trigger: 'div:contains("Ticket #2").modal-body select[name*="2-simple_choice"]',
+    trigger: 'div:contains("Ticket #2").o_wevent_attendee_registration_line select[name*="2-simple_choice"]',
     run: "selectByLabel Pastafarian",
 }, {
     trigger: 'div.o_wevent_registration_question_global select[name*="0-simple_choice"]',
