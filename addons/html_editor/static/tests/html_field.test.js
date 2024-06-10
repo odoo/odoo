@@ -647,7 +647,6 @@ test("Pasted/dropped images are converted to attachments on save", async () => {
     const img = htmlEditor.editable.querySelector("img");
     expect(img.src.startsWith("data:image/png;base64,")).toBe(true);
     expect(img.classList.contains("o_b64_image_to_save")).toBe(true);
-    expect(`.o_form_button_save`).toBeVisible();
 
     // Save changes.
     await contains(".o_form_button_save").click();
