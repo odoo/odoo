@@ -55,20 +55,23 @@
                             <a href="#" role="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                                 <t t-out="category.name"/>
                                 <span t-if="len(searched_category_tags)" t-out="len(searched_category_tags)"
-                                    class="o_wevent_filter_count_pill d-inline-block rounded-circle text-white ms-1"/>
+                                    class="o_wevent_filter_count_pill d-inline-block rounded-circle bg-primary text-white ms-1"/>
                             </a>
                             <div class="dropdown-menu">
                                 <a t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - searched_category_tags).ids))"
                                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if not searched_category_tags else ''}">
                                    All
                                 </a>
-                                <t t-foreach="category.tag_ids" t-as="tag">
-                                    <a t-if="tag.color"
-                                        t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
-                                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                                <div t-foreach="category.tag_ids" t-as="tag">
+                                    <label class="dropdown-item form-check-label">
+                                        <input t-if="tag.color"
+                                            type="checkbox"
+                                            class="form-check-input me-1"
+                                            t-attf-onclick="location.href='/event?#{keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))}'"
+                                            t-att-checked="tag in search_tags"/>
                                         <t t-out="tag.name"/>
-                                    </a>
-                                </t>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </t>
