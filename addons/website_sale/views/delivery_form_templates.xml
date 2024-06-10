@@ -64,27 +64,49 @@
             </div>
         </div>
         <!-- === Pick up location === -->
-        <div class="position-relative d-flex flex-column gap-2 mt-2">
-            <div class="o_pickup_location d-none ms-2">
+        <div
+            t-if="is_pickup_needed"
+            name="o_pickup_location"
+            t-attf-class="position-relative d-flex gap-2 mt-2 {{'' if is_selected else 'd-none'}}"
+        >
+            <t t-set="pickup_location_data" t-value="order.pickup_location_data or {}"/>
+            <div
+                name="o_pickup_location_details"
+                t-attf-class="ms-4 {{'' if is_selected and pickup_location_data else 'd-none'}}"
+            >
                 <span>
-                    <b name="o_pickup_location_name"/>
+                    <b name="o_pickup_location_name" t-out="pickup_location_data.get('name', '')"/>
                     <br/>
-                    <i name="o_pickup_location_address"/>
+                    <i
+                        name="o_pickup_location_address"
+                        t-out="pickup_location_data.get('street', '') + ' ' + pickup_location_data.get('zip_code', '') + ' ' + pickup_location_data.get('city', '')"
+                    />
                 </span>
                 <span
-                    name="o_remove_pickup_location"
-                    class="fa fa-times ms-2"
-                    title="Remove this location"
-                    aria-label="Remove this location"
+                    name="o_pickup_location_selector"
+                    class="btn btn-primary fa fa-pencil ms-2 p-1"
+                    title="Change location"
+                    aria-label="Change location"
+                    t-att-data-location-id="pickup_location_data.get('id')"
+                    t-att-data-zip-code="pickup_location_data.get('zip_code')"
+                    t-att-data-pickup-location-data="json_pickup_location_data"
                 />
             </div>
-            <t t-if="is_pickup_needed">
-                <div name="o_list_pickup_locations"/>
-            </t>
+            <button
+                t-if="not (is_selected and pickup_location_data)"
+                name="o_pickup_location_selector"
+                type="button"
+                class="btn btn-primary ms-4"
+                t-att-data-zip-code="order.partner_shipping_id.zip"
+            >
+                Select a location
+            </button>
         </div>
-        <t t-if="dm.website_description">
-            <div t-field="dm.website_description" class="text-muted mt-1"/>
-        </t>
+        <div
+            t-if="dm.website_description"
+            t-field="dm.website_description"
+            class="text-muted mt-1"
+        />
     </template>
 
 </odoo>

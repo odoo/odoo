@@ -106,6 +106,11 @@
             'website_sale/static/src/js/product_configurator_dialog/*',
             'website_sale/static/src/js/product_list/*',
             'website_sale/static/src/js/product_template_attribute_line/*',
+
+            # Location selector components are defined in `delivery` to share the codebase with the
+            # backend.
+            'delivery/static/src/js/location_selector/**/*',
+            'website_sale/static/src/js/location_selector/**/*',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',

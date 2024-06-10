@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
 from datetime import datetime
 
@@ -983,6 +984,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return {
             'order': order,
             'website_sale_order': order,
+            'json_pickup_location_data': json.dumps(order.pickup_location_data or {}),
             'shippings': ship_partners,
             'billings': bill_partners,
             'only_services': order and order.only_services or False
