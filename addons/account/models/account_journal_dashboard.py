@@ -523,45 +523,30 @@ class account_journal(models.Model):
             "account_move.invoice_date",
             "account_move.company_id",
         ]
-        payment_field_list = [
-            "account_move_line.journal_id",
-            "account_move_line.move_id",
-            "ABS(account_move_line.amount_residual) AS amount_total_company",
-        ]
         # DRAFTS
         query, params = sale_purchase_journals._get_draft_sales_purchases_query().select(*bills_field_list)
         self.env.cr.execute(query, params)
         query_results_drafts = group_by_journal(self.env.cr.dictfetchall())
 
-        # WAITING BILLS AND PAYMENTS
+        # WAITING AND LATE BILLS AND PAYMENTS
         query_results_to_pay = {}
-        if purchase_journals:
-            query, params = purchase_journals._get_open_purchases_query().select(*payment_field_list)
-            self.env.cr.execute(query, params)
-            query_results_purchases_to_pay = group_by_journal(self.env.cr.dictfetchall())
-            for journal in purchase_journals:
-                query_results_to_pay[journal.id] = query_results_purchases_to_pay[journal.id]
-        if sale_journals:
-            query, params = sale_journals._get_open_sales_query().select(*payment_field_list)
-            self.env.cr.execute(query, params)
-            query_results_sales_to_pay = group_by_journal(self.env.cr.dictfetchall())
-            for journal in sale_journals:
-                query_results_to_pay[journal.id] = query_results_sales_to_pay[journal.id]
-
-        # LATE BILLS AND PAYMENTS
         late_query_results = {}
-        if purchase_journals:
-            query, params = purchase_journals._get_late_purchases_query().select(*payment_field_list)
+        for journal_type, journals in [('sale', sale_journals), ('purchase', purchase_journals)]:
+            if not journals:
+                continue
+            query, params = journals._get_open_sale_purchase_query(journal_type).select(
+                SQL("account_move_line.journal_id"),
+                SQL("account_move_line.company_id"),
+                SQL("account_move_line.date_maturity < %s AS late", fields.Date.context_today(self)),
+                SQL("SUM(account_move_line.amount_residual) AS amount_total_company"),
+                SQL("COUNT(*)"),
+            )
+            query += " GROUP BY company_id, journal_id, late"
             self.env.cr.execute(query, params)
-            query_results_late_purchases = group_by_journal(self.env.cr.dictfetchall())
-            for journal in purchase_journals:
-                late_query_results[journal.id] = query_results_late_purchases[journal.id]
-        if sale_journals:
-            query, params = sale_journals._get_late_sales_query().select(*payment_field_list)
-            self.env.cr.execute(query, params)
-            query_results_late_sales = group_by_journal(self.env.cr.dictfetchall())
-            for journal in sale_journals:
-                late_query_results[journal.id] = query_results_late_sales[journal.id]
+            query_results_to_pay = group_by_journal(self.env.cr.dictfetchall())
+            for journal in journals:
+                query_results_to_pay[journal.id] = query_results_to_pay[journal.id]
+                late_query_results[journal.id] = [r for r in query_results_to_pay[journal.id] if r['late']]
 
         to_check_vals = {
             journal.id: (amount_total_signed_sum, count)
@@ -620,9 +605,9 @@ class account_journal(models.Model):
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
                 'number_late': number_late,
-                'sum_draft': currency.format(sum_draft),
-                'sum_waiting': currency.format(sum_waiting),
-                'sum_late': currency.format(sum_late),
+                'sum_draft': currency.format(sum_draft * (1 if journal.type == 'sale' else -1)),
+                'sum_waiting': currency.format(sum_waiting * (1 if journal.type == 'sale' else -1)),
+                'sum_late': currency.format(sum_late * (1 if journal.type == 'sale' else -1)),
                 'has_sequence_holes': journal.has_sequence_holes,
                 'title_has_sequence_holes': title_has_sequence_holes,
                 'has_unhashed_entries': journal.has_unhashed_entries,
@@ -700,46 +685,17 @@ class account_journal(models.Model):
             ('move_type', 'in', self.env['account.move'].get_invoice_types(include_receipts=True)),
         ])
 
-    def _get_open_sales_query(self):
+    def _get_open_sale_purchase_query(self, journal_type):
+        assert journal_type in ('sale', 'purchase')
         return self.env['account.move.line']._where_calc([
-            *self.env['account.move.line']._check_company_domain(self.env.companies),
-            ('journal_id', 'in', self.ids),
-            ('move_id.payment_state', 'in', ('not_paid', 'partial')),
-            ('account_type', '=', 'asset_receivable'),
-            ('move_id.move_type', '=', 'out_invoice'),
-            ('parent_state', '=', 'posted'),
-        ])
-
-    def _get_late_sales_query(self):
-        return self.env['account.move.line']._where_calc([
-            *self.env['account.move.line']._check_company_domain(self.env.companies),
-            ('journal_id', 'in', self.ids),
-            ('move_id.payment_state', 'in', ('not_paid', 'partial')),
-            ('account_type', '=', 'asset_receivable'),
-            ('date_maturity', '<', fields.Date.context_today(self)),
-            ('move_id.move_type', '=', 'out_invoice'),
-            ('parent_state', '=', 'posted'),
-        ])
-
-    def _get_open_purchases_query(self):
-        return self.env['account.move.line']._where_calc([
-            *self.env['account.move.line']._check_company_domain(self.env.companies),
-            ('journal_id', 'in', self.ids),
-            ('move_id.payment_state', 'in', ('not_paid', 'partial')),
-            ('account_type', '=', 'liability_payable'),
-            ('move_id.move_type', '=', 'in_invoice'),
-            ('parent_state', '=', 'posted'),
-        ])
-
-    def _get_late_purchases_query(self):
-        return self.env['account.move.line']._where_calc([
-            *self.env['account.move.line']._check_company_domain(self.env.companies),
-            ('journal_id', 'in', self.ids),
-            ('move_id.payment_state', 'in', ('not_paid', 'partial')),
-            ('account_type', '=', 'liability_payable'),
-            ('date_maturity', '<', fields.Date.context_today(self)),
-            ('move_id.move_type', '=', 'in_invoice'),
-            ('parent_state', '=', 'posted'),
+            ('move_id', 'in', self.env['account.move']._where_calc([
+                *self.env['account.move.line']._check_company_domain(self.env.companies),
+                ('journal_id', 'in', self.ids),
+                ('payment_state', 'in', ('not_paid', 'partial')),
+                ('move_type', '=', 'out_invoice' if journal_type == 'sale' else 'in_invoice'),
+                ('state', '=', 'posted'),
+            ])),
+            ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
         ])
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency):
@@ -747,20 +703,19 @@ class account_journal(models.Model):
         their amount_total field (expressed in the given target currency).
         amount_total must be signed!
         """
-        # Create a cache with currency rates to avoid unnecessary SQL requests. Do not copy
-        # curr_cache on purpose, so the dictionary is modified and can be re-used for subsequent
-        # calls of the method.
         total_amount = 0
+        count = 0
         for result in results_dict:
             document_currency = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             date = result.get('invoice_date') or fields.Date.context_today(self)
 
+            count += result.get('count', 1)
             if company.currency_id == target_currency:
                 total_amount += result.get('amount_total_company') or 0
             else:
                 total_amount += document_currency._convert(result.get('amount_total'), target_currency, company, date)
-        return (len(results_dict), target_currency.round(total_amount))
+        return (count, target_currency.round(total_amount))
 
     def _get_journal_dashboard_bank_running_balance(self):
         # In order to not recompute everything from the start, we take the last
