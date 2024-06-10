@@ -151,3 +151,14 @@ class Holidays(models.Model):
         timesheets = self.sudo().timesheet_ids
         timesheets.holiday_id = False
         timesheets.unlink()
+
+    def write(self, vals):
+        res = super().write(vals)
+        # reevaluate timesheets after the leaves are wrote in order to remove empty timesheets
+        timesheet_ids_to_remove = []
+        for leave in self:
+            if leave.number_of_days == 0 and leave.sudo().timesheet_ids:
+                leave.sudo().timesheet_ids.holiday_id = False
+                timesheet_ids_to_remove.extend(leave.timesheet_ids)
+        self.env['account.analytic.line'].browse(set(timesheet_ids_to_remove)).sudo().unlink()
+        return res
