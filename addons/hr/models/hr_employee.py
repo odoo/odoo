@@ -2,7 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+<<<<<<< HEAD
 from pytz import timezone, UTC
+||||||| parent of d84d8b17b9ab (temp)
+from pytz import UTC
+=======
+from pytz import UTC, timezone
+>>>>>>> d84d8b17b9ab (temp)
 from datetime import datetime, time
 from random import choice
 from string import digits
@@ -579,11 +585,30 @@ class HrEmployeePrivate(models.Model):
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
 
+<<<<<<< HEAD
     def _get_age(self, target_date=None):
         self.ensure_one()
         if target_date is None:
             target_date = fields.Date.context_today(self.env.user)
         return relativedelta(target_date, self.birthday).years if self.birthday else 0
+||||||| parent of d84d8b17b9ab (temp)
+=======
+    def _get_expected_attendances(self, date_from, date_to, domain=None, lunch=False):
+        self.ensure_one()
+        employee_timezone = timezone(self.tz) if self.tz else None
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        if not lunch:
+            calendar_intervals = calendar._work_intervals_batch(
+                date_from,
+                date_to,
+                tz=employee_timezone,
+                resources=self.resource_id,
+                compute_leaves=True,
+                domain=domain)[self.resource_id.id]
+            return calendar_intervals
+        else:
+            return calendar._attendance_intervals_batch(date_from, date_to, self.resource_id, lunch=True)[self.resource_id.id]
+>>>>>>> d84d8b17b9ab (temp)
 
     # ---------------------------------------------------------
     # Messaging

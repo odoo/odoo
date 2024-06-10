@@ -1,12 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from pytz import timezone, UTC
+||||||| parent of d84d8b17b9ab (temp)
+from pytz import UTC
+=======
+from pytz import UTC, timezone
+>>>>>>> d84d8b17b9ab (temp)
 from datetime import date, datetime, time
 
 from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.addons.resource.models.utils import Intervals
+<<<<<<< HEAD
 
+||||||| parent of d84d8b17b9ab (temp)
+=======
+>>>>>>> d84d8b17b9ab (temp)
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
@@ -161,6 +171,7 @@ class Employee(models.Model):
             ))
         return unusual_days
 
+<<<<<<< HEAD
     def _employee_attendance_intervals(self, start, stop, lunch=False):
         self.ensure_one()
         if not lunch:
@@ -222,6 +233,36 @@ class Employee(models.Model):
                     domain=[('company_id', 'in', [False, contract.company_id.id])])
             duration_data['days'] += contract_duration_data['days']
             duration_data['hours'] += contract_duration_data['hours']
+||||||| parent of d84d8b17b9ab (temp)
+=======
+    def _get_expected_attendances(self, date_from, date_to, domain=None, lunch=False):
+        self.ensure_one()
+        valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
+        if not valid_contracts:
+            return super()._get_expected_attendances(date_from, date_to, domain, lunch)
+        employee_tz = timezone(self.tz) if self.tz else None
+        duration_data = Intervals()
+        for contract in valid_contracts:
+            contract_start = datetime.combine(contract.date_start, time.min, employee_tz)
+            contract_end = datetime.combine(contract.date_end or date.max, time.max, employee_tz)
+            calendar = contract.resource_calendar_id or contract.company_id.resource_calendar_id
+            if not lunch:
+                contract_intervals = calendar._work_intervals_batch(
+                                        max(date_from, contract_start),
+                                        min(date_to, contract_end),
+                                        tz=employee_tz,
+                                        domain=domain,
+                                        compute_leaves=True,
+                                        resources=self.resource_id)[self.resource_id.id]
+                duration_data = duration_data | contract_intervals
+            else:
+                lunch_intervals = calendar._attendance_intervals_batch(
+                    max(date_from, contract_start),
+                    min(date_to, contract_end),
+                    resources=self.resource_id,
+                    lunch=True)[self.resource_id.id]
+                duration_data = duration_data | lunch_intervals
+>>>>>>> d84d8b17b9ab (temp)
         return duration_data
 
     def write(self, vals):

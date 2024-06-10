@@ -58,6 +58,7 @@ class TestAttendances(TestContractCommon):
 
         cls.employee.resource_calendar_id = contract_now.resource_calendar_id
 
+<<<<<<< HEAD
     def test_incoming_overlapping_contract(self):
         tz = timezone("Europe/Brussels")
         check_in_tz = datetime.combine(datetime(2024, 6, 1), datetime.min.time()).astimezone(tz)
@@ -68,4 +69,17 @@ class TestAttendances(TestContractCommon):
         check_in_tz = datetime.combine(datetime(2024, 7, 1), datetime.min.time()).astimezone(tz)
         check_out_tz = datetime.combine(datetime(2024, 7, 31), datetime.max.time()).astimezone(tz)
         intervals = self.employee._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=False)
+||||||| parent of d84d8b17b9ab (temp)
+=======
+    def test_attendance_intervals(self):
+        tz = timezone("Europe/Brussels")
+        check_in_tz = datetime.combine(datetime(2024, 6, 1), datetime.min.time()).astimezone(tz)
+        check_out_tz = datetime.combine(datetime(2024, 6, 30), datetime.max.time()).astimezone(tz)
+        intervals = self.employee._get_expected_attendances(check_in_tz, check_out_tz, lunch=False)
+        self.assertEqual(len(intervals), 40)
+
+        check_in_tz = datetime.combine(datetime(2024, 7, 1), datetime.min.time()).astimezone(tz)
+        check_out_tz = datetime.combine(datetime(2024, 7, 31), datetime.max.time()).astimezone(tz)
+        intervals = self.employee._get_expected_attendances(check_in_tz, check_out_tz, lunch=False)
+>>>>>>> d84d8b17b9ab (temp)
         self.assertEqual(len(intervals), 25)
