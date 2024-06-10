@@ -1633,7 +1633,7 @@ class BaseModel(metaclass=MetaModel):
         # first determine a query that satisfies the domain and access rules
         query = self._search(domain, offset=offset, limit=limit, order=order or self._order)
 
-        if query.is_empty():
+        if isinstance(query, list) or query.is_empty():
             # optimization: don't execute the query at all
             return self.browse()
 
