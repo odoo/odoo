@@ -339,3 +339,77 @@ function _convertImageColumn(columnEl) {
     columnEl.classList.add('o_grid_item_image');
     imageEl.style.removeProperty('width');
 }
+/**
+ * Adapts the grid and the grid items area so the rows are back to a fixed size,
+ * in order to have a consistent grid when modifying it.
+ *
+ * @param {HTMLElement} rowEl the grid to adjust
+ * @param {Boolean} [isDragging=false] true if we are in the drag and drop flow,
+ *     false otherwise.
+ * @param {HTMLElement} [draggedColumnEl=undefined] the dragged item, if any.
+ */
+export function _adjustGrid(rowEl, isDragging = false, draggedColumnEl = undefined) {
+    const gridProp = _getGridProperties(rowEl);
+    const columnEls = [...rowEl.children].filter(el => el.classList.contains("o_grid_item"));
+    // If we are dragging an item in the grid, do not consider the dragged item.
+    if (isDragging) { // TODO do that in the filter.
+        const index = columnEls.indexOf(draggedColumnEl);
+        if (index >= 0) {
+            columnEls.splice(index, 1);
+        }
+    }
+
+    const newGridAreas = [];
+    let newRowCount = 0;
+    for (const columnEl of columnEls) {
+        // Computing the new grid-areas.
+        // Vertical placement.
+        const columnTop = columnEl.offsetTop;
+        const columnHeight = columnEl.scrollHeight;
+        const rowStart = Math.round((columnTop + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap)) + 1;
+        const rowSpan = Math.ceil((columnHeight + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap));
+        const rowEnd = rowStart + rowSpan;
+        // Keeping the same horizontal placement.
+        const columnStart = columnEl.style.gridColumnStart;
+        const columnEnd = columnEl.style.gridColumnEnd;
+        // Storing the new dimensions.
+        newGridAreas.push(`${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`);
+        newRowCount = Math.max(rowEnd, newRowCount);
+
+        // Updating the grid size class.
+        const gridSizeClass = columnEl.className.match(/g-height-[0-9]+/g);
+        columnEl.classList.remove(gridSizeClass);
+        columnEl.classList.add("g-height-" + rowSpan);
+    }
+    // Updating the grid-areas and the row count.
+    [...columnEls].forEach((columnEl, i) => columnEl.style.gridArea = newGridAreas[i]);
+    rowEl.dataset.rowCount = newRowCount - 1;
+}
+/**
+ * Checks if the content of the given grid item overflows it and returns the
+ * overflow amount (in pixels) if it does.
+ *
+ * @param {HTMLElement} columnEl the grid item
+ * @returns {Boolean|Number} - false if there is no overflow,
+ *                           - the overflow amount otherwise.
+ */
+export function isContentOverflowing(columnEl) {
+    const columnContentEls = [...columnEl.children];
+    // No overflow if the grid item is empty.
+    if (columnContentEls.length === 0) {
+        return false;
+    }
+    // Computing the maximum bottom position to not exceed.
+    const columnPaddingBottom = parseFloat(window.getComputedStyle(columnEl).getPropertyValue("--grid-item-padding-y"));
+    const columnBottom = columnEl.getBoundingClientRect().bottom;
+    const columnLimit = columnBottom - columnPaddingBottom;
+    // Computing the bottom position of the last grid item content.
+    const lastContentEl = columnContentEls[columnContentEls.length - 1];
+    const lastContentMarginBottom = parseFloat(window.getComputedStyle(lastContentEl).marginBottom);
+    const lastContentBottom = lastContentEl.getBoundingClientRect().bottom;
+    const contentEnd = lastContentBottom + lastContentMarginBottom;
+
+    // Computing the overflow.
+    const overflow = contentEnd - columnLimit;
+    return overflow > 0 ? overflow : false;
+}
