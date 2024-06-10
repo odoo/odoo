@@ -40,11 +40,3 @@ class MrpBom(models.Model):
                     "product_categ_id": record.product_id.categ_id.id,
                     "company_id": record.company_id.id,
                 })
-
-    @api.constrains('analytic_distribution')
-    def _check_analytic(self):
-        for record in self:
-            record.with_context({'validate_analytic': True})._validate_distribution(**{
-                'product': record.product_id.id,
-                'company_id': record.company_id.id,
-            })
