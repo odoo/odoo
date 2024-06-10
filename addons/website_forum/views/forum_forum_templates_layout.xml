@@ -31,11 +31,12 @@
             <div class="flex-grow-1">
                 <div class="o_wforum_breadcrumb_root_single row g-0">
                     <div t-if="breadcrumb_kind == 'base'" class="col-10">
-                        <a class="btn btn-link px-0 pb-2 fs-5" t-attf-href="/forum/#{ _forum_slug }">
+                        <a t-if="not forum_embed" class="btn btn-link px-0 pb-2 fs-5" t-attf-href="#{ forum_base_path or '/forum' }/#{ _forum_slug }">
                             <i class="d-inline-block fa fa-angle-left me-1 small"/><t t-out="_forum_name"/>
                         </a>
+                        <span t-else="" class="btn btn-link px-0 pb-2 fs-5" t-out="_forum_name"/>
                     </div>
-                    <div class="d-lg-none col-2 text-end">
+                    <div t-if="not forum_embed" class="d-lg-none col-2 text-end">
                         <button class="btn position-relative ms-auto fs-5" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                             <i class="fa fa-navicon"/>
                         </button>
@@ -53,7 +54,7 @@
                             </t>
                         </span>
                         <a t-elif="uid" type="button" aria-label="Favorite"
-                            t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
+                            t-attf-data-href="#{forum_base_path or '/forum'}/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
                             t-attf-class="o_wforum_favourite_toggle btn btn-lg #{ 'opacity-50' if not question.user_favourite else '' } opacity-hover-100 p-0">
                             <i t-attf-class="position-relative fa #{'o_wforum_gold fa-star ' if question.user_favourite else 'fa-star-o '}"
                                 data-bs-toggle="tooltip"
@@ -81,7 +82,8 @@
         </t>
         <ol t-else="" class="breadcrumb col-10 col-lg flex-grow-1 flex-nowrap my-0 p-0 fs-5">
             <li class="o_wforum_breadcrumb_root breadcrumb-item text-nowrap text-truncatet">
-                <a t-attf-href="/forum/#{ _forum_slug }" t-out="_forum_name"/>
+                <a t-if="not forum_embed" t-attf-href="#{ forum_base_path or '/forum' }/#{ _forum_slug }" t-out="_forum_name"/>
+                <span t-else="" t-out="_forum_name"/>
             </li>
             <li t-if="queue_type" class="breadcrumb-item text-nowrap d-none d-lg-flex">
                 <span>Moderation</span>
@@ -91,7 +93,7 @@
             </li>
         </ol>
         <t t-if="_page_name != 'single_question'">
-            <div class="d-lg-none text-end">
+            <div t-if="not forum_embed" class="d-lg-none text-end">
                 <button class="btn position-relative ms-auto fs-5" data-bs-toggle="offcanvas" data-bs-target="#o_wforum_offcanvas">
                     <i class="fa fa-navicon"/>
                 </button>
@@ -99,7 +101,7 @@
             <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
                     <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"></t></span>
-                    <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
+                    <a t-attf-href="#{ forum_base_path or '/forum' }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
                        class="p-1 text-decoration-none text-reset opacity-50"><i class="oi oi-close d-inline-block"/></a>
                 </span>
                 <span t-if="search" class="btn btn-light rounded ps-2">
@@ -163,11 +165,11 @@
                 <t t-if="question_count or tags" t-call="website.website_search_box_input">
                     <t t-if="_page_name == 'tags'">
                         <t t-set="search_type" t-value="'forum_tags_only'"/>
-                        <t t-set="action" t-value="'/forum/%s/tag' % (_forum_slug)"/>
+                        <t t-set="action" t-value="'%s/%s/tag' % (forum_base_path or '/forum', _forum_slug)"/>
                     </t>
                     <t t-else="">
                         <t t-set="search_type" t-value="'forums'"/>
-                        <t t-set="action" t-value="'/forum/%s' % (_forum_slug)"/>
+                        <t t-set="action" t-value="'%s/%s' % (forum_base_path or '/forum', _forum_slug)"/>
                     </t>
                     <t t-set="display_description" t-valuef="true"/>
                     <t t-set="display_detail" t-valuef="true"/>
@@ -185,10 +187,10 @@
                         data-bs-toggle="popover"
                         t-att-data-bs-title="popover_title"
                         t-att-data-bs-content="popover_content">
-                        <a class="o_wforum_ask_btn disabled btn btn-primary w-100 w-md-auto mb-3 mb-md-0" t-attf-href="/forum/#{ slug(forum) }/ask">New Post</a>
+                        <a class="o_wforum_ask_btn disabled btn btn-primary w-100 w-md-auto mb-3 mb-md-0" t-attf-href="#{forum_base_path or '/forum'}/#{ slug(forum) }/ask">New Post</a>
                     </div>
                     <a t-elif="uid and forum" role="button" type="button" t-attf-class="o_wforum_ask_btn btn btn-primary w-100 w-md-auto #{ 'karma_required' if user.karma &lt; forum.karma_ask else '' }"
-                        t-att-data-karma="forum.karma_ask" t-attf-href="/forum/#{slug(forum)}/ask">New Post</a>
+                        t-att-data-karma="forum.karma_ask" t-attf-href="#{forum_base_path or '/forum'}/#{slug(forum)}/ask">New Post</a>
                 </t>
                 <button t-if="website_forum_action and not queue_type == 'close' and posts_ids" type="button" class="o_wforum_btn_filter_tool btn btn-secondary"
                     data-bs-toggle="modal" data-bs-target="#markAllAsSpam">
@@ -211,15 +213,15 @@
         </t>
         <t t-else="">
             <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
-            <div id="wrap" t-attf-class="o_wforum_wrapper position-relative container row mx-auto px-0 #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
+            <div id="wrap" t-attf-class="o_wforum_wrapper position-relative #{'container-fluid px-4' if forum_embed else 'container px-0'} row mx-auto #{ 'h-100' if forum_welcome_message else ''} #{website_forum_action}">
                 <t t-set="_forum_slug" t-value="slug(forum) if forum else 'all'"/>
-                <t t-set="_forum_path" t-value="url_for('/forum') + '/' + _forum_slug"/>
-                <t t-call="website_forum.user_sidebar"/>
-                <t t-call="website_forum.user_sidebar_mobile"/>
-                <div class="o_wforum_content_wrapper col-lg-9">
+                <t t-set="_forum_path" t-value="(forum_base_path or '/forum') + '/' + _forum_slug"/>
+                <t t-if="not forum_embed" t-call="website_forum.user_sidebar"/>
+                <t t-if="not forum_embed" t-call="website_forum.user_sidebar_mobile"/>
+                <div t-attf-class="o_wforum_content_wrapper #{'col-lg-12' if forum_embed else 'col-lg-9'}">
                     <div class="o_wprofile_email_validation_container d-flex flex-column justify-content-center mb-3 mb-lg-5 pt-2 pt-lg-3">
                         <t t-call="website_profile.email_validation_banner">
-                            <t t-set="redirect_url" t-value="'/forum/%s' % forum.id if forum else '/forum/all/'"/>
+                            <t t-set="redirect_url" t-value="'%s/%s' % (forum_base_path or '/forum', forum.id) if forum else '%s/all/' % forum_base_path"/>
                             <t t-set="additional_validation_email_message"> and join this Forum</t>
                             <t t-set="additional_validated_email_message"> You may now participate in our forums.</t>
                         </t>
@@ -240,7 +242,7 @@
             <t t-call="website_forum.user_sidebar_body"/>
         </div>
         <div t-if="forum" class="o_wforum_sidebar_footer mt-3 px-3 pb-2 text-center">
-            <a class="btn btn-sm btn-link" t-attf-href="/forum/#{slug(forum)}/faq">
+            <a class="btn btn-sm btn-link" t-attf-href="#{forum_base_path or '/forum'}/#{slug(forum)}/faq">
                 <i class="fa fa-info-circle fa-fw"/> About this forum
             </a>
         </div>
@@ -273,7 +275,7 @@
         </div>
     </div>
     <div t-if="uid" class="o_wforum_sidebar_section mt-4 mb-2">
-        <a t-attf-href="/forum/user/#{ uid }?forum_id=#{ forum.id if forum else '' }&amp;forum_origin=#{ request.httprequest.path }"
+        <a t-attf-href="#{forum_base_path or '/forum'}/user/#{ uid }?forum_id=#{ forum.id if forum else '' }&amp;forum_origin=#{ request.httprequest.path }"
             class="btn w-100 py-1 text-start d-flex align-items-center" data-bs-toggle="tooltip" data-trigger="hover"
             title="My profile">
             <img class="o_wforum_avatar rounded-circle o_object_fit_cover" t-att-src="request.website.image_url(user, 'avatar_128', '60x60')" alt="Avatar"/>
@@ -313,18 +315,18 @@
             <i class="fa fa-shield fa-fw opacity-50"/> Badges
         </a>
     </div>
-    <div t-if="forum and user.karma>=forum.karma_moderate" class="o_wforum_sidebar_section pt-3">
+    <div t-if="forum and user.karma>=forum.karma_moderate and not forum_embed" class="o_wforum_sidebar_section pt-3">
         <!-- Moderation Tools -->
         <div class="px-3 pb-1 fw-bold">Moderation tools</div>
-        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/validation_queue">
+        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'validation' else 'text-reset'}" t-attf-href="#{forum_base_path or '/forum'}/#{_forum_slug}/validation_queue">
             <i t-attf-class="fa fa-check-square-o fa-fw #{ 'opacity-50' if queue_type != 'validation' else ''}"/> To Validate
             <span id="count_posts_queue_validation" t-attf-class="badge #{ 'text-bg-warning' if forum.count_posts_waiting_validation > 0 else 'd-none'}" t-out="forum.count_posts_waiting_validation"/>
         </a>
-        <a t-attf-class="nav-link my-1 py-1 #{'rounded text-bg-light disabled' if queue_type == 'offensive' or queue_type == 'flagged' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/flagged_queue">
+        <a t-attf-class="nav-link my-1 py-1 #{'rounded text-bg-light disabled' if queue_type == 'offensive' or queue_type == 'flagged' else 'text-reset'}" t-attf-href="#{forum_base_path or '/forum'}/#{_forum_slug}/flagged_queue">
             <i t-attf-class="fa fa-flag fa-fw #{ 'opacity-50' if queue_type != 'flagged' else ''}"/> Flagged
             <span id="count_posts_queue_flagged" t-attf-class="badge #{ 'text-bg-danger' if forum.count_flagged_posts > 0 else 'd-none'}" t-out="forum.count_flagged_posts"/>
         </a>
-        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'close' else 'text-reset'}" t-attf-href="/forum/#{_forum_slug}/closed_posts">
+        <a t-attf-class="nav-link my-1 py-1 #{ 'rounded text-bg-light disabled' if queue_type == 'close' else 'text-reset'}" t-attf-href="#{forum_base_path or '/forum'}/#{_forum_slug}/closed_posts">
             <i t-attf-class="fa fa-window-close fa-fw #{ 'opacity-50' if queue_type != 'close' else '' }"/> Closed
         </a>
     </div>
@@ -344,7 +346,7 @@
     <div t-if="my_other_forums" class="o_wforum_sidebar_section pt-3">
         <div class="px-3 pb-1 fw-bold">My forums</div>
         <t t-foreach="my_other_forums.sorted(lambda f: f.name.casefold())" t-as="my_forum">
-            <a class="nav-link my-1 py-1 text-reset" t-attf-href="/forum/#{slug(my_forum)}">
+            <a class="nav-link my-1 py-1 text-reset" t-attf-href="#{forum_base_path or '/forum'}/#{slug(my_forum)}">
                 <i class="fa fa-file-o fa-fw opacity-50"/>
                 <t t-out="my_forum.name"/>
             </a>
@@ -354,7 +356,7 @@
 
 <template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message (oe_structure_forum_top)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_website_forum_header_1']" position="replace">
-        <div t-if="forum" class="oe_structure oe_empty" id="oe_structure_website_forum_header_1">
+        <div t-if="forum and not forum_embed" class="oe_structure oe_empty" id="oe_structure_website_forum_header_1">
             <section t-if="editable or (is_public_user and not forum_welcome_message)" t-attf-class="s_cover parallax s_parallax_is_fixed bg-black-50 pt48 pb48 #{'css_non_editable_mode_hidden' if editable else 'forum_intro'}" data-scroll-background-ratio="1" data-snippet="s_cover">
                 <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{request.website.image_url(forum, 'image_1920')}'); background-position: center;"/>
                 <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>
@@ -375,7 +377,7 @@
         <t t-set="_no_results_title">You've Completely Caught&amp;nbsp;Up!</t>
         <t t-set="result_msg">Go enjoy a cup of coffee.</t>
         <t t-set="record_name_plural">posts</t>
-        <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/"/>
+        <t t-set="go_back_url" t-valuef="#{ forum_base_path or '/forum' }/#{ slug(forum) }/"/>
     </t>
     <t t-else="" t-set="_no_results_title">Oops!</t>
     <div t-attf-class="#{ 'o_caught_up_alert' if queue_type else '' } row g-0 justify-content-center #{ 'd-none' if hide_alert else '' }">
@@ -413,7 +415,7 @@
             </div>
             <span t-elif="forum and forum.total_posts == 0">Because there are no posts in this forum yet.</span>
             <div class="mt-3">
-                <a t-if="uid and forum and forum.total_posts == 0" role="button" type="button" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="/forum/#{_forum_slug}/ask">Start by creating a post</a>
+                <a t-if="uid and forum and forum.total_posts == 0" role="button" type="button" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="#{forum_base_path or '/forum'}/#{_forum_slug}/ask">Start by creating a post</a>
                 <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-att-href="go_back_url">Go back to the list of <t t-out="record_name_plural"/></a>
             </div>
         </div>

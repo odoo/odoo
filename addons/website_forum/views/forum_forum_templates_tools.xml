@@ -9,7 +9,7 @@
     <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="o_wforum_flag_validator flag_validator btn btn-success #{'' if object.state == 'flagged' else 'd-none'} my-2 me-2" title="Validate" data-bs-toggle="tooltip" data-bs-placement="top">
         <i class="fa fa-check"/> Accept
     </a>
-    <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="o_wforum_flag_mark_as_offensive flag_validator #{'' if object.state == 'flagged' else 'd-none'} btn btn-danger my-2 me-2" title="Mark as Offensive"  data-bs-toggle="tooltip" data-bs-placement="top">
+    <a href="#" t-attf-data-action="#{forum_base_path or '/forum'}/#{object.id}/ask_for_mark_as_offensive" t-attf-class="o_wforum_flag_mark_as_offensive flag_validator #{'' if object.state == 'flagged' else 'd-none'} btn btn-danger my-2 me-2" title="Mark as Offensive"  data-bs-toggle="tooltip" data-bs-placement="top">
         <i class="fa fa-times"/> Reject
     </a>
 </template>
@@ -104,7 +104,7 @@
     <t t-set="can_upvote" t-value="post.can_upvote"/>
     <t t-set="can_downvote" t-value="post.can_downvote"/>
     <div t-attf-class="vote d-inline-flex align-items-center gap-2 ms-n2 #{classes} text-muted text-center">
-        <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"
+        <button type="button" t-attf-data-href="#{forum_base_path or '/forum'}/#{slug(forum)}/post/#{slug(post)}/upvote"
             t-attf-class="btn vote_up py-0 px-2 #{ 'text-success' if own_vote == 1 else '' } #{ 'karma_required text-reset opacity-50' if not can_upvote else ''}#{ ' text-300' if post.create_uid.id == uid else ''}"
             t-att-disabled="own_vote == 1 and 'disabled'"
             t-att-data-karma="forum.karma_upvote"
@@ -114,7 +114,7 @@
         </button>
         <small t-attf-class="vote_count #{ 'text-success' if own_vote == 1 else 'text-danger' if own_vote == -1 else ('text-muted opacity-75' if post.vote_count == 0 and not own_vote else '') }"
             t-out="post.vote_count"/>
-        <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
+        <button type="button" t-attf-data-href="#{forum_base_path or '/forum'}/#{slug(forum)}/post/#{slug(post)}/downvote"
             t-attf-class="btn vote_down py-0 px-2 #{ 'text-danger' if own_vote == -1 else ''} #{'karma_required text-reset opacity-50' if not can_downvote else '' }#{' text-300' if post.create_uid.id == uid else '' }"
             t-att-disabled="own_vote == -1 and 'disabled'"
             t-att-data-karma="forum.karma_downvote"
@@ -144,8 +144,8 @@
          t-att-data-bs-content="bio_popover_data"
          data-bs-placement="top">
         <t t-set="user_profile_url" t-value="False"/>
-        <t t-if="'forum_id' in object and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
-            <t t-set="user_profile_url" t-valuef="/forum/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }&amp;forum_origin=#{ request.httprequest.path }"/>
+        <t t-if="not forum_embed and 'forum_id' in object and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
+            <t t-set="user_profile_url" t-valuef="#{forum_base_path or '/forum'}/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }&amp;forum_origin=#{ request.httprequest.path }"/>
         </t>
         <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ 'pe-none' if not user_profile_url else '' }">
             <img t-attf-class="o_wforum_avatar rounded-circle o_object_fit_cover #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>

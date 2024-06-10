@@ -25,7 +25,7 @@
             users having a high karma can see offensive posts to moderate
             them.
         </div>
-        <form t-attf-action="/forum/#{ slug(forum) }/#{'post' if offensive else 'question'}/#{slug(question)}/#{'mark_as_offensive' if offensive else 'close'}" method="post" role="form" class="js_website_submit_form">
+        <form t-attf-action="#{ forum_base_path or '/forum' }/#{ slug(forum) }/#{'post' if offensive else 'question'}/#{slug(question)}/#{'mark_as_offensive' if offensive else 'close'}" method="post" role="form" class="js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="row g-0 mb-3">
@@ -46,7 +46,7 @@
                         <t t-if="offensive">Mark as offensive</t>
                         <t t-if="not offensive">Close post</t>
                     </button>
-                    <a role="button" class="btn btn-link ms-2" t-attf-href="/forum/#{ slug(forum) }/#{ slug(question) }">Discard</a>
+                    <a role="button" class="btn btn-link ms-2" t-attf-href="#{ forum_base_path or '/forum' }/#{ slug(forum) }/#{ slug(question) }">Discard</a>
                 </div>
             </div>
         </form>
@@ -146,7 +146,7 @@
                         <b t-else="">Question:</b>
                     </h6>
                     <div class="col d-flex align-items-center justify-content-between">
-                        <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{ ('/#answer-%s' % answer.id) if answer else '' }"
+                        <a t-attf-href="#{forum_base_path or '/forum'}/#{slug(question.forum_id)}/#{slug(question)}#{ ('/#answer-%s' % answer.id) if answer else '' }"
                             t-attf-title="Read: #{question.name}"
                             t-attf-class="text-reset"
                             t-out="question.name"/>
@@ -194,11 +194,11 @@
                             </small>
                         </div>
                     </div>
-                    <t t-set="post_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(question) }"/>
+                    <t t-set="post_url" t-valuef="#{forum_base_path or '/forum'}/#{ slug(forum) }/post/#{ slug(question) }"/>
                     <div class="col-sm-3 o_wforum_validation_queue">
                         <div class="text-center d-flex flex-row gap-2 flex-lg-column align-items-stretch mt-2 mt-lg-0">
                             <t t-if="queue_type == 'close'" t-call="website_forum.link_button">
-                                <t t-set="url" t-valuef="/forum/#{ slug(forum) }/question/#{ slug(question) }/reopen"/>
+                                <t t-set="url" t-valuef="#{forum_base_path or '/forum'}/#{ slug(forum) }/question/#{ slug(question) }/reopen"/>
                                 <t t-set="label">Reopen</t>
                                 <t t-set="icon" t-value="'fa fa-folder-open'"/>
                                 <t t-set="karma" t-value="question.karma_close if not question.can_close else 0"/>
