@@ -170,6 +170,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_price_unit',
         digits='Product Price',
         store=True, readonly=False, required=True, precompute=True)
+    technical_price_unit = fields.Float()
 
     discount = fields.Float(
         string="Discount (%)",
@@ -531,9 +532,13 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
-            # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
-            # manually edited
-            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
+            # check if the price has been manually set or there is already invoiced amount.
+            # if so, the price shouldn't change as it might have been manually edited.
+            if (
+                line.technical_price_unit not in (0.0, line.price_unit)
+                or line.qty_invoiced > 0
+                or (line.product_id.expense_policy == 'cost' and line.is_expense)
+            ):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
@@ -547,6 +552,7 @@ class SaleOrderLine(models.Model):
                     ),
                     fiscal_position=line.order_id.fiscal_position_id,
                 )
+                line.technical_price_unit = line.price_unit
 
     def _get_display_price(self):
         """Compute the displayed unit price for a given line.
@@ -1185,6 +1191,12 @@ class SaleOrderLine(models.Model):
                 line.order_id.message_post(body=msg)
 
         return lines
+
+    def _add_precomputed_values(self, vals_list):
+        super()._add_precomputed_values(vals_list)
+        for vals in vals_list:
+            if 'price_unit' in vals and 'technical_price_unit' not in vals:
+                vals['technical_price_unit'] = vals['price_unit']
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
