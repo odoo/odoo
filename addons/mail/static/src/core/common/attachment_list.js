@@ -1,4 +1,5 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onWillUnmount } from "@odoo/owl";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
@@ -12,19 +13,29 @@ import { url } from "@web/core/utils/urls";
  * @property {function} unlinkAttachment
  * @property {number} imagesHeight
  * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
+ * @property {Boolean} [selectionMode]
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+    static props = [
+        "attachments",
+        "unlinkAttachment",
+        "imagesHeight",
+        "messageSearch?",
+        "selectionMode?",
+    ];
     static template = "mail.AttachmentList";
+    static components = { CheckBox };
 
     setup() {
         super.setup();
+        this.store = useState(useService("mail.store"));
         this.ui = useState(useService("ui"));
         // Arbitrary high value, this is effectively a max-width.
         this.imagesWidth = 1920;
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer();
+        onWillUnmount(() => (this.store.attachmentIdSelected = []));
     }
 
     /**
@@ -108,5 +119,21 @@ export class AttachmentList extends Component {
             this.env.message.hasTextContent ||
             (this.env.message && this.props.attachments.length > 1)
         );
+    }
+
+    select(attachment, ev) {
+        if (this.props.selectionMode && ev) {
+            ev.stopPropagation();
+        }
+        if (!this.selected(attachment)) {
+            this.store.attachmentIdSelected.push(attachment.id);
+        } else {
+            const index = this.store.attachmentIdSelected.indexOf(attachment.id);
+            this.store.attachmentIdSelected.splice(index, 1);
+        }
+    }
+
+    selected(attachment) {
+        return this.store.attachmentIdSelected.includes(attachment.id);
     }
 }

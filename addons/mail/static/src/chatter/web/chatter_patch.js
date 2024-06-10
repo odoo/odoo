@@ -79,6 +79,7 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
+            attachmentSelection: false,
         });
         this.attachmentUploader = useAttachmentUploader(
             this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
@@ -378,5 +379,16 @@ patch(Chatter.prototype, {
 
     popoutAttachment() {
         this.mailPopoutService.popout().focus();
+    },
+
+    toggleAttachmentSelection() {
+        this.state.attachmentSelection = !this.state.attachmentSelection;
+    },
+
+    selectAll() {
+        const attachmentIds = this.attachments.map((a) => a.id);
+        this.store.attachmentIdSelected.length !== attachmentIds.length
+            ? (this.store.attachmentIdSelected = attachmentIds)
+            : (this.store.attachmentIdSelected = []);
     },
 });
