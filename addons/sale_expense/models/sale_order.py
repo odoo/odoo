@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields
 from odoo.osv import expression
+from odoo.addons import sale
+from odoo.addons import sale, hr_expense
 
 
-class SaleOrder(models.Model):
+class SaleOrder(sale.models.SaleOrder):
     _inherit = 'sale.order'
 
-    expense_ids = fields.One2many('hr.expense', 'sale_order_id', string='Expenses', domain=[('state', '=', 'done')], readonly=True, copy=False)
+    expense_ids = fields.One2many(hr_expense.models.HrExpense, 'sale_order_id', string='Expenses', domain=[('state', '=', 'done')], readonly=True, copy=False)
     expense_count = fields.Integer("# of Expenses", compute='_compute_expense_count', compute_sudo=True)
 
     @api.model
@@ -25,7 +27,7 @@ class SaleOrder(models.Model):
 
     @api.depends('expense_ids')
     def _compute_expense_count(self):
-        expense_data = self.env['hr.expense']._read_group([('sale_order_id', 'in', self.ids)], ['sale_order_id'], ['__count'])
+        expense_data = hr_expense.models.HrExpense(self.env)._read_group([('sale_order_id', 'in', self.ids)], ['sale_order_id'], ['__count'])
         mapped_data = {sale_order.id: count for sale_order, count in expense_data}
         for sale_order in self:
             sale_order.expense_count = mapped_data.get(sale_order.id, 0)

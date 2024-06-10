@@ -7,12 +7,12 @@ from . import mail_alias_domain
 from . import models
 
 # mixin
-from . import mail_activity_mixin
+from .mail_activity_mixin import MailActivityMixin
 from . import mail_alias_mixin_optional
 from . import mail_alias_mixin
 from . import mail_render_mixin
 from . import mail_composer_mixin
-from . import mail_thread
+from .mail_thread import MailThread
 from . import mail_thread_blacklist
 from . import mail_thread_cc
 from . import mail_thread_main_attachment
@@ -39,7 +39,7 @@ from . import mail_mail
 from . import mail_push
 from . import mail_push_device
 from . import mail_tracking_value
-from . import mail_template
+from .mail_template import MailTemplate
 
 # discuss
 from . import mail_ice_server

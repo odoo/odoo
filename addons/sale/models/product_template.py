@@ -2,14 +2,14 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round, format_list
+from odoo.addons.product import models as product_models
 
 
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
+class ProductTemplate(product_models.ProductTemplate):
     _check_company_auto = True
 
     service_type = fields.Selection(

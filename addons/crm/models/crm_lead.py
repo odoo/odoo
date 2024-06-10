@@ -10,7 +10,9 @@ from datetime import date, datetime, timedelta
 from markupsafe import Markup
 from psycopg2 import sql
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, tools, SUPERUSER_ID
+import odoo.fields as fields
+import odoo.models as models
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation

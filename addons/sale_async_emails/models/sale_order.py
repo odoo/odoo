@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields
 from odoo.tools.misc import str2bool
+from odoo.addons import sale
 
 
-class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+class SaleOrder(sale.models.SaleOrder):
 
     pending_email_template_id = fields.Many2one(
         string="Pending Email Template",

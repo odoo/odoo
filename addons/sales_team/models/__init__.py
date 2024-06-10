@@ -3,5 +3,5 @@
 
 from . import crm_team_member
 from . import crm_team
-from . import crm_tag
+from .crm_tag import Tag
 from . import res_users

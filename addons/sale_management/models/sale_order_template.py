@@ -3,6 +3,10 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.addons import base as base
+from odoo.addons import mail, account
+from .sale_order_template_line import SaleOrderTemplateLine
+from .sale_order_template_option import SaleOrderTemplateOption
 
 
 class SaleOrderTemplate(models.Model):
@@ -13,14 +17,14 @@ class SaleOrderTemplate(models.Model):
     active = fields.Boolean(
         default=True,
         help="If unchecked, it will allow you to hide the quotation template without removing it.")
-    company_id = fields.Many2one(comodel_name='res.company', default=lambda self: self.env.company)
+    company_id = fields.Many2one(comodel_name=base.models.Company, default=lambda self: self.env.company)
 
     name = fields.Char(string="Quotation Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)
     sequence = fields.Integer(default=10)
 
     mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
+        comodel_name=mail.models.MailTemplate,
         string="Confirmation Mail",
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
@@ -45,15 +49,15 @@ class SaleOrderTemplate(models.Model):
         help="The percentage of the amount needed to be paid to confirm quotations.")
 
     sale_order_template_line_ids = fields.One2many(
-        comodel_name='sale.order.template.line', inverse_name='sale_order_template_id',
+        comodel_name=SaleOrderTemplateLine, inverse_name='sale_order_template_id',
         string="Lines",
         copy=True)
     sale_order_template_option_ids = fields.One2many(
-        comodel_name='sale.order.template.option', inverse_name='sale_order_template_id',
+        comodel_name=SaleOrderTemplateOption, inverse_name='sale_order_template_id',
         string="Optional Products",
         copy=True)
     journal_id = fields.Many2one(
-        'account.journal', string="Invoicing Journal",
+        account.models.AccountJournal, string="Invoicing Journal",
         domain=[('type', '=', 'sale')], company_dependent=True, check_company=True,
         help="If set, SO with this template will invoice in this journal; "
              "otherwise the sales journal with the lowest sequence is used.")
@@ -116,14 +120,14 @@ class SaleOrderTemplate(models.Model):
 
     def write(self, vals):
         if 'active' in vals and not vals.get('active'):
-            companies = self.env['res.company'].sudo().search([('sale_order_template_id', 'in', self.ids)])
+            companies = base.models.Company(self.env).sudo().search([('sale_order_template_id', 'in', self.ids)])
             companies.sale_order_template_id = None
         result = super().write(vals)
         self._update_product_translations()
         return result
 
     def _update_product_translations(self):
-        languages = self.env['res.lang'].search([('active', '=', True)])
+        languages = base.models.Lang(self.env).search([('active', '=', True)])
         for lang in languages:
             for line in self.sale_order_template_line_ids:
                 if line.name == line.product_id.get_product_multiline_description_sale():

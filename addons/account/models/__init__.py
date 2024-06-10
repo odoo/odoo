@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from . import sequence_mixin
-from . import partner
+from .partner import AccountFiscalPosition
 from . import ir_http
 from . import res_partner_bank
 from . import account_account_tag
 from . import account_account
-from . import account_journal
-from . import account_tax
+from .account_journal import AccountJournal
+from .account_tax import AccountTax
 from . import account_reconcile_model
-from . import account_payment_term
-from . import account_move
+from .account_payment_term import AccountPaymentTerm
+from .account_move import AccountMove
 from . import account_move_line
 from . import account_move_line_tax_details
 from . import account_partial_reconcile
@@ -43,3 +43,4 @@ from . import account_report
 from . import onboarding_onboarding_step
 from . import template_generic_coa
 from . import uom_uom
+

@@ -3,6 +3,15 @@
 
 from . import controllers
 from . import models
+from .models import (
+    ProductTemplate,
+    ProductProduct,
+    ProductAttributeCustomValue,
+    ProductCatalogMixin,
+    ProductDocument,
+    ProductPackaging,
+    Pricelist,
+)
 from . import report
 from . import populate
 from . import wizard

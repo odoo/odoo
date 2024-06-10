@@ -1,11 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields
+from odoo.addons.product import models as product_models
 
 
-class ProductDocument(models.Model):
-    _inherit = 'product.document'
-
+class ProductDocument(product_models.ProductDocument):
     attached_on_sale = fields.Selection(
         selection=[
             ('hidden', "Hidden"),

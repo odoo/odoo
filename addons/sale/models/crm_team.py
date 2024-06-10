@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, _
 from odoo.exceptions import UserError
+from odoo.addons import crm
 
 
-class CrmTeam(models.Model):
-    _inherit = 'crm.team'
-
+class Team(crm.Team):
     invoiced = fields.Float(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,
@@ -139,7 +138,7 @@ class CrmTeam(models.Model):
         return super()._graph_title_and_key()
 
     def _compute_dashboard_button_name(self):
-        super(CrmTeam,self)._compute_dashboard_button_name()
+        super()._compute_dashboard_button_name()
         if self._in_sale_scope():
             self.dashboard_button_name = _("Sales Analysis")
 

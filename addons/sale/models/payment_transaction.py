@@ -3,13 +3,12 @@
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import _, api, Command, fields, models, SUPERUSER_ID
+from odoo import _, api, Command, fields, SUPERUSER_ID
 from odoo.tools import str2bool
+from odoo.addons.payment.models import payment_transaction as payment
 
 
-class PaymentTransaction(models.Model):
-    _inherit = 'payment.transaction'
-
+class PaymentTransaction(payment.PaymentTransaction):
     sale_order_ids = fields.Many2many('sale.order', 'sale_order_transaction_rel', 'transaction_id', 'sale_order_id',
                                       string='Sales Orders', copy=False, readonly=True)
     sale_order_ids_nbr = fields.Integer(compute='_compute_sale_order_ids_nbr', string='# of Sales Orders')

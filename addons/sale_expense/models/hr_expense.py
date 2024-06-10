@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields
+from odoo.addons import (hr_expense, sale)
 
 
-class Expense(models.Model):
-    _inherit = "hr.expense"
+class Expense(hr_expense.models.HrExpense):
 
-    sale_order_id = fields.Many2one('sale.order', compute='_compute_sale_order_id', store=True, string='Customer to Reinvoice', readonly=False, tracking=True,
+    sale_order_id = fields.Many2one(sale.models.SaleOrder, compute='_compute_sale_order_id', store=True, string='Customer to Reinvoice', readonly=False, tracking=True,
         # NOTE: only confirmed SO can be selected, but this domain in activated throught the name search with the `sale_expense_all_order`
         # context key. So, this domain is not the one applied.
         domain="[('state', '=', 'sale'), ('company_id', '=', company_id)]",

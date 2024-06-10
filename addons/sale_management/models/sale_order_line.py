@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
-from odoo import api, fields, models
+from odoo import api, fields
+from odoo.addons import sale
+from .sale_order_option import SaleOrderOption
+
+if TYPE_CHECKING:
+    from .sale_order import SaleOrder
 
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-    _description = "Sales Order Line"
+class SaleOrderLine(sale.models.SaleOrderLine):
 
-    sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
+    order_id: fields.Many2one[SaleOrder]
+    sale_order_option_ids = fields.One2many(SaleOrderOption, 'line_id', 'Optional Products Lines')
 
     @api.depends('product_id')
     def _compute_name(self):
