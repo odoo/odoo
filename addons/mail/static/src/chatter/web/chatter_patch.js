@@ -69,6 +69,7 @@ Object.assign(Chatter.defaultProps, {
  */
 patch(Chatter.prototype, {
     setup() {
+        this.messageHighlight = useMessageHighlight();
         super.setup(...arguments);
         this.orm = useService("orm");
         this.mailPopoutService = useService("mail.popout");
@@ -83,7 +84,6 @@ patch(Chatter.prototype, {
         this.attachmentUploader = useAttachmentUploader(
             this.store.Thread.insert({ model: this.props.threadModel, id: this.props.threadId })
         );
-        this.messageHighlight = useMessageHighlight();
         this.unfollowHover = useHover("unfollow");
         this.followerListDropdown = useDropdownState();
         /** @type {number|null} */
