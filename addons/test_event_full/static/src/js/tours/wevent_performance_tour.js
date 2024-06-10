@@ -22,7 +22,7 @@ var registerSteps = [{
     run: 'click',
 }, {
     content: "Fill attendees details",
-    trigger: 'form[id="attendee_registration"] .btn[type=submit]',
+    trigger: 'div[id="attendee_registration_buttons"] .btn[type=submit]',
     run: function () {
             document.querySelector("input[name*='1-name']").value = "Raoulette Poiluchette";
             document.querySelector("input[name*='1-phone']").value = "0456112233";

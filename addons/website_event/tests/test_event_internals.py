@@ -72,7 +72,7 @@ class TestEventData(EventCase, MockVisitor):
         }
 
         with MockRequest(self.env):
-            registrations = WebsiteEventController()._process_attendees_form(event, form_details)
+            registrations = WebsiteEventController()._process_attendees_form(event, form_details)[0]
 
         self.assertEqual(registrations, [
             {'name': 'Pixis', 'email': 'pixis@gmail.com', 'phone': '+32444444444', 'event_ticket_id': ticket_id_1.id,
@@ -115,7 +115,7 @@ class TestEventData(EventCase, MockVisitor):
         }
 
         with MockRequest(self.env):
-            registrations = WebsiteEventController()._process_attendees_form(event, form_details)
+            registrations = WebsiteEventController()._process_attendees_form(event, form_details)[0]
 
         self.assertEqual(len(registrations), 1)
         self.assertDictEqual(registrations[0], {

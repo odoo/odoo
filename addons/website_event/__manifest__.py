@@ -56,6 +56,8 @@
             'website_event/static/tests/**/*',
         ],
         'web.assets_frontend': [
+            'website_event/static/src/client_action/website_event_ticket_registration_dialog.js',
+            'website_event/static/src/client_action/website_event_ticket_registration_dialog.xml',
             'website_event/static/src/js/tours/**/*',
             'website_event/static/src/scss/event_templates_common.scss',
             'website_event/static/src/scss/event_templates_list.scss',

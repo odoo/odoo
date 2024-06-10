@@ -100,4 +100,25 @@
         </xpath>
     </template>
 
+    <template id="website_event_adjust_quantity" inherit_id="website_sale.cart_lines" name="Shopping Cart Lines">
+        <xpath expr="//t[@name='cart_qty_update']" position="attributes">
+            <attribute name="t-if" separator="and" add="not line.service_tracking == 'event'"/>
+        </xpath>
+        <xpath expr="//t[@name='cart_qty_update']" position="after">
+            <t t-elif="show_qty and line.service_tracking == 'event'">
+                <input class="js_quantity quantity form-control border-end-0 text-dark"
+                    t-att-data-line-id="line.id"
+                    t-att-data-product-id="line.product_id.id"
+                    t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"
+                    readonly="True"/>
+                <button class="d-inline-block float_left btn btn-link border-start-0 o_wevent_sale_adjust_ticket_quantity"
+                        t-att-data-event-slug="slug(line.event_id)"
+                        t-att-data-registration-id="line.registration_ids.ids[0]"
+                        >
+                    Adjust Quantity
+                </button>
+            </t>
+        </xpath>
+    </template>
+
 </odoo>

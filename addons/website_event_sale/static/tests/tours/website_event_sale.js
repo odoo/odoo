@@ -43,54 +43,54 @@ registry.category("web_tour.tours").add("event_buy_tickets", {
         },
         {
             content: "Fill attendees details",
-            trigger: 'form[id="attendee_registration"] .btn[type=submit]',
+            trigger: 'div[id="attendee_registration_buttons"] .btn[type=submit]',
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='1-email']",
+            trigger: "form[id='attendee_registration'] input[name*='1-email']",
             run: "edit att1@example.com",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='1-phone']",
+            trigger: "form[id='attendee_registration'] input[name*='1-phone']",
             run: "edit 111 111",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='2-name']",
+            trigger: "form[id='attendee_registration'] input[name*='2-name']",
             run: "edit Att2",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='2-phone']",
+            trigger: "form[id='attendee_registration'] input[name*='2-phone']",
             run: "edit 222 222",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='2-email']",
+            trigger: "form[id='attendee_registration'] input[name*='2-email']",
             run: "edit att2@example.com",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='1-name']",
+            trigger: "form[id='attendee_registration'] input[name*='1-name']",
             run: "edit Att1",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='3-name']",
+            trigger: "form[id='attendee_registration'] input[name*='3-name']",
             run: "edit Att3",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='3-phone']",
+            trigger: "form[id='attendee_registration'] input[name*='3-phone']",
             run: "edit 333 333",
         },
         {
-            trigger: ".modal#modal_attendees_registration input[name*='3-email']",
+            trigger: "form[id='attendee_registration'] input[name*='3-email']",
             run: "edit att3@example.com",
         },
         {
             trigger:
-                ".modal#modal_attendees_registration input[name*='1-name'], .modal#modal_attendees_registration input[name*='2-name'], .modal#modal_attendees_registration input[name*='3-name']",
+                "form[id='attendee_registration'] input[name*='1-name'], form[id='attendee_registration'] input[name*='2-name'], form[id='attendee_registration'] input[name*='3-name']",
         },
         {
             trigger: "input[name*='1-name'], input[name*='2-name'], input[name*='3-name']",
         },
         {
             content: "Validate attendees details",
-            trigger: ".modal#modal_attendees_registration button[type=submit]",
+            trigger: "div#attendee_registration_buttons button[type=submit]",
             run: "click",
         },
         wsTourUtils.goToCart({ quantity: 3 }),

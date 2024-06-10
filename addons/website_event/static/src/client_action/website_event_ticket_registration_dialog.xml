@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="website_event.WebsiteEventTicketRegistration">
+        <Dialog size="'md'" title="'Attendees'">
+            <form id="attendee_registration" t-attf-action="/event/#{data.event.event_slug}/registration/confirm" method="post" class="js_website_submit_form">
+                <t t-set="input_type_by_question_type" t-value="{'name': 'text', 'email': 'email', 'phone': 'tel', 'company_name': 'text'}"/>
+                <input type="hidden" name="csrf_token" t-att-value="data.csrf_token"/>
+                <input type="hidden" name="registrations_to_delete" t-if="registrationsToDelete.length > 0" t-attf-value="[#{registrationsToDelete}]"/>
+                <input type="hidden" name="registrations_hash" t-if="data.registrations_hash" t-att-value="data.registrations_hash"/>
+                <t t-if="data.availability_check">
+                    <t t-foreach="registrations" t-as="registration" t-key="registration.index">
+                        <input t-if="registration.hasOwnProperty('registrationId')" type="hidden" t-attf-name="#{registration.index}-registration_id" t-att-value="registration.registrationId"/>
+                        <div class="o_wevent_attendee_registration_line mb-4">
+                            <div t-attf-class="mt-1 pb-2 d-flex justify-content-between align-items-center #{data.event.question_ids ? 'border-bottom' : ''}">
+                                <h5 class="mb-0 d-flex">Ticket #<t t-out="registration.index"/>
+                                </h5>
+                                <div type="button" t-attf-class="text-primary me-2 #{registrations.length === 1 ? 'd-none' : ''}" t-on-click="() => this.removeRegistration(registration.index)"><i role="img" class="fa fa-trash"/></div>
+                            </div>
+                            <div class="row mx-0">
+                                <div t-attf-class="col-lg-6 mt-2 #{data.event.tickets_ids.length > 1 ? '' : 'd-none'}">
+                                    <label>Ticket Type</label>
+                                    <select class="form-select"
+                                            aria-label="Ticket Type Selection"
+                                            t-attf-name="#{registration.index}-event_ticket_id"
+                                            t-on-change="(ev) => this.changeTicketType(registration.index, ev.target.value)">
+                                        <option selected="1" t-att-value="registration.ticketTypeId" t-out="registration.ticketTypeName"/>
+                                        <option t-foreach="this.getAvailableTicketTypes(registration.ticketTypeId)"
+                                                t-as="availableTicketType"
+                                                t-key="availableTicketType.id"
+                                                t-att-value="availableTicketType.id"
+                                                t-out="availableTicketType.seats_available !== null ? availableTicketType.name + ' (' + availableTicketType.seats_available + ' tickets available)' : availableTicketType.name"
+                                                t-att-disabled="availableTicketType.seats_available === 0"
+                                        />
+                                    </select>
+                                </div>
+                                <div t-foreach="data.event.specific_question_ids" t-as="question" t-key="question.id" class="col-lg-6 mt-2">
+                                    <label t-out="question.title"/>
+                                    <span t-if="question.is_mandatory_answer">*</span>
+                                    <input t-if="['name', 'email', 'phone', 'company_name'].includes(question.question_type)"
+                                        class="form-control" t-att-type="input_type_by_question_type[question.question_type]"
+                                        t-attf-name="#{registration.index}-#{question.question_type}-#{question.id}"
+                                        t-att-required="question.is_mandatory_answer" t-model="registration.answers[question.id]"/>
+                                    <select t-elif="question.question_type === 'simple_choice'"
+                                            t-attf-name="#{registration.index}-#{question.question_type}-#{question.id}"
+                                            class="form-select" t-att-required="question.is_mandatory_answer">
+                                        <option value=""/>
+                                        <option t-foreach="question.answer_ids" t-as="answer" t-key="answer.id"
+                                                t-out="answer.name" t-att-value="answer.id"/>
+                                    </select>
+                                    <textarea t-else="" t-attf-name="#{registration.index}-#{question.question_type}-#{question.id}"
+                                            class="col-lg-12 form-control" t-att-required="question.is_mandatory_answer"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <div t-if="data.availability_check &amp;&amp; data.event.general_question_ids.length" class="modal-body border-top o_wevent_registration_question_global">
+                    <div class="row">
+                        <div t-foreach="data.event.general_question_ids" t-as="question" t-key="question.id"
+                            class="mt-2" t-att-class="question.question_type === 'text_box' &amp;&amp; 'col-lg-12' || 'col-lg-6'">
+                            <label t-out="question.title"/>
+                            <span t-if="question.is_mandatory_answer">*</span>
+                            <select t-if="question.question_type === 'simple_choice'" t-attf-name="0-#{question.question_type}-#{question.id}"
+                                    class="form-select" t-att-required="question.is_mandatory_answer">
+                                <option value=""/>
+                                <t t-foreach="question.answer_ids" t-as="answer" t-key="answer.id">
+                                    <option t-out="answer.name" t-att-value="answer.id"/>
+                                </t>
+                            </select>
+                            <textarea t-else="" t-attf-name="0-#{question.question_type}-#{question.id}"
+                                    class="col-lg-12 form-control" t-att-required="question.is_mandatory_answer"/>
+                        </div>
+                    </div>
+                </div>
+                <t t-elif="!data.availability_check">
+                    <div class="modal-body border-bottom">
+                        <strong> You ordered more tickets than available seats</strong>
+                    </div>
+                </t>
+            </form>
+            <t t-set-slot="footer">
+                <div class="w-100 d-flex justify-content-between align-items-center">
+                    <div>
+                        <span t-if="!this.isEventFull.value" type="button" class="text-success" t-on-click="() => this.addRegistration()">
+                            <i role="img" class="fa fa-plus-circle"/> Add a ticket
+                        </span>
+                    </div>
+                    <div id="attendee_registration_buttons" class="d-flex gap-1">
+                        <button type="button" class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+                        <button t-if="data.availability_check &amp;&amp; registrations.length"
+                                type="submit" class="btn btn-primary" t-on-click="(ev) => this.submitForm(ev)">
+                                Confirm Registration
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

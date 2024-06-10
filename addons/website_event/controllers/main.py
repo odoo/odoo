@@ -13,7 +13,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
-from odoo.tools import lazy
+from odoo.tools import consteq, lazy
 from odoo.exceptions import UserError
 
 class WebsiteEventController(http.Controller):
@@ -228,39 +228,109 @@ class WebsiteEventController(http.Controller):
             'quantity': count,
         } for tid, count in ticket_order.items() if count]
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
-        tickets = self._process_tickets_form(event, post)
-        availability_check = True
-        if event.seats_limited:
-            ordered_seats = 0
-            for ticket in tickets:
-                ordered_seats += ticket['quantity']
-            if event.seats_available < ordered_seats:
-                availability_check = False
-        if not tickets:
-            return False
+    def _prepare_registrations_tickets_values(self, event, additional_values=None):
+        """Return the require values to render the template."""
         default_first_attendee = {}
         if not request.env.user._is_public():
             default_first_attendee = {
-                "name": request.env.user.name,
                 "email": request.env.user.email,
+                "name": request.env.user.name,
                 "phone": request.env.user.mobile or request.env.user.phone,
             }
         else:
             visitor = request.env['website.visitor']._get_visitor_from_request()
             if visitor.email:
                 default_first_attendee = {
-                    "name": visitor.display_name,
                     "email": visitor.email,
+                    "name": visitor.display_name,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
-            'tickets': tickets,
-            'event': event,
-            'availability_check': availability_check,
+        return {
+            'csrf_token': request.csrf_token(),
             'default_first_attendee': default_first_attendee,
+            'event': {
+                'event_slug': request.env['ir.http']._slug(event),
+                'general_question_ids': [
+                    {
+                        'answer_ids': general_question.answer_ids.read(['id', 'name']),
+                        'id': general_question.id,
+                        'is_mandatory_answer': general_question.is_mandatory_answer,
+                        'question_type': general_question.question_type,
+                        'title': general_question.title
+                    } for general_question in event.general_question_ids
+                ],
+                'question_ids': event.question_ids,
+                'seats_available': event.seats_available,
+                'seats_limited': event.seats_limited,
+                'specific_question_ids': [
+                    {
+                        'id': specific_question.id,
+                        'title': specific_question.title,
+                        'is_mandatory_answer': specific_question.is_mandatory_answer,
+                        'question_type': specific_question.question_type,
+                        'answer_ids': specific_question.answer_ids.read(['id', 'name'])
+                    } for specific_question in event.specific_question_ids
+                ],
+                'tickets_ids': [
+                    {
+                        'id': ticket['id'],
+                        'name': ticket['name'],
+                        'seats_available': ticket['seats_available'] if ticket['seats_limited'] else None,
+                    } for ticket in event.event_ticket_ids
+                ]
+            },
+            **(additional_values or {}),
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        tickets = self._process_tickets_form(event, post)
+        availability_check = True
+        if event.seats_limited:
+            ordered_seats = sum(ticket['quantity'] for ticket in tickets)
+            if event.seats_available < ordered_seats:
+                availability_check = False
+        if not tickets:
+            return False
+        return self._prepare_registrations_tickets_values(event, {
+            'availability_check': availability_check,
+            'tickets': tickets,
         })
+
+    @http.route(['/event/<model("event.event"):event>/registration/modify'], type='json', auth="public", methods=['POST'], website=True)
+    def registration_modify(self, event, registration_id):
+        registration = request.env['event.registration'].sudo().browse(registration_id)
+        # Get all the registrations from the same sale order and the same event :
+        registrations = request.env['event.registration'].sudo().search([
+            ('sale_order_id', '=', registration.sale_order_id.id),
+            ('event_id', '=', event.id)], order='id')
+        return self._prepare_registrations_tickets_values(event, {
+            'availability_check': True,
+            'registrations': [
+                {
+                    'answers': {
+                        answer.question_id.id: answer.value_text_box or answer.value_answer_id.name for answer in registration.registration_answer_ids
+                    },
+                    'registration_id': registration.id,
+                    'ticket_id': registration.event_ticket_id.id,
+                    'ticket_name': registration.event_ticket_id.name,
+                } for registration in registrations
+            ],
+            'registrations_hash': event._get_tickets_access_hash(registrations.ids),
+        })
+
+    def _registrations_hash_check(self, event, post, registrations_to_delete):
+        registrations_hash = False
+        if 'registrations_hash' in post:
+            registrations_hash = post.get('registrations_hash')
+            del post['registrations_hash']
+
+        registrations_ids_for_hash = registrations_to_delete + [int(value) for key, value in post.items() if key.endswith('registration_id')]
+        # if we have no registration to delete or to modify, we don't need to check the hash
+        if registrations_ids_for_hash:
+            hash_truth = event and event._get_tickets_access_hash(registrations_ids_for_hash)
+            if not consteq(registrations_hash, hash_truth):
+                raise NotFound()
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -272,6 +342,13 @@ class WebsiteEventController(http.Controller):
         :param form_details: posted data from frontend registration form, like
             {'1-name': 'r', '1-email': 'r@r.com', '1-phone': '', '1-event_ticket_id': '1'}
         """
+        registrations_to_delete = []
+        if 'registrations_to_delete' in form_details:
+            registrations_to_delete = literal_eval(form_details.get('registrations_to_delete'))
+            del form_details['registrations_to_delete']
+
+        self._registrations_hash_check(event, form_details, registrations_to_delete)
+
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
         for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
@@ -289,10 +366,10 @@ class WebsiteEventController(http.Controller):
                 continue
 
             key_values = key.split('-')
-            # Special case for handling event_ticket_id data that holds only 2 values
+            # Special case for handling event_ticket_id or registration_id data that holds only 2 values
             if len(key_values) == 2:
                 registration_index, field_name = key_values
-                if field_name not in registration_fields:
+                if field_name not in registration_fields and field_name != 'registration_id':
                     continue
                 registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
                 continue
@@ -337,7 +414,7 @@ class WebsiteEventController(http.Controller):
             for registration in registrations.values():
                 registration.update(general_identification_answers)
 
-        return list(registrations.values())
+        return list(registrations.values()), registrations_to_delete
 
     def _create_attendees_from_registration_post(self, event, registration_data):
         """ Also try to set a visitor (from request) and
@@ -347,7 +424,14 @@ class WebsiteEventController(http.Controller):
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request(force_create=True)
 
         registrations_to_create = []
+        registration_ids_to_update = [registration['registration_id'] for registration in registration_data if 'registration_id' in registration]
+        registrations_to_update = request.env['event.registration'].sudo().search([('id', 'in', registration_ids_to_update)])
+
         for registration_values in registration_data:
+            # For already existing registration, just write de new values to the record
+            if 'registration_id' in registration_values:
+                registrations_to_update.browse(registration_values.pop('registration_id')).write(registration_values)
+                continue
             registration_values['event_id'] = event.id
             if not registration_values.get('partner_id') and visitor_sudo.partner_id:
                 registration_values['partner_id'] = visitor_sudo.partner_id.id
@@ -359,7 +443,7 @@ class WebsiteEventController(http.Controller):
 
             registrations_to_create.append(registration_values)
 
-        return request.env['event.registration'].sudo().create(registrations_to_create)
+        return request.env['event.registration'].sudo().create(registrations_to_create) + registrations_to_update
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
@@ -367,13 +451,14 @@ class WebsiteEventController(http.Controller):
             that we have enough seats for all selected tickets.
             If we don't, the user is instead redirected to page to register with a
             formatted error message. """
-        registrations_data = self._process_attendees_form(event, post)
+        registrations_data, registrations_to_delete = self._process_attendees_form(event, post)
         registration_tickets = Counter(registration['event_ticket_id'] for registration in registrations_data)
         event_tickets = request.env['event.event.ticket'].browse(list(registration_tickets.keys()))
         if any(event_ticket.seats_limited and event_ticket.seats_available < registration_tickets.get(event_ticket.id) for event_ticket in event_tickets):
             return request.redirect('/event/%s/register?registration_error_code=insufficient_seats' % event.id)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations_data)
-
+        if registrations_to_delete:
+            request.env['event.registration'].sudo().browse(registrations_to_delete).unlink()
         return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
