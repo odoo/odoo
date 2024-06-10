@@ -78,6 +78,9 @@ patch(PosStore.prototype, {
         }
 
         const order = this.get_order();
+        if (order.finalized) {
+            return;
+        }
         updateRewardsMutex.exec(() => {
             return this.orderUpdateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
