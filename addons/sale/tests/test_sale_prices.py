@@ -523,6 +523,21 @@ class TestSalePrices(SaleCommon):
             "The SO amount without pricelist should be the same than with an empty pricelist"
         )
 
+    def test_manual_price_prevents_recompute(self):
+        sale_order_line = self.sale_order.order_line[0]
+        # Ensure initial price is set correctly
+        self.assertEqual(sale_order_line.price_unit, 20.0)
+
+        # Update the price manually and then change the quantity
+        with Form(sale_order_line) as line:
+            line.price_unit = 100.0
+            line.product_uom_qty = 10
+
+        self.assertEqual(
+            sale_order_line.price_unit, 100.0,
+            "Price should remain 100.0 after changing the quantity"
+        )
+
     # Taxes tests:
     # We do not rely on accounting common on purpose to avoid
     # all the useless setup not needed here.

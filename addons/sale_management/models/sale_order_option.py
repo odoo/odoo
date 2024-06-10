@@ -109,6 +109,7 @@ class SaleOrderOption(models.Model):
         return {
             'order_id': self.order_id.id,
             'price_unit': self.price_unit,
+            'technical_price_unit': self.price_unit,
             'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_qty': self.quantity,
