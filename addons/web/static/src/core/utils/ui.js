@@ -227,3 +227,7 @@ export function addLoadingEffect(btnEl) {
         loaderEl.remove();
     };
 }
+
+export function getSiblings(target) {
+    return [...target.parentNode.children].filter((sibling) => sibling !== target);
+}
