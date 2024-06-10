@@ -2,7 +2,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 
-export async function insertSeparator(editor) {
+async function insertSeparator(editor) {
     editor.dispatch("INSERT_SEPARATOR");
 }
 

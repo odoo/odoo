@@ -11,7 +11,7 @@ import { setSelection } from "../_helpers/selection";
  * @param {HTMLElement} node
  * @param {boolean} [after=false] whether to place the cursor after the node
  */
-export async function simulateMouseClick(node, after = false) {
+async function simulateMouseClick(node, after = false) {
     pointerDown(node);
     const pos = after ? leftPos(node) : rightPos(node);
     setSelection({

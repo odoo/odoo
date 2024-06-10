@@ -1,9 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
-
-export async function insertLineBreak(editor) {
-    editor.dispatch("INSERT_LINEBREAK");
-}
+import { insertLineBreak } from "../_helpers/user_actions";
 
 describe("Selection collapsed", () => {
     describe("Basic", () => {
