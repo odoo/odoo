@@ -264,3 +264,33 @@ test("select text inside t-field", async () => {
         `<div>[<t t-field="test" data-oe-t-inline="true" contenteditable="false">Hello</t>]</div>`
     );
 });
+
+test("cleaning removes content editable", async () => {
+    const { el, editor } = await setupEditor(
+        `
+        <div>
+            <t t-field="test">Hello</t>
+            <t t-out="test">Hello</t>
+            <t t-esc="test">Hello</t>
+            <t t-raw="test">Hello</t>
+        </div>`,
+        {
+            config,
+        }
+    );
+    expect(getContent(el)).toBe(`
+        <div>
+            <t t-field="test" data-oe-t-inline="true" contenteditable="false">Hello</t>
+            <t t-out="test" data-oe-t-inline="true" contenteditable="false">Hello</t>
+            <t t-esc="test" data-oe-t-inline="true" contenteditable="false">Hello</t>
+            <t t-raw="test" data-oe-t-inline="true" contenteditable="false">Hello</t>
+        </div>`);
+
+    expect(editor.getContent()).toBe(`
+        <div>
+            <t t-field="test">Hello</t>
+            <t t-out="test">Hello</t>
+            <t t-esc="test">Hello</t>
+            <t t-raw="test">Hello</t>
+        </div>`);
+});

@@ -49,7 +49,7 @@ export class QWebPlugin extends Plugin {
                 for (const element of payload.root.querySelectorAll(
                     "[t-esc], [t-raw], [t-out], [t-field]"
                 )) {
-                    element.setAttribute("contenteditable", "false");
+                    element.removeAttribute("contenteditable");
                 }
                 break;
         }
