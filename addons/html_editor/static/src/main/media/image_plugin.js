@@ -231,7 +231,7 @@ export class ImagePlugin extends Plugin {
             case "TRANSFORM_IMAGE": {
                 const selectedImg = this.getSelectedImage();
                 const $selectedImg = $(selectedImg);
-                $selectedImg.transfo(this.document);
+                $selectedImg.transfo({ document: this.document });
                 this.currentImageTransformation = {
                     clean: () => {
                         $selectedImg.transfo("destroy");
