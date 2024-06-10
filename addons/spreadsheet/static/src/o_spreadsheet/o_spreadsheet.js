@@ -5352,8 +5352,7 @@
      */
     function useSpreadsheetRect() {
         const position = owl.useState({ x: 0, y: 0, width: 0, height: 0 });
-        let spreadsheetElement = document.querySelector(".o-spreadsheet");
-        updatePosition();
+        let spreadsheetElement = null;
         function updatePosition() {
             if (!spreadsheetElement) {
                 spreadsheetElement = document.querySelector(".o-spreadsheet");
@@ -21281,7 +21280,14 @@
         }
         onPaste(ev) {
             if (this.env.model.getters.getEditionMode() !== "inactive") {
+                // let the browser clipboard work
                 ev.stopPropagation();
+            }
+            else {
+                // the user meant to paste in the sheet, not open the composer with the pasted content
+                // While we're not editing, we still have the focus and should therefore prevent
+                // the native "paste" to occur.
+                ev.preventDefault();
             }
         }
         /*
@@ -21289,10 +21295,6 @@
          * */
         onInput(ev) {
             if (!this.shouldProcessInputEvents) {
-                return;
-            }
-            if (ev.inputType === "insertFromPaste" &&
-                this.env.model.getters.getEditionMode() === "inactive") {
                 return;
             }
             ev.stopPropagation();
@@ -21695,10 +21697,7 @@
         }
         get containerStyle() {
             if (this.env.model.getters.getEditionMode() === "inactive" || !this.rect) {
-                return `
-        position: absolute;
-        z-index: -1000;
-      `;
+                return `z-index: -1000;`;
             }
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
@@ -48161,9 +48160,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.37';
-    __info__.date = '2024-06-04T06:32:14.973Z';
-    __info__.hash = 'e7bf8e1';
+    __info__.version = '16.3.38';
+    __info__.date = '2024-06-10T09:43:39.799Z';
+    __info__.hash = '2fcf01c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
