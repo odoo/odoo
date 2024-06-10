@@ -979,3 +979,63 @@ class TestSalesTeam(SaleCommon):
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
+
+    def test_recompute_taxes_rounded_globally_multi_company_currency(self):
+        '''
+        Check that taxes computation are made in the currency of the company
+        configured on the SO lines.
+        '''
+        # create a currency with no decimal
+        currency_b = self.env['res.currency'].create({
+            'name': 'B',
+            'symbol': 'B',
+            'rounding': 1.000000,
+        })
+        # create a company with USD as currency (rounding == 0.01)
+        company_a = self.env['res.company'].create({
+            'name': 'Company A',
+            'country_id': self.env.ref('base.us').id,
+        })
+        # create a company with currency_b as currency
+        company_b = self.env['res.company'].create({
+            'name': 'Company B',
+            'tax_calculation_rounding_method': 'round_globally',
+            'currency_id': currency_b.id,
+        })
+        # set company_b as default company of current user
+        self.env.user.company_id = company_b
+        tax_group_a = self.env['account.tax.group'].create({
+            'name': 'Tax Group A',
+            'company_id': company_a.id,
+        })
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'amount': 10,
+            'company_id': company_a.id,
+            'tax_group_id': tax_group_a.id,
+            'country_id': self.env.ref('base.us').id,
+        })
+        # create a SO from company_a
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': company_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 123.4,
+                    'tax_id': tax_a.ids,
+                }),
+            ],
+        })
+        # edit the price unit
+        so.write({
+            'order_line': [
+                Command.update(so.order_line[0].id, {'price_unit': 123.5}),
+            ],
+        })
+        # call "flush_all" as it is done in "call_kw" method to test
+        # the tax values that have been recomputed after it
+        self.env.flush_all()
+        self.assertEqual(so.amount_tax, 12.35)
+        self.assertEqual(so.amount_total, 135.85)
