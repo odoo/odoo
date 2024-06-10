@@ -22,6 +22,7 @@ class Delivery(WebsiteSale):
         values = {
             'delivery_methods': order_sudo._get_delivery_methods(),
             'selected_dm_id': order_sudo.carrier_id.id,
+            'order': order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
         return request.env['ir.ui.view']._render_template('website_sale.delivery_form', values)
@@ -116,6 +117,35 @@ class Delivery(WebsiteSale):
                 0.0, {'display_currency': order.currency_id}
             )
         return rate
+
+    @route('/website_sale/set_pickup_location', type='json', auth='public', website=True)
+    def website_sale_set_pickup_location(self, pickup_location_data):
+        """ Fetch the order from the request and set the pickup location on the current order.
+
+        :param str pickup_location_data: The JSON-formatted pickup location address.
+        :return: None
+        """
+        order_sudo = request.website.sale_get_order()
+        order_sudo._set_pickup_location(pickup_location_data)
+
+    @route('/website_sale/get_pickup_locations', type='json', auth='public', website=True)
+    def website_sale_get_pickup_locations(self, zip_code=None):
+        """ Fetch the order from the request and return the pickup locations close to the zip code.
+
+        Determine the country based on GeoIP or fallback on the order's delivery address' country.
+
+        :param int zip_code: The zip code to look up to.
+        :return: The close pickup locations data.
+        :rtype: dict
+        """
+        order_sudo = request.website.sale_get_order()
+        if request.geoip.country_code:
+            country = self.env['res.country'].search(
+                [('code', '=', request.geoip.country_code)], limit=1,
+            )
+        else:
+            country = order_sudo.partner_shipping_id.country_id
+        return order_sudo._get_pickup_locations(zip_code, country)
 
     @route(_express_checkout_delivery_route, type='json', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):
