@@ -834,6 +834,7 @@ class UserValueComponent extends Component {
         const state = useState({});
         const propsCopy = { ...this.props };
         delete propsCopy.slots;
+        delete propsCopy.multiSequence;
         this.state = new this.constructor.StateModel(
             id,
             state,
@@ -841,6 +842,9 @@ class UserValueComponent extends Component {
             this.env.snippetOption,
             propsCopy
         );
+        if (this.props.multiSequence) {
+            this.state.multiSequence = this.props.multiSequence;
+        }
 
         this.env.registerUserValue(this.state);
 
@@ -1796,18 +1800,17 @@ export class WeInput extends UserValueComponent {
 }
 registry.category("snippet_widgets").add("WeInput", WeInput);
 
-const MultiUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-multi',
+class MultiUserValue extends UserValue {
 
-    /**
-     * @override
-     */
-    start: function () {
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
+    get sortedValues() {
+        if (!this._sortedValues) {
+            this._sortedValues = Object.values(this._subValues);
+            this._sortedValues.sort((a, b) => {
+                return a.multiSequence - b.multiSequence;
+            });
         }
-        return this._super(...arguments);
-    },
+        return this._sortedValues;
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -1816,33 +1819,37 @@ const MultiUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getValue: function (methodName) {
-        const value = this._userValueWidgets.map(widget => {
-            return widget.getValue(methodName);
+    getValue(methodName) {
+        const value = this.sortedValues.map(subValue => {
+            return subValue.getValue(methodName);
         }).join(' ').trim();
 
-        return value || this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    isContainer: function () {
-        return true;
-    },
+        return value || super.getValue(...arguments);
+    }
     /**
      * @override
      */
     async setValue(value, methodName) {
+        // TODO: @owl-options avoid null
+        value ||= "";
         let values = value.split(/\s*\|\s*/g);
         if (values.length === 1) {
             values = value.split(/\s+/g);
         }
-        for (let i = 0; i < this._userValueWidgets.length - 1; i++) {
-            await this._userValueWidgets[i].setValue(values.shift() || '', methodName);
+        for (let i = 0; i < this.sortedValues.length - 1; i++) {
+            await this.sortedValues[i].setValue(values.shift() || '', methodName);
         }
-        await this._userValueWidgets[this._userValueWidgets.length - 1].setValue(values.join(' '), methodName);
-    },
-});
+        await this.sortedValues[this.sortedValues.length - 1].setValue(values.join(' '), methodName);
+    }
+}
+
+const MultiUserValueWidget = UserValueWidget.extend({});
+class WeMulti extends UserValueComponent {
+    static template = "web_editor.WeMulti";
+    static isContainer = true;
+    static StateModel = MultiUserValue;
+}
+registry.category("snippet_widgets").add("WeMulti", WeMulti);
 
 export class ColorpickerUserValue extends SelectUserValue {
     /** 
