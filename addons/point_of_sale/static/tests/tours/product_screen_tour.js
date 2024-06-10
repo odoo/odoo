@@ -4,9 +4,19 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_screen_util";
 import { registry } from "@web/core/registry";
+<<<<<<< HEAD:addons/point_of_sale/static/tests/tours/product_screen_tour.js
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/utils/product_configurator_util";
+||||||| parent of 123913766d7a (temp):addons/point_of_sale/static/tests/tours/ProductScreen.tour.js
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import { inLeftSide } from "./helpers/utils";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
+=======
+import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
+import * as ProductConfiguratorPopup from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
+import { inLeftSide, scan_barcode } from "@point_of_sale/../tests/tours/helpers/utils";
+>>>>>>> 123913766d7a (temp):addons/point_of_sale/static/tests/tours/ProductScreen.tour.js
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     test: true,
@@ -181,16 +191,16 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
         [
             Dialog.confirm("Open session"),
 
-            ProductScreen.scan_barcode("0100100"),
+            scan_barcode("0100100"),
             ProductScreen.selectedOrderlineHas("Test Product 1", "1.0", "80.0"),
 
-            ProductScreen.scan_barcode("0100201"),
+            scan_barcode("0100201"),
             ProductScreen.selectedOrderlineHas("Test Product 2 (White)", "1.0", "100.0"),
 
-            ProductScreen.scan_barcode("0100202"),
+            scan_barcode("0100202"),
             ProductScreen.selectedOrderlineHas("Test Product 2 (Red)", "1.0", "120.0"),
 
-            ProductScreen.scan_barcode("0100300"),
+            scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1.0", "50.0"),
             Chrome.endTour(),
         ].flat(),
