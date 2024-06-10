@@ -9,6 +9,8 @@
                 <field name="count_mo_todo"/>
                 <field name="count_mo_waiting"/>
                 <field name="count_mo_late"/>
+                <field name="count_mo_in_progress"/>
+                <field name="count_mo_to_close"/>
             </field>
 
             <xpath expr="//t[@t-name='kanban-menu']" position="inside">
@@ -71,14 +73,14 @@
                     <div class="container o_kanban_card_content" t-if="!selection_mode">
                         <div class="row">
                             <div class="col-6 o_kanban_primary_left">
-                                <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_todo': 1, 'default_picking_type_id': id}">
+                                <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_confirmed': 1, 'default_picking_type_id': id}">
                                     <span t-if="record.count_mo_todo.raw_value > 0">
                                         <t t-esc="record.count_mo_todo.value"/> To Manufacture
                                     </span>
                                     <span t-else="">Open</span>
                                 </button>
                             </div>
-                            <div class="col-6 o_kanban_primary_right">
+                            <div class="col-6 o_kanban_primary_right stock-overview-links">
                                 <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
                                     <a class="col-8 offset-4" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
                                         <div class="row">
@@ -88,10 +90,26 @@
                                     </a>
                                 </div>
                                 <div t-if="record.count_mo_late.raw_value > 0" class="row">
-                                    <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planning_issues': 1, 'default_picking_type_id': id}">
+                                    <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_late_mo': 1, 'default_picking_type_id': id}">
                                         <div class="row">
                                             <span class="col-6">Late</span>
                                             <field class="col-2 text-end" name="count_mo_late"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_mo_in_progress.raw_value > 0" class="row">
+                                    <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_in_progress': 1, 'default_picking_type_id': id}">
+                                        <div class="row">
+                                            <span class="col-6">In Progress</span>
+                                            <field class="col-2 text-end" name="count_mo_in_progress"/>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div t-if="record.count_mo_to_close.raw_value > 0" class="row">
+                                    <a class="col-8 offset-4 oe_kanban_stock_picking_type_list" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_to_close': 1, 'default_picking_type_id': id}">
+                                        <div class="row">
+                                            <span class="col-6">To Close</span>
+                                            <field class="col-2 text-end" name="count_mo_to_close"/>
                                         </div>
                                     </a>
                                 </div>
@@ -197,6 +215,15 @@
         <field name="view_mode">list,kanban,form,calendar,activity</field>
         <field name="domain"></field>
         <field name="context">{'default_company_id': allowed_company_ids[0]}</field>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+    </record>
+
+    <record id="action_picking_tree_mrp_operation_graph" model="ir.actions.act_window">
+        <field name="name">Manufacturings</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
+        <field name="domain"></field>
+        <field name="context">{'search_default_filter_confirmed': 1}</field>
         <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
     </record>
 
