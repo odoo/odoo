@@ -815,6 +815,10 @@ class Picking(models.Model):
                     else:
                         picking.state = relevant_move_state
 
+    @api.onchange('scheduled_date')
+    def _onchange_scheduled_date(self):
+        return {}
+
     @api.depends('move_ids.state', 'move_ids.date', 'move_type')
     def _compute_scheduled_date(self):
         for picking in self:

@@ -177,6 +177,13 @@ class StockPicking(models.Model):
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
 
+    @api.onchange('scheduled_date')
+    def _onchange_scheduled_date(self):
+        super()._onchange_scheduled_date()
+        if self.sale_id.commitment_date:
+            delta = self.scheduled_date - self._origin.scheduled_date
+            self.sale_id.commitment_date = (self.sale_id.commitment_date or self.sale_id.expected_date) + delta
+
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 

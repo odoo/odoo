@@ -13,6 +13,13 @@ class StockPicking(models.Model):
         'purchase.order', related='move_ids.purchase_line_id.order_id',
         string="Purchase Orders", readonly=True)
 
+    @api.onchange('scheduled_date')
+    def _onchange_scheduled_date(self):
+        super()._onchange_scheduled_date()
+        if self.purchase_id.date_planned:
+            delta = self.scheduled_date - self._origin.scheduled_date
+            self.purchase_id.date_planned += delta
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
