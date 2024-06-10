@@ -11,6 +11,7 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _, Command
+from odoo.addons.stock.utils.overview_graph import calculate_date_category
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -246,6 +247,10 @@ class MrpProduction(models.Model):
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
+    date_category = fields.Char(
+        string="Date Category", compute='_compute_date_category',
+        search="_search_date_category", help="TODO", readonly=True
+    )
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -773,6 +778,20 @@ class MrpProduction(models.Model):
                 record.state in ['confirmed', 'progress', 'to_close'] and (
                     record.date_deadline and (record.date_deadline < datetime.datetime.now() or record.date_deadline < record.date_finished))
             )
+
+    @api.depends('date_start')
+    def _compute_date_category(self):
+        for mo in self:
+            mo.date_category = calculate_date_category(self.env.user, mo.date_start)
+
+    def _search_date_category(self, operator, value):
+        matching_ids = []
+        for mo in self.env['mrp.production'].search([('date_start', '!=', False)]):
+            if operator != '=':
+                raise NotImplementedError(_('Operation not supported'))
+            if mo.date_category == value:
+                matching_ids.append(mo.id)
+        return [('id', 'in', matching_ids)]
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):

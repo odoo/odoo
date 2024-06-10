@@ -374,6 +374,13 @@
                     <filter name="delivery" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
                     <filter name="internal" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <separator/>
+                    <filter name="before" string="Before" help="TODO" domain="[('date_category', '=', 'before')]"/>
+                    <filter name="yesterday" string="Yesterday" help="TODO" domain="[('date_category', '=', 'yesterday')]"/>
+                    <filter name="today" string="Today" help="TODO" domain="[('date_category', '=', 'today')]"/>
+                    <filter name="day_1" string="Tomorrow" help="TODO" domain="[('date_category', '=', 'day_1')]"/>
+                    <filter name="day_2" string="The day after tomorrow" help="TODO" domain="[('date_category', '=', 'day_2')]"/>
+                    <filter name="after" string="After" help="TODO" domain="[('date_category', '=', 'after')]"/>
+                    <separator/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
                         domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
@@ -511,6 +518,13 @@
             }"/>
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
             <field name="binding_view_types">list</field>
+        </record>
+
+        <record id="click_dashboard_graph" model="ir.actions.server">
+            <field name="name">stock.click_dashboard_graph</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">action = model.get_action_click_graph()</field>
         </record>
 
         <record id="method_action_picking_tree_incoming" model="ir.actions.server">

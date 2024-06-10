@@ -200,3 +200,20 @@ class Picking(models.Model):
                     'domain': [('id', 'in', self.repair_ids.ids)],
                 })
             return action
+
+    @api.model
+    def get_action_click_graph(self):
+        picking_type_code = self.env["stock.picking.type"].browse(
+            self.env.context["picking_type_id"]
+        ).code
+
+        if picking_type_code == "repair_operation":
+            action = self._get_action("repair.action_picking_repair_graph")
+            if self:
+                action["context"].update({
+                    "default_picking_type_id": self.picking_type_id,
+                    "picking_type_id": self.picking_type_id,
+                })
+            return action
+
+        return super().get_action_click_graph()

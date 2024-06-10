@@ -663,6 +663,14 @@
                     <filter string="MO Pending" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
                     <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
+                    <filter name="before" string="Before" help="TODO" domain="[('date_category', '=', 'before')]"/>
+                    <filter name="yesterday" string="Yesterday" help="TODO" domain="[('date_category', '=', 'yesterday')]"/>
+                    <filter name="today" string="Today" help="TODO" domain="[('date_category', '=', 'today')]"/>
+                    <filter name="day_1" string="Tomorrow" help="TODO" domain="[('date_category', '=', 'day_1')]"/>
+                    <filter name="day_2" string="The day after tomorrow" help="TODO" domain="[('date_category', '=', 'day_2')]"/>
+                    <filter name="after" string="After" help="TODO" domain="[('date_category', '=', 'after')]"/>
+                    <separator/>
+                    <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', context_today()), ('state', '=', 'confirmed')]"/>
                     <filter string="Delayed Productions" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>
