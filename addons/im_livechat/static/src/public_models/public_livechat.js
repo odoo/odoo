@@ -6,7 +6,6 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-import { unaccent } from 'web.utils';
 import { deleteCookie, setCookie } from 'web.utils.cookies';
 
 registerModel({
@@ -44,7 +43,7 @@ registerModel({
             deleteCookie("im_livechat_session");
             setCookie(
                 "im_livechat_session",
-                unaccent(JSON.stringify(this.widget.toData()), true),
+                encodeURIComponent(JSON.stringify(this.widget.toData()), true),
                 60 * 60,
                 "required"
             );

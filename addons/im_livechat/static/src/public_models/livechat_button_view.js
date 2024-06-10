@@ -177,7 +177,7 @@ registerModel({
             if (this.isOpeningChat) {
                 return;
             }
-            const cookie = getCookie('im_livechat_session');
+            const cookie = decodeURIComponent(getCookie('im_livechat_session'));
             let def;
             this.update({ isOpeningChat: true });
             clearTimeout(this.autoOpenChatTimeout);
