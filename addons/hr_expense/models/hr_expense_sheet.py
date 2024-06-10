@@ -685,7 +685,10 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
 
     def _do_refuse(self, reason):
+        if any(self.sudo().account_move_ids.filtered(lambda move: move.state != 'draft')):
+            raise UserError("You cannot cannot cancel an expense linked to a posted/canceled journal entry")
         self.approval_state = 'cancel'
+        self.sudo().account_move_ids.unlink()  # Else there would be a lost draft entry that could be approved by mistake
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         for sheet in self:
             sheet.message_post_with_source(
