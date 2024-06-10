@@ -69,6 +69,11 @@ class PaymentMethod(models.Model):
              " provides all required billing and shipping information, thus allowing to skip the"
              " checkout process.",
     )
+    support_manual_capture = fields.Boolean(
+        string="Manual Capture",
+        help="Manual capture allows the authorization of a payment but delays the actual transfer"
+             " of funds until a later date.",
+    )
     support_refund = fields.Selection(
         string="Refund",
         help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
