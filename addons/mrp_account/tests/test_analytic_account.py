@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tests import Form
 
@@ -19,6 +20,11 @@ class TestMrpAnalyticAccount(TransactionCase):
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan',
+        })
+        cls.applicability = cls.env['account.analytic.applicability'].create({
+            'business_domain': 'general',
+            'analytic_plan_id': cls.analytic_plan.id,
+            'applicability': 'mandatory',
         })
         cls.analytic_account = cls.env['account.analytic.account'].create({
             'name': 'test_analytic_account',
@@ -432,3 +438,61 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.save()
         self.assertEqual(mo.state, 'progress')
         self.assertEqual(self.analytic_account.balance, 0.0)
+
+    def test_mandatory_analytic_plan_production(self):
+        """
+        Tests that the distribution validation is correctly evaluated
+        The Production (Manufacturing Order) creation should be constrained by an analytic applicability rule if any relevant one.
+        """
+        manufacturing_order = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+        })
+        self.assertTrue(manufacturing_order)
+
+        self.applicability.business_domain = 'manufacturing_order'
+
+        with self.assertRaises(ValidationError):
+            self.env['mrp.production'].create({
+                'product_id': self.product.id,
+            })
+        mo_analytic = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'analytic_distribution': {str(self.analytic_account.id): 100.0},
+        })
+        self.assertTrue(mo_analytic)
+
+    def test_mandatory_analytic_plan_bom(self):
+        """
+        Tests that the distribution validation is correctly evaluated
+        The BOM creation should not be constrained by any analytic applicability rule.
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+        })
+        self.assertTrue(bom)
+
+        self.applicability.business_domain = 'manufacturing_order'
+
+        bom_2 = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+        })
+        self.assertTrue(bom_2)
+
+    def test_mandatory_analytic_plan_workcenter(self):
+        """
+        Tests that the distribution validation is correctly evaluated
+        The Workcenter creation should not be constrained by any analytic applicability rule.
+        """
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': "Great Workcenter",
+            'analytic_distribution': False,
+        })
+        self.assertTrue(workcenter)
+
+        self.applicability.business_domain = 'manufacturing_order'
+
+        workcenter_2 = self.env['mrp.workcenter'].create({
+            'name': "Great Workcenter",
+            'analytic_distribution': False,
+        })
+        self.assertTrue(workcenter_2)
