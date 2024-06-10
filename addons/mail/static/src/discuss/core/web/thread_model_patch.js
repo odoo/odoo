@@ -44,11 +44,4 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.foldStateCount = 0;
     },
-    incrementUnreadCounter() {
-        super.incrementUnreadCounter();
-        if (this.model === "discuss.channel") {
-            // initChannelsUnreadCounter becomes unreliable
-            this.store.channels.fetch();
-        }
-    },
 });

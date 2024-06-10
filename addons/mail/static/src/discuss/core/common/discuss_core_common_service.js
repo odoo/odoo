@@ -196,7 +196,7 @@ export class DiscussCoreCommon {
                     channel.scrollUnread = true;
                 }
                 if (notifId > channel.message_unread_counter_bus_id) {
-                    channel.incrementUnreadCounter();
+                    channel.message_unread_counter++;
                 }
             }
         }
