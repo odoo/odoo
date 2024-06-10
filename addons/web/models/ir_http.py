@@ -38,6 +38,33 @@ class Http(models.AbstractModel):
     @classmethod
     def is_a_bot(cls):
         user_agent = request.httprequest.user_agent.string.lower()
+
+        if 'logged_user_agent' not in request.httprequest.environ:
+            _logger.info("_____________________________________________________________________________________________________________________")
+            _logger.info("_____________________________________________________________________________________________________________________")
+            _logger.info("user_agent___________________________________________________________________________________________________________")
+            _logger.info(request.httprequest.user_agent)
+            _logger.info("accept_mimetypes_____________________________________________________________________________________________________")
+            _logger.info(request.httprequest.accept_mimetypes)
+            _logger.info("accept_encoding______________________________________________________________________________________________________")
+            if 'HTTP_ACCEPT_ENCODING' in request.httprequest.environ:
+                _logger.info(request.httprequest.environ['HTTP_ACCEPT_ENCODING'])
+            _logger.info("accept_languages_____________________________________________________________________________________________________")
+            _logger.info(request.httprequest.accept_languages)
+            _logger.info("_____________________________________________________________________________________________________________________")
+            _logger.info("_____________________________________________________________________________________________________________________")
+        request.httprequest.environ['logged_user_agent'] = True
+
+        # if request is head return true
+        if request.httprequest.method == 'HEAD':
+            return True
+
+        # if request has lax compatible mimetypes of a certain shape and
+        if 'HTTP_ACCEPT_ENCODING' in request.httprequest.environ and \
+            request.httprequest.environ['HTTP_ACCEPT_ENCODING'] == 'gzip, deflate' and \
+            request.httprequest.accept_mimetypes == 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7':
+            return True
+
         # We don't use regexp and ustr voluntarily
         # timeit has been done to check the optimum method
         return any(bot in user_agent for bot in cls.bots)
