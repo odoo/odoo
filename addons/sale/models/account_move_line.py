@@ -4,11 +4,13 @@
 from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
+from odoo.addons.account.models import account_move_line as account
+from odoo.addons.base.models import decimal_precision as base
+from .sale_order_line import SaleOrderLine
+from .sale_order import SaleOrder
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
-
+class AccountMoveLine(account.AccountMoveLine):
     is_downpayment = fields.Boolean()
     sale_line_ids = fields.Many2many(
         'sale.order.line',
@@ -18,17 +20,17 @@ class AccountMoveLine(models.Model):
 
     def _copy_data_extend_business_fields(self, values):
         # OVERRIDE to copy the 'sale_line_ids' field as well.
-        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
+        super()._copy_data_extend_business_fields(values)
         values['sale_line_ids'] = [(6, None, self.sale_line_ids.ids)]
 
     def _prepare_analytic_lines(self):
         """ Note: This method is called only on the move.line that having an analytic distribution, and
             so that should create analytic entries.
         """
-        values_list = super(AccountMoveLine, self)._prepare_analytic_lines()
+        values_list = super()._prepare_analytic_lines()
 
         # filter the move lines that can be reinvoiced: a cost (negative amount) analytic line without SO line but with a product can be reinvoiced
-        move_to_reinvoice = self.env['account.move.line']
+        move_to_reinvoice = AccountMoveLine(self.env)
         if len(values_list) > 0:
             for index, move_line in enumerate(self):
                 values = values_list[index]
@@ -53,7 +55,7 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if self.sale_line_ids:
             return False
-        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        uom_precision_digits = base.DecimalPrecision(self.env).precision_get('Product Unit of Measure')
         return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
     def _sale_create_reinvoice_sale_line(self):
@@ -115,7 +117,7 @@ class AccountMoveLine(models.Model):
                     map_move_sale_line[move_line.id] = sale_line
                     existing_sale_line_cache[map_entry_key] = sale_line
                 else:  # search for existing sale line
-                    sale_line = self.env['sale.order.line'].search([
+                    sale_line = SaleOrderLine(self.env).search([
                         ('order_id', '=', sale_order.id),
                         ('price_unit', '=', price),
                         ('product_id', '=', move_line.product_id.id),
@@ -136,7 +138,7 @@ class AccountMoveLine(models.Model):
                 map_move_sale_line[move_line.id] = len(sale_line_values_to_create) - 1  # save the index of the value to create sale line
 
         # create the sale lines in batch
-        new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
+        new_sale_lines = SaleOrderLine(self.env).create(sale_line_values_to_create)
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
@@ -157,12 +159,12 @@ class AccountMoveLine(models.Model):
                 distribution_json = move_line.analytic_distribution
                 account_ids = [int(account_id) for key in distribution_json.keys() for account_id in key.split(',')]
 
-                sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', account_ids),
+                sale_order = SaleOrder(self.env).search([('analytic_account_id', 'in', account_ids),
                                                             ('state', '=', 'sale')], order='create_date ASC', limit=1)
                 if sale_order:
                     mapping[move_line.id] = sale_order
                 else:
-                    sale_order = self.env['sale.order'].search([('analytic_account_id', 'in', account_ids)],
+                    sale_order = SaleOrder(self.env).search([('analytic_account_id', 'in', account_ids)],
                                                                order='create_date ASC', limit=1)
                     mapping[move_line.id] = sale_order
 
@@ -172,7 +174,7 @@ class AccountMoveLine(models.Model):
     def _sale_prepare_sale_line_values(self, order, price):
         """ Generate the sale.line creation value from the current move line """
         self.ensure_one()
-        last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
+        last_so_line = SaleOrderLine(self.env).search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
         fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
@@ -209,7 +211,7 @@ class AccountMoveLine(models.Model):
                 date=order.date_order,
             )
 
-        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        uom_precision_digits = base.DecimalPrecision(self.env).precision_get('Product Unit of Measure')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
             return 0.0
 

@@ -3,7 +3,7 @@
 
 from . import utm_campaign
 from . import utm_medium
-from . import utm_mixin
+from .utm_mixin import UtmMixin
 from . import utm_source
 from . import utm_stage
 from . import utm_tag

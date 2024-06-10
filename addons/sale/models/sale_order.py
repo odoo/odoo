@@ -4,14 +4,29 @@ from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, models
+import odoo.fields as fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 from odoo.tools.sql import create_index
 
-from odoo.addons.payment import utils as payment_utils
+from odoo.addons import base
+from odoo.addons import (
+    product as product_,
+    utm,
+    mail,
+    portal,
+    payment,
+    analytic,
+    account,
+    sales_team,
+    crm,
+    sale,
+)
+from .sale_order_line import SaleOrderLine
+
 
 INVOICE_STATUS = [
     ('upselling', 'Upselling Opportunity'),
@@ -28,9 +43,9 @@ SALE_ORDER_STATE = [
 ]
 
 
-class SaleOrder(models.Model):
+class SaleOrder(models.Model, portal.models.PortalMixin, product_.models.ProductCatalogMixin, mail.models.MailThread, mail.models.MailActivityMixin, utm.models.UtmMixin):
+    """ Sales Order (model name: 'sale.order')"""
     _name = 'sale.order'
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
@@ -55,12 +70,11 @@ class SaleOrder(models.Model):
         index='trigram',
         default=lambda self: _('New'))
 
-    company_id = fields.Many2one(
-        comodel_name='res.company',
+    company_id = fields.Many2one[base.Company](
         required=True, index=True,
         default=lambda self: self.env.company)
     partner_id = fields.Many2one(
-        comodel_name='res.partner',
+        comodel_name=base.models.Partner,
         string="Customer",
         required=True, change_default=True, index=True,
         tracking=1,
@@ -138,14 +152,14 @@ class SaleOrder(models.Model):
         store=True, readonly=False, precompute=True)
 
     partner_invoice_id = fields.Many2one(
-        comodel_name='res.partner',
+        comodel_name=base.models.Partner,
         string="Invoice Address",
         compute='_compute_partner_invoice_id',
         store=True, readonly=False, required=True, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         index='btree_not_null')
     partner_shipping_id = fields.Many2one(
-        comodel_name='res.partner',
+        comodel_name=base.models.Partner,
         string="Delivery Address",
         compute='_compute_partner_shipping_id',
         store=True, readonly=False, required=True, precompute=True,
@@ -153,7 +167,7 @@ class SaleOrder(models.Model):
         index='btree_not_null')
 
     fiscal_position_id = fields.Many2one(
-        comodel_name='account.fiscal.position',
+        comodel_name=account.models.AccountFiscalPosition,
         string="Fiscal Position",
         compute='_compute_fiscal_position_id',
         store=True, readonly=False, precompute=True, check_company=True,
@@ -161,13 +175,13 @@ class SaleOrder(models.Model):
             "The default value comes from the customer.",
     )
     payment_term_id = fields.Many2one(
-        comodel_name='account.payment.term',
+        comodel_name=account.models.AccountPaymentTerm,
         string="Payment Terms",
         compute='_compute_payment_term_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     pricelist_id = fields.Many2one(
-        comodel_name='product.pricelist',
+        comodel_name=product_.models.Pricelist,
         string="Pricelist",
         compute='_compute_pricelist_id',
         store=True, readonly=False, precompute=True, check_company=True,  # Unrequired company
@@ -175,7 +189,7 @@ class SaleOrder(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(
-        comodel_name='res.currency',
+        comodel_name=base.models.Currency,
         compute='_compute_currency_id',
         store=True,
         precompute=True,
@@ -187,7 +201,7 @@ class SaleOrder(models.Model):
         digits=0,
         store=True, precompute=True)
     user_id = fields.Many2one(
-        comodel_name='res.users',
+        comodel_name=base.models.Users,
         string="Salesperson",
         compute='_compute_user_id',
         store=True, readonly=False, precompute=True, index=True,
@@ -196,7 +210,7 @@ class SaleOrder(models.Model):
             self.env.ref("sales_team.group_sale_salesman").id
         ))
     team_id = fields.Many2one(
-        comodel_name='crm.team',
+        comodel_name=crm.models.Team,
         string="Sales Team",
         compute='_compute_team_id',
         store=True, readonly=False, precompute=True, ondelete="set null",
@@ -206,7 +220,7 @@ class SaleOrder(models.Model):
 
     # Lines and line based computes
     order_line = fields.One2many(
-        comodel_name='sale.order.line',
+        comodel_name=SaleOrderLine,
         inverse_name='order_id',
         string="Order Lines",
         copy=True, auto_join=True)
@@ -219,7 +233,7 @@ class SaleOrder(models.Model):
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
-        comodel_name='account.move',
+        comodel_name=account.models.AccountMove,
         string="Invoices",
         compute='_get_invoiced',
         search='_search_invoice_ids',
@@ -232,12 +246,12 @@ class SaleOrder(models.Model):
 
     # Payment fields
     transaction_ids = fields.Many2many(
-        comodel_name='payment.transaction',
+        comodel_name=payment.models.PaymentTransaction,
         relation='sale_order_transaction_rel', column1='sale_order_id', column2='transaction_id',
         string="Transactions",
         copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many(
-        comodel_name='payment.transaction',
+        comodel_name=payment.models.PaymentTransaction,
         string="Authorized Transactions",
         compute='_compute_authorized_transaction_ids',
         copy=False,
@@ -257,12 +271,12 @@ class SaleOrder(models.Model):
 
     # Followup ?
     analytic_account_id = fields.Many2one(
-        comodel_name='account.analytic.account',
+        comodel_name=analytic.models.AccountAnalyticAccount,
         string="Analytic Account",
         copy=False, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tag_ids = fields.Many2many(
-        comodel_name='crm.tag',
+        comodel_name=sales_team.models.Tag,
         relation='sale_order_tag_rel', column1='order_id', column2='tag_id',
         string="Tags")
 
@@ -282,7 +296,7 @@ class SaleOrder(models.Model):
         related='company_id.tax_calculation_rounding_method',
         depends=['company_id'])
     tax_country_id = fields.Many2one(
-        comodel_name='res.country',
+        comodel_name=base.models.Country,
         compute='_compute_tax_country_id',
         # Avoid access error on fiscal position when reading a sale order with company != user.company_ids
         compute_sudo=True)  # used to filter available taxes depending on the fiscal country and position
@@ -352,7 +366,7 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id')
     def _compute_note(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        use_invoice_terms = base.models.IrConfigParameter(self.env).sudo().get_param('account.use_invoice_terms')
         if not use_invoice_terms:
             return
         for order in self:
@@ -392,7 +406,7 @@ class SaleOrder(models.Model):
             fpos_id_before = order.fiscal_position_id.id
             key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
             if key not in cache:
-                cache[key] = self.env['account.fiscal.position'].with_company(
+                cache[key] = account.models.AccountFiscalPosition(self.env).with_company(
                     order.company_id
                 )._get_fiscal_position(order.partner_id, order.partner_shipping_id).id
             if fpos_id_before != cache[key] and order.order_line:
@@ -424,7 +438,7 @@ class SaleOrder(models.Model):
     @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
         for order in self:
-            order.currency_rate = self.env['res.currency']._get_conversion_rate(
+            order.currency_rate = base.models.Currency(self.env)._get_conversion_rate(
                 from_currency=order.company_id.currency_id,
                 to_currency=order.currency_id,
                 company=order.company_id,
@@ -434,7 +448,7 @@ class SaleOrder(models.Model):
     @api.depends('company_id')
     def _compute_has_active_pricelist(self):
         for order in self:
-            order.has_active_pricelist = bool(self.env['product.pricelist'].search(
+            order.has_active_pricelist = bool(product_.models.Pricelist(self.env).search(
                 [('company_id', 'in', (False, order.company_id.id)), ('active', '=', True)],
                 limit=1,
             ))
@@ -461,11 +475,11 @@ class SaleOrder(models.Model):
             company_id = order.company_id.id
             key = (default_team_id, user_id, company_id)
             if key not in cached_teams:
-                cached_teams[key] = self.env['crm.team'].with_context(
+                cached_teams[key] = crm.models.Team(self.env).with_context(
                     default_team_id=default_team_id,
                 )._get_default_team_id(
                     user_id=user_id,
-                    domain=self.env['crm.team']._check_company_domain(company_id),
+                    domain=crm.models.Team(self.env)._check_company_domain(company_id),
                 )
             order.team_id = cached_teams[key]
 
@@ -476,7 +490,7 @@ class SaleOrder(models.Model):
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
-                tax_results = self.env['account.tax']._compute_taxes(
+                tax_results = account.models.AccountTax(self.env)._compute_taxes(
                     [
                         line._convert_to_tax_base_line_dict()
                         for line in order_lines
@@ -558,7 +572,7 @@ class SaleOrder(models.Model):
         lines_domain = [('is_downpayment', '=', False), ('display_type', '=', False)]
         line_invoice_status_all = [
             (order.id, invoice_status)
-            for order, invoice_status in self.env['sale.order.line']._read_group(
+            for order, invoice_status in SaleOrderLine(self.env)._read_group(
                 lines_domain + [('order_id', 'in', confirmed_orders.ids)],
                 ['order_id', 'invoice_status']
             )
@@ -675,7 +689,7 @@ class SaleOrder(models.Model):
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
             if show_warning:
-                order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
+                order.partner_credit_warning = account.models.AccountMove(self.env)._build_credit_warning_message(
                     order,
                     current_amount=(order.amount_total / order.currency_rate),
                 )
@@ -685,7 +699,7 @@ class SaleOrder(models.Model):
     def _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
-            order.tax_totals = self.env['account.tax']._prepare_tax_totals(
+            order.tax_totals = account.models.AccountTax(self.env)._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id or self.env.company.currency_id,
                 order.company_id or self.env.company,
@@ -819,7 +833,7 @@ class SaleOrder(models.Model):
                 seq_date = fields.Datetime.context_timestamp(
                     self, fields.Datetime.to_datetime(vals['date_order'])
                 ) if 'date_order' in vals else None
-                vals['name'] = self.env['ir.sequence'].next_by_code(
+                vals['name'] = base.models.IrSequence(self.env).next_by_code(
                     'sale.order', sequence_date=seq_date) or _("New")
 
         return super().create(vals_list)
@@ -910,7 +924,7 @@ class SaleOrder(models.Model):
             and self.env.is_admin()
             and not self.env.company.external_report_layout_id
         ):
-            layout_action = self.env['ir.actions.report']._action_configure_external_report_layout(
+            layout_action = base.models.IrActionsReport(self.env)._action_configure_external_report_layout(
                 action,
             )
             # Need to remove this context for windows action
@@ -940,11 +954,11 @@ class SaleOrder(models.Model):
         :return: `mail.template` record or None if default template wasn't found
         """
         self.ensure_one()
-        default_confirmation_template_id = self.env['ir.config_parameter'].sudo().get_param(
+        default_confirmation_template_id = base.models.IrConfigParameter(self.env).sudo().get_param(
             'sale.default_confirmation_template'
         )
         default_confirmation_template = default_confirmation_template_id \
-            and self.env['mail.template'].browse(int(default_confirmation_template_id)).exists()
+            and mail.models.MailTemplate.browse(int(default_confirmation_template_id)).exists()
         if default_confirmation_template:
             return default_confirmation_template
         else:
@@ -1100,11 +1114,11 @@ class SaleOrder(models.Model):
         cancel_warning = self._show_cancel_wizard()
         if cancel_warning:
             self.ensure_one()
-            template_id = self.env['ir.model.data']._xmlid_to_res_id(
+            template_id = base.models.IrModelData(self.env)._xmlid_to_res_id(
                 'sale.mail_template_sale_cancellation', raise_if_not_found=False
             )
             lang = self.env.context.get('lang')
-            template = self.env['mail.template'].browse(template_id)
+            template = mail.models.mail_template.MailTemplate.browse(template_id)
             if template.lang:
                 lang = template._render_lang(self.ids)[self.id]
             ctx = {
@@ -1189,7 +1203,7 @@ class SaleOrder(models.Model):
 
     def _default_order_line_values(self, child_field=False):
         default_data = super()._default_order_line_values(child_field)
-        new_default_data = self.env['sale.order.line']._get_product_catalog_lines_data()
+        new_default_data = SaleOrderLine(self.env)._get_product_catalog_lines_data()
         return {**default_data, **new_default_data}
 
     def _get_action_add_from_catalog_extra_context(self):
@@ -1247,7 +1261,7 @@ class SaleOrder(models.Model):
     def action_view_invoice(self, invoices=False):
         if not invoices:
             invoices = self.mapped('invoice_ids')
-        action = self.env['ir.actions.actions']._for_xml_id('account.action_move_out_invoice_type')
+        action = base.models.IrActions(self.env)._for_xml_id('account.action_move_out_invoice_type')
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
@@ -1267,7 +1281,7 @@ class SaleOrder(models.Model):
             context.update({
                 'default_partner_id': self.partner_id.id,
                 'default_partner_shipping_id': self.partner_shipping_id.id,
-                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or self.env['account.move'].default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
+                'default_invoice_payment_term_id': self.payment_term_id.id or self.partner_id.property_payment_term_id.id or account.models.AccountMove(self.env).default_get(['invoice_payment_term_id']).get('invoice_payment_term_id'),
                 'default_invoice_origin': self.name,
             })
         action['context'] = context
@@ -1296,7 +1310,7 @@ class SaleOrder(models.Model):
         down_payment_line_ids = []
         invoiceable_line_ids = []
         pending_section = None
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        precision = base.models.DecimalPrecision(self.env).precision_get('Product Unit of Measure')
 
         for line in self.order_line:
             if line.display_type == 'line_section':
@@ -1316,7 +1330,7 @@ class SaleOrder(models.Model):
                     pending_section = None
                 invoiceable_line_ids.append(line.id)
 
-        return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
+        return SaleOrderLine(self.env).browse(invoiceable_line_ids + down_payment_line_ids)
 
     def _create_invoices(self, grouped=False, final=False, date=None):
         """ Create invoice(s) for the given Sales Order(s).
@@ -1329,12 +1343,12 @@ class SaleOrder(models.Model):
         :rtype: `account.move` recordset
         :raises: UserError if one of the orders has no invoiceable lines.
         """
-        if not self.env['account.move'].check_access_rights('create', False):
+        if not account.models.AccountMove(self.env).check_access_rights('create', False):
             try:
                 self.check_access_rights('write')
                 self.check_access_rule('write')
             except AccessError:
-                return self.env['account.move']
+                return account.models.AccountMove(self.env)
 
         # 1) Create invoices.
         invoice_vals_list = []
@@ -1426,7 +1440,7 @@ class SaleOrder(models.Model):
         # orders, meaning a grouping might have been done. This could also mean that only a part
         # of the selected SO are invoiceable, but resequencing in this case shouldn't be an issue.
         if len(invoice_vals_list) < len(self):
-            SaleOrderLine = self.env['sale.order.line']
+            SaleOrderLine = SaleOrderLine(self.env)
             for invoice in invoice_vals_list:
                 sequence = 1
                 for line in invoice['invoice_line_ids']:
@@ -1435,7 +1449,7 @@ class SaleOrder(models.Model):
 
         # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
         # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
-        moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+        moves = account.models.AccountMove(self.env).sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
 
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
@@ -1622,14 +1636,14 @@ class SaleOrder(models.Model):
     def payment_action_capture(self):
         """ Capture all transactions linked to this sale order. """
         self.ensure_one()
-        payment_utils.check_rights_on_recordset(self)
+        payment.utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
         return self.transaction_ids.sudo().action_capture()
 
     def payment_action_void(self):
         """ Void all transactions linked to this sale order. """
-        payment_utils.check_rights_on_recordset(self)
+        payment.utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
         self.authorized_transaction_ids.sudo().action_void()
@@ -1794,9 +1808,9 @@ class SaleOrder(models.Model):
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
-        plan = self.env['account.analytic.plan'].sudo().search([], limit=1)
+        plan = analytic.models.AccountAnalyticPlan(self.env).sudo().search([], limit=1)
         if not plan:
-            plan = self.env['account.analytic.plan'].sudo().create({
+            plan = analytic.models.AccountAnalyticPlan(self.env).sudo().create({
                 'name': 'Default',
             })
         return {
@@ -1815,8 +1829,8 @@ class SaleOrder(models.Model):
         :return: None
         """
         for order in self:
-            analytic = self.env['account.analytic.account'].create(order._prepare_analytic_account_data(prefix))
-            order.analytic_account_id = analytic
+            account = analytic.models.AccountAnalyticAccount(self.env).create(order._prepare_analytic_account_data(prefix))
+            order.analytic_account_id = account
 
     def _prepare_down_payment_section_line(self, **optional_values):
         """ Prepare the values to create a new down payment section.
@@ -1875,10 +1889,10 @@ class SaleOrder(models.Model):
         :return: The generated down payment invoices.
         :rtype: recordset of `account.move`
         """
-        generated_invoices = self.env['account.move']
+        generated_invoices = account.models.AccountMove(self.env)
 
         for order in self:
-            downpayment_wizard = order.env['sale.advance.payment.inv'].create({
+            downpayment_wizard = sale.wizard.SaleAdvancePaymentInv(order.env).create({
                 'sale_order_ids': order,
                 'advance_payment_method': 'fixed',
                 'fixed_amount': order.amount_paid,
@@ -1905,7 +1919,7 @@ class SaleOrder(models.Model):
         return res
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
+        grouped_lines = defaultdict(lambda: SaleOrderLine(self.env))
         for line in self.order_line:
             if line.display_type or line.product_id.id not in product_ids:
                 continue
@@ -1953,7 +1967,7 @@ class SaleOrder(models.Model):
             else:
                 sol.product_uom_qty = 0
         elif quantity > 0:
-            sol = self.env['sale.order.line'].create({
+            sol = sale_order_line.SaleOrderLine(self.env).create({
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_uom_qty': quantity,

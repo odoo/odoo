@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields
+from odoo.addons import sale, loyalty
 
 
-class SaleOrderLine(models.Model):
-    _inherit = 'sale.order.line'
+class SaleOrderLine(sale.models.SaleOrderLine):
 
     is_reward_line = fields.Boolean(
         string="Is a program reward line", compute='_compute_is_reward_line')
     reward_id = fields.Many2one(
-        comodel_name='loyalty.reward', ondelete='restrict', readonly=True)
+        comodel_name=loyalty.models.LoyaltyReward, ondelete='restrict', readonly=True)
     coupon_id = fields.Many2one(
-        comodel_name='loyalty.card', ondelete='restrict', readonly=True)
+        comodel_name=loyalty.models.LoyaltyCard, ondelete='restrict', readonly=True)
     reward_identifier_code = fields.Char(
         help="Technical field used to link multiple reward lines from the same reward together.")
     points_cost = fields.Float(help="How much point this reward costs on the loyalty card.")
@@ -97,10 +97,10 @@ class SaleOrderLine(models.Model):
     def unlink(self):
         # Remove related reward lines
         reward_coupon_set = {(l.reward_id, l.coupon_id, l.reward_identifier_code) for l in self if l.reward_id}
-        related_lines = self.env['sale.order.line']
+        related_lines = sale.models.SaleOrderLine(self.env)
         related_lines |= self.order_id.order_line.filtered(lambda l: (l.reward_id, l.coupon_id, l.reward_identifier_code) in reward_coupon_set)
         # Remove the line's coupon from order if it is the last line using that coupon
-        coupons_to_unlink = self.env['loyalty.card']
+        coupons_to_unlink = loyalty.models.LoyaltyCard(self.env)
         for line in self:
             if line.coupon_id:
                 # 2 cases:

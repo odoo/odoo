@@ -12,6 +12,7 @@ from . import product_product
 from . import product_template
 from . import res_company
 from . import res_partner
-from . import sale_order
-from . import sale_order_line
+from .sale_order import SaleOrder
+from .sale_order_line import SaleOrderLine
 from . import utm_campaign
+

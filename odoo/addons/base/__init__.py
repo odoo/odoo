@@ -3,6 +3,22 @@
 
 from . import controllers
 from . import models
+from .models import (
+    Company,
+    IrModelData,
+    IrSequence,
+    IrActions,
+    IrActionsReport,
+    IrConfigParameter,
+    Country,
+    Lang,
+    Partner,
+    ResConfigSettings,
+    Currency,
+    Company,
+    Users,
+    DecimalPrecision,
+)
 from . import populate
 from . import report
 from . import wizard

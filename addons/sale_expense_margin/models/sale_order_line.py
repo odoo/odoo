@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, fields
+from odoo.addons import sale
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
+
+class SaleOrderLine(sale.models.SaleOrderLine):
 
     expense_id = fields.Many2one('hr.expense', string='Expense')
 

@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo.addons import account
 
 
-class AccountMoveLine(models.Model):
-    _inherit = 'account.move.line'
+class AccountMoveLine(account.models.AccountMoveLine):
 
     def _sale_can_be_reinvoice(self):
         """ determine if the generated analytic line should be reinvoiced or not.
@@ -43,8 +42,7 @@ class AccountMoveLine(models.Model):
         return res
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+class AccountMove(account.models.AccountMove):
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         self.expense_sheet_id._sale_expense_reset_sol_quantities()

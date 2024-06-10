@@ -16,3 +16,6 @@ from . import account_journal_dashboard
 from . import res_company
 from . import analytic
 from . import ir_actions_report
+
+from .hr_expense import HrExpense
+from .hr_expense_sheet import HrExpenseSheet

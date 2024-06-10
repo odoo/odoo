@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields
+from odoo.addons import loyalty, sale
 
 
-class LoyaltyProgram(models.Model):
-    _inherit = 'loyalty.program'
+class LoyaltyProgram(loyalty.models.LoyaltyProgram):
 
     order_count = fields.Integer(compute='_compute_order_count')
     sale_ok = fields.Boolean(string="Sales", default=True)
 
     def _compute_order_count(self):
         # An order should count only once PER program but may appear in multiple programs
-        read_group_res = self.env['sale.order.line']._read_group(
+        read_group_res = sale.models.SaleOrderLine(self.env)._read_group(
             [('reward_id', 'in', self.reward_ids.ids)], ['order_id'], ['reward_id:array_agg'])
         for program in self:
             program_reward_ids = program.reward_ids.ids

@@ -54,7 +54,7 @@ class UoM(models.Model):
 
     name = fields.Char('Unit of Measure', required=True, translate=True)
     category_id = fields.Many2one(
-        'uom.category', 'Category', required=True, ondelete='restrict',
+        UoMCategory, 'Category', required=True, ondelete='restrict',
         help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios.")
     factor = fields.Float(
         'Ratio', default=1.0, digits=0, required=True,  # force NUMERIC with unlimited precision
