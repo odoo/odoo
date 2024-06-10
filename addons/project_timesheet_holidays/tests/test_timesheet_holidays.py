@@ -238,8 +238,8 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'name': 'Test Time off please',
             'employee_id': self.empl_employee.id,
             'holiday_status_id': self.hr_leave_type_with_ts.id,
-            'date_from': leave_start_datetime,
-            'date_to': leave_end_datetime,
+            'request_date_from': leave_start_datetime,
+            'request_date_to': leave_end_datetime,
         })
         time_off.with_user(SUPERUSER_ID).action_validate()
 
