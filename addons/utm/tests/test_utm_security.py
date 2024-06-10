@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import tagged, users
 
 
-@tagged('post_install', '-at_install', 'security')
+@tagged('post_install', '-at_install', 'security', 'utm')
 class TestUTMSecurity(TestUTMCommon):
 
     @users('__system__')
