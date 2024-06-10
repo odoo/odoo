@@ -6,3 +6,4 @@ from . import chatbot
 from . import main
 from . import webclient
 from . import cors
+from . import home
