@@ -1143,6 +1143,24 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(model.getters.getGlobalFilters()[0].label, "Arthouuuuuur");
     });
 
+    QUnit.test("Can undo-redo a MOVE_GLOBAL_FILTER", async function (assert) {
+        const model = await createModelWithDataSource();
+        addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, NEXT_YEAR_GLOBAL_FILTER, {});
+
+        const lastYearFilterId = LAST_YEAR_GLOBAL_FILTER.id;
+
+        moveGlobalFilter(model, lastYearFilterId, 1);
+        assert.deepEqual(model.getters.getGlobalFilters()[1].id, lastYearFilterId);
+
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getGlobalFilters()[0].id, lastYearFilterId);
+
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getGlobalFilters()[1].id, lastYearFilterId);
+    });
+
     QUnit.test("pivot headers won't change when adding a filter ", async function (assert) {
         assert.expect(6);
         const { model } = await createSpreadsheetWithPivot({
