@@ -75,7 +75,7 @@ class Company(models.Model):
     primary_color = fields.Char()
     secondary_color = fields.Char()
     color = fields.Integer(compute='_compute_color', inverse='_inverse_color')
-    layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
+    layout_background = fields.Selection([('Blank', 'Blank'), ('Demo logo', 'Demo logo'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
     uninstalled_l10n_module_ids = fields.Many2many('ir.module.module', compute='_compute_uninstalled_l10n_module_ids')
     _sql_constraints = [
