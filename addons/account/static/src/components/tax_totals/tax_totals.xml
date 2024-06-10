@@ -39,7 +39,7 @@
     </t>
 
     <t t-name="account.TaxTotalsField">
-        <table t-if="totals">
+        <table t-if="totals" class="float-end">
             <tbody>
                 <t t-foreach="totals.subtotals" t-as="subtotal" t-key="subtotal['name']">
                     <tr>
