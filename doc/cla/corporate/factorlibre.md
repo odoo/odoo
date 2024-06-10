@@ -17,3 +17,4 @@ Hugo Santos hugo.santos@factorlibre.com https://github.com/hugosantosred
 Jorge Martínez jorge.martinez@factorlibre.com https://github.com/jorgemartinez-factorlibre
 Adriana Saiz adriana.saiz@factorlibre.com https://github.com/AdrianaSaiz
 Pablo Calvo pablo.calvo@factorlibre.com https://github.com/Pablocce
+Juan Carlos Bonilla juancarlos.bonilla@factorlibre.com https://github.com/suker
