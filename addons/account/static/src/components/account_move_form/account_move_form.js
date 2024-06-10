@@ -8,8 +8,15 @@ import { FormCompiler } from "@web/views/form/form_compiler";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormController } from '@web/views/form/form_controller';
 import { useService } from "@web/core/utils/hooks";
+import { AccountCogMenu } from "@account/components/action_menus/action_menus";
 
-export class AccountMoveController extends FormController {
+
+export class AccountMoveFormController extends FormController {
+    static components = {
+        ...FormController.components,
+        CogMenu: AccountCogMenu,
+    };
+
     setup() {
         super.setup();
         this.account_move_service = useService("account_move");
@@ -20,7 +27,7 @@ export class AccountMoveController extends FormController {
             return super.deleteRecord(...arguments);
         }
     }
-};
+}
 
 export class AccountMoveFormNotebook extends Notebook {
     static template = "account.AccountMoveFormNotebook";
@@ -54,6 +61,7 @@ export class AccountMoveFormRenderer extends FormRenderer {
         }
     }
 }
+
 export class AccountMoveFormCompiler extends FormCompiler {
     compileNotebook(el, params) {
         const originalNoteBook = super.compileNotebook(...arguments);
@@ -72,7 +80,7 @@ export const AccountMoveFormView = {
     ...formView,
     Renderer: AccountMoveFormRenderer,
     Compiler: AccountMoveFormCompiler,
-    Controller: AccountMoveController,
+    Controller: AccountMoveFormController,
 };
 
 registry.category("views").add("account_move_form", AccountMoveFormView);

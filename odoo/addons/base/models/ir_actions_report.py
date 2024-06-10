@@ -140,6 +140,7 @@ class IrActionsReport(models.Model):
                                     help='If enabled, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Save as Attachment Prefix',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
+    domain = fields.Char(string='Filter domain', help='If set, the action will only appear on records that matches the domain.')
 
     @api.depends('model')
     def _compute_model_id(self):
@@ -179,6 +180,7 @@ class IrActionsReport(models.Model):
             "context", "data",
             # and this one is used by the frontend later on.
             "close_on_report_download",
+            "domain",
         }
 
     def associated_view(self):

@@ -18,59 +18,62 @@ const cogMenuRegistry = registry.category("cogMenu");
  *
  * @extends ActionMenus
  */
-export class CogMenu extends ActionMenus {
-    static template = "web.CogMenu";
-    static components = {
-        ...ActionMenus.components,
-        Dropdown,
-    };
-    static props = {
-        ...ActionMenus.props,
-        getActiveIds: { type: ActionMenus.props.getActiveIds, optional: true },
-        context: { type: ActionMenus.props.context, optional: true },
-        resModel: { type: ActionMenus.props.resModel, optional: true },
-        items: { ...ActionMenus.props.items, optional: true },
-    };
-    static defaultProps = {
-        ...ActionMenus.defaultProps,
-        items: {},
-    };
+export const CogMenuMixin = (T) =>
+    class extends T {
+        static template = "web.CogMenu";
+        static components = {
+            ...T.components,
+            Dropdown,
+        };
+        static props = {
+            ...T.props,
+            getActiveIds: { type: T.props.getActiveIds, optional: true },
+            context: { type: T.props.context, optional: true },
+            resModel: { type: T.props.resModel, optional: true },
+            items: { ...T.props.items, optional: true },
+        };
+        static defaultProps = {
+            ...T.defaultProps,
+            items: {},
+        };
 
-    setup() {
-        super.setup();
-        onWillStart(async () => {
-            this.registryItems = await this._registryItems();
-        });
-        onWillUpdateProps(async () => {
-            this.registryItems = await this._registryItems();
-        });
-    }
-
-    get hasItems() {
-        return this.cogItems.length || this.printItems.length;
-    }
-
-    async _registryItems() {
-        const items = [];
-        for (const item of cogMenuRegistry.getAll()) {
-            if ("isDisplayed" in item ? await item.isDisplayed(this.env) : true) {
-                items.push({
-                    Component: item.Component,
-                    groupNumber: item.groupNumber,
-                    key: item.Component.name,
-                });
-            }
+        setup() {
+            super.setup();
+            onWillStart(async () => {
+                this.registryItems = await this._registryItems();
+            });
+            onWillUpdateProps(async () => {
+                this.registryItems = await this._registryItems();
+            });
         }
-        return items;
-    }
 
-    get cogItems() {
-        return [...this.actionItems, ...this.registryItems].sort((item1, item2) => {
-            const grp = (item1.groupNumber || 0) - (item2.groupNumber || 0);
-            if (grp !== 0) {
-                return grp;
+        get hasItems() {
+            return this.cogItems.length || this.printItems.length;
+        }
+
+        async _registryItems() {
+            const items = [];
+            for (const item of cogMenuRegistry.getAll()) {
+                if ("isDisplayed" in item ? await item.isDisplayed(this.env) : true) {
+                    items.push({
+                        Component: item.Component,
+                        groupNumber: item.groupNumber,
+                        key: item.Component.name,
+                    });
+                }
             }
-            return (item1.sequence || 0) - (item2.sequence || 0);
-        });
-    }
-}
+            return items;
+        }
+
+        get cogItems() {
+            return [...this.actionItems, ...this.registryItems].sort((item1, item2) => {
+                const grp = (item1.groupNumber || 0) - (item2.groupNumber || 0);
+                if (grp !== 0) {
+                    return grp;
+                }
+                return (item1.sequence || 0) - (item2.sequence || 0);
+            });
+        }
+    };
+
+export class CogMenu extends CogMenuMixin(ActionMenus) {}

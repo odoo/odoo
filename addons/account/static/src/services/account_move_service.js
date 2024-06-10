@@ -8,8 +8,8 @@ import { registry } from "@web/core/registry";
 
 
 export const accountMove = {
-    dependencies: ["dialog", "orm"],
-    start(env, { dialog, orm }) {
+    dependencies: ["action", "dialog", "orm"],
+    start(env, { action, dialog, orm }) {
         return {
             async addDeletionDialog(component, moveIds) {
                 const isMoveEndOfChain = await orm.call('account.move', 'check_move_sequence_chain', [moveIds]);
@@ -21,9 +21,17 @@ export const accountMove = {
                     return true;
                 }
                 return false;
-            }
-        }
-    }
-}
+            },
+            async downloadPdf(accountMoveId) {
+                const downloadAction = await orm.call(
+                    "account.move",
+                    "action_invoice_download_pdf",
+                    [accountMoveId]
+                );
+                await action.doAction(downloadAction);
+            },
+        };
+    },
+};
 
 registry.category("services").add("account_move", accountMove);

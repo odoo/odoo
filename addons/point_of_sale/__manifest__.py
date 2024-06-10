@@ -161,6 +161,7 @@
             'web/static/src/legacy/js/libs/jquery.js',
             # account
             'account/static/src/helpers/*.js',
+            'account/static/src/services/account_move_service.js',
 
             "web/static/src/core/browser/router.js",
             "web/static/src/core/debug/**/*",

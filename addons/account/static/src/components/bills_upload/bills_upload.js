@@ -14,6 +14,7 @@ import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_men
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { AccountActionMenus } from "@account/components/action_menus/action_menus";
 
 import { Component, useState, onWillStart, useSubEnv, reactive } from "@odoo/owl";
 
@@ -204,6 +205,7 @@ export class AccountMoveListController extends ListController {
     static components = {
         ...ListController.components,
         AccountFileUploader,
+        ActionMenus: AccountActionMenus,
     };
 
     setup() {
@@ -217,7 +219,7 @@ export class AccountMoveListController extends ListController {
             return super.onDeleteSelectedRecords(...arguments);
         }
     }
-};
+}
 
 export const AccountMoveUploadListView = {
     ...listView,

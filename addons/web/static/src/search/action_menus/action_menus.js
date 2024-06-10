@@ -1,5 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
+import { Domain } from "@web/core/domain";
+import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -52,15 +54,40 @@ export class ActionMenus extends Component {
         this.actionService = useService("action");
         onWillStart(async () => {
             this.actionItems = await this.getActionItems(this.props);
+            this.printItems = await this.getPrintItems();
         });
         onWillUpdateProps(async (nextProps) => {
             this.actionItems = await this.getActionItems(nextProps);
+            this.printItems = await this.getPrintItems();
         });
     }
 
-    get printItems() {
+    actionMenuTitle() {
+        return _t("Print");
+    }
+
+    async getPrintItems() {
         const printActions = this.props.items.print || [];
-        return printActions.map((action) => ({
+        const asyncFilter = async (arr, predicate) => {
+            const results = await Promise.all(arr.map(predicate));
+            return arr.filter((_v, index) => results[index]);
+        };
+        const filteredPrintActions = await asyncFilter(printActions, async (printAction) => {
+            if (printAction.domain) {
+                const recMatch = await this.orm.search(
+                    this.props.resModel,
+                    [
+                        ["id", "in", this.props.getActiveIds()],
+                        ...new Domain(printAction.domain).toList(),
+                    ],
+                    { limit: 1 }
+                );
+                return recMatch.length > 0;
+            } else {
+                return true;
+            }
+        });
+        return filteredPrintActions.map((action) => ({
             action,
             description: action.name,
             key: action.id,
