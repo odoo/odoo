@@ -294,6 +294,21 @@ class PaymentProvider(models.Model):
                 "You cannot change the company of a payment provider with existing transactions."
             ))
 
+    # === CONSTRAINT METHODS === #
+
+    @api.constrains('capture_manually')
+    def _check_manual_capture_supported_by_payment_methods(self):
+        if self.capture_manually:
+            incompatible_pms = self.payment_method_ids.filtered(
+                lambda method: method.active and method.support_manual_capture == 'none'
+            )
+            if incompatible_pms:
+                raise ValidationError(_(
+                    "The following payment methods must be disabled in order to enable manual"
+                    " capture: %s", ", ".join(incompatible_pms.mapped('name'))
+                ))
+
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi

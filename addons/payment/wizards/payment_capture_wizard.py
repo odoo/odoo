@@ -87,7 +87,9 @@ class PaymentCaptureWizard(models.TransientModel):
     def _compute_support_partial_capture(self):
         for wizard in self:
             wizard.support_partial_capture = all(
-                tx.provider_id.support_manual_capture == 'partial' for tx in wizard.transaction_ids
+                tx.provider_id.support_manual_capture == 'partial'
+                and tx.payment_method_id.support_manual_capture == 'partial'
+                for tx in wizard.transaction_ids
             )
 
     @api.depends('transaction_ids')
