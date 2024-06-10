@@ -88,6 +88,8 @@ export const getOrderChanges = (order, skipped = false, orderPreparationCategori
                     attribute_value_ids: lineResume["attribute_value_ids"],
                     quantity: -lineResume["quantity"],
                 };
+                changeAbsCount += Math.abs(lineResume["quantity"]);
+                changesCount += lineResume["quantity"];
             } else {
                 changes[lineKey]["quantity"] -= lineResume["quantity"];
             }

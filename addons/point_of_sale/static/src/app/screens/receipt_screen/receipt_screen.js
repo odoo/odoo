@@ -30,6 +30,7 @@ export class ReceiptScreen extends Component {
         this.doPrint = useTrackedAsync(() => this.pos.printReceipt());
         onMounted(() => {
             const order = this.pos.get_order();
+            this.currentOrder.uiState.locked = true;
             this.pos.sendOrderInPreparation(order);
         });
     }
