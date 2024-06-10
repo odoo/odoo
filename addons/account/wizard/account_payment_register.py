@@ -56,6 +56,19 @@ class AccountPaymentRegister(models.TransientModel):
         compute="_compute_qr_code",
     )
 
+    # == Fields given to detect if the user change the date after he modifies the amount of the payment == #
+    wizard_change_mode = fields.Selection(
+        selection=[
+            ('compute_amount_change', 'Amount recomputed'),
+            ('payment_date_change', 'Payment date change'),
+        ],
+        export_string_translation=False,
+    )
+    # Specify if the user changed the amount or not based on 'wizard_change_mode'
+    is_amount_forced_by_user = fields.Boolean(
+        export_string_translation=False,
+    )
+
     # == Fields given through the context ==
     line_ids = fields.Many2many('account.move.line', 'account_payment_register_move_line_rel', 'wizard_id', 'line_id',
         string="Journal items", readonly=True, copy=False,)
@@ -565,17 +578,30 @@ class AccountPaymentRegister(models.TransientModel):
                 self.payment_date,
             ), False
 
+    @api.onchange('amount')
+    def _onchange_amount(self):
+        if not self.wizard_change_mode:
+            self.is_amount_forced_by_user = True
+        else:
+            self.is_amount_forced_by_user = False
+
+    @api.onchange('payment_date')
+    def _onchange_payment_date(self):
+        self.wizard_change_mode = 'payment_date_change'
+
     @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):
         for wizard in self:
-            if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
-                wizard.amount = wizard.amount
-            elif wizard.source_currency_id and wizard.can_edit_wizard:
-                batch_result = wizard._get_batches()[0]
-                wizard.amount = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)[0]
-            else:
-                # The wizard is not editable so no partial payment allowed and then, 'amount' is not used.
-                wizard.amount = None
+            if wizard.wizard_change_mode != 'payment_date_change' or not wizard.is_amount_forced_by_user:
+                if not wizard.journal_id or not wizard.currency_id or not wizard.payment_date:
+                    wizard.amount = wizard.amount
+                elif wizard.source_currency_id and wizard.can_edit_wizard:
+                    batch_result = wizard._get_batches()[0]
+                    wizard.amount = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)[0]
+                else:
+                    # The wizard is not editable so no partial payment allowed and then, 'amount' is not used.
+                    wizard.amount = None
+                wizard.wizard_change_mode = 'compute_amount_change'
 
     @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
     def _compute_early_payment_discount_mode(self):
