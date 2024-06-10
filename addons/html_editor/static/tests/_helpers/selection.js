@@ -95,7 +95,12 @@ export function setContent(el, content) {
     }
 }
 
-export function setSelection({ anchorNode, anchorOffset, focusNode, focusOffset }) {
+export function setSelection({
+    anchorNode,
+    anchorOffset,
+    focusNode = anchorNode,
+    focusOffset = anchorOffset,
+}) {
     const selection = anchorNode.ownerDocument.getSelection();
     selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
 }
