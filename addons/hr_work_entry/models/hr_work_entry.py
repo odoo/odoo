@@ -23,7 +23,7 @@ class HrWorkEntry(models.Model):
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
     duration = fields.Float(compute='_compute_duration', store=True, string="Duration", readonly=False)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1))
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
@@ -37,6 +37,7 @@ class HrWorkEntry(models.Model):
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
+    country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id')
 
     # There is no way for _error_checking() to detect conflicts in work
     # entries that have been introduced in concurrent transactions, because of the transaction
@@ -252,10 +253,28 @@ class HrWorkEntryType(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
+    country_id = fields.Many2one('res.country', string="Country")
 
-    _sql_constraints = [
-        ('unique_work_entry_code', 'UNIQUE(code)', 'The same code cannot be associated to multiple work entry types.'),
-    ]
+    @api.constrains('country_id')
+    def _check_work_entry_type_country(self):
+        if self.env.ref('hr_work_entry.work_entry_type_attendance') in self:
+            raise UserError(_("You can't change the country of this specific work entry type."))
+        elif self.env['hr.work.entry'].sudo().search_count([('work_entry_type_id', 'in', self.ids)], limit=1):
+            raise UserError(_("You can't change the Country of this work entry type cause it's currently used by the system. You need to delete related working entries first."))
+
+    @api.constrains('code', 'country_id')
+    def _check_code_unicity(self):
+        similar_work_entry_types = self.search([
+            ('code', 'in', self.mapped('code')),
+            ('country_id', 'in', self.country_id.ids + [False]),
+            ('id', 'not in', self.ids)
+        ])
+        for work_entry_type in self:
+            if similar_work_entry_types.filtered_domain([
+                ('code', '=', work_entry_type.code),
+                ('country_id', 'in', self.country_id.ids + [False]),
+            ]):
+                raise UserError(_("The same code cannot be associated to multiple work entry types."))
 
 
 class Contacts(models.Model):
