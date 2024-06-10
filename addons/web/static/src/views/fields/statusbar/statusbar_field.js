@@ -284,14 +284,14 @@ export class StatusBarField extends Component {
     /**
      * @param {StatusBarItem} item
      */
-    getItemTooltip(item) {
+    getItemAriaLabel(item) {
         if (item.isSelected) {
-            return _t("Current state");
+            return _t("Current state is %s", item.label);
         }
         if (this.props.isDisabled) {
-            return _t("Not active state");
+            return _t("Unselected state is %s", item.label);
         }
-        return _t("Not active state, click to change it");
+        return _t("Not active state, click to change it to %s", item.label);
     }
 
     getSortedItems() {
