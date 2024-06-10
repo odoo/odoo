@@ -679,7 +679,7 @@ test("isDirty should be false when the content is being transformed by the edito
     expect(`.o_form_button_save`).not.toBeVisible();
 });
 
-test("link preview in Link Dialog", async () => {
+test("link preview in Link Popover", async () => {
     Partner._records = [
         {
             id: 1,
@@ -700,7 +700,8 @@ test("link preview in Link Dialog", async () => {
 
     // Open the popover option to edit the link
     let anchorNode = queryOne(".test_target a");
-    setSelection({ anchorNode, anchorOffset: 0 });
+    setSelection({ anchorNode, anchorOffset: 0, focusNode: anchorNode, focusOffset: 0 });
+    await animationFrame();
     // Click on the edit link icon
     await contains("a.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
@@ -726,7 +727,7 @@ test("link preview in Link Dialog", async () => {
 
     anchorNode = queryOne(".test_target a");
     // Select link label to open the floating toolbar.
-    setSelection({ anchorNode, anchorOffset: 0 });
+    setSelection({ anchorNode, anchorOffset: 0, focusNode: anchorNode, focusOffset: 0 });
     await animationFrame();
     // Click on the edit link icon
     await contains("a.o_we_edit_link").click();
