@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
+from urllib.parse import unquote
 import json
 
 from odoo import api, Command, fields, models, _
@@ -111,7 +112,7 @@ class WebsiteVisitor(models.Model):
         visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
         if upsert == 'inserted':
             visitor_sudo = self.sudo().browse(visitor_id)
-            mail_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
+            mail_channel_uuid = json.loads(unquote(request.httprequest.cookies.get('im_livechat_session', '{}'))).get('uuid')
             if mail_channel_uuid:
                 mail_channel = request.env["mail.channel"].sudo().search([("uuid", "=", mail_channel_uuid)])
                 mail_channel.write({

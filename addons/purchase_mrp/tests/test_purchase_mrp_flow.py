@@ -892,6 +892,85 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(line1_values['availability_state'], 'expected', 'The first component should be expected as there is an incoming PO.')
         self.assertEqual(line2_values['availability_state'], 'expected', 'The second component should be expected as there is an incoming PO.')
 
+    def test_bom_report_vendor_quantities(self):
+        """ Test bom overview with different vendor minimum quantities, see if it picks the right ones.
+        """
+        buy_route = self.warehouse.buy_pull_id.route_id
+        final = self.env['product.product'].create({'name': 'Final', 'type': 'product'})
+        # Compo A has 2 vendors, one faster but with a min qty of 5, the other with more delay but without a min qty
+        self.component_a.write({
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 0, 'delay': 5}),
+                Command.create({'partner_id': self.partner_b.id, 'min_qty': 5, 'delay': 1}),
+            ],
+        })
+        # Compo B has 1 vendor with a min qty of 5
+        self.component_b.write({
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 5}),
+            ]
+        })
+        # Compo C has 1 vendor with a min qty of 5
+        self.component_c.write({
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 5}),
+            ]
+        })
+        # Compo D has 1 vendor with a min qty of 1 dozen
+        self.component_d.write({
+            'uom_po_id': self.uom_dozen.id,
+            'route_ids': [Command.link(buy_route.id)],
+            'seller_ids': [
+                Command.create({'partner_id': self.partner_a.id, 'min_qty': 1, 'price': 10}),
+            ]
+        })
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.component_a.id,
+                    'product_qty': 10,
+                    'product_uom_id': self.uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': self.component_b.id,
+                    'product_qty': 3,
+                    'product_uom_id': self.uom_unit.id,
+                }),
+                Command.create({
+                    'product_id': self.component_c.id,
+                    'product_qty': 1,
+                    'product_uom_id': self.uom_dozen.id,
+                }),
+                Command.create({
+                    'product_id': self.component_d.id,
+                    'product_qty': 3,
+                    'product_uom_id': self.uom_unit.id,
+                })
+            ]
+        })
+
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id)
+
+        compo_a_values = report_values['lines']['components'][0]
+        self.assertEqual(compo_a_values['route_detail'], self.partner_b.display_name, "Compo A should have picked the fastest supplier")
+        compo_b_values = report_values['lines']['components'][1]
+        self.assertEqual(compo_b_values['route_detail'], self.partner_a.display_name, "Compo B should have found the supplier, even without enough qty")
+        self.assertTrue(compo_b_values['route_alert'], "Should be true as there isn't enough quantity for this vendor")
+        compo_c_values = report_values['lines']['components'][2]
+        self.assertEqual(compo_c_values['route_detail'], self.partner_a.display_name)
+        self.assertFalse(compo_c_values['route_alert'], "Should be false as 1 dozen > 5 units for this vendor")
+        compo_d_values = report_values['lines']['components'][3]
+        self.assertEqual(compo_d_values['route_detail'], self.partner_a.display_name, "Compo D should have found the supplier, even without enough qty")
+        self.assertTrue(compo_d_values['route_alert'], "Should be true as 3 units < 1 dozen for this vendor")
+
     def test_valuation_with_backorder(self):
         fifo_category = self.env['product.category'].create({
             'name': 'FIFO',

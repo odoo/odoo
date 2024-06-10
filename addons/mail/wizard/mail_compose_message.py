@@ -630,6 +630,10 @@ class MailComposer(models.TransientModel):
                             'attachment_ids', 'mail_server_id'
                            ] if key in default_values)
 
+        if template_id:  # Restore default sender if not updated on template switch (for both "mass_mail" and "comment" modes)
+            if 'email_from' not in values:
+                values['email_from'] = self.default_get(['email_from']).get('email_from')
+
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
 
