@@ -2125,14 +2125,14 @@
                 <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-pencil me-1"/>Edit</a>
                 <t
                     t-set="separate_billing_address"
-                    t-value="order.partner_invoice_id != order.partner_shipping_id or order.access_point_address"
+                    t-value="order.partner_invoice_id != order.partner_shipping_id or order.pickup_location_data"
                 />
                 <div>
                     <b>Billing<t t-if="not separate_billing_address and not only_services"> &amp; Delivery</t>: </b>
                     <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
                 <div t-if="separate_billing_address and order._has_deliverable_products()" groups="account.group_delivery_invoice_address">
-                    <t t-if="not order.access_point_address">
+                    <t t-if="not order.pickup_location_data">
                         <b>Delivery: </b>
                         <span
                             t-out="order.partner_shipping_id"
@@ -2142,7 +2142,7 @@
                     </t>
                     <t t-else="">
                         <b>Deliver to pickup point: </b>
-                        <t t-out="order.access_point_address.get('pick_up_point_name', '') + ', '+ order.access_point_address.get('address', '')"/>
+                        <t t-out="order.pickup_location_data.get('pick_up_point_name', '') + ', '+ order.pickup_location_data.get('address', '')"/>
                     </t>
                 </div>
             </div>

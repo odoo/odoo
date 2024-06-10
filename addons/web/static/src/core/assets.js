@@ -54,7 +54,7 @@ const cacheMap = new Map();
 
 whenReady(computeCacheMap);
 
-class AssetsLoadingError extends Error {}
+export class AssetsLoadingError extends Error {}
 
 /**
  * Loads the given url inside a script tag.

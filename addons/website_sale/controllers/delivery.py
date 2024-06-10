@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo import _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
@@ -118,77 +116,6 @@ class Delivery(WebsiteSale):
                 0.0, {'display_currency': order.currency_id}
             )
         return rate
-
-    @route('/shop/get_pickup_location', type='json', auth='public', website=True)
-    def shop_get_pickup_location(self):
-        """ Return the pickup location that is set on the current order.
-
-        :return: The pickup location set on the current order, if any.
-        :rtype: dict|None
-        """
-        order = request.website.sale_get_order()
-        if not order.carrier_id.delivery_type or not order.carrier_id.display_name:
-            return {}
-
-        order_location = order.access_point_address
-        if not order_location:
-            return {}
-
-        address = order_location['address']
-        name = order_location['pick_up_point_name']
-        return {
-            'pickup_address': address,
-            'name': name,
-            'delivery_name': order.carrier_id.display_name,
-        }
-
-    @route('/shop/set_pickup_location', type='json', auth='public', website=True)
-    def set_pickup_location(self, pickup_location_data):
-        """ Set the pickup location on the current order.
-
-        :param str pickup_location_data: The JSON-formatted pickup location address.
-        :return: None
-        """
-        order = request.website.sale_get_order()
-        use_locations_fname = f'{order.carrier_id.delivery_type}_use_locations'
-        if hasattr(order.carrier_id, use_locations_fname):
-            use_location = getattr(order.carrier_id, use_locations_fname)
-            if use_location and pickup_location_data:
-                pickup_location = json.loads(pickup_location_data)
-            else:
-                pickup_location = None
-            order.access_point_address = pickup_location
-
-    @route('/shop/get_close_locations', type='json', auth='public', website=True)
-    def shop_get_close_locations(self):
-        """ Return the pickup locations of the delivery method close to the order delivery address.
-
-        :return: The close pickup location data.
-        :rtype: dict
-        """
-        order = request.website.sale_get_order()
-        try:
-            error = {'error': _("No pick-up point available for that shipping address")}
-            function_name = f'_{order.carrier_id.delivery_type}_get_close_locations'
-            if not hasattr(order.carrier_id, function_name):
-                return error
-
-            close_locations = getattr(order.carrier_id, function_name)(order.partner_shipping_id)
-            partner_address = order.partner_shipping_id
-            inline_partner_address = ' '.join((part or '') for part in [
-                partner_address.street,
-                partner_address.street2,
-                partner_address.zip,
-                partner_address.country_id.code
-            ])
-            if not close_locations:
-                return error
-
-            for location in close_locations:
-                location['address_stringified'] = json.dumps(location)
-            return {'close_locations': close_locations, 'partner_address': inline_partner_address}
-        except UserError as e:
-            return {'error': str(e)}
 
     @route(_express_checkout_delivery_route, type='json', auth='public', website=True)
     def express_checkout_process_delivery_address(self, partial_delivery_address):

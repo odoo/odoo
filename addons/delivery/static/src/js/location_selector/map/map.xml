@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="delivery.locationSelector.map">
+        <div class="o_location_selector_map w-100 flex-grow-1" t-ref="map"/>
+    </t>
+
+    <t t-name="delivery.locationSelector.map.marker">
+        <svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="15" cy="38" rx="12" ry="2" fill="#000" fill-opacity="0.25"/>
+            <path
+                d="M15 39.2507C14.9216 39.1623 14.8316 39.0606 14.731 38.9461C14.323 38.482 13.7395 37.8091 13.0391 36.9752C11.6379 35.3068 9.77066 32.9967 7.90454 30.4276C6.03711 27.8567 4.17807 25.0364 2.78794 22.3465C1.38981 19.6411 0.5 17.1309 0.5 15.1621C0.5 7.06077 6.9955 0.5 14.9995 0.5C23.0004 0.5 29.5 7.06089 29.5 15.1621C29.5 17.1309 28.6102 19.6411 27.2121 22.3465C25.8219 25.0364 23.9629 27.8567 22.0955 30.4276C20.2293 32.9967 18.3621 35.3068 16.9609 36.9752C16.2605 37.8091 15.677 38.482 15.269 38.9461C15.1684 39.0606 15.0784 39.1623 15 39.2507Z"
+                fill="var(--LocationSelectorMarker-background)"
+                stroke="var(--LocationSelectorMarker-border-color)"
+            />
+            <text
+                x="50%"
+                y="50%"
+                text-anchor="middle"
+                t-out="number"
+                fill="var(--LocationSelectorMarker-color)"
+            />
+        </svg>
+    </t>
+</templates>
