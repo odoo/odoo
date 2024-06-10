@@ -211,8 +211,9 @@ export class Editor {
                 this.editable.removeAttribute("contenteditable");
                 removeClass(this.editable, "odoo-editor-editable");
             }
-            for (const p of this.plugins) {
-                p.destroy();
+            let plugin;
+            while ((plugin = this.plugins.pop())) {
+                plugin.destroy();
             }
             this.shared = {};
             this.editable = null;
