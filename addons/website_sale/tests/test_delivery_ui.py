@@ -14,11 +14,6 @@ class TestUi(odoo.tests.HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.transfer_provider = cls.env.ref('payment.payment_provider_transfer')
-        cls.transfer_provider.write({
-            'state': 'enabled',
-            'is_published': True,
-        })
 
         # Avoid Shipping/Billing address page
         cls.env.ref('base.partner_admin').write({
@@ -78,7 +73,14 @@ class TestUi(odoo.tests.HttpCase):
     def test_01_free_delivery_when_exceed_threshold(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
-        self.transfer_provider._transfer_ensure_pending_msg_is_set()
+
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
+
         self.env['delivery.price.rule'].create([{
             'carrier_id': self.carrier.id,
             'max_value': 5,
@@ -101,7 +103,14 @@ class TestUi(odoo.tests.HttpCase):
     def test_pay_button_disabled_when_carrier_has_error(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer provider is not installed")
-        self.transfer_provider._transfer_ensure_pending_msg_is_set()
+
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+        transfer_provider._transfer_ensure_pending_msg_is_set()
+
         Monetary = self.env['ir.qweb.field.monetary']
         usd_currency = self.env.ref('base.USD')
         with patch.object(WebsiteSaleDelivery, '_get_rate',
