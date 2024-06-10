@@ -605,6 +605,10 @@
                                     name="price_unit"
                                     readonly="qty_invoiced &gt; 0"/>
                                 <field
+                                    name="is_price_set_manually"
+                                    column_invisible="1"
+                                    force_save="1"/>
+                                <field
                                     name="tax_id"
                                     widget="many2many_tags"
                                     options="{'no_create': True}"
