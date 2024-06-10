@@ -6,10 +6,10 @@
             <t t-slot="layout-buttons"/>
         </t>
         <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="props.display.controlPanel" display="props.display.controlPanel"/>
-        <div t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel': props.display.searchPanel }">
+        <main t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel': props.display.searchPanel }">
             <t t-component="components.SearchPanel" t-if="props.display.searchPanel"/>
             <t t-slot="default" contentRef="contentRef" />
-        </div>
+        </main>
     </t>
 
 </templates>

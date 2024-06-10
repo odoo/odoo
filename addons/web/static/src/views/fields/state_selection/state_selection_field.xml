@@ -18,12 +18,12 @@
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="options" t-as="option" t-key="option[0]">
-                        <DropdownItem
+                        <CheckboxItem
                             class="`d-flex align-items-center ${option[0] === currentValue ? 'active' : ''}`"
-                            onSelected="() => this.updateRecord(option[0])">
+                            onSelected="() => this.updateRecord(option[0])" checked="option[0] === currentValue">
                                 <span t-attf-class="o_status ms-2 {{ statusColor(option[0]) }} "/>
                                 <span t-esc="option[1]"/>
-                        </DropdownItem>
+                        </CheckboxItem>
                     </t>
                 </t>
             </Dropdown>

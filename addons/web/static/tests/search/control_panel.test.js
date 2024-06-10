@@ -92,6 +92,23 @@ test.tags`desktop`("view switcher", async () => {
     expect.verifySteps(["kanban"]);
 });
 
+test.tags`desktop`("views aria labels", async () => {
+    await mountWithSearch(
+        ControlPanel,
+        { resModel: "foo" },
+        {
+            viewSwitcherEntries: [
+                { type: "list", active: true, icon: "oi-view-list", name: "List" },
+                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+            ],
+        }
+    );
+
+    const views = queryAll`.o_switch_view`;
+    expect(views[0]).toHaveAttribute("aria-label", "List View");
+    expect(views[1]).toHaveAttribute("aria-label", "Kanban View");
+});
+
 test.tags`mobile`("view switcher on mobile", async () => {
     await mountWithSearch(
         ControlPanel,

@@ -85,14 +85,14 @@
             <attribute name="t-att-class">getTogglerClass(currentValue)</attribute>
         </xpath>
         <!-- Dropdown divider -->
-        <xpath expr="//DropdownItem" position="before">
+        <xpath expr="//CheckboxItem" position="before">
             <div t-if="option[0] == '1_canceled' and (currentValue != '04_waiting_normal' or this.env.isSmall)" role="separator" class="dropdown-divider"/>
         </xpath>
         <!-- Approval mode dropdown button (class)-->
-        <xpath expr="//DropdownItem/span[1]" position="attributes">
+        <xpath expr="//CheckboxItem/span[1]" position="attributes">
             <attribute name="t-attf-class" separator=" " add="{{ stateIcon(option[0]) }}" remove="o_status"></attribute>
         </xpath>
-        <xpath expr="//DropdownItem/span[2]" position="attributes">
+        <xpath expr="//CheckboxItem/span[2]" position="attributes">
             <attribute name="t-attf-class">{{ statusColor(option[0]) }}</attribute>
         </xpath>
     </t>
