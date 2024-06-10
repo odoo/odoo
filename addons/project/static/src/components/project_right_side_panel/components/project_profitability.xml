@@ -79,21 +79,22 @@
                     <tr class="align-top">
                         <th>Margin</th>
                         <th class="text-end" t-att-class="margin.invoiced_billed &lt; 0 ? 'text-danger' : 'text-success'">
-                            <t t-esc="props.formatMonetary(margin.invoiced_billed)"/><br/>
-                            <t t-if="costs.total.billed != 0">
-                                <t t-esc="margin.invoiced_billed > 0 ? '+' : ''"/><t t-esc="(margin.invoiced_billed / (-costs.total.billed) * 100).toFixed(0)"/>%
+                            <t t-out="props.formatMonetary(margin.invoiced_billed)"/><br/>
+                            <t t-if="revenues.total.invoiced != 0">
+                                <t t-out="margin.invoiced_billed > 0 ? '+' : ''"/><t t-out="(margin.invoiced_billed / revenues.total.invoiced * 100).toFixed()"/>%
                             </t>
                         </th>
                         <th class="text-end" t-att-class="margin.to_invoice_to_bill &lt; 0 ? 'text-danger' : 'text-success'">
-                            <t t-esc="props.formatMonetary(margin.to_invoice_to_bill)"/><br/>
-                            <t t-if="costs.total.to_bill != 0">
-                                <t t-esc="margin.to_invoice_to_bill > 0 ? '+' : ''"/><t t-esc="(margin.to_invoice_to_bill / (-costs.total.to_bill) * 100).toFixed(0)"/>%
+                            <t t-out="props.formatMonetary(margin.to_invoice_to_bill)"/><br/>
+                            <t t-if="revenues.total.to_invoice != 0">
+                                <t t-out="margin.to_invoice_to_bill > 0 ? '+' : ''"/><t t-out="(margin.to_invoice_to_bill / revenues.total.to_invoice * 100).toFixed()"/>%
                             </t>
                         </th>
                         <th class="text-end" t-att-class="margin.total &lt; 0 ? 'text-danger' : 'text-success'">
-                            <t t-esc="props.formatMonetary(margin.total)"/><br/>
-                            <t t-if="(costs.total.billed + costs.total.to_bill) != 0">
-                                <t t-esc="margin.total > 0 ? '+' : ''"/><t t-esc="(margin.total / (-costs.total.billed - costs.total.to_bill) * 100).toFixed(0)"/>%
+                            <t t-set="total_revenue" t-value="revenues.total.to_invoice + revenues.total.invoiced"/>
+                            <t t-out="props.formatMonetary(margin.total)"/><br/>
+                            <t t-if="total_revenue != 0">
+                                <t t-out="margin.total > 0 ? '+' : ''"/><t t-out="(margin.total / total_revenue * 100).toFixed()"/>%
                             </t>
                         </th>
                     </tr>
