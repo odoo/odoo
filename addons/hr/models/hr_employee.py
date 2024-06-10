@@ -454,6 +454,18 @@ class HrEmployeePrivate(models.Model):
         works = {d[0].date() for d in calendar._work_intervals_batch(dfrom, dto)[False]}
         return {fields.Date.to_string(day.date()): (day.date() not in works) for day in rrule(DAILY, dfrom, until=dto)}
 
+    def _get_expected_attendances(self, date_from, date_to, domain=None):
+        self.ensure_one()
+        employee_timezone = pytz.timezone(self.tz) if self.tz else None
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        calendar_intervals = calendar._work_intervals_batch(
+            date_from,
+            date_to,
+            tz=employee_timezone,
+            resources=self.resource_id,
+            domain=domain)[self.resource_id.id]
+        return calendar_intervals
+
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
