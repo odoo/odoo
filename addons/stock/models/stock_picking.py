@@ -3,8 +3,6 @@
 import json
 import math
 import pytz
-import random
-import time
 from ast import literal_eval
 from datetime import date, timedelta
 from collections import defaultdict
@@ -14,7 +12,7 @@ from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, format_list, groupby, SQL
+from odoo.tools import format_datetime, format_date, format_list, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -260,7 +258,7 @@ class PickingType(models.Model):
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
             'count_picking_ready': [('state', '=', 'assigned')],
             'count_picking': [('state', 'in', ('assigned', 'waiting', 'confirmed'))],
-            'count_picking_late': [('scheduled_date', '<', time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)), ('state', 'in', ('assigned', 'waiting', 'confirmed'))],
+            'count_picking_late': [('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', ('scheduled_date', '<', fields.Date.today()), ('has_deadline_issue', '=', True)],
             'count_picking_backorders': [('backorder_id', '!=', False), ('state', 'in', ('confirmed', 'assigned', 'waiting'))],
         }
         for field_name, domain in domains.items():
@@ -365,15 +363,9 @@ class PickingType(models.Model):
     def _compute_kanban_dashboard_graph(self):
         grouped_records = self._get_aggregated_records_by_date()
 
-        start_today = fields.Date.context_today(self)
-
-        start_yesterday = start_today + timedelta(days=-1)
-        start_day_1 = start_today + timedelta(days=1)
-        start_day_2 = start_today + timedelta(days=2)
-
         summaries = {}
         for picking_type_id, dates, data_series_name in grouped_records:
-            summaries[picking_type_id.id] = {
+            summaries[picking_type_id] = {
                 'data_series_name': data_series_name,
                 'total_before': 0,
                 'total_yesterday': 0,
@@ -383,24 +375,10 @@ class PickingType(models.Model):
                 'total_after': 0,
             }
             for p_date in dates:
-                p_date = p_date.astimezone(pytz.UTC).date()
-                if p_date < start_yesterday:
-                    summaries[picking_type_id.id]['total_before'] += 1
-                elif p_date == start_yesterday:
-                    summaries[picking_type_id.id]['total_yesterday'] += 1
-                elif p_date == start_today:
-                    summaries[picking_type_id.id]['total_today'] += 1
-                elif p_date == start_day_1:
-                    summaries[picking_type_id.id]['total_day_1'] += 1
-                elif p_date == start_day_2:
-                    summaries[picking_type_id.id]['total_day_2'] += 1
-                else:
-                    summaries[picking_type_id.id]['total_after'] += 1
+                date_category = self.env["stock.picking"].calculate_date_category(p_date)
+                summaries[picking_type_id]['total_' + date_category] += 1
 
-        for picking_type in self:
-            picking_type_summary = summaries.get(picking_type.id)
-            graph_data = self._prepare_graph_data(picking_type_summary)
-            picking_type.kanban_dashboard_graph = json.dumps(graph_data)
+        self._prepare_graph_data(summaries)
 
     def _compute_ready_items_label(self):
         for pt in self:
@@ -509,20 +487,26 @@ class PickingType(models.Model):
         records = self.env['stock.picking']._read_group(
             [
                 ('picking_type_id', 'in', self.ids),
-                ('state', '=', 'assigned')
+                ('state', 'in', ['assigned', 'waiting', 'confirmed'])
             ],
             ['picking_type_id'],
             ['scheduled_date' + ':array_agg'],
         )
-        return [(r[0], r[1], _('Ready')) for r in records]
+        # Make sure that all picking type IDs are represented, even if empty
+        picking_type_id_to_dates = {i: [] for i in self.ids}
+        picking_type_id_to_dates.update({r[0].id: r[1] for r in records})
+        return [(i, d, _('Transfers')) for i, d in picking_type_id_to_dates.items()]
 
-    def _prepare_graph_data(self, picking_type_summary):
+    def _prepare_graph_data(self, summaries):
         """
-        Takes in a summary of a picking type, containing the name of the data series
-        and categories to display with their corresponding stock picking counts.
-        Returns the data in a form suitable for the dashboard graph.
+        Takes in summaries of picking types, each containing the name of the data
+        series and categories to display with their corresponding stock picking counts.
+        Converts each summary into data suitable for the dashboard graph and assigns
+        that data to the corresponding picking type from `self`.
+
+        If all values in a graph are 0, then they are assigned the "sample" type.
         """
-        mapping = {
+        data_category_mapping = {
             'total_before': {'label': _('Before'), 'type': 'past'},
             'total_yesterday': {'label': _('Yesterday'), 'type': 'past'},
             'total_today': {'label': _('Today'), 'type': 'present'},
@@ -530,24 +514,21 @@ class PickingType(models.Model):
             'total_day_2': {'label': _('The day after tomorrow'), 'type': 'future'},
             'total_after': {'label': _('After'), 'type': 'future'},
         }
-        if picking_type_summary:
+
+        for picking_type in self:
+            picking_type_summary = summaries.get(picking_type.id)
+            # Graph is empty if all its "total_*" values are 0
+            empty = all(picking_type_summary[k] == 0 for k in data_category_mapping)
             graph_data = [{
-                'key': picking_type_summary['data_series_name'],
+                'key': _('Sample data') if empty else picking_type_summary['data_series_name'],
+                # Passing the picking type ID allows for a redirection after clicking
+                'picking_type_id': None if empty else picking_type.id,
                 'values': [
-                    dict(v, value=picking_type_summary[k])
-                    for k, v in mapping.items()
+                    dict(v, value=picking_type_summary[k], type='sample' if empty else v['type'])
+                    for k, v in data_category_mapping.items()
                 ],
             }]
-        else:
-            # Provide random sample data
-            graph_data = [{
-                'key': _('Sample data'),
-                'values': [
-                    dict(v, type='sample', value=random.randint(1, 10))
-                    for k, v in mapping.items()
-                ],
-            }]
-        return graph_data
+            picking_type.kanban_dashboard_graph = json.dumps(graph_data)
 
 
 class Picking(models.Model):
@@ -717,6 +698,16 @@ class Picking(models.Model):
         definition='picking_type_id.picking_properties_definition',
         copy=True)
     show_next_pickings = fields.Boolean(compute='_compute_show_next_pickings')
+    search_date_category = fields.Selection([
+        ('before', 'Before'),
+        ('yesterday', 'Yesterday'),
+        ('today', 'Today'),
+        ('day_1', 'Tomorrow'),
+        ('day_2', 'The day after tomorrow'),
+        ('after', 'After')],
+        string='Date Category', store=False,
+        search='_search_date_category', readonly=True
+    )
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -736,6 +727,14 @@ class Picking(models.Model):
     def _compute_has_deadline_issue(self):
         for picking in self:
             picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
+
+    def _search_date_category(self, operator, value):
+        if operator != '=':
+            raise NotImplementedError(_('Operation not supported'))
+        search_domain = self.date_category_to_domain(value)
+        return expression.AND([
+            [('scheduled_date', operator, value)] for operator, value in search_domain
+        ])
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -1828,9 +1827,15 @@ class Picking(models.Model):
                 return res
             raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
 
+    @api.model
+    def get_action_click_graph(self):
+        return self._get_action("stock.action_picking_tree_graph")
+
     def _get_action(self, action_xmlid):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
-        context = literal_eval(action['context'])
+        context = self.env.context
+        context.update(literal_eval(action['context']))
+        action['context'] = context
 
         action['help'] = self.env['ir.ui.view']._render_template(
             'stock.help_message_template', {
@@ -1851,6 +1856,94 @@ class Picking(models.Model):
     @api.model
     def get_action_picking_tree_internal(self):
         return self._get_action('stock.action_picking_tree_internal')
+
+    @api.model
+    def calculate_date_category(self, datetime):
+        """
+        Assigns given datetime to one of the following categories:
+        - "before"
+        - "yesterday"
+        - "today"
+        - "day_1" (tomorrow)
+        - "day_2" (the day after tomorrow)
+        - "after"
+
+        The categories are based on current user's timezone (e.g. "today" will last
+        between 00:00 and 23:59 local time). The datetime itself is assumed to be
+        in UTC. If the datetime is falsy, this function returns "none".
+        """
+        start_today = fields.Datetime.context_timestamp(
+            self.env.user, fields.Datetime.now()
+        ).replace(hour=0, minute=0, second=0, microsecond=0)
+
+        start_yesterday = start_today + timedelta(days=-1)
+        start_day_1 = start_today + timedelta(days=1)
+        start_day_2 = start_today + timedelta(days=2)
+        start_day_3 = start_today + timedelta(days=3)
+
+        date_category = "none"
+
+        if datetime:
+            datetime = datetime.astimezone(pytz.UTC)
+            if datetime < start_yesterday:
+                date_category = "before"
+            elif datetime >= start_yesterday and datetime < start_today:
+                date_category = "yesterday"
+            elif datetime >= start_today and datetime < start_day_1:
+                date_category = "today"
+            elif datetime >= start_day_1 and datetime < start_day_2:
+                date_category = "day_1"
+            elif datetime >= start_day_2 and datetime < start_day_3:
+                date_category = "day_2"
+            else:
+                date_category = "after"
+
+        return date_category
+
+    @api.model
+    def date_category_to_domain(self, date_category):
+        """
+        Given a date category, returns a list of tuples of operator and value
+        that can be used in a domain to filter records based on their scheduled date.
+
+        Args:
+            date_category (str): The date category to use for the computation.
+                Allowed values are:
+                * "before"
+                * "yesterday"
+                * "today"
+                * "day_1"
+                * "day_2"
+                * "after"
+
+        Returns:
+            a list of tuples:
+                each tuple consists of an operator and a value that can be used in
+                a domain to filter records based on their scheduled date.
+                The operator can be "<" or ">=". The value is a datetime object.
+                If an incorrect date category is passed, this method returns None.
+        """
+        start_today = fields.Datetime.context_timestamp(
+            self.env.user, fields.Datetime.now()
+        ).replace(hour=0, minute=0, second=0, microsecond=0)
+
+        start_today = start_today.astimezone(pytz.UTC)
+
+        start_yesterday = start_today + timedelta(days=-1)
+        start_day_1 = start_today + timedelta(days=1)
+        start_day_2 = start_today + timedelta(days=2)
+        start_day_3 = start_today + timedelta(days=3)
+
+        date_category_to_search_domain = {
+            "before": [("<", start_yesterday)],
+            "yesterday": [(">=", start_yesterday), ("<", start_today)],
+            "today": [(">=", start_today), ("<", start_day_1)],
+            "day_1": [(">=", start_day_1), ("<", start_day_2)],
+            "day_2": [(">=", start_day_2), ("<", start_day_3)],
+            "after": [(">=", start_day_3)],
+        }
+
+        return date_category_to_search_domain.get(date_category)
 
     def button_scrap(self):
         self.ensure_one()

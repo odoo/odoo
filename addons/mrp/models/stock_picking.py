@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
+
 from odoo import _, api, fields, models
+from odoo.osv import expression
 
 
 class StockPickingType(models.Model):
@@ -15,6 +18,10 @@ class StockPickingType(models.Model):
     count_mo_waiting = fields.Integer(string="Number of Manufacturing Orders Waiting",
         compute='_get_mo_count')
     count_mo_late = fields.Integer(string="Number of Manufacturing Orders Late",
+        compute='_get_mo_count')
+    count_mo_in_progress = fields.Integer(string="Number of Manufacturing Orders In Progress",
+        compute='_get_mo_count')
+    count_mo_to_close = fields.Integer(string="Number of Manufacturing Orders To Close",
         compute='_get_mo_count')
     use_create_components_lots = fields.Boolean(
         string="Create New Lots/Serial Numbers for Components",
@@ -68,10 +75,13 @@ class StockPickingType(models.Model):
         mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
         remaining = (self - mrp_picking_types)
         remaining.count_mo_waiting = remaining.count_mo_todo = remaining.count_mo_late = False
+        remaining.count_mo_in_progress = remaining.count_mo_to_close = False
         domains = {
             'count_mo_waiting': [('reservation_state', '=', 'waiting')],
-            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'progress', 'to_close')), ('is_planned', '=', True)],
+            'count_mo_todo': [('state', '=', 'confirmed')],
             'count_mo_late': [('date_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
+            'count_mo_in_progress': [('state', '=', 'progress')],
+            'count_mo_to_close': [('state', '=', 'to_close')],
         }
         for key, domain in domains.items():
             data = self.env['mrp.production']._read_group(domain +
@@ -100,7 +110,10 @@ class StockPickingType(models.Model):
             ['picking_type_id'],
             ['date_start' + ':array_agg'],
         )
-        mrp_records = [(r[0], r[1], _('Confirmed')) for r in mrp_records]
+        # Make sure that all picking type IDs are represented, even if empty
+        picking_type_id_to_dates = {i: [] for i in production_picking_types.ids}
+        picking_type_id_to_dates.update({r[0].id: r[1] for r in mrp_records})
+        mrp_records = [(i, d, _('Confirmed')) for i, d in picking_type_id_to_dates.items()]
         return records + mrp_records
 
 class StockPicking(models.Model):
@@ -161,3 +174,22 @@ class StockPicking(models.Model):
 
         production_documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_groupby)
         return {**documents, **production_documents}
+
+    @api.model
+    def get_action_click_graph(self):
+        picking_type_id = self.env.context["picking_type_id"]
+        picking_type_code = self.env["stock.picking.type"].browse(picking_type_id).code
+
+        if picking_type_code == "mrp_operation":
+            action = self._get_action("mrp.action_picking_tree_mrp_operation_graph")
+            action["domain"] = expression.AND([
+                literal_eval(action["domain"] or '[]'), [('picking_type_id', '=', picking_type_id)]
+            ])
+            allowed_company_ids = self.env.context.get("allowed_company_ids", [])
+            if allowed_company_ids:
+                action["context"].update({
+                    "default_company_id": allowed_company_ids[0],
+                })
+            return action
+
+        return super().get_action_click_graph()

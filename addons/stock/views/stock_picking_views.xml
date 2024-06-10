@@ -361,11 +361,17 @@
                     <filter name="delivery" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
                     <filter name="internal" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <separator/>
+                    <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
+                    <filter invisible="1" name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
+                    <filter invisible="1" name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
+                    <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
+                    <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
+                    <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
                         domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
                         domain="['|', ('delay_alert_date', '!=', False), '&amp;', ('scheduled_date','&lt;', time.strftime('%Y-%m-%d %H:%M:%S')), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]"/>
-                    <filter string="Late Availability" name="late" domain="[('products_availability_state', '=', 'late')]"/>
+                    <filter string="Late Availability" name="late_availability" domain="[('products_availability_state', '=', 'late')]"/>
                     <separator/>
                     <filter name="backorder" string="Backorders" domain="[('backorder_id', '!=', False), ('state', 'in', ('assigned', 'waiting', 'confirmed'))]" help="Remaining parts of picking partially processed"/>
                     <separator/>
@@ -501,6 +507,13 @@
             <field name="binding_view_types">list</field>
         </record>
 
+        <record id="click_dashboard_graph" model="ir.actions.server">
+            <field name="name">stock.click_dashboard_graph</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="state">code</field>
+            <field name="code">action = model.get_action_click_graph()</field>
+        </record>
+
         <record id="method_action_picking_tree_incoming" model="ir.actions.server">
             <field name="name">stock.method_action_picking_tree_incoming</field>
             <field name="model_id" ref="stock.model_stock_picking"/>
@@ -546,6 +559,14 @@
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
        </record>
 
+        <record id="action_picking_tree_graph" model="ir.actions.act_window">
+            <field name="name">To Do</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_mode">list,kanban,form,calendar</field>
+            <field name="domain"></field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1, 'search_default_waiting': 1}</field>
+       </record>
+
         <record id="action_picking_tree_waiting" model="ir.actions.act_window">
             <field name="name">Waiting Transfers</field>
             <field name="res_model">stock.picking</field>
@@ -559,7 +580,7 @@
             <field name="res_model">stock.picking</field>
             <field name="view_mode">list,kanban,form,calendar</field>
             <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_planning_issues': 1}</field>
+            <field name="context">{'contact_display': 'partner_address', 'search_default_late': 1}</field>
         </record>
 
         <record id="action_picking_tree_backorder" model="ir.actions.act_window">

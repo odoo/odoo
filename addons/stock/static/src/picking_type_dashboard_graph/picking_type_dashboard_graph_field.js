@@ -1,9 +1,14 @@
 import { cookie } from "@web/core/browser/cookie";
 import { getColor, getCustomColor } from "@web/core/colors/colors";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { JournalDashboardGraphField } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
 
 export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
+    setup() {
+        super.setup();
+        this.actionService = useService("action");
+    }
     getBarChartConfig() {
         // Only bar chart is available for picking types
         const data = [];
@@ -40,6 +45,32 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
                 ],
             },
             options: {
+                onClick: (e) => {
+                    const pickingTypeId = e.chart.config._config.options.pickingTypeId;
+                    // If no picking type ID was provided, than this is sample data
+                    if (!pickingTypeId) {
+                        return;
+                    }
+                    const columnIndex = e.chart.tooltip.dataPoints[0].parsed.x;
+                    const dateCategories = {
+                        0: "before",
+                        1: "yesterday",
+                        2: "today",
+                        3: "day_1",
+                        4: "day_2",
+                        5: "after",
+                    };
+                    const dateCategory = dateCategories[columnIndex];
+                    const additionalContext = {
+                        picking_type_id: pickingTypeId,
+                        search_default_picking_type_id: [pickingTypeId],
+                    };
+                    // Add a filter for the given date category
+                    additionalContext["search_default_".concat(dateCategory)] = true;
+                    this.actionService.doAction("stock.click_dashboard_graph", {
+                        additionalContext: additionalContext
+                    });
+                },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
@@ -56,6 +87,7 @@ export class PickingTypeDashboardGraphField extends JournalDashboardGraphField {
                         display: false,
                     },
                 },
+                pickingTypeId: this.data[0].picking_type_id,
                 maintainAspectRatio: false,
                 elements: {
                     line: {

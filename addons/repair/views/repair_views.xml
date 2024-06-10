@@ -237,8 +237,14 @@
                 <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                 <filter string="Returned" name="returned" domain="[('picking_id', '!=', False), ('picking_id.state', '=', 'done')]"/>
                 <separator/>
-                <filter string="Ready" name="ready" domain="[('state', 'in', ('confirmed', 'under_repair')),('is_parts_available', '=', True)]" invisible="True"/>
-                <filter string="Late" name="filter_late" domain="[('state', 'in', ('confirmed', 'under_repair')), '|', ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d')), ('is_parts_late', '=', True)]"/>
+                <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
+                <filter invisible="1" name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
+                <filter invisible="1" name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
+                <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
+                <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
+                <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
+                <filter string="Ready" name="ready" domain="[('state', '=', 'confirmed'), ('is_parts_available', '=', True)]" invisible="True"/>
+                <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <filter name="filter_create_date" date="create_date"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -325,6 +331,17 @@
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
             <field name="context">{'default_picking_type_id': active_id}</field>
+        </record>
+
+        <record id="action_picking_repair_graph" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_filter_confirmed': 1}</field>
         </record>
 
         <record id="view_repair_tag_form" model="ir.ui.view">

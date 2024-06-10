@@ -175,7 +175,7 @@
         <field name="name">stock.picking.type.kanban</field>
         <field name="model">stock.picking.type</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard o_stock_kanban o_emphasize_colors" create="0" group_create="false" can_open="0">
+            <kanban class="o_kanban_dashboard o_stock_kanban o_emphasize_colors" js_class="stock_dashboard_kanban" create="0" group_create="false" can_open="0">
                 <field name="color"/>
                 <field name="code" readonly="1"/>
                 <field name="count_picking_ready"/>
@@ -256,7 +256,7 @@
                                             <span t-else="">Open</span>
                                         </button>
                                     </div>
-                                    <div class="col-6 o_kanban_primary_right">
+                                    <div class="col-6 o_kanban_primary_right stock-overview-links">
                                         <div t-if="record.count_picking_waiting.raw_value > 0" class="row">
                                             <a class="col-8 offset-4" name="get_action_picking_tree_waiting" type="object">
                                                 <div class="row">
