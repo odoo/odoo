@@ -1,0 +1,45 @@
+.o_location_selector {
+    .o_location_selector_view {
+        // Force tab-pane to be displayed on desktop.
+        @include media-breakpoint-up(md) {
+            opacity: 1;
+        }
+
+        // Remove border-start class for mobile
+        @include media-breakpoint-down(md) {
+            border-left: 0 !important;
+        }
+    }
+
+    .o_location_selector_number {
+        width: 3ch;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_location_selector_details {
+        transform: translateY(-100%);
+    }
+
+    .collapsed i.o_location_selector_hours_caret {
+        transform: rotate(180deg) !important;
+    }
+
+    .o_location_selector_mobile_tab.active {
+        font-weight: $font-weight-bold;
+        --border-color: #{$primary};
+    }
+
+    .modal-footer,
+    .modal.o_modal_full &.modal-content .modal-footer {
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .o_location_selector_schedule {
+        grid-template-columns: auto 1fr;
+    }
+
+    .o_location_selector_schedule_hours {
+        gap: 0 map-get($spacers, 3);
+    }
+}
