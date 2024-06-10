@@ -102,7 +102,7 @@ patch(PosStore.prototype, {
             }
             const couponRules = nomenclatureRules.filter((rule) => rule.type === "coupon");
             const isValidCoupon = couponRules.some((rule) => {
-                let patterns = rule.pattern.split("|");
+                const patterns = rule.pattern.split("|");
                 return patterns.some((pattern) => trimmedCode.startsWith(pattern));
             });
             if (isValidCoupon) {
@@ -288,7 +288,7 @@ patch(PosStore.prototype, {
         // When an order is selected, it doesn't always contain the reward lines.
         // And the list of active programs are not always correct. This is because
         // of the use of DropPrevious in _updateRewards.
-        if (order) {
+        if (order && !order.finalized) {
             order._updateRewards();
         }
         return result;
