@@ -202,7 +202,7 @@ class TestPaymentMethod(PaymentCommon):
         expected_pms_report = {
             self.payment_method: {
                 'available': True,
-                'reason': '',
+                'reason': REPORT_REASONS_MAPPING['manual_capture_not_supported'],
                 'supported_providers': [(self.provider, True)],
             },
             no_provider_pm: {

@@ -87,6 +87,10 @@ class PaymentMethod(models.Model):
              "to customers.",
         context={'active_test': False},
     )
+    support_manual_capture = fields.Boolean(
+        string="Support Manual Capture",
+        help="Indicates whether this payment method supports manual capture",
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -289,7 +293,34 @@ class PaymentMethod(models.Model):
                 reason=REPORT_REASONS_MAPPING['express_checkout_not_supported'],
             )
 
+        # Filter pms that does not support manual capture.
+        providers = self.env['payment.provider'].browse(provider_ids)
+        supported_methods = self._get_supported_methods(payment_methods, providers)
+        for method in supported_methods:
+            payment_utils.add_to_report(
+                report,
+                supported_methods,
+                available=supported_methods[method][1],
+                reason=REPORT_REASONS_MAPPING['manual_capture_not_supported'],
+                filter_provider=True,
+            )
+
         return payment_methods
+
+    def _get_supported_methods(self, payment_methods, provider_ids):
+        record = {}
+        for method in payment_methods:
+            available = True
+            supported_providers = []
+            for provider in provider_ids:
+                if provider in method.provider_ids:
+                    if provider.capture_manually and not method.support_manual_capture:
+                        supported_providers.append((provider, False))
+                        available = False
+                    else:
+                        supported_providers.append((provider, True))
+            record[method] = (supported_providers, available)
+        return record
 
     def _get_from_code(self, code, mapping=None):
         """ Get the payment method corresponding to the given provider-specific code.
