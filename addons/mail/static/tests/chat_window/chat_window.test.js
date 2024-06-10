@@ -1095,7 +1095,9 @@ test("mark as read when opening chat window", async () => {
     await click(".o-mail-NotificationItem", { text: "bob" });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header", { text: "bob" });
     // composer is focused by default, we remove that focus
-    await contains(".o-mail-Composer-input", { setFocus: false });
+    await contains(".o-mail-Composer-input:focus");
+    document.querySelector(".o-mail-Composer-input").blur();
+    await contains(".o-mail-Composer-input:not(:focus");
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
             post_data: {
