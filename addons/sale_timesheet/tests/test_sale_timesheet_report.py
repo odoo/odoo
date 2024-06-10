@@ -1,5 +1,6 @@
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import tagged
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -28,6 +29,7 @@ class TestSaleTimesheetReport(TestCommonSaleTimesheet):
             'product_uom_qty': 3,
             'order_id': sale_order.id,
             'price_unit': 10.0,
+            'tax_id': [Command.set(self.tax_sale_a.ids)],
         })
         sale_order.action_confirm()
         task = self.env['project.task'].search([('sale_line_id', '=', so_line.id)])
