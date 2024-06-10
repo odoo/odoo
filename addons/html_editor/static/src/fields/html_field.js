@@ -1,6 +1,6 @@
 import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
@@ -38,26 +38,19 @@ export class HtmlField extends Component {
     };
 
     setup() {
+        this.codeViewRef = useRef("codeView");
+
         const { model } = this.props.record;
-        const commitChanges = async ({ urgent } = {}) => {
-            if (this.isDirty) {
-                const savePendingImagesPromise = this.editor.shared.savePendingImages();
-                if (urgent) {
-                    await this.updateValue();
-                }
-                const isDirty = await savePendingImagesPromise;
-                if (isDirty) {
-                    await this.updateValue();
-                }
-            }
-        };
-        useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges({ urgent: true }));
-        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => detail.proms.push(commitChanges()));
+        useBus(model.bus, "WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
+        useBus(model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
+            detail.proms.push(this.commitChanges())
+        );
         this.busService = this.env.services.bus_service;
 
         this.isDirty = false;
         this.state = useState({
             key: 0,
+            showCodeView: false,
             containsComplexHTML: computeContainsComplexHTML(
                 this.props.record.data[this.props.name]
             ),
@@ -74,8 +67,12 @@ export class HtmlField extends Component {
         });
     }
 
+    get value() {
+        return this.props.record.data[this.props.name];
+    }
+
     get displayReadonly() {
-        return this.props.readonly || this.sandboxedPreview;
+        return this.props.readonly || (this.sandboxedPreview && !this.state.showCodeView);
     }
 
     get wysiwygKey() {
@@ -88,10 +85,30 @@ export class HtmlField extends Component {
     }
 
     async updateValue() {
-        this.lastValue = this.editor.getContent();
+        this.lastValue = this.state.showCodeView
+            ? this.codeViewRef.el.value
+            : this.editor.getContent();
         await this.props.record.update({ [this.props.name]: this.lastValue });
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
         this.isDirty = false;
+    }
+
+    async commitChanges({ urgent } = {}) {
+        if (this.isDirty) {
+            if (this.state.showCodeView) {
+                await this.updateValue();
+                return;
+            }
+
+            const savePendingImagesPromise = this.editor.shared.savePendingImages();
+            if (urgent) {
+                await this.updateValue();
+            }
+            const isDirty = await savePendingImagesPromise;
+            if (isDirty || !urgent) {
+                await this.updateValue();
+            }
+        }
     }
 
     onEditorLoad(editor) {
@@ -105,6 +122,13 @@ export class HtmlField extends Component {
 
     onBlur() {
         return this.updateValue();
+    }
+
+    async toggleCodeView() {
+        if (this.state.showCodeView) {
+            await this.updateValue();
+        }
+        this.state.showCodeView = !this.state.showCodeView;
     }
 
     getConfig() {

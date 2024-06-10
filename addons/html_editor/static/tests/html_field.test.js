@@ -751,6 +751,10 @@ test("link preview in Link Popover", async () => {
     });
 });
 
+test.todo("media dialog: upload", async function () {
+    throw new Error("To imp");
+});
+
 describe("sandbox", () => {
     const recordWithComplexHTML = {
         id: 1,
@@ -828,8 +832,151 @@ describe("sandbox", () => {
         });
     });
 
-    test.todo("sandboxed preview display and editing", async () => {
-        throw new Error("To imp => showCode");
+    function htmlDocumentTextTemplate(text, color) {
+        return `
+        <html>
+            <head>
+                <style>
+                    body {
+                        color: ${color};
+                    }
+                </style>
+            </head>
+            <body>
+                ${text}
+            </body>
+        </html>
+        `;
+    }
+
+    test("sandboxed preview display and editing", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: htmlDocumentTextTemplate("Hello", "red"),
+            },
+        ];
+        onRpc("partner", "web_save", ({ args }) => {
+            expect(args[1].txt).toBe(htmlDocumentTextTemplate("Hi", "blue"));
+            expect.step("web_save");
+        });
+        await mountView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                                <page string="Body" name="body">
+                                    <field name="txt" widget="html" options="{'sandboxedPreview': true}"/>
+                                </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+        });
+
+        // check original displayed content
+        let iframe = queryOne(
+            '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]'
+        );
+        expect(`.o_form_button_save`).not.toBeVisible();
+        expect(iframe.contentDocument.body).toHaveText("Hello");
+        expect(
+            iframe.contentDocument.head.querySelector("style").textContent.trim().replace(/\s/g, "")
+        ).toBe("body{color:red;}", {
+            message: "Head nodes should remain unaltered in the head",
+        });
+        expect(iframe.contentWindow.getComputedStyle(iframe.contentDocument.body).color).toBe(
+            "rgb(255, 0, 0)"
+        );
+        expect("#codeview-btn-group > button").toHaveCount(1);
+
+        // switch to XML editor and edit
+        await contains("#codeview-btn-group > button").click();
+        expect('.o_field_html[name="txt"] textarea').toHaveCount(1);
+
+        await contains('.o_field_html[name="txt"] textarea').edit(
+            htmlDocumentTextTemplate("Hi", "blue")
+        );
+        expect(`.o_form_button_save`).toBeVisible();
+
+        // check displayed content after edit
+        await contains("#codeview-btn-group > button").click();
+        iframe = queryOne(
+            '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]'
+        );
+        expect(iframe.contentDocument.body).toHaveText("Hi");
+        expect(
+            iframe.contentDocument.head.querySelector("style").textContent.trim().replace(/\s/g, "")
+        ).toBe("body{color:blue;}", {
+            message: "Head nodes should remain unaltered in the head",
+        });
+        expect(iframe.contentWindow.getComputedStyle(iframe.contentDocument.body).color).toBe(
+            "rgb(0, 0, 255)"
+        );
+
+        await contains(".o_form_button_save").click();
+        expect(["web_save"]).toVerifySteps();
+    });
+
+    test("switch page after editing html with code editor", async () => {
+        Partner._records = [
+            {
+                id: 1,
+                txt: htmlDocumentTextTemplate("Hello", "red"),
+            },
+            {
+                id: 2,
+                txt: htmlDocumentTextTemplate("Bye", "green"),
+            },
+        ];
+        onRpc("partner", "web_save", ({ args }) => {
+            expect(args[1].txt).toBe(htmlDocumentTextTemplate("Hi", "blue"));
+            expect.step("web_save");
+        });
+        await mountView({
+            type: "form",
+            resId: 1,
+            resIds: [1, 2],
+            resModel: "partner",
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                                <page string="Body" name="body">
+                                    <field name="txt" widget="html" options="{'sandboxedPreview': true}"/>
+                                </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+        });
+
+        // switch to XML editor and edit
+        await contains("#codeview-btn-group > button").click();
+        expect('.o_field_html[name="txt"] textarea').toHaveValue(
+            htmlDocumentTextTemplate("Hello", "red")
+        );
+
+        await contains('.o_field_html[name="txt"] textarea').edit(
+            htmlDocumentTextTemplate("Hi", "blue")
+        );
+        expect(`.o_form_button_save`).toBeVisible();
+        expect('.o_field_html[name="txt"] textarea').toHaveValue(
+            htmlDocumentTextTemplate("Hi", "blue")
+        );
+
+        await contains(`.o_pager_next`).click();
+        expect(["web_save"]).toVerifySteps();
+        expect(`.o_form_button_save`).not.toBeVisible();
+        expect('.o_field_html[name="txt"] textarea').toHaveValue(
+            htmlDocumentTextTemplate("Bye", "green")
+        );
+
+        await contains(`.o_pager_previous`).click();
+        expect('.o_field_html[name="txt"] textarea').toHaveValue(
+            htmlDocumentTextTemplate("Hi", "blue")
+        );
     });
 
     test("sanboxed preview mode not automatically enabled for regular values", async () => {
