@@ -12,7 +12,7 @@ class Partner(models.Model):
 
     def _compute_employees_count(self):
         for partner in self:
-            partner.employees_count = len(partner.employee_ids.filtered(lambda e: e.company_id in self.env.companies))
+            partner.employees_count = len(partner.sudo().employee_ids.filtered(lambda e: e.company_id in self.env.companies))
 
     def action_open_employees(self):
         self.ensure_one()
