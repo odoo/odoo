@@ -900,63 +900,48 @@ export class PosStore extends Reactive {
                 order.recomputeOrderData();
             }
 
-            const orderToDelete = [];
-            const { localOrders, serializedOrder } = orders.reduce(
-                (acc, curr) => {
-                    acc.localOrders.push(curr);
-                    acc.serializedOrder.push(curr.serialize({ orm: true }));
-                    return acc;
-                },
-                { localOrders: [], serializedOrder: [] }
-            );
+            const serializedOrder = orders.map((order) => order.serialize({ orm: true }));
+            const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
+                context,
+            });
 
-            const data = await this.data.callRelated(
-                "pos.order",
-                "sync_from_ui",
-                [serializedOrder],
-                {
-                    context,
-                }
-            );
+            const modelToAdd = {};
+            const newData = {};
+            for (const [model, records] of Object.entries(data)) {
+                const modelKey = this.data.opts.databaseTable.find((dt) => dt.name === model)?.key;
 
-            const serverOrders = data["pos.order"];
-            for (const localO of localOrders) {
-                const serverO = serverOrders.find((o) => o.uuid === localO.uuid);
-                serverO.uiState = {
-                    ...localO.uiState,
-                    locked: serverO.finalized && typeof serverO.id === "number",
-                };
-                if (serverO && typeof localO.id === "string") {
-                    orderToDelete.push(localO);
+                if (!modelKey) {
+                    modelToAdd[model] = records;
+                    continue;
                 }
+
+                Object.assign(
+                    newData,
+                    this.models.replaceDataByKey(modelKey, { [model]: records })
+                );
             }
 
-            for (const serverO of serverOrders) {
-                if (serverO.state === "draft") {
-                    this.addPendingOrder([serverO.id]);
+            for (const order of [...orders, ...newData["pos.order"]]) {
+                if (!["invoiced", "paid", "done", "cancel"].includes(order.state)) {
+                    this.addPendingOrder([order.id]);
                 } else {
-                    this.removePendingOrder(serverO);
-                }
-
-                for (const line of serverO.lines) {
-                    const refundedOrderLine = line.refunded_orderline_id;
-
-                    if (refundedOrderLine) {
-                        const order = refundedOrderLine.order_id;
-                        delete order.uiState.lineToRefund[refundedOrderLine.uuid];
-                        refundedOrderLine.refunded_qty += Math.abs(line.qty);
-                    }
+                    this.removePendingOrder(order);
                 }
             }
 
-            for (const orderToDel of orderToDelete) {
-                this.removePendingOrder(orderToDel);
-                // We can force the delete because at this point we have serverO
-                this.data.localDeleteCascade(orderToDel, true);
+            for (const line of newData["pos.order.line"]) {
+                const refundedOrderLine = line.refunded_orderline_id;
+
+                if (refundedOrderLine) {
+                    const order = refundedOrderLine.order_id;
+                    delete order.uiState.lineToRefund[refundedOrderLine.uuid];
+                    refundedOrderLine.refunded_qty += Math.abs(line.qty);
+                }
             }
 
-            this.postSyncAllOrders(serverOrders);
-            return serverOrders;
+            this.models.loadData(modelToAdd);
+            this.postSyncAllOrders(newData["pos.order"]);
+            return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
                 throw error;

@@ -549,16 +549,17 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             }
         }
 
+        orderedRecords[model] = orderedRecords[model].filter((rec) => rec.id !== record.id);
+        delete records[model][id];
+
         for (const key of indexes[model] || []) {
             const keyVal = record[key];
             const finds = orderedRecords[model].find((rec) => rec[key] === keyVal);
 
-            if (finds === -1) {
+            if (!finds) {
                 delete indexedRecords[model][key][keyVal];
             }
         }
-        orderedRecords[model] = orderedRecords[model].filter((rec) => rec.id !== record.id);
-        delete records[model][id];
         models[model].triggerEvents("delete", id);
     }
 
@@ -752,6 +753,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
     const models = mapObj(processedModelDefs, (model, fields) => createCRUD(model, fields));
 
     function replaceDataByKey(key, rawData) {
+        const newRecords = {};
         for (const model in rawData) {
             const uiState = {};
             const rawDataIdx = rawData[model].map((r) => r[key]);
@@ -773,7 +775,15 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
                     record.uiState = uiState[record[key]];
                 }
             }
+
+            if (!newRecords[model]) {
+                newRecords[model] = [];
+            }
+
+            newRecords[model].push(...newRec[model]);
         }
+
+        return newRecords;
     }
 
     /**
