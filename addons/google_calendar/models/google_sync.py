@@ -10,7 +10,7 @@ from dateutil.parser import parse
 from markupsafe import Markup
 
 from odoo import api, fields, models, registry, _
-from odoo.tools import ormcache_context, email_normalize
+from odoo.tools import ormcache, email_normalize
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -64,7 +64,9 @@ class GoogleSync(models.AbstractModel):
     def write(self, vals):
         google_service = GoogleCalendarService(self.env['google.service'])
         if 'google_id' in vals:
-            self.env.registry.clear_cache()  # _event_ids_from_google_ids
+            for record in self:
+                if record.google_id != vals.get('google_id'):
+                    self.env.registry.clear_cache() # _event_ids_from_google_ids
         synced_fields = self._get_google_synced_fields()
         if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
@@ -116,9 +118,9 @@ class GoogleSync(models.AbstractModel):
         return self.browse(self._event_ids_from_google_ids(google_ids))
 
     @api.model
-    @ormcache_context('google_ids', keys=('active_test',))
+    @ormcache('google_ids')
     def _event_ids_from_google_ids(self, google_ids):
-        return self.search([('google_id', 'in', google_ids)]).ids
+        return self.with_context(active_test=False).search([('google_id', 'in', google_ids)]).ids
 
     def _sync_odoo2google(self, google_service: GoogleCalendarService):
         if not self:

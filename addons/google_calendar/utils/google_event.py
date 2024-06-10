@@ -108,7 +108,7 @@ class GoogleEvent(abc.Set):
                 e._events[e.id]['_odoo_id'] = odoo_id
 
     def _load_odoo_ids_from_db(self, env, model):
-        odoo_events = model.with_context(active_test=False)._from_google_ids(self.ids)
+        odoo_events = model._from_google_ids(self.ids)
         mapping = {e.google_id: e.id for e in odoo_events}  # {google_id: odoo_id}
         existing_google_ids = odoo_events.mapped('google_id')
         for e in self:

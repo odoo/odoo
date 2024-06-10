@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import pytz
 import werkzeug
 from werkzeug.urls import url_encode
 
@@ -145,6 +146,9 @@ class AuthSignupHome(Home):
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
             values['lang'] = lang
+        tz = request.httprequest.cookies.get('tz')
+        if tz in pytz.all_timezones:
+            values['tz'] = tz
         return values
 
     def do_signup(self, qcontext):

@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import odoo
 from odoo import http
+from odoo.tests import HttpCase, tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 from odoo.exceptions import AccessError
 
@@ -64,3 +65,18 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         with self.assertRaises(AccessError):
             partner.with_user(user.id).signup_url
+
+@tagged('post_install', '-at_install')
+class TestAuthSignupCache(HttpCase):
+    def test_signup_no_clear_cache(self):
+        values = {
+            'login': 'some_login',
+            'password': 'password',
+            'name': "some_name",
+        }
+        def patched_clear_cache(*cache_names):
+            raise AssertionError("clear_cache should not be called")
+
+        with patch.object(self.env.registry, 'clear_cache', patched_clear_cache):
+            login, password = self.env['res.users'].sudo().signup(values)
+            self.env['res.users'].authenticate(self.env.cr.dbname, login, password, {'interactive': False})
