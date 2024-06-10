@@ -77,9 +77,10 @@
                                     <button t-att-disabled="!state.active" class="o-mail-Composer-attachFiles btn border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"><i class="fa fa-paperclip"/></button>
                                 </t>
                             </FileUploader>
+                            <button t-if="env.inChatWindow and thread and thread.model !== 'discuss.channel'" class="btn border-0 rounded-pill" aria-label="Log Note/Send Message" t-on-click="onClickToggleNote" t-att-class="{'text-success': !this.state.isNote}"><i t-att-class="{'fa-envelope': !this.state.isNote, 'fa-envelope-o': this.state.isNote}" class="fa"/></button>
                             <t t-if="extended and ui.isSmall and props.composer.message" t-call="mail.Composer.sendButton"/>
+                            <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer" data-hotkey="shift+c"><i class="fa fa-expand"/></button>
                         </div>
-                        <button t-if="props.showFullComposer and thread and thread.model !== 'discuss.channel'" class="o-mail-Composer-fullComposer btn fa fa-expand px-4 py-2 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer" data-hotkey="shift+c"/>
                     </div>
                     <t t-if="!extended" t-call="mail.Composer.sendButton"/>
                 </div>
