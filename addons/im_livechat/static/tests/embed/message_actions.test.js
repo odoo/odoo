@@ -1,3 +1,5 @@
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
+
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
@@ -22,14 +24,17 @@ test("Only two quick actions are shown", async () => {
     // "Add a reaction" and "View reactions".
     await startServer();
     await loadDefaultEmbedConfig();
-    await start({ authenticateAs: false });
+    const env = await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await insertText(".o-mail-Composer-input", "Hello World!");
     triggerHotkey("Enter");
+    // message data from post contains no reaction, wait now to avoid overriding newer value later
+    await waitNotifications([env, "discuss.channel/new_message"]);
     await click("[title='Add a Reaction']");
     await click(".o-Emoji", { text: "😅" });
+    await contains(".o-mail-MessageReaction", { text: "😅" });
     await contains(".o-mail-Message-actions i", { count: 3 });
     await contains("[title='Add a Reaction']");
     await contains("[title='Reply']");
