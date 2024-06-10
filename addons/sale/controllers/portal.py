@@ -313,6 +313,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
         if order_sudo._has_to_be_signed() and decline_message:
             order_sudo._action_cancel()
+            # The currency is manually cached while in a sudoed environment to prevent an
+            # AccessError. The state of the Sales Order is a dependency of
+            # `untaxed_amount_to_invoice`, which is a monetary field. They require the currency to
+            # ensure the values are saved in the correct format. However, the currency cannot be
+            # read directly during the flush due to access rights, necessitating manual caching.
+            order_sudo.order_line.currency_id
+
             _message_post_helper(
                 'sale.order',
                 order_sudo.id,
