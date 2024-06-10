@@ -21,6 +21,8 @@ class PickingType(models.Model):
         string="Number of Repair Orders Under Repair", compute='_compute_count_repair')
     count_repair_ready = fields.Integer(
         string="Number of Repair Orders to Process", compute='_compute_count_repair')
+    count_repair_late = fields.Integer(
+        string="Number of Late Repair Orders", compute='_compute_count_repair')
 
     default_remove_location_dest_id = fields.Many2one(
         'stock.location', 'Default Remove Destination Location', compute='_compute_default_remove_location_dest_id',
@@ -45,6 +47,7 @@ class PickingType(models.Model):
         self.count_repair_ready = False
         self.count_repair_confirmed = False
         self.count_repair_under_repair = False
+        self.count_repair_late = False
 
         # shortcut
         if not repair_picking_types:
@@ -59,10 +62,24 @@ class PickingType(models.Model):
             aggregates=['id:count']
         )
 
+        late_repairs = self.env['repair.order']._read_group(
+            [
+                ('picking_type_id', 'in', repair_picking_types.ids),
+                ('state', '=', 'confirmed'),
+                '|',
+                ('schedule_date', '<', fields.Date.today()),
+                ('is_parts_late', '=', True),
+            ],
+            groupby=['picking_type_id'],
+            aggregates=['__count']
+        )
+        late_repairs = {pt.id: late_count for pt, late_count in late_repairs}
+
         counts = {}
         for pt in picking_types:
             pt_count = counts.setdefault(pt[0].id, {})
-            if pt[1]:
+            # Only confirmed repairs (not "under repair" ones) are considered as ready
+            if pt[1] and pt[2] == 'confirmed':
                 pt_count.setdefault('ready', 0)
                 pt_count['ready'] += pt[3]
             pt_count.setdefault(pt[2], 0)
@@ -74,6 +91,7 @@ class PickingType(models.Model):
             pt.count_repair_ready = counts[pt.id].get('ready')
             pt.count_repair_confirmed = counts[pt.id].get('confirmed')
             pt.count_repair_under_repair = counts[pt.id].get('under_repair')
+            pt.count_repair_late = late_repairs.get(pt.id, 0)
 
     @api.depends('return_type_of_ids', 'code')
     def _compute_is_repairable(self):
@@ -143,7 +161,10 @@ class PickingType(models.Model):
             ['picking_type_id'],
             ['schedule_date' + ':array_agg'],
         )
-        repair_records = [(r[0], r[1], _('Confirmed')) for r in repair_records]
+        # Make sure that all picking type IDs are represented, even if empty
+        picking_type_id_to_dates = {i: [] for i in repair_picking_types.ids}
+        picking_type_id_to_dates.update({r[0].id: r[1] for r in repair_records})
+        repair_records = [(i, d, _('Confirmed')) for i, d in picking_type_id_to_dates.items()]
         return records + repair_records
 
 
@@ -200,3 +221,20 @@ class Picking(models.Model):
                     'domain': [('id', 'in', self.repair_ids.ids)],
                 })
             return action
+
+    @api.model
+    def get_action_click_graph(self):
+        picking_type_code = self.env["stock.picking.type"].browse(
+            self.env.context["picking_type_id"]
+        ).code
+
+        if picking_type_code == "repair_operation":
+            action = self._get_action("repair.action_picking_repair_graph")
+            if self:
+                action["context"].update({
+                    "default_picking_type_id": self.picking_type_id,
+                    "picking_type_id": self.picking_type_id,
+                })
+            return action
+
+        return super().get_action_click_graph()

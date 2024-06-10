@@ -664,9 +664,16 @@
                     <filter string="In Progress" name="filter_in_progress" domain="[('state', '=', 'progress')]"/>
                     <filter string="To Close" name="filter_to_close" domain="[('state', '=', 'to_close')]"/>
                     <separator/>
-                    <filter string="MO Pending" name="waiting" domain="[('reservation_state', 'in', ('waiting', 'confirmed'))]"/>
+                    <filter string="MO Pending" name="waiting" domain="[('reservation_state', '=', 'waiting')]"/>
                     <filter string="MO Ready" name="filter_ready" domain="[('reservation_state', '=', 'assigned')]"/>
                     <separator/>
+                    <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
+                    <filter invisible="1" name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
+                    <filter invisible="1" name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
+                    <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
+                    <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
+                    <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
+                    <filter string="Late" name="filter_late_mo" help="Late" domain="[('date_start', '&lt;', context_today()), ('state', '=', 'confirmed')]"/>
                     <filter string="Delayed Productions" name="planning_issues" help="Late MO or Late delivery of components"
                         domain="['|', ('delay_alert_date', '!=', False), ('is_delayed', '=', True)]"/>
                     <filter string="Components Available" name="available" domain="[('components_availability_state', '=', 'available')]"/>

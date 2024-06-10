@@ -262,6 +262,16 @@ class MrpProduction(models.Model):
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
     is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
     is_delayed = fields.Boolean(compute='_compute_is_delayed', search='_search_is_delayed')
+    search_date_category = fields.Selection([
+        ('before', 'Before'),
+        ('yesterday', 'Yesterday'),
+        ('today', 'Today'),
+        ('day_1', 'Tomorrow'),
+        ('day_2', 'The day after tomorrow'),
+        ('after', 'After')],
+        string='Date Category', store=False,
+        search='_search_date_category', readonly=True
+    )
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -793,6 +803,14 @@ class MrpProduction(models.Model):
                 record.state in ['confirmed', 'progress', 'to_close'] and (
                     record.date_deadline and (record.date_deadline < datetime.datetime.now() or record.date_deadline < record.date_finished))
             )
+
+    def _search_date_category(self, operator, value):
+        if operator != '=':
+            raise NotImplementedError(_('Operation not supported'))
+        search_domain = self.env['stock.picking'].date_category_to_domain(value)
+        return expression.AND([
+            [('date_start', operator, value)] for operator, value in search_domain
+        ])
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):

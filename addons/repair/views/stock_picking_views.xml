@@ -116,7 +116,15 @@
                                     </span>
                                 </button>
                             </div>
-                            <div class="col-6 o_kanban_primary_right">
+                            <div class="col-6 o_kanban_primary_right stock-overview-links">
+                                <div t-if="record.count_repair_late.raw_value > 0" class="row">
+                                    <a class="col-8 offset-4" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_late': 1}" type="object">
+                                        <div class="row">
+                                            <span class="col-6">Late</span>
+                                            <field class="col-2 text-end" name="count_repair_late"/>
+                                        </div>
+                                    </a>
+                                </div>
                                 <div t-if="record.count_repair_confirmed.raw_value > 0" class="row">
                                     <a class="col-8 offset-4" name="get_repair_stock_picking_action_picking_type" context="{'search_default_filter_confirmed': 1}" type="object">
                                         <div class="row">
