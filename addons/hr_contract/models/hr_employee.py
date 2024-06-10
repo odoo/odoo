@@ -1,8 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
+from datetime import date, datetime, time
+from pytz import timezone
+
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.addons.resource.models.utils import Intervals
 
 
 class Employee(models.Model):
@@ -112,6 +115,35 @@ class Employee(models.Model):
         Returns the contracts of all employees between date_from and date_to
         """
         return self.search(['|', ('active', '=', True), ('active', '=', False)])._get_contracts(date_from, date_to, states=states)
+
+    def _get_expected_attendances(self, date_from, date_to, domain=None, lunch=False):
+        self.ensure_one()
+        valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
+        if not valid_contracts:
+            return super()._get_expected_attendances(date_from, date_to, domain, lunch)
+        employee_tz = timezone(self.tz) if self.tz else None
+        duration_data = Intervals()
+        for contract in valid_contracts:
+            contract_start = datetime.combine(contract.date_start, time.min, employee_tz)
+            contract_end = datetime.combine(contract.date_end or date.max, time.max, employee_tz)
+            calendar = contract.resource_calendar_id or contract.company_id.resource_calendar_id
+            if not lunch:
+                contract_intervals = calendar._work_intervals_batch(
+                                        max(date_from, contract_start),
+                                        min(date_to, contract_end),
+                                        tz=employee_tz,
+                                        domain=domain,
+                                        compute_leaves=True,
+                                        resources=self.resource_id)[self.resource_id.id]
+                duration_data = duration_data | contract_intervals
+            else:
+                lunch_intervals = calendar._attendance_intervals_batch(
+                    max(date_from, contract_start),
+                    min(date_to, contract_end),
+                    resources=self.resource_id,
+                    lunch=True)[self.resource_id.id]
+                duration_data = duration_data | lunch_intervals
+        return duration_data
 
     def write(self, vals):
         res = super().write(vals)
