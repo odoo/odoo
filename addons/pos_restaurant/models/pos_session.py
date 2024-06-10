@@ -66,16 +66,16 @@ class PosSession(models.Model):
     @api.model
     def _load_onboarding_data(self):
         super()._load_onboarding_data()
-        convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding.xml', None, mode='init', kind='data')
+        convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding.xml', None, mode='init', noupdate=True, kind='data')
         restaurant_config = self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False)
         if restaurant_config:
-            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_main_config.xml', None, mode='init', kind='data')
+            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_main_config.xml', None, mode='init', noupdate=True, kind='data')
             if len(restaurant_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
                 self.env['pos.session'].create({
                     'config_id': restaurant_config.id,
                     'user_id': self.env.ref('base.user_admin').id,
                 })
-            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_open_session.xml', None, mode='init', kind='data')
+            convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding_open_session.xml', None, mode='init', noupdate=True, kind='data')
 
     def _after_load_onboarding_data(self):
         super()._after_load_onboarding_data()
