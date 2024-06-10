@@ -6,7 +6,7 @@ class Apoderado(models.Model):
 
     codigo = fields.Integer()
     ci = fields.Integer()
-    nombre = fields.Text()
+    name = fields.Char(string="Nombre")
     fecha_nacimiento = fields.Date()
     ocupacion = fields.Text()
     domicilio = fields.Text()

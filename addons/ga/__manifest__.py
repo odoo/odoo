@@ -11,7 +11,8 @@
     'depends': ['base', 'hr'],
     'data': [
         'security/ir.model.access.csv',
-        'views/ga_menu.xml',
+        'views/ga_inscripcion_views.xml',
+       
     ],
     'installable': True,
     'auto_install': False,

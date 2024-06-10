@@ -6,7 +6,7 @@ class Alumno(models.Model):
 
     codigo = fields.Integer()
     ci = fields.Integer()
-    nombre = fields.Text()
+    name = fields.Char(string="Nombre")
     fecha_nacimiento = fields.Date()
     genero = fields.Text()
     nacionalidad = fields.Text()
