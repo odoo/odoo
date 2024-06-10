@@ -61,6 +61,33 @@ test.tags("desktop")("basic rendering 2", async () => {
     expect(".o_popover").toHaveCount(0);
 });
 
+test.tags("desktop")("tab navigation and Enter key", async () => {
+    class MyComponent extends Component {
+        static props = ["*"];
+        static template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+
+    const button = queryOne(".mybtn");
+    button.focus();
+    expect(document.activeElement).toBe(button);
+
+    expect(".o_popover").toHaveCount(0);
+    const enterEvent = new KeyboardEvent("keydown", { key: "Enter", bubbles: true });
+    button.dispatchEvent(enterEvent);
+
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("hello");
+
+    const tabEvent = new KeyboardEvent("keydown", { key: "Tab", bubbles: true });
+    button.dispatchEvent(tabEvent);
+
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+});
+
 test.tags("desktop")("remove element with opened tooltip", async () => {
     let compState;
     class MyComponent extends Component {

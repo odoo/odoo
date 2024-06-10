@@ -167,6 +167,17 @@ export const tooltipService = {
                 cleanup();
             }
         }
+        function onKeydown(ev){
+            if (ev.key === 'Enter') {
+                let focusedElement = document.activeElement;
+                if (focusedElement && (focusedElement.matches("[data-tooltip], [data-tooltip-template]"))) {
+                    openElementsTooltip(ev.target);
+                }
+            }
+            else {
+                cleanup();
+            }
+        }
         /**
          * Checks whether there is a tooltip registered on the event target, and
          * if there is, creates a timeout to open the corresponding tooltip
@@ -211,6 +222,7 @@ export const tooltipService = {
             document.body.addEventListener("mouseenter", onMouseenter, { capture: true });
             // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
             document.body.addEventListener("mouseleave", onMouseleave, { capture: true });
+            document.body.addEventListener("keydown", onKeydown, { capture:true });
         });
 
         return {
