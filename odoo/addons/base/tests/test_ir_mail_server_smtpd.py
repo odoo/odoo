@@ -3,16 +3,19 @@ import logging
 import smtplib
 import socket
 import ssl
+import textwrap
 import unittest
 import warnings
-from base64 import b64encode
+from base64 import b64decode, b64encode
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 from socket import getaddrinfo  # keep a reference on the non-patched function
 
-from odoo import modules
+from odoo import Command, modules
 from odoo.exceptions import UserError
-from odoo.tools import config, file_path, mute_logger
+from odoo.tools import file_path, mute_logger
+from odoo.tools.misc import SENTINEL
 from .common import TransactionCaseWithUserDemo
 
 try:
@@ -59,8 +62,9 @@ def _smtp_authenticate(server, session, enveloppe, mechanism, data):
 
 
 class Certificate:
-    def __init__(self, key, cert):
+    def __init__(self, key, pubkey, cert):
         self.key = key and Path(file_path(key, filter_ext='.pem'))
+        self.pubkey = Path(file_path(pubkey, filter_ext='.pem'))
         self.cert = Path(file_path(cert, filter_ext='.pem'))
 
     def __repr__(self):
@@ -109,12 +113,17 @@ class Mixin:
         # Get various TLS keys and certificates. CA was used to sign
         # both client and server. self_signed is... self signed.
         cls.ssl_ca, cls.ssl_client, cls.ssl_server, cls.ssl_self_signed = [
-            Certificate(None, 'base/tests/ssl/ca.cert.pem'),
+            Certificate(None,
+                        'base/tests/ssl/ca.pub.pem',
+                        'base/tests/ssl/ca.cert.pem'),
             Certificate('base/tests/ssl/client.key.pem',
+                        'base/tests/ssl/client.pub.pem',
                         'base/tests/ssl/client.cert.pem'),
             Certificate('base/tests/ssl/server.key.pem',
+                        'base/tests/ssl/server.pub.pem',
                         'base/tests/ssl/server.cert.pem'),
             Certificate('base/tests/ssl/self_signed.key.pem',
+                        'base/tests/ssl/self_signed.pub.pem',
                         'base/tests/ssl/self_signed.cert.pem'),
         ]
 
@@ -196,7 +205,6 @@ class Mixin:
         :param auth_required: whether the server enforces password
             authentication or not.
         """
-        encryption = encryption.removesuffix('_strict')
         assert encryption in ('none', 'ssl', 'starttls')
         assert encryption == 'none' or ssl_context
 
@@ -261,7 +269,12 @@ class Mixin:
             ('certificate', "valid client", self.ssl_client.cert, self.ssl_client.key, None),
         ]
 
-        for encryption in ('starttls', 'ssl'):
+        for encryption, check in [
+            ('starttls', True),
+            ('starttls', False),
+            ('ssl', True),
+            ('ssl', False)
+        ]:
             with self.start_smtpd(encryption, ssl_context, auth_required=False):
                 for authentication, name, certificate, private_key, error_pattern in matrix:
                     with self.subTest(encryption=encryption, certificate=name):
@@ -270,6 +283,7 @@ class Mixin:
                             'smtp_authentication': authentication,
                             'smtp_ssl_certificate': certificate,
                             'smtp_ssl_private_key': private_key,
+                            'smtp_ssl_check_certificate': check,
                         })
                         if error_pattern:
                             with self.assertRaises(UserError) as error_capture:
@@ -310,12 +324,13 @@ class Mixin:
             (True, PASSWORD, None),
         ]
 
-        for encryption in ('none', 'starttls', 'starttls_strict', 'ssl', 'ssl_strict'):
+        for encryption, check_cert in (('none', False), ('starttls', False), ('starttls', True), ('ssl', False), ('ssl', True)):
             for auth_required, password, error_pattern in matrix:
                 self.mail_server_write({
                     'smtp_encryption': encryption,
                     'smtp_user': password and self.user_demo.email,
                     'smtp_pass': password,
+                    'smtp_ssl_check_certificate': check_cert,
                 })
                 with self.subTest(encryption=encryption,
                                   auth_required=auth_required,
@@ -426,7 +441,8 @@ class Mixin:
                 self.mail_server_write({
                     'smtp_host': hostname,
                     'smtp_authentication': authentication,
-                    'smtp_encryption': encryption + ('_strict' if strict else ''),
+                    'smtp_encryption': encryption,
+                    'smtp_ssl_check_certificate': strict,
                     **({
                         'smtp_user': self.user_demo.email,
                         'smtp_pass': PASSWORD,
@@ -440,7 +456,8 @@ class Mixin:
                     })
                 })
                 with self.subTest(
-                    encryption=encryption + ('_strict' if strict else ''),
+                    encryption=encryption,
+                    check_cert=strict,
                     authentication=authentication,
                     cert_good=certificate == cert_good,
                     host_good=hostname == host_good,
@@ -473,6 +490,114 @@ class TestIrMailServerSMTPD(Mixin, TransactionCaseWithUserDemo):
             values['smtp_ssl_private_key'] = b64encode(key.read_bytes())
         self.mail_server.write(values)
 
+    @mute_logger('mail.log')
+    def test_download_remote_certificate(self):
+        """
+        Add a security exception for a mail server that is using an
+        invalid certificate.
+        """
+        # The remote mail server is using an untrusted certificate
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(self.ssl_self_signed.cert, self.ssl_self_signed.key)
+
+        for encryption in ('ssl', 'starttls'):
+            with (self.subTest(encryption=encryption),
+                  self.start_smtpd(encryption, context, auth_required=False)):
+                self.mail_server.write({
+                    'smtp_authentication': 'login',
+                    'smtp_user': '',
+                    'smtp_pass': '',
+                    'smtp_encryption': encryption,
+                    'smtp_ssl_check_certificate': True,
+                    'smtp_ssl_trusted_public_keys': [Command.clear()],
+                })
+
+                # Connection must be rejected
+                with self.assertRaises(UserError) as error_capture:
+                    self.mail_server.test_smtp_connection()
+                self.assertIn("certificate verify failed", error_capture.exception.args[0])
+
+                # Download the certificate of the remote mail server
+                x509 = self.env['base.x509.wizard'].create({
+                    'mail_server_id': self.mail_server.id,
+                })
+                action = x509.download()
+                self.assertEqual(action['res_id'], x509.id)
+
+                # Check the information extracted from the certificate,
+                # and public key, you access them running:
+                #   openssl x509 -text -in odoo/addons/base/tests/ssl/self_signed.cert.pem
+                #   openssl rsa -text -pubin -in odoo/addons/base/tests/ssl/self_signed.pub.pem
+                self.assertEqual(b64decode(x509.certificate_pem),
+                                 self.ssl_self_signed.cert.read_bytes())
+                self.assertEqual(b64decode(x509.public_key_pem),
+                                 self.ssl_self_signed.pubkey.read_bytes())
+                self.assertEqual(x509.subject, "CN=SelfSigned Lmtd")
+                self.assertEqual(x509.subject_alternative_names, "")
+                self.assertEqual(x509.issuer, "CN=SelfSigned Lmtd")
+                self.assertEqual(x509.not_valid_before, datetime(2024, 4, 22, 15, 14, 57))
+                self.assertEqual(x509.not_valid_after, datetime(3023, 8, 24, 15, 14, 57))
+                self.assertEqual(x509.signature, textwrap.dedent("""\
+                    c0:0c:02:82:63:85:83:85:52:67:45:ec:8f:d9:f7:3f:13:f3:
+                    76:59:ad:bd:04:27:51:f4:b6:71:4b:6b:0d:77:98:32:42:76:
+                    49:14:72:ea:bb:54:7e:b4:c0:02:b5:71:b8:ab:50:04:b8:dd:
+                    32:9f:b8:6c:a8:27:f2:de:14:07:e6:61:4b:a9:0c:cd:aa:85:
+                    85:e8:70:d0:af:66:fb:91:fc:3f:13:54:b7:6c:7f:ca:fb:a2:
+                    9b:bb:97:c4:61:64:59:36:8e:53:8b:ad:a6:10:78:52:4b:6b:
+                    41:c3:4a:a6:37:da:5c:79:3f:d9:16:16:29:7b:8e:11:43:3b:
+                    b1:11:c9:0e:5c:1a:71:83:52:7c:34:0a:af:92:77:ef:97:d9:
+                    ee:df:50:bc:61:ef:7c:5e:5b:07:0c:6c:ff:a9:4b:e6:20:fa:
+                    97:0a:69:a0:db:a3:5c:4f:f3:44:db:a0:3b:ea:d8:1e:81:40:
+                    e8:53:f2:b8:58:53:ab:e5:cc:87:70:87:da:61:61:60:db:f4:
+                    8a:ba:4b:9d:42:57:70:53:dd:99:bc:93:92:c1:8b:e7:dc:c2:
+                    a2:c6:0f:d8:64:62:be:d0:cc:33:32:6e:1c:f9:92:ad:b4:bd:
+                    4f:c2:e6:f8:1a:df:59:68:5a:f3:ac:cd:6d:d8:d4:53:80:c8:
+                    8a:53:69:50"""))
+
+                # Add the public key to the trusted ones, check it is
+                # the right public key that was added.
+                x509.save()
+                [pubkey] = self.mail_server.smtp_ssl_trusted_public_keys
+                self.assertEqual(pubkey.raw, self.ssl_self_signed.pubkey.read_bytes())
+                self.assertEqual(pubkey.name, "SelfSigned Lmtd.pub.pem")
+                self.assertEqual(pubkey.mimetype, "application/x-pem-file")
+                self.assertEqual(pubkey.description, textwrap.dedent("""\
+                    This public key was extracted from the following certificate.
+
+                    Subject: CN=SelfSigned Lmtd
+                    Subject alternative names: 
+                    Issuer: CN=SelfSigned Lmtd
+                    Not valid before: Apr 22, 2024, 5:14:57 PM
+                    Not valid after: Aug 24, 3023, 4:14:57 PM
+                    Signature:
+                    %s
+                    """) % x509.signature)  # noqa: W291
+
+                # Attempt to connect again, this time it must work.
+                self.mail_server.test_smtp_connection()
+
+    def test_download_remote_certificate_failure(self):
+        """
+        Prevent users from downloading/installing the certificate of a
+        remote mail server when it is possible to connect to that server
+        already.
+        """
+
+        self.mail_server.write({
+            'smtp_encryption': 'none',
+            'smtp_authentication': 'login',
+            'smtp_user': '',
+            'smtp_pass': '',
+        })
+        with self.start_smtpd('none', auth_required=False):
+            with self.assertRaises(UserError) as error_capture:
+                self.env['base.x509.wizard'].create({
+                    'mail_server_id': self.mail_server.id
+                }).download()
+        self.assertEqual(error_capture.exception.args[0],
+            "The connection can be established already. "
+            "Certificate importation cancelled.")
+
 
 IR_TO_CLI = {
     'smtp_host': 'smtp_server',
@@ -493,11 +618,12 @@ class TestCliMailServerSMTPD(Mixin, TransactionCaseWithUserDemo):
         self.mail_server.smtp_authentication = 'cli'
 
     def mail_server_write(self, values):
-        sentinel = object()
         for ir, cli in IR_TO_CLI.items():
-            value = values.pop(ir, sentinel)
-            if value is not sentinel:
+            value = values.pop(ir, SENTINEL)
+            if value is not SENTINEL:
                 values[cli] = str(value)
         values.pop('smtp_authentication', None)
+        if values.pop('smtp_ssl_check_certificate', None):
+            values['smtp_ssl'] += '_strict'
         self.assertFalse(set(values) - set(DEFAULT_SMTP_CONFIG))
         self.config.update(values)

@@ -810,3 +810,19 @@ class IrAttachment(models.Model):
             self.check("read")
             return True
         return super()._can_return_content(field_name, access_token)
+
+    def action_x509_extract_public_key(self):
+        wizard = self.env['base.x509.wizard'].create({})
+        return {
+            'name': _("Security Exception - Add a trusted public key"),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_model': wizard._name,
+            'res_id': wizard.id,
+            'views': [(False, 'form')],
+        }
+
+    def action_x509_download_public_key(self):
+        wizard = self.env['base.x509.wizard'].create({})
+        action = wizard.download()
+        return action

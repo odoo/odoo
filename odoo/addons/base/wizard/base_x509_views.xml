@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="base_x509_wizard_form">
+        <field name="model">base.x509.wizard</field>
+        <field name="arch" type="xml">
+            <form string="SSL/TLS Certificate Wizard">
+                <sheet>
+                    <group>
+                        <field name="certificate_pem"/>
+                    </group>
+                    <p invisible="not certificate_pem">The following public key is going to be installed.</p>
+                    <group invisible="not certificate_pem">
+                        <field name="public_key_pem"/>
+                    </group>
+                    <p invisible="not certificate_pem">
+                        The following information have been extracted from the certificate.
+                        You <strong>MUST</strong> verify they match with the actual
+                        certificate installed on the server. On a Linux server with
+                        <a target="_new" href="https://www.openssl.org/">openssl</a>, run
+                        <code>openssl x509 -text -noout -in path/to/certificate.pem</code> .
+                        On a Windows server, find the certificate in the file explorer and
+                        open it using the default certificate viewer.
+                    </p>
+                    <group invisible="not certificate_pem">
+                        <field name="subject"/>
+                        <field name="subject_alternative_names"/>
+                        <field name="issuer"/>
+                        <field name="not_valid_before"/>
+                        <field name="not_valid_after"/>
+                        <field name="signature" widget="code"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" type="object" name="save" class="btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
