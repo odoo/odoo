@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
-
+import { _t } from "@web/core/l10n/translation";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 const cogMenuRegistry = registry.category("cogMenu");
@@ -72,5 +72,9 @@ export class CogMenu extends ActionMenus {
             }
             return (item1.sequence || 0) - (item2.sequence || 0);
         });
+    }
+
+    getPrintItemAriaLabel(item) {
+        return _t("Print report: %s", item.description);
     }
 }

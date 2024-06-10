@@ -114,6 +114,7 @@
                                     t-attf-class="o_{{view.type}} {{view.active ? 'active' : ''}}"
                                     t-att-data-tooltip="view.name"
                                     t-on-click="() => this.switchView(view.type)"
+                                    t-att-aria-label="view.name + ' View'"
                                 >
                                     <i t-att-class="view.icon" />
                                 </button>

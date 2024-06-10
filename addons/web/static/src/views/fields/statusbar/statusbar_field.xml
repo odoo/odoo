@@ -40,7 +40,7 @@
                     }"
                     t-att-disabled="props.isDisabled || item.isSelected"
                     role="radio"
-                    t-att-aria-label="getItemTooltip(item)"
+                    t-att-aria-label="getItemAriaLabel(item)"
                     t-att-aria-checked="item.isSelected.toString()"
                     t-att-aria-current="item.isSelected and 'step'"
                     t-att-data-value="item.value"
