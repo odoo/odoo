@@ -2132,17 +2132,17 @@
                     <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
                 <div t-if="separate_billing_address and order._has_deliverable_products()" groups="account.group_delivery_invoice_address">
-                    <t t-if="not order.pickup_location_data">
+                    <t t-if="order.pickup_location_data">
+                        <b>Deliver to pickup point: </b>
+                        <t t-out="order.pickup_location_data.get('name', '') + ', ' + order.pickup_location_data.get('street', '') + ' ' + order.pickup_location_data.get('zip_code', '') + ' ' + order.pickup_location_data.get('city','')"/>
+                    </t>
+                    <t t-else="">
                         <b>Delivery: </b>
                         <span
                             t-out="order.partner_shipping_id"
                             t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"
                             class="address-inline"
                         />
-                    </t>
-                    <t t-else="">
-                        <b>Deliver to pickup point: </b>
-                        <t t-out="order.pickup_location_data.get('pick_up_point_name', '') + ', '+ order.pickup_location_data.get('address', '')"/>
                     </t>
                 </div>
             </div>

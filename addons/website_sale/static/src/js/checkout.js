@@ -1,6 +1,8 @@
+import {
+    LocationSelectorDialog
+} from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
-import { renderToElement } from '@web/core/utils/render';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
@@ -12,8 +14,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         'click .js_edit_address': '_preventChangingAddress',
         // Delivery methods
         'click [name="o_delivery_radio"]': '_selectDeliveryMethod',
-        'click [name="o_select_pickup_location"]': '_selectPickupLocation',
-        'click [name="o_remove_pickup_location"]': '_removePickupLocation',
+        'click [name="o_pickup_location_selector"]': '_selectPickupLocation',
     },
 
     // #=== WIDGET LIFECYCLE ===#
@@ -122,45 +123,57 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
         // Re-enable the main button after delivery rates have been fetched.
         this._enableMainButton();
 
-        // Display a list of closest pickup locations if required for the selected delivery method.
-        await this._showClosestPickupLocations(checkedRadio);
+        // Show a button to open the location selector if required for the selected delivery method.
+        await this._showPickupLocation(checkedRadio);
     },
 
     /**
-     * Assign the selected pickup location to the order and display its address.
+     * Fetch and display the closest pickup locations based on the zip code.
      *
      * @private
      * @param {Event} ev
      * @return {void}
      */
     async _selectPickupLocation(ev) {
-        ev.stopPropagation();
-        const deliverMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
-        const radio = deliverMethodContainer.querySelector('input[type="radio"]');
-        const pickupLocationList = this._getPickupLocationList(deliverMethodContainer);
-        const pickupLocation = ev.target.previousElementSibling.innerText;
-        await this._setPickupLocation(pickupLocation);
-        this._clearElement(pickupLocationList);
-        await this._showPickupLocation(radio);
-        this._enableMainButton();
-    },
+        const { zipCode, locationId } = ev.currentTarget.dataset;
+        this.call('dialog', 'add', LocationSelectorDialog, {
+            zipCode: zipCode,
+            selectedLocationId: locationId,
+            isFrontend: true,
+            save: async location => {
+                const jsonLocation = JSON.stringify(location);
+                // Assign the selected pickup location to the order.
+                await this._setPickupLocation(jsonLocation);
 
-    /**
-     * Unset the selected pickup location from the order and display the available pickup locations.
-     *
-     * @private
-     * @param {Event} ev
-     * @return {void}
-     */
-    async _removePickupLocation(ev) {
-        ev.stopPropagation();
-        this._disableMainButton();
-        await this._setPickupLocation(null);
-        const radio = this._getDeliveryMethodContainer(ev.currentTarget).querySelector(
-            'input[type="radio"]'
-        );
-        await this._showPickupLocation(radio);
-        await this._showClosestPickupLocations(radio);
+                //  Show and set the order location details.
+                const deliveryMethodContainer = this._getDeliveryMethodContainer(ev.currentTarget);
+                const pickupLocation = deliveryMethodContainer.querySelector(
+                    '[name="o_pickup_location"]'
+                );
+                pickupLocation.querySelector(
+                    '[name="o_pickup_location_name"]'
+                ).innerText = location.name;
+                pickupLocation.querySelector(
+                    '[name="o_pickup_location_address"]'
+                ).innerText = `${location.street} ${location.zip_code} ${location.city}`;
+                const editPickupLocationButton = pickupLocation.querySelector(
+                    'span[name="o_pickup_location_selector"]'
+                );
+                editPickupLocationButton.dataset.locationId = location.id;
+                editPickupLocationButton.dataset.zipCode = location.zip_code;
+                editPickupLocationButton.dataset.pickupLocationData = jsonLocation;
+                pickupLocation.querySelector(
+                    '[name="o_pickup_location_details"]'
+                ).classList.remove('d-none');
+
+                // Remove the button.
+                pickupLocation.querySelector(
+                    'button[name="o_pickup_location_selector"]'
+                )?.remove();
+
+                this._enableMainButton();
+            },
+        });
     },
 
     // #=== DOM MANIPULATION ===#
@@ -188,30 +201,17 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     /**
-     * Hide the selected pickup location.
+     * Hide the pickup location.
      *
      * @private
      * @return {void}
      */
     _hidePickupLocation() {
-        const pickupLocations = document.querySelectorAll('.o_pickup_location')
-        pickupLocations.forEach(pickupLocation => { // Whichever location was set ¯\_(ツ)_/¯
-            pickupLocation.querySelector('[name="o_pickup_location_name"]').innerText = '';
-            pickupLocation.querySelector('[name="o_pickup_location_address"]').innerText = '';
-            pickupLocation.classList.add('d-none');
-        });
-    },
-
-    /**
-     * Hide the list of available pickup locations.
-     *
-     * @private
-     * @return {void}
-     */
-    _hidePickupLocationList() {
-        const listLocations = document.querySelectorAll('[name="o_list_pickup_locations"]');
-        listLocations.forEach(pickupLocationList =>  { // Whichever list was built ¯\_(ツ)_/¯
-            this._clearElement(pickupLocationList);
+        const pickupLocations = document.querySelectorAll(
+            '[name="o_pickup_location"]:not(.d-none)'
+        );
+        pickupLocations.forEach(pickupLocation => {
+            pickupLocation.classList.add('d-none'); // Hide the whole div.
         });
     },
 
@@ -335,9 +335,7 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
             this._disableMainButton();
             if (checkedRadio) {
                 await this._updateDeliveryMethod(checkedRadio);
-                await this._showPickupLocation(checkedRadio);
                 this._enableMainButton();
-                await this._showClosestPickupLocations(checkedRadio);
             }
         }
         // Asynchronously fetch delivery rates to mitigate delays from third-party APIs
@@ -379,50 +377,35 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * Set the delivery method on the order and return the result values.
      *
      * @private
-     * @param {Integer} dm_id - The id of selected delivery method.
+     * @param {Integer} dmId - The id of selected delivery method.
      * @return {Object} The result values.
      */
-    async _setDeliveryMethod(dm_id) {
-        return await rpc('/shop/set_delivery_method', {'dm_id': dm_id});
+    async _setDeliveryMethod(dmId) {
+        return await rpc('/shop/set_delivery_method', {'dm_id': dmId});
     },
 
     /**
-     * Fetch and display the closest pickup locations for the selected shipping address.
+     * Show the pickup location information or the button to open the location selector.
      *
      * @private
      * @param {HTMLInputElement} radio - The radio button linked to the delivery method.
      * @return {void}
      */
-    async _showClosestPickupLocations(radio) {
-        this._hidePickupLocationList();
+    async _showPickupLocation(radio) {
+        if (!radio.dataset.isPickupLocationRequired || radio.disabled) {
+            return;  // Fetching the delivery rate failed.
+        }
         const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
-        if (!this._isPickupLocationMissing(radio) || radio.disabled) {
-            return;  // DM does not have a pickup location, or fetching the delivery rate failed.
+        const pickupLocation = deliveryMethodContainer.querySelector('[name="o_pickup_location"]');
+
+        const editPickupLocationButton = pickupLocation.querySelector(
+            'span[name="o_pickup_location_selector"]'
+        );
+        if (editPickupLocationButton.dataset.pickupLocationData) {
+            await this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData);
         }
-        const pickupLocationList = this._getPickupLocationList(deliveryMethodContainer);
-        const title = document.createElement('div');
-        title.classList.add('h6', 'm-3');
-        title.textContent = _t("Please select a pick-up point");
-        title.style.cssText = 'color:red;';
-        pickupLocationList.append(title);
-        const deliveryType = radio.dataset.deliveryType;
-        pickupLocationList.appendChild(this._createLoadingElement());
-        const data = await rpc("/shop/get_close_locations");
-        // Remove the loading spinner.
-        pickupLocationList.removeChild(pickupLocationList.querySelector('i'));
-        if (data.error) {
-            const errorMessage = document.createElement('em');
-            errorMessage.innerText = data.error
-            pickupLocationList.appendChild(errorMessage);
-            return;
-        }
-        // The corresponding delivery method template to render the pickup locations.
-        const templateToRender = `${deliveryType}_pickup_location_list`;
-        const context = {
-            partner_address: data.partner_address,
-            pickup_locations: data.close_locations,
-        };
-        pickupLocationList.append(renderToElement(templateToRender, context));
+
+        pickupLocation.classList.remove('d-none'); // Show the whole div.
     },
 
     /**
@@ -433,50 +416,10 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
      * @return {void}
      */
     async _setPickupLocation(pickupLocationData) {
-        await rpc("/shop/set_pickup_location", {pickup_location_data: pickupLocationData});
-    },
-
-    /**
-     * Show the pickup location if selected.
-     *
-     * @private
-     * @param {HTMLInputElement} radio - The radio button linked to the delivery method.
-     * @return {void}
-     */
-    async _showPickupLocation(radio) {
-        if (!this._isPickupLocationRequired(radio)) {
-            return
-        }
-
-        const data = await rpc('/shop/get_pickup_location');
-        const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
-        const orderLoc = deliveryMethodContainer.querySelector('.o_pickup_location');
-        const pickupLoc = data['pickup_address'];
-        orderLoc.querySelector('[name="o_pickup_location_name"]').innerText = data.name || '';
-        orderLoc.querySelector('[name="o_pickup_location_address"]').innerText = pickupLoc || '';
-        if (pickupLoc) {
-            orderLoc.classList.remove("d-none");
-        } else {
-            orderLoc.classList.add("d-none");
-        }
+        await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
     },
 
     // #=== GETTERS & SETTERS ===#
-
-    /**
-     * Return whether a pickup location is required but not selected.
-     *
-     * @private
-     * @param {HTMLInputElement} radio - The radio button linked to the delivery method.
-     * @return {boolean} Whether a required pickup location is missing.
-     */
-    _isPickupLocationMissing(radio) {
-        const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
-        const address = deliveryMethodContainer.querySelector(
-            '[name="o_pickup_location_address"]'
-        ).innerText;
-        return this._isPickupLocationRequired(radio) && address === '';
-    },
 
     /**
      * Create and return an element representing a loading spinner.
@@ -514,15 +457,18 @@ publicWidget.registry.websiteSaleCheckout = publicWidget.Widget.extend({
     },
 
     /**
-     * Return the pickup location list element of the provided delivery method container.
+     * Return whether a pickup location is required but not selected.
      *
      * @private
-     * @param {Element} deliveryMethodContainer - The container element of the linked delivery
-     *                                            method.
-     * @return {Element} The pickup location list element of the linked delivery method.
+     * @param {HTMLInputElement} radio - The radio button linked to the delivery method.
+     * @return {boolean} Whether a required pickup location is missing.
      */
-    _getPickupLocationList(deliveryMethodContainer) {
-        return deliveryMethodContainer.querySelector('[name="o_list_pickup_locations"]');
+    _isPickupLocationMissing(radio) {
+        const deliveryMethodContainer = this._getDeliveryMethodContainer(radio);
+        if (!this._isPickupLocationRequired(radio)) return false;
+        return !deliveryMethodContainer.querySelector(
+            'span[name="o_pickup_location_selector"]'
+        ).dataset.locationId;
     },
 
     /**
