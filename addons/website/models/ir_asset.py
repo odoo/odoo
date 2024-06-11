@@ -11,7 +11,9 @@ class IrAsset(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade')
 
     def _get_related_assets(self, domain):
-        website = self.env['website'].get_current_website(fallback=False)
+        website = self.env['website']
+        if self.env.context.get('website_id'):
+            website = website.browse(self.env.context['website_id'])
         if website:
             domain += website.website_domain()
         assets = super()._get_related_assets(domain)
@@ -20,7 +22,9 @@ class IrAsset(models.Model):
     def _get_active_addons_list(self):
         """Overridden to discard inactive themes."""
         addons_list = super()._get_active_addons_list()
-        website = self.env['website'].get_current_website(fallback=False)
+        website = self.env['website']
+        if self.env.context.get('website_id'):
+            website = website.browse(self.env.context['website_id'])
 
         if not website:
             return addons_list
@@ -38,7 +42,9 @@ class IrAsset(models.Model):
               * In non website context, every asset with a website will be removed
               * In a website context, every asset from another website
         """
-        current_website = self.env['website'].get_current_website(fallback=False)
+        current_website = self.env['website']
+        if self.env.context.get('website_id'):
+            current_website = current_website.browse(self.env.context['website_id'])
         if not current_website:
             return self.filtered(lambda asset: not asset.website_id)
 
