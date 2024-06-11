@@ -175,7 +175,7 @@ class TestSelfAccessRights(TestHrCommon):
         for f, v in self.self_protected_fields_user.items():
             val = None
             if v.type == 'char' or v.type == 'text':
-                val = '0000' if f == 'pin' else 'dummy'
+                val = '0000' if f in ['pin', 'barcode'] else 'dummy'
             if val is not None:
                 self.richard.with_user(self.richard).write({f: val})
 
