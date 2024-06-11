@@ -1031,13 +1031,13 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
-            focusedDateIndex: 0,
+            focusedDateIndex: 1,
             onSelect: (values) => assert.step(formatForStep(values)),
         });
 
         await click(getPickerCell("27").at(1));
 
-        assert.verifySteps(["2023-04-27T08:43:00,2023-04-23T17:16:00"]);
+        assert.verifySteps(["2023-04-20T08:43:00,2023-05-27T17:16:00"]);
     });
 
     QUnit.test("focus proper month when changing props out of current month", async (assert) => {

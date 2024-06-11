@@ -139,6 +139,14 @@ const toWeekItem = (weekDayItems) => ({
     days: weekDayItems,
 });
 
+const getWeeksInMonth = (monthRange) => {
+    let weeknumber1 = getStartOfWeek(monthRange[0]).weekNumber;
+    let weeknumber2 = getStartOfWeek(monthRange[1]).weekNumber;
+
+    weeknumber1 = weeknumber1 > 50 ? 0 : weeknumber1;
+    return weeknumber2 - weeknumber1 + 1;
+};
+
 // Time constants
 const HOURS = numberRange(0, 24).map((hour) => [hour, String(hour)]);
 const MINUTES = numberRange(0, 60).map((minute) => [minute, String(minute || 0).padStart(2, "0")]);
@@ -172,9 +180,10 @@ const PRECISION_LEVELS = new Map()
                 /** @type {WeekItem[]} */
                 const weeks = [];
 
+                const week = additionalMonth ? 6 : getWeeksInMonth(monthRange)
                 // Generate 6 weeks for current month
                 let startOfNextWeek = getStartOfWeek(monthRange[0]);
-                for (let w = 0; w < 6; w++) {
+                for (let w = 0; w < week; w++) {
                     const weekDayItems = [];
                     // Generate all days of the week
                     for (let d = 0; d < 7; d++) {
@@ -403,7 +412,7 @@ export class DateTimePicker extends Component {
             val?.second || 0,
         ]);
 
-        this.shouldAdjustFocusDate = !props.range;
+        this.shouldAdjustFocusDate = !this.isRange;
         this.adjustFocus(this.values, props.focusedDateIndex);
         this.handle12HourSystem();
         this.state.timeValues = this.state.timeValues.map((timeValue) => timeValue.map(String));
@@ -428,7 +437,7 @@ export class DateTimePicker extends Component {
         this.highlightedRange = [...this.values];
 
         // Apply hovered date to selected range
-        if (hoveredDate) {
+        if (hoveredDate && (!this.values[0] || !this.values[1])) {
             [this.selectedRange] = this.applyValueAtIndex(hoveredDate, this.props.focusedDateIndex);
             if (this.isRange && this.selectedRange.every(Boolean)) {
                 this.highlightedRange = [
@@ -436,6 +445,12 @@ export class DateTimePicker extends Component {
                     latest(this.selectedRange[1], this.values[1]),
                 ];
             }
+        }
+        else if (hoveredDate && this.isRange) {
+            this.highlightedRange = [
+                earliest(this.values[0], hoveredDate),
+                latest(this.values[1], hoveredDate),
+            ];
         }
     }
 
@@ -450,8 +465,7 @@ export class DateTimePicker extends Component {
     adjustFocus(values, focusedDateIndex) {
         if (
             !this.shouldAdjustFocusDate &&
-            this.state.focusDate &&
-            focusedDateIndex === this.props.focusedDateIndex
+            this.state.focusDate
         ) {
             return;
         }
@@ -480,6 +494,12 @@ export class DateTimePicker extends Component {
      */
     applyValueAtIndex(value, valueIndex) {
         const result = [...this.values];
+        if (result[1]) {
+            result[1] = null;
+        }
+        if (result.length === 2 && result[0] && !result[1]) {
+            this.props.focusedDateIndex = 1;
+        }
         result[valueIndex] = value;
         return [result, valueIndex];
     }

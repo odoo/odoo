@@ -234,6 +234,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Change date
         await click(getPickerCell("16").at(0));
+        await click(target.querySelector(".o_add_date"));
         await click(getPickerCell("12").at(1));
         // Close picker
         await click(document.querySelector(".o_form_view"));
