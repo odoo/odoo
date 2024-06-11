@@ -140,12 +140,12 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.deepEqual(model.getters.getChartRuntime(chartId).chartJsConfig.data, {
             datasets: [
                 {
-                    backgroundColor: "#1F77B466",
+                    backgroundColor: "rgb(31,119,180)",
                     borderColor: "rgb(31,119,180)",
                     data: [1, 3],
                     label: "Count",
                     lineTension: 0,
-                    fill: "origin",
+                    fill: false,
                     pointBackgroundColor: "rgb(31,119,180)",
                 },
             ],
@@ -458,6 +458,32 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         });
         assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.x.stacked);
         assert.notOk(model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.y.stacked);
+    });
+
+    QUnit.test("Area charts are supported", async (assert) => {
+        const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+        await waitForDataLoaded(model);
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        const definition = model.getters.getChartDefinition(chartId);
+        model.dispatch("UPDATE_CHART", {
+            definition: { ...definition, fillArea: true, stacked: false },
+            id: chartId,
+            sheetId,
+        });
+        let runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
+        assert.strictEqual(runtime.options.scales.x.stacked, undefined);
+        assert.strictEqual(runtime.options.scales.y.stacked, undefined);
+        assert.strictEqual(runtime.data.datasets[0].fill, "origin");
+        model.dispatch("UPDATE_CHART", {
+            definition: { ...definition, fillArea: true, stacked: true },
+            id: chartId,
+            sheetId,
+        });
+        runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
+        assert.strictEqual(runtime.options.scales.x.stacked, undefined);
+        assert.strictEqual(runtime.options.scales.y.stacked, true);
+        assert.strictEqual(runtime.data.datasets[0].fill, "origin");
     });
 
     QUnit.test(

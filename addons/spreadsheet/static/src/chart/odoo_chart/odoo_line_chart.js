@@ -24,6 +24,7 @@ export class OdooLineChart extends OdooChart {
         this.stacked = definition.stacked;
         this.cumulative = definition.cumulative;
         this.axesDesign = definition.axesDesign;
+        this.fillArea = definition.fillArea;
     }
 
     getDefinition() {
@@ -33,6 +34,7 @@ export class OdooLineChart extends OdooChart {
             stacked: this.stacked,
             cumulative: this.cumulative,
             axesDesign: this.axesDesign,
+            fillArea: this.fillArea,
         };
     }
 }
@@ -54,12 +56,15 @@ function createOdooChartRuntime(chart, getters) {
     const locale = getters.getLocale();
     const chartJsConfig = getLineConfiguration(chart, labels, locale);
     const colors = new ColorGenerator();
+
     for (let [index, { label, data, cumulatedStart }] of datasets.entries()) {
         const color = colors.next();
-        const backgroundRGBA = colorToRGBA(color);
-        if (chart.stacked) {
+        let backgroundColor = color;
+        if (chart.fillArea) {
+            const backgroundRGBA = colorToRGBA(color)
             // use the transparency of Odoo to keep consistency
             backgroundRGBA.a = LINE_FILL_TRANSPARENCY;
+            backgroundColor = rgbaToHex(backgroundRGBA);
         }
         if (chart.cumulative) {
             let accumulator = cumulatedStart;
@@ -69,7 +74,6 @@ function createOdooChartRuntime(chart, getters) {
             });
         }
 
-        const backgroundColor = rgbaToHex(backgroundRGBA);
         const dataset = {
             label,
             data,
@@ -77,7 +81,7 @@ function createOdooChartRuntime(chart, getters) {
             borderColor: color,
             backgroundColor,
             pointBackgroundColor: color,
-            fill: chart.stacked ? getFillingMode(index) : false,
+            fill: chart.fillArea ? getFillingMode(index, chart.stacked) : false,
         };
         chartJsConfig.data.datasets.push(dataset);
     }
@@ -91,17 +95,6 @@ function getLineConfiguration(chart, labels, locale) {
     const legend = {
         ...config.options.legend,
         display: chart.legendPosition !== "none",
-        labels: {
-            color: fontColor,
-            generateLabels(chart) {
-                const { data } = chart;
-                const labels = window.Chart.defaults.plugins.legend.labels.generateLabels(chart);
-                for (const [index, label] of labels.entries()) {
-                    label.fillStyle = data.datasets[index].borderColor;
-                }
-                return labels;
-            },
-        },
     };
     legend.position = chart.legendPosition;
     config.options.plugins = config.options.plugins || {};
