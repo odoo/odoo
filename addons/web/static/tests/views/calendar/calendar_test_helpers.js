@@ -1,5 +1,6 @@
 import { drag, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { EventBus } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
 import { createElement } from "@web/core/utils/xml";
@@ -171,6 +172,7 @@ export const FAKE_FIELDS = {
 };
 
 export const FAKE_MODEL = {
+    bus: new EventBus(),
     canCreate: true,
     canDelete: true,
     canEdit: true,

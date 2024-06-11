@@ -377,6 +377,9 @@ export class CalendarController extends Component {
                 break;
             case "today":
                 date = luxon.DateTime.local().startOf("day");
+                if (date.ts === this.date.startOf("day").ts) {
+                    this.model.bus.trigger("SCROLL_TO_CURRENT_HOUR", false);
+                }
                 break;
         }
         await this.model.load({ date });

@@ -3861,3 +3861,19 @@ test(`Retaining the 'all' filter value on re-rendering`, async () => {
     await getService("action").switchView("calendar");
     expect(`.o_calendar_filter_item[data-value='all'] input`).toBeChecked();
 });
+
+test(`scroll to current hour when clicking on today`, async () => {
+    mockDate("2016-12-12T01:00:00", 1);
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
+    });
+    // Default scroll time should be 6am no matter the current hour
+    expect(queryLast(".fc-scroller").scrollTop).toBeWithin(210, 230);
+    await contains(".o_calendar_button_today").click();
+    expect(queryLast(".fc-scroller").scrollTop).toBe(0);
+    mockDate("2016-12-12T20:00:00", 1);
+    await contains(".o_calendar_button_today").click();
+    expect(queryLast(".fc-scroller").scrollTop).toBeWithin(360, 380);
+});
