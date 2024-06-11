@@ -1308,7 +1308,7 @@ class Import(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
-        savepoint = self._cr.savepoint()
+        savepoint = self._cr.savepoint(flush=False)
         try:
             input_file_data, import_fields = self._convert_import_data(fields, options)
             # Parse date and float field

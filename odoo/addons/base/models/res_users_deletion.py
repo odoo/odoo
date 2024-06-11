@@ -62,7 +62,7 @@ class ResUsersDeletion(models.Model):
             user_name = user.name
             requester_name = delete_request.create_uid.name
             # Step 1: Delete User
-            with self.env.cr.savepoint() as savepoint:  # TODO savepoint in loop, it could be a commit
+            with self.env.cr.savepoint(flush=False) as savepoint:  # TODO savepoint in loop, it could be a commit
                 try:
                     partner = user.partner_id
                     user.unlink()
@@ -82,7 +82,7 @@ class ResUsersDeletion(models.Model):
 
             # Step 2: Delete Linked Partner
             #         Could be impossible if the partner is linked to a SO for example
-            with self.env.cr.savepoint() as savepoint:
+            with self.env.cr.savepoint(flush=False) as savepoint:
                 try:
                     partner.unlink()
                     _logger.info("Partner #%i %r, deleted. Original request from %r.",
