@@ -435,10 +435,10 @@
             </t>
         </template>
         <template id="price_dynamic_filter_template_product_product" name="Dynamic Product Filter Price">
-            <t t-if="data['prevent_zero_price_sale']">
+            <t t-if="data.get('prevent_zero_price_sale')">
                 <span t-field="website.prevent_zero_price_sale_text"/>
             </t>
-            <t t-else="">
+            <t t-elif="not data.get('is_sample')">
                 <span t-esc="data['price']"
                       class="fw-bold"
                       name="product_price"
