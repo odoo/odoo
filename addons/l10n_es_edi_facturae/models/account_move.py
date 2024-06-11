@@ -230,7 +230,7 @@ class AccountMove(models.Model):
                 price_unit=line.price_unit,
                 quantity=line.quantity,
             )
-            tax_before_discount = self.env['account.tax']._compute_taxes([tax_base_before_discount])
+            tax_before_discount = self.env['account.tax']._compute_taxes([tax_base_before_discount], line.company_id)
             price_before_discount = sum(to_update['price_subtotal'] for _dummy, to_update in tax_before_discount['base_lines_to_update'])
             discount = max(0., (price_before_discount - line.price_subtotal))
             surcharge = abs(min(0., (price_before_discount - line.price_subtotal)))
@@ -241,7 +241,7 @@ class AccountMove(models.Model):
                 price_subtotal=line.price_subtotal, is_refund=line.is_refund, rate=conversion_rate
             )
 
-            taxes_computed = self.env['account.tax']._compute_taxes([base_line])
+            taxes_computed = self.env['account.tax']._compute_taxes([base_line], line.company_id)
             taxes_withheld_computed = [tax for tax in taxes_computed["tax_lines_to_add"] if tax["tax_amount"] < 0]
             taxes_normal_computed = [tax for tax in taxes_computed["tax_lines_to_add"] if tax["tax_amount"] >= 0]
 

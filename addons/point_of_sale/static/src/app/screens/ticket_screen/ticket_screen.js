@@ -602,7 +602,7 @@ export class TicketScreen extends Component {
                 orderUid: orderline.order.uid,
                 orderBackendId: orderline.order.backendId,
                 orderPartnerId,
-                tax_ids: orderline.get_taxes().map((tax) => tax.id),
+                tax_ids: orderline.getTaxIds(),
                 discount: orderline.discount,
                 pack_lot_lines: orderline.pack_lot_lines
                     ? orderline.pack_lot_lines.map((lot) => {

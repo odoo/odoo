@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -10,6 +11,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.maxDiff = None
 
         cls.tax_group1 = cls.env['account.tax.group'].create({
             'name': '1',
@@ -57,27 +59,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount': 17.0,
         })
         cls.tax_17b = cls.tax_17a.copy({'name': "tax_17b"})
-
-    def assertTaxTotals(self, document, expected_values):
-        main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
-        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
-        subtotals_keys_to_ignore = {'formatted_amount'}
-
-        to_compare = document.tax_totals
-
-        for key in main_keys_to_ignore:
-            del to_compare[key]
-
-        for key in group_keys_to_ignore:
-            for groups in to_compare['groups_by_subtotal'].values():
-                for group in groups:
-                    del group[key]
-
-        for key in subtotals_keys_to_ignore:
-            for subtotal in to_compare['subtotals']:
-                del subtotal[key]
-
-        self.assertEqual(to_compare, expected_values)
 
     def _create_document_for_tax_totals_test(self, lines_data):
         """ Creates and returns a new record of a model defining a tax_totals
@@ -131,23 +112,23 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (1000, tax_20),
         ])
 
-        self.assertTaxTotals(document, {
-            'amount_total': 3600,
-            'amount_untaxed': 3000,
+        self.assert_document_tax_totals(document, {
+            'amount_total': 3600.0,
+            'amount_untaxed': 3000.0,
             'display_tax_base': True,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
                     {
                         'tax_group_name': self.tax_group1.name,
-                        'tax_group_amount': 200,
-                        'tax_group_base_amount': 2000,
+                        'tax_group_amount': 200.0,
+                        'tax_group_base_amount': 2000.0,
                         'tax_group_id': self.tax_group1.id,
                     },
 
                     {
                         'tax_group_name': self.tax_group2.name,
-                        'tax_group_amount': 400,
-                        'tax_group_base_amount': 2000,
+                        'tax_group_amount': 400.0,
+                        'tax_group_base_amount': 2000.0,
                         'tax_group_id': self.tax_group2.id,
                     },
                 ],
@@ -155,7 +136,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'amount': 3000,
+                    'amount': 3000.0,
                 }
             ],
             'subtotals_order': ["Untaxed Amount"],
@@ -164,9 +145,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         # Same but both are sharing the same tax group.
 
         tax_20.tax_group_id = self.tax_group1
-        document.invalidate_model(['tax_totals'])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 3600,
             'amount_untaxed': 3000,
             'display_tax_base': False,
@@ -200,7 +180,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (1000, tax_0),
         ])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 1000,
             'amount_untaxed': 1000,
             'display_tax_base': False,
@@ -246,7 +226,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (1000, tax_20),
         ])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
             'display_tax_base': True,
@@ -279,9 +259,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         # Same but both are sharing the same tax group.
 
         tax_20.tax_group_id = self.tax_group1
-        document.invalidate_model(['tax_totals'])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 3620,
             'amount_untaxed': 3000,
             'display_tax_base': False,
@@ -336,7 +315,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (1000, tax_30 + tax_10),
         ])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
             'display_tax_base': True,
@@ -369,9 +348,8 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         # Same but both are sharing the same tax group.
 
         tax_30.tax_group_id = self.tax_group1
-        document.invalidate_model(['tax_totals'])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 2750,
             'amount_untaxed': 2000,
             'display_tax_base': False,
@@ -423,7 +401,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (200, tax_42 + tax_10 + tax_25),
         ])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 2846,
             'amount_untaxed': 2300,
             'display_tax_base': True,
@@ -509,7 +487,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (100, tax_30 + tax_10)
         ])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 1867,
             'amount_untaxed': 1500,
             'display_tax_base': True,
@@ -567,83 +545,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'subtotals_order': ["Untaxed Amount", "PRE GROUP 1", "PRE GROUP 2"],
         })
 
-    def test_discounted_tax(self):
-        tax_21_exempted = self.env['account.tax'].create({
-            'name': "tax_21_exempted",
-            'amount_type': 'group',
-            'amount': 2.0,
-            'tax_group_id': self.tax_group1.id,
-            'children_tax_ids': [
-                Command.create({
-                    'name': "tax_exempt",
-                    'amount_type': 'percent',
-                    'amount': -2.0,
-                    'include_base_amount': True,
-                    'tax_group_id': self.tax_group_sub1.id,
-                    'sequence': 1,
-                }),
-                Command.create({
-                    'name': "tax_21",
-                    'amount_type': 'percent',
-                    'amount': 21.0,
-                    'tax_group_id': self.tax_group_sub2.id,
-                    'sequence': 2,
-                }),
-                Command.create({
-                    'name': "tax_reapply",
-                    'amount_type': 'percent',
-                    'amount': 2.0,
-                    'is_base_affected': False,
-                    'tax_group_id': self.tax_group_sub3.id,
-                    'sequence': 3,
-                }),
-            ]
-        })
-        self.tax_group_sub1.preceding_subtotal = "Tax exemption"
-        self.tax_group_sub2.preceding_subtotal = "Tax application"
-        self.tax_group_sub3.preceding_subtotal = "Reapply amount"
-
-        document = self._create_document_for_tax_totals_test([
-            (1000 / 0.98, tax_21_exempted),
-        ])
-
-        self.assertTaxTotals(document, {
-            'amount_total': 1230.41,
-            'amount_untaxed': 1020.41,
-            'display_tax_base': True,
-            'groups_by_subtotal': {
-                "Reapply amount": [{
-                    'tax_group_name': self.tax_group_sub3.name,
-                    'tax_group_amount': 20.41,
-                    'tax_group_base_amount': 1020.41,
-                    'tax_group_id': self.tax_group_sub3.id,
-                }],
-                "Tax application": [{
-                    'tax_group_name': self.tax_group_sub2.name,
-                    'tax_group_amount': 210.0,
-                    'tax_group_base_amount': 1000.0,
-                    'tax_group_id': self.tax_group_sub2.id,
-                }],
-                "Tax exemption": [{
-                    'tax_group_name': self.tax_group_sub1.name,
-                    'tax_group_amount': -20.41,
-                    'tax_group_base_amount': 1020.41,
-                    'tax_group_id': self.tax_group_sub1.id,
-                }],
-            },
-            'subtotals': [{
-                'name': "Tax exemption",
-                'amount': 1020.41,
-            }, {
-                'name': "Tax application",
-                'amount': 1000.00,
-            }, {
-                'name': "Reapply amount",
-                'amount': 1210.00,
-            }],
-            'subtotals_order': ["Tax exemption", "Tax application", "Reapply amount"],
-        })
-
     def test_invoice_grouped_taxes_with_tax_group(self):
         """ A tax of type group with a tax_group_id being the same as one of the children tax shouldn't affect the
         result of the _prepare_tax_totals.
@@ -675,7 +576,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (100, tax_10_withheld),
         ])
 
-        self.assertTaxTotals(document, {
+        self.assert_document_tax_totals(document, {
             'amount_total': 63,
             'amount_untaxed': 100,
             'display_tax_base': True,
@@ -748,7 +649,10 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             (-500, self.tax_10),
         ]
         run_case('round_per_line', lines, [15.45])
-        run_case('round_globally', lines, [15.45])
+        # 5.445 + 60 - 50 = 15.444999999999993 ~= 15.44
+        # 5.445 - 50 + 60 = 15.445 ~= 15.45
+        # 5.445 + 10 = 15.445 ~= 15.45
+        run_case('round_globally', lines, [15.44])
 
     def test_invoice_foreign_currency_tax_totals(self):
         self.env['res.currency.rate'].create({
@@ -793,7 +697,7 @@ class TestTaxTotals(AccountTestInvoicingCommon):
 
         invoice['invoice_line_ids'] = invoice_lines_vals
 
-        self.assertTaxTotals(invoice, {
+        self.assert_document_tax_totals(invoice, {
             'amount_total': 470,
             'amount_total_company_currency': 2350,
             'amount_untaxed': 400,
@@ -958,3 +862,179 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             })
             move.invoice_cash_rounding_id = cash_rounding
             self.assertEqual(move.tax_totals['amount_total'], 120)
+
+    def test_tax_division_for_l10n_br(self):
+        tax_groups = self.env['account.tax.group'].create([
+            {
+                'name': str(i),
+                'sequence': 1,
+            }
+            for i in range(1, 6)
+        ])
+        taxes = self.env['account.tax'].create([
+            {
+                'name': f"division_{amount}",
+                'amount_type': 'division',
+                'amount': amount,
+                'tax_group_id': tax_groups[0].id,
+            }
+            for amount in (5, 3, 0.65, 9, 15)
+        ])
+
+        # == Tax-excluded ==
+        document = self._create_document_for_tax_totals_test([(32.33, taxes)])
+
+        # Same tax group.
+        with self.subTest("Tax-excluded / Same tax group"):
+            self.assert_document_tax_totals(document, {
+                'amount_total': 48.0,
+                'amount_untaxed': 32.33,
+                'display_tax_base': False,
+                'groups_by_subtotal': {
+                    "Untaxed Amount": [
+                        {
+                            'tax_group_name': taxes.tax_group_id.name,
+                            'tax_group_amount': 15.67,
+                            'tax_group_base_amount': 32.33,
+                            'tax_group_id': taxes.tax_group_id.id,
+                        },
+                    ],
+                },
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'amount': 32.33,
+                    }
+                ],
+                'subtotals_order': ["Untaxed Amount"],
+            })
+
+        # Multiple tax groups.
+        for i, tax in enumerate(taxes):
+            tax.tax_group_id = tax_groups[i]
+        with self.subTest("Tax-excluded / Multiple tax groups"):
+            self.assert_document_tax_totals(document, {
+                'amount_total': 48.0,
+                'amount_untaxed': 32.33,
+                'display_tax_base': False,
+                'groups_by_subtotal': {
+                    "Untaxed Amount": [
+                        {
+                            'tax_group_name': tax_groups[0].name,
+                            'tax_group_amount': 2.4,
+                            'tax_group_base_amount': 32.33,
+                            'tax_group_id': tax_groups[0].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[1].name,
+                            'tax_group_amount': 1.44,
+                            'tax_group_base_amount': 32.33,
+                            'tax_group_id': tax_groups[1].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[2].name,
+                            'tax_group_amount': 0.31,
+                            'tax_group_base_amount': 32.33,
+                            'tax_group_id': tax_groups[2].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[3].name,
+                            'tax_group_amount': 4.32,
+                            'tax_group_base_amount': 32.33,
+                            'tax_group_id': tax_groups[3].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[4].name,
+                            'tax_group_amount': 7.2,
+                            'tax_group_base_amount': 32.33,
+                            'tax_group_id': tax_groups[4].id,
+                        },
+                    ],
+                },
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'amount': 32.33,
+                    },
+                ],
+                'subtotals_order': ["Untaxed Amount"],
+            })
+
+        # == Tax-included ==
+        taxes.write({'price_include': True})
+        document = self._create_document_for_tax_totals_test([(48.0, taxes)])
+
+        # Multiple tax groups.
+        with self.subTest("Tax-included / Multiple tax groups"):
+            self.assert_document_tax_totals(document, {
+                'amount_total': 48.0,
+                'amount_untaxed': 32.33,
+                'display_tax_base': True,
+                'groups_by_subtotal': {
+                    "Untaxed Amount": [
+                        {
+                            'tax_group_name': tax_groups[0].name,
+                            'tax_group_amount': 2.4,
+                            'tax_group_base_amount': 48.0,
+                            'tax_group_id': tax_groups[0].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[1].name,
+                            'tax_group_amount': 1.44,
+                            'tax_group_base_amount': 48.0,
+                            'tax_group_id': tax_groups[1].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[2].name,
+                            'tax_group_amount': 0.31,
+                            'tax_group_base_amount': 48.0,
+                            'tax_group_id': tax_groups[2].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[3].name,
+                            'tax_group_amount': 4.32,
+                            'tax_group_base_amount': 48.0,
+                            'tax_group_id': tax_groups[3].id,
+                        },
+                        {
+                            'tax_group_name': tax_groups[4].name,
+                            'tax_group_amount': 7.2,
+                            'tax_group_base_amount': 48.0,
+                            'tax_group_id': tax_groups[4].id,
+                        },
+                    ],
+                },
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'amount': 32.33,
+                    },
+                ],
+                'subtotals_order': ["Untaxed Amount"],
+            })
+
+        # Same tax group.
+        taxes.tax_group_id = tax_groups[0]
+        with self.subTest("Tax-included / Same tax group"):
+            self.assert_document_tax_totals(document, {
+                'amount_total': 48.0,
+                'amount_untaxed': 32.33,
+                'display_tax_base': True,
+                'groups_by_subtotal': {
+                    "Untaxed Amount": [
+                        {
+                            'tax_group_name': taxes.tax_group_id.name,
+                            'tax_group_amount': 15.67,
+                            'tax_group_base_amount': 48.0,
+                            'tax_group_id': taxes.tax_group_id.id,
+                        },
+                    ],
+                },
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'amount': 32.33,
+                    }
+                ],
+                'subtotals_order': ["Untaxed Amount"],
+            })

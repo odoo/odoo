@@ -63,6 +63,9 @@ export class DiscountButton extends Component {
                 lines.filter((ll) => ll.isGlobalDiscountApplicable())
             );
 
+            const taxIds = this.pos.models["account.tax"].filter((tax) =>
+                tax_ids_array.includes(tax.id)
+            );
             // We add the price as manually set to avoid recomputation when changing customer.
             const discount = (-pc / 100.0) * baseToDiscount;
             if (discount < 0) {
@@ -74,12 +77,7 @@ export class DiscountButton extends Component {
                     description:
                         `${pc}%, ` +
                         (tax_ids_array.length
-                            ? _t(
-                                  "Tax: %s",
-                                  tax_ids_array
-                                      .map((taxId) => this.pos.taxes_by_id[taxId].amount + "%")
-                                      .join(", ")
-                              )
+                            ? _t("Tax: %s", this.pos.mapTaxValues(taxIds).map(taxValues => `${taxValues.amount}%`).join(", "))
                             : _t("No tax")),
                     extras: {
                         price_type: "automatic",

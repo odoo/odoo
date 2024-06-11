@@ -924,21 +924,22 @@ class AccountMoveLine(models.Model):
     @api.depends('tax_ids', 'currency_id', 'partner_id', 'analytic_distribution', 'balance', 'partner_id', 'move_id.partner_id', 'price_unit', 'quantity')
     def _compute_all_tax(self):
         for line in self:
-            sign = line.move_id.direction_sign
             if line.display_type == 'tax':
                 line.compute_all_tax = {}
                 line.compute_all_tax_dirty = False
                 continue
             if line.display_type == 'product' and line.move_id.is_invoice(True):
-                amount_currency = sign * line.price_unit * (1 - line.discount / 100)
+                sign = line.move_id.direction_sign
+                price_unit = line.price_unit * (1 - line.discount / 100)
                 handle_price_include = True
                 quantity = line.quantity
             else:
-                amount_currency = line.amount_currency
+                sign = 1
+                price_unit = line.amount_currency
                 handle_price_include = False
                 quantity = 1
             compute_all_currency = line.tax_ids.compute_all(
-                amount_currency,
+                price_unit,
                 currency=line.currency_id,
                 quantity=quantity,
                 product=line.product_id,
@@ -946,7 +947,6 @@ class AccountMoveLine(models.Model):
                 is_refund=line.is_refund,
                 handle_price_include=handle_price_include,
                 include_caba_tags=line.move_id.always_tax_exigible,
-                fixed_multiplicator=sign,
             )
             rate = line.amount_currency / line.balance if line.balance else 1
             line.compute_all_tax_dirty = True
@@ -964,9 +964,9 @@ class AccountMoveLine(models.Model):
                     'display_type': line.display_type,
                 }): {
                     'name': tax['name'] + (' ' + _('(Discount)') if line.display_type == 'epd' else ''),
-                    'balance': tax['amount'] / rate,
-                    'amount_currency': tax['amount'],
-                    'tax_base_amount': tax['base'] / rate * (-1 if line.tax_tag_invert else 1),
+                    'balance': sign * tax['amount'] / rate,
+                    'amount_currency': sign * tax['amount'],
+                    'tax_base_amount': sign * tax['base'] / rate * (-1 if line.tax_tag_invert else 1),
                 }
                 for tax in compute_all_currency['taxes']
                 if tax['amount']
@@ -3179,7 +3179,8 @@ class AccountMoveLine(models.Model):
             group_tax=self.group_tax_id,
             account=self.account_id,
             analytic_distribution=self.analytic_distribution,
-            tax_amount=sign * self.amount_currency,
+            tax_amount_currency=sign * self.amount_currency,
+            tax_amount=sign * self.balance,
         )
 
     def _get_invoiced_qty_per_product(self):

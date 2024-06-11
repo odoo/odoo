@@ -478,6 +478,62 @@ class AccountTestInvoicingCommon(TransactionCase):
         self.assertRecordValues(sort_lines(move.line_ids.sorted()), expected_lines_values)
         self.assertRecordValues(move, [expected_move_values])
 
+    def assert_tax_totals(self, tax_totals, currency, expected_values):
+        main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
+        group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+        subtotals_keys_to_ignore = {'formatted_amount'}
+        comp_curr_keys = {'tax_group_amount_company_currency', 'tax_group_base_amount_company_currency', 'amount_company_currency'}
+        to_compare = dict(tax_totals)
+
+        for key in main_keys_to_ignore:
+            del to_compare[key]
+
+        # Exclude company currency fields if not checked.
+        need_comp_curr_fields = False
+        for subtotals in expected_values.get('subtotals', []):
+            if any(x in subtotals for x in comp_curr_keys):
+                need_comp_curr_fields = True
+                break
+        if not need_comp_curr_fields:
+            for groups in expected_values.get('groups_by_subtotal').values():
+                if any(x in groups for x in comp_curr_keys):
+                    need_comp_curr_fields = True
+                    break
+        if not need_comp_curr_fields:
+            for key in comp_curr_keys:
+                group_keys_to_ignore.add(key)
+                subtotals_keys_to_ignore.add(key)
+
+        for group_key, groups in to_compare['groups_by_subtotal'].items():
+            expected_groups = expected_values['groups_by_subtotal'].get(group_key)
+            for i, group in enumerate(groups):
+                for key in group_keys_to_ignore:
+                    group.pop(key, None)
+
+                # Fix monetary field to avoid 40.8 != 40.8000000004
+                expected_group = i < len(expected_groups) and expected_groups[i]
+                if expected_group:
+                    for monetary_field in ('tax_group_amount', 'tax_group_base_amount'):
+                        if (
+                            expected_group
+                            and monetary_field in expected_group
+                            and currency.compare_amounts(
+                                expected_group[monetary_field],
+                                group[monetary_field],
+                            ) == 0
+                        ):
+                            expected_group[monetary_field] = group[monetary_field]
+
+        for key in subtotals_keys_to_ignore:
+            for subtotal in to_compare['subtotals']:
+                subtotal.pop(key, None)
+
+        self.assertEqual(to_compare, expected_values)
+
+    def assert_document_tax_totals(self, document, expected_values):
+        document.invalidate_model(fnames=['tax_totals'])
+        self.assert_tax_totals(document.tax_totals, document.currency_id, expected_values)
+
     def assert_invoice_outstanding_to_reconcile_widget(self, invoice, expected_amounts):
         """ Check the outstanding widget before the reconciliation.
         :param invoice:             An invoice.

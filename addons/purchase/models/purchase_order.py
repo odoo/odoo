@@ -28,10 +28,13 @@ class PurchaseOrder(models.Model):
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
 
             if order.company_id.tax_calculation_rounding_method == 'round_globally':
-                tax_results = self.env['account.tax']._compute_taxes([
-                    line._convert_to_tax_base_line_dict()
-                    for line in order_lines
-                ])
+                tax_results = self.env['account.tax']._compute_taxes(
+                    [
+                        line._convert_to_tax_base_line_dict()
+                        for line in order_lines
+                    ],
+                    order.company_id,
+                )
                 totals = tax_results['totals']
                 amount_untaxed = totals.get(order.currency_id, {}).get('amount_untaxed', 0.0)
                 amount_tax = totals.get(order.currency_id, {}).get('amount_tax', 0.0)
@@ -216,6 +219,7 @@ class PurchaseOrder(models.Model):
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
                 order.currency_id or order.company_id.currency_id,
+                order.company_id,
             )
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')

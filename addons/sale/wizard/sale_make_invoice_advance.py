@@ -323,8 +323,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             )
             for line in order_lines
         ]
-        computed_taxes = self.env['account.tax']._compute_taxes(
-            tax_base_line_dicts)
+        computed_taxes = self.env['account.tax']._compute_taxes(tax_base_line_dicts, self.company_id)
         down_payment_values = []
         for line, tax_repartition in computed_taxes['base_lines_to_update']:
             taxes = line['taxes'].flatten_taxes_hierarchy()

@@ -330,8 +330,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 2576.77 | 2946.11 |  369.34
 
-        self.assertAlmostEqual(order.amount_total, 1901.11, 2, "The order total with programs should be 1901.11")
-        self.assertEqual(order.amount_untaxed, 1594.95, "The order untaxed total without any programs should be 2576.77")
+        self.assertRecordValues(order, [{
+            'amount_total': 1901.11,
+            'amount_untaxed': 1594.95,
+        }])
         self.assertEqual(len(order.order_line.ids), 5, "The order without any programs should have 5 lines")
 
         # Apply all the programs
@@ -345,8 +347,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1901.11 |  306.16
 
-        self.assertAlmostEqual(order.amount_total, 1901.11, 2, "The order total with programs should be 1901.11")
-        self.assertEqual(order.amount_untaxed, 1594.95, "The order untaxed total with programs should be 1594.95")
+        self.assertRecordValues(order, [{
+            'amount_total': 1901.11,
+            'amount_untaxed': 1594.95,
+        }])
         self.assertEqual(len(order.order_line.ids), 8, "Order should contains 5 regular product lines and 3 free product lines")
 
         # Apply 10% on top of everything
@@ -362,18 +366,24 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL AFTER APPLYING 10% GLOBAL PROGRAM            | 1435.46 | 1711.00 | 275.54
 
-        self.assertEqual(order.amount_total, 1711, "The order total with programs should be 1711")
-        self.assertEqual(order.amount_untaxed, 1435.46, "The order untaxed total with programs should be 1435.46")
+        self.assertRecordValues(order, [{
+            'amount_total': 1711.0,
+            'amount_untaxed': 1435.46,
+        }])
         self.assertEqual(len(order.order_line.ids), 12, "Order should contains 5 regular product lines, 3 free product lines and 4 discount lines (one for every tax)")
 
         # -- This is a test inside the test
         order.order_line._compute_tax_id()
-        self.assertEqual(order.amount_total, 1711, "Recomputing tax on sale order lines should not change total amount")
-        self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
+        self.assertRecordValues(order, [{
+            'amount_total': 1711.0,
+            'amount_untaxed': 1435.46,
+        }])
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         self._auto_rewards(order, self.all_programs)
-        self.assertEqual(order.amount_total, 1711, "Recomputing tax on sale order lines should not change total amount")
-        self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
+        self.assertRecordValues(order, [{
+            'amount_total': 1711.0,
+            'amount_untaxed': 1435.46,
+        }])
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")
         # -- End test inside the test
 
@@ -402,8 +412,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL AFTER APPLYING 20% ON LARGE CABINET          | 1363.46 | 1628.2 |  264.74
 
-        self.assertEqual(order.amount_total, 1628.2, "The order total with programs should be 1628.2")
-        self.assertEqual(order.amount_untaxed, 1363.46, "The order untaxed total with programs should be 1363.45")
+        self.assertRecordValues(order, [{
+            'amount_total': 1628.2,
+            'amount_untaxed': 1363.46,
+        }])
         self.assertEqual(len(order.order_line.ids), 13, "Order should have a new discount line for 20% on Large Cabinet")
 
         # Check that if you delete one of the discount tax line, the others tax lines from the same promotion got deleted as well.
@@ -464,8 +476,10 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # --------------------------------------------------------------------------------
         # TOTAL                                              | 1118.00 | 1349.00 |  240.20
 
-        self.assertAlmostEqual(order.amount_total, 1358.2, 2, "The order total with programs should be 1358.20")
-        self.assertEqual(order.amount_untaxed, 1118, "The order untaxed total with programs should be 1118.00")
+        self.assertRecordValues(order, [{
+            'amount_total': 1358.2,
+            'amount_untaxed': 1118.0,
+        }])
         self.assertEqual(len(order.order_line.ids), 10, "Order should contains 10 lines: 4 products lines, 2 free products lines and 4 discount lines")
 
     def test_program_numbers_extras(self):

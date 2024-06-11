@@ -52,24 +52,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ]
         })
 
-    def assert_tax_totals(self, document, expected_values):
-        main_keys_to_ignore = {
-            'formatted_amount_total', 'formatted_amount_untaxed', 'display_tax_base', 'subtotals_order'}
-        group_keys_to_ignore = {'group_key', 'tax_group_id', 'tax_group_name',
-                                'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
-        subtotals_keys_to_ignore = {'formatted_amount'}
-        to_compare = document.copy()
-        for key in main_keys_to_ignore:
-            del to_compare[key]
-        for key in group_keys_to_ignore:
-            for groups in to_compare['groups_by_subtotal'].values():
-                for group in groups:
-                    del group[key]
-        for key in subtotals_keys_to_ignore:
-            for subtotal in to_compare['subtotals']:
-                del subtotal[key]
-        self.assertEqual(to_compare, expected_values)
-
     # ========================== Tests Payment Terms ==========================
     def test_early_payment_end_date(self):
         inv_1200_10_percents_discount_no_tax = self.env['account.move'].create({
@@ -475,23 +457,28 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-            self.assert_tax_totals(invoice.tax_totals, {
-                'amount_untaxed': 1000,
-                'amount_total': 1090,
+
+            self.assert_tax_totals(invoice.tax_totals, invoice.currency_id, {
+                'amount_untaxed': 1000.0,
+                'amount_total': 1090.0,
+                'display_tax_base': True,
                 'groups_by_subtotal': {
                     'Untaxed Amount': [
                         {
-                            'tax_group_amount': 90,
-                            'tax_group_base_amount': 900,
+                            'tax_group_name': tax.tax_group_id.name,
+                            'tax_group_amount': 90.0,
+                            'tax_group_base_amount': 900.0,
+                            'tax_group_id': tax.tax_group_id.id,
                         },
                     ],
                 },
                 'subtotals': [
                     {
                         'name': "Untaxed Amount",
-                        'amount': 1000,
+                        'amount': 1000.0,
                     }
                 ],
+                'subtotals_order': ["Untaxed Amount"],
             })
 
     def test_intracomm_bill_with_early_payment_included(self):
@@ -660,14 +647,17 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-            self.assert_tax_totals(invoice.tax_totals, {
+            self.assert_tax_totals(invoice.tax_totals, invoice.currency_id, {
                 'amount_untaxed': 100,
                 'amount_total': 120.58,
+                'display_tax_base': True,
                 'groups_by_subtotal': {
                     'Untaxed Amount': [
                         {
+                            'tax_group_name': tax.tax_group_id.name,
                             'tax_group_amount': 20.58,
                             'tax_group_base_amount': 98,
+                            'tax_group_id': tax.tax_group_id.id,
                         },
                     ],
                 },
@@ -677,6 +667,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                         'amount': 100,
                     }
                 ],
+                'subtotals_order': ["Untaxed Amount"],
             })
 
     def test_mixed_epd_with_tax_no_duplication(self):
