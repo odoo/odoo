@@ -7,7 +7,7 @@
             <field name="name">Generic Tax report</field>
             <field name="filter_multi_company">tax_units</field>
             <field name="filter_fiscal_position" eval="1"/>
-            <field name="default_opening_date_filter">last_tax_period</field>
+            <field name="default_opening_date_filter">previous_tax_period</field>
             <field name="only_tax_exigible" eval="True"/>
             <field name="column_ids">
                 <record id="generic_tax_report_column_net" model="account.report.column">
