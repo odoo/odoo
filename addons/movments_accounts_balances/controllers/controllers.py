@@ -90,6 +90,35 @@ class AccountBalance(models.Model):
         return {'balance_info': balance_info}
 
     @api.model
+    def get_all_customers(self):
+        # Define the domain to filter partners based on the customer tag
+        domain = [('category_id.name', '=', 'Customer')]
+        # domain = []
+
+        # Search for partners based on the domain
+        customers = self.env['res.partner'].search(domain)
+
+        # Prepare the partner data
+        customer_data = [{'id': customer.id, 'name': customer.name} for customer in customers]
+
+        # Return the customer data
+        return customer_data
+
+    @api.model
+    def get_all_vendors(self):
+        # Define the domain to filter partners based on the vendor tag
+        domain = [('category_id.name', '=', 'Vendor')]
+
+        # Search for partners based on the domain
+        vendors = self.env['res.partner'].search(domain)
+
+        # Prepare the partner data
+        vendor_data = [{'id': vendor.id, 'name': vendor.name} for vendor in vendors]
+
+        # Return the vendor data
+        return vendor_data
+
+    @api.model
     def general_ledger_report(self, account_id, start_date, end_date):
         domain = [
             ('account_id', '=', account_id),
@@ -539,3 +568,163 @@ class AccountBalance(models.Model):
             return "Account deleted successfully."
         except Exception as e:
             return "Failed to delete account: {}".format(e)
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+    @api.model
+    def create_customer(self, name, is_company, company_id, email, phone):
+        """
+        Create a new customer in the Odoo CRM module and assign the 'Customer' category.
+
+        Args:
+        - name (str): The name of the customer.
+        - is_company (bool): True if the customer is a company, False if an individual.
+        - company_id (int): ID of the company this customer is associated with, if any.
+        - email (str, optional): Email address of the customer.
+        - phone (str, optional): Phone number of the customer.
+
+        Returns:
+        dict: Dictionary containing a key 'partner_info' with the created customer details.
+
+        Raises:
+        ValidationError: If any validation fails.
+        """
+        # Search for or create the 'Customer' category
+        customer_category = self.env['res.partner.category'].search([('name', '=', 'Customer')], limit=1)
+        if not customer_category:
+            customer_category = self.env['res.partner.category'].create({'name': 'Customer'})
+
+        # Check for duplicate customer using name and company_id
+        if self.search([('name', '=', name), ('company_id', '=', company_id)], limit=1):
+            raise ValidationError("A customer with this name already exists in the selected company.")
+
+        # Customer values to create
+        customer_vals = {
+            'name': name,
+            'is_company': is_company,
+            'company_id': company_id,
+            'email': email or None,
+            'phone': phone or None,
+            'category_id': [(6, 0, [customer_category.id])],  # Assign the customer category
+        }
+
+        # Create new customer record
+        new_customer = self.create(customer_vals)
+
+        # Prepare customer data for response
+        customer_data = {
+            'id': new_customer.id,
+            'name': new_customer.name,
+            'is_company': new_customer.is_company,
+            'email': new_customer.email,
+            'phone': new_customer.phone,
+            'company_id': new_customer.company_id.id if new_customer.company_id else None,
+        }
+
+        return {'partner_info': customer_data}
+
+    @api.model
+    def create_vendor(self, name, is_company, company_id, email, phone):
+        """
+        Create a new customer in the Odoo CRM module and assign the 'Customer' category.
+
+        Args:
+        - name (str): The name of the customer.
+        - is_company (bool): True if the customer is a company, False if an individual.
+        - company_id (int): ID of the company this customer is associated with, if any.
+        - email (str, optional): Email address of the customer.
+        - phone (str, optional): Phone number of the customer.
+
+        Returns:
+        dict: Dictionary containing a key 'partner_info' with the created customer details.
+
+        Raises:
+        ValidationError: If any validation fails.
+        """
+        # Search for or create the 'Customer' category
+        vendor_category = self.env['res.partner.category'].search([('name', '=', 'Vendor')], limit=1)
+        if not vendor_category:
+            vendor_category = self.env['res.partner.category'].create({'name': 'Vendor'})
+
+        # Check for duplicate customer using name and company_id
+        if self.search([('name', '=', name), ('company_id', '=', company_id)], limit=1):
+            raise ValidationError("A customer with this name already exists in the selected company.")
+
+        # Customer values to create
+        vendor_vals = {
+            'name': name,
+            'is_company': is_company,
+            'company_id': company_id,
+            'email': email or None,
+            'phone': phone or None,
+            'category_id': [(6, 0, [vendor_category.id])],  # Assign the customer category
+        }
+
+        # Create new customer record
+        new_vendor = self.create(vendor_vals)
+
+        # Prepare customer data for response
+        vendor_data = {
+            'id': new_vendor.id,
+            'name': new_vendor.name,
+            'is_company': new_vendor.is_company,
+            'email': new_vendor.email,
+            'phone': new_vendor.phone,
+            'company_id': new_vendor.company_id.id if new_vendor.company_id else None,
+        }
+
+        return {'partner_info': vendor_data}
+
+    @api.model
+    def get_partner(self, partner_id):
+        """
+        Retrieves a partner by ID within Odoo's CRM module.
+
+        Args:
+        - partner_id (int): The ID of the partner to retrieve.
+
+        Returns:
+        dict: Dictionary containing a key 'partner_info' with details of the retrieved partner.
+
+        Raises:
+        ValidationError: If the partner does not exist.
+        """
+        partner = self.browse(partner_id)
+        if not partner.exists():
+            raise ValidationError("Partner with ID {} does not exist.".format(partner_id))
+
+        partner_data = {
+            'id': partner.id,
+            'name': partner.name,
+            'is_company': partner.is_company,
+            'email': partner.email,
+            'phone': partner.phone,
+            'company_id': partner.company_id.id,
+        }
+        response = {'partner_info': partner_data}
+        return response
+
+    @api.model
+    def delete_partner(self, partner_id):
+        """
+        Deletes a partner from Odoo's CRM module.
+
+        Args:
+        - partner_id (int): The ID of the partner to be deleted.
+
+        Returns:
+        str: Success or error message.
+        """
+        Partner = self.env['res.partner']
+        partner = Partner.search([('id', '=', partner_id)])
+
+        if not partner:
+            return "Partner not found."
+
+        try:
+            partner.unlink()  # Delete the partner
+            return "Partner deleted successfully."
+        except Exception as e:
+            return "Failed to delete partner: {}".format(e)
+
