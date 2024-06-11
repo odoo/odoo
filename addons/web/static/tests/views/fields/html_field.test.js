@@ -1,5 +1,6 @@
 import {
     clickSave,
+    contains,
     defineModels,
     fields,
     models,
@@ -204,6 +205,7 @@ test("field html translatable", async () => {
     });
 
     expect("[name=txt] textarea").toHaveClass("o_field_translate");
+    await contains("[name=txt] textarea").click();
     expect(".o_field_html .btn.o_field_translate").toHaveCount(1, {
         message: "should have a translate button",
     });
