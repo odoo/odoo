@@ -846,17 +846,14 @@ overridden by modules), because:
 <template id="new_page_template_s_showcase" inherit_id="website.s_showcase" primary="True"/>
 
 <template id="new_page_template_landing_s_showcase" inherit_id="website.new_page_template_s_showcase" primary="True">
-    <xpath expr="//h3|//h4" position="replace">
-        <h3>Intuitive Touch Controls</h3>
+    <xpath expr="//h5" position="replace" mode="inner">
+        Intuitive Touch Controls
     </xpath>
-    <xpath expr="(//h3)[2]" position="replace">
-        <h3>Secure and Comfortable Fit</h3>
+    <xpath expr="(//h5)[2]" position="replace" mode="inner">
+        Secure and Comfortable Fit
     </xpath>
-    <xpath expr="(//h3)[3]" position="replace">
-        <h3>On-the-Go Charging</h3>
-    </xpath>
-    <xpath expr="(//h3)[4]" position="replace">
-        <h3>Sleek and Modern Design</h3>
+    <xpath expr="(//h5)[3]" position="replace" mode="inner">
+        On-the-Go Charging
     </xpath>
     <xpath expr="//p" position="replace">
         <p>Adjust volume, skip tracks, answer calls, and activate voice assistants with a simple tap, keeping your hands free and your focus on what matters most.</p>
@@ -866,9 +863,6 @@ overridden by modules), because:
     </xpath>
     <xpath expr="(//p)[3]" position="replace">
         <p>The compact charging case offers convenient on-the-go charging with a battery life that lasts up to 17h, you can enjoy your favorite tunes without interruption.</p>
-    </xpath>
-    <xpath expr="(//p)[4]" position="replace">
-        <p>The earbuds fit seamlessly into your lifestyle, while the charging case's pocket-friendly size ensures you can carry your audio experience wherever you roam.</p>
     </xpath>
 </template>
 
