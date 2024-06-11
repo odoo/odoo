@@ -1284,6 +1284,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     values = Partner.browse(partner_id)
             elif partner_id == -1:
                 mode = ('new', kw.get('mode') or 'shipping')
+                if mode[1] == 'billing':
+                    can_edit_vat = order.partner_id.can_edit_vat()
             else: # no mode - refresh without post?
                 return request.redirect('/shop/checkout')
 
