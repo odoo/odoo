@@ -6,6 +6,8 @@
         <field name="model">payment.provider</field>
         <field name="arch" type="xml">
             <form string="Payment provider">
+                <!-- Prevent considering the field readonly and thus allow writing on it. -->
+                <field name="is_published" invisible="1"/>
                 <sheet>
                     <!-- === Stat Buttons === -->
                     <div class="oe_button_box" name="button_box"
