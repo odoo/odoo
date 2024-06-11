@@ -1,13 +1,11 @@
 /** @odoo-module **/
 
-import { defineModels, webModels } from "@web/../tests/web_test_helpers";
+import { after, expect } from "@odoo/hoot";
+import { Deferred } from "@odoo/hoot-mock";
+import { MockServer, defineModels, webModels } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { BusBus } from "./mock_server/mock_models/bus_bus";
 import { IrWebSocket } from "./mock_server/mock_models/ir_websocket";
-import { Deferred } from "@odoo/hoot-mock";
-import { after, expect } from "@odoo/hoot";
-import { patch } from "@web/core/utils/patch";
-import { patchWebsocketWorkerWithCleanup } from "./mock_websocket";
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -49,48 +47,58 @@ viewsRegistry.category("form").add(
 // should be enough to decide whether or not notifications/channel
 // subscriptions... are received.
 const TIMEOUT = 500;
-const callbackRegistry = registry.category("mock_server_websocket_callbacks");
 
 /**
- * Returns a deferred that resolves when a websocket subscription is
- * done. If channels are provided, the deferred will only resolve when
- * we subscribe to all of them.
- *
- * @param {...string} [requiredChannels]
- * @returns {import("@web/core/utils/concurrency").Deferred}
+ * @param {string} eventName
+ * @param {Function} cb
  */
-export function waitUntilSubscribe(...requiredChannels) {
-    const subscribeDeferred = new Deferred();
-    const failTimeout = setTimeout(() => {
-        const errMsg = `Subscription to ${JSON.stringify(requiredChannels)} not received.`;
-        subscribeDeferred.reject(new Error(errMsg));
-        expect(false).toBe(true, { message: errMsg });
-    }, TIMEOUT);
-    const lastCallback = callbackRegistry.get("subscribe", () => {});
-    callbackRegistry.add(
-        "subscribe",
-        (data) => {
-            const { channels } = data;
-            lastCallback(data);
-            const allChannelsSubscribed = requiredChannels.every((channel) =>
-                channels.includes(channel)
-            );
-            if (allChannelsSubscribed) {
-                subscribeDeferred.resolve();
-                expect(true).toBe(true, {
-                    message: `Subscription to ${JSON.stringify(requiredChannels)} received.`,
-                });
-                clearTimeout(failTimeout);
-            }
-        },
-        { force: true }
-    );
-    return subscribeDeferred;
+export function onWebsocketEvent(eventName, cb) {
+    const callbacks = registry
+        .category("mock_server_websocket_callbacks")
+        .get(eventName, new Set());
+    callbacks.add(cb);
+    registry.category("mock_server_websocket_callbacks").add(eventName, callbacks, { force: true });
 }
 
 /**
- * Returns a deferred that resolves when the given channel(s) addition/deletion
- * is notified to the websocket worker.
+ * @param {string} eventName
+ * @param {Function} cb
+ */
+export function offWebsocketEvent(eventName, cb) {
+    registry.category("mock_server_websocket_callbacks").get(eventName, new Set()).delete(cb);
+}
+
+/**
+ * Returns a deferred that resolves when a websocket subscription is
+ * done.
+ *
+ * @returns {import("@web/core/utils/concurrency").Deferred}
+ */
+export function waitUntilSubscribe() {
+    const def = new Deferred();
+    const timeout = setTimeout(() => handleResult(false), TIMEOUT);
+
+    function handleResult(success) {
+        clearTimeout(timeout);
+        offWebsocketEvent("subscribe", onSubscribe);
+        const message = success
+            ? "Websocket subscription received."
+            : "Websocket subscription not received.";
+        expect(success).toBe(true, { message });
+        if (success) {
+            def.resolve();
+        } else {
+            def.reject(new Error(message));
+        }
+    }
+    const onSubscribe = () => handleResult(true);
+    onWebsocketEvent("subscribe", onSubscribe);
+    return def;
+}
+
+/**
+ * Returns a deferred that resolves when the given channel addition/deletion
+ * occurs. Resolve immediately if the operation was already done.
  *
  * @param {string[]} channels
  * @param {object} [options={}]
@@ -98,43 +106,35 @@ export function waitUntilSubscribe(...requiredChannels) {
  *
  * @returns {import("@web/core/utils/concurrency").Deferred} */
 export function waitForChannels(channels, { operation = "add" } = {}) {
-    const missingChannels = new Set(channels);
-    const deferred = new Deferred();
+    const { env } = MockServer.current;
+    const def = new Deferred();
+
     function check({ crashOnFail = false } = {}) {
-        const success = missingChannels.size === 0;
+        const userChannels = new Set(env["bus.bus"].channelsByUser[env.uid]);
+        const success = channels.every((c) => userChannels.has(c));
         if (!success && !crashOnFail) {
             return;
         }
-        unpatch();
         clearTimeout(failTimeout);
-        const msg = success
+        offWebsocketEvent("subscribe", check);
+        const message = success
             ? `Channel(s) [${channels.join(", ")}] ${operation === "add" ? "added" : "deleted"}.`
             : `Waited ${TIMEOUT}ms for [${channels.join(", ")}] to be ${
                   operation === "add" ? "added" : "deleted"
               }`;
-        expect(success).toBe(true, { message: msg });
+        expect(success).toBe(true, { message });
         if (success) {
-            deferred.resolve();
+            def.resolve();
         } else {
-            deferred.reject(new Error(msg));
+            def.reject(new Error(message));
         }
     }
+
     const failTimeout = setTimeout(() => check({ crashOnFail: true }), TIMEOUT);
-    after(() => {
-        if (missingChannels.length > 0) {
-            check({ crashOnFail: true });
-        }
-    });
-    const worker = patchWebsocketWorkerWithCleanup();
-    const workerMethod = operation === "add" ? "_addChannel" : "_deleteChannel";
-    const unpatch = patch(worker, {
-        async [workerMethod](client, channel) {
-            await super[workerMethod](client, channel);
-            missingChannels.delete(channel);
-            check();
-        },
-    });
-    return deferred;
+    after(() => check({ crashOnFail: true }));
+    onWebsocketEvent("subscribe", check);
+    check();
+    return def;
 }
 
 /**
