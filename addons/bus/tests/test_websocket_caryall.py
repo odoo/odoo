@@ -14,6 +14,7 @@ try:
 except ImportError:
     pass
 
+from odoo import http
 from odoo.api import Environment
 from odoo.tests import common, new_test_user
 from .common import WebsocketCase
@@ -184,6 +185,22 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assertEqual(1, len(notifications))
         self.assertEqual(notifications[0]['message']['type'], 'notif_type')
         self.assertEqual(notifications[0]['message']['payload'], 'another_message')
+
+    def test_trigger_notification_unsupported_language(self):
+        websocket = self.websocket_connect()
+        # set session lang to what a websitor visitor could have (based on their
+        # preferred language), this could be a unknown language (ex. territorial
+        # specific) or a known language that is uninstalled; in all cases this
+        # should not crash the notif. dispatching.
+        self.session.context['lang'] = 'fr_LU'
+        http.root.session_store.save(self.session)
+        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
+        self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+        self.trigger_notification_dispatching(["my_channel"])
+        notifications = json.loads(websocket.recv())
+        self.assertEqual(1, len(notifications))
+        self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+        self.assertEqual(notifications[0]['message']['payload'], 'message')
 
     def test_subscribe_higher_last_notification_id(self):
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
