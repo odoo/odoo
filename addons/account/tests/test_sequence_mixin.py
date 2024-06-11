@@ -660,6 +660,83 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
 
 @tagged('post_install', '-at_install')
+class TestSequenceGaps(TestSequenceMixinCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        move_1 = cls.create_move()
+        move_2 = cls.create_move()
+        move_3 = cls.create_move()
+        all_moves = move_1 + move_2 + move_3
+        all_moves.action_post()
+        cls.all_moves = all_moves
+
+    def test_basic(self):
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_first(self):
+        new_move = self.create_move(name="NEW/000001")
+        new_move.action_post()
+        self.assertEqual(new_move.made_sequence_gap, False)
+
+    def test_unlink(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[0].unlink()
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True, False])
+        self.all_moves[1].button_draft()
+        self.all_moves[1].unlink()
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+
+    def test_unlink_2(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[1].unlink()
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
+        self.all_moves[0].button_draft()
+        self.all_moves[0].unlink()
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+
+    def test_change_sequence(self):
+        previous = self.all_moves[1].name
+        self.all_moves[1].name = '/'
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.all_moves[1].name = previous
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_change_multi(self):
+        self.all_moves[0].name = '/'
+        self.all_moves[1].name = '/'
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+
+    def test_change_multi_2(self):
+        self.all_moves[1].name = '/'
+        self.all_moves[0].name = '/'
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+
+    def test_null_change(self):
+        self.all_moves[1].name = self.all_moves[1].name
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_create_fill_gap(self):
+        previous = self.all_moves[1].name
+        self.all_moves[1].button_draft()
+        self.all_moves[1].unlink()
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
+        new_move = self.create_move(name=previous)
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, False])
+        self.assertEqual(new_move.made_sequence_gap, True)
+        new_move.action_post()
+        self.assertEqual(new_move.made_sequence_gap, False)
+
+    def test_create_gap(self):
+        last = self.all_moves[2].name
+        format_string, format_values = self.all_moves[0]._get_sequence_format_param(last)
+        format_values['seq'] = format_values['seq'] + 10
+        new_move = self.create_move(name=format_string.format(**format_values))
+        new_move.action_post()
+        self.assertEqual(new_move.made_sequence_gap, True)
+
+
+@tagged('post_install', '-at_install')
 class TestSequenceMixinDeletion(TestSequenceMixinCommon):
     @classmethod
     def setUpClass(cls):
