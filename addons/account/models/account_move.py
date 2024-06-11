@@ -253,7 +253,7 @@ class AccountMove(models.Model):
         compute='_compute_suitable_journal_ids',
     )
     highest_name = fields.Char(compute='_compute_highest_name')
-    made_sequence_hole = fields.Boolean(compute='_compute_made_sequence_hole', search="_search_made_sequence_hole")
+    made_sequence_gap = fields.Boolean(compute='_compute_made_sequence_gap', store=True)  # store wether this is the first move breaking the natural sequencing
     show_name_warning = fields.Boolean(store=False)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
@@ -641,12 +641,6 @@ class AccountMove(models.Model):
                                  ON account_move(name, journal_id)
                               WHERE (state = 'posted' AND name != '/')
             """)
-        if not index_exists(self.env.cr, 'account_move_sequence_index3'):
-            # Used for gap detection in list views
-            self.env.cr.execute("""
-                CREATE INDEX account_move_sequence_index3
-                          ON account_move (journal_id, sequence_prefix desc, (sequence_number+1) desc)
-            """)
 
     def init(self):
         super().init()
@@ -654,6 +648,13 @@ class AccountMove(models.Model):
                      indexname='account_move_journal_id_company_id_idx',
                      tablename='account_move',
                      expressions=['journal_id', 'company_id', 'date'])
+        create_index(
+            self.env.cr,
+            indexname='account_move_made_gaps',
+            tablename='account_move',
+            expressions=['journal_id', 'company_id', 'date'],
+            where="made_sequence_gap = TRUE",
+        )  # used in <account.journal>._query_has_sequence_holes
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -819,37 +820,19 @@ class AccountMove(models.Model):
         for record in self:
             record.highest_name = record._get_last_sequence()
 
-    @api.model
-    def _get_query_made_hole(self, ids=None):
-        ids_domain = SQL()
-        if ids:
-            ids_domain = SQL("AND this.id = ANY(%s)", ids)
-        elif irregular_domain := self.env.context.get('irregular_sequence_domain'):
-            ids_domain = SQL("AND this.id IN %s", self._where_calc(irregular_domain).subselect())
-        return SQL("""(
-                SELECT this.id
-                  FROM account_move this
-                  JOIN res_company company ON company.id = this.company_id
-             LEFT JOIN account_move other ON this.journal_id = other.journal_id
-                                         AND this.sequence_prefix = other.sequence_prefix
-                                         AND this.sequence_number = other.sequence_number + 1
-                 WHERE other.id IS NULL
-                   AND this.sequence_number != 1
-                   AND this.name != '/'
-                   %s
-        )""", ids_domain)
-
-    @api.depends('name', 'journal_id')
-    def _compute_made_sequence_hole(self):
-        sql = self._get_query_made_hole(self.ids)
-        made_sequence_hole = {id_ for id_, in self.env.execute_query(sql)}
-        for move in self:
-            move.made_sequence_hole = move.id in made_sequence_hole
-
-    def _search_made_sequence_hole(self, operator, value):
-        sql = self._get_query_made_hole()
-        operator = 'in' if (operator == '=') ^ (value is False) else 'not in'
-        return [('id', operator, sql)]
+    @api.depends('journal_id', 'sequence_number', 'sequence_prefix', 'state')
+    def _compute_made_sequence_gap(self):
+        unposted = self.filtered(lambda move: move.sequence_number != 0 and move.state != 'posted')
+        unposted.made_sequence_gap = True
+        for (journal, prefix), moves in (self - unposted).grouped(lambda m: (m.journal_id, m.sequence_prefix)).items():
+            previous_numbers = set(self.env['account.move'].sudo().search([
+                ('journal_id', '=', journal.id),
+                ('sequence_prefix', '=', prefix),
+                ('sequence_number', '>=', min(moves.mapped('sequence_number')) - 1),
+                ('sequence_number', '<=', max(moves.mapped('sequence_number')) - 1),
+            ]).mapped('sequence_number'))
+            for move in moves:
+                move.made_sequence_gap = move.sequence_number > 1 and (move.sequence_number - 1) not in previous_numbers
 
     @api.depends('move_type')
     def _compute_type_name(self):
@@ -1928,6 +1911,7 @@ class AccountMove(models.Model):
         self._conditional_add_to_compute('payment_reference', lambda move: (
             move.name and move.name != '/'
         ))
+        self._set_next_made_sequence_gap(False)
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
@@ -2811,6 +2795,9 @@ class AccountMove(models.Model):
                     raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
                 move.journal_id.sequence_override_regex = False
 
+        if {'sequence_prefix', 'sequence_number', 'journal_id', 'name'} & vals.keys():
+            self._set_next_made_sequence_gap(True)
+
         stolen_moves = self.browse(set(move for move in self._stolen_move(vals)))
         container = {'records': self | stolen_moves}
         with self.env.protecting(self._get_protected_vals(vals, self)), self._check_balanced(container):
@@ -2910,6 +2897,7 @@ class AccountMove(models.Model):
             ))
 
     def unlink(self):
+        self._set_next_made_sequence_gap(True)
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
         logger_message = self._get_unlink_logger_message()
         self.line_ids.unlink()
@@ -4380,6 +4368,24 @@ class AccountMove(models.Model):
         )._invoice_paid_hook()
 
         return to_post
+
+    def _set_next_made_sequence_gap(self, made_gap: bool):
+        """Update the field made_sequence_gap on the next moves of the current ones.
+
+        Either:
+        - we changed something related to the sequence on the current moves, so we need to set the
+          sequence as broken on the next moves before updating (made_gap=True)
+        - we are filling a gap, so we need to update the next move to remove the flag (made_gap=False)
+        """
+        next_moves = self.browse()
+        named = self.filtered(lambda m: m.name and m.name != '/')
+        for (journal, prefix), moves in named.grouped(lambda move: (move.journal_id, move.sequence_prefix)).items():
+            next_moves += self.env['account.move'].sudo().search([
+                ('journal_id', '=', journal.id),
+                ('sequence_prefix', '=', prefix),
+                ('sequence_number', 'in', [move.sequence_number + 1 for move in moves]),
+            ])
+        next_moves.made_sequence_gap = made_gap
 
     def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, from_ocr=False, timeout=10):
         # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders

@@ -127,7 +127,7 @@ class account_journal(models.Model):
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
     def _query_has_sequence_holes(self):
-        self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'sequence_number', 'state'])
+        self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'made_sequence_gap'])
         queries = []
         for company in self.env.companies:
             queries.append(SQL(
@@ -137,10 +137,9 @@ class account_journal(models.Model):
                       FROM account_move move
                      WHERE move.journal_id = ANY(%(journal_ids)s)
                        AND move.company_id = %(company_id)s
-                       AND move.state = 'posted'
+                       AND move.made_sequence_gap = TRUE
                        AND %(fiscalyear_lock_date_clause)s
                   GROUP BY move.journal_id, move.sequence_prefix
-                    HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
                 """,
                 journal_ids=self.ids,
                 company_id=company.id,
@@ -1029,7 +1028,6 @@ class account_journal(models.Model):
                 'search_default_group_by_sequence_prefix': 1,
                 'search_default_irregular_sequences': 1,
                 'expand': 1,
-                'irregular_sequence_domain': domain,
             }
         }
 
