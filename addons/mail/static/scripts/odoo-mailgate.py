@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 #
 # odoo-mailgate
@@ -13,30 +13,33 @@
 #
 # *: |/home/odoo/src/odoo-mail.py
 #
-import argparse
+# Note python2 was chosen on purpose for backward compatibility with old mail
+# servers.
+#
+import optparse
 import sys
 import traceback
-import xmlrpc.client
+import xmlrpclib
 
 def main():
-    parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument("-d", "--database", dest="database", help="Odoo database name (default: %(default)s)", default='odoo')
-    parser.add_argument("-u", "--userid", dest="userid", help="Odoo user id to connect with (default: %(default)s)", default=1, type=int)
-    parser.add_argument("-p", "--password", dest="password", help="Odoo user password (default: %(default)s)", default='admin')
-    parser.add_argument("--host", dest="host", help="Odoo host (default: %(default)s)", default='localhost')
-    parser.add_argument("--port", dest="port", help="Odoo port (default: %(default)s)", default=8069, type=int)
-    args = parser.parse_args()
+    op = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.2')
+    op.add_option("-d", "--database", dest="database", help="Odoo database name (default: %default)", default='odoo')
+    op.add_option("-u", "--userid", dest="userid", help="Odoo user id to connect with (default: %default)", default=1, type=int)
+    op.add_option("-p", "--password", dest="password", help="Odoo user password (default: %default)", default='admin')
+    op.add_option("--host", dest="host", help="Odoo host (default: %default)", default='localhost')
+    op.add_option("--port", dest="port", help="Odoo port (default: %default)", default=8069, type=int)
+    (o, args) = op.parse_args()
 
     try:
-        msg = sys.stdin.buffer.read()  # Read as bytes
-        models = xmlrpc.client.ServerProxy(f'http://{args.host}:{args.port}/xmlrpc/2/object', allow_none=True)
-        models.execute_kw(args.database, args.userid, args.password, 'mail.thread', 'message_process', [False, xmlrpc.client.Binary(msg)], {})
-    except xmlrpc.client.Fault as e:
+        msg = sys.stdin.read()
+        models = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/2/object' % (o.host, o.port), allow_none=True)
+        models.execute_kw(o.database, o.userid, o.password, 'mail.thread', 'message_process', [False, xmlrpclib.Binary(msg)], {})
+    except xmlrpclib.Fault as e:
         # reformat xmlrpc faults to print a readable traceback
-        err = f"xmlrpc.client.Fault: {e.faultCode}\n{e.faultString}"
+        err = "xmlrpclib.Fault: %s\n%s" % (e.faultCode, e.faultString)
         sys.exit(err)
     except Exception as e:
-        traceback.print_exc(file=sys.stderr)
+        traceback.print_exc(None, sys.stderr)
         sys.exit(2)
 
 if __name__ == '__main__':
