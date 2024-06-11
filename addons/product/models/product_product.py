@@ -640,7 +640,7 @@ class ProductProduct(models.Model):
 
     def _get_filtered_sellers(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
-        if date is None:
+        if not date:
             date = fields.Date.context_today(self)
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
