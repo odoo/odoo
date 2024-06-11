@@ -196,6 +196,10 @@ class PortalChatter(http.Controller):
             }
         }
 
+    def _get_void_portal_messages_filter(self):
+        """Return a filter to check if a message is void or not."""
+        return lambda m: m.body or m.attachment_ids
+
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
         if not domain:
@@ -205,11 +209,7 @@ class PortalChatter(http.Controller):
         model = request.env[res_model]
         field = model._fields['website_message_ids']
         field_domain = field.get_domain_list(model)
-        domain = expression.AND([
-            domain,
-            field_domain,
-            [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
-        ])
+        domain = expression.AND([domain, field_domain, [("res_id", "=", res_id)]])
 
         # Check access
         Message = request.env['mail.message']
@@ -221,9 +221,14 @@ class PortalChatter(http.Controller):
             if not request.env['res.users'].has_group('base.group_user'):
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
+
+        messages = Message.search(domain).filtered(
+            self._get_void_portal_messages_filter()
+        )
+
         return {
-            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
-            'message_count': Message.search_count(domain)
+            "messages": messages[offset : offset + limit].portal_message_format(),
+            "message_count": len(messages),
         }
 
     @http.route(['/mail/update_is_internal'], type='json', auth="user", website=True)
