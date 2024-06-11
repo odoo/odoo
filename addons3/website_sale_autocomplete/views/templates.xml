@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <template id="website_sale_address_with_autocomplete" inherit_id="website_sale.address">
+        <xpath expr="//input[@name='street']" position="attributes">
+            <attribute name="t-att-data-autocomplete-enabled">
+                1 if website.has_google_places_api_key() else 0
+            </attribute>
+        </xpath>
+    </template>
+</odoo>

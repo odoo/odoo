@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.PageListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow">
+    <xpath expr="//Field//ancestor::td/*[1]" position="before">
+        <t t-if="column.name === 'name' and record.data.is_homepage and record.mode !== 'edit'">
+            <i class="fa fa-fw fa-home fa-lg" title="Home page of the current website"/>
+        </t>
+    </xpath>
+    <!-- TODO master: remove this xpath -->
+    <xpath expr="//tr[@class='o_data_row']" position="attributes">
+        <attribute name="t-if">recordFilter(record, list.records)</attribute>
+        <attribute name="t-if"/><!-- stable way to cancel the above `t-if` -->
+    </xpath>
+</t>
+
+<t t-name="website.PageListView" t-inherit="web.ListView">
+    <!-- TODO master: remove this xpath -->
+    <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+        <attribute name="activeWebsite">state.activeWebsite</attribute>
+    </xpath>
+    <xpath expr="//SearchBar" position="inside">
+        <t t-set-slot="search-bar-additional-menu">
+            <t t-call="website.RecordFilter"/>
+        </t>
+    </xpath>
+</t>
+
+<t t-name="website.RecordFilter">
+    <div t-if="websiteSelection.length > 1" class="o_dropdown_container o_website_menu w-100 w-lg-auto px-3 border-start">
+        <div class="px-3 fs-5 mb-2">
+            <i class="me-2 fa fa-globe"/>
+            <h5 class="o_dropdown_title d-inline">Website</h5>
+        </div>
+        <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
+            <CheckboxItem class="{ o_menu_item: true, selected: state.activeWebsite.id === website.id }"
+                checked="state.activeWebsite.id === website.id"
+                parentClosingMode="'none'"
+                t-esc="website.name"
+                onSelected="() => this.onSelectWebsite(website)"
+            />
+            <div t-if="!website.id" class="dropdown-divider"/>
+        </t>
+    </div>
+</t>
+
+</templates>

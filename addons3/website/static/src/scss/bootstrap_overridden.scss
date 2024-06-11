@@ -1,0 +1,378 @@
+//
+// Color system
+//
+
+//Restore BS4 Colors
+$blue: #007bff !default;
+$pink: #e83e8c !default;
+$green: #28a745 !default;
+$cyan: #17a2b8 !default;
+$gray-900: #212529 !default;
+//End Restore BS4 Colors
+
+$white: #FFF !default;
+$black: #000 !default;
+
+// This coupling allows to control the appearance of some app components (and
+// more). Note that it is still possible to have more than 2 "bright" main
+// colors by using them in color combinations config instead of as theme colors.
+$light: o-color('o-color-3');
+$dark: o-color('o-color-5');
+
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+
+// Overridden here as it is a dependency for some variables/functions afterwards
+$min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
+
+// Prefix for :root CSS variables
+$variable-prefix: '' !default;
+
+// Restore negative margins disabled in BS5 by default
+$enable-negative-margins: true !default;
+
+
+
+// Customize the light and dark text colors for use in our color contrast function.
+$color-contrast-dark: o-color('900') !default;
+$color-contrast-light: o-color('white') !default;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem !default; // Need to predefine as used below
+$spacers: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 3,
+) !default; // BS default
+
+// Body
+//
+// Settings for the `<body>` element.
+
+// Bootstrap uses `$body-bg` as default value for multiple variables but also in
+// the creation of CSS rules (not controlled by variables). In case of Odoo
+// boxed layout, `$body-bg` should thus be used to control the box background
+// color so that components displayed inside are consistent (as they use the
+// variable to compute some of their colors too). The background color behind
+// the box will be forced by an Odoo CSS rule instead of relying on Bootstrap
+// CSS rule (the <body> background color CSS rule) which uses `$body-bg`.
+// In future bootstrap version (> 5.1.3), this should probably be reviewed.
+// grep: BOXED_BODY_BG_ODOO
+$body-bg: o-color('o-cc1-bg') !default;
+$body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
+
+// Links
+//
+// Style anchor elements.
+
+$-link-color: o-color('o-cc1-link');
+$-link-color: if($-link-color, $-link-color, o-color('primary'));
+$link-color: auto-contrast($-link-color, $body-bg, 'o-cc1-link') !default;
+$link-hover-color: auto-contrast(darken($link-color, 15%), $body-bg, 'o-cc1-link') !default;
+$link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
+$link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
+
+// Grid
+$grid-gutter-width: 30px !default;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+// Allow dynamic border-color adaptations
+$border-color: var(--o-border-color) !default;
+
+// Note: for the 'active' color, color preset edition is not really flexible but
+// this could come in a future update.
+$component-active-bg: o-color('o-cc1-btn-primary') !default;
+$component-active-color: if($component-active-bg, color-contrast($component-active-bg), null) !default;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$font-family-sans-serif: $o-theme-font !default;
+
+$font-size-base: o-website-value('font-size-base') !default;
+// The top paragraph margin is a custom variable.
+$paragraph-margin-top: o-website-value('paragraph-margin-top') !default;
+$paragraph-margin-bottom: o-website-value('paragraph-margin-bottom') !default;
+
+$h1-font-size: o-website-value('h1-font-size') or $font-size-base * $o-theme-h1-font-size-multiplier !default;
+$h2-font-size: o-website-value('h2-font-size') or $font-size-base * $o-theme-h2-font-size-multiplier !default;
+$h3-font-size: o-website-value('h3-font-size') or $font-size-base * $o-theme-h3-font-size-multiplier !default;
+$h4-font-size: o-website-value('h4-font-size') or $font-size-base * $o-theme-h4-font-size-multiplier !default;
+$h5-font-size: o-website-value('h5-font-size') or $font-size-base * $o-theme-h5-font-size-multiplier !default;
+$h6-font-size: o-website-value('h6-font-size') or $font-size-base * $o-theme-h6-font-size-multiplier !default;
+
+$display-font-sizes: (
+    // If the theme does not configure, default to Bootstrap values. It has to
+    // be duplicated here as Bootstrap does not merge the default map with the
+    // overridden ones anymore.
+    1: o-website-value('display-1-font-size') or 5rem,
+    2: o-website-value('display-2-font-size') or 4.5rem,
+    3: o-website-value('display-3-font-size') or 4rem,
+    4: o-website-value('display-4-font-size') or 3.5rem,
+
+    // Unused in Odoo templates and not configurable through the editor but we
+    // still want default Bootstrap classes to work for now. Also using
+    // o-website-value for those still allows to configure them through custom
+    // code more easily if needed.
+    5: o-website-value('display-5-font-size') or 3rem,
+    6: o-website-value('display-6-font-size') or 2.5rem
+) !default;
+
+// H2~H6 font families are custom variables.
+$headings-font-family: $o-theme-headings-font !default;
+$h2-font-family: $o-theme-h2-font !default;
+$h3-font-family: $o-theme-h3-font !default;
+$h4-font-family: $o-theme-h4-font !default;
+$h5-font-family: $o-theme-h5-font !default;
+$h6-font-family: $o-theme-h6-font !default;
+$display-1-font-family: $o-theme-display-1-font !default;
+$display-2-font-family: $o-theme-display-2-font !default;
+$display-3-font-family: $o-theme-display-3-font !default;
+$display-4-font-family: $o-theme-display-4-font !default;
+// H2~H6 line heights are custom variables.
+$headings-line-height: o-website-value('headings-line-height') !default;
+$h2-line-height: o-website-value('h2-line-height') or $headings-line-height !default;
+$h3-line-height: o-website-value('h3-line-height') or $headings-line-height !default;
+$h4-line-height: o-website-value('h4-line-height') or $headings-line-height !default;
+$h5-line-height: o-website-value('h5-line-height') or $headings-line-height !default;
+$h6-line-height: o-website-value('h6-line-height') or $headings-line-height !default;
+$display-1-line-height: o-website-value('display-1-line-height') or $headings-line-height !default;
+$display-2-line-height: o-website-value('display-2-line-height') or $headings-line-height !default;
+$display-3-line-height: o-website-value('display-3-line-height') or $headings-line-height !default;
+$display-4-line-height: o-website-value('display-4-line-height') or $headings-line-height !default;
+// H1~H6 top margins are custom variables.
+$headings-margin-top: o-website-value('headings-margin-top') or 0 !default;
+$h2-margin-top: o-website-value('h2-margin-top') or $headings-margin-top !default;
+$h3-margin-top: o-website-value('h3-margin-top') or $headings-margin-top !default;
+$h4-margin-top: o-website-value('h4-margin-top') or $headings-margin-top !default;
+$h5-margin-top: o-website-value('h5-margin-top') or $headings-margin-top !default;
+$h6-margin-top: o-website-value('h6-margin-top') or $headings-margin-top !default;
+$display-1-margin-top: o-website-value('display-1-margin-top') or $headings-margin-top !default;
+$display-2-margin-top: o-website-value('display-2-margin-top') or $headings-margin-top !default;
+$display-3-margin-top: o-website-value('display-3-margin-top') or $headings-margin-top !default;
+$display-4-margin-top: o-website-value('display-4-margin-top') or $headings-margin-top !default;
+// H2~H6 bottom margins are custom variables.
+$headings-margin-bottom: o-website-value('headings-margin-bottom') !default;
+$h2-margin-bottom: o-website-value('h2-margin-bottom') or $headings-margin-bottom !default;
+$h3-margin-bottom: o-website-value('h3-margin-bottom') or $headings-margin-bottom !default;
+$h4-margin-bottom: o-website-value('h4-margin-bottom') or $headings-margin-bottom !default;
+$h5-margin-bottom: o-website-value('h5-margin-bottom') or $headings-margin-bottom !default;
+$h6-margin-bottom: o-website-value('h6-margin-bottom') or $headings-margin-bottom !default;
+$display-1-margin-bottom: o-website-value('display-1-margin-bottom') or $headings-margin-bottom !default;
+$display-2-margin-bottom: o-website-value('display-2-margin-bottom') or $headings-margin-bottom !default;
+$display-3-margin-bottom: o-website-value('display-3-margin-bottom') or $headings-margin-bottom !default;
+$display-4-margin-bottom: o-website-value('display-4-margin-bottom') or $headings-margin-bottom !default;
+
+$headings-color: o-color('o-cc1-headings') !default;
+
+$lead-font-size: $font-size-base * $o-lead-ratio !default;
+// Note that we currently load only 700 for Google fonts, we may consider trying
+// to load more or this one only instead. Meanwhile, this fallbacks on 700
+// if 600 is not available anyway.
+$font-weight-bold: 600 !default;
+
+$text-muted: mute-color($body-color) !default;
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-striped-bg-factor: .01 !default;
+$table-cell-padding-x: .75rem !default;
+$table-cell-padding-y: .75rem !default;
+$table-cell-padding-x-sm: .3rem !default;
+$table-cell-padding-y-sm: .3rem !default;
+$table-border-color: $border-color !default;
+$table-group-separator-color: $table-border-color !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-padding-y: o-website-value('btn-padding-y') !default;
+$btn-padding-x: o-website-value('btn-padding-x') !default;
+$btn-font-size: o-website-value('btn-font-size') !default;
+
+$btn-padding-y-sm: o-website-value('btn-padding-y-sm') !default;
+$btn-padding-x-sm: o-website-value('btn-padding-x-sm') !default;
+$btn-font-size-sm: o-website-value('btn-font-size-sm') !default;
+
+$btn-padding-y-lg: o-website-value('btn-padding-y-lg') !default;
+$btn-padding-x-lg: o-website-value('btn-padding-x-lg') !default;
+$btn-font-size-lg: o-website-value('btn-font-size-lg') !default;
+
+$btn-border-width: o-website-value('btn-border-width') !default;
+
+$btn-border-radius: o-website-value('btn-border-radius') !default;
+$btn-border-radius-lg: o-website-value('btn-border-radius-lg') !default;
+$btn-border-radius-sm: o-website-value('btn-border-radius-sm') !default;
+
+// Forms
+
+$input-padding-y: o-website-value('input-padding-y') !default;
+$input-padding-x: o-website-value('input-padding-x') !default;
+$input-font-size: o-website-value('input-font-size') !default;
+
+$input-padding-y-sm: o-website-value('input-padding-y-sm') !default;
+$input-padding-x-sm: o-website-value('input-padding-x-sm') !default;
+$input-font-size-sm: o-website-value('input-font-size-sm') !default;
+
+$input-padding-y-lg: o-website-value('input-padding-y-lg') !default;
+$input-padding-x-lg: o-website-value('input-padding-x-lg') !default;
+$input-font-size-lg: o-website-value('input-font-size-lg') !default;
+
+$input-border-width: o-website-value('input-border-width') !default;
+
+$input-border-radius: o-website-value('input-border-radius') !default;
+$input-border-radius-lg: o-website-value('input-border-radius-lg') !default;
+$input-border-radius-sm: o-website-value('input-border-radius-sm') !default;
+
+$input-bg: o-color('input') or $body-bg !default;
+$input-border-color: $border-color !default;
+$input-color: color-contrast($input-bg) !default;
+$input-placeholder-color: mix($input-bg, $input-color) !default;
+
+$input-disabled-bg: mix($input-color, $input-bg, 10%) !default;
+
+$form-check-input-border: ($input-border-width or 1px) solid $input-border-color !default;
+// Note that using "input-disabled-bg" here might seems strange at first but it
+// is actually the most consistent found way at the moment:
+// - It does not depend on the "border-color", which is important as the
+//   border-color depends on the "currentColor" in standard... and the track
+//   does not have a color.
+// - It depends on "input-bg", which is what we want otherwise the "input-bg"
+//   color would be used for all control elements except the range one.
+// - The notion of "disabled" kinda fits the "track" part of the range, as it is
+//   the "disabled" part of the range value. True, it is still interactive but
+//   a background color on its own is not enough to convey that meaning anyway
+//   (a disabled range should have its *active* part with a different color).
+$form-range-track-bg: $input-disabled-bg !default;
+
+// Badge
+$badge-padding-y: 0.25em !default;
+$badge-padding-x: 0.4em !default;
+
+// Breadcrumbs
+$breadcrumb-padding-y: .75rem !default;
+$breadcrumb-padding-x: 1rem !default;
+
+// Navbar
+
+// Increase default navbar padding for some navbar styles
+$navbar-padding-x: $spacer !default;
+$navbar-padding-y: if(index(('fill', 'pills', 'outline'), o-website-value('header-links-style')), ($spacer / 2) * 1.25, null) !default;
+$navbar-nav-link-padding-x: if(index(('outline', 'block'), o-website-value('header-links-style')), .5rem * 3, null) !default;
+$navbar-nav-link-padding-x: if(o-website-value('header-links-style') == 'border-bottom', .5rem * 2, null) !default;
+
+
+// Jumbotron
+
+$jumbotron-bg: transparent !default;
+
+// Block Quote
+$blockquote-margin-y: 0 !default;
+
+// Bootstrap Review
+
+$o-btn-flat-defaults: () !default;
+$o-btn-outline-defaults: () !default;
+$o-btn-outline-border-width-defaults: () !default;
+@each $color in ('primary', 'secondary') {
+    @if o-website-value('btn-#{$color}-flat') {
+        $o-btn-flat-defaults: append($o-btn-flat-defaults, $color);
+    } @else if o-website-value('btn-#{$color}-outline') {
+        $o-btn-outline-defaults: append($o-btn-outline-defaults, $color);
+        $o-btn-outline-border-width-defaults: map-merge($o-btn-outline-border-width-defaults, (
+            $color: o-website-value('btn-#{$color}-outline-border-width'),
+        ));
+    }
+}
+
+// Increase default navbar pills padding for 'pills' mode and add big radius
+$o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 'pills', 1rem * 1.5, null) !default;
+$o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;
+
+// Borders
+$border-radius-sm: .3rem !default;
+$border-radius: .4rem !default;
+$border-radius-lg: .6rem !default;
+$border-radius-pill: 50rem !default; // BS Default
+
+// Accordion
+$accordion-color: inherit !default;
+$accordion-bg: inherit !default;
+$accordion-padding-x: 1.5rem !default;
+$accordion-border-width: 1px !default;
+$accordion-border-color: $border-color !default;
+$accordion-button-active-bg: $light !default;
+$accordion-button-active-color: color-contrast($light) !default;
+$accordion-button-focus-box-shadow: none !default;
+$accordion-icon-color: $body-color !default;
+$accordion-icon-active-color: $accordion-button-active-color !default;
+
+// Popovers
+$popover-bg: $body-bg !default;
+$popover-border-color: $border-color !default;
+$popover-arrow-color: $body-bg !default;
+$popover-arrow-outer-color: $border-color !default;
+
+// Shadows
+$box-shadow: 0px 4px 16px rgba($black, 0.12) !default;
+$box-shadow-sm: 0px 1px 3px rgba($black, .1) !default;
+$box-shadow-lg: 0px 12px 32px rgba($black, .175) !default;
+
+// Cards
+$card-border-color: $border-color !default;
+
+// Modals
+$modal-header-border-width: 0 !default;
+$modal-footer-border-width: 0 !default;
+
+// HR Separator
+$hr-color: $border-color !default;
+$hr-opacity: 1 !default;
+
+// Pagination
+
+// Arbitrary values to get a circle for 1 digit numbers
+$pagination-padding-y: 0.4ch !default;
+$pagination-padding-x: 1.2ch !default;
+
+$pagination-border-radius: $border-radius-pill !default;
+$pagination-margin-start: map-get($map: $spacers, $key: 1) !default;
+$pagination-border-color: transparent !default;
+$pagination-bg: $body-bg !default;
+$pagination-color: color-contrast($pagination-bg) !default;
+$pagination-transition: none !default;
+
+$pagination-focus-bg: $light !default;
+$pagination-focus-color: color-contrast($light) !default;
+$pagination-focus-box-shadow: 0 0 0 1px $pagination-focus-bg !default;
+
+$pagination-hover-bg: $light !default;
+$pagination-hover-color: color-contrast($light) !default;
+$pagination-hover-border-color: $light !default;
+
+$pagination-disabled-color: rgba(color-contrast($pagination-bg), 0.5) !default;
+$pagination-disabled-border-color: transparent !default;
+$pagination-disabled-bg: $pagination-bg !default;
+
+$pagination-padding-y-sm: $pagination-padding-y !default;
+$pagination-padding-x-sm: $pagination-padding-x !default;
+$pagination-padding-y-lg: $pagination-padding-y !default;
+$pagination-padding-x-lg: $pagination-padding-x !default;
+
+$pagination-border-radius-lg: $pagination-border-radius !default;
+$pagination-border-radius-sm: $pagination-border-radius !default;

@@ -1,0 +1,204 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_pdf_quote_builder
+# 
+# Translators:
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Arnis Putniņš <arnis@allegro.lv>, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2023
+# Will Sensors, 2024
+# Lancelot Semal, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Lancelot Semal, 2024\n"
+"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in (\"draft\", \"sent\") and \"Piedāvājumu - %s\" % "
+"(object.name)) or \"Pasūtījumu - %s\" % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr "<i class=\"fa fa-arrow-right\"/> Lejupielādēt piemērus"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales customer.\n"
+"Quotation: the document will be sent to and accessible by customers at any time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"Confirmed order: the document will be sent to and accessible by customers.\n"
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+msgstr ""
+"Ļauj kopīgot dokumentu ar klientiem pārdošanas laikā.\n"
+"Atstājiet to tukšu, ja nevēlaties kopīgot šo dokumentu ar pārdošanas klientu.\n"
+"Piedāvājums: dokuments tiks nosūtīts klientiem un būs pieejams tiem jebkurā laikā.\n"
+"piemēram, šī opcija var būt noderīga, lai kopīgotu produkta apraksta failus.\n"
+"Apstiprināts pasūtījums: dokuments tiks nosūtīts klientiem un būs tiem pieejams.\n"
+"piemēram, šī opcija var būt noderīga, lai kopīgotu lietotāja rokasgrāmatu vai digitālo saturu, kas iegādāts e-komercijā.\n"
+"Citāti iekšpusē: Dokuments tiks iekļauts piedāvājuma pdf formātā starp galvenajām lapām un piedāvājuma tabulu. "
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_company
+msgid "Companies"
+msgstr "Uzņēmumi"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurācijas uzstādījumi"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
+msgid "Footer pages"
+msgstr "Kājenes apas"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
+msgid "Header pages"
+msgstr "Titullapas"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
+msgid "Inside quote"
+msgstr "Iekšējais piedāvājums"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr "Uzziniet vairāk no dokumentācijas."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid ""
+"Make your quote attractive by adding header pages, product descriptions and "
+"footer pages to your quote."
+msgstr ""
+"Padariet savu piedāvājumu pievilcīgu, pievienojot tam galvenes lapas, "
+"produktu aprakstus un pēdējās lapas."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "Only PDF documents can be attached inside a quote."
+msgstr "Piedāvājumā var pievienot tikai PDF dokumentus."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "PDF Quote Builder"
+msgstr "PDF piedāvājuma veidotājs"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "PDF Quote builder"
+msgstr "PDF piedāvājuma veidotājs"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+msgid "Product Document"
+msgstr "Produkta dokuments"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Products descriptions are pdf documents you can add directly on products.\n"
+"                            To do so, go on a product, find the \"product documents\" button, then add a\n"
+"                            new pdf document with a visibility set as \"Inside Quotes\". For each product\n"
+"                            in the quote, if the product has an \"inside quotes\" document, this document\n"
+"                            will be added after header pages and before the quotation details."
+msgstr ""
+"Produktu apraksti ir pdf dokumenti, kurus varat pievienot tieši produktiem.\n"
+"                            Lai to izdarītu, atveriet produktu, atrodiet pogu \"Produkta dokumenti\" un pēc tam pievienojiet\n"
+"                            jaunu pdf dokumentu ar redzamību, kas iestatīta kā \"Citāti iekšpusē\". Katram produktam\n"
+"                            piedāvājumā, ja produktam ir dokuments \"iekšējās kotācijas\", šis dokuments\n"
+"                            tiks pievienots pēc galvenajām lapām un pirms piedāvājuma informācijas."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation\n"
+"                            with more information about your company, your products and your services.\n"
+"                            The pdf of your quotes will be built by putting together header pages,\n"
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
+msgstr ""
+"Nodrošiniet galvenes un kājenes lapas, lai izveidotu pievilcīgu piedāvājumu\n"
+"                            ar plašāku informāciju par jūsu uzņēmumu, jūsu produktiem un pakalpojumiem.\n"
+"                            Jūsu piedāvājuma pdf tiks izveidots, izveidojot galvenes lapas,\n"
+"                            produktu aprakstus, sīkāku informāciju par piedāvājumu un pēc tam pēdējās lappuses.\n"
+"                            Ja tās ir tukšas, tiks izmantotas uzņēmuma iestatījumos definētās lapas.<br/>"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr "Piedāvājums / Pasūtījums"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Quotation Template"
+msgstr "Piedāvājuma veidne"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "Atskaites darbība"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
+msgid "Sale Footer Name"
+msgstr "Pārdošanas kājenes nosaukums"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
+msgid "Sale Header Name"
+msgstr "Pārdošanas galvenes nosaukums"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr "Pasūtījums"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Some information specific to the quote (customer name, quotation reference, ... )\n"
+"                            can be injected in these documents using pdf forms.\n"
+"                            Refer to the documentation to know more about this feature."
+msgstr ""
+"Konkrēta informācija par cenu piedāvājumu (klienta nosaukums, atsauce uz cenu piedāvājumu, ... )\n"
+"                            šajos dokumentos var ievadīt, izmantojot pdf veidlapas.\n"
+"                            Lai uzzinātu vairāk par šo funkciju, skatiet dokumentāciju."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
+msgid "Visible at"
+msgstr "Redzams pie"

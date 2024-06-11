@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="website.MenuDialog">
+    <WebsiteDialog title="title" closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="props.close">
+        <div class="o_menu_dialog_form mb-3 row">
+            <label class="col-form-label col-md-3">
+                Name
+            </label>
+            <div class="col-md-9">
+                <input type="text" t-model="name.input.value" class="form-control" t-att-class="{ 'is-invalid': name.input.hasError }" t-ref="autofocus"/>
+            </div>
+        </div>
+        <div t-if="!props.isMegaMenu" class="mb-3 row">
+            <label class="col-form-label col-md-3">
+                Url or Email
+            </label>
+            <div class="col-md-9">
+                <input id="url_input" t-ref="url-input" type="text" t-model="url.input.value" class="form-control" t-att-class="{ 'is-invalid': url.input.hasError }"/>
+                <small class="form-text">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+            </div>
+        </div>
+    </WebsiteDialog>
+</t>
+
+<t t-name="website.MenuRow">
+    <li t-att-data-menu-id="props.menu.fields['id']" t-att-data-is-mega-menu="props.menu.fields['is_mega_menu'] ? 'true' : undefined">
+        <div class="input-group mb-1">
+                <span class="input-group-text bg-view fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            <span class="form-control d-flex align-items-center bg-view">
+                <span class="js_menu_label o_text_overflow flex-grow-1">
+                    <t t-esc="props.menu.fields['name']"/>
+                </span>
+                <span t-if="props.menu.fields['is_mega_menu']" class="badge text-bg-primary">Mega Menu</span>
+                <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>
+            </span>
+                <button t-on-click="edit" type="button" class="btn btn-secondary js_edit_menu fa fa-pencil-square-o" aria-label="Edit Menu Item" title="Edit Menu Item"/>
+                <button t-on-click="delete" type="button" class="btn btn-secondary js_delete_menu fa fa-trash-o rounded-start-0" aria-label="Delete Menu Item" title="Delete Menu Item"/>
+        </div>
+        <ul t-if="props.menu.children">
+            <t t-foreach="props.menu.children" t-as="submenu" t-key="submenu.fields['id']">
+                <MenuRow menu="submenu" edit="props.edit" delete="props.delete"/>
+            </t>
+        </ul>
+    </li>
+</t>
+
+<t t-name="website.EditMenuDialog">
+    <WebsiteDialog close="props.close" title="title" primaryTitle="saveButton" primaryClick="() => this.onClickSave()">
+        <ul t-ref="menu-editor" class="oe_menu_editor list-unstyled">
+            <t t-foreach="state.rootMenu.children" t-as="menu" t-key="menu.fields['id']">
+                <MenuRow menu="menu" edit="(id) => this.editMenu(id)" delete="(id) => this.deleteMenu(id)"/>
+            </t>
+        </ul>
+        <div class="mt32">
+            <small class="float-end text-muted">
+                Drag to the right to get a submenu
+            </small>
+            <a href="#" t-on-click="() => this.addMenu(false)">
+                <i class="fa fa-plus-circle"/> Add Menu Item
+            </a><br/>
+            <a href="#" t-on-click="() => this.addMenu(true)">
+                <i class="fa fa-plus-circle"/> Add Mega Menu Item
+            </a>
+        </div>
+    </WebsiteDialog>
+</t>
+</templates>

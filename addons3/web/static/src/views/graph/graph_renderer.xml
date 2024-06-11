@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GraphRenderer.CustomTooltip">
+        <div class="o_graph_custom_tooltip popover show p-2 pe-none mw-100">
+            <table class="overflow-hidden m-0">
+                <thead>
+                    <tr>
+                        <th class="o_measure align-baseline border-0" t-esc="measure" />
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="tooltipItems" t-as="tooltipItem" t-key="tooltipItem_index">
+                        <td>
+                            <span class="o_square badge p-2 rounded-0 align-middle me-2" t-attf-style="background-color: {{ tooltipItem.boxColor }}"> </span>
+                            <span class="o_label text-truncate d-inline-block align-middle" t-attf-style="max-width: {{ maxWidth }}" t-esc="tooltipItem.label" />
+                        </td>
+                        <td class="o_value ps-2 text-end fw-bolder">
+                            <t t-esc="tooltipItem.value"/>
+                            <t t-if="mode === 'pie' and tooltipItem.percentage">
+                                (<t t-esc="tooltipItem.percentage" />%)
+                            </t>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="web.GraphRenderer">
+        <div t-att-class="'o_graph_renderer o_renderer h-100 d-flex flex-column border-top ' + props.class" t-ref="root">
+            <div class="d-flex gap-1 mt-2 mx-3 mb-3">
+                <t t-call="{{ props.buttonTemplate }}"/>
+            </div>
+            <div class="o_graph_canvas_container flex-grow-1 position-relative" t-ref="container">
+                <canvas t-ref="canvas" />
+            </div>
+        </div>
+    </t>
+
+</templates>

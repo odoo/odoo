@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TextField">
+        <t t-if="props.readonly">
+            <span t-esc="props.record.data[props.name] or ''" />
+        </t>
+        <t t-else="">
+            <div t-ref="div">
+                <textarea
+                    class="o_input"
+                    t-att-class="{'o_field_translate': isTranslatable}"
+                    t-att-id="props.id"
+                    t-att-placeholder="props.placeholder"
+                    t-att-rows="rowCount"
+                    t-ref="textarea"
+                />
+                <t t-if="isTranslatable">
+                    <TranslationButton
+                        fieldName="props.name"
+                        record="props.record"
+                    />
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

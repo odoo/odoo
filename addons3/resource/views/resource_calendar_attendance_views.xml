@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.tree</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Working Time" editable="bottom" default_order="sequence, week_type, dayofweek, hour_from">
+                <field name="sequence" widget="handle"/>
+                <field name="display_type" column_invisible="True"/>
+                <field name="display_name" width="1" string=" " invisible="display_type != 'line_section'"/>
+                <field name="name" invisible="display_type == 'line_section'"/>
+                <field name="dayofweek"/>
+                <field name="day_period"/>
+                <field name="hour_from" widget="float_time"/>
+                <field name="hour_to" widget="float_time"/>
+                <field name="duration_days" optional="show"/>
+                <field name="date_from" optional="hide"/>
+                <field name="date_to" optional="hide"/>
+                <field name="week_type" readonly="1" force_save="1" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_attendance_form" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.form</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Working Time">
+                <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="dayofweek"/>
+                    <label for="hour_from" string="Hours"/>
+                    <div class="o_row">
+                        <field name="hour_from" widget="float_time"/> -
+                        <field name="hour_to" widget="float_time"/>
+                    </div>
+                    <field name="day_period"/>
+                    <field name="duration_days"/>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

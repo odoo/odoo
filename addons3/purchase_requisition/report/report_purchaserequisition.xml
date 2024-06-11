@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_purchaserequisition_document">
+    <t t-set="o" t-value="o.with_context(lang=o.vendor_id.lang)"/>
+    <t t-call="web.external_layout">
+        <t t-set="address">
+            <span t-field="o.vendor_id"
+                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+            <p t-if="o.vendor_id.vat"><t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="o.vendor_id.vat"/></p>
+        </t>
+        <div class="page">
+            <div class="oe_structure"/>
+
+            <h2><span t-out="o.type_id.name">Agreement</span> <span t-field="o.name">Agreement00004</span></h2>
+
+            <div class="row my-2">
+                <div class="col-3">
+                    <strong><span t-out="o.type_id.name">Agreement:</span></strong><br/>
+                    <span t-field="o.name">Agreement00004</span>
+                </div>
+                <div t-if="o.ordering_date" class="col-3">
+                    <strong>Scheduled Ordering Date:</strong><br/>
+                    <span t-field="o.ordering_date">2023-08-20</span>
+                </div>
+                <div t-if="o.date_end" class="col-3">
+                    <strong>Agreement Deadline:</strong><br/>
+                    <span t-field="o.date_end">2023-09-15</span>
+                </div>
+                <div t-if="o.origin" class="col-3">
+                    <strong>Source:</strong><br/>
+                    <span t-field="o.origin">Origin</span>
+                </div>
+            </div>
+
+            <t t-if="o.line_ids">
+                <h3>Products</h3>
+                <div class="oe_structure"></div>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th><strong>Product</strong></th>
+                            <th><strong>Description</strong></th>
+                            <th class="text-end"><strong>Qty</strong></th>
+                            <th class="text-center" groups="uom.group_uom">
+                                <strong>Product UoM</strong>
+                            </th>
+                            <th t-if="o.type_id == env.ref('purchase_requisition.type_single')">Price Unit</th>
+                            <th class="text-end"><strong>Scheduled Date</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.line_ids" t-as="line_ids">
+                            <td>
+                                <span t-if="line_ids.product_id.code"><!--internal reference exists-->
+                                    [ <span t-field="line_ids.product_id.code">Code</span> ]
+                                </span>
+                                <span t-field="line_ids.product_id.name">Product</span>
+                            </td>
+                            <td>
+                                <span t-if="line_ids.product_description_variants" t-field="line_ids.product_description_variants">Product description</span>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line_ids.product_qty">5</span>
+                            </td>
+                            <td class="text-center" groups="uom.group_uom">
+                                <span t-field="line_ids.product_uom_id.name">Unit</span>
+                            </td>
+                            <td t-if="o.type_id == env.ref('purchase_requisition.type_single')">
+                                <span t-field="line_ids.price_unit" t-options='{"widget": "monetary", "display_currency": line_ids.requisition_id.currency_id}'>$50</span>
+                            </td>
+                            <td class="text-end">
+                                <span t-if="line_ids.schedule_date" t-field="line_ids.schedule_date">2023-08-11</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+            <t t-if="o.purchase_ids">
+                <h3>Requests for Quotation Details</h3>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th><strong>Vendor </strong></th>
+                            <th class="text-end"><strong>Date</strong></th>
+                            <th class="text-end"><strong>Reference </strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.purchase_ids" t-as="purchase_ids">
+                            <td>
+                                <span t-field="purchase_ids.partner_id.name">Vendor Name</span>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="purchase_ids.date_order">2023-08-15</span>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="purchase_ids.name">PO000042</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+            <div t-if="o.description" t-out="o.description"/>
+
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+<template id="report_purchaserequisitions">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="purchase_requisition.report_purchaserequisition_document" t-lang="o.vendor_id.lang"/>
+        </t>
+    </t>
+</template>
+</data>
+</odoo>

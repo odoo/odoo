@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Multicompay rules-->
+    <record model="ir.rule" id="repair_order_rule">
+        <field name="name">repair order multi-company</field>
+        <field name="model_id" search="[('model','=','repair.order')]" model="ir.model"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

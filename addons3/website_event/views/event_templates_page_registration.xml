@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+<template id="event_details" name="Event Header">
+    <t t-call="website_event.layout">
+        <div class="h-100" name="event" itemscope="itemscope" itemtype="http://schema.org/Event">
+            <t t-out="0"/>
+        </div>
+    </t>
+</template>
+
+<!-- Event - Description -->
+<template id="event_description_full" name="Event Description" track="1">
+    <t t-set="hide_submenu" t-value="True"/>
+    <t t-set="hide_register_cta" t-value="True"/>
+    <t t-call="website_event.event_details">
+        <section class="h-100" t-cache="event if not editable and event.website_published else None">
+            <div class="container overflow-hidden pb-5">
+                <div class="row h-100">
+                <div class="col pe-xxl-5">
+                    <t t-call="website_event.navbar"/>
+                    <!-- Show the button tickets only on mobile -->
+                    <div class="container d-lg-none">
+                        <t t-call="website_event.registration_template">
+                            <t t-set="toast_message" t-value=""/>
+                        </t>
+                    </div>
+                    <!-- Description -->
+                    <div id="o_wevent_event_main_col">
+                        <t t-call="website.record_cover">
+                            <t t-set="_record" t-value="event"/>
+                            <t t-set="use_filters" t-value="True"/>
+                            <t t-set="use_size" t-value="False"/>
+                            <t t-set="use_text_align" t-value="True"/>
+                            <div class="container d-flex flex-column flex-grow-1 justify-content-around">
+                                <div class="o_wevent_event_title p-3 my-5">
+                                    <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge"><i class="fa fa-check me-2"/>Registered</span>
+                                    <h1 t-field="event.name" class="o_wevent_event_name" itemprop="name" placeholder="Event Title"/>
+                                    <h2 t-field="event.subtitle" class="o_wevent_event_subtitle" placeholder="Event Subtitle"/>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="mt-4" t-field="event.description" itemprop="description"/>
+                    </div>
+                </div>
+                    <!-- Sidebar -->
+                    <div class="d-lg-flex justify-content-end col-lg-4 col-xl-3 mb-3 mb-lg-0 d-print-none">
+                        <div class="mt-3">
+                            <!-- Tickets Desktop -->
+                            <div class="container d-none d-lg-block">
+                                <t t-call="website_event.registration_template"/>
+                            </div>
+                            <!-- Date & Time -->
+                            <div class="o_wevent_sidebar_block border-bottom pb-3 my-3">
+                                <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
+                                <div class="d-flex">
+                                    <h6 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                                </div>
+                                <t t-if="not event.is_one_day">Start -</t>
+                                <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                <t t-if="event.is_one_day">
+                                    <i class="fa fa-long-arrow-right mx-1"/>
+                                </t>
+                                <t t-else="">
+                                    (<span t-out="event.date_tz"/>)
+                                    <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
+                                    <div class="d-flex">
+                                        <h6 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'full', 'date_only': 'true'}"/>
+                                    </div>
+                                    <t t-if="not event.is_one_day">End -</t>
+                                </t>
+                                <span t-if="not event.is_one_day" t-out="event.date_end" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                <span t-else="" t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}" t-att-datetime="event.date_end"/>
+                                (<span t-out="event.date_tz"/>)
+
+                                <a href="#" role="button" data-bs-toggle="dropdown" class="btn btn-secondary text-bg-secondary dropdown w-100 mt-3">
+                                    <p class="mb-0"><i class="fa fa-calendar me-2"/>Add to Calendar</p>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a t-att-href="iCal_url" class="dropdown-item">iCal/Outlook</a>
+                                    <a t-att-href="google_url" class="dropdown-item" target="_blank">Google</a>
+                                </div>
+                            </div>
+                            <!-- Location -->
+                            <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
+                                <h6 class="o_wevent_sidebar_title">Location</h6>
+                                <h4 t-field="event.address_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["name"]
+                                }'/>
+                                <div itemprop="location" class="mb-2 small" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["address"],
+                                    "no_marker": True
+                                }'/>
+                                <div class="mb-2 small" t-field="event.address_id" t-options='{
+                                    "widget": "contact",
+                                    "fields": ["phone", "mobile", "email"]
+                                }'/>
+                                <a t-att-href="event._google_map_link()" target="_blank" class="btn btn-secondary text-bg-secondary w-100">
+                                    <p class="mb-0"><i class="fa fa-map-marker fa-fw" role="img"/>Get the direction</p>
+                                </a>
+                            </div>
+                            <!-- Organizer -->
+                            <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-3">
+                                <h6 class="o_wevent_sidebar_title">Organizer</h6>
+                                <h4 t-field="event.organizer_id" class="font-sans-serif mt-0 mb-1" style="font-size: 1rem"/>
+                                <div class="small" itemprop="location" t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email']}"/>
+                            </div>
+                            <!-- Social -->
+                            <div class="o_wevent_sidebar_block">
+                                <h6 class="o_wevent_sidebar_title">Share</h6>
+                                <p>Find out what people see and say about this event, and join the conversation.</p>
+                                <t t-snippet-call="website.s_share">
+                                    <t t-set="_no_title" t-value="True"/>
+                                    <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
+                                    <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <t t-call="website_event.modal_ticket_registration"/>
+    </t>
+</template>
+
+<!-- Event - Registration -->
+<template id="registration_template" name="Registration">
+    <!-- Show the tickets button only on desktop -->
+    <div t-attf-class="d-flex d-lg-block flex-wrap justify-content-between align-items-center {{event.event_registrations_open and 'pb-3 border-bottom' or ''}}">
+        <div class="d-flex flex-wrap justify-content-between align-items-center w-100 mb-3">
+            <h4 class="mb-0">Tickets</h4>
+            <t t-call="website_event.registration_configure_tickets_button" t-if="request.env.user.has_group('event.group_event_manager')">
+                <t t-set="linkClasses" t-translation="off">ms-2</t>
+            </t>
+        </div>
+        <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" class="btn btn-primary w-100">Register</button>
+    </div>
+    <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
+    <div t-if="not event.event_registrations_open" class="mb-3">
+        <div class="alert alert-info mb-0 d-flex flex-wrap gap-2 justify-content-between align-items-center" role="status">
+            <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
+                <div class="d-flex flex-column">
+                    <em class="me-2">Ticket Sales starting on
+                        <span class="" t-out="event.start_sale_datetime"
+                            t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                        <span t-out="event.date_tz"/>
+                    </em>
+                    <t t-call="website_event.registration_configure_tickets_button"
+                        t-if="request.env.user.has_group('event.group_event_manager')">
+                            <t t-set="linkClasses" t-translation="off">alert-link my-3</t>
+                    </t>
+                </div>
+                <button class="btn btn-danger" disabled="1">Registrations not yet open</button>
+            </t>
+            <t t-else="">
+                <div>
+                    <em t-if="event.event_registrations_sold_out">Tickets for this Event are <b>Sold Out</b></em>
+                    <em t-else="">Registrations are <b>closed</b></em>
+                </div>
+                <button class="btn btn-danger py-2 w-100" disabled="1">
+                    <span t-if="event.event_registrations_sold_out">Sold Out</span>
+                    <span t-else="">Registrations Closed</span>
+                </button>
+            </t>
+        </div>
+    </div>
+</template>
+
+<template id="registration_attendee_details" name="Registration Attendee Details">
+    <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="modal-content">
+                    <div class="modal-header align-items-center">
+                        <h4 class="modal-title">Attendees</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </div>
+                    <t t-set="counter" t-value="0"/>
+                    <t t-set="input_type_by_question_type" t-value="{'name': 'text', 'email': 'email', 'phone': 'tel', 'company_name': 'text'}"/>
+                    <t t-if="availability_check" t-foreach="tickets" t-as="ticket">
+                        <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
+                            <t t-set="counter" t-value="counter + 1"/>
+                            <div class="modal-body">
+                                <h5 t-attf-class="mt-1 pb-2 #{'border-bottom' if event.question_ids else ''}">Ticket #<span t-out="counter"/> <small class="text-muted">- <span t-out="ticket['name']"/></small></h5>
+                                <div t-if="event.specific_question_ids" class="row">
+                                    <t t-foreach="event.specific_question_ids" t-as="question">
+                                        <div class="col-lg-6 mt-2">
+                                            <t t-call="website_event.registration_event_question">
+                                                <t t-set="registration_index" t-value="counter"/>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                                <input class="d-none" type="text" t-attf-name="#{counter}-event_ticket_id" t-attf-value="#{ticket['id']}"/>
+                            </div>
+                        </t>
+                    </t>
+                    <div t-if="availability_check and event.general_question_ids" class="modal-body border-top o_wevent_registration_question_global">
+                        <div class="row">
+                            <t t-foreach="event.general_question_ids" t-as="question">
+                                <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
+                                    <t t-call="website_event.registration_event_question">
+                                        <t t-set="registration_index" t-value="0"/>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <t t-elif="not availability_check">
+                        <div class="modal-body border-bottom">
+                            <strong> You ordered more tickets than available seats</strong>
+                        </div>
+                    </t>
+                    <div class="modal-footer border-top">
+                        <button type="button" class="btn btn-secondary js_goto_event" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" t-if="availability_check">Confirm Registration</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="registration_event_question" name="Registration Event Question">
+    <label t-out="question.title"/>
+    <span t-if="question.is_mandatory_answer">*</span>
+    <t t-if="question.question_type in ['name', 'email', 'phone', 'company_name']">
+        <input class="form-control" t-att-type="input_type_by_question_type[question.question_type]"
+               t-attf-name="#{registration_index}-#{question.question_type}-#{question.id}"
+               t-att-required="question.is_mandatory_answer" t-att-value="default_first_attendee.get(question.question_type, '') if counter in (0,1) else ''"/>
+    </t>
+    <t t-elif="question.question_type == 'simple_choice'">
+        <select t-attf-name="#{registration_index}-#{question.question_type}-#{question.id}"
+                class="form-select" t-att-required="question.is_mandatory_answer">
+            <option value=""/>
+            <t t-foreach="question.answer_ids" t-as="answer">
+                <option t-out="answer.name" t-att-value="answer.id"/>
+            </t>
+        </select>
+    </t>
+    <t t-else="">
+        <textarea t-attf-name="#{registration_index}-#{question.question_type}-#{question.id}"
+                  class="col-lg-12 form-control" t-att-required="question.is_mandatory_answer"/>
+    </t>
+</template>
+
+<template id="registration_complete" name="Registration Completed">
+    <t t-call="website_event.layout">
+        <div class="container my-5 o_wereg_confirmed">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <h3>Registration confirmed!</h3>
+                    <u><a class="h4 text-primary" t-out="event.name" t-att-href="event.website_url" /></u>
+                </div>
+            </div>
+            <div t-if="attendees" class="row mb-3">
+                <div class="col-12 mb-2">
+                    <a class="btn btn-primary" title="Download All Tickets" target="_blank"
+                        t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
+                        Download Tickets <i class="ms-1 fa fa-download"/>
+                    </a>
+                </div>
+            </div>
+            <div class="row mb-3 o_wereg_confirmed_attendees">
+                <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
+                    <div class="d-flex flex-column">
+                        <span t-if="attendee.name"  class="fw-bold text-truncate">
+                            <t t-out="attendee.name"/>
+                        </span>
+                        <span t-if="attendee.email" class="text-truncate">
+                            <i class="fa fa-envelope me-2"/>
+                            <t t-out="attendee.email"/>
+                        </span>
+                        <span t-if="attendee.phone">
+                            <i class="fa fa-phone me-2"/>
+                            <t t-out="attendee.phone"/>
+                        </span>
+                        <span>
+                            <i class="fa fa-ticket me-2"/>
+                            <t t-if="attendee.event_ticket_id">
+                                <t t-out="attendee.event_ticket_id.name"/> (Ref: <t t-out="attendee.id"/>)
+                            </t>
+                            <t t-else="">Ref: <t t-out="attendee.id"/></t>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col-2 col-md-1">
+                            <b>Start</b>
+                        </div>
+                        <div class="col ps-0">
+                            <span itemprop="startDate" t-out="event.date_begin_located"/>
+                            (<span t-out="event.date_tz"/>)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 col-md-1">
+                            <b>End</b>
+                        </div>
+                        <div class="col ps-0">
+                            <span itemprop="endDate" t-out="event.date_end_located"/>
+                            (<span t-out="event.date_tz"/>)
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <h5 t-field="event.address_id" class="text-secondary fw-bold" t-options='{
+                            "widget": "contact",
+                            "fields": ["name"]
+                            }'/>
+                        <a itemprop="location" t-att-href="event.google_map_link()" target="_BLANK" temprop="location" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["address"]
+                            }'/>
+                        <div itemprop="contactInfo" t-field="event.organizer_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["phone", "mobile", "email"]
+                            }'/>
+                    </div>
+                    <div id="add_to_calendar" class="mt-4 d-flex flex-column flex-md-row">
+                        <a role="button" class="btn btn-primary" t-att-href="iCal_url">
+                            <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
+                        </a>
+                        <a role="button" class="btn btn-primary ms-md-2 mt-2 mt-md-0" t-att-href="google_url" target='_blank'>
+                            <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Lead Generation' t-attf-data-event-params='{"CTA": "Event Registration"}' />
+    </t>
+</template>
+
+<!-- Button to configure Tickets -->
+<template id="registration_configure_tickets_button" name="Registration Configure Ticket Button">
+    <a t-attf-class="o_not_editable text-nowrap {{linkClasses or '' }}" t-attf-href="/web#id=#{event.id}&amp;menu_id=#{backend_menu_id}&amp;view_type=form&amp;model=event.event" role="link"  title="Configure event tickets">
+        <i class="fa fa-gear me-1" role="img" aria-label="Configure" title="Configure event tickets"/><em>Configure Tickets</em>
+    </a>
+</template>
+
+<template id="modal_ticket_registration" name="Modal for tickets registration">
+    <!-- Modal -->
+    <div class="modal fade" id="modal_ticket_registration" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <div class="o_wevent_registration_title modal-title fs-5" id="staticBackdropLabel">Tickets</div>
+                <div t-if="len(event.event_ticket_ids) &gt; 2" class="o_wevent_price_range ms-2"/>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
+                id="registration_form"
+                t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+                itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div id="o_wevent_tickets" class="shadow-sm o_wevent_js_ticket_details">
+                    <div t-if="registration_error_code == 'insufficient_seats'" class="alert alert-danger" role="alert">
+                        <p class="mb-0">
+                            Registration failed! These tickets are not available anymore.
+                        </p>
+                    </div>
+                    <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
+                    <!-- If some tickets expired and there is only one type left, we keep the same layout -->
+                    <t t-if="len(event.event_ticket_ids) &gt; 1">
+                        <span t-if="not event.event_registrations_open" class="text-danger">
+                            <i class="fa fa-ban me-2"/>Sold Out
+                        </span>
+                        <div id="o_wevent_tickets_collapse" class="modal-body collapse show">
+                            <div t-foreach="tickets" t-as="ticket"
+                                t-attf-class="d-flex justify-content-between o_wevent_ticket_selector mb-2 pb-2 {{not ticket_last and 'border-bottom' or ''}}"
+                                t-att-name="ticket.name">
+                                <div itemscope="itemscope" itemtype="http://schema.org/Offer">
+                                    <h5 itemprop="name" t-field="ticket.name" class="h6 my-0"/>
+                                    <t t-if="ticket.description">
+                                        <small t-field="ticket.description" class="text-muted py-2"/>
+                                        <br/>
+                                    </t>
+                                    <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
+                                        class="text-muted me-3" itemprop="availabilityEnds">Sales end on
+                                        <span itemprop="priceValidUntil" t-out="ticket.end_sale_datetime"
+                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                        (<span t-out="ticket.event_id.date_tz"/>)
+                                    </small>
+                                    <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired"
+                                        class="text-muted me-3" itemprop="availabilityEnds">
+                                        Sales start on <span itemprop="priceValidUntil" t-out="ticket.start_sale_datetime"
+                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                        (<span t-out="ticket.event_id.date_tz"/>)
+                                    </small>
+                                </div>
+                                <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-2">
+                                    <div class="o_wevent_registration_multi_select flex-md-grow-1 text-end"/>
+                                    <div class="ms-auto">
+                                        <select t-if="not ticket.is_expired and ticket.sale_available"
+                                            t-attf-name="nb_register-#{ticket.id}"
+                                            class="w-auto form-select">
+                                            <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
+                                            <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                            <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
+                                            <t t-foreach="range(0, seats_max)" t-as="nb">
+                                                <option t-out="nb" t-att-selected="len(ticket) == 0 and nb == 0 and 'selected'"/>
+                                            </t>
+                                        </select>
+                                        <div t-else="" class="text-danger">
+                                            <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.is_launched" >Sold Out</span>
+                                            <span t-if="ticket.is_expired">Expired</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-lg-row border-top">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" disabled="" t-attf-id="#{event.id}">
+                                Register
+                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                    (only <t t-out="event.seats_available"/> available)
+                                </t>
+                            </button>
+                        </div>
+                    </t>
+                    <div t-else="" class="o_wevent_registration_single">
+                        <div class="modal-body row px-3 py-2 mx-0">
+                            <div class="col-12 col-md-8 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                                <h5 itemprop="name" class="my-0 pe-3 o_wevent_single_ticket_name">
+                                    <span t-if="tickets" t-field="tickets.name"/>
+                                    <span t-else="">Registration</span>
+                                </h5>
+                                <t t-if="tickets.description">
+                                    <small t-field="tickets.description" class="text-muted py-2"/>
+                                    <br/>
+                                </t>
+                                <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired"
+                                    class="text-muted" itemprop="availabilityEnds">
+                                    Sales end on
+                                    <span itemprop="priceValidUntil" t-out="tickets.end_sale_datetime"
+                                        t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                    (<span t-out="tickets.event_id.date_tz"/>)
+                                </small>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center justify-content-between p-0">
+                                <t t-if="event.event_registrations_open">
+                                    <link itemprop="availability" content="http://schema.org/InStock"/>
+                                    <div class="o_wevent_registration_single_select w-auto ms-auto">
+                                        <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="d-inline w-auto form-select">
+                                            <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
+                                            <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
+                                            <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event) if tickets else seats_max_event"/>
+                                            <t t-foreach="range(0, seats_max)" t-as="nb">
+                                                <option t-out="nb" t-att-selected="nb == 1 and 'selected'"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <span itemprop="availability" content="http://schema.org/SoldOut" class="text-danger">
+                                        <i class="fa fa-ban me-2"/>Sold Out
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="modal-footer flex-lg-row border-top">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary o_wait_lazy_js a-submit" t-attf-id="#{event.id}" disabled="disabled">
+                                Register
+                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                    (only <t t-out="event.seats_available"/> available)
+                                </t>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</template>
+
+</odoo>

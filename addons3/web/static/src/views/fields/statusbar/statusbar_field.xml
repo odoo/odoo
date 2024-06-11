@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.StatusBarField.Dropdown">
+        <Dropdown toggler="'parent'">
+            <t t-foreach="items" t-as="item" t-key="item.value">
+                <DropdownItem
+                    class="getDropdownItemClassNames(item)"
+                    onSelected="() => this.selectItem(item)"
+                >
+                    <span t-esc="item.label" />
+                </DropdownItem>
+            </t>
+        </Dropdown>
+        <!-- Must be below the dropdown menu to align with the caret (if any) -->
+        <t t-esc="label" />
+    </t>
+
+    <t t-name="web.StatusBarField">
+        <div class="o_statusbar_status" t-ref="root" role="radiogroup">
+            <button
+                t-ref="after"
+                type="button"
+                class="btn btn-secondary dropdown-toggle o_arrow_button o_first"
+            >
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label">...</t>
+                    <t t-set="items" t-value="items.after" />
+                </t>
+            </button>
+            <t t-foreach="items.inline" t-as="item" t-key="item.value">
+                <button
+                    type="button"
+                    class="btn btn-secondary o_arrow_button"
+                    t-att-class="{
+                        o_first: item_first,
+                        o_arrow_button_current: item.isSelected,
+                        o_last: item_last,
+                    }"
+                    t-att-disabled="props.isDisabled || item.isSelected"
+                    role="radio"
+                    t-att-aria-label="getItemTooltip(item)"
+                    t-att-aria-checked="item.isSelected.toString()"
+                    t-att-aria-current="item.isSelected and 'step'"
+                    t-att-data-value="item.value"
+                    t-esc="item.label"
+                    t-on-click="() => this.selectItem(item)"
+                />
+            </t>
+            <button
+                t-ref="before"
+                type="button"
+                class="btn btn-secondary dropdown-toggle o_arrow_button o_last"
+            >
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label">...</t>
+                    <t t-set="items" t-value="items.before" />
+                </t>
+            </button>
+            <button t-ref="dropdown" type="button" class="btn btn-secondary dropdown-toggle">
+                <t t-call="web.StatusBarField.Dropdown">
+                    <t t-set="label" t-value="getCurrentLabel()" />
+                    <t t-set="items" t-value="getAllItems()" />
+                </t>
+            </button>
+        </div>
+    </t>
+</templates>

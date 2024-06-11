@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet_edition.DateFilterValue" class="date_filter_values">
+        <select class="o_input me-3" t-on-change="onPeriodChanged">
+            <option value="empty">Select period...</option>
+            <t t-foreach="dateOptions" t-as="periodOption" t-key="periodOption.id">
+                <option t-if="isSelected(periodOption.id)" selected="1" t-att-value="periodOption.id">
+                    <t t-esc="periodOption.description"/>
+                </option>
+                <option t-else="" t-att-value="periodOption.id">
+                    <t t-esc="periodOption.description"/>
+                </option>
+            </t>
+        </select>
+        <DateTimeInput
+            value="date"
+            format="'yyyy'"
+            minPrecision="'years'"
+            type="'date'"
+            placeholder="'Select year...'"
+            onChange.bind="onYearChanged"
+        />
+    </div>
+</templates>

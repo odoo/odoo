@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="InventoryReport.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+    <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+        <button t-if="props.context.inventory_mode and !props.context.inventory_report_mode and nbSelected == 0"
+            class="btn btn-secondary" type="button" t-on-click="onClickApplyAll">
+            Apply All
+        </button>
+    </xpath>
+</t>
+
+</templates>

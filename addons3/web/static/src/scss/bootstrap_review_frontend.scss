@@ -1,0 +1,271 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in frontend
+/// ==============================================================================
+
+// Extend bootstrap to create background and text utilities for gray colors too
+// Note: the card-body rule below needs those grays utilities to be defined
+// before so that the related o-bg-color text-muted rules work.
+@each $color, $value in $grays {
+    @include bg-variant(".bg-#{$color}", $value);
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+// Restore text-X from BS4 that use text-emphasis-variant
+@each $color, $value in $theme-colors {
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+// Cards
+.card-body {
+    @extend %-card-body-reviewed; // See bootstrap_review.scss
+}
+
+// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
+// We do it ourself here with a tweak: we introduce btn-fill-* (working as the
+// normal btn-* classes (in opposition to btn-outline-* classes). We then map
+// the btn-* classes to either btn-fill-* or btn-outline-* classes depending on
+// the configuration. We also allow to define a border-color different than the
+// background color.
+$o-btn-bg-colors: () !default;
+$o-btn-border-colors: () !default;
+@each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    .btn-fill-#{$color} {
+        @include button-variant($-bg-color, $-border-color);
+    }
+}
+@each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    .btn-outline-#{$color} {
+        @include button-outline-variant($-border-color);
+    }
+}
+$o-btn-flat-defaults: () !default;
+$o-btn-outline-defaults: () !default;
+$o-btn-outline-border-width-defaults: () !default;
+@each $color, $value in $theme-colors {
+    .btn-#{$color} {
+        @if index($o-btn-outline-defaults, $color) {
+            @extend .btn-outline-#{$color};
+            border-width: map-get($o-btn-outline-border-width-defaults, $color);
+        } @else {
+            @extend .btn-fill-#{$color};
+            @if index($o-btn-flat-defaults, $color) {
+                @extend .btn.flat;
+            }
+        }
+    }
+}
+
+// Highlight '.btn-group's active buttons
+.btn-group .btn-light.active {
+    box-shadow: inset 0 0 0 $border-width $component-active-bg;
+    border-color: transparent;
+    background-color: mix($component-active-bg, $light, 10%);
+}
+
+// Compensate navbar brand padding if no visible border
+@if alpha($navbar-dark-toggler-border-color) < 0.001 {
+    .navbar-dark .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+@if alpha($navbar-light-toggler-border-color) < 0.001 {
+    .navbar-light .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+// Review bootstrap navbar to work with different nav styles
+$o-navbar-nav-pills-link-padding-x: $nav-link-padding-x !default;
+$o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
+.navbar-nav.nav-pills .nav-link {
+    // The rules is needed so that the padding is not reset to 0 in mobile.
+    // Also use default nav-link paddings instead of navbar ones.
+    padding-right: $o-navbar-nav-pills-link-padding-x;
+    padding-left: $o-navbar-nav-pills-link-padding-x;
+
+    @if $o-navbar-nav-pills-link-border-radius != $nav-pills-border-radius {
+        @include border-radius($o-navbar-nav-pills-link-border-radius);
+    }
+}
+
+.carousel-control-next .visually-hidden {
+    left: 50%; // Avoid horizontal scrollbar in Chrome
+}
+
+.pagination {
+    // Ensure circle for one digit numbers
+    font-variant-numeric: tabular-nums;
+}
+
+// Modal
+.modal-content {
+    // If the text color of the body (used for the text color in modals) is not
+    // visible due to insufficient contrast with the modal background, we adjust
+    // the text color in the modal using the following code. For example, if the
+    // user sets a black background for its website and the text color of the
+    // body is white, the text will not be visible on modals with a white
+    // background.
+
+    @if $modal-content-color == null {
+        color: adjust-color-to-background($body-color, $modal-content-bg);
+
+        // This prevents these elements from taking their colors from the body
+        // inside a modal.
+        // We need to exclude 'oe_structure' that are areas containing editable
+        // snippets. Indeed, this code was added in a stable version, and we are
+        // doing everything not to alter the content edited by users. For
+        // example in Website, without this 'not', the 's_website_form' snippets
+        // with a black background in modals and on websites with a black
+        // background would have their input background changing from black to
+        // white.
+        // TODO: In Master, find a more consistent way to define the background
+        // color of 's_website_form' snippet inputs inside a modal.
+        &:where(:not(.oe_structure)) {
+            @if ($input-bg == $body-bg) {
+                .form-control {
+                    background-color: $modal-content-bg;
+                    color: color-contrast($modal-content-bg);
+                }
+            }
+            @if ($form-select-bg == $body-bg) {
+                .form-select {
+                    background-color: $modal-content-bg;
+                    color: color-contrast($modal-content-bg);;
+                }
+            }
+            @if $form-check-input-bg == $body-bg {
+                .form-check-input:not(:checked) {
+                    background-color: $modal-content-bg;
+                }
+            }
+        }
+    }
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $modal-content-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}
+
+// Popover
+.popover {
+    // The popover can have a different background color than that of the body.
+    // Here, we adjust the text color of the popover in case the body color
+    // (used by default for the text color of popovers) is not visible inside a
+    // popover due to a lack of contrast (e.g. on a website with a dark
+    // background).
+    @if $popover-header-color == null {
+        .popover-header {
+            color: adjust-color-to-background($body-color, $popover-header-bg);
+        }
+    }
+    @if $popover-body-color == $body-color {
+        .popover-body {
+            color: adjust-color-to-background($body-color, $popover-bg);
+        }
+    }
+}
+
+// Form
+.form-check-input {
+    // Without this line, the border of the checkboxes is not visible when the
+    // body is dark. This is due to the fact that the borders are defined based
+    // on the 'currentColor' of the inputs.
+    color: inherit;
+}
+.form-control.bg-light {
+    color: adjust-color-to-background($input-color, $light);
+}
+
+$-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
+// Input group text (e.g. Date time picker)
+.input-group-text {
+    // Adapt only if the variables have their default values.
+    @if ($input-group-addon-bg == $gray-200) and ($input-group-addon-color == $body-color) {
+        color: $-color-for-gray-200-bg;
+    }
+}
+// File upload button
+.form-control::file-selector-button {
+    @if ($form-file-button-bg == $gray-200) and ($form-file-button-color == $body-color) {
+        color: $-color-for-gray-200-bg;
+    }
+}
+
+// offcanvas
+.offcanvas {
+    @if $offcanvas-color == null {
+        color: adjust-color-to-background($body-color, $offcanvas-bg-color);
+
+        @if $form-check-input-bg == $body-bg {
+            .form-check-input:where(:not(:checked)) {
+                background-color: $offcanvas-bg-color;
+            }
+        }
+        @if $form-range-thumb-bg == $body-bg {
+            .form-range {
+                &::-webkit-slider-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+                &::-moz-range-thumb {
+                    &:where(:not(:active)) {
+                        background-color: $offcanvas-bg-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Button within input-group (e.g., "search bar")
+.input-group {
+    .btn:first-child, .btn:last-child {
+        @include border-radius($input-border-radius, 0);
+    }
+}
+
+// Dropdown
+.dropdown .dropdown-menu {
+    .text-muted {
+        color: adjust-color-to-background($text-muted, $dropdown-bg, mute-color($color-contrast-light), mute-color($color-contrast-dark)) !important;
+    }
+}
+
+// The following code adapts the style of disabled inputs to maintain color
+// consistency and make them more recognizable.
+.form-select {
+    // This is necessary to achieve a consistent "border rendering behaviour"
+    // across form-select and form-control when using semi-transparent
+    // borders and a background color (eg. disabled inputs).
+    // Otherwise, the color rendering of the semi-transparent border may be altered
+    // (the color may be darker depending on the background color used).
+    background-clip: padding-box;
+
+    &:disabled:not([multiple]):where(:not([size]), [size="1"]) {
+        background-image: str-replace($form-select-indicator, #{$form-select-indicator-color}, str-replace(#{$form-select-disabled-color}, "#", "%23"));
+    }
+}
+
+.form-control {
+    &:disabled, &[readonly] {
+        color: $form-select-disabled-color;
+    }
+}
+
+.form-check-input:disabled:not(:checked) {
+    background-color: $input-disabled-bg;
+
+    .form-switch & {
+        background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-select-disabled-color}'/></svg>"));
+    }
+}
+
+.form-range:disabled::-webkit-slider-thumb {
+    border-color: $input-disabled-border-color;
+}

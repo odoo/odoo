@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.WarningDialog">
+      <Dialog title="title" size="'md'" contentClass="'o_error_dialog'">
+        <div role="alert">
+          <p t-esc="message" class="text-prewrap"/>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
+        </t>
+      </Dialog>
+    </t>
+
+    <t t-name="web.RedirectWarningDialog">
+      <Dialog title="title" size="'md'" contentClass="'o_error_dialog'">
+        <div role="alert">
+          <p t-esc="message" class="text-prewrap"/>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary" t-on-click="onClick" t-esc="buttonText"/>
+          <button class="btn btn-secondary" t-on-click="props.close">Close</button>
+        </t>
+      </Dialog>
+    </t>
+
+    <t t-name="web.Error504Dialog">
+      <Dialog title="this.constructor.title" size="'md'" contentClass="'o_error_dialog'">
+        <div role="alert">
+            <p class="text-prewrap">
+            The operation was interrupted. This usually means that the current operation is taking too much time.
+            </p>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
+        </t>
+      </Dialog>
+    </t>
+
+    <t t-name="web.SessionExpiredDialog">
+      <Dialog title="this.constructor.title" size="'md'" contentClass="'o_error_dialog'">
+        <div role="alert">
+          <p class="text-prewrap">
+            Your Odoo session expired. The current page is about to be refreshed.
+          </p>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary o-default-button" t-on-click="onClick">Close</button>
+        </t>
+      </Dialog>
+    </t>
+
+    <t t-name="web.ErrorDialog">
+      <Dialog title="this.constructor.title" size="'md'" contentClass="'o_error_dialog'">
+         <div role="alert">
+          <p class="text-prewrap">
+            <p><b>An error occurred</b></p>
+            <p>Please use the copy button to report the error to your support service.</p>
+          </p>
+
+          <button class="btn btn-link" t-on-click="() => { state.showTraceback = !state.showTraceback }">See details</button>
+          <div t-if="state.showTraceback and (props.name or props.message)" class="alert alert-info bg-100 clearfix" role="alert">
+            <code t-if="props.name" t-esc="props.name"></code>
+            <p t-if="props.message" t-esc="props.message"></p>
+          </div>
+          <div t-if="state.showTraceback" class="alert alert-danger o_error_detail" role="alert">
+              <pre t-esc="traceback or props.traceback"/>
+          </div>
+        </div>
+        <t t-set-slot="footer">
+          <button class="btn btn-primary o-default-button" t-on-click="props.close">Close</button>
+          <button class="btn btn-secondary" t-on-click="onClickClipboard">
+            <i class="fa fa-clipboard mr8"/><t>Copy error to clipboard</t>
+          </button>
+        </t>
+      </Dialog>
+    </t>
+
+</templates>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TagsList">
+        <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
+            <span
+                class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100"
+                t-att-class="{
+                    'o_avatar opacity-trigger-hover' : tag.img,
+                    'o_badge badge rounded-pill lh-1': !tag.img,
+                }"
+                t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}"
+                tabindex="-1"
+                t-att-data-color="tag.colorIndex"
+                t-att-title="tag.text"
+                t-on-click="(ev) => tag.onClick and tag.onClick(ev)"
+                t-on-keydown="tag.onKeydown">
+
+                <!-- Avatar's :hover backdrop -->
+                <span
+                    t-if="tag.img and props.displayText and tag.onDelete"
+                    class="o_avatar_backdrop position-absolute top-0 end-0 bottom-0 start-0 ms-n2 mt-n1 mb-n1 bg-view rounded border shadow opacity-0 opacity-100-hover"/>
+
+                <img
+                    t-if="tag.img"
+                    t-att-src="tag.img"
+                    class="o_avatar o_m2m_avatar position-relative rounded"
+                    t-att-class="tag.imageClass"/>
+
+                <i t-if="tag.icon" t-attf-class="p-1 fa {{ tag.icon }}" t-att-class="tag.className"/>
+
+                <div
+                    t-if="props.displayText"
+                    class="o_tag_badge_text text-truncate"
+                    t-att-class="{'position-relative ms-1' : tag.img}"
+                    t-out="tag.text"/>
+
+                <a
+                    t-if="tag.onDelete"
+                    t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)"
+                    class="o_delete d-flex align-items-center opacity-100-hover"
+                    t-att-class="{
+                            'btn btn-link position-relative py-0 px-1 text-danger opacity-0': tag.img,
+                            'ps-1 opacity-75': !tag.img
+                        }"
+                    title="Delete"
+                    aria-label="Delete"
+                    tabIndex="-1"
+                    href="#">
+                        <i class="oi oi-close align-text-top"/>
+                </a>
+            </span>
+        </t>
+        <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
+            <span t-if="otherTags.length > 9" t-esc="'9+'" />
+            <span t-else="" t-esc="'+' + otherTags.length" />
+        </span>
+    </t>
+
+    <t t-name="web.TagsList.Tooltip">
+        <t t-foreach="tags" t-as="tag" t-key="tag.id">
+            <div t-esc="tag.text"/>
+        </t>
+    </t>
+
+</templates>

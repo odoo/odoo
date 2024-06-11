@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="certification_report_view_general">
+            <!-- Style classes to be applied to '#o_survey_certification': [no class](purple), gold, blue -->
+            <div id="o_survey_certification" t-att-data-oe-model="user_input._name" t-att-data-oe-id="user_input.id" 
+                t-attf-class="#{'article certification-wrapper ' + layout_template + ' ' + layout_color}">
+                <div class="certification">
+                    <div class="certification-seal" t-if="user_input.scoring_success and layout_template == 'modern'"/>
+                    <div class="certification-top">
+                        <h1><b>Certificate</b>
+                            <br/><span t-if="user_input.scoring_success">of achievement</span>
+                        </h1>
+                    </div>
+
+                    <div class="page certification-content">
+                        <div class="oe_structure"/>
+                        <div t-if="user_input.scoring_success">
+                        <div class="oe_structure"/>
+                            <p> <span>This certificate is presented to</span>
+                                <br/>
+                                <t t-set="certif_style" t-value="''"/>
+                                <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email or ''"/>
+                                <t t-if="certified_name.isupper()">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-family: certification-serif;'"/>
+                                </t>
+                                <t t-if="len(certified_name) > 35 and layout_template == 'classic'">
+                                    <t t-set="certif_style" t-value="certif_style + 'font-size: 20px; line-height: 4; font-family: certification-serif; '"/>
+                                </t>
+                                <t t-elif="len(certified_name) > 20">
+                                    <t t-if="layout_template == 'modern'">
+                                        <t t-set="certif_style" t-value="certif_style + 'font-size: 40px; line-height: 4;'"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="certif_style" t-value="certif_style + 'font-size: 30px; line-height: 4;'"/>
+                                    </t>
+                                </t>
+                                <span t-att-style="certif_style" class="user-name" t-out="certified_name">DEMO_CERTIFIED_NAME</span>
+
+                                <br/> <span>by</span> <span class="certification-company" t-field="user_input.create_uid.company_id.display_name">Odoo</span> <span>for successfully completing</span>
+                                <br/><b><span class="certification-name" t-field="user_input.survey_id.display_name">Functional Training</span></b>
+                             </p>
+                            <div class="oe_structure"/>
+                        </div>
+                        <div t-else="" class="certification-failed">
+                            <p>Certification Failed</p>
+                            <div class="oe_structure"/>
+                        </div>
+                        <div class="oe_structure"/>
+                    </div>
+
+                    <div class="certification-bottom">
+                        <div class="oe_structure"/>
+                        <div class="certification-date-wrapper">
+                            <span class="certification-date" t-field="user_input.create_date" t-options='{"widget": "date"}'>2023-08-18</span>
+                            <span>Date</span>
+                        </div>
+                        <div class="certification-company">
+                            <span class="certification-company-logo" t-field="user_input.create_uid.company_id.logo" t-options="{'widget': 'image'}" role="img"/>
+                        </div>
+                    </div>
+                    <div t-if="user_input.test_entry" class="test-entry"/>
+                    <div class="certification-number" t-if="user_input.scoring_success">
+                        Certification n°<span t-out="str(user_input.id).rjust(10, '0')">0000000010</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="certification_report_view">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="user_input">
+                    <t t-set="layout_values" t-value="user_input.survey_id.certification_report_layout.split('_') if user_input.survey_id.certification_report_layout else ['modern', 'purple']"/>
+                    <t t-set="layout_template" t-value="layout_values[0]"/>
+                    <t t-set="layout_color" t-value="layout_values[1]"/>
+                    <t t-call="survey.certification_report_view_general"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
