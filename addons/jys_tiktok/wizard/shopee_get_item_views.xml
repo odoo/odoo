@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_get_item_form" model="ir.ui.view">
+            <field name="name">Tiktok Get Items</field>
+            <field name="model">tiktok.get.item</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Get Items">
+                    <p>
+                        Integration Tiktok to System.
+                    </p>
+                    <separator string="Shops"/>
+                    <field name="shop_ids" nolabel="1" required="1"/>
+                    
+                    <group colspan="2" col="6">
+                        <field name="method" colspan="6" required="1"/>
+                        <field name="is_update_variant" colspan="6"/>
+                        <field name="is_merge_name" col="4" invisible="method == '-2'"/>
+                        <field name="is_merge_sku" col="2" invisible="method == '-2'"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_get_item" model="ir.actions.act_window">
+            <field name="name">Get Items</field>
+            <field name="res_model">tiktok.get.item</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_tiktok_get_item_form"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

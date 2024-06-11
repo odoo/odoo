@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <menuitem id="main_menu_jys_tiktok"
+        name="Tiktok"
+        web_icon="jys_tiktok,static/description/icon.png"
+        groups="jys_tiktok.group_jys_tiktok_access"
+        sequence="400">
+
+        <menuitem id="datas_menu_jys_tiktok"
+            name="Data"
+            sequence="10">
+
+            <menuitem id="menu_jys_tiktok_category"
+            name="Category"
+            action="action_jys_tiktok_category"
+            sequence="10"/>
+
+            <menuitem id="menu_jys_tiktok_attribute"
+            name="Attributes"
+            action="action_jys_tiktok_attribute"
+            sequence="20"/>
+
+            <menuitem id="menu_jys_tiktok_delivery_carrier"
+            name="Logistics"
+            action="action_jys_tiktok_delivery_carrier"
+            sequence="30"/>
+
+            <menuitem id="menu_jys_tiktok_api_log"
+            name="History API"
+            action="action_jys_tiktok_history_api"
+            sequence="40"/>
+
+        </menuitem>
+
+        <menuitem id="data_menu_jys_tiktok"
+            name="Orders"
+            sequence="20">
+
+            <menuitem id="item_menu_jys_tiktok"
+            name="Items"
+            action="action_jys_tiktok_item"
+            sequence="10"/>
+
+            <menuitem id="order_menu_jys_tiktok"
+            name="Orders"
+            action="action_jys_tiktok_order"
+            sequence="20"/>
+
+        </menuitem>
+
+        <menuitem id="sync_menu_jys_tiktok"
+            name="Sync"
+            sequence="30">
+
+            <menuitem id="menu_jys_tiktok_get_order"
+            name="Get Orders"
+            action="action_jys_tiktok_get_order"
+            sequence="10"/>
+
+            <menuitem id="menu_jys_tiktok_get_item"
+            name="Get Items"
+            action="action_jys_tiktok_get_item"
+            sequence="20"/>
+        </menuitem>
+
+        <menuitem id="shop_menu_jys_tiktok"
+            name="Shop"
+            action="action_jys_tiktok_shop"
+            sequence="40">
+        </menuitem>
+    </menuitem>
+
+</odoo>

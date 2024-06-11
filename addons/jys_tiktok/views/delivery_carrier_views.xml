@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_jys_tiktok_delivery_carrier_form" model="ir.ui.view">
+            <field name="name">delivery.carrier.form</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="is_cashless"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_delivery_carrier" model="ir.actions.act_window">
+            <field name="name">Logistics</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">delivery.carrier</field>
+            <field name="domain">[('tiktok_logistic_id', '!=', 0)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new deliver method.
+              </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
