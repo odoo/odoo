@@ -614,6 +614,13 @@
             display: inline-block;
             text-align: right;
             border: none;  // usefull for textarea
+            visibility: hidden;
+    }
+
+    div {
+        div:focus-within > span.o_field_translate, div:hover > span.o_field_translate {
+            visibility: visible !important;
+        }
     }
 
     input, textarea {

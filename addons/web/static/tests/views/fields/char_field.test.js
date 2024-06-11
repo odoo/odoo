@@ -266,6 +266,7 @@ test("char field translatable", async () => {
         }
     });
     expect("[name=name] input").toHaveClass("o_field_translate");
+    await contains("[name=name] input").click();
     expect(".o_field_char .btn.o_field_translate").toHaveCount(1, {
         message: "should have a translate button",
     });
@@ -353,6 +354,7 @@ test("translation dialog should close if field is not there anymore", async () =
         }
     });
     expect("[name=name] input").toHaveClass("o_field_translate");
+    await contains("[name=name] input").click();
     await contains(".o_field_char .btn.o_field_translate").click();
     expect(".modal").toHaveCount(1, {
         message: "a translate modal should be visible",

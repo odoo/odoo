@@ -129,6 +129,7 @@ test("is translatable", async () => {
         arch: `<form><sheet><group><field name="description"/></group></sheet></form>`,
     });
     expect(".o_field_text textarea").toHaveClass("o_field_translate");
+    await contains(".o_field_text textarea").click()
     expect(".o_field_text .btn.o_field_translate").toHaveCount(1);
     await contains(".o_field_text .btn.o_field_translate").click();
     expect(".modal").toHaveCount(1);
