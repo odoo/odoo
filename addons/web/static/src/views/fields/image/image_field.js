@@ -4,7 +4,6 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { url } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
@@ -58,6 +57,7 @@ export class ImageField extends Component {
     };
 
     setup() {
+        this.imageProcessing = useService("image_processing");
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.isMobile = isMobileOS();
@@ -131,71 +131,12 @@ export class ImageField extends Component {
         this.state.isValid = true;
         if (info.type === "image/webp") {
             // Generate alternate sizes and format for reports.
-            const image = document.createElement("img");
-            image.src = `data:image/webp;base64,${info.data}`;
-            await new Promise((resolve) => image.addEventListener("load", resolve));
-            const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
-            let referenceId = undefined;
-            for (const size of [originalSize, ...smallerSizes]) {
-                const ratio = size / originalSize;
-                const canvas = document.createElement("canvas");
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
-                const ctx = canvas.getContext("2d");
-                ctx.fillStyle = "rgb(255, 255, 255)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(
-                    image,
-                    0,
-                    0,
-                    image.width,
-                    image.height,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-
-                let data, mimetype;
-                if (size === originalSize) {
-                    data = info.data;
-                    mimetype = info.type;
-                } else {
-                    const { dataURL, mimetype: outputMimetype } = convertCanvasToDataURL(
-                        canvas,
-                        info.type,
-                        0.75
-                    );
-                    data = dataURL.split(",")[1];
-                    mimetype = outputMimetype;
-                }
-                const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
-                    [
-                        {
-                            name: info.name,
-                            description: size === originalSize ? "" : `resize: ${size}`,
-                            datas: data,
-                            res_id: referenceId,
-                            res_model: "ir.attachment",
-                            mimetype: mimetype,
-                        },
-                    ],
-                ]);
-                referenceId = referenceId || resizedId; // Keep track of original.
-                await this.orm.call("ir.attachment", "create_unique", [
-                    [
-                        {
-                            name: info.name.replace(/\.webp$/, ".jpg"),
-                            description: "format: jpeg",
-                            datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
-                            res_id: resizedId,
-                            res_model: "ir.attachment",
-                            mimetype: "image/jpeg",
-                        },
-                    ],
-                ]);
-            }
+            await this.imageProcessing.generateImageAlternatives(
+                `data:image/webp;base64,${info.data}`,
+                0.75,
+                true,
+                info.name.split(".").splice(-1).join()
+            );
         }
         this.props.record.update({ [this.props.name]: info.data });
     }

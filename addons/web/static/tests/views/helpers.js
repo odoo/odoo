@@ -4,6 +4,7 @@ import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import { Dialog } from "@web/core/dialog/dialog";
+import { imageProcessingService } from "@web/core/image_processing_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 import { View, getDefaultConfig } from "@web/views/view";
@@ -124,4 +125,5 @@ export function setupViewRegistries() {
     serviceRegistry.add("router", makeFakeRouterService(), { force: true });
     serviceRegistry.add("localization", makeFakeLocalizationService());
     serviceRegistry.add("company", fakeCompanyService);
+    serviceRegistry.add("image_processing", imageProcessingService);
 }

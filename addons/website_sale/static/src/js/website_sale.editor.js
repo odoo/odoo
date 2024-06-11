@@ -5,7 +5,6 @@ import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import "@website/js/editor/snippets.options";
-import { convertCanvasToDataURL } from "@web/core/utils/image_processing";
 import { renderToElement } from "@web/core/utils/render";
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
@@ -468,6 +467,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         this.rpc = this.bindService("rpc");
         this.orm = this.bindService("orm");
         this.notification = this.bindService("notification");
+        this.imageProcessing = this.bindService("image_processing");
     },
 
     /**
@@ -591,7 +591,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
                         if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
                             continue;
                         }
-                        await this._convertAttachmentToWebp(attachment, extraImageEls[index]);
+                        await this._saveAlternativeImageSizesAttachments(attachment, extraImageEls[index]);
                     }
                 }
                 this.rpc(`/shop/product/extra-images`, {
@@ -606,52 +606,26 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         });
     },
 
-    async _convertAttachmentToWebp(attachment, imageEl) {
-        // This method is widely adapted from onFileUploaded in ImageField.
-        // Upon change, make sure to verify whether the same change needs
-        // to be applied on both sides.
+    async _saveAlternativeImageSizesAttachments(attachment, sourceImageElement) {
         // Generate alternate sizes and format for reports.
-        const imgEl = document.createElement("img");
-        imgEl.src = imageEl.src;
-        await new Promise(resolve => imgEl.addEventListener("load", resolve));
-        const originalSize = Math.max(imgEl.width, imgEl.height);
-        const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
-        const webpName = attachment.name.replace(/\.(jpe?g|png)$/i, ".webp");
-        let referenceId = undefined;
-        for (const size of [originalSize, ...smallerSizes]) {
-            const ratio = size / originalSize;
-            const canvas = document.createElement("canvas");
-            canvas.width = imgEl.width * ratio;
-            canvas.height = imgEl.height * ratio;
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = "rgb(255, 255, 255)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(imgEl, 0, 0, imgEl.width, imgEl.height, 0, 0, canvas.width, canvas.height);
-            const { dataURL, mimetype } = convertCanvasToDataURL(canvas, "image/webp", 0.75);
-            const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [[{
-                name: webpName,
-                description: size === originalSize ? "" : `resize: ${size}`,
-                datas: dataURL.split(",")[1],
-                res_id: referenceId,
-                res_model: "ir.attachment",
-                mimetype: mimetype,
-            }]]);
-            if (size === originalSize) {
-                attachment.original_id = attachment.id;
-                attachment.id = resizedId;
-                attachment.image_src = `/web/image/${resizedId}-autowebp/${attachment.name}`;
-                attachment.mimetype = mimetype;
-            }
-            referenceId = referenceId || resizedId; // Keep track of original.
-            await this.orm.call("ir.attachment", "create_unique", [[{
-                name: webpName.replace(/\.webp$/, ".jpg"),
-                description: "format: jpeg",
-                datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
-                res_id: resizedId,
-                res_model: "ir.attachment",
-                mimetype: "image/jpeg",
-            }]]);
-        }
+        const { originalImage } = await this.imageProcessing.generateImageAlternatives(
+            sourceImageElement.src,
+            0.75,
+            true,
+            attachment.name.split(".").splice(-1).join()
+        );
+
+        attachment.original_id = attachment.id;
+        attachment.id = originalImage.id;
+        attachment.image_src = `/web/image/${originalImage.id}-autowebp/${attachment.name}`;
+        attachment.mimetype = originalImage.mimetype;
+    },
+
+    /**
+     * TODO: remove in master
+     */
+    async _convertAttachmentToWebp(attachment, sourceImageElement) {
+        return await this._saveAlternativeImageSizesAttachments(attachment, sourceImageElement);
     },
 
     /**

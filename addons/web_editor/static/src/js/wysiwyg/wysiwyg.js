@@ -20,7 +20,6 @@ import weUtils from "@web_editor/js/common/utils";
 import { isSelectionInSelectors, peek } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer, RequestError } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
-import { canExportCanvasAsWebp } from "@web/core/utils/image_processing";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
@@ -149,6 +148,7 @@ export class Wysiwyg extends Component {
         this.orm = useService('orm');
         this.rpc = useService('rpc');
         this.getColorPickerTemplateService = useService('get_color_picker_template');
+        this.imageProcessing = useService("image_processing");
         this.notification = useService("notification");
         this.popover = useService("popover");
         this.busService = this.env.services.bus_service;
@@ -3497,6 +3497,7 @@ export class Wysiwyg extends Component {
      */
     async _saveModifiedImage(el, resModel, resId) {
         const isBackground = !el.matches('img');
+        const imageSource = isBackground ? el.dataset.bgSrc : el.getAttribute("src");
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
@@ -3505,25 +3506,12 @@ export class Wysiwyg extends Component {
         if (el.dataset.mimetype === 'image/webp' && isImageField) {
             // Generate alternate sizes and format for reports.
             altData = {};
-            const image = document.createElement('img');
-            image.src = isBackground ? el.dataset.bgSrc : el.getAttribute('src');
-            await new Promise(resolve => image.addEventListener('load', resolve));
-            const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1024, 512, 256, 128].filter(size => size < originalSize);
-            for (const size of [originalSize, ...smallerSizes]) {
-                const ratio = size / originalSize;
-                const canvas = document.createElement('canvas');
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
-                const ctx = canvas.getContext('2d');
-                ctx.fillStyle = 'rgb(255, 255, 255)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-                altData[size] = {
-                    'image/jpeg': canvas.toDataURL('image/jpeg', 0.75).split(',')[1],
-                };
-                if (size !== originalSize && canExportCanvasAsWebp()) {
-                    altData[size]['image/webp'] = canvas.toDataURL('image/webp', 0.75).split(',')[1];
+            const { alternativeImagesBySize } = this.imageProcessing.generateImageAlternatives(imageSource, 0.75);
+
+            for (const size in alternativeImagesBySize) {
+                const images = alternativeImagesBySize[size];
+                for (const image of images) {
+                    altData[size][image.mimetype] = image.dataURL.split(",")[1];
                 }
             }
         }
@@ -3532,7 +3520,7 @@ export class Wysiwyg extends Component {
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
-                data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
+                data: imageSource.split(",")[1],
                 alt_data: altData,
                 mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
                 name: (el.dataset.fileName ? el.dataset.fileName : null),

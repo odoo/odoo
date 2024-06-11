@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { IMAGE_TYPE } from "@web/core/image_processing_service";
 import { registry } from '@web/core/registry';
 import { UploadProgressToast } from './upload_progress_toast';
 import { _t } from "@web/core/l10n/translation";
@@ -12,8 +13,8 @@ import { reactive } from "@odoo/owl";
 export const AUTOCLOSE_DELAY = 3000;
 
 export const uploadService = {
-    dependencies: ['rpc', 'notification'],
-    start(env, { rpc, notification }) {
+    dependencies: ["image_processing", "rpc", "notification"],
+    start(env, { image_processing, rpc, notification }) {
         let fileId = 0;
         const progressToast = reactive({
             files: {},
@@ -135,20 +136,20 @@ export const uploadService = {
                         } else {
                             if (attachment.mimetype === 'image/webp') {
                                 // Generate alternate format for reports.
-                                const image = document.createElement('img');
-                                image.src = `data:image/webp;base64,${dataURL.split(',')[1]}`;
-                                await new Promise(resolve => image.addEventListener('load', resolve));
-                                const canvas = document.createElement('canvas');
-                                canvas.width = image.width;
-                                canvas.height = image.height;
-                                const ctx = canvas.getContext('2d');
-                                ctx.fillStyle = 'rgb(255, 255, 255)';
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                ctx.drawImage(image, 0, 0);
-                                const altDataURL = canvas.toDataURL('image/jpeg', 0.75);
+                                const { alternativeImagesBySize } = await image_processing.generateImageAlternatives(
+                                    `data:image/webp;base64,${dataURL.split(",")[1]}`,
+                                    0.75,
+                                    false,
+                                    undefined,
+                                    [],
+                                    [IMAGE_TYPE.JPEG]
+                                );
+
+                                const alternativeImage = Object.values(alternativeImagesBySize)[0][0];
+
                                 await rpc('/web_editor/attachment/add_data', {
                                     'name': file.name.replace(/\.webp$/, '.jpg'),
-                                    'data': altDataURL.split(',')[1],
+                                    'data': alternativeImage.dataURL.split(",")[1],
                                     'res_id': attachment.id,
                                     'res_model': 'ir.attachment',
                                     'is_image': true,
