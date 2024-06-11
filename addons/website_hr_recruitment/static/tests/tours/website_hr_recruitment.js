@@ -23,7 +23,7 @@
             run: `edit ${application.email}`,
         }, {
             content: "Complete phone number",
-            trigger: "input[name=partner_mobile]",
+            trigger: "input[name=partner_phone]",
             run: `edit ${application.phone}`,
         }, {
             content: "Complete LinkedIn profile",
