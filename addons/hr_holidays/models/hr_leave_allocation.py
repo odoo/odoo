@@ -40,12 +40,11 @@ class HolidaysAllocation(models.Model):
     name = fields.Char(
         string='Description',
         compute='_compute_description',
-        inverse='_inverse_description',
-        search='_search_description',
+        readonly=False,
+        store=True,
         compute_sudo=False)
     name_validity = fields.Char('Description with validity', compute='_compute_description_validity')
     active = fields.Boolean(default=True)
-    private_name = fields.Char('Allocation Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
@@ -158,42 +157,16 @@ class HolidaysAllocation(models.Model):
     @api.depends_context('uid')
     @api.depends('holiday_status_id')
     def _compute_description(self):
-        self.check_access_rights('read')
-        self.check_access_rule('read')
-
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
-                title = allocation.sudo().private_name
-                if allocation.env.context.get('is_employee_allocation'):
-                    if allocation.holiday_status_id:
-                        allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
-                        title = _("%s allocation request (%s %s)",
-                            allocation.holiday_status_id.name,
-                            allocation_duration,
-                            allocation.type_request_unit)
-                    else:
-                        title = _("Allocation Request")
-                allocation.name = title
+            if allocation.holiday_status_id:
+                allocation_duration = allocation.number_of_days_display if allocation.type_request_unit != 'hour' else allocation.number_of_hours_display
+                title = _("%s allocation request (%s %s)",
+                    allocation.holiday_status_id.name,
+                    allocation_duration,
+                    allocation.type_request_unit)
             else:
-                allocation.name = '*****'
-
-    def _inverse_description(self):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
-                allocation.sudo().private_name = allocation.name
-
-    def _search_description(self, operator, value):
-        is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
-        domain = [('private_name', operator, value)]
-
-        if not is_officer:
-            domain = expression.AND([domain, [('employee_id.user_id', '=', self.env.user.id)]])
-
-        allocations = self.sudo().search(domain)
-        return [('id', 'in', allocations.ids)]
+                title = _("Allocation Request")
+            allocation.name = title
 
     @api.depends('accrual_plan_id')
     def _compute_has_accrual_plan(self):
