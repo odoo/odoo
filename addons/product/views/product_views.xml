@@ -91,7 +91,7 @@
                                             options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                             <span name="uom_span" groups="uom.group_uom">per
                                                 <field name="uom_id"
-                                                    class="oe_inline"
+                                                    class="oe_inline" style="max-width:136px"
                                                     options="{'no_create': True}"/>
                                             </span>
                                     </div>
@@ -447,7 +447,7 @@
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" required="id"/>
                 </field>
                 <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" groups="product.group_product_variant"/>
+                    <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" invisible="not product_template_variant_value_ids" groups="product.group_product_variant"/>
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
                     <attribute name="options">{'no_open': True}</attribute>
