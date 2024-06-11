@@ -69,6 +69,11 @@ def report_configuration():
     replica_port = config['db_replica_port']
     if replica_host is not False or replica_port:
         _logger.info('replica database: %s@%s:%s', user, replica_host or 'default', replica_port or 'default')
+    if sys.version_info[:2] > odoo.MAX_PY_VERSION:
+        _logger.warning("Python %s is not officially supported, please use Python %s instead",
+            '.'.join(map(str, sys.version_info[:2])),
+            '.'.join(map(str, odoo.MAX_PY_VERSION))
+        )
 
 def rm_pid_file(main_pid):
     config = odoo.tools.config
