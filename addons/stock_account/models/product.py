@@ -717,8 +717,13 @@ class ProductProduct(models.Model):
         candidates = stock_moves\
             .sudo()\
             .filtered(lambda m: is_returned == bool(m.origin_returned_move_id and sum(m.stock_valuation_layer_ids.mapped('quantity')) >= 0))\
-            .mapped('stock_valuation_layer_ids')\
-            .sorted()
+            .mapped('stock_valuation_layer_ids')
+
+        if self.env.context.get('candidates_prefetch_ids'):
+            candidates = candidates.with_prefetch(self.env.context.get('candidates_prefetch_ids'))
+
+        if len(candidates) > 1:
+            candidates = candidates.sorted(lambda svl: (svl.create_date, svl.id))
 
         value_invoiced = self.env.context.get('value_invoiced', 0)
         if 'value_invoiced' in self.env.context:
