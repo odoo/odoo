@@ -45,7 +45,7 @@
                                 <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
                             </button>
                             <t t-set-slot="content">
-                                <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread" dropdown="followerListDropdown"/>
+                                <FollowerList onEditFollowers.bind="onEditFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread" dropdown="followerListDropdown"/>
                             </t>
                         </Dropdown>
                     </div>
