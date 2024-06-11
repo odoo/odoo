@@ -82,14 +82,10 @@ export const tourService = {
                         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
                     }
                     if (!steps) {
-                        steps = tour.steps().map((step) => {
-                            step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
-                            return step;
-                        });
+                        steps = tour.steps();
                     }
                     return steps;
                 },
-                shadow_dom: tour.shadow_dom,
                 url: tour.url,
                 rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
                 rainbowManMessage: tour.rainbowManMessage,
@@ -279,49 +275,6 @@ export const tourService = {
         }
 
         /**
-         * Wait for the shadow hosts matching the given selectors to
-         * appear in the DOM then, register the underlying shadow roots
-         * to the macro engine observer in order to listen to the
-         * changes in the shadow DOM.
-         *
-         * @param {Set<string>} shadowHostSelectors
-         */
-        function observeShadows(shadowHostSelectors) {
-            const observer = new MutationObserver(() => {
-                const shadowRoots = [];
-                for (const selector of shadowHostSelectors) {
-                    const shadowHost = document.querySelector(selector);
-                    if (shadowHost) {
-                        shadowRoots.push(shadowHost.shadowRoot);
-                        shadowHostSelectors.delete(selector);
-                    }
-                }
-                for (const shadowRoot of shadowRoots) {
-                    macroEngine.observer.observe(shadowRoot, macroEngine.observerOptions);
-                }
-                if (shadowHostSelectors.size === 0) {
-                    observer.disconnect();
-                }
-            });
-            observer.observe(macroEngine.target, { childList: true, subtree: true });
-        }
-
-        /**
-         * Register shadow roots that must be observed by the tour to
-         * the macro engine.
-         *
-         * @param {Tour} tour
-         */
-        function setupShadowObservers(tour) {
-            const shadowDOMs = new Set(
-                tour.steps.filter((step) => step.shadow_dom).map((step) => step.shadow_dom)
-            );
-            if (shadowDOMs.size > 0) {
-                observeShadows(shadowDOMs);
-            }
-        }
-
-        /**
          * Disable transition before starting an "auto" tour.
          * @param {Macro} macro
          * @param {'auto' | 'manual'} mode
@@ -374,7 +327,6 @@ export const tourService = {
                 }
             });
             if (!willUnload) {
-                setupShadowObservers(tour);
                 pointer.start();
                 activateMacro(macro, options.mode);
             }
@@ -399,7 +351,6 @@ export const tourService = {
                 keepWatchBrowser,
                 showPointerDuration,
             });
-            setupShadowObservers(tour);
             pointer.start();
             activateMacro(macro, mode);
         }

@@ -33,21 +33,19 @@ import {
 
 /**
  * @param {string} selector - any valid Hoot selector
- * @param {string|undefined} shadowDOM - selector of the shadow root host
  * @param {boolean} inModal
  * @returns {Array<Element>}
  */
-function findTrigger(selector, shadowDOM, inModal) {
-    const target = shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document;
+function findTrigger(selector, inModal) {
     let nodes;
     if (inModal !== false) {
-        const visibleModal = hoot.queryAll(".modal", { root: target, visible: true }).at(-1);
+        const visibleModal = hoot.queryAll(".modal", { visible: true }).at(-1);
         if (visibleModal) {
             nodes = hoot.queryAll(selector, { root: visibleModal });
         }
     }
     if (!nodes) {
-        nodes = hoot.queryAll(selector, { root: target });
+        nodes = hoot.queryAll(selector);
     }
     return nodes;
 }
@@ -62,7 +60,7 @@ function tryFindTrigger(tour, step, elKey) {
     const selector = step[elKey];
     const in_modal = elKey === "extra_trigger" ? false : step.in_modal;
     try {
-        const nodes = findTrigger(selector, step.shadow_dom, in_modal);
+        const nodes = findTrigger(selector, in_modal);
         //TODO : change _legacyIsVisible by isVisible (hoot lib)
         //Failed with tour test_snippet_popup_with_scrollbar_and_animations > snippet_popup_and_animations
         return !step.allowInvisible ? nodes.find(_legacyIsVisible) : nodes.at(0);

@@ -3,24 +3,25 @@
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
-    shadow_dom: ".o-livechat-root",
     test: true,
     url: "/contactus",
     steps: () => [
         {
-            trigger: ".o-livechat-LivechatButton",
+            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
         {
-            trigger: ".o-mail-Message:contains(Hello, were do you want to go?)",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-Message:contains(Hello, were do you want to go?)",
             run: "click",
         },
         {
-            trigger: "li:contains(Go to the #chatbot-redirect anchor)",
+            trigger: ".o-livechat-root:shadow li:contains(Go to the #chatbot-redirect anchor)",
             run: "click",
         },
         {
-            trigger: ".o-mail-Message:contains(Tadam, we are on the page you asked for!)",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-Message:contains(Tadam, we are on the page you asked for!)",
             run() {
                 const url = new URL(location.href);
                 if (url.pathname !== "/contactus" || url.hash !== "#chatbot-redirect") {
@@ -31,16 +32,17 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
             },
         },
         {
-            trigger: "button[title='Restart Conversation']",
+            trigger: ".o-livechat-root:shadow button[title='Restart Conversation']",
             run: "click",
         },
         {
-            trigger: "li:contains(Go to the /chatbot-redirect page)",
+            trigger: ".o-livechat-root:shadow li:contains(Go to the /chatbot-redirect page)",
             run: "click",
         },
         {
-            trigger:
-                ".o-mail-Message:contains('Go to the /chatbot-redirect page') + .o-mail-Message:contains('Tadam')",
+            trigger: ".o-livechat-root:shadow .o-mail-Message:last:contains('Tadam')",
+            extra_trigger:
+                ".o-livechat-root:shadow .o-mail-Message:contains('Go to the /chatbot-redirect page')",
             run() {
                 const url = new URL(location.href);
                 if (url.pathname !== "/chatbot-redirect") {

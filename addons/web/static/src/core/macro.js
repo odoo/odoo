@@ -30,6 +30,17 @@ export const ACTION_HELPERS = {
     },
 };
 
+function findAllShadowRoots(node, shadowRoots = []) {
+    if (node.shadowRoot) {
+        shadowRoots.push(node.shadowRoot);
+        findAllShadowRoots(node.shadowRoot, shadowRoots);
+    }
+    node.childNodes.forEach((child) => {
+        findAllShadowRoots(child, shadowRoots);
+    });
+    return shadowRoots;
+}
+
 const mutex = new Mutex();
 
 class TimeoutError extends Error {}
@@ -174,7 +185,7 @@ export class MacroEngine {
         };
         this.observer = new MutationObserver((mutationList, observer) => {
             this.delayedCheck();
-            //When iframes are added to "this.target"
+            //When iframes or shadowDom are added to "this.target"
             mutationList.forEach((mutationRecord) =>
                 Array.from(mutationRecord.addedNodes).forEach((node) => {
                     let iframes = [];
@@ -184,6 +195,9 @@ export class MacroEngine {
                         iframes = Array.from(node.querySelectorAll("iframe"));
                     }
                     iframes.forEach((iframeEl) => this.observeIframe(iframeEl, observer));
+                    findAllShadowRoots(node).forEach((shadowRoot) =>
+                        observer.observe(shadowRoot, this.observerOptions)
+                    );
                 })
             );
         });
@@ -233,6 +247,10 @@ export class MacroEngine {
             this.target
                 .querySelectorAll("iframe")
                 .forEach((el) => this.observeIframe(el, this.observer));
+            //When shadowDom already exist at "this.target" initialization
+            findAllShadowRoots(this.target).forEach((shadowRoot) => {
+                this.observer.observe(shadowRoot, this.observerOptions);
+            });
         }
         this.delayedCheck();
     }
