@@ -77,7 +77,7 @@ class Employee(models.Model):
 
     def _sync_user(self, user, employee_has_image=False):
         if self.work_contact_id and self.work_contact_id != user.partner_id:
-            cars = self.env['fleet.vehicle'].search(['|', ('future_driver_id', '=', self.work_contact_id.id), ('driver_id', '=', self.work_contact_id.id)])
+            cars = self.env['fleet.vehicle'].search(['|', ('future_driver_id', '=', self.work_contact_id.id), ('driver_id', '=', self.work_contact_id.id), ('company_id', '=', self.company_id.id)])
             for car in cars:
                 if car.future_driver_id == self.work_contact_id:
                     car.future_driver_id = user.partner_id
