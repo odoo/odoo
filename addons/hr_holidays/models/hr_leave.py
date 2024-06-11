@@ -72,6 +72,16 @@ class HolidaysRequest(models.Model):
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _mail_post_access = 'read'
 
+    def _default_holiday_status_id(self, country_id):
+        domain = [
+                    ('country_id', 'in', [country_id, False]),
+                    '|',
+                    ('requires_allocation', '=', 'no'),
+                    ('has_valid_allocation', '=', True)
+                ]
+
+        return self.env['hr.leave.type'].search(domain, limit=1, order='sequence')
+
     @api.model
     def default_get(self, fields_list):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
@@ -79,8 +89,9 @@ class HolidaysRequest(models.Model):
 
         lt = self.env['hr.leave.type']
         if self.env.context.get('holiday_status_display_name', True) and 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
-            lt = self.env['hr.leave.type'].search(['|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)], limit=1, order='sequence')
+            lt = self._default_holiday_status_id(self.env.user.company_id.country_id.id)
             if lt:
+                # This default value is used when the logged in employee opens `My Time Off`
                 defaults['holiday_status_id'] = lt.id
                 defaults['request_unit_custom'] = False
 
@@ -143,6 +154,7 @@ class HolidaysRequest(models.Model):
         required=True, readonly=False,
         domain="""[
             ('company_id', 'in', [employee_company_id, False]),
+            ('country_id', 'in', [country_id, False]),
             '|',
                 ('requires_allocation', '=', 'no'),
                 ('has_valid_allocation', '=', True),
@@ -158,6 +170,15 @@ class HolidaysRequest(models.Model):
         domain=lambda self: self._get_employee_domain())
     employee_company_id = fields.Many2one(related='employee_id.company_id', string="Employee Company", store=True)
     company_id = fields.Many2one('res.company', compute='_compute_company_id', store=True)
+    country_id = fields.Many2one('res.country',
+                                 compute='_compute_country_id',
+                                 # This default value is necessary when the current logged in user
+                                 # opens `My Time Off`. Without it the country would be set to the
+                                 # country of the current selected company. This would result in
+                                 # having time off types available to be selected on the time off
+                                 # request whereas they shouldn't be available.
+                                 default=lambda self: self.env.user.company_id.country_id,
+                                 store=True)
     active_employee = fields.Boolean(related='employee_id.active', string='Employee Active')
     tz_mismatch = fields.Boolean(compute='_compute_tz_mismatch')
     tz = fields.Selection(_tz_get, compute='_compute_tz')
@@ -584,13 +605,22 @@ class HolidaysRequest(models.Model):
             leave.number_of_hours = hours
             leave.number_of_days = days
 
-    @api.depends('employee_company_id', 'mode_company_id')
+    @api.depends('employee_company_id', 'mode_company_id', 'department_id')
     def _compute_company_id(self):
         for holiday in self:
+            # If there are multiple employees on the time off request, set the company to the
+            # company of the first of these employees.
             holiday.company_id = holiday.employee_company_id \
+                or holiday.employee_ids[0].company_id if holiday.employee_ids else False \
                 or holiday.mode_company_id \
                 or holiday.department_id.company_id \
                 or self.env.company
+
+    @api.depends('company_id')
+    def _compute_country_id(self):
+        for holiday in self:
+            holiday.country_id = holiday.company_id.country_id
+
 
     @api.depends('number_of_days')
     def _compute_last_several_days(self):
@@ -767,6 +797,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     continue
                 if previous_emp_data != emp_data and len(emp_data) >= len(previous_emp_data):
                     raise ValidationError(_("There is no valid allocation to cover that request."))
+
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        self.holiday_status_id = self._default_holiday_status_id(self.country_id.id)
 
     ####################################################
     # ORM Overrides methods

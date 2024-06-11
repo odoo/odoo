@@ -26,16 +26,22 @@ class HolidaysAllocation(models.Model):
     _mail_post_access = 'read'
 
     def _default_holiday_status_id(self):
+        country_domain = [('country_id', 'in', [self.country_id.id, False])]
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes')]
         else:
             domain = [('has_valid_allocation', '=', True), ('requires_allocation', '=', 'yes'), ('employee_requests', '=', 'yes')]
+
+        domain = expression.AND([country_domain, domain])
         return self.env['hr.leave.type'].search(domain, limit=1)
 
     def _domain_holiday_status_id(self):
+        country_domain = "('country_id', 'in', [country_id, False])"
         if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            return [('requires_allocation', '=', 'yes')]
-        return [('employee_requests', '=', 'yes')]
+            domain = "('requires_allocation', '=', 'yes')"
+        else:
+            domain = "('employee_requests', '=', 'yes')"
+        return f"[{country_domain},{domain}]"
 
     name = fields.Char(
         string='Description',
@@ -64,6 +70,10 @@ class HolidaysAllocation(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', compute='_compute_from_employee_ids', store=True, string='Employee', index=True, readonly=False, ondelete="restrict", tracking=True)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
+    country_id = fields.Many2one('res.country',
+                            compute='_compute_country_id',
+                            default=lambda self: self.env.user.company_id.country_id,
+                            store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_manager_id', store=True, string='Manager')
     notes = fields.Text('Reasons', readonly=False)
@@ -352,6 +362,19 @@ class HolidaysAllocation(models.Model):
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
+
+    @api.depends('employee_company_id', 'mode_company_id', 'department_id')
+    def _compute_country_id(self):
+        for holiday in self:
+            # If there are multiple employees on the time off request, set the country to the
+            # country of the company of the first of these employees.
+            company_id = holiday.employee_company_id \
+                or holiday.employee_ids[0].company_id if holiday.employee_ids else False \
+                or holiday.mode_company_id \
+                or holiday.department_id.company_id \
+                or self.env.company
+
+            holiday.country_id = company_id.country_id
 
     def _get_carryover_date(self, date_from):
         self.ensure_one()
@@ -884,6 +907,9 @@ class HolidaysAllocation(models.Model):
         date_to = min(self.date_to, date.today()) if self.date_to else False
         self._process_accrual_plans(date_to)
 
+    @api.onchange('country_id')
+    def _onchange_country_id(self):
+        self.holiday_status_id = self._default_holiday_status_id()
     # ------------------------------------------------------------
     # Activity methods
     # ------------------------------------------------------------

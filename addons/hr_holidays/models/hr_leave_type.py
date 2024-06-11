@@ -52,6 +52,10 @@ class HolidaysType(models.Model):
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    country_id = fields.Many2one('res.country', string='Country',
+                                 default=lambda self: self.env.company.country_id,
+                                 store=True,
+                                 compute="_compute_country_id")
     responsible_ids = fields.Many2many(
         'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
@@ -165,6 +169,12 @@ class HolidaysType(models.Model):
                 holiday_type.has_valid_allocation = bool(allocations)
             else:
                 holiday_type.has_valid_allocation = True
+
+    @api.depends('company_id')
+    def _compute_country_id(self):
+        for holiday_type in self:
+            if holiday_type.company_id:
+                holiday_type.country_id = holiday_type.company_id.country_id
 
     def _search_max_leaves(self, operator, value):
         value = float(value)

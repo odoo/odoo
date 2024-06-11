@@ -276,6 +276,7 @@
                             <field name="employee_company_id" invisible="1"/>
                             <field name="holiday_status_id" force_save="1"
                                 domain="[
+                                ('country_id', 'in', [country_id, False]),
                                     '|',
                                         ('requires_allocation', '=', 'no'),
                                         '&amp;',

@@ -16,6 +16,19 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.company = cls.env['res.company'].create({'name': 'Test company'})
         cls.env.user.company_id = cls.company
 
+        # In the file `test_holidays_calendar.py`, the `time_off_request_calendar_view` tour is executed
+        # and appears to succeed, but this is a false positive. When the tour attempts to save the leave request,
+        # it encounters an error because no `time off type` is selected by default. This issue arises due to the following reasons:
+        # 1. All defined time off types are linked to a specific country.
+        # 2. The test company is defined without a country.
+        # As a result, when the system tries to retrieve a time off type that matches the country of the test company, it fails to find any.
+        # Hence, define a time off type without a country to be available for `Test company`
+        cls.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'requires_allocation': 'no',
+            'request_unit': 'day',
+        })
+
         # Test users to use through the various tests
         cls.user_hruser = mail_new_test_user(cls.env, login='armande', groups='base.group_user,hr_holidays.group_hr_holidays_user')
         cls.user_hruser_id = cls.user_hruser.id
