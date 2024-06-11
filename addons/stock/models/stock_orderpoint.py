@@ -286,7 +286,10 @@ class StockWarehouseOrderpoint(models.Model):
                 remainder = orderpoint.qty_multiple > 0.0 and qty_to_order % orderpoint.qty_multiple or 0.0
                 if (float_compare(remainder, 0.0, precision_rounding=rounding) > 0
                         and float_compare(orderpoint.qty_multiple - remainder, 0.0, precision_rounding=rounding) > 0):
-                    qty_to_order -= remainder
+                    if float_is_zero(orderpoint.product_max_qty, precision_rounding=rounding):
+                        qty_to_order += orderpoint.qty_multiple - remainder
+                    else:
+                        qty_to_order -= remainder
             orderpoint.qty_to_order = qty_to_order
 
     def _get_qty_multiple_to_order(self):
