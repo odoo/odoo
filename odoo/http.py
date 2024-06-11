@@ -1209,7 +1209,7 @@ class HTTPRequest:
         self.environ = {
             key: value
             for key, value in self.__environ.items()
-            if (not key.startswith(('werkzeug.', 'wsgi.', 'socket')) or key in ['wsgi.url_scheme'])
+            if (not key.startswith(('werkzeug.', 'wsgi.', 'socket')) or key in ['wsgi.url_scheme', 'werkzeug.proxy_fix.orig'])
         }
 
     def __enter__(self):
