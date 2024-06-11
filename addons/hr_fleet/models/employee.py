@@ -76,13 +76,15 @@ class Employee(models.Model):
         return res
 
     def _sync_user(self, user, employee_has_image=False):
-        cars = self.env['fleet.vehicle'].search(['|', ('future_driver_id', '=', self.work_contact_id.id), ('driver_id', '=', self.work_contact_id.id)])
-        for car in cars:
-            if car.future_driver_id == self.work_contact_id:
-                car.future_driver_id = user.partner_id
-            if car.driver_id == self.work_contact_id:
-                car.driver_id = user.partner_id
+        if self.work_contact_id and self.work_contact_id != user.partner_id:
+            cars = self.env['fleet.vehicle'].search(['|', ('future_driver_id', '=', self.work_contact_id.id), ('driver_id', '=', self.work_contact_id.id)])
+            for car in cars:
+                if car.future_driver_id == self.work_contact_id:
+                    car.future_driver_id = user.partner_id
+                if car.driver_id == self.work_contact_id:
+                    car.driver_id = user.partner_id
         return super()._sync_user(user, employee_has_image)
+
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
