@@ -160,15 +160,10 @@
                 <field name="end_date"/>
                 <field name="last_update"/>
                 <templates>
-                    <t t-name="kanban-tooltip">
-                        <ul class="oe_kanban_tooltip">
-                            <li><t t-esc="record.definition_description.value" /></li>
-                        </ul>
-                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value and record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value and record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                             <div class="o_kanban_content text-center">
-                                <p><strong><h4 class="oe_goal_name" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
+                                <p><strong><h4 class="oe_goal_name"><field name="definition_id" /></h4></strong></p>
                                 <img class="o_image_24_cover me-1 rounded" t-att-src="kanban_image('res.users', 'avatar_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                                 <field name="user_id" class="fw-bold"/>
                                 <div class="o_goal_state_block pt-3 fs-1 fw-bolder">

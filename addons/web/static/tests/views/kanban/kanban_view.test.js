@@ -978,48 +978,6 @@ test("view button and string interpolated attribute in kanban", async () => {
     ]).toVerifySteps();
 });
 
-test.tags("desktop")("kanban with kanban-tooltip template", async () => {
-    await mountView({
-        type: "kanban",
-        resModel: "partner",
-        arch: `
-            <kanban>
-                <templates>
-                    <t t-name="kanban-tooltip">
-                        <ul class="oe_kanban_tooltip">
-                            <li><t t-esc="record.foo.value" /></li>
-                        </ul>
-                    </t>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="foo"/>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>`,
-    });
-
-    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
-        "yop",
-        "blip",
-        "gnap",
-        "blip",
-    ]);
-
-    expect(".o_popover").toHaveCount(0);
-    hover(queryFirst(".o_kanban_record"));
-    await animationFrame();
-    expect(".o_popover").toHaveCount(0);
-    await runAllTimers();
-    await animationFrame();
-    expect(".o_popover").toHaveCount(1);
-    expect(".o_popover").toHaveText("yop");
-
-    hover(queryFirst(".o_control_panel"));
-    await animationFrame();
-    expect(".o_popover").toHaveCount(0);
-});
-
 test("pager should be hidden in grouped mode", async () => {
     await mountView({
         type: "kanban",

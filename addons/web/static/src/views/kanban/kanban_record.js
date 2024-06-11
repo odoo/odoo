@@ -4,7 +4,6 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
-import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
@@ -15,11 +14,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
-import {
-    KANBAN_BOX_ATTRIBUTE,
-    KANBAN_MENU_ATTRIBUTE,
-    KANBAN_TOOLTIP_ATTRIBUTE,
-} from "./kanban_arch_parser";
+import { KANBAN_BOX_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
@@ -210,13 +205,6 @@ export class KanbanRecord extends Component {
 
         if (this.constructor.KANBAN_MENU_ATTRIBUTE in templates) {
             this.showMenu = true;
-        }
-
-        if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
-            useTooltip("root", {
-                info: { ...this, record: getFormattedRecord(this.props.record) },
-                template: this.templates[KANBAN_TOOLTIP_ATTRIBUTE],
-            });
         }
 
         this.dataState = useState({ record: {}, widget: {} });
