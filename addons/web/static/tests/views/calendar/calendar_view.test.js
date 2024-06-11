@@ -1657,6 +1657,58 @@ test(`readonly date_start field`, async () => {
     expect.verifySteps(["doAction"]);
 });
 
+test(`readonly calendar view`, async () => {
+    let expectedRequest;
+    mockService("action", {
+        doAction(request) {
+            expect.step("doAction");
+            expect(request).toEqual(expectedRequest);
+        },
+    });
+
+    onRpc("get_formview_id", () => false);
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="month" edit="0"/>`,
+    });
+    expect(`.fc-resizer`).toHaveCount(0);
+
+    expectedRequest = {
+        type: "ir.actions.act_window",
+        res_id: 4,
+        res_model: "event",
+        views: [[false, "form"]],
+        target: "current",
+        context: {},
+    };
+    await clickEvent(4);
+    await contains(`.o_cw_popover .o_cw_popover_edit`).click();
+    expect.verifySteps(["doAction"]);
+
+    // create a new event and edit it
+    await clickDate("2016-12-27");
+    await contains(`.o-calendar-quick-create--input`).edit("coucou", { confirm: false });
+    expectedRequest = {
+        type: "ir.actions.act_window",
+        res_model: "event",
+        views: [[false, "form"]],
+        target: "current",
+        context: {
+            allowed_company_ids: [1],
+            default_name: "coucou",
+            default_start: "2016-12-27",
+            default_stop: "2016-12-27",
+            default_is_all_day: true,
+            lang: "en",
+            tz: "taht",
+            uid: serverState.userId,
+        },
+    };
+    await contains(`.o-calendar-quick-create--edit-btn`).click();
+    expect.verifySteps(["doAction"]);
+});
+
 test(`check filters with filter_field specified`, async () => {
     await mountView({
         resModel: "event",
