@@ -1,8 +1,8 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { DataPoint } from "./datapoint";
 import { Record } from "./record";
+import { resequence } from "./utils";
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -313,98 +313,28 @@ export class DynamicList extends DataPoint {
         }
         const handleField = this.resModel === resModel ? this.handleField : DEFAULT_HANDLE_FIELD;
         const order = this.orderBy.find((o) => o.name === handleField);
-        const asc = !order || order.asc;
-
-        // Find indices
-        const fromIndex = originalList.findIndex((d) => d.id === movedId);
-        let toIndex = 0;
-        if (targetId !== null) {
-            const targetIndex = originalList.findIndex((d) => d.id === targetId);
-            toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
-        }
-
         const getSequence = (dp) => dp && this._getDPFieldValue(dp, handleField);
-
-        // Determine which records/groups need to be modified
-        const firstIndex = Math.min(fromIndex, toIndex);
-        const lastIndex = Math.max(fromIndex, toIndex) + 1;
-        let reorderAll = originalList.some(
-            (dp) => this._getDPFieldValue(dp, handleField) === undefined
-        );
-        if (!reorderAll) {
-            let lastSequence = (asc ? -1 : 1) * Infinity;
-            for (let index = 0; index < originalList.length; index++) {
-                const sequence = getSequence(originalList[index]);
-                if (
-                    ((index < firstIndex || index >= lastIndex) &&
-                        ((asc && lastSequence >= sequence) ||
-                            (!asc && lastSequence <= sequence))) ||
-                    (index >= firstIndex && index < lastIndex && lastSequence === sequence)
-                ) {
-                    reorderAll = true;
-                }
-                lastSequence = sequence;
-            }
-        }
-
-        // Save the original list in case of error
-        const originalOrder = [...originalList];
-        // Perform the resequence in the list of records/groups
-        const dp = originalList[fromIndex];
-        if (fromIndex !== toIndex) {
-            originalList.splice(fromIndex, 1);
-            originalList.splice(toIndex, 0, dp);
-        }
-
-        // Creates the list of records/groups to modify
-        let toReorder = originalList;
-        if (!reorderAll) {
-            toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => r.id !== movedId);
-            if (fromIndex < toIndex) {
-                toReorder.push(dp);
-            } else {
-                toReorder.unshift(dp);
-            }
-        }
-        if (!asc) {
-            toReorder.reverse();
-        }
-
-        const resIds = toReorder.map((d) => this._getDPresId(d)).filter((id) => id && !isNaN(id));
-        const sequences = toReorder.map(getSequence);
-        const offset = sequences.length && Math.min(...sequences);
-
-        // Try to write new sequences on the affected records/groups
-        const params = {
-            model: resModel,
-            ids: resIds,
+        const getResId = (dp) => this._getDPresId(dp);
+        const resequencedRecords = await resequence({
+            records: originalList,
+            resModel,
+            movedId,
+            targetId,
+            fieldName: handleField,
+            asc: order?.asc,
             context: this.context,
-            field: handleField,
-        };
-        if (offset) {
-            params.offset = offset;
-        }
-        // Attempt to resequence the records/groups on the server
-        try {
-            const wasResequenced = await rpc("/web/dataset/resequence", params);
-            if (!wasResequenced) {
-                return;
-            }
-        } catch (error) {
-            // If the server fails to resequence, rollback the original list
-            originalList.splice(0, originalList.length, ...originalOrder);
-            throw error;
-        }
-
-        // Read the actual values set by the server and update the records/groups
-        const kwargs = { context: this.context };
-        const result = await this.model.orm.read(resModel, resIds, [handleField], kwargs);
-        for (const dpData of result) {
-            const dp = originalList.find((d) => this._getDPresId(d) === dpData.id);
-            if (dp instanceof Record) {
-                dp._applyValues(dpData);
-            } else {
-                dp[handleField] = dpData[handleField];
+            orm: this.model.orm,
+            getSequence,
+            getResId,
+        });
+        if (resequencedRecords) {
+            for (const dpData of resequencedRecords) {
+                const dp = originalList.find((d) => getResId(d) === dpData.id);
+                if (dp instanceof Record) {
+                    dp._applyValues(dpData);
+                } else {
+                    dp[handleField] = dpData[handleField];
+                }
             }
         }
     }
