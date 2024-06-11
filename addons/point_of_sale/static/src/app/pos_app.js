@@ -58,7 +58,8 @@ export class Chrome extends Component {
             ]);
         }
         if (this.pos.config.customer_display_type === "proxy") {
-            fetch(`${deduceUrl(this.pos.config.proxy_ip)}/hw_proxy/customer_facing_display`, {
+            const proxyIP = this.pos.getDisplayDeviceIP();
+            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
