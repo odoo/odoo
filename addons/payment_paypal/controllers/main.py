@@ -35,12 +35,24 @@ class PaypalController(http.Controller):
          Creates an order and returns it as a JSON response.
         """
         data = {
-            'intent': "CAPTURE",
+            'intent': kwargs['intent'],
             'purchase_units': [
                 {
+                    'reference_id': kwargs['reference'],
                     'amount': {
                         'currency_code': kwargs['currency'],
                         'value': kwargs['amount'],
+                    },
+                    "payee": kwargs['payee'],
+                    "shipping": {
+                        "address": {
+                            "address_line_1": "123 Townsend St",
+                            "address_line_2": "Floor 6",
+                            "admin_area_2": "San Francisco",
+                            "admin_area_1": "CA",
+                            "postal_code": "94107",
+                            "country_code": "US"
+                        }
                     },
                 },
             ],
@@ -55,7 +67,7 @@ class PaypalController(http.Controller):
         except Forbidden:
             _logger.exception("Could not create transaction")
 
-        return response_content
+        return response_content['id']
 
     @http.route(
         _complete_url, type='json', auth='public', methods=['POST'], csrf=False,
@@ -68,14 +80,14 @@ class PaypalController(http.Controller):
         # Make the payment request to Paypal
         try:
             paypal = request.env['payment.provider'].search([('code','=','paypal')],limit=1)
-            response_content = paypal._paypal_make_request(
+            response = paypal._paypal_make_request(
                 endpoint='/v2/checkout/orders/' + kwargs['order_id'] + '/' + kwargs['intent'],
                 payload={},
             )
         except Forbidden:
             _logger.exception("Could not create transaction")
 
-        return response_content
+        return response
 
     @http.route(
         _return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,

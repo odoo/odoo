@@ -21,7 +21,6 @@
     'assets': {
         'web.assets_frontend': [
             'payment_paypal/static/src/js/payment_form.js',
-            'payment_paypal/static/src/scss/payment_form.scss',
         ],
     },
     'license': 'LGPL-3',

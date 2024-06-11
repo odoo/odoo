@@ -7,7 +7,8 @@ import requests
 from odoo import _, fields, models
 
 from odoo.addons.payment_paypal import const
-
+from odoo.addons.payment_paypal.controllers.main import PaypalController
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -104,13 +105,22 @@ class PaymentProvider(models.Model):
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
-        self.ensure_one()
-
         inline_form_values = {
             'client_id': self.paypal_client_id,
             'amount': amount,
             'currency': currency and currency.name,
-            'intent': "CAPTURE",
+            'intent': "authorize" if self.capture_manually else 'capture',
+            'payee': {
+                'email_address': self.paypal_email_account,
+                "display_data": {
+                    "business_email":  self.company_id.email,
+                    "business_phone": {
+                        "country_code": self.company_id.country_id.code,
+                        "national_number": self.company_id.phone,
+                    },
+                    "brand_name": self.company_id.name,
+                }
+            },
         }
         return json.dumps(inline_form_values)
 
@@ -155,7 +165,7 @@ class PaymentProvider(models.Model):
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
             raise ValidationError("Paypal: " + _("Could not establish the connection to the API."))
-        return response.json()['id']
+        return response.json()
 
     def _get_access_token(self):
         response = requests.post(
