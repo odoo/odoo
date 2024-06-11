@@ -1,0 +1,24 @@
+.navbar-container {
+    .category-item, .search-button {
+        width: calc(3.5rem + 2vw);
+    }
+
+    .category-item {
+        img {
+            background-color: #f7f7f7;
+        }
+
+        &.active {
+            color: $headings-color;
+
+            div {
+                outline: 1px solid $o-action;
+                border-radius: 0.25rem;
+            }
+        }
+
+        .category-name {
+            word-break: break-all;
+        }
+    }
+}

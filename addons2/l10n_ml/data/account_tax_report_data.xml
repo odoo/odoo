@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_ml" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ml"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="account_tax_report_ml_balance" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="account_tax_report_ml_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_ml_sales" model="account.report.line">
+                <field name="name">Outgoing</field>
+                <field name="code">ML_SALES</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_sales_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_TAXABLE_18.base + ML_TAXABLE_5.base + ML_TAXABLE_SD.base + ML_EXPORT.base + ML_SALE_EXEMPT.base</field>
+                    </record>
+                    <record id="account_tax_report_line_ml_sales_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_TAXABLE_18.tax + ML_TAXABLE_5.tax + ML_TAXABLE_SD.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_ml_sales_18" model="account.report.line">
+                        <field name="name">Taxable operations at 18%</field>
+                        <field name="code">ML_TAXABLE_18</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_sales_18_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">base_18</field>
+                            </record>
+                            <record id="account_tax_report_line_ml_sales_18_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">tax_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ml_sales_5" model="account.report.line">
+                        <field name="name">Taxable operations at 5%</field>
+                        <field name="code">ML_TAXABLE_5</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_sales_5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">base_5</field>
+                            </record>
+                            <record id="account_tax_report_line_ml_sales_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">tax_5</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ml_sales_sd" model="account.report.line">
+                        <field name="name">Self Delivery</field>
+                        <field name="code">ML_TAXABLE_SD</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_sales_sd_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ML_TAXABLE_SD_18.base + ML_TAXABLE_SD_5.base</field>
+                            </record>
+                            <record id="account_tax_report_line_ml_sales_sd_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">ML_TAXABLE_SD_18.tax + ML_TAXABLE_SD_5.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_ml_sales_sd_18" model="account.report.line">
+                                <field name="name">at 18%</field>
+                                <field name="code">ML_TAXABLE_SD_18</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ml_sales_sd_18_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_lasm_18</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ml_sales_sd_18_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_lasm_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_ml_sales_sd_5" model="account.report.line">
+                                <field name="name">at 5%</field>
+                                <field name="code">ML_TAXABLE_SD_5</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ml_sales_sd_5_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_lasm_5</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ml_sales_sd_5_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_lasm_5</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ml_sales_export" model="account.report.line">
+                        <field name="name">Export</field>
+                        <field name="code">ML_EXPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_sales_export_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">export</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ml_sales_exempt" model="account.report.line">
+                        <field name="name">Exempt</field>
+                        <field name="code">ML_SALE_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_sales_exempt_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">sale_exempt</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_refund_regularisation" model="account.report.line">
+                <field name="name">VAT refund following adjustment</field>
+                <field name="code">ML_REFUND_REGU</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_refund_regularisation_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_gross_pay" model="account.report.line">
+                <field name="name">Gross VAT to pay</field>
+                <field name="code">ML_GROSS_PAY</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_gross_pay_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_REFUND_REGU.tax + ML_SALES.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_deductible" model="account.report.line">
+                <field name="name">Deductible</field>
+                <field name="code">ML_DEDUCTIBLE</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_deductible_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_PURC_TAXABLE.base</field>
+                    </record>
+                    <record id="account_tax_report_line_ml_deductible_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_PURC_TAXABLE.tax + ML_WITHHELD.tax + ML_DEDU_ADJUSTMENT.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_ml_purchases_taxable" model="account.report.line">
+                        <field name="name">Taxable</field>
+                        <field name="code">ML_PURC_TAXABLE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_purchases_taxable_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">purc_base</field>
+                            </record>
+                            <record id="account_tax_report_line_ml_purchases_taxable_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">purc_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ml_purchases_withheld" model="account.report.line">
+                        <field name="name">VAT withheld by clients</field>
+                        <field name="code">ML_WITHHELD</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_purchases_withheld_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ml_purchases_deduction_adjustment" model="account.report.line">
+                        <field name="name">Additional deduction following adjustment</field>
+                        <field name="code">ML_DEDU_ADJUSTMENT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ml_purchases_deduction_adjustment_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_purchases_credit_reported" model="account.report.line">
+                <field name="name">Credit to be carried forward from previous months</field>
+                <field name="code">ML_CREDIT_REPORTED</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_purchases_credit_reported_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">most_recent</field>
+                        <field name="date_scope">previous_tax_period</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_deductions" model="account.report.line">
+                <field name="name">Total deductions</field>
+                <field name="code">ML_DEDUCTIONS</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_deductions_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_DEDUCTIBLE.tax + ML_CREDIT_REPORTED.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_to_pay" model="account.report.line">
+                <field name="name">Net VAT to pay</field>
+                <field name="code">ML_TO_PAY</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_to_pay_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_SALES.tax - ML_DEDUCTIONS.tax</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_credit_report" model="account.report.line">
+                <field name="name">VAT credit to report</field>
+                <field name="code">ML_CREDIT_REPORT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_credit_report_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_DEDUCTIONS.tax - ML_SALES.tax</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_reimbursement" model="account.report.line">
+                <field name="name">Reimbursement Asked</field>
+                <field name="code">ML_REIMBURSEMENT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_reimbursement_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable;rounding=2</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ml_credit_report_deductions" model="account.report.line">
+                <field name="name">Credit to report coming from deductions</field>
+                <field name="code">ML_CREDIT_REPROT_DEDU</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ml_credit_report_deductions_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ML_CREDIT_REPORT.tax - ML_REIMBURSEMENT.tax</field>
+                        <field name="subformula">if_above(EUR(0))</field>
+                        <field name="carryover_target">ML_CREDIT_REPORTED.tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

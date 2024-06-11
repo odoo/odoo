@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_expense.ListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+
+       <!-- hr.expense and hr.expense.sheet -->
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
+            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary me-1" t-on-click.prevent="uploadDocument">
+                Scan
+            </button>
+            <button t-if="displayCreateReport()" class="d-none d-md-block btn btn-secondary"
+                    t-on-click="() => this.action_show_expenses_to_submit()">
+                Create Report
+            </button>
+            <button t-if="displaySubmit()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_submit_sheet')">
+                Submit
+            </button>
+            <button t-if="displayApprove()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_approve_expense_sheets')">
+                Approve Report
+            </button>
+            <button t-if="displayPost()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_sheet_move_create')">
+                Post Entries
+            </button>
+            <button t-if="displayPayment()" class="d-none d-md-block btn btn-secondary" t-on-click="() => this.onClick('action_register_payment')">
+                Register Payment
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <div t-if="dragState.showDragZone" class="o_dropzone">
+                <i class="fa fa-upload fa-10x"></i>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="attributes">
+            <attribute name="class">o_list_renderer hr_expense h-auto o_forbidden_tooltip_parent</attribute>
+        </xpath>
+    </t>
+
+
+    <t t-name="hr_expense.DashboardListRenderer" t-inherit="hr_expense.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_renderer')]" position="before">
+            <ExpenseDashboard/>
+        </xpath>
+    </t>
+</templates>

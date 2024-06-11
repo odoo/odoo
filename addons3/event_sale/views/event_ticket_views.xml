@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <!-- EVENT.TYPE.TICKET -->
+    <record id="event_type_ticket_view_tree_from_type" model="ir.ui.view">
+        <field name="name">event.type.ticket.view.tree.inherit.sale</field>
+        <field name="model">event.type.ticket</field>
+        <field name="inherit_id" ref="event.event_type_ticket_view_tree_from_type"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_id" context="{'default_detailed_type': 'event'}"/>
+            </field>
+            <field name="description" position="after">
+                <field name="price"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_type_ticket_view_form_from_type" model="ir.ui.view">
+        <field name="name">event.type.ticket.view.form.inherit.sale</field>
+        <field name="model">event.type.ticket</field>
+        <field name="inherit_id" ref="event.event_type_ticket_view_form_from_type"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_id" context="{'default_detailed_type': 'event'}"/>
+            </field>
+            <field name="description" position="after">
+                <field name="price"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- EVENT.TICKET -->
+    <record id="event_event_ticket_view_tree_from_event" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.tree.from.event.inherit.sale</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event.event_event_ticket_view_tree_from_event"/>
+        <field name="arch" type="xml">
+            <field name="start_sale_datetime" position="attributes">
+                <attribute name="string">Sales Start</attribute>
+            </field>
+            <field name="end_sale_datetime" position="attributes">
+                <attribute name="string">Sales End</attribute>
+            </field>
+            <field name="name" position="after">
+                <field name="product_id" context="{'default_detailed_type': 'event'}"/>
+            </field>
+            <field name="description" position="after">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_form_from_event" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.form.from.event.inherit.sale</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event.event_event_ticket_view_form_from_event"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_id" context="{'default_detailed_type': 'event'}"/>
+            </field>
+            <field name="description" position="after">
+                <field name="price"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_kanban_from_event" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.kanban.from.event</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event.event_event_ticket_view_kanban_from_event"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="product_id"/>
+                <field name="price"/>
+            </field>
+            <xpath expr="//div[hasclass('col-8')]" position="after">
+                <div class="col-4 text-end"><strong> <t t-out="record.price.value"/></strong></div>
+            </xpath>
+            <xpath expr="//div[hasclass('row')]" position="after">
+                <div t-out="record.product_id.value"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_form_view" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.form.inherit.sale</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event.event_event_ticket_form_view"/>
+        <field name="arch" type="xml">
+            <field name="end_sale_datetime" position="after">
+                <field name="price"/>
+                <field name="price_reduce" groups="base.group_no_one"/>
+            </field>
+            <field name="seats_used" position="after">
+                <field name="product_id"/>
+            </field>
+        </field>
+    </record>
+</data></odoo>

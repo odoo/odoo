@@ -1,0 +1,156 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_audit_trail
+# 
+# Translators:
+# Leaanika Randmets, 2023
+# Arma Gedonsky <armagedonsky@hot.ee>, 2023
+# Patrick-Jordan Kiudorv, 2023
+# Birgit Vijar, 2023
+# Rivo Zängov <eraser@eraser.ee>, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
+# Triine Aavik <triine@avalah.ee>, 2023
+# Anna, 2023
+# Peeter Mark, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"PO-Revision-Date: 2023-12-23 23:00+0000\n"
+"Last-Translator: Peeter Mark, 2024\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Activate Audit Trail"
+msgstr "Aktiveeri auditeerimine"
+
+#. module: account_audit_trail
+#: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_company__check_account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_config_settings__check_account_audit_trail
+#: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Audit Trail"
+msgstr "Auditi Kontrolljälg"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/res_config_settings.py:0
+#, python-format
+msgid "Can't disable audit trail when there are existing records."
+msgstr ""
+"Olemasolevate kirjete puhul ei saa auditeerimise kontrolljälge deaktiveerida"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Changed"
+msgstr "Muudetud"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_company
+msgid "Companies"
+msgstr "Ettevõtted"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_config_settings
+msgid "Config Settings"
+msgstr "Seadistused"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Date"
+msgstr "Kuupäev"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_preview
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_preview
+msgid "Description"
+msgstr "Kirjeldus"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Go to Audit Trail"
+msgstr "Mine Auditi Kontrolljäljele"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Group By"
+msgstr "Rühmitamine"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_move
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_move_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_move_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Journal Entry"
+msgstr "Andmiku kanne"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_message
+msgid "Message"
+msgstr "Sõnum"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Messages Search"
+msgstr "Sõnumite Otsing"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Toiming pole toetatud"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
+msgid "Show Audit Log"
+msgstr "Näita Auditeerimise Logi"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/account_move.py:0
+#, python-format
+msgid ""
+"To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+"Instead, you can cancel the journal entry."
+msgstr ""
+"Auditi kontrolljälje säilitamise jaoks on vajalik, et andmiku kandeid ei saaks peale konteerimist enam kustutada.\n"
+"Selle asemel on võimalik andmiku kanne tühistada."
+
+#. module: account_audit_trail
+#: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
+msgid ""
+"To see the audit log you have to enable the audit trail option from settings"
+msgstr ""
+"Auditi logi nägemiseks peab seadetes olema auditeerimise kontrolljälg "
+"aktiveeritud"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Update Only"
+msgstr "Ainult Uuendamine"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Updated"
+msgstr "Uuendatud"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "date"
+msgstr "kuupäev"

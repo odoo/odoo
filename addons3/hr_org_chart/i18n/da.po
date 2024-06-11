@@ -1,0 +1,202 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_org_chart
+# 
+# Translators:
+# Mads Søndergaard, 2023
+# Martin Trigaux, 2023
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "Tilføj en ny medarbejder"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Standard ansat"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr ""
+
+#. module: hr_org_chart
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Direct and indirect subordinates"
+msgstr "Direkte og indirekte underordnede"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Direct subordinates"
+msgstr "Direkte underordnede"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee
+msgid "Employee"
+msgstr "Medarbejder"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "Medarbejdere"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "In order to get an organigram, set a manager and save the record."
+msgstr ""
+"For at få vist et organisationsdiagram angiv en leder og gem rekorden."
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Indirect Subordinates Count"
+msgstr "Antal Indirekte Underordnede"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Indirect subordinates"
+msgstr "Indirekte underordnede"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
+msgid "Is Subordinate"
+msgstr ""
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "More managers"
+msgstr "Flere ledere"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "No hierarchy position."
+msgstr "Ingen hierarki."
+
+#. module: hr_org_chart
+#. odoo-python
+#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operation ikke understøttet"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
+msgstr ""
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "Organization Chart"
+msgstr "Organisationsdiagram"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Offentlig ansat"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Redirect"
+msgstr "Redirect"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "See All"
+msgstr "Vis Alle"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Subordinates"
+msgstr "Underordnede"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
+#, python-format
+msgid "Team"
+msgstr "Team"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "This employee has no manager or subordinate."
+msgstr "Denne medarbejder har ingen leder eller underordnet."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+#, python-format
+msgid "Total"
+msgstr "I alt"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+"Blot et hurtigt kig på Odoos oversigt over ansatte kan hjælpe dig med at "
+"finde al den information, som du skal bruge for hver person: "
+"kontaktoplysninger, job, tilgængelighed mv."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+#, python-format
+msgid "people"
+msgstr ""

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.pos.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="4"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_pos_order"
+                        groups="point_of_sale.group_pos_user"
+                        context="{'default_partner_id': id}"
+                        invisible="pos_order_count == 0"
+                        icon="fa-shopping-bag">
+                        <field string="PoS Orders" name="pos_order_count" widget="statinfo"/>
+                    </button>
+                </div>
+                <xpath expr="//group[@name='purchase']" position="after">
+                    <group string="Point Of Sale" name="point_of_sale" groups="point_of_sale.group_pos_user">
+                        <field name="barcode"/>
+                    </group>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="view_partner_pos_kanban" model="ir.ui.view">
+            <field name="name">res.partner.pos.kanban.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="state_id" position="before">
+                    <field name="pos_order_count" groups="point_of_sale.group_pos_user"/>
+                </field>
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
+                    <a t-if="record.pos_order_count.value>0" data-type="object" data-name="action_view_pos_order"
+                       groups="point_of_sale.group_pos_user"
+                       href="#" class="oe_kanban_action oe_kanban_action_a me-1">
+                        <span class="badge rounded-pill">
+                            <i class="fa fa-fw fa-shopping-bag" role="img" aria-label="Shopping cart" title="Shopping cart"/>
+                            <t t-out="record.pos_order_count.value"/>
+                        </span>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+</odoo>

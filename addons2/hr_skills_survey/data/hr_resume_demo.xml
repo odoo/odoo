@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Valid certification -->
+        <record id="resume_line_valid" model="hr.resume.line">
+            <field name="name">AWS Cloud</field>
+            <field name="display_type">certification</field>
+            <field name="date_start" eval="DateTime.today() + relativedelta(years=-1, months=-2, days=-13)"/>
+            <field name="date_end" eval="DateTime.today() + relativedelta(years=1)"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
+        </record>
+
+        <!-- Expiring soon certification -->
+        <record id="resume_line_expiring" model="hr.resume.line">
+            <field name="name">MongoDB Developer</field>
+            <field name="display_type">certification</field>
+            <field name="date_start" eval="DateTime.today() + relativedelta(years=-1)"/>
+            <field name="date_end" eval="DateTime.today() + relativedelta(months=2)"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
+        </record>
+
+        <!-- Expired -->
+        <record id="resume_line_aws" model="hr.resume.line">
+            <field name="name">Oracle DB</field>
+            <field name="display_type">certification</field>
+            <field name="date_start" eval="DateTime.today() + relativedelta(years=-1, months=-6, days=-7)"/>
+            <field name="date_end" eval="DateTime.today() + relativedelta(days=-3)"/>
+            <field name="employee_id" ref="hr.employee_admin"/>
+        </record>
+    </data>
+</odoo>

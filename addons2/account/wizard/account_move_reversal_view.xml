@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_move_reversal" model="ir.ui.view">
+            <field name="name">account.move.reversal.form</field>
+            <field name="model">account.move.reversal</field>
+            <field name="arch" type="xml">
+                <form string="Reverse Journal Entry">
+                    <field name="residual" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="move_ids" invisible="1"/>
+                    <field name="move_type" invisible="1"/>
+                    <field name="available_journal_ids" invisible="1"/>
+                    <group>
+                        <field name="reason" invisible="move_type == 'entry'"/>
+                        <field name="journal_id" domain="[('id', 'in', available_journal_ids)]"/>
+                        <field name="date" widget="date" required="1"/>
+                    </group>
+                    <footer>
+                        <button string='Reverse' name="refund_moves" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Reverse and Create Invoice" name="modify_moves" type="object" class="btn-secondary" invisible="move_type  == 'entry'"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_move_reversal" model="ir.actions.act_window">
+            <field name="name">Reverse</field>
+            <field name="res_model">account.move.reversal</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_move_reversal"/>
+            <field name="target">new</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>

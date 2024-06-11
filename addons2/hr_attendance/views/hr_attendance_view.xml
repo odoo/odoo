@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- views -->
+
+    <record id="view_attendance_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.tree</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false">
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="check_in"/>
+                <field name="check_out" options="{}"/>
+                <field name="worked_hours" string="Work Hours" widget="float_time"/>
+                <field name="overtime_hours" string="Over Time" optional="show" widget="float_time"/>
+                <field name="color" column_invisible="1"/>
+                <field name="in_latitude" optional="hidden"/>
+                <field name="in_longitude" optional="hidden"/>
+                <field name="out_latitude" optional="hidden"/>
+                <field name="out_longitude" optional="hidden"/>
+                <field name="in_country_name" optional="hidden"/>
+                <field name="out_country_name" optional="hidden"/>
+                <field name="in_mode" optional="hidden"/>
+                <field name="out_mode" optional="hidden"/>
+                <field name="in_city" optional="hidden"/>
+                <field name="out_city" optional="hidden"/>
+                <field name="create_uid" optional="hidden"/>
+                <field name="write_uid" optional="hidden"/>
+                <field name="write_date" optional="hidden"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_attendance_kanban" model="ir.ui.view">
+        <field name="name">hr.attendance.kanban</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="o_kanban_record_title">
+                                <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" class="fs-5 fw-bold"/>
+                            </div>
+                            <hr class="mt4 mb8"/>
+                            <div class="o_kanban_record_subtitle">
+                                <i class="fa fa-calendar" aria-label="Period" role="img" title="Period"></i>
+                                <t t-esc="record.check_in.value"/>
+                                - <t t-esc="record.check_out.value"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Employee attendances" duplicate="false">
+                <sheet>
+                    <group>
+                        <group colspan="2">
+                            <group col="1">
+                                <field name="employee_id" widget="many2one_avatar_user"/>
+                                <field name="check_in" options="{'rounding': 0}"/>
+                                <field name="check_out" options="{'rounding': 0}"/>
+                            </group>
+                            <group col="2">
+                                <field name="worked_hours" widget="float_time"/>
+                                <field name="overtime_hours" widget="float_time" string="Extra Hours"/>
+                            </group>
+                        </group>
+                        <separator string="Check In"/>
+                        <group colspan="2">
+                            <group>
+                                <group>
+                                    <field name="in_mode"/>
+                                    <field name="in_ip_address" invisible="in_mode == 'manual'"/>
+                                    <field name="in_browser" invisible="in_mode == 'manual'"/>
+                                </group>
+                            </group>
+                            <group invisible="in_mode == 'manual'">
+                                <label for="in_country_name" string="Localisation"/>
+                                <div class="o_row" name="in_location_info">
+                                    <span>
+                                        <field name="in_country_name"/>
+                                    </span>
+                                    <span>
+                                        <field name="in_city" invisible="in_city == 'Unknown'" nolabel="1"/>
+                                    </span>
+                                </div>
+
+                                <label for="in_latitude" string="GPS Coordinates"/>
+                                <div>
+                                    <div class="o_row">
+                                        <span>
+                                            <field name="in_latitude"/>
+                                        </span>,
+                                        <span>
+                                            <field name="in_longitude" nolabel="1"/>
+                                        </span>
+                                    </div>
+                                    <button
+                                        name="action_in_attendance_maps"
+                                        type="object"
+                                        class="btn btn-link ps-0 pt-0 pb-2"
+                                        icon="oi-arrow-right"
+                                        string="View on Maps"
+                                        colspan="2"/>
+                                </div>
+                            </group>
+                        </group>
+                        <separator string="Check Out" invisible="not check_out"/>
+                        <group colspan="2" invisible="not check_out">
+                            <group>
+                                <group>
+                                    <field name="out_mode" string="Mode"/>
+                                    <field name="out_ip_address" string="IP Address" invisible="in_mode == 'manual'"/>
+                                    <field name="out_browser" string="Browser" invisible="in_mode == 'manual'"/>
+                                </group>
+                            </group>
+                            <group invisible="out_mode == 'manual'">
+                                <label for="out_country_name" string="Localisation"/>
+                                <div class="o_row" name="out_location_info" >
+                                    <span>
+                                        <field name="out_country_name"/>
+                                    </span>
+                                    <span>
+                                        <field name="out_city" invisible="out_city == 'Unknown'" nolabel="1"/>
+                                    </span>
+                                </div>
+
+                                <label for="out_latitude" string="GPS Coordinates"/>
+                                <div>
+                                    <div class="o_row">
+                                        <span>
+                                            <field name="out_latitude"/>
+                                        </span>,
+                                        <span>
+                                            <field name="out_longitude" nolabel="1"/>
+                                        </span>
+                                    </div>
+                                    <button
+                                        name="action_out_attendance_maps"
+                                        type="object"
+                                        class="btn btn-link ps-0 pt-0 pb-2"
+                                        icon="oi-arrow-right"
+                                        string="View on Maps"
+                                        colspan="2"/>
+                                </div>
+                            </group>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.graph</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <graph string="Worked Hours" type="line" stacked="0" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" interval="week" type="col"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.pivot</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <pivot string="Worked Hours">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" type="col" interval="month"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+                <field name="overtime_hours" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <field name="check_in"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
+                <filter string="Errors" name="errors"
+                        domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"                />
+                <separator/>
+                <filter string="Check In" name="check_in_filter" date="check_in"/>
+                <filter string="Last 7 days" name="last_week" domain="[(
+                    'check_in','&gt;=', (
+                        context_today() + datetime.timedelta(days=-7)
+                        )
+                    )]"/>
+                <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
+                    'check_in','&gt;=', (
+                        context_today() + datetime.timedelta(days=-90)
+                        )
+                    )]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Check In" name="groupby_name" context="{'group_by': 'check_in:week'}"/>
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Check Out" name="groupby_check_out" context="{'group_by': 'check_out'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+
+    <record id="hr_attendance_action" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">
+            {
+                "search_default_employee": 1
+            }
+        </field>
+        <field name="search_view_id" ref="hr_attendance_view_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance records of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_attendance_reporting" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="hr_attendance_view_filter"/>
+        <field name="context">
+            {
+                "search_default_groupby_name" : 1,
+                "search_default_employee": 1,
+                "search_default_last_three_months": 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_attendance_action_greeting_message" model="ir.actions.client">
+        <field name="name">Message</field>
+        <field name="tag">hr_attendance_greeting_message</field>
+    </record>
+
+    <record model="ir.actions.server" id="open_kiosk_url">
+        <field name="name">Open Kiosk Url</field>
+        <field name="model_id" ref="hr_attendance.model_res_company"/>
+        <field name="binding_model_id" ref="hr_attendance.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model._action_open_kiosk_mode()
+        </field>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
+    <!-- Menus -->
+
+    <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="205" groups="hr_attendance.group_hr_attendance_officer" web_icon="hr_attendance,static/description/icon.png"/>
+
+    <menuitem id="menu_hr_attendance_kiosk_no_user_mode" name="Kiosk Mode" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager" action="open_kiosk_url"/>
+
+    <menuitem id="menu_hr_attendance_reporting" name="Reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_reporting"/>
+
+    <menuitem id="menu_hr_attendance_view_attendances" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_action"/>
+</odoo>

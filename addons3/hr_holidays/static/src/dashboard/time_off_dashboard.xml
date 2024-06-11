@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="hr_holidays.TimeOffDashboard" class="o_timeoff_dashboard">
+        <t t-foreach="state.holidays" t-as="holiday" t-key="holiday[3]">
+            <TimeOffCard
+                name="holiday[0]"
+                data="holiday[1]"
+                requires_allocation="holiday[2] == 'yes'"
+                holidayStatusId="holiday[3]"
+                employeeId="props.employeeId"/>
+        </t>
+        <div class="o_timeoff_card p-0 d-flex justify-content-around">
+            <div class="row justify-content-center align-items-center border-bottom h-50 w-100 p-1" t-if="has_accrual_allocation()">
+                Balance at the
+                <div class="p-1" style="max-width: 100px!important">
+                    <DateTimeInput
+                        type="'date'"
+                        value="state.date"
+                        onChange="(date) => this.loadDashboardData(date)"
+                        minDate="state.today"
+                        placeholder="'Today'"/>
+                </div>
+                <button class="o_timeoff_today_button btn btn-secondary" t-on-click="resetDate">Today</button>
+            </div>
+            <div class="row justify-content-center align-items-center h-50 w-100">
+                <button class="btn btn-secondary m-auto" t-on-click="newAllocationRequest" type="button" style="width: fit-content;">
+                    <t t-if="employeeId">Grant Time</t>
+                    <t t-else="">New Allocation Request</t>
+                </button>
+            </div>
+        </div>
+    </div>
+</templates>

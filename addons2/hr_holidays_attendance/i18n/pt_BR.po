@@ -1,0 +1,233 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_attendance
+# 
+# Translators:
+# Wil Odoo, 2023
+# Layna Nascimento, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Layna Nascimento, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
+#, python-format
+msgid "%s hours available"
+msgstr "%s horas disponíveis"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_accrual_level
+msgid "Accrual Plan Level"
+msgstr "Nível de plano de acumulação"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Controle de presença"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__attendance
+msgid "Attendances"
+msgstr "Presenças"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
+#, python-format
+msgid "Available"
+msgstr "Disponível"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields.selection,name:hr_holidays_attendance.selection__hr_leave_accrual_level__frequency_hourly_source__calendar
+msgid "Calendar"
+msgstr "Calendário"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__hr_attendance_overtime
+msgid "Count Extra Hours"
+msgstr "Total de horas extras"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
+#, python-format
+msgid "Days"
+msgstr "Dias"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
+msgid "Deduct Extra Hours"
+msgstr "Deduzir horas extras"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+msgid "Discard"
+msgstr "Cancelar"
+
+#. module: hr_holidays_attendance
+#: model:hr.leave.type,name:hr_holidays_attendance.holiday_status_extra_hours
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
+msgid "Extra Hours"
+msgstr "Horas extras"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form_overtime
+msgid "Extra Hours Available"
+msgstr "Horas extras disponíveis"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+msgid "Frequency Hourly Source"
+msgstr "Origem – Frequência por hora"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
+#: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
+#, python-format
+msgid "Hours"
+msgstr "Horas"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_type__hr_attendance_overtime
+msgid "Hr Attendance Overtime"
+msgstr "HR – Controle de Presença – Horas extras"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_accrual_level__frequency_hourly_source
+msgid ""
+"If the source is set to Calendar, the amount of worked hours will be "
+"computed from employee calendar and time off (if the plan is based on worked"
+" time). Otherwise, the amount of worked hours will be based on Attendance "
+"records."
+msgstr ""
+"Se a origem for definida como Calendário, a quantidade de horas trabalhadas "
+"será calculada a partir do calendário e das folgas do funcionário (se o "
+"plano for baseado no tempo trabalhado). Caso contrário, a quantidade de "
+"horas trabalhadas será baseada nos registros de presença."
+
+#. module: hr_holidays_attendance
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
+#: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
+msgid "New Allocation Request"
+msgstr "Nova solicitação de alocação"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
+msgid ""
+"Once a time off of this type is approved, extra hours in attendances will be"
+" deducted."
+msgstr ""
+"Quando uma folga deste tipo for aprovada, as horas extras no controle de "
+"presenças serão deduzidas."
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
+msgid "Overtime Deductible"
+msgstr "Horas extras dedutíveis"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
+msgid "Request Overtime"
+msgstr "Solicitação de horas extras"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
+msgid "Save"
+msgstr "Salvar"
+
+#. module: hr_holidays_attendance
+#: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_accrual_level_view_form
+msgid "Source"
+msgstr "Origem"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"The employee does not have enough extra hours to extend this allocation."
+msgstr ""
+"O funcionário não tem horas extras suficientes para estender esta alocação."
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#, python-format
+msgid "The employee does not have enough extra hours to extend this leave."
+msgstr "O funcionário não tem horas extras para estender esta licença."
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#, python-format
+msgid "The employee does not have enough extra hours to request this leave."
+msgstr ""
+"O funcionário não tem horas extras suficientes paraa solicitar esta licença."
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"The employee does not have enough overtime hours to request this leave."
+msgstr ""
+"O funcionário não tem horas de trabalho extras suficientes para solicitar "
+"esta licença."
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave
+msgid "Time Off"
+msgstr "Folga"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_allocation
+msgid "Time Off Allocation"
+msgstr "Alocação de folga"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
+msgid "Time Off Type"
+msgstr "Tipo de folga"
+
+#. module: hr_holidays_attendance
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
+#: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
+msgid "Total Overtime"
+msgstr "Total de horas extras"
+
+#. module: hr_holidays_attendance
+#: model:ir.model,name:hr_holidays_attendance.model_res_users
+msgid "User"
+msgstr "Usuário"
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#, python-format
+msgid "You do not have enough extra hours to request this leave"
+msgstr "Você não tem horas extras suficientes para solicitar esta licença."

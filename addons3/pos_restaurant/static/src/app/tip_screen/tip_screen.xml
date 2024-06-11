@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TipScreen">
+        <div class="tip-screen screen h-100 bg-100">
+            <div class="pos-receipt-container text-center" t-ref="pos-receipt-container"/>
+            <div class="screen-content d-flex flex-column h-100">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center">
+                    <button class="button btn btn-lg btn-outline-primary" t-on-click="() => this.pos.showScreen('FloorScreen')">
+                        <i class="fa fa-angle-double-left me-2"/>
+                        <span>Back</span>
+                    </button>
+                    <button class="button btn btn-lg btn-outline-primary" t-if="printer.is()" t-on-click="printTipReceipt">
+                        <i class="fa fa-print"></i>
+                        <span> </span>
+                        <span>Reprint receipts</span>
+                    </button>
+                    <div class="top-content-center flex-grow-1">
+                        <h2 class="mb-0">Add a tip</h2>
+                    </div>
+                    <div class="button highlight next btn btn-lg btn-primary" t-on-click="validateTip">
+                        Settle <i class="fa fa-angle-double-right"></i>
+                    </div>
+                </div>
+                <div class="tip-options">
+                    <div class="total-amount my-4 fs-2 text-center">
+                        <t t-esc="overallAmountStr" />
+                    </div>
+                    <div class="tip-amount-options d-flex flex-column gap-2 mx-4 p-3 rounded bg-view">
+                        <div class="percentage-amounts d-flex gap-2">
+                            <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
+                                <button class="button btn btn-lg btn-secondary flex-fill py-5" t-on-click="() => { state.inputTipAmount = env.utils.formatCurrency(tip.amount,false); }">
+                                    <div class="percentage fs-1 text-primary text-center">
+                                        <t t-esc="tip.percentage"></t>
+                                    </div>
+                                    <div class="amount text-muted">
+                                        <t t-esc="env.utils.formatCurrency(tip.amount)" />
+                                    </div>
+                                </button>
+                            </t>
+                        </div>
+                        <div class="no-tip d-grid">
+                            <button class="button btn btn-lg btn-secondary flex-fill py-5 fs-1 text-primary"  t-on-click="() => { state.inputTipAmount = '0'; }">No Tip</button>
+                        </div>
+                        <div class="custom-amount-form d-flex">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-secondary">Tip Amount</span>
+                                <input type="text" class="item form-control fs-1" aria-label="Username" t-model="state.inputTipAmount" t-att-data-amount="state.inputTipAmount"/>
+                                <span class="input-group-text">
+                                    <div class="currency">
+                                        <t t-esc="pos.getCurrencySymbol()" />
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

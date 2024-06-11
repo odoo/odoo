@@ -1,0 +1,123 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_discount
+# 
+# Translators:
+# Wil Odoo, 2023
+# Tony Ng, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Tony Ng, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_discount
+#. odoo-python
+#: code:addons/pos_discount/models/pos_config.py:0
+#, python-format
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr "要使用全局折扣功能，需要有一個折扣產品。進入銷售點 > 配置 > 設置來設置它。"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
+msgid "Allow the cashier to give discounts on the whole order."
+msgstr "允許出納在整張訂單給出折扣."
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.xml:0
+#, python-format
+msgid "Discount"
+msgstr "折扣"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount %"
+msgstr "折扣百分比"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
+#, python-format
+msgid "Discount Percentage"
+msgstr "折扣百分比"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount Product"
+msgstr "折扣產品"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "No discount product found"
+msgstr "未找到折扣產品"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "No tax"
+msgstr "無稅"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
+msgid "Order Discounts"
+msgstr "訂單折扣"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS設定"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
+msgstr "Pos折扣產品"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid "Tax: %s"
+msgstr "稅：%s"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
+msgstr "點擊折扣按鈕時的預設折扣百分比"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/discount_button/discount_button.js:0
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr "折扣產品似乎設定不當。確保它被標記為 \"可以出售\" 和 \"POS可用\"。"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to apply the discount on the ticket."
+msgstr "在票據上應用折扣的產品。"

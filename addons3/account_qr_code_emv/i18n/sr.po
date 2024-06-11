@@ -1,0 +1,118 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_qr_code_emv
+# 
+# Translators:
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# Martin Trigaux, 2023
+# コフスタジオ, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: コフスタジオ, 2024\n"
+"Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: account_qr_code_emv
+#: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankovni računi"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__country_code
+msgid "Country Code"
+msgstr "Šifra države"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
+msgid "Display Qr Setting"
+msgstr "Prikaz postavki QR koda"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "EMV Merchant-Presented QR-code"
+msgstr "EMV Trgovac-Predstavljen QR-kod"
+
+#. module: account_qr_code_emv
+#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
+msgid "EMV QR Configuration"
+msgstr "EMV QR Konfiguracija"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include Reference"
+msgstr "Uključi referencu"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include the reference in the QR code."
+msgstr "Uključite referencu u QR kod."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Merchant Account Information."
+msgstr "Nedostaju informacije o trgovinskom računu."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Merchant City."
+msgstr "Nedostaje trgovački grad."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Proxy Type."
+msgstr "Nedostaje vrsta proxy-ja."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+#, python-format
+msgid "Missing Proxy Value."
+msgstr "Nedostaje vrednost proksija."
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
+msgid "None"
+msgstr "Ništa"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid "Proxy Type"
+msgstr "Tip proxya"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid "Proxy Value"
+msgstr "Proxy Vrednost"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__country_code
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO kod zemlje u dve karaktera.\n"
+" Možete koristiti ovo polje za brzu pretragu."

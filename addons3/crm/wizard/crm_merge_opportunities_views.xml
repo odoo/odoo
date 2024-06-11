@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<odoo>
+        <!-- Merge Opportunities  -->
+        <record id="merge_opportunity_form" model="ir.ui.view">
+            <field name="name">crm.merge.opportunity.form</field>
+            <field name="model">crm.merge.opportunity</field>
+            <field name="arch" type="xml">
+                <form string="Merge Leads/Opportunities">
+                    <group string="Assign opportunities to">
+                        <field name="user_id" class="oe_inline"/>
+                        <field name="team_id" class="oe_inline" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                    </group>
+                    <group string="Select Leads/Opportunities">
+                        <field name="opportunity_ids" nolabel="1">
+                            <tree>
+                                <field name="create_date"/>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="contact_name"/>
+                                <field name="email_from" optional="hide"/>
+                                <field name="phone" class="o_force_ltr" optional="hide"/>
+                                <field name="stage_id"/>
+                                <field name="user_id"/>
+                                <field name="team_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="action_merge" type="object" string="Merge" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_merge_opportunities" model="ir.actions.act_window">
+            <field name="name">Merge</field>
+            <field name="res_model">crm.merge.opportunity</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+</odoo>

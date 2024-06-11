@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Expense-related subtypes for messaging / Chatter -->
+        <record id="mt_expense_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense report approved</field>
+        </record>
+        <record id="mt_expense_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense report refused</field>
+        </record>
+        <record id="mt_expense_paid" model="mail.message.subtype">
+            <field name="name">Paid</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="description">Expense report paid</field>
+            <field name="default" eval="True"/>
+        </record>
+        <record id="mt_expense_reset" model="mail.message.subtype">
+            <field name="name">Draft</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Expense report reset to Draft</field>
+        </record>
+        <record id="mt_expense_entry_delete" model="mail.message.subtype">
+            <field name="name">Journal Entry Deleted</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="default" eval="True"/>
+            <field name="description">Journal entry deleted</field>
+        </record>
+    </data>
+</odoo>

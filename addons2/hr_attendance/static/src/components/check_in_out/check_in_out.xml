@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="hr_attendance.CheckInOut">
+    <div class="flex-grow-1">
+        <button t-on-click="() => this.onClickSignInOut()" t-attf-class="o_hr_attendance_sign_in_out_icon btn btn-{{ props.checkedIn ? 'warning' : 'success' }} align-self-center px-5 py-3 mt-4 mb-2">
+            <span class="align-middle fs-2 me-3 text-white" t-if="!props.checkedIn">Check IN</span>
+            <i t-attf-class="fa fa-4x fa-sign-{{ props.checkedIn ? 'out' : 'in' }} align-middle"/>
+            <span class="align-middle fs-2 ms-3" t-if="props.checkedIn">Check OUT</span>
+        </button>
+    </div>
+</t>
+
+</templates>

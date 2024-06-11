@@ -1,0 +1,43 @@
+.o_kanban_dashboard.o_hr_recruitment_kanban {
+    .o_kanban_renderer {
+        &.o_kanban_ungrouped .o_kanban_record {
+            width: 450px;
+            &:not(.o_kanban_ghost) {
+                min-height: 220px;
+            }
+        }
+
+        .text_top_padding{
+            padding-top: 0.375rem;
+        }
+
+        .o_primary {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 24px !important;
+
+            .fa {
+                margin-left: 0;
+            }
+        }
+
+        .o_job_activities {
+            list-style-type: none;
+        }
+
+        .o_kanban_card_header_title {
+            min-height: 3rem;
+
+            .o_field_boolean_favorite {
+                display: inline;
+            }
+        }
+    }
+}
+
+.o_kanban_view {
+    .o_view_sample_data .ribbon {
+        display: none;
+    }
+}

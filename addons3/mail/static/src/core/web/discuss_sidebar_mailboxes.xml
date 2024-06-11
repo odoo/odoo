@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebarMailboxes">
+        <div class="d-flex flex-column flex-grow-0">
+            <t t-call="mail.Mailbox">
+                <t t-set="mailbox" t-value="store.discuss.inbox"/>
+            </t>
+            <t t-call="mail.Mailbox">
+                <t t-set="mailbox" t-value="store.discuss.starred"/>
+            </t>
+            <t t-call="mail.Mailbox">
+                <t t-set="mailbox" t-value="store.discuss.history"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="mail.Mailbox">
+        <button
+            class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-reset"
+            t-att-class="{
+                'bg-inherit': mailbox.notEq(store.discuss.thread),
+                'o-active': mailbox.eq(store.discuss.thread),
+            }"
+            t-on-click="(ev) => this.openThread(ev, mailbox)"
+        >
+            <ThreadIcon className="'ms-4 me-2 bg-inherit'" thread="mailbox"/>
+            <div class="me-2 text-truncate" t-esc="mailbox.name"/>
+            <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
+            <span
+                t-if="mailbox.counter > 0"
+                class="o-mail-DiscussSidebar-badge o-discuss-badge badge rounded-pill ms-1 me-3 fw-bold"
+                t-att-class="{ 'o-muted': mailbox.id === 'starred' }"
+                t-esc="mailbox.counter"
+            />
+        </button>
+    </t>
+
+</templates>

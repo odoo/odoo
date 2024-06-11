@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="True">
+
+    <!-- Create draft refund for invoice 3 -->
+    <record id="demo_sup_refund_invoice_3" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">Mercadería defectuosa</field>
+        <field name="l10n_latam_document_number">0001-01234567</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_3'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_ar.company_ri')), ('type', '=', 'purchase')]"/>
+    </record>
+
+    <function model="account.move.reversal" name="refund_moves" eval="[ref('demo_sup_refund_invoice_3')]"/>
+
+    <!-- Create draft refund for invoice 4 -->
+    <record id="demo_sup_refund_invoice_4" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">Venta cancelada</field>
+        <field name="l10n_latam_document_number">0001-01234566</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_4'), 0)]"/>
+        <field name="journal_id" search="[('company_id', '=', ref('l10n_ar.company_ri')), ('type', '=', 'purchase')]"/>
+    </record>
+
+    <function model="account.move.reversal" name="refund_moves" eval="[ref('demo_sup_refund_invoice_4')]"/>
+
+    <!-- Liquido Producto document vendor bill refund -->
+    <record id="demo_sup_refund_invoice_5" model="account.move.reversal" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="reason">demo_sup_refund_invoice_5: liquido producto bill refund (credit note)</field>
+        <field name="move_ids" eval="[(4, ref('demo_sup_invoice_8'), 0)]"/>
+        <field name="l10n_latam_document_type_id" ref="l10n_ar.dc_liq_cd_sp_a"/>
+        <field name="l10n_latam_document_number">00011-00000012</field>
+        <field name="date" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="journal_id" model="account.journal" eval="obj().env.ref('l10n_ar.demo_sup_invoice_8').journal_id"/>
+    </record>
+
+    <function model="account.move.reversal" name="refund_moves" eval="[ref('demo_sup_refund_invoice_5')]"/>
+
+</odoo>

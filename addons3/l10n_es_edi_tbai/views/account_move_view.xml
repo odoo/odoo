@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_l10n_es_edi_tbai" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.l10n_es_edi_tbai</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='other_tab_group']/group[last()]" position='after'>
+                    <group id="ticketbai_group" string="TicketBAI" invisible="not l10n_es_tbai_is_required">
+                        <field name="l10n_es_tbai_is_required" invisible="1"/>
+                        <field name="l10n_es_tbai_chain_index" groups="base.group_no_one"/>
+                        <field name="l10n_es_tbai_refund_reason"
+                            invisible="not l10n_es_tbai_refund_reason"
+                            readonly="state != 'draft'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

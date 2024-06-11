@@ -1,0 +1,219 @@
+<odoo>
+    <template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'invoice'" t-attf-class="breadcrumb-item #{'active ' if not invoice else ''}">
+                <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices &amp; Bills</a>
+                <t t-else="">Invoices &amp; Bills</t>
+            </li>
+            <li t-if="invoice" class="breadcrumb-item active">
+                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
+                <t t-else=""><em>Draft Invoice</em></t>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_invoice" name="Show Invoices &amp; Bills" inherit_id="portal.portal_my_home" customize_show="True" priority="30">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+            <t t-set="portal_vendor_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/account/static/src/img/Bill.svg'"/>
+                <t t-set="title">Your Invoices</t>
+                <t t-set="url" t-value="'/my/invoices?filterby=invoices'"/>
+                <t t-set="text">Follow, download or pay your invoices</t>
+                <t t-set="placeholder_count" t-value="'invoice_count'"/>
+            </t>
+        </div>
+        <div id="portal_vendor_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/account/static/src/img/Bill.svg'"/>
+                <t t-set="title">Our Invoices</t>
+                <t t-set="url" t-value="'/my/invoices?filterby=bills'"/>
+                <t t-set="text">Follow, download or pay our invoices</t>
+                <t t-set="placeholder_count" t-value="'bill_count'"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_my_invoices" name="My Invoices and Payments">
+      <t t-call="portal.portal_layout">
+        <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+        <t t-call="portal.portal_searchbar">
+            <t t-set="title">Invoices</t>
+        </t>
+        <t t-if="not invoices">
+            <p class="alert alert-warning">There are currently no invoices and payments for your account.</p>
+        </t>
+        <t t-if="invoices" t-call="portal.portal_table">
+            <thead>
+                <tr class="active">
+                    <th>Invoice #</th>
+                    <th>Invoice Date</th>
+                    <th class='d-none d-md-table-cell'>Due Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Amount Due</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-foreach="invoices" t-as="invoice">
+                    <tr>
+                        <td>
+                            <a t-att-href="invoice.get_portal_url()" t-att-title="invoice.name">
+                                <t t-out="invoice.name" t-if="invoice.name != '/'"/>
+                                <em t-else="">Draft Invoice</em>
+                            </a>
+                        </td>
+                        <td><span t-field="invoice.invoice_date"/></td>
+                        <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
+                        <td name="invoice_status">
+                            <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
+                                <span t-if="invoice.payment_state in ('paid', 'in_payment')"
+                                      class="badge rounded-pill text-bg-success">
+                                    <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"/>
+                                    <span class="d-none d-md-inline"> Paid</span>
+                                </span>
+                                <span t-elif="invoice.payment_state == 'reversed'"
+                                      class="badge rounded-pill text-bg-success">
+                                    <i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"/>
+                                    <span class="d-none d-md-inline"> Reversed</span>
+                                </span>
+                                <span t-else="" class="badge rounded-pill text-bg-info" name="invoice_status_waiting_for_payment">
+                                    <i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"/>
+                                    <span class="d-none d-md-inline"> Waiting for Payment</span>
+                                </span>
+                            </t>
+                            <t t-elif="invoice.state == 'cancel'">
+                                <span class="badge rounded-pill text-bg-warning">
+                                    <i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"/>
+                                    <span class="d-none d-md-inline"> Cancelled</span>
+                                </span>
+                            </t>
+                        </td>
+                        <td class="text-end"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
+                    </tr>
+                </t>
+            </tbody>
+        </t>
+      </t>
+    </template>
+
+    <template id="portal_invoice_page" name="Invoice/Bill" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (invoice._name, invoice.id, invoice.env.ref('account.action_move_out_invoice_type').id)"/>
+                </t>
+            </t>
+
+            <div class="row o_portal_invoice_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-3 col-xl-4 d-print-none me-lg-auto'"/>
+                    <t t-set="title">
+                        <h2>
+                            <span t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
+                            <span t-else="1" t-field="invoice.amount_total"/>
+                        </h2>
+                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment', 'reversed') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
+                    </t>
+
+                    <t t-set="entries">
+                        <div class="d-flex flex-column gap-4">
+                            <div class="flex-basis-100 flex-basis-sm-50 flex-basis-lg-100 order-1 order-lg-0">
+                                <div class="o_download_pdf d-flex gap-1 flex-lg-column flex-xl-row">
+                                    <div class="flex-grow-1">
+                                        <a class="btn btn-secondary d-block o_download_btn" t-att-href="invoice.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div t-if="invoice.invoice_user_id" class="flex-grow-1">
+                                <h6>
+                                    <small class="text-muted">
+                                        <t t-if="invoice.move_type == 'out_invoice'">
+                                            Salesperson
+                                        </t>
+                                        <t t-if="invoice.move_type == 'in_invoice'">
+                                            Purchase Representative
+                                        </t>
+                                    </small>
+                                </h6>
+                                <div class="o_portal_contact_details d-flex flex-column gap-2">
+                                    <div class="d-flex justify-content-start align-items-center gap-2">
+                                        <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(invoice.invoice_user_id.avatar_128)" alt="Contact"/>
+                                        <div>
+                                            <h6 class="mb-0" t-out="invoice.invoice_user_id.name"/>
+                                            <a href="#discussion" class="d-flex align-items-center gap-2 small fw-bold">
+                                            Send message
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div t-field="invoice.invoice_user_id" t-options='{"widget": "contact", "fields": ["city", "phone"]}'/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+
+                <!-- Page Content -->
+                <div id="invoice_content" class="o_portal_content col-12 col-lg-9 col-xl-8">
+                    <t t-if="error or warning" t-call="account.portal_invoice_error"/>
+                    <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+
+                    <div class="o_portal_html_view shadow p-3">
+                        <div class="o_portal_html_loader text-center">
+                            <i class="fa fa-circle-o-notch fa-spin fa-2x fa-fw text-black-50"></i>
+                        </div>
+                        <iframe id="invoice_html" class="mt8 mb8" width="100%" height="100%" frameborder="0" scrolling="no" t-att-src="invoice.get_portal_url(report_type='html')"/>
+                    </div>
+                    <!-- chatter -->
+                    <div id="invoice_communication" class="mt-4">
+                        <h3>Communication history</h3>
+                        <t t-call="portal.message_thread"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_error" name="Invoice error/warning display">
+        <div class="row mr16">
+            <div t-attf-class="'col-lg-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
+                <a href="#" class="close" data-bs-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_invoice_success" name="Invoice success display">
+        <div class="row mr16">
+            <div class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
+                <a href="#" class="close" data-bs-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
+    </template>
+
+    <!-- Get the fields set in required_fields and display them as form elements. Doesn't create the form itself. -->
+    <template id="portal_invoice_required_fields_form">
+        <t t-foreach="required_fields" t-as="required_field">
+            <div t-attf-class="mb-3 #{error.get(required_field.name) and 'o_has_error' or ''} col-xl-6">
+                <!-- select by default the value passed in the data or corresponding to the "default" attribute on the field -->
+                <t t-set="field_info" t-value="env[required_field.model]._fields[required_field.name]"/>
+                <t t-set="default_value" t-value="extra_field_values.get(field_prefix + required_field.name) or field_info.default and field_info.default(required_field.model)"/>
+                <t t-if="required_field.ttype == 'selection'">
+                    <label class="col-form-label" t-att-for="field_prefix + required_field.name"><t t-out="required_field.field_description"/></label>
+                    <select class="form-select" t-att-name="field_prefix + required_field.name" required="required">
+                        <option t-att-selected="not default_value" disabled="disabled" value=""><t t-out="'Select the %s ...' % required_field.field_description.lower()"/></option>
+                        <t t-foreach="required_field.selection_ids" t-as="selection">
+                            <option t-att-selected="default_value and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name"/></option>
+                        </t>
+                    </select>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

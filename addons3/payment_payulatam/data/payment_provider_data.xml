@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_payulatam" model="payment.provider">
+        <field name="name">PayU Latam</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_payulatam/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_payulatam"/>
+        <!-- https://www.payulatam.com/medios-de-pago/ -->
+        <field name="payment_method_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_method_card'),
+                   ref('payment.payment_method_pix'),
+                   ref('payment.payment_method_bank_reference'),
+                   ref('payment.payment_method_bank_transfer'),
+                   ref('payment.payment_method_pse'),
+                ])]"/>
+        <field name="code">payulatam</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+    </record>
+
+</odoo>

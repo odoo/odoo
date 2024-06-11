@@ -1,0 +1,146 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_audit_trail
+# 
+# Translators:
+# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-12-15 06:37+0000\n"
+"PO-Revision-Date: 2023-12-23 23:00+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Activate Audit Trail"
+msgstr "تفعيل سجل المراجعة "
+
+#. module: account_audit_trail
+#: model:ir.actions.act_window,name:account_audit_trail.action_account_audit_trail_report
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_company__check_account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_res_config_settings__check_account_audit_trail
+#: model:ir.ui.menu,name:account_audit_trail.account_audit_trail_menu
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Audit Trail"
+msgstr "سجل المراجعة "
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/res_config_settings.py:0
+#, python-format
+msgid "Can't disable audit trail when there are existing records."
+msgstr "لا يمكن تعطيل سجل المراجعة عندما تكون هناك سجلات موجودة. "
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Changed"
+msgstr "تم التغيير "
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_preview
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_preview
+msgid "Description"
+msgstr "الوصف"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.res_config_settings_view_form_inherit_account_audit_trail
+msgid "Go to Audit Trail"
+msgstr "الذهاب إلى سجل المراجعة "
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_account_move
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__account_audit_log_move_id
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__account_audit_log_move_id
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Journal Entry"
+msgstr "قيد اليومية"
+
+#. module: account_audit_trail
+#: model:ir.model,name:account_audit_trail.model_mail_message
+msgid "Message"
+msgstr "الرسالة"
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Messages Search"
+msgstr "البحث في الرسائل"
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "العملية غير مدعومة "
+
+#. module: account_audit_trail
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_mail__show_audit_log
+#: model:ir.model.fields,field_description:account_audit_trail.field_mail_message__show_audit_log
+msgid "Show Audit Log"
+msgstr "عرض سجل المراجعة "
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/account_move.py:0
+#, python-format
+msgid ""
+"To keep the audit trail, you can not delete journal entries once they have been posted.\n"
+"Instead, you can cancel the journal entry."
+msgstr ""
+"لإبقاء سجل المراجعة، لا يمكنك حذف قيود دفتر اليومية بمجرد أن قد تم ترحيلها. \n"
+"عوضاً عن ذلك، يمكنك إلغاء قيد دفتر اليومية. "
+
+#. module: account_audit_trail
+#: model_terms:ir.actions.act_window,help:account_audit_trail.action_account_audit_trail_report
+msgid ""
+"To see the audit log you have to enable the audit trail option from settings"
+msgstr "لرؤية سجل المراجعة، عليك تمكين خيار سجل المراجعة من الخيارات "
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "Update Only"
+msgstr "التحديث فقط "
+
+#. module: account_audit_trail
+#. odoo-python
+#: code:addons/account_audit_trail/models/mail_message.py:0
+#, python-format
+msgid "Updated"
+msgstr "تم التحديث "
+
+#. module: account_audit_trail
+#: model_terms:ir.ui.view,arch_db:account_audit_trail.view_message_tree_audit_log_search
+msgid "date"
+msgstr "التاريخ"

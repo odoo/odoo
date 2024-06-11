@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.Orderline">
+        <t t-set="line" t-value="props.line" />
+        <li class="orderline p-2 lh-sm cursor-pointer" t-attf-class="{{ line.comboParent ? 'border-start border-3 ms-4' : '' }}" t-att-class="props.class">
+            <div class="d-flex justify-content-between">
+                <div class="product-name d-inline-block flex-grow-1 fw-bolder pe-1 text-truncate">
+                    <span class="text-wrap" t-esc="line.productName"/>
+                    <t t-slot="product-name"/>
+                </div>
+                <div class="product-price d-inline-block text-end price fw-bolder">
+                    <t t-if="line.price === 'free'">
+                        Free
+                    </t>
+                    <t t-else="" t-esc="line.price"/>
+                </div>
+            </div>
+            <ul class="info-list ms-2">
+                <li class="price-per-unit">
+                    <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" /> 
+                    <t t-if="line.price !== 0">
+                        x <s t-esc="line.oldUnitPrice" t-if="line.oldUnitPrice" /> 
+                        <t t-esc="line.unitPrice" /> <span t-if="line.unit"> / <t t-esc="line.unit" /></span>
+                    </t>
+                </li>
+                <li t-if="line.price !== 0 and line.discount and line.discount !== '0'">
+                    With a <em><t t-esc="line.discount" />% </em> discount
+                </li>
+                <t t-slot="default" />
+                <li t-if="line.customerNote" class="customer-note w-100 p-2 my-1 rounded text-break text-bg-warning text-warning bg-opacity-25">
+                    <i class="fa fa-sticky-note me-1" role="img" aria-label="Customer Note" title="Customer Note"/>
+                    <t t-esc="line.customerNote" />
+                </li>
+                <li t-if="line.internalNote" class="internal-note w-100 p-2 my-1 rounded text-bg-info text-info bg-opacity-25 text-break">
+                    <i class="fa fa-tag me-1" role="img" aria-label="Note" title="Note"/>
+                    <t t-esc="line.internalNote" />
+                </li>
+                <li t-if="line.attributes">
+                    <div t-foreach="line.attributes" t-as="attribute" t-key="attribute.id">
+                        <t t-esc="attribute.name"/>:
+                        <t t-foreach="attribute.valuesForOrderLine" t-as="value" t-key="value.id">
+                            <t t-if="value_index !== 0" t-esc="' | '"/>
+                            <t t-esc="value.name"/>
+                            <t t-if="value.price_extra">
+                                (<t t-esc='env.utils.formatCurrency(value.price_extra)'/>)
+                            </t>
+
+                        </t><br/>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </t>
+</templates>

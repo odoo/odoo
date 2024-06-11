@@ -1,0 +1,134 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_mrp
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">製造</span>"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">購入</span>"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "部品表概要レポート"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "部品表"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr "部品表明細"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, python-format
+msgid "Components cost share have to be positive or equals to zero."
+msgstr "構成品原価シェアは正の値または0と等しい必要があります。"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
+msgid "Cost Share (%)"
+msgstr "原価シェア (%)"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr "製造オーダソース数"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr "生成された購買オーダ数"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_account_move_line
+msgid "Journal Item"
+msgstr "仕訳項目"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr "製造オーダ概要レポート"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/purchase.py:0
+#, python-format
+msgid "Manufacturing Source of %s"
+msgstr " %sの製造ソース"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/stock_move.py:0
+#, python-format
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr "ODooはアングロサクソン人のエントリを生成できません。 %s の総評価は0です。"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Production Order"
+msgstr "製造オーダ"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "購買オーダ"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "購買オーダ明細"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr " %sから生成された購買オーダ"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
+msgstr "キットを購買する際の構成品の再分割原価の割合。全構成品の原価の合計が100に等しい必要があります。"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+#, python-format
+msgid "The total cost share for a BoM's component have to be 100"
+msgstr "部品表の構成品の原価シェア合計は100である必要があります。"

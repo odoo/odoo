@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="payment_form" inherit_id="payment.form">
+        <xpath expr="." position="inside">
+            <t t-call="payment_stripe.sdk_assets"/>
+        </xpath>
+    </template>
+
+    <template id="express_checkout" inherit_id="payment.express_checkout">
+        <xpath expr="." position="inside">
+            <t t-call="payment_stripe.sdk_assets"/>
+        </xpath>
+    </template>
+
+    <template id="sdk_assets">
+        <!-- As the following link does not end with '.js', it's not loaded when
+             placed in __manifest__.py. The following declaration fix this problem -->
+        <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+    </template>
+</odoo>

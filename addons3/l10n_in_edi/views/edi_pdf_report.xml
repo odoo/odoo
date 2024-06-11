@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_einvoice_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
+            <div class="col-auto col-3 mw-100 mb-2" t-if="l10n_in_einvoice_json" name="ack_no">
+                <strong>Acknowledgement:</strong>
+                <p class="m-0" t-out="l10n_in_einvoice_json['AckNo']"/>
+                <p t-out="l10n_in_einvoice_json['AckDt']"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='right-elements']" position="after">
+            <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
+            <div t-attf-class="#{'col-5' if report_type != 'html' else 'ms-auto'} row" t-if="l10n_in_einvoice_json">
+                <div class="col-7 me-2" t-attf-style="#{'' if report_type != 'html' else 'padding: 0 !important;'}">
+                    <strong>IRN:</strong>
+                    <span t-esc="l10n_in_einvoice_json['Irn']"/>
+                </div>
+                <div class="col-3 mt-1">
+                    <img t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %('QR', l10n_in_einvoice_json['SignedQRCode'], 500, 500)" style="max-height: 155px"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

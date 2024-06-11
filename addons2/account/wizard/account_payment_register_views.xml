@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_payment_register_form" model="ir.ui.view">
+            <field name="name">account.payment.register.form</field>
+            <field name="model">account.payment.register</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment">
+                    <!-- Invisible fields -->
+                    <field name="line_ids" invisible="1"/>
+                    <field name="can_edit_wizard" invisible="1" force_save="1"/>
+                    <field name="can_group_payments" invisible="1" force_save="1"/>
+                    <field name="early_payment_discount_mode" invisible="1" force_save="1"/>
+                    <field name="payment_type" invisible="1" force_save="1"/>
+                    <field name="partner_type" invisible="1" force_save="1"/>
+                    <field name="source_amount" invisible="1" force_save="1"/>
+                    <field name="source_amount_currency" invisible="1" force_save="1"/>
+                    <field name="source_currency_id" invisible="1" force_save="1"/>
+                    <field name="company_id" invisible="1" force_save="1"/>
+                    <field name="partner_id" invisible="1" force_save="1"/>
+                    <field name="country_code" invisible="1" force_save="1"/>
+                    <field name="currency_id" invisible="1" />
+
+                    <field name="show_partner_bank_account" invisible="1"/>
+                    <field name="require_partner_bank_account" invisible="1"/>
+                    <field name="available_journal_ids" invisible="1"/>
+                    <field name="available_payment_method_line_ids" invisible="1"/>
+                    <field name="available_partner_bank_ids" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="hide_writeoff_section" invisible="1"/>
+                    <field name="writeoff_is_exchange_account" invisible="1"/>
+                    <field name="untrusted_bank_ids" invisible="1"/>
+
+                    <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
+                        <p><b>Early Payment Discount applied.</b></p>
+                    </div>
+                    <div role="alert" class="alert alert-warning" invisible="untrusted_payments_count == 0">
+                        <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>
+                    </div>
+                    <group>
+                        <group name="group1">
+                            <field name="journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                            <field name="payment_method_line_id"
+                                   required="1"  options="{'no_create': True, 'no_open': True}"/>
+                            <field name="partner_bank_id"
+                                   invisible="not show_partner_bank_account or not can_edit_wizard or (can_group_payments and not group_payment)"
+                                   readonly="payment_type == 'inbound'"
+                                   required="require_partner_bank_account and can_edit_wizard and (not can_group_payments or not group_payment)"
+                                    context="{'display_account_trust': True}"/>
+                            <field name="group_payment"
+                                   invisible="not can_group_payments"/>
+                        </group>
+                        <group name="group2">
+                            <label for="amount"
+                                   invisible="not can_edit_wizard or can_group_payments and not group_payment"/>
+                            <div name="amount_div" class="o_row"
+                                 invisible="not can_edit_wizard or can_group_payments and not group_payment">
+                                <field name="amount"/>
+                                <field name="currency_id"
+                                       required="1"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       groups="base.group_multi_currency"/>
+                            </div>
+                            <field name="payment_date"/>
+                            <field name="communication"
+                                   invisible="not can_edit_wizard or (can_group_payments and not group_payment)"/>
+                        </group>
+                        <group name="group3"
+                               invisible="payment_difference == 0.0 or not can_edit_wizard or can_group_payments and not group_payment">
+                            <label for="payment_difference"/>
+                            <div>
+                                <field name="payment_difference"/>
+                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                <div invisible="hide_writeoff_section or payment_difference_handling == 'open'">
+                                    <label for="writeoff_account_id" string="Post Difference In" class="oe_edit_only"/>
+                                    <field name="writeoff_account_id"
+                                           string="Post Difference In"
+                                           options="{'no_create': True}"
+                                           required="payment_difference_handling == 'reconcile' and not early_payment_discount_mode"/>
+                                    <label for="writeoff_label"
+                                           class="oe_edit_only"
+                                           string="Label"
+                                           invisible="writeoff_is_exchange_account"/>
+                                    <field name="writeoff_label"
+                                           required="payment_difference_handling == 'reconcile'"
+                                           invisible="writeoff_is_exchange_account"/>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>
+                        <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount != 1"/>
+                        <button string="Discard" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

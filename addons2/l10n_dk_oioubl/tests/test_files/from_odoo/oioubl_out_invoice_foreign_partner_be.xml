@@ -1,0 +1,288 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+  xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+  xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
+  <cbc:CustomizationID>OIOUBL-2.01</cbc:CustomizationID>
+  <cbc:ProfileID schemeID="urn:oioubl:id:profileid-1.6" schemeAgencyID="320">Procurement-BilSim-1.0</cbc:ProfileID>
+  <cbc:ID>INV/2017/00001</cbc:ID>
+  <cbc:IssueDate>2017-01-01</cbc:IssueDate>
+  <cbc:InvoiceTypeCode listID="urn:oioubl:codelist:invoicetypecode-1.2" listAgencyID="320">380</cbc:InvoiceTypeCode>
+  <cbc:Note>test narration</cbc:Note>
+  <cbc:DocumentCurrencyCode>DKK</cbc:DocumentCurrencyCode>
+  <cac:OrderReference>
+    <cbc:ID>ref_move</cbc:ID>
+  </cac:OrderReference>
+  <cac:AdditionalDocumentReference>
+    <cbc:ID>INV_2017_00001.pdf</cbc:ID>
+    <cbc:DocumentTypeCode listAgencyID="6" listID="UN/ECE 1001">380</cbc:DocumentTypeCode>
+    <cac:Attachment>
+      <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename="INV_2017_00001.pdf">___ignore___</cbc:EmbeddedDocumentBinaryObject>
+    </cac:Attachment>
+  </cac:AdditionalDocumentReference>
+  <cac:AccountingSupplierParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="DK:CVR">DK12345674</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">
+          StructuredDK</cbc:AddressFormatCode>
+        <cbc:StreetName>Paradisæblevej,</cbc:StreetName>
+        <cbc:BuildingNumber>10</cbc:BuildingNumber>
+        <cbc:CityName>Aalborg</cbc:CityName>
+        <cbc:PostalZone>9430</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>DK</cbc:IdentificationCode>
+          <cbc:Name>Denmark</cbc:Name>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="DK:SE">DK12345674</cbc:CompanyID>
+        <cac:RegistrationAddress>
+          <cbc:AddressFormatCode listAgencyID="320"
+            listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredDK</cbc:AddressFormatCode>
+          <cbc:StreetName>Paradisæblevej,</cbc:StreetName>
+          <cbc:BuildingNumber>10</cbc:BuildingNumber>
+          <cbc:CityName>Aalborg</cbc:CityName>
+          <cbc:PostalZone>9430</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>DK</cbc:IdentificationCode>
+            <cbc:Name>Denmark</cbc:Name>
+          </cac:Country>
+        </cac:RegistrationAddress>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+          <cbc:Name>VAT</cbc:Name>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="DK:CVR">DK12345674</cbc:CompanyID>
+        <cac:RegistrationAddress>
+          <cbc:AddressFormatCode listAgencyID="320"
+            listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredDK</cbc:AddressFormatCode>
+          <cbc:StreetName>Paradisæblevej,</cbc:StreetName>
+          <cbc:BuildingNumber>10</cbc:BuildingNumber>
+          <cbc:CityName>Aalborg</cbc:CityName>
+          <cbc:PostalZone>9430</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>DK</cbc:IdentificationCode>
+            <cbc:Name>Denmark</cbc:Name>
+          </cac:Country>
+        </cac:RegistrationAddress>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>___ignore___</cbc:ID>
+        <cbc:Name>company_1_data</cbc:Name>
+        <cbc:Telephone>+45 32 12 34 56</cbc:Telephone>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cbc:EndpointID schemeID="BE:VAT">BE0897223670</cbc:EndpointID>
+      <cac:PartyName>
+        <cbc:Name>SUPER BELGIAN PARTNER</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">
+          StructuredDK</cbc:AddressFormatCode>
+        <cbc:StreetName>Rue du Paradis,</cbc:StreetName>
+        <cbc:BuildingNumber>10</cbc:BuildingNumber>
+        <cbc:CityName>Eghezee</cbc:CityName>
+        <cbc:PostalZone>6870</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+          <cbc:Name>Belgium</cbc:Name>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PartyTaxScheme>
+        <cbc:RegistrationName>SUPER BELGIAN PARTNER</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="ZZZ">BE0897223670</cbc:CompanyID>
+        <cac:RegistrationAddress>
+          <cbc:AddressFormatCode listAgencyID="320"
+            listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredDK</cbc:AddressFormatCode>
+          <cbc:StreetName>Rue du Paradis,</cbc:StreetName>
+          <cbc:BuildingNumber>10</cbc:BuildingNumber>
+          <cbc:CityName>Eghezee</cbc:CityName>
+          <cbc:PostalZone>6870</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+            <cbc:Name>Belgium</cbc:Name>
+          </cac:Country>
+        </cac:RegistrationAddress>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+          <cbc:Name>VAT</cbc:Name>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>SUPER BELGIAN PARTNER</cbc:RegistrationName>
+        <cbc:CompanyID schemeID="ZZZ">BE0897223670</cbc:CompanyID>
+        <cac:RegistrationAddress>
+          <cbc:AddressFormatCode listAgencyID="320"
+            listID="urn:oioubl:codelist:addressformatcode-1.1">StructuredDK</cbc:AddressFormatCode>
+          <cbc:StreetName>Rue du Paradis,</cbc:StreetName>
+          <cbc:BuildingNumber>10</cbc:BuildingNumber>
+          <cbc:CityName>Eghezee</cbc:CityName>
+          <cbc:PostalZone>6870</cbc:PostalZone>
+          <cac:Country>
+            <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+            <cbc:Name>Belgium</cbc:Name>
+          </cac:Country>
+        </cac:RegistrationAddress>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:ID>___ignore___</cbc:ID>
+        <cbc:Name>SUPER BELGIAN PARTNER</cbc:Name>
+        <cbc:Telephone>061928374</cbc:Telephone>
+        <cbc:ElectronicMail>partner_b@tsointsoin</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:Delivery>
+    <cac:DeliveryLocation>
+      <cac:Address>
+        <cbc:AddressFormatCode listAgencyID="320" listID="urn:oioubl:codelist:addressformatcode-1.1">
+          StructuredDK</cbc:AddressFormatCode>
+        <cbc:StreetName>Rue du Paradis,</cbc:StreetName>
+        <cbc:BuildingNumber>10</cbc:BuildingNumber>
+        <cbc:CityName>Eghezee</cbc:CityName>
+        <cbc:PostalZone>6870</cbc:PostalZone>
+        <cac:Country>
+          <cbc:IdentificationCode>BE</cbc:IdentificationCode>
+          <cbc:Name>Belgium</cbc:Name>
+        </cac:Country>
+      </cac:Address>
+    </cac:DeliveryLocation>
+  </cac:Delivery>
+  <cac:PaymentMeans>
+    <cbc:PaymentMeansCode name="credit transfer">1</cbc:PaymentMeansCode>
+    <cbc:PaymentDueDate>2017-02-28</cbc:PaymentDueDate>
+    <cbc:InstructionID>INV/2017/00001</cbc:InstructionID>
+    <cbc:PaymentID>INV/2017/00001</cbc:PaymentID>
+    <cac:PayeeFinancialAccount>
+      <cbc:ID>DK5000400440116243</cbc:ID>
+    </cac:PayeeFinancialAccount>
+  </cac:PaymentMeans>
+  <cac:PaymentTerms>
+    <cbc:ID>___ignore___</cbc:ID>
+    <cbc:Amount currencyID="DKK">450.00</cbc:Amount>
+    <cac:SettlementPeriod>
+      <cbc:StartDate>2017-01-01</cbc:StartDate>
+      <cbc:EndDate>2017-01-01</cbc:EndDate>
+    </cac:SettlementPeriod>
+  </cac:PaymentTerms>
+  <cac:PaymentTerms>
+    <cbc:ID>___ignore___</cbc:ID>
+    <cbc:Amount currencyID="DKK">1050.00</cbc:Amount>
+    <cac:SettlementPeriod>
+      <cbc:StartDate>2017-01-01</cbc:StartDate>
+      <cbc:EndDate>2017-02-28</cbc:EndDate>
+    </cac:SettlementPeriod>
+  </cac:PaymentTerms>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="DKK">1500.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">ReverseCharge</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReasonCode>VATEX-EU-IC</cbc:TaxExemptionReasonCode>
+        <cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+          <cbc:Name>VAT</cbc:Name>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="DKK">1500.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="DKK">0.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="DKK">1500.00</cbc:TaxInclusiveAmount>
+    <cbc:PayableAmount currencyID="DKK">1500.00</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>___ignore___</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="DKK">500.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="DKK">500.00</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">ReverseCharge</cbc:ID>
+          <cbc:Percent>0.0</cbc:Percent>
+          <cbc:TaxExemptionReasonCode>VATEX-EU-IC</cbc:TaxExemptionReasonCode>
+          <cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>
+          <cac:TaxScheme>
+            <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+            <cbc:Name>VAT</cbc:Name>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>product_a</cbc:Description>
+      <cbc:Name>product_a</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">ReverseCharge</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReasonCode>VATEX-EU-IC</cbc:TaxExemptionReasonCode>
+        <cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+          <cbc:Name>VAT</cbc:Name>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="DKK">500.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+  <cac:InvoiceLine>
+    <cbc:ID>___ignore___</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="DZN">1.0</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="DKK">1000.00</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+      <cac:TaxSubtotal>
+        <cbc:TaxableAmount currencyID="DKK">1000.00</cbc:TaxableAmount>
+        <cbc:TaxAmount currencyID="DKK">0.00</cbc:TaxAmount>
+        <cac:TaxCategory>
+          <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">ReverseCharge</cbc:ID>
+          <cbc:Percent>0.0</cbc:Percent>
+          <cbc:TaxExemptionReasonCode>VATEX-EU-IC</cbc:TaxExemptionReasonCode>
+          <cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>
+          <cac:TaxScheme>
+            <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+            <cbc:Name>VAT</cbc:Name>
+          </cac:TaxScheme>
+        </cac:TaxCategory>
+      </cac:TaxSubtotal>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Description>product_b</cbc:Description>
+      <cbc:Name>product_b</cbc:Name>
+      <cac:ClassifiedTaxCategory>
+        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">ReverseCharge</cbc:ID>
+        <cbc:Percent>0.0</cbc:Percent>
+        <cbc:TaxExemptionReasonCode>VATEX-EU-IC</cbc:TaxExemptionReasonCode>
+        <cbc:TaxExemptionReason>Intra-Community supply</cbc:TaxExemptionReason>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">VAT</cbc:ID>
+          <cbc:Name>VAT</cbc:Name>
+        </cac:TaxScheme>
+      </cac:ClassifiedTaxCategory>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="DKK">1000.0</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

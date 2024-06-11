@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Sub-template used for every instance of AddressType -->
+        <template id="address_type">
+            <t t-if="partner_country_code == 'ESP'">
+                <AddressInSpain>
+                    <Address t-out="', '.join(val for val in (partner.street, partner.street2) if val)[:80]"/>
+                    <PostCode t-out="str(partner.zip)"/>
+                    <Town t-out="(partner.city or '')[:50]"/>
+                    <Province t-out="partner.state_id.name[:20] if partner.state_id else partner.country_id.name[:20]"/>
+                    <CountryCode t-out="partner_country_code"/>
+                </AddressInSpain>
+            </t>
+            <t t-else="">
+                <OverseasAddress>
+                    <Address t-out="', '.join(val for val in (partner.street, partner.street2) if val)[:80]"/>
+                    <PostCodeAndTown t-out="' '.join(var for var in (str(partner.zip), partner.city) if var)[:50]"/>
+                    <Province t-out="partner.state_id.name[:20] if partner.state_id else partner.country_id.name[:20]"/>
+                    <CountryCode t-out="partner_country_code"/>
+                </OverseasAddress>
+            </t>
+        </template>
+
+        <!-- Sub-template used for every instance of ContactDetails -->
+        <template id="contact_details_type">
+            <ContactDetails>
+                <Telephone t-out="(partner_phone or '')[:15]"/>
+                <WebAddress t-out="(partner.website or '')[:60]"/>
+                <ElectronicMail t-out="(partner.email or '')[:60]"/>
+            </ContactDetails>
+        </template>
+
+        <!-- Sub-template used for every instance of LegalEntityType -->
+        <template id="legal_entity_type">
+            <LegalEntity>
+                <CorporateName t-out="partner.name[:80]"/>
+                <TradeName t-out="partner.display_name[:40]"/>
+                <t t-call="l10n_es_edi_facturae.address_type"/>
+                <t t-call="l10n_es_edi_facturae.contact_details_type"/>
+            </LegalEntity>
+        </template>
+
+        <!-- Sub-template used for every instance of IndividualType -->
+        <template id="individual_type">
+            <Individual>
+                <Name t-out="(partner_name.get('firstname') or '')[:40]"/>
+                <FirstSurname t-out="(partner_name.get('surname') or '')[:40]"/>
+                <SecondSurname t-out="(partner_name.get('surname2') or '')[:40]"/>
+                <t t-call="l10n_es_edi_facturae.address_type"/>
+                <t t-call="l10n_es_edi_facturae.contact_details_type"/>
+            </Individual>
+        </template>
+
+        <!-- Sub-template used for every instance of TaxIdentificationType -->
+        <template id="tax_identification_type">
+            <TaxIdentification>
+                <PersonTypeCode t-out="'J' if partner.is_company else 'F'"/>
+                <ResidenceTypeCode t-out="partner.l10n_es_edi_facturae_residence_type"/>
+                <TaxIdentificationNumber t-out="partner.vat"/>
+            </TaxIdentification>
+        </template>
+
+        <!-- Sub-template used for every instance of BusinessType -->
+        <template id="business_type">
+            <t t-call="l10n_es_edi_facturae.tax_identification_type"/>
+            <t t-if="partner.is_company">
+                <t t-call="l10n_es_edi_facturae.legal_entity_type"/>
+            </t>
+            <t t-else="">
+                <t t-call="l10n_es_edi_facturae.individual_type"/>
+            </t>
+        </template>
+
+        <!-- Sub-template used for every instance of TaxType -->
+        <template id="tax_type">
+            <Tax>
+                <TaxTypeCode t-out="tax['tax_record'].l10n_es_edi_facturae_tax_type"/>
+                <TaxRate t-out="tax['TaxRate']"/>
+                <TaxableBase>
+                    <TotalAmount t-out="float_repr(refund_multiplier*tax['TaxableBase']['TotalAmount'], file_currency.decimal_places)"/>
+                    <EquivalentInEuros t-if="need_conversion" t-out="float_repr(refund_multiplier*tax['TaxableBase']['EquivalentInEuros'], eur.decimal_places)"/>
+                </TaxableBase>
+                <TaxAmount t-if="tax.get('TaxAmount')">
+                    <TotalAmount t-out="float_repr(refund_multiplier*tax['TaxAmount']['TotalAmount'], file_currency.decimal_places)"/>
+                    <EquivalentInEuros t-if="need_conversion" t-out="float_repr(refund_multiplier*tax['TaxAmount']['EquivalentInEuros'], eur.decimal_places)"/>
+                </TaxAmount>
+                <SpecialTaxableBase t-if="tax.get('SpecialTaxableBase')">
+                    <TotalAmount t-out="float_repr(refund_multiplier*tax['SpecialTaxableBase']['TotalAmount'], file_currency.decimal_places)"/>
+                    <EquivalentInEuros t-if="need_conversion" t-out="float_repr(refund_multiplier*tax['SpecialTaxableBase']['EquivalentInEuros'], eur.decimal_places)"/>
+                </SpecialTaxableBase>
+                <SpecialTaxAmount t-if="tax.get('SpecialTaxAmount')">
+                    <TotalAmount t-out="float_repr(refund_multiplier*tax['SpecialTaxAmount']['TotalAmount'], file_currency.decimal_places)"/>
+                    <EquivalentInEuros t-if="need_conversion" t-out="float_repr(refund_multiplier*tax['SpecialTaxAmount']['EquivalentInEuros'], eur.decimal_places)"/>
+                </SpecialTaxAmount>
+                <EquivalenceSurcharge t-out="tax.get('EquivalenceSurcharge')"/>
+                <EquivalenceSurchargeAmount t-if="tax.get('EquivalenceSurchargeAmount')">
+                    <TotalAmount t-out="float_repr(refund_multiplier*tax['EquivalenceSurchargeAmount']['TotalAmount'], file_currency.decimal_places)"/>
+                    <EquivalentInEuros t-if="need_conversion" t-out="float_repr(refund_multiplier*tax['EquivalenceSurchargeAmount']['EquivalentInEuros'], eur.decimal_places)"/>
+                </EquivalenceSurchargeAmount>
+            </Tax>
+        </template>
+
+        <!-- Sub-template used for every instance of InvoiceLineType -->
+        <template id="invoice_line_type">
+            <InvoiceLine>
+                <FileReference t-out="line.get('FileReference')"/>
+                <FileDate t-out="line.get('FileDate')"/>
+                <SequenceNumber t-out="line.get('SequenceNumber')"/>
+                <ItemDescription t-out="line['ItemDescription']"/>
+                <Quantity t-out="line['Quantity']"/>
+                <UnitOfMeasure t-out="line.get('UnitOfMeasure')"/>
+                <UnitPriceWithoutTax t-out="float_repr(refund_multiplier*line['UnitPriceWithoutTax'], file_currency.decimal_places)"/>
+                <TotalCost t-out="float_repr(refund_multiplier*line['TotalCost'], file_currency.decimal_places)"/>
+                <DiscountsAndRebates t-if="line.get('DiscountsAndRebates')">
+                    <t t-foreach="line['DiscountsAndRebates']" t-as="discount">
+                        <Discount>
+                            <DiscountReason t-out="discount['DiscountReason']"/>
+                            <DiscountRate t-out="discount.get('DiscountRate')"/>
+                            <DiscountAmount t-out="float_repr(refund_multiplier*discount['DiscountAmount'], file_currency.decimal_places)"/>
+                        </Discount>
+                    </t>
+                </DiscountsAndRebates>
+                <Charges t-if="line.get('Charges')">
+                    <t t-foreach="line['Charges']" t-as="charge">
+                        <Charge>
+                            <ChargeReason t-out="charge['ChargeReason']"/>
+                            <ChargeRate t-out="charge.get('ChargeRate')"/>
+                            <ChargeAmount t-out="float_repr(refund_multiplier*charge['ChargeAmount'], file_currency.decimal_places)"/>
+                        </Charge>
+                    </t>
+                </Charges>
+                <GrossAmount t-out="float_repr(refund_multiplier*line['GrossAmount'], file_currency.decimal_places)"/>
+                <TaxesOutputs>
+                    <t t-foreach="line['TaxesOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
+                </TaxesOutputs>
+                <TaxesWithheld t-if="line.get('TaxesWithheld')">
+                    <t t-foreach="line['TaxesWithheld']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
+                </TaxesWithheld>
+                <LineItemPeriod t-if="line.get('LineItemPeriod')">
+                    <StartDate t-out="line['LineItemPeriod']['StartDate']"/>
+                    <EndDate t-out="line['LineItemPeriod']['EndDate']"/>
+                </LineItemPeriod>
+                <TransactionDate t-out="line.get('TransactionDate')"/>
+            </InvoiceLine>
+        </template>
+
+        <template id="corrective_type">
+            <Corrective>
+                <InvoiceNumber t-out="invoice['Corrective']['refunded_invoice_record'].name"/>
+                <ReasonCode t-out="invoice['Corrective']['ReasonCode']"/>
+                <ReasonDescription t-out="invoice['Corrective']['Reason']"/>
+                <TaxPeriod>
+                    <StartDate t-out="invoice['Corrective']['TaxPeriod']['StartDate']"/>
+                    <EndDate t-out="invoice['Corrective']['TaxPeriod']['EndDate']"/>
+                </TaxPeriod>
+                <CorrectionMethod>01</CorrectionMethod>
+                <CorrectionMethodDescription>Rectificación modelo íntegro.</CorrectionMethodDescription>
+            </Corrective>
+        </template>
+
+        <!-- Sub-template used for every instance of InvoiceType -->
+        <template id="invoice_type">
+            <Invoice>
+                <InvoiceHeader>
+                    <InvoiceNumber t-out="invoice['invoice_record'].name"/>
+                    <InvoiceDocumentType t-out="invoice['InvoiceDocumentType']"/>
+                    <InvoiceClass t-out="invoice['InvoiceClass']"/>
+                    <t t-if="refund_multiplier == -1" t-call="l10n_es_edi_facturae.corrective_type"/>
+                </InvoiceHeader>
+                <InvoiceIssueData>
+                    <IssueDate t-out="invoice['invoice_record'].invoice_date.isoformat()"/>
+                    <OperationDate t-out="invoice['InvoiceIssueData'].get('OperationDate')"/>
+                    <InvoicingPeriod t-if="invoice['InvoiceIssueData'].get('InvoicingPeriod')">
+                        <StartDate t-out="invoice['InvoiceIssueData']['InvoicingPeriod']['StartDate']"/>
+                        <EndDate t-out="invoice['InvoiceIssueData']['InvoicingPeriod']['EndDate']"/>
+                    </InvoicingPeriod>
+                    <InvoiceCurrencyCode t-out="invoice['invoice_currency'].name"/>
+                    <ExchangeRateDetails t-if="invoice['InvoiceIssueData'].get('ExchangeRateDetails')">
+                        <ExchangeRate t-out="invoice['InvoiceIssueData']['ExchangeRate']"/>
+                        <ExchangeRateDate t-out="(invoice['invoice_record'].invoice_date or invoice['invoice_record'].date).isoformat()"/>
+                    </ExchangeRateDetails>
+                    <TaxCurrencyCode t-out="invoice['invoice_currency'].name"/>
+                    <LanguageName t-out="invoice['InvoiceIssueData']['LanguageName']"/>
+                </InvoiceIssueData>
+                <TaxesOutputs>
+                    <t t-foreach="invoice['TaxOutputs']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
+                </TaxesOutputs>
+                <TaxesWithheld t-if="invoice.get('TaxesWithheld')">
+                    <t t-foreach="invoice['TaxesWithheld']" t-as="tax"><t t-call="l10n_es_edi_facturae.tax_type"/></t>
+                </TaxesWithheld>
+                <InvoiceTotals>
+                    <TotalGrossAmount t-out="float_repr(refund_multiplier*invoice['TotalGrossAmount'], file_currency.decimal_places)"/>
+                    <GeneralDiscounts t-if="invoice.get('GeneralDiscounts')">
+                        <t t-foreach="invoice['GeneralDiscounts']" t-as="discount">
+                            <Discount>
+                                <DiscountReason t-out="discount['DiscountReason']"/>
+                                <DiscountRate t-out="discount.get('DiscountRate')"/>
+                                <DiscountAmount t-out="float_repr(refund_multiplier*discount['DiscountAmount'], file_currency.decimal_places)"/>
+                            </Discount>
+                        </t>
+                    </GeneralDiscounts>
+                    <GeneralSurcharges t-if="invoice.get('GeneralSurcharges')">
+                        <t t-foreach="invoice['GeneralSurcharges']" t-as="charge">
+                            <Charge>
+                                <ChargeReason t-out="charge['ChargeReason']"/>
+                                <ChargeRate t-out="charge.get('ChargeRate')"/>
+                                <ChargeAmount t-out="float_repr(refund_multiplier*charge['ChargeAmount'], file_currency.decimal_places)"/>
+                            </Charge>
+                        </t>
+                    </GeneralSurcharges>
+                    <TotalGeneralDiscounts t-if="invoice.get('TotalGeneralDiscounts')" t-out="float_repr(refund_multiplier*invoice['TotalGeneralDiscounts'], file_currency.decimal_places)"/>
+                    <TotalGeneralSurcharges t-if="invoice.get('TotalGeneralSurcharges')" t-out="float_repr(refund_multiplier*invoice['TotalGeneralSurcharges'], file_currency.decimal_places)"/>
+                    <TotalGrossAmountBeforeTaxes t-out="float_repr(refund_multiplier*invoice['TotalGrossAmountBeforeTaxes'], file_currency.decimal_places)"/>
+                    <TotalTaxOutputs t-out="float_repr(refund_multiplier*invoice['TotalTaxOutputs'], file_currency.decimal_places)"/>
+                    <TotalTaxesWithheld t-out="float_repr(refund_multiplier*invoice['TotalTaxesWithheld'], file_currency.decimal_places)"/>
+                    <InvoiceTotal t-out="float_repr(refund_multiplier*invoice['InvoiceTotal'], file_currency.decimal_places)"/>
+                    <PaymentsOnAccount t-if="invoice.get('PaymentsOnAccount')">
+                        <t t-foreach="invoice['PaymentsOnAccount']" t-as="payment">
+                            <PaymentOnAccount>
+                                <PaymentOnAccountDate t-out="payment['PaymentOnAccountDate']"/>
+                                <PaymentOnAccountAmount t-out="float_repr(refund_multiplier*payment['PaymentOnAccountAmount'], file_currency.decimal_places)"/>
+                            </PaymentOnAccount>
+                        </t>
+                    </PaymentsOnAccount>
+                    <TotalFinancialExpenses t-if="invoice.get('ReimbursableExpensesAmount')" t-out="float_repr(refund_multiplier*invoice['ReimbursableExpensesAmount'], file_currency.decimal_places)"/>
+                    <TotalOutstandingAmount t-out="float_repr(refund_multiplier*invoice['TotalOutstandingAmount'], file_currency.decimal_places)"/>
+                    <TotalPaymentsOnAccount t-if="invoice.get('TotalPaymentsOnAccount')" t-out="float_repr(refund_multiplier*invoice['TotalPaymentsOnAccount'], file_currency.decimal_places)"/>
+                    <AmountsWithheld t-if="invoice.get('AmountsWithheld')">
+                        <WithholdingReason t-out="invoice['AmountsWithheld']['WithholdingReason']"/>
+                        <WithholdingRate t-out="invoice['AmountsWithheld'].get('WithholdingRate')"/>
+                        <WithholdingAmount t-out="float_repr(refund_multiplier*invoice['AmountsWithheld']['WithholdingAmount'], file_currency.decimal_places)"/>
+                    </AmountsWithheld>
+                    <TotalExecutableAmount t-out="float_repr(refund_multiplier*invoice['TotalExecutableAmount'], file_currency.decimal_places)"/>
+                    <TotalReimbursableExpenses t-if="invoice.get('TotalReimbursableExpenses')" t-out="float_repr(refund_multiplier*invoice['TotalReimbursableExpenses'], file_currency.decimal_places)"/>
+                </InvoiceTotals>
+                <Items>
+                    <t t-foreach="invoice['Items']" t-as="line"><t t-call="l10n_es_edi_facturae.invoice_line_type"/></t>
+                </Items>
+                <PaymentDetails t-if="invoice['PaymentDetails']">
+                    <Installment t-foreach="invoice['PaymentDetails']" t-as="installment">
+                        <InstallmentDueDate t-out="installment['InstallmentDueDate']"/>
+                        <InstallmentAmount t-out="float_repr(installment['InstallmentAmount'], 2)"/>
+                        <PaymentMeans t-out="installment['PaymentMeans']"/>
+                        <AccountToBeCredited>
+                            <IBAN t-out="installment['AccountToBeCredited']['IBAN']"/>
+                            <BIC t-out="installment['AccountToBeCredited']['BIC']"/>
+                        </AccountToBeCredited>
+                    </Installment>
+                </PaymentDetails>
+                <LegalLiterals t-if="invoice.get('LegalLiterals')">
+                    <t t-foreach="invoice['LegalLiterals']" t-as="reference"><LegalReference t-out="reference"/></t>
+                </LegalLiterals>
+            </Invoice>
+        </template>
+
+        <!-- Main template used for the EDI -->
+        <template id="account_invoice_facturae_export">
+            <fac:Facturae xmlns:fac="http://www.facturae.gob.es/formato/Versiones/Facturaev3_2_2.xml">
+                <FileHeader>
+                    <SchemaVersion>3.2.2</SchemaVersion>
+                    <Modality t-out="Modality"/>
+                    <InvoiceIssuerType t-out="'EM' if is_outstanding else 'RE'"/>
+                    <Batch>
+                        <BatchIdentifier t-out="BatchIdentifier"/>
+                        <InvoicesCount t-out="InvoicesCount"/>
+                        <TotalInvoicesAmount>
+                            <TotalAmount t-out="float_repr(refund_multiplier*TotalInvoicesAmount['TotalAmount'], file_currency.decimal_places)"/>
+                            <EquivalentInEuros t-if="conversion_needed" t-out="float_repr(refund_multiplier*TotalInvoicesAmount['EquivalentInEuros'], eur.decimal_places)"/>
+                        </TotalInvoicesAmount>
+                        <TotalOutstandingAmount>
+                            <TotalAmount t-out="float_repr(refund_multiplier*TotalOutstandingAmount['TotalAmount'], file_currency.decimal_places)"/>
+                            <EquivalentInEuros t-if="conversion_needed" t-out="float_repr(refund_multiplier*TotalOutstandingAmount['EquivalentInEuros'], eur.decimal_places)"/>
+                        </TotalOutstandingAmount>
+                        <TotalExecutableAmount>
+                            <TotalAmount t-out="float_repr(refund_multiplier*TotalExecutableAmount['TotalAmount'], file_currency.decimal_places)"/>
+                            <EquivalentInEuros t-if="conversion_needed" t-out="float_repr(refund_multiplier*TotalExecutableAmount['EquivalentInEuros'], eur.decimal_places)"/>
+                        </TotalExecutableAmount>
+                        <InvoiceCurrencyCode t-out="InvoiceCurrencyCode"/>
+                    </Batch>
+                </FileHeader>
+                <Parties>
+                    <SellerParty>
+                        <t t-call="l10n_es_edi_facturae.business_type">
+                            <t t-set="partner" t-value="self_party if is_outstanding else other_party"/>
+                            <t t-set="partner_country_code" t-value="self_party_country_code if is_outstanding else other_party_country_code"/>
+                            <t t-set="partner_phone" t-value="False if is_outstanding else other_party_phone"/>
+                            <t t-set="partner_name" t-value="{} if is_outstanding else other_party_name"/>
+                        </t>
+                    </SellerParty>
+                    <BuyerParty>
+                        <t t-call="l10n_es_edi_facturae.business_type">
+                            <t t-set="partner" t-value="other_party if is_outstanding else self_party"/>
+                            <t t-set="partner_country_code" t-value="other_party_country_code if is_outstanding else self_party_country_code"/>
+                            <t t-set="partner_phone" t-value="other_party_phone if is_outstanding else False"/>
+                            <t t-set="partner_name" t-value="other_party_name if is_outstanding else {}"/>
+                        </t>
+                    </BuyerParty>
+                </Parties>
+                <Invoices>
+                    <t t-foreach="Invoices" t-as="invoice"><t t-call="l10n_es_edi_facturae.invoice_type"/></t>
+                </Invoices>
+            </fac:Facturae>
+        </template>
+    </data>
+</odoo>

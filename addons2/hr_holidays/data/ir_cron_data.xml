@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <record id="hr_leave_allocation_cron_accrual" model="ir.cron">
+        <field name="name">Accrual Time Off: Updates the number of time off</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
+        <field name="state">code</field>
+        <field name="code">model._update_accrual()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+    </record>
+
+    <record id="hr_leave_cron_cancel_invalid" model="ir.cron">
+        <field name="name">Time Off: Cancel invalid leaves</field>
+        <field name="model_id" ref="model_hr_leave"/>
+        <field name="state">code</field>
+        <field name="code">model._cancel_invalid_leaves()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="True"/>
+    </record>
+</odoo>

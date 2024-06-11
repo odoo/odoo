@@ -1,0 +1,99 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Wil Odoo, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Wil Odoo, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+"Qualsiasi nuova data di blocco di tutti gli utenti deve essere posteriore (o"
+" uguale) alla precedente."
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Aziende"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for accountants is irreversible and can't be removed."
+msgstr ""
+"Per i consulenti, la data di chiusura è irrevocabile e non può essere "
+"rimossa."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr ""
+"La nuova data di chiusura fiscale deve essere impostata dopo quella "
+"precedente."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr "La data di chiusura fiscale è irreversibile e non può essere rimossa."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Non si può bloccare un periodo che non è ancora terminato. Pertanto, la data"
+" di blocco di tutti gli utenti deve essere anteriore (o uguale) all'ultimo "
+"giorno del mese precedente."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Non si può bloccare un periodo che non è ancora finito. Pertanto, la data di"
+" blocco delle imposte deve essere anteriore (o uguale) all'ultimo giorno del"
+" mese precedente."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot set stricter restrictions on accountants than on users. "
+"Therefore, the All Users Lock Date must be anterior (or equal) to the "
+"Invoice/Bills Lock Date."
+msgstr ""
+"Non è possibile configurare restrizioni più rigorose per i consulenti "
+"rispetto agli utenti. Pertanto, la data di chiusura per tutti gli utenti "
+"deve precedere (o essere uguale) alla data di chiusura per le fatture "
+"clienti/fornitori."

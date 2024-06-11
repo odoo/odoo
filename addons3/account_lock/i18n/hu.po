@@ -1,0 +1,98 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_lock
+# 
+# Translators:
+# Martin Trigaux, 2023
+# gezza <geza.nagy@oregional.hu>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+"Bármely új Összes felhasználó zárolás dátumának az előző dátumnál "
+"korábbinak, vagy azzal egyezőnek kell lennie."
+
+#. module: account_lock
+#: model:ir.model,name:account_lock.model_res_company
+msgid "Companies"
+msgstr "Vállalatok"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The lock date for accountants is irreversible and can't be removed."
+msgstr ""
+"Könyvelők számára történő zárolás dátuma visszafordíthatatlan és nem lehet "
+"eltávolítani."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The new tax lock date must be set after the previous lock date."
+msgstr "Új adózási zárolási dátumnak az előző dátumnál későbbinek kell lennie"
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid "The tax lock date is irreversible and can't be removed."
+msgstr ""
+"Az adózási zárolási dátum visszafordíthatatlan és nem lehet eltávolítani."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Nem lehet olyan periódust zárolni, ami még nem ért véget. Az Összes "
+"felhasználó zárolás dátumának emiatt az előző hónap utolsó napjával "
+"megegyezőnek, vagy azt megelőzőnek kell lennie."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
+msgstr ""
+"Nem lehet olyan periódust zárolni, ami még nem ért véget. Az adó zárolás "
+"dátumának emiatt az előző hónap utolsó napjával megegyezőnek, vagy azt "
+"megelőzőnek kell lennie."
+
+#. module: account_lock
+#. odoo-python
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"You cannot set stricter restrictions on accountants than on users. "
+"Therefore, the All Users Lock Date must be anterior (or equal) to the "
+"Invoice/Bills Lock Date."
+msgstr ""
+"Nem lehet a felhasználókénál szigorúbb korlátozásokat beállítani a könyvelők"
+" számára. Az Összes felhasználó zárolás dátumának a Számla zárolási "
+"dátumával megegyezőnek, vagy azt megelőzőnek kell lennie."

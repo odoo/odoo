@@ -1,0 +1,56 @@
+
+#o_employee_right {
+    @include media-breakpoint-up(lg) {
+        border-left: $border-width solid $o-form-separator-color;
+    }
+
+    .o_org_chart_entry {
+        .o_media_object {
+            width: $o-hr-org-chart-entry-pic-small-size;
+            height: $o-hr-org-chart-entry-pic-small-size;
+            background-size: cover;
+            background-position: center center;
+        }
+
+        &.o_org_chart_entry_self .o_media_object {
+            width: $o-hr-org-chart-entry-pic-size;
+            height: $o-hr-org-chart-entry-pic-size;
+        }
+
+        &:not(.o_org_chart_entry_self):hover .o_media_object {
+            box-shadow: 0 0 0 $border-width*2 $info;
+        }
+    }
+
+    .o_org_chart_entry_self_container.o_org_chart_has_managers {
+        margin-left: $o-hr-org-chart-entry-pic-small-size * .25;
+    }
+
+    .o_org_chart_group_down.o_org_chart_has_managers {
+        padding-left: $o-hr-org-chart-entry-pic-size * .6;
+    }
+
+    // ORGANIGRAM LINES
+    .o_org_chart_group_up .o_treeEntry {
+        --treeEntry-padding-h: 0px;
+        --treeEntry--before-top: 50%;
+        --treeEntry--after-display: none;
+        --treeEntry--beforeAfter-left: #{$o-hr-org-chart-entry-pic-small-size * .5};
+    }
+
+    .o_org_chart_entry_self_container .o_treeEntry {
+        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-small-size * .5};
+        --treeEntry-padding-v: #{$o-hr-org-chart-entry-pic-size * .25};
+    }
+
+    .o_org_chart_group_down .o_treeEntry {
+        --treeEntry-padding-h: #{$o-hr-org-chart-entry-pic-size};
+        --treeEntry-padding-v: #{$o-hr-org-chart-entry-pic-small-size * .5};
+    }
+}
+
+// Right to Left specific style to flip the popover arrow
+.o_rtl .o_org_chart_popup.popover .arrow {
+    left: 100%;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_sale.SaleOrderRow">
+        <div class="order-row"
+        t-att-class="{ highlight: highlighted }"
+        t-on-click="() => this.props.onClickSaleOrder(props.order)">
+            <div class="col name p-2">
+                <div t-if="ui.isSmall">Order</div>
+                <div><t t-esc="name"/></div>
+            </div>
+            <div class="col date p-2">
+                <div t-if="ui.isSmall">Date</div>
+                <div><t t-esc="date"/></div>
+            </div>
+            <div class="col partner p-2">
+                <div t-if="ui.isSmall">Customer</div>
+                <div><t t-esc="partner"/></div>
+            </div>
+            <div class="col salesman p-2">
+                <div t-if="ui.isSmall">Salesman</div>
+                <div><t t-esc="salesman"/></div>
+            </div>
+            <div class="col end total p-2">
+                <div t-if="ui.isSmall">Total</div>
+                <div class="flex-container d-flex flex-column h-100">
+                    <div >
+                        <t t-esc="total"/>
+                    </div>
+                    <div t-if="showAmountUnpaid" class="text-muted">
+                        (left: <t t-esc="amountUnpaidRepr"/>)
+                    </div>
+                </div>
+            </div>
+            <div class="col state p-2">
+                <div t-if="ui.isSmall">State</div>
+                <div><t t-esc="state"/></div>
+            </div>
+        </div>
+    </t>
+
+</templates>

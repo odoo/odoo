@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderWidget">
+        <t t-if="props.lines?.length">
+            <div t-ref="scrollable" class="order-container bg-view overflow-y-auto flex-grow-1 d-flex flex-column text-start">
+                <t t-foreach="props.lines" t-as="line" t-key="line_index">
+                    <t t-slot="default" line="line"/>
+                </t>
+            </div>
+            <div t-if="props.total or props.tax" class="order-summary w-100 py-2 px-3 bg-100 text-end fw-bolder fs-2 lh-sm">
+                Total:
+                <span t-esc="props.total" class="total"/>
+                <div t-if="props.tax" class="fs-6 text-muted subentry">
+                    Taxes: <span t-esc="props.tax" class="tax"/>
+                </div>
+            </div>
+            <t t-slot="details"/>
+        </t>
+        <t t-else="">
+            <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()"/>
+            <t t-slot="details"/>
+        </t>
+    </t>
+</templates>

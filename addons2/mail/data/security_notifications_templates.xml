@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template for security update notification (password/login/mail changed, ...) -->
+        <template id="account_security_setting_update">
+<p>
+    <span>Dear <t t-out="user.name"/>,</span>
+</p>
+<p>
+    <span t-out="security_update_text"/>
+    <span>(<t
+        t-out="update_datetime"
+        t-options='{"widget": "datetime", "hide_seconds": True}'/>).</span>
+</p>
+<p>
+    <span>If this was done by you:</span><br/>
+    <ul>
+        <li>You can safely ignore this message</li>
+    </ul>
+</p>
+<p>
+    <span>If this was not done by you:</span>
+</p>
+<ul class="o_mail_account_security_suggestions">
+    <li t-if="suggest_password_reset">
+        <span>We suggest you start by</span>
+        <a t-att-href="password_reset_url">
+            Resetting Your Password
+        </a>
+    </li>
+    <li>
+        Contact your administrator
+    </li>
+</ul>
+        </template>
+    </data>
+</odoo>

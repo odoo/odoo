@@ -1,0 +1,72 @@
+.o-mail-Message {
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+
+    &.o-highlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
+    }
+}
+
+.o-mail-Message-sidebar {
+    flex-basis: $o-mail-Message-sidebarWidth;
+    max-width: $o-mail-Message-sidebarWidth;
+
+    .o-mail-Message-date {
+        font-size: 0.75rem;
+    }
+}
+
+.o-mail-Message-avatarContainer {
+    width: $o-mail-Avatar-size;
+    height: $o-mail-Avatar-size;
+}
+
+.o-mail-Message-body > p {
+    margin-bottom: 0 !important;
+
+    &:last-of-type:has(~ .o-mail-Message-edited) {
+        display: inline-block;
+    }
+}
+
+
+.o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
+    flex-direction: row-reverse;
+
+    .o-mail-Message-core, .o-mail-Message-textContent {
+        flex-direction: row-reverse;
+    }
+    .o-mail-Message-header {
+        justify-content: flex-end;
+    }
+    .o-mail-Message-author {
+        display: none;
+    }
+}
+
+.o-mail-Message-actions {
+    z-index: $o-mail-NavigableList-zIndex - 3;
+
+    &.o-expanded {
+        z-index: $o-mail-NavigableList-zIndex - 2;
+    }
+
+    button:hover, .focus {
+        background-color: $o-gray-200 !important;
+    }
+}
+
+.o-mail-Message-moreMenu {
+    z-index: $o-mail-NavigableList-zIndex;
+}
+
+.o-mail-Message-searchHighlight {
+    background: rgba($warning, 0.75);
+}
+
+.o-mail-Message-starred {
+    color: $o-main-favorite-color;
+}
+
+.o-mail-Message-translated {
+    color: $o-enterprise-action-color;
+}

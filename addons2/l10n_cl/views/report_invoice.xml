@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- this header can be used on any Chilean report -->
+    <template id="custom_header">
+
+        <t t-set="report_date" t-value="o.invoice_date"/>
+        <t t-set="report_number" t-value="int(o.l10n_latam_document_number)"/>
+        <t t-set="pre_printed_report" t-value="report_type == 'pdf'"/>
+        <t t-set="report_name" t-value="o.l10n_latam_document_type_id.name"/>
+        <t t-set="header_address" t-value="o.company_id.partner_id"/>
+        <t t-set="custom_footer">
+            <t t-call="l10n_cl.custom_footer"/>
+        </t>
+
+        <div>
+            <div class="row">
+                <div name="left-upper-side" class="col-8">
+                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                         style="max-height: 45px;" alt="Logo"/>
+                    <br/>
+                    <strong>
+                        <span t-field="o.company_id.partner_id.name"/>
+                    </strong>
+                    <br/>
+                    <span name="company_activity" class="fst-italic" t-field="o.company_id.report_header"/>
+                    <div/>
+                    <t t-out="' - '.join([item for item in [
+                        ', '.join([item for item in [header_address.street, header_address.street2] if item]),
+                        header_address.city,
+                        header_address.state_id and header_address.state_id.name,
+                        header_address.zip,
+                        header_address.country_id and header_address.country_id.name] if item])"/>
+                    <span t-if="header_address.phone">
+                        <br/>
+                    </span>
+                    <span t-if="header_address.phone" style="white-space: nowrap;"
+                          t-out="'Tel: ' + header_address.phone"/>
+                    <span t-if="header_address.website">
+                        <span t-att-style="'color: %s;' % o.company_id.primary_color"
+                              t-out="'- Web: %s' %' - '.join([item for item in [header_address.website.replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
+                    </span>
+                </div>
+                <div name="right-upper-side" class="col-4">
+                    <div class="row">
+                        <div name="right-upper-side" class="col-12">
+                            <div class="row border border-dark">
+                                <div class="col-12 text-center">
+                                    <h6 t-att-style="'color: %s;' % o.company_id.primary_color">
+                                        <strong t-att-style="'color: %s;' % o.company_id.primary_color">
+                                            <br/>
+                                            <span style="line-height: 180%;">RUT:</span>
+                                            <t t-if="o.company_id.partner_id.vat">
+                                                <span t-out="o.company_id.partner_id._format_dotted_vat_cl(o.company_id.partner_id.vat)"/>
+                                            </t>
+                                            <br/>
+                                            <span class="text-uppercase" t-out="report_name"/>
+                                            <br/>
+                                            <span>Nº:</span>
+                                            <span style="line-height: 200%;" t-out="report_number"/>
+                                        </strong>
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-12 text-center" t-att-style="'color: %s;' % o.company_id.primary_color"
+                                     name="regional-office"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </template>
+
+
+    <template id="informations">
+        <div id="informations" class="row mt8 mb8">
+            <div class="col-6">
+                <strong>
+                    <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date:</span>
+                </strong>
+                <span t-out="o.invoice_date" t-options='{"widget": "date"}'/>
+                <br/>
+
+                <strong>Customer:</strong>
+                <span t-field="o.partner_id.name"/>
+                <br/>
+
+                <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id">
+                    <strong>
+                        <t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:
+                    </strong>
+                    <span t-out="o.partner_id.vat"/>
+                    <br/>
+                </t>
+                <strong>Address:</strong>
+                <span t-out="o.partner_id._display_address(without_company=True)"/>
+            </div>
+            <div class="col-6">
+                <strong>Due Date:</strong>
+                <span t-out="o.invoice_date_due" t-options='{"widget": "date"}'/>
+                <br/>
+
+                <strong>Payment Terms:</strong>
+                <span t-out="o.invoice_payment_term_id.name or ''"/>
+
+
+                <t t-if="o.invoice_incoterm_id">
+                    <br/>
+                    <strong>Incoterm:</strong>
+                    <span t-if="o.incoterm_location">
+                        <span t-field="o.invoice_incoterm_id.code"/> -
+                        <span t-field="o.incoterm_location"/>
+                    </span>
+                    <span t-else="" t-field="o.invoice_incoterm_id.name" class="m-0"/>
+                </t>
+
+                <t t-if="o.partner_shipping_id and o.partner_id not in o.partner_shipping_id" >
+                    <br/>
+                    <strong>Delivery Address:</strong>
+                    <span t-out="o.partner_shipping_id._display_address(without_company=True)"/>
+                </t>
+                <br/>
+                <strong>GIRO:</strong>
+                <span t-out="o.partner_id.industry_id.name or ''"/>
+            </div>
+        </div>
+        <div id="references" class="row">
+            <div name="references" class="col-12 text-center"/>
+        </div>
+    </template>
+
+    <template id="custom_footer">
+        <div name="footer_left_column" class="col-8 text-center"/>
+    </template>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+
+        <t t-set="o" position="after">
+            <t t-set="custom_header" t-value="'l10n_cl.custom_header'"/>
+        </t>
+
+        <!-- remove default partner address -->
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="replace">
+            <div name="address_not_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
+            <div name="address_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="replace">
+            <div name="no_shipping"/>
+        </xpath>
+
+        <xpath expr="//h2" position="replace"/>
+
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
+            <t t-set="l10n_cl_values" t-value="line._l10n_cl_prices_and_taxes()"/>
+        </t>
+
+        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">line.price_unit</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+
+        <xpath expr="//span[@id='line_tax_ids']" position="attributes">
+            <attribute name="t-out">', '.join(map(lambda x: (x.description or x.name), line.tax_lines))</attribute>
+        </xpath>
+
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
+            <attribute name="t-value">current_subtotal + l10n_cl_values['price_subtotal']</attribute>
+        </t>
+
+        <xpath expr="//th[@name='th_subtotal']/span" position="replace">
+            <span>Amount</span>
+        </xpath>
+
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">l10n_cl_values['price_subtotal']</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </span>
+
+        <t t-set="tax_totals" position="attributes">
+            <attribute name="t-value">o._l10n_cl_get_invoice_totals_for_report()</attribute>
+        </t>
+
+        <xpath expr="//th[@name='th_taxes']" position="replace"/>
+        <xpath expr="//span[@id='line_tax_ids']/.." position="replace"/>
+
+        <span name="payment_term" position="replace"/>
+        <xpath expr="//span[@t-field='o.payment_reference']/../.." position="replace"/>
+
+        <!-- replace information section and usage chilean style -->
+        <div id="informations" position="replace">
+            <t t-call="l10n_cl.informations"/>
+        </div>
+
+        <xpath expr="//div[@id='right-elements']" position="after">
+            <div name="stamp" class="text-center col-6"/>
+            <div name="transferable-table" class="col-6"/>
+            <div name="transferable-legend" class="col-6"/>
+        </xpath>
+
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_cl.report_invoice_document'"
+               t-call="l10n_cl.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

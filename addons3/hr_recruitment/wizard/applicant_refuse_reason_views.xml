@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="applicant_get_refuse_reason_view_form" model="ir.ui.view">
+            <field name="name">applicant.get.refuse.reason.form</field>
+            <field name="model">applicant.get.refuse.reason</field>
+            <field name="arch" type="xml">
+                <form string="Refuse Reason">
+                    <group col="1">
+                        <field name="refuse_reason_id" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
+                        <label for="send_mail" invisible="not refuse_reason_id" colspan="1"/>
+                        <span colspan="1" class="text-nowrap" invisible="not refuse_reason_id">
+                            <field name="send_mail"/>
+                            to
+                            <field name="applicant_emails"/>
+                        </span>
+                        <field name="template_id" invisible="not send_mail" required="send_mail"/>
+                        <field name="applicant_ids" invisible="1"/>
+                    </group>
+                    <div class="alert alert-danger" role="alert" invisible="not applicant_without_email">
+                        <field name="applicant_without_email" class="mr4"/>
+                    </div>
+                    <footer>
+                        <button name="action_refuse_reason_apply" string="Refuse" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="applicant_get_refuse_reason_action" model="ir.actions.act_window">
+            <field name="name">Refuse Reason</field>
+            <field name="res_model">applicant.get.refuse.reason</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="applicant_get_refuse_reason_view_form"/>
+            <field name="target">new</field>
+        </record>
+</odoo>

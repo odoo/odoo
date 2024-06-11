@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="invoicing_settings" position="inside">
+                <setting help="Use this if setup with Reseller(E-Commerce)." name="ecommerce_reseller_setting" title="Manage Reseller(E-Commerce)" invisible="country_code != 'IN'">
+                    <field name="group_l10n_in_reseller"/>
+                </setting>
+                <setting help="Connect to NIC (National Informatics Center) to submit invoices on posting." name="electronic_invoices_in" invisible="country_code != 'IN'" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html#indian-e-invoicing">
+                    <field name="module_l10n_in_edi" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
+                <setting help="Connect to NIC (National Informatics Center) to submit e-waybill on posting." name="electronic_waybill_in" invisible="country_code != 'IN'" documentation="/applications/finance/accounting/fiscal_localizations/localizations/india.html#indian-e-waybill">
+                    <field name="module_l10n_in_edi_ewaybill" class="oe_inline" widget="upgrade_boolean"/>
+                </setting>
+            </block>
+            <xpath expr="//app[@name='account']" position="inside">
+                <div id="india_integration_section" invisible="1">
+                    <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
+                    </block>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

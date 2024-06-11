@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_view_partner_form" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.vat.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="readonly">parent_id</attribute>
+                <attribute name="required">l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="before">
+                <field name="l10n_in_gst_treatment" invisible="'IN' not in fiscal_country_codes" readonly="parent_id"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="l10n_in_pan" placeholder="e.g. ABCTY1234D" invisible="'IN' not in fiscal_country_codes" />
+            </xpath>
+            <xpath expr="//sheet" position="before">
+                <field name="display_pan_warning" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                        invisible="not display_pan_warning">
+                        PAN number is not same as the 3rd to 12th characters of the GST number.
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
