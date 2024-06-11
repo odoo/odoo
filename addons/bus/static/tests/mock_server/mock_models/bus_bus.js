@@ -48,11 +48,8 @@ export class BusBus extends models.Model {
             const { channels } = data;
             this.channelsByUser[this.env?.uid] = channels;
         }
-        const callbackFn = registry
-            .category("mock_server_websocket_callbacks")
-            .get(event_name, null);
-        if (callbackFn) {
-            callbackFn(data);
+        for (const fn of registry.category("mock_server_websocket_callbacks").get(event_name, [])) {
+            fn(data);
         }
     }
 
