@@ -15,16 +15,6 @@ class PasskeyTest(TransactionCase):
     def setUpClass(self):
         super().setUpClass()
 
-        # Needs a fake request in order to call methods protected with check_identity
-        fake_req = DotDict({
-            'httprequest': DotDict({
-                'environ': {'REMOTE_ADDR': 'localhost'},
-                'cookies': {},
-            }),
-            'session': {'identity-check-last': time.time()},
-        })
-        _request_stack.push(fake_req)
-
         self.admin_user = self.env.ref('base.user_admin')
         self.demo_user = self.env.ref('base.user_demo')
 
@@ -35,7 +25,7 @@ class PasskeyTest(TransactionCase):
 
         self.cr.execute(SQL(
             query,
-            'test_passkey_1',
+            'test-yubikey-nano',
             'c2dc34bbb0fcae9ee7abb5815850adfc5461107a54e841ef1204e7dc106277937e504e5af570b34bc35a56e87bc9d173',
             'pQECAyYgASFYIMLcNLuw_K6e56u1gVioLcAJF8v8eUw7kfqTOqDdl7nFIlggFSs_nZWewd_JqzeWzXmJ6Wmn_nKuo82rCdoOZ-oewOU=',
             self.admin_user.id,
@@ -43,13 +33,34 @@ class PasskeyTest(TransactionCase):
 
         self.cr.execute(SQL(
             query,
-            'test_passkey_2',
+            'test-keepassxc',
             'cba689549b2fbd24a46f04de199d456d03ff8c20e1a3b1013f066afb79408d0d',
             'pQECAyYgASFYICjw-NoCHMkYYbRo8Q4SgJ4tZc8BSEmuEI0XmA6hUqR_IlggjtuBgyhwnr7PqABF2o8vCniMVa7_mTG6_l9Pc4eI4mo=',
             self.demo_user.id,
         ))
 
-        _request_stack.pop()
+        with MockRequest(self.env) as request:
+            request.session['identity-check-last'] = time.time()
+            request.session['webauthn_challenge'] = b'R\x86\xba3\x98\xc4?\xb27N\x8c\x8a\xf5\x004\xbd\xff\x08r\xc7\xb3}\xe2d\xd2\xb8,\xd6\x92\xd4Z\xb3 \x17\xdb\xdd\xd3\xee\xc3\xbf\x98\x95\xdf\x15\xbb\xaf\xbd>b\xa90y\x15\xe1\x00)\x83>hG*\xd0\x08y'
+            yubikey = self.env['auth.passkey.key.name'].with_user(self.admin_user).create({'name': 'test-yubikey'})
+            yubikey.make_key({
+                "id": "L2p6jvcWuCMTRmkZHKqqvQbz0Dhk3JbJOx1F8ci99nSNjlfx3Z7nkigMdUACLggB",
+                "rawId": "L2p6jvcWuCMTRmkZHKqqvQbz0Dhk3JbJOx1F8ci99nSNjlfx3Z7nkigMdUACLggB",
+                "response": {
+                    "attestationObject": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjCSZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2PFAAAAAgAAAAAAAAAAAAAAAAAAAAAAMC9qeo73FrgjE0ZpGRyqqr0G89A4ZNyWyTsdRfHIvfZ0jY5X8d2e55IoDHVAAi4IAaUBAgMmIAEhWCAvanqO9xa4IxNGaRkcMSyBudC-JDZYY9gyMqknP2IkUiJYINqumy9viKCeo_xpFU3XzyssfEReXvMM1_fmZN-wMpDPoWtjcmVkUHJvdGVjdAI",
+                    "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiVW9hNk01akVQN0kzVG95SzlRQTB2ZjhJY3NlemZlSmswcmdzMXBMVVdyTWdGOXZkMC03RHY1aVYzeFc3cjcwLVlxa3dlUlhoQUNtRFBtaEhLdEFJZVEiLCJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjgwNjkiLCJjcm9zc09yaWdpbiI6ZmFsc2V9",
+                    "transports": [
+                    "nfc",
+                    "usb"
+                    ],
+                    "publicKeyAlgorithm": -7,
+                    "publicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEL2p6jvcWuCMTRmkZHDEsgbnQviQ2WGPYMjKpJz9iJFLarpsvb4ignqP8aRVN188rLHxEXl7zDNf35mTfsDKQzw",
+                    "authenticatorData": "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2PFAAAAAgAAAAAAAAAAAAAAAAAAAAAAMC9qeo73FrgjE0ZpGRyqqr0G89A4ZNyWyTsdRfHIvfZ0jY5X8d2e55IoDHVAAi4IAaUBAgMmIAEhWCAvanqO9xa4IxNGaRkcMSyBudC-JDZYY9gyMqknP2IkUiJYINqumy9viKCeo_xpFU3XzyssfEReXvMM1_fmZN-wMpDPoWtjcmVkUHJvdGVjdAI"
+                },
+                "type": "public-key",
+                "clientExtensionResults": {},
+                "authenticatorAttachment": "cross-platform"
+            })
 
     def setUp(self):
         super().setUp()
@@ -59,7 +70,7 @@ class PasskeyTest(TransactionCase):
 
     def test_authentication(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'http://localhost:8069')
-        # Yubikey Nano
+        # test-yubikey-nano
         auth = {
             "id": "wtw0u7D8rp7nq7WBWFCt_FRhEHpU6EHvEgTn3BBid5N-UE5a9XCzS8NaVuh7ydFz",
             "rawId": "wtw0u7D8rp7nq7WBWFCt_FRhEHpU6EHvEgTn3BBid5N-UE5a9XCzS8NaVuh7ydFz",
@@ -81,9 +92,31 @@ class PasskeyTest(TransactionCase):
             with self.assertRaises(Exception):
                 self.env['res.users']._login(get_db_name(), credential, None)
 
-    def test_verification(self):
+    def test_check_identity_admin(self):
+        # test-yubikey
+        auth = {
+            "id": "L2p6jvcWuCMTRmkZHKqqvQbz0Dhk3JbJOx1F8ci99nSNjlfx3Z7nkigMdUACLggB",
+            "rawId": "L2p6jvcWuCMTRmkZHKqqvQbz0Dhk3JbJOx1F8ci99nSNjlfx3Z7nkigMdUACLggB",
+            "response": {
+                "authenticatorData": "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MFAAAAAw",
+                "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiREtydzVJZUZpTDB3X3k1b0IwUkFUUHJxRzFlRk9DMlA3eUVpWENzdEJSdVpZYlNCQmtBV2ZoQUlJbmtNcVdqWUlOOHZiS243SjNQTVhfVGh6bkhwcWciLCJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjgwNjkiLCJjcm9zc09yaWdpbiI6ZmFsc2V9","signature":"MEUCIQD5iaPp48QMS3amx4PS89kv_EBAo3bBkaWnLzWlSgFSXgIgLWKEv9xR_ZwVXZbw2zx459RKbrQuAcd-UqD4gJw1lWY",
+                "userHandle": "Mg"
+            },
+            "type": "public-key",
+            "clientExtensionResults": {},
+            "authenticatorAttachment": "cross-platform"
+        }
+        webauthn_challenge = b'\x0c\xaa\xf0\xe4\x87\x85\x88\xbd0\xff.h\x07D@L\xfa\xea\x1bW\x858-\x8f\xef!"\\+-\x05\x1b\x99a\xb4\x81\x06@\x16~\x10\x08"y\x0c\xa9h\xd8 \xdf/l\xa9\xfb\'s\xcc_\xf4\xe1\xceq\xe9\xaa'
+        with MockRequest(self.env) as request:
+            request.session['webauthn_challenge'] = webauthn_challenge
+            idcheck = self.env['res.users.identitycheck'].with_user(self.admin_user).create({'auth_method': 'webauthn'})
+            idcheck.password = json.dumps(auth)
+            idcheck._check_identity()
+
+    def test_check_identity_demo(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')
         # This is an emulated key by KeePassXC that does not support sign_count
+        # test-keepassxc
         auth = {
             "id": "y6aJVJsvvSSkbwTeGZ1FbQP_jCDho7EBPwZq-3lAjQ0",
             "rawId": "y6aJVJsvvSSkbwTeGZ1FbQP_jCDho7EBPwZq-3lAjQ0",
@@ -123,6 +156,7 @@ class PasskeyTest(TransactionCase):
 
     def test_verification_only_self(self):
         self.env['ir.config_parameter'].sudo().set_param('web.base.url', 'https://localhost:8888')
+        # test-keepassxc (belongs to demo_user)
         auth = {
             "id": "y6aJVJsvvSSkbwTeGZ1FbQP_jCDho7EBPwZq-3lAjQ0",
             "rawId": "y6aJVJsvvSSkbwTeGZ1FbQP_jCDho7EBPwZq-3lAjQ0",
