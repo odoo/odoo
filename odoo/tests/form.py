@@ -106,9 +106,16 @@ class Form:
         assert isinstance(record, BaseModel)
         assert len(record) <= 1
 
+        onchange_readonly = False
+        for cls in record.__class__.mro():
+            if hasattr(cls, 'onchange') and hasattr(cls.onchange, '_readonly'):
+                onchange_readonly = cls.onchange._readonly
+                break
+
         # use object.__setattr__ to bypass Form's override of __setattr__
         object.__setattr__(self, '_record', record)
         object.__setattr__(self, '_env', record.env)
+        object.__setattr__(self, '_onchange_readonly', onchange_readonly)
 
         # determine view and process it
         if isinstance(view, BaseModel):
@@ -575,7 +582,16 @@ class Form:
                 record = record.with_context(**context)
 
         values = self._get_onchange_values()
+
+        if self._onchange_readonly:
+            self._env.flush_all()
+
         result = record.onchange(values, field_names, self._view['fields_spec'])
+
+        if self._onchange_readonly:
+            # WIP
+            pass
+
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
@@ -642,6 +658,15 @@ class O2MForm(Form):
         object.__setattr__(self, '_record', model)
         object.__setattr__(self, '_env', model.env)
 
+        onchange_readonly = False
+        for cls in model.__class__.mro():
+            if hasattr(cls, 'onchange') and hasattr(cls.onchange, '_readonly'):
+                onchange_readonly = cls.onchange._readonly
+                break
+
+        # use object.__setattr__ to bypass Form's override of __setattr__
+        object.__setattr__(self, '_onchange_readonly', onchange_readonly)
+
         object.__setattr__(self, '_models_info', proxy._form._models_info)
         object.__setattr__(self, '_view', proxy._field_info['edition_view'])
 
@@ -653,6 +678,7 @@ class O2MForm(Form):
             self._values.update(vals)
             if vals.get('id'):
                 object.__setattr__(self, '_record', model.browse(vals['id']))
+
 
     def _get_modifier(self, field_name, modifier, *, view=None, vals=None):
         if modifier != 'required' and self._proxy._form._get_modifier(self._proxy._field, modifier):

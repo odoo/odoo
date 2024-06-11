@@ -1873,6 +1873,7 @@ class Base(models.AbstractModel):
 
             return { 'values': field_range, }
 
+    @api.readonly
     def onchange(self, values: dict, field_names: list[str], fields_spec: dict):
         """
         Perform an onchange on the given fields, and return the result.
