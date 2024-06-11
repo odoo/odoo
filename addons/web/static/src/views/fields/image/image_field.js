@@ -207,6 +207,13 @@ export class ImageField extends Component {
 export const imageField = {
     component: ImageField,
     displayName: _t("Image"),
+    supportedAttributes: [
+        {
+            label: _t("Alternative text"),
+            name: "alt",
+            type: "string",
+        },
+    ],
     supportedOptions: [
         {
             label: _t("Reload"),
