@@ -191,7 +191,7 @@ patch(Chatter.prototype, {
      */
     get toRecipientsText() {
         if (this.state.thread?.recipients.length === 0) {
-            return _t("No recipient");
+            return undefined;
         }
         const recipients = [...(this.state.thread?.recipients ?? [])]
             .slice(0, 5)
