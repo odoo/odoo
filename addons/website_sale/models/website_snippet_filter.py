@@ -84,6 +84,10 @@ class WebsiteSnippetFilter(models.Model):
 
                     if records.env.context.get('add2cart_rerender'):
                         res_product['_add2cart_rerender'] = True
+                else:
+                    res_product.update({
+                        'is_sample': True,
+                    })
         return res_products
 
     @api.model
