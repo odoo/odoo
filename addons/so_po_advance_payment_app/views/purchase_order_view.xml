@@ -1,0 +1,33 @@
+<odoo>
+	<data>
+
+		<record id="purchase_order_form_inherit" model="ir.ui.view">
+			<field name="name">purchase.order.form.inherit</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//notebook/page[@name='purchase_delivery_invoice']" position="after">
+					<page name="advance_payment_page" string="Advance Payment Information" groups="so_po_advance_payment_app.group_purchase_advance_payment">
+							<field name="payment_history_ids" readonly="1">
+							 <tree>
+								<field name="name" string="Name"/>
+								<field name="payment_date"/>
+								<field name="partner_id"/>
+								<field name="journal_id"/>
+								<field name="payment_method_id"/>
+								<field name="amount_currency" groups="base.group_multi_currency"/>
+								<field name="currency_id" groups="base.group_multi_currency"/>
+								<field name="advance_amount"/>
+								<field name="total_amount"/>
+								<field name="company_currency_id" invisible="1"/>
+							</tree>
+							</field>
+					</page>
+				</xpath>
+				<xpath expr="//button[@id='bid_confirm']" position="before">
+					<button class="oe_highlight" type="object" name="set_purchase_advance_payment" string=" Advance Payment" icon="fa-money" attrs="{'invisible': [('state', 'not in', ['draft'])]}" groups="so_po_advance_payment_app.group_purchase_advance_payment"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

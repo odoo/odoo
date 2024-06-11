@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Financial Reports -->
+        <record id="account_financial_report_profitandloss0"
+                model="account.financial.report">
+            <field name="name">Profit and Loss</field>
+            <field name="sign" eval="'-1'"/>
+            <field name="type">sum</field>
+        </record>
+
+        <record id="account_financial_report_income0"
+                model="account.financial.report">
+            <field name="name">Income</field>
+            <field name="sign" eval="'-1'"/>
+            <field name="sequence">1</field>
+
+            <field name="parent_id"
+                   ref="account_financial_report_profitandloss0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">sum</field>
+        </record>
+        <record id="account_financial_report_other_income0"
+                model="account.financial.report">
+            <field name="name">Other Income</field>
+            <field name="sequence">10</field>
+
+            <field name="parent_id"
+                   ref="account_financial_report_income0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids"
+                   eval="[(4,ref('account.data_account_type_other_income'))]"/>
+        </record>
+
+        <record id="financial_report_gross_profit"
+                model="account.financial.report">
+            <field name="name">Gross Profit</field>
+            <field name="parent_id"
+                   ref="account_financial_report_income0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">sum</field>
+            <field name="sequence">3</field>
+
+        </record>
+
+        <record id="financial_report_cost_of_revenue"
+                model="account.financial.report">
+            <field name="name">Cost of Revenue</field>
+            <field name="sequence">10</field>
+            <field name="parent_id"
+                   ref="financial_report_gross_profit"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids"
+                   eval="[(4,ref('account.data_account_type_direct_costs'))]"/>
+        </record>
+
+        <record id="account_financial_report_operating_income0"
+                model="account.financial.report">
+            <field name="name">Operating Income</field>
+            <field name="sequence">1</field>
+            <field name="parent_id"
+                   ref="financial_report_gross_profit"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids"
+                   eval="[(4,ref('account.data_account_type_revenue'))]"/>
+        </record>
+
+        <record id="account_financial_report_expense0"
+                model="account.financial.report">
+            <field name="name">Expense</field>
+            <field name="sign" eval="'-1'"/>
+            <field name="sequence">2</field>
+            <field name="parent_id"
+                   ref="account_financial_report_profitandloss0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids"
+                   eval="[(4,ref('account.data_account_type_expenses')), (4,ref('account.data_account_type_direct_costs')), (4,ref('account.data_account_type_depreciation'))]"/>
+        </record>
+
+        <record id="account_financial_report_balancesheet0"
+                model="account.financial.report">
+            <field name="name">Balance Sheet</field>
+            <field name="type">sum</field>
+        </record>
+
+        <record id="account_financial_report_assets0"
+                model="account.financial.report">
+            <field name="name">Assets</field>
+            <field name="parent_id"
+                   ref="account_financial_report_balancesheet0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids"
+                   eval="[(4,ref('account.data_account_type_receivable')), (4,ref('account.data_account_type_liquidity')), (4,ref('account.data_account_type_current_assets')), (4,ref('account.data_account_type_non_current_assets'), (4,ref('account.data_account_type_prepayments'))), (4,ref('account.data_account_type_fixed_assets'))]"/>
+        </record>
+
+        <record id="account_financial_report_liabilitysum0"
+                model="account.financial.report">
+            <field name="name">Liability</field>
+            <field name="sequence">1</field>
+            <field name="parent_id"
+                   ref="account_financial_report_balancesheet0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">sum</field>
+        </record>
+
+        <record id="account_financial_report_liability0"
+                model="account.financial.report">
+            <field name="name">Liability</field>
+            <field name="parent_id"
+                   ref="account_financial_report_liabilitysum0"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">account_type</field>
+            <field name="account_type_ids"
+                   eval="[(4,ref('account.data_account_type_payable')), (4,ref('account.data_account_type_equity')), (4,ref('account.data_account_type_current_liabilities')), (4,ref('account.data_account_type_non_current_liabilities'))]"/>
+        </record>
+
+        <record id="account_financial_report_profitloss_toreport0"
+                model="account.financial.report">
+            <field name="name">Profit (Loss) to report</field>
+            <field name="parent_id"
+                   ref="account_financial_report_liabilitysum0"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">account_report</field>
+            <field name="account_report_id"
+                   ref="account_financial_report_profitandloss0"/>
+        </record>
+
+    </data>
+</odoo>

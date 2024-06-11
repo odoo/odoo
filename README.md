@@ -26,7 +26,75 @@ a full-featured <a href="https://www.odoo.com">Open Source ERP</a> when you inst
 Getting started with Odoo
 -------------------------
 
-For a standard installation please follow the <a href="https://www.odoo.com/documentation/15.0/administration/install.html">Setup instructions</a>
-from the documentation.
+**Table of contents**
 
-To learn the software, we recommend the <a href="https://www.odoo.com/slides">Odoo eLearning</a>, or <a href="https://www.odoo.com/page/scale-up-business-game">Scale-up</a>, the <a href="https://www.odoo.com/page/scale-up-business-game">business game</a>. Developers can start with <a href="https://www.odoo.com/documentation/15.0/developer/howtos.html">the developer tutorials</a>
+<!-- TOC -->
+
+- [1. Setup development environment](#1-setup-development-environment)
+- [2. Dependencies](#2-dependencies)
+- [3. Work with odoo project everyday](#3-work-with-odoo-project-everyday)
+
+## 1. Setup development environment
+### Prerequisites
+1. Python
+
+  * Odoo requires Python 3.7 or later to run. Use your preferred package manager (homebrew, macports) to download and install Python 3 [python3](https://formulae.brew.sh/formula/python@3.10) on your machine if it is not already done.
+
+
+```
+brew install python@3.10
+python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade setuptools
+```
+
+
+2. PostgreSQL
+ 
+  * Odoo uses PostgreSQL as database management system. Use [postgres.app](https://postgresapp.com/) to download and install PostgreSQL (supported version: 10.0 and later).
+
+  * By default, the only user is postgres but Odoo forbids connecting as postgres, so you need to create a new PostgreSQL user:
+
+```
+ sudo -u postgres createuser -s $USER
+ createdb $USER
+```
+ * Use [PgAdmin4](https://www.pgadmin.org/download/) to download PostgreSQL Tools.
+
+3. Wkhtmltopdf
+
+* wkhtmltopdf is not installed through pip and must be installed manually  for it to support headers and footers. See our [wiki](https://github.com/odoo/odoo/wiki/Wkhtmltopdf) for more details on the various versions.
+
+```
+brew install --cask wkhtmltopdf
+```
+
+4. psycopg2-binary 
+
+* To install psycopg2-binary 
+
+```
+ pip3 install psycopg2-binary
+```
+## 2. Dependencies
+
+* Odoo dependencies are listed in the requirements.txt file located at the root of the Odoo community directory.
+
+```
+ cd [proj-path]
+ pip3 install setuptools wheel
+ pip3 install -r requirements.txt
+```
+
+## 3. Work with odoo project everyday
+
+```
+ cd [proj-path]
+ python3 odoo-bin --addons-path=addons -d mydb
+```
+* To run project  in browser: 
+
+```
+http://localhost:8069/
+```
+
+ 

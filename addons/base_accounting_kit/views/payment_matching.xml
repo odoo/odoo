@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <record id="payment_matching_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.payment</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_purchase_refund']" position="after">
+                <div>
+                    <a type="object" name="action_open_reconcile" groups="account.group_account_user">Payments Matching</a>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='dashboard_bank_cash_left']/*[1]" position="before">
+                <t t-if="dashboard.number_to_reconcile > 0">
+                    <button type="object" name="action_open_reconcile" class="btn btn-primary" groups="account.group_account_user"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
+                </t>
+            </xpath>
+        </field>
+  </record>
+    <record id="matching_account_payment" model="ir.ui.view">
+            <field name="name">account.payment.matching</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_open_statements']" position="after">
+                     <button class="oe_stat_button" name="open_payment_matching_screen"
+                                    string="Payment Matching" type="object"
+                                    groups="account.group_account_user"
+                                    attrs="{'invisible': ['|', ('is_reconciled', '=', True), ('state', '!=', 'posted')]}"
+                                    icon="fa-dollar"/>
+                    <field name="is_reconciled" invisible="1"/>
+                </xpath>
+            </field>
+  </record>
+</odoo>

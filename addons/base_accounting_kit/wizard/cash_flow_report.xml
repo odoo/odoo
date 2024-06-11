@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="cash_flow_report_view" model="ir.ui.view">
+        <field name="name">Cash Flow Statement</field>
+        <field name="model">cash.flow.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="replace"/>
+            <field name="target_move" position="before">
+                <field name="account_report_id" domain="[('parent_id','=',False)]" readonly="1"/>
+                <field name="enable_filter"/>
+            </field>
+            <field name="target_move" position="after">
+                <field name="debit_credit"/>
+            </field>
+            <field name="journal_ids" position="after">
+                <group>
+                    <field name="company_id" position="replace"/>
+                </group>
+                <notebook tabpos="up" colspan="4" attrs="{'invisible': [('enable_filter','=',False)]}">
+                    <page string="Comparison" name="comparison">
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+            <field name="journal_ids" position="replace"/>
+        </field>
+    </record>
+
+    <record id="action_cash_flow_report" model="ir.actions.act_window">
+        <field name="name">Cash Flow Statement</field>
+        <field name="res_model">cash.flow.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="cash_flow_report_view"/>
+        <field name="target">new</field>
+        <field name="context"
+               eval="{'default_account_report_id':ref('base_accounting_kit.account_financial_report_cash_flow0')}"/>
+    </record>
+    <menuitem id="menu_account_cash_flow_report"
+              name="Cash Flow Statement"
+              sequence="5"
+              action="action_cash_flow_report"
+              parent="base_accounting_kit.account_reports_generic_statements"/>
+
+</odoo>
