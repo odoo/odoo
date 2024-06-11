@@ -33,6 +33,7 @@ class HrApplicant(models.Model):
         job_id = self.env.context.get('active_id')
         if not job_id:
             self.matching_skill_ids = False
+            self.missing_skill_ids = False
             self.matching_score = 0
         else:
             for applicant in self:
