@@ -2,22 +2,21 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_as_portal_tour", {
     test: true,
-    shadow_dom: ".o-livechat-root",
     steps: () => [
         {
-            trigger: ".o-livechat-LivechatButton",
+            trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit Hello, I need help!",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Message:contains('Hello, I need help!')",
+            trigger: ".o-livechat-root:shadow .o-mail-Message:contains('Hello, I need help!')",
         },
     ],
 });

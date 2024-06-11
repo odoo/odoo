@@ -1,11 +1,10 @@
 import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/utils";
 
-const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
+const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     test: true,
-    shadow_dom: ".o-livechat-root",
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),
@@ -31,11 +30,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             },
         },
         {
-            trigger: 'li:contains("I want to buy the software")',
+            trigger: '.o-livechat-root:shadow li:contains("I want to buy the software")',
             run: "click",
         },
         {
-            trigger: ".o-mail-ChatWindow",
+            trigger: ".o-livechat-root:shadow .o-mail-ChatWindow",
             // check selected option is posted and reactions are available since
             // the thread has been persisted in the process
             async run() {
@@ -50,11 +49,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Can you give us your email please?"),
         },
         {
-            trigger: ".o-mail-Composer-input ",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input ",
             run: "edit No, you won't get my email!",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
@@ -64,11 +63,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             ),
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit okfine@fakeemail.com",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
@@ -80,11 +79,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Would you mind providing your website address?"),
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit https://www.fakeaddress.com",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
@@ -92,27 +91,27 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             // should ask for feedback now
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit Yes, actually, I'm glad you asked!",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit I think it's outrageous that you ask for all my personal information!",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit I will be sure to take this to your manager!",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
@@ -120,7 +119,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Ok bye!"),
         },
         {
-            trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-ChatWindow-command[title='Restart Conversation']",
             run: "click",
         },
         {
@@ -140,7 +140,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("How can I help you?"),
         },
         {
-            trigger: 'li:contains("Pricing Question")',
+            trigger: '.o-livechat-root:shadow li:contains("Pricing Question")',
             run: "click",
         },
         {
@@ -158,11 +158,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Would you mind providing your website address?"),
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit no",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
@@ -170,11 +170,11 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Great, do you want to leave any feedback for us to improve?"),
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "edit no, nothing so say",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
             run: "press Enter",
         },
         {
@@ -183,7 +183,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             // wait for chatbot script to finish.
-            trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
+            trigger:
+                ".o-livechat-root:shadow .o-mail-ChatWindow-command[title='Restart Conversation']",
         },
     ],
 });

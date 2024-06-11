@@ -118,7 +118,7 @@ QUnit.module("Tour service", (hooks) => {
         const env = await makeTestEnv({});
         const sortedTours = env.services.tour_service.getSortedTours();
         assert.strictEqual(sortedTours.length, 1);
-        assert.deepEqual(sortedTours[0].steps, [{ shadow_dom: undefined, trigger: "#2" }]);
+        assert.deepEqual(sortedTours[0].steps, [{ trigger: "#2" }]);
         assert.deepEqual(sortedTours[0].name, "homepage");
     });
 
