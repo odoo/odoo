@@ -3,6 +3,110 @@
 import * as Order from "@point_of_sale/../tests/tours/helpers/generic_components/OrderWidgetMethods";
 import * as ProductScreen from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 
+<<<<<<< HEAD
+||||||| parent of 82b73bd0779d (temp)
+export function clickSplitBillButton() {
+    return [
+        {
+            content: "click split bill button",
+            trigger: ".control-buttons .control-button.order-split",
+        },
+    ];
+}
+export function clickTransferButton() {
+    return [
+        {
+            content: "click transfer button",
+            trigger: '.control-buttons .control-button span:contains("Transfer")',
+        },
+    ];
+}
+export function clickNoteButton() {
+    return [
+        {
+            content: "click note button",
+            trigger: '.control-buttons .control-button span:contains("Internal Note")',
+        },
+    ];
+}
+export function clickPrintBillButton() {
+    return [
+        {
+            content: "click print bill button",
+            trigger: ".control-buttons .control-button.order-printbill",
+        },
+        {
+            content: "Close printing error",
+            trigger: ".popup-error .cancel",
+        },
+    ];
+}
+export function clickSubmitButton() {
+    return [
+        {
+            content: "click print bill button",
+            trigger: '.control-buttons .control-button span:contains("Order")',
+        },
+    ];
+}
+export function clickGuestButton() {
+    return [
+        {
+            content: "click guest button",
+            trigger: '.control-buttons .control-button span:contains("Guests")',
+        },
+    ];
+}
+=======
+export function clickSplitBillButton() {
+    return [
+        {
+            content: "click split bill button",
+            trigger: ".control-buttons .control-button.order-split",
+        },
+    ];
+}
+export function clickTransferButton() {
+    return [
+        {
+            content: "click transfer button",
+            trigger: '.control-buttons .control-button span:contains("Transfer")',
+        },
+    ];
+}
+export function clickNoteButton() {
+    return [
+        {
+            content: "click note button",
+            trigger: '.control-buttons .control-button span:contains("Internal Note")',
+        },
+    ];
+}
+export function clickPrintBillButton() {
+    return [
+        {
+            content: "click print bill button",
+            trigger: ".control-buttons .control-button.order-printbill",
+        },
+    ];
+}
+export function clickSubmitButton() {
+    return [
+        {
+            content: "click print bill button",
+            trigger: '.control-buttons .control-button span:contains("Order")',
+        },
+    ];
+}
+export function clickGuestButton() {
+    return [
+        {
+            content: "click guest button",
+            trigger: '.control-buttons .control-button span:contains("Guests")',
+        },
+    ];
+}
+>>>>>>> 82b73bd0779d (temp)
 export function clickOrderButton() {
     return [
         {
