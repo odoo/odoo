@@ -20,7 +20,6 @@ import { archParseBoolean, getActiveActions, processButton } from "@web/views/ut
 
 export const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 export const KANBAN_MENU_ATTRIBUTE = "kanban-menu";
-export const KANBAN_TOOLTIP_ATTRIBUTE = "kanban-tooltip";
 
 export class KanbanArchParser {
     parse(xmlDoc, models, modelName) {
