@@ -1632,6 +1632,10 @@ export class PosStore extends Reactive {
     redirectToBackend() {
         window.location = "/web#action=point_of_sale.action_client_pos_menu";
     }
+
+    getDisplayDeviceIP() {
+        return this.config.proxy_ip;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
