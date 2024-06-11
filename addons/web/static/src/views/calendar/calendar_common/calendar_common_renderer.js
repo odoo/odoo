@@ -8,6 +8,7 @@ import { CalendarCommonPopover } from "./calendar_common_popover";
 import { makeWeekColumn } from "./calendar_common_week_column";
 
 import { Component } from "@odoo/owl";
+import { useBus } from "@web/core/utils/hooks";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -61,6 +62,9 @@ export class CalendarCommonRenderer extends Component {
         this.fc = useFullCalendar("fullCalendar", this.options);
         this.click = useClickHandler(this.onClick, this.onDblClick);
         this.popover = useCalendarPopover(this.constructor.components.Popover);
+        useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
+            this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
+        );
     }
 
     get options() {

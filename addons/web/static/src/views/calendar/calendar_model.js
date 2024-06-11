@@ -44,8 +44,8 @@ export class CalendarModel extends Model {
         if (!this.meta.date) {
             this.meta.date =
                 params.context && params.context.initial_date
-                    ? deserializeDateTime(params.context.initial_date)
-                    : luxon.DateTime.local();
+                    ? deserializeDateTime(params.context.initial_date).startOf("day")
+                    : luxon.DateTime.local().startOf("day");
         }
         // Prevent picking a scale that is not supported by the view
         if (!this.meta.scales.includes(this.meta.scale)) {
@@ -846,7 +846,9 @@ export class CalendarModel extends Model {
             recordId: null,
             value: "all",
             label: isUserOrPartner ? _t("Everybody's calendars") : _t("Everything"),
-            active: previousAllFilter ? previousAllFilter.active : this.meta.allFilter[sectionLabel] || false,
+            active: previousAllFilter
+                ? previousAllFilter.active
+                : this.meta.allFilter[sectionLabel] || false,
             canRemove: false,
             colorIndex: null,
             hasAvatar: false,
