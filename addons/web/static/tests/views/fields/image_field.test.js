@@ -81,7 +81,7 @@ test("ImageField is correctly rendered", async () => {
         resId: 1,
         arch: /* xml */ `
             <form>
-                <field name="document" widget="image" options="{'size': [90, 90]}" />
+                <field name="document" widget="image" options="{'size': [90, 90]}"/>
             </form>
         `,
     });
@@ -122,6 +122,36 @@ test("ImageField is correctly rendered", async () => {
     expect("input.o_input_file").toHaveAttribute("accept", "image/*", {
         message:
             'the default value for the attribute "accept" on the "image" widget must be "image/*"',
+    });
+});
+
+test("ImageField with img_class option", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="document" widget="image" options="{'img_class': 'my_custom_class'}"/>
+            </form>`,
+    });
+
+    expect(".o_field_image img").toHaveClass("my_custom_class");
+});
+
+test("ImageField with alt attribute", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="document" widget="image" alt="something"/>
+            </form>`,
+    });
+
+    expect(".o_field_widget[name='document'] img").toHaveAttribute("data-alt", "something", {
+        message: "the image should correctly set its alt attribute",
     });
 });
 
