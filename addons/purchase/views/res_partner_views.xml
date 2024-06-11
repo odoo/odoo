@@ -51,17 +51,10 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
-                <field name="mobile" position="after">
-                    <field name="purchase_order_count" groups="purchase.group_purchase_user"/>
-                </field>
-                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
-                    <a t-if="record.purchase_order_count.value>0" data-type="action" data-name="%(purchase.act_res_partner_2_purchase_order)d"
-                        groups="purchase.group_purchase_user"
-                        href="#" class="oe_kanban_action oe_kanban_action_a me-1">
-                        <span class="badge rounded-pill">
-                            <i class="fa fa-fw fa-credit-card" role="img" aria-label="Purchases" title="Purchases"/>
-                            <span t-out="record.purchase_order_count.value" class="ms-1"/>
-                        </span>
+                <xpath expr="//footer/div" position="inside">
+                    <a t-if="record.purchase_order_count.value>0" type="action" name="%(purchase.act_res_partner_2_purchase_order)d" class="btn btn-sm btn-link smaller" role="button">
+                        <i class="fa fa-credit-card me-1" aria-label="Purchases" role="img" title="Purchases"/>
+                        <field name="purchase_order_count"/>
                     </a>
                 </xpath>
             </field>
