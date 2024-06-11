@@ -14,9 +14,6 @@ class Event(models.Model):
     sale_price_subtotal = fields.Monetary(
         string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal',
         groups='sales_team.group_sale_salesman')
-    currency_id = fields.Many2one(
-        'res.currency', string='Currency',
-        related='company_id.currency_id', readonly=True)
 
     @api.depends('company_id.currency_id',
                  'sale_order_lines_ids.price_subtotal', 'sale_order_lines_ids.currency_id',

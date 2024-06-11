@@ -51,6 +51,17 @@
                                </tree>
                            </field>
                        </page>
+                        <page string="Questions" name="page_questions">
+                            <field name="question_ids" class="w-100">
+                                <tree sample="1">
+                                    <field name="title"/>
+                                    <field name="is_mandatory_answer" string="Mandatory"/>
+                                    <field name="once_per_order" string="Once per Order"/>
+                                    <field name="question_type" />
+                                    <field name="answer_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </page>
                        <page string="Notes" name="notes">
                            <group>
                                 <label for="note" string="Note" />
