@@ -4,6 +4,26 @@ import { registry } from "@web/core/registry";
 import { Component, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
+const supportedInfoValidation = {
+    type: Array,
+    element: Object,
+    shape: {
+        label: String,
+        name: String,
+        type: String,
+        availableTypes: { type: Array, element: String, optional: true },
+        default: { type: String, optional: true },
+        help: { type: String, optional: true },
+        choices: /* choices if type == selection */ {
+            type: Array,
+            element: Object,
+            shape: { label: String, value: String },
+            optional: true,
+        },
+    },
+    optional: true,
+};
+
 viewWidgetRegistry.addValidation({
     component: { validate: (c) => c.prototype instanceof Component },
     extractProps: { type: Function, optional: true },
@@ -12,6 +32,8 @@ viewWidgetRegistry.addValidation({
         type: [Function, { type: Array, element: Object, shape: { name: String, type: String } }],
         optional: true,
     },
+    supportedAttributes: supportedInfoValidation,
+    supportedOptions: supportedInfoValidation,
 });
 
 /**

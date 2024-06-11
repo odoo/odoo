@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
@@ -19,6 +20,7 @@ class KanbanColorPickerField extends Component {
 
 export const kanbanColorPickerField = {
     component: KanbanColorPickerField,
+    displayName: _t("Color Picker"),
     extractProps(fieldInfo, dynamicInfo) {
         return {
             readonly: dynamicInfo.readonly,
