@@ -170,3 +170,59 @@ class WebsiteSaleCart(TransactionCaseWithUserPortal):
             self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
             sale_order = website.sale_get_order()
             self.assertEqual(len(sale_order._cart_accessories()), 0)
+
+    def test_remove_archived_product_line(self):
+        """If an order has a line containing an archived product,
+        it is removed when opening the order in the cart."""
+        # Arrange
+        user = self.public_user
+        website = self.website.with_user(user)
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'sale_ok': True,
+            'website_published': True,
+        })
+        with MockRequest(self.env(user=user), website=website):
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            order = website.sale_get_order()
+
+            # pre-condition: the order contains an active product
+            self.assertRecordValues(order.order_line, [{
+                "product_id": product.id,
+            }])
+            self.assertTrue(product.active)
+
+            # Act: archive the product and open the cart
+            product.active = False
+            self.WebsiteSaleController.cart()
+
+            # Assert: the line has been removed
+            self.assertFalse(order.order_line)
+
+    def test_keep_note_line(self):
+        """If an order has a line containing a note,
+        it is not removed when opening the order in the cart."""
+        # Arrange
+        user = self.public_user
+        website = self.website.with_user(user)
+        with MockRequest(self.env(user=user), website=website):
+            order = website.sale_get_order(force_create=True)
+            order.order_line = [
+                Command.create({
+                    "name": "Note",
+                    "display_type": "line_note",
+                })
+            ]
+
+            # pre-condition: the order contains only a note line
+            self.assertRecordValues(order.order_line, [{
+                "display_type": "line_note",
+            }])
+
+            # Act: open the cart
+            self.WebsiteSaleController.cart()
+
+            # Assert: the line is still there
+            self.assertRecordValues(order.order_line, [{
+                "display_type": "line_note",
+            }])
