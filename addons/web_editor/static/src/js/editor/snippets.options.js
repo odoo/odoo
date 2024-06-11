@@ -382,6 +382,7 @@ export class UserValue {
         this._state = state;
         this._state.preview = false;
         this._state.active = false;
+        this._state.show = true;
         this._data = data;
     }
     /**
