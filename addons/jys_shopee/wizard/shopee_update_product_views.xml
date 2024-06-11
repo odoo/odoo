@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="jys_shopee_update_product_form" model="ir.ui.view">
+            <field name="name">Shopee Update Product</field>
+            <field name="model">shopee.update.product</field>
+            <field name="arch" type="xml">
+                <form string="Shopee update Product">
+                    <p>
+                        Update Product to Shopee.
+                    </p>
+                    <group>
+                        <field name="is_update_price"/>
+                        <field name="is_update_stock"/>
+                        <field name="is_update_image"/>
+                    </group>
+                    <separator string="Shops"/>
+                    <field name="name" nolabel="1" required="1"/>
+                    
+                    <footer>
+                        <button name="update_product" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_shopee_update_product" model="ir.actions.act_window">
+            <field name="name">Update to Shopee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shopee.update.product</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record id="action_shopee_update_product_form" model="ir.actions.act_window">
+            <field name="name">Update to Shopee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shopee.update.product</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_shopee_shop_tree" model="ir.ui.view">
+            <field name="name">shopee.shop.tree</field>
+            <field name="model">shopee.shop</field>
+            <field name="arch" type="xml">
+                <tree string="Shopee Shop">
+                    <header>
+                        <button name="action_authorize_shop_v2" string="Authorize Shop" class="btn-primary ms-1" type="object" display="always"/>
+                    </header>
+                    <field name="name"/>
+                    <field name="shop_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_shopee_shop_form" model="ir.ui.view">
+            <field name="name">shopee.shop.form</field>
+            <field name="model">shopee.shop</field>
+            <field name="arch" type="xml">
+                <form string="Shopee Shop">
+                    <header>
+                        <button name="shopee_generate_new_token" type="object" string="Generate New Token" class="btn-primary"/>
+                        <button name="shopee_generate_refresh_token" type="object" string="Generate Refresh Token" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" required="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="shop_id" required="1"/>
+                            <field name="payment_journal_id"/>
+                            <field name="payment_method_id"/>
+                            <field name="commission"/>
+                            <field name="max_commission"/>
+                            <field name="is_star_seller"/>
+                            <field name="star_seller_commission"/>
+                            <field name="is_include_tax"/>	
+                            <field name="duty_import" invisible="is_include_tax == False"/>	
+                            <field name="ppn" invisible="is_include_tax == False"/>
+
+                            <h2>
+                                <separator string="Configuration"/>
+                            </h2>
+
+                        </group>
+                        <group>
+                            <field name="shopee_code"/>
+                            <field name="shopee_access_token"/>
+                            <field name="shopee_refresh_token"/>
+                        </group>
+                        <!-- <h2>
+                            <separator string="Boost Products"/>
+                        </h2>  -->   
+                        <!-- <field name="boost_product_ids" nolabel="1" domain="[('shopee_product_ids.shop_id', '=', id)]"/> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_shopee_shop" model="ir.actions.act_window">
+            <field name="name">Shop</field>
+            <field name="res_model">shopee.shop</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>

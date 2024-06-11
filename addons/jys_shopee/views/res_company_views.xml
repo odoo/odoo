@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_jys_shopee_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='branches']" position="after">
+                    <page string="Shopee" name="page_shopee">
+                        <group col="4" colspan="2">
+                            <field name="shopee_redirect_url"/>
+                            <field name="shopee_partner_id"/>\
+                            <field name="shopee_partner_key"/>
+                        </group>
+                        
+                        <separator string="Shops"/>
+                        <field name="shopee_shop_ids" nolabel="1" readonly="1">
+                            <tree>
+                                <field name="name"/>
+                                <field name="shop_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <template id="shopee_assets_backend" name="Shopee Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/jys_shopee/static/src/delete_confirmation.js"></script>
+        </xpath>
+    </template> -->
+
+    <!-- <record id="shopee_assets_backend" model="ir.asset">
+        <field name="name">Shopee Assets</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">/jys_shopee/static/src/delete_confirmation.js</field>
+        <field name="sequence" eval="99"/>
+    </record> -->
+
+    <record id="shopee_css_assets_backend" model="ir.asset">
+        <field name="name">Shopee CSS Assets</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">/jys_shopee/static/src/custom.css</field>
+        <field name="sequence" eval="99"/>
+    </record>
+</odoo>
+

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_jys_shopee_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Shopee" invisible="is_shopee_order == False">
+                        <group name="shopee">
+                            <group name="shopee_order">
+                                <field name="shopee_shop_id" readonly="1"/>
+                                <field name="is_shopee_order" readonly="1"/>
+                                <field name="is_shopee_cod" readonly="1"/>
+                                <field name="is_shopee_return" readonly="1"/>
+                                <field name="shopee_ordersn" readonly="1"/>
+                                <field name="tracking_no" readonly="1"/>
+                            </group>
+                            <group name="shopee_date">
+                                <field name="shopee_payment_date" readonly="1"/>
+                                <field name="shopee_max_ship_date" readonly="1"/>
+                                <field name="shopee_actual_shipping_cost" readonly="1"/>
+                                <field name="shopee_shipping_cost_rebate" readonly="1"/>
+                                <field name="shopee_commission_fee" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_jys_shopee_sales_order_filter_inherit" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                    <filter string="Shopee" name="shopee" domain="[('shopee_shop_id','!=',False)]" help="Sales Order from Shopee"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
