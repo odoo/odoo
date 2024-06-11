@@ -2,7 +2,6 @@
 
 from . import test_invite
 from . import test_ir_actions
-from . import test_ir_attachment
 from . import test_mail_activity
 from . import test_mail_composer
 from . import test_mail_composer_mixin
