@@ -25,7 +25,9 @@ export class ImageField extends Component {
     };
     static props = {
         ...standardFieldProps,
+        alt: { type: String, optional: true },
         enableZoom: { type: Boolean, optional: true },
+        imgClass: { type: String, optional: true },
         zoomDelay: { type: Number, optional: true },
         previewImage: { type: String, optional: true },
         acceptedFileExtensions: { type: String, optional: true },
@@ -35,6 +37,8 @@ export class ImageField extends Component {
     };
     static defaultProps = {
         acceptedFileExtensions: "image/*",
+        alt: _t("Binary file"),
+        imgClass: "",
         reload: true,
     };
 
@@ -46,6 +50,10 @@ export class ImageField extends Component {
             isValid: true,
         });
         this.lastURL = undefined;
+    }
+
+    get imgClass() {
+        return ["img", "img-fluid"].concat(this.props.imgClass.split(" ")).join(" ");
     }
 
     get rawCacheKey() {
@@ -69,9 +77,7 @@ export class ImageField extends Component {
         return style;
     }
     get hasTooltip() {
-        return (
-            this.props.enableZoom && this.props.record.data[this.props.name]
-        );
+        return this.props.enableZoom && this.props.record.data[this.props.name];
     }
     get tooltipAttributes() {
         return {
@@ -224,7 +230,9 @@ export const imageField = {
     fieldDependencies: [{ name: "write_date", type: "datetime" }],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => ({
+        alt: attrs.alt,
         enableZoom: options.zoom,
+        imgClass: options.img_class,
         zoomDelay: options.zoom_delay,
         previewImage: options.preview_image,
         acceptedFileExtensions: options.accepted_file_extensions,
