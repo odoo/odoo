@@ -7531,6 +7531,7 @@ test(`translation dialog with right context and domain`, async () => {
         arch: `<form><field name="name"/></form>`,
         resId: 1,
     });
+    await contains(".o_field_translate").click();
     await contains(`.o_field_translate.btn-link`).click();
     expect([
         `translate args [[1],"name"]`,
@@ -7563,6 +7564,7 @@ test(`save new record before opening translate dialog`, async () => {
     expect(["get_views", "onchange"]).toVerifySteps();
     expect(`.o_form_editable`).toHaveCount(1);
 
+    await contains(`.o_field_translate`).click();
     await contains(`.o_field_translate.btn-link`).click();
     expect(["web_save", "get_field_translations"]).toVerifySteps();
     expect(`.modal`).toHaveCount(1);
@@ -7618,6 +7620,7 @@ test(`translate event correctly handled with multiple controllers`, async () => 
     expect(`.o_dialog`).toHaveCount(1);
 
     await contains(`[name="product_id"] .o_external_button`, { visible: false }).click();
+    await contains(`.o_field_translate`).click();
     expect(`.o_dialog:eq(1) span.o_field_translate`).toHaveCount(1);
 
     await contains(`.o_dialog:eq(1) span.o_field_translate`).click();
