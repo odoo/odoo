@@ -422,6 +422,12 @@ class HrEmployeePrivate(models.Model):
             if employee.pin and not employee.pin.isdigit():
                 raise ValidationError(_("The PIN must be a sequence of digits."))
 
+    @api.constrains('barcode')
+    def _verify_barcode(self):
+        for employee in self:
+            if employee.barcode and not employee.barcode.isdigit():
+                raise ValidationError(_("The Badge ID must be a sequence of digits."))
+
     @api.constrains('ssnid')
     def _check_ssnid(self):
         # By default, an Social Security Number is always valid, but each localization
