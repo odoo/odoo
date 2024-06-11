@@ -105,8 +105,12 @@ class MailMessageSubtype(models.Model):
 
     @tools.ormcache('self.env.uid', 'self.env.su', 'model_name')
     def _default_subtypes(self, model_name):
-        domain = [('default', '=', True),
-                  '|', ('res_model', '=', model_name), ('res_model', '=', False)]
-        subtypes = self.search(domain)
+        self.env[model_name].check_access_rights("read")
+        # sudo: ir.model reading is only allowed for admin
+        subtypes = self.env["ir.model"].sudo().search([('model', '=', model_name)]).subtype_ids
+        if not subtypes:
+            domain = [('default', '=', True),
+                    '|', ('res_model', '=', model_name), ('res_model', '=', False)]
+            subtypes = self.search(domain)
         internal = subtypes.filtered('internal')
         return subtypes.ids, internal.ids, (subtypes - internal).ids

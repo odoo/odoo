@@ -2,6 +2,7 @@ import { rpc } from "@web/core/network/rpc";
 import { Component, onWillStart, useState } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -21,7 +22,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class FollowerSubtypeDialog extends Component {
     static components = { Dialog };
-    static props = ["close", "follower", "onFollowerChanged"];
+    static props = ["close", "follower?", "thread?", "onFollowerChanged"];
     static template = "mail.FollowerSubtypeDialog";
 
     setup() {
@@ -33,7 +34,8 @@ export class FollowerSubtypeDialog extends Component {
         });
         onWillStart(async () => {
             this.state.subtypes = await rpc("/mail/read_subscription_data", {
-                follower_id: this.props.follower.id,
+                follower_id: this.props.follower?.id,
+                thread_model: this.props.thread?.model,
             });
         });
     }
@@ -48,6 +50,72 @@ export class FollowerSubtypeDialog extends Component {
 
     async onClickApply() {
         const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
+        if (this.props.follower) {
+            await this.updateFollowerSubscriptions(selectedSubtypes);
+            this.env.services.notification.add(
+                _t("The subscription preferences were successfully applied."),
+                { type: "success" }
+            );
+            this.props.close();
+        }
+        if (this.props.thread) {
+            await this.updateThreadDefaultSubscriptions(selectedSubtypes);
+        }
+    }
+
+    async onClickApplyAll() {
+        const dialogProps = {
+            title: _t("Are you sure you want to change the default subscription?"),
+            body: _t(
+                "This selection will be applied to all new records of this user having the same model type."
+            ),
+            confirm: async () => {
+                const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
+                await this.updateFollowerSubscriptions(selectedSubtypes);
+                await this.env.services.orm.call(
+                    "mail.message.subtype.settings",
+                    "set_mail_message_subtype_settings",
+                    [[]],
+                    {
+                        partner_id: this.props.follower.partner.id,
+                        thread_model: this.props.follower.thread.model,
+                        subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
+                    }
+                );
+                this.env.services.notification.add(
+                    _t("The subscription preferences were successfully applied."),
+                    { type: "success" }
+                );
+                this.props.close();
+            },
+            cancel: () => {},
+        };
+        return this.env.services.dialog.add(ConfirmationDialog, dialogProps);
+    }
+
+    async updateThreadDefaultSubscriptions(selectedSubtypes) {
+        const dialogProps = {
+            title: _t("Are you sure you want to change the default subscription?"),
+            body: _t(
+                "This selection will be applied to all new followers. Existing ones won't be affected by the changes."
+            ),
+            confirm: async () => {
+                await rpc("/mail/thread/default_subscribe", {
+                    thread_model: this.props.thread.model,
+                    subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
+                });
+                this.env.services.notification.add(
+                    _t("The subscription preferences were successfully applied."),
+                    { type: "success" }
+                );
+                this.props.close();
+            },
+            cancel: () => {},
+        };
+        return this.env.services.dialog.add(ConfirmationDialog, dialogProps);
+    }
+
+    async updateFollowerSubscriptions(selectedSubtypes) {
         const thread = this.props.follower.thread;
         if (selectedSubtypes.length === 0) {
             await this.props.follower.remove();
@@ -64,16 +132,14 @@ export class FollowerSubtypeDialog extends Component {
             if (!selectedSubtypes.some((subtype) => subtype.id === this.store.mt_comment_id)) {
                 this.props.follower.removeRecipient();
             }
-            this.env.services.notification.add(
-                _t("The subscription preferences were successfully applied."),
-                { type: "success" }
-            );
         }
         this.props.onFollowerChanged(thread);
-        this.props.close();
     }
 
     get title() {
-        return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner.name });
+        if (this.props.follower) {
+            return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner.name });
+        }
+        return _t("Edit Default Subscription");
     }
 }

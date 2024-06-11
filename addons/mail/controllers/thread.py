@@ -35,20 +35,36 @@ class ThreadController(http.Controller):
         ]
         return partners
 
+    @http.route("/mail/thread/default_subscribe", methods=["POST"], type="json", auth="user")
+    def thread_default_subscribe(self, thread_model, subtype_ids):
+        """Set the default subscription for the given thread model.
+        :param list subtype_ids: list of subtype ids to follow
+        """
+        res_model = request.env["ir.model"].search([("model", "=", thread_model)])
+        if res_model:
+            res_model.subtype_ids = None if subtype_ids == [] else subtype_ids
+            return True
+        return False
+
     @http.route("/mail/read_subscription_data", methods=["POST"], type="json", auth="user")
-    def read_subscription_data(self, follower_id):
+    def read_subscription_data(self, follower_id=False, thread_model=False):
         """Computes:
         - message_subtype_data: data about document subtypes: which are
             available, which are followed if any"""
-        request.env["mail.followers"].check_access_rights("read")
-        follower = request.env["mail.followers"].sudo().browse(follower_id)
-        follower.ensure_one()
-        request.env[follower.res_model].check_access_rights("read")
-        record = request.env[follower.res_model].browse(follower.res_id)
-        record.check_access_rule("read")
+        if thread_model:
+            res_model = request.env["ir.model"].search([("model", "=", thread_model)])
+            followed_subtypes_ids = set(res_model.subtype_ids.ids)
+            model = request.env[thread_model]
+        else:
+            request.env["mail.followers"].check_access_rights("read")
+            follower = request.env["mail.followers"].sudo().browse(follower_id)
+            follower.ensure_one()
+            request.env[follower.res_model].check_access_rights("read")
+            model = request.env[follower.res_model]
+            followed_subtypes_ids = set(follower.subtype_ids.ids)
         # find current model subtypes, add them to a dictionary
-        subtypes = record._mail_get_message_subtypes()
-        followed_subtypes_ids = set(follower.subtype_ids.ids)
+        model.check_access_rule("read")
+        subtypes = model._mail_get_message_subtypes()
         subtypes_list = [
             {
                 "name": subtype.name,

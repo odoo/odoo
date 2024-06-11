@@ -18,6 +18,9 @@ class IrModel(models.Model):
     is_mail_blacklist = fields.Boolean(
         string="Has Mail Blacklist", default=False,
     )
+    subtype_ids = fields.Many2many(
+        'mail.message.subtype', string='Subtype',
+        help="Message subtypes followed by this model. When adding new followers, this will be the default subtype selection.")
 
     def unlink(self):
         """ Delete mail data (followers, messages, activities) associated with

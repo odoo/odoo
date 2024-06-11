@@ -60,11 +60,14 @@ export class FollowerList extends Component {
 
     /**
      * @param {MouseEvent} ev
-     * @param {import("models").Follower} follower
+     * @param {object} param
+     * @param {import("models").Follower} param.follower
+     * @param {import("models").Thread} param.thread
      */
-    async onClickEdit(ev, follower) {
+    async onClickEditSubscription(ev, { follower, thread }) {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
             follower,
+            thread,
             onFollowerChanged: () => this.props.onFollowerChanged?.(this.props.thread),
         });
         this.props.dropdown.close();

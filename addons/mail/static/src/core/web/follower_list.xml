@@ -6,6 +6,9 @@
         <DropdownItem onSelected="() => this.onClickAddFollowers()" attrs="{ href: '#' }">
             Add Followers
         </DropdownItem>
+        <DropdownItem t-if="store.self.isAdmin" onSelected="(ev) => this.onClickEditSubscription(ev, { thread: props.thread })" attrs="{ href: '#' }">
+            Edit default subscription
+        </DropdownItem>
         <div t-if="props.thread.followers.length > 0" role="separator" class="dropdown-divider"/>
     </t>
     <t t-if="props.thread.selfFollower">
@@ -34,7 +37,7 @@
             <span class="flex-shrink text-truncate" t-esc="follower.partner.name"/>
         </a>
         <t t-if="follower.isEditable">
-            <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEdit(ev, follower)">
+            <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="(ev) => this.onClickEditSubscription(ev, { follower })">
                 <i class="fa fa-pencil"/>
             </button>
             <button class="o-mail-Follower-action btn btn-icon rounded-0" title="Remove this follower" aria-label="Remove this follower" t-on-click="(ev) => this.onClickRemove(ev, follower)">

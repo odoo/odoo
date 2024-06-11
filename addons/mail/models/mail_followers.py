@@ -438,11 +438,22 @@ GROUP BY fol.id%s%s""" % (
         if not partner_ids:
             return dict(), dict()
 
-        default, _, external = self.env['mail.message.subtype'].default_subtypes(res_model)
-        if partner_ids and customer_ids is None:
-            customer_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('partner_share', '=', True)]).ids
+        # fetch existing default subtypes settings for partners
+        message_subtype_settings = self.env['mail.message.subtype.settings'].search([
+            ('res_model_id', '=', self.env['ir.model']._get_id(res_model)),
+            ('partner_id', 'in', partner_ids),
+        ])
+        p_stypes = dict()
+        if message_subtype_settings:
+            p_stypes = {ms.partner_id.id: ms.subtype_ids.ids for ms in message_subtype_settings}
+        no_default_partner_ids = list(set(partner_ids) - set(p_stypes.keys()))
 
-        p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in partner_ids)
+        # compute default subtypes for partners
+        default, _, external = self.env['mail.message.subtype'].default_subtypes(res_model)
+        if no_default_partner_ids and customer_ids is None:
+            customer_ids = self.env['res.partner'].sudo().search([('id', 'in', no_default_partner_ids), ('partner_share', '=', True)]).ids
+
+        p_stypes.update({pid: external.ids if pid in customer_ids else default.ids for pid in no_default_partner_ids})
 
         return self._add_followers(res_model, res_ids, partner_ids, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
 
