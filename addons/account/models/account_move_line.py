@@ -679,10 +679,14 @@ class AccountMoveLine(models.Model):
                     from_currency=line.company_currency_id,
                     to_currency=line.currency_id,
                     company=line.company_id,
-                    date=line.move_id.invoice_date or line.move_id.date or fields.Date.context_today(line),
+                    date=line._get_rate_date(),
                 )
             else:
                 line.currency_rate = 1
+
+    def _get_rate_date(self):
+        self.ensure_one()
+        return self.move_id.invoice_date or self.move_id.date or fields.Date.context_today(self)
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
