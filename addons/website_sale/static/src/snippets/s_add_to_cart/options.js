@@ -98,6 +98,7 @@ options.registry.AddToCart = options.Class.extend({
             domain: [
                 ["product_tmpl_id", "=", parseInt(productTemplateId)],
             ],
+            fields: ['id'],
         });
         this.$target[0].dataset.variants = response.map(variant => variant.id);
     },
