@@ -6,8 +6,14 @@ from odoo import api, fields, models
 class ProductReplenishMixin(models.AbstractModel):
     _inherit = 'stock.replenish.mixin'
 
-    supplier_id = fields.Many2one('product.supplierinfo', string="Vendor")
+    supplier_id = fields.Many2one('product.supplierinfo', string="Vendor", compute='_compute_supplier',
+                                  store=True, readonly=False, check_company=True)
     show_vendor = fields.Boolean(compute='_compute_show_vendor')
+
+    @api.depends('product_id', 'route_id')
+    def _compute_supplier(self):
+        for rec in self:
+            rec.supplier_id = rec.product_id.seller_ids[:1] if rec.show_vendor else False
 
     @api.depends('route_id')
     def _compute_show_vendor(self):
