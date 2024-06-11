@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='due_date']" position="after">
-                <field name="taxable_supply_date" invisible="country_code != 'CZ'"/>
+                <field name="taxable_supply_date" invisible="country_code != 'CZ'" readonly="state != 'draft'"/>
             </xpath>
         </field>
     </record>
