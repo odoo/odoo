@@ -304,11 +304,11 @@ class ProductTemplate(models.Model):
 
                 # Compare_list_price are never tax included
                 base_price = self._apply_taxes_to_price(
-                    base_price, currency, product_taxes, taxes, self, website=website,
+                    base_price, currency, product_taxes, taxes, template, website=website,
                 )
 
             price_reduce = self._apply_taxes_to_price(
-                price_reduce, currency, product_taxes, taxes, self, website=website,
+                price_reduce, currency, product_taxes, taxes, template, website=website,
             )
 
             template_price_vals = {
