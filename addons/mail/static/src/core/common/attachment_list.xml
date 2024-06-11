@@ -72,24 +72,23 @@
                             <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
                         </div>
                     </t>
-                    <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex flex-grow-1" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': showDelete and !env.inComposer }">
+                    <div class="flex-grow-1"/>
+                    <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': showDelete and !env.inComposer }">
                         <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-spin fa-spinner"/>
                         </div>
-                        <div t-if="!attachment.uploading and env.inComposer" class="d-flex justify-content-end me-2 align-items-center w-100 h-100 text-primary" title="Uploaded">
+                        <div t-if="!attachment.uploading and env.inComposer" class="d-flex justify-content-center me-2 align-items-center w-100 h-100 text-primary" title="Uploaded">
                             <i class="fa fa-check"/>
                         </div>
                         <button t-if="showDelete"
-                                class="o-mail-AttachmentCard-unlink btn top-0 align-items-center d-flex w-100 h-100 rounded-0 border-0"
-                                t-att-class="env.inComposer ? 'justify-content-center' : 'justify-content-end'"
+                                class="o-mail-AttachmentCard-unlink btn top-0 align-items-center justify-content-center d-flex w-100 h-100 rounded-0 border-0"
                                 t-attf-class="{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base justify-content-center' : 'bg-300' }}"
                                 t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove"
                         >
                             <i class="fa fa-trash" role="img" aria-label="Remove"/>
                         </button>
                         <!-- t-attf-class overridden in extensions -->
-                        <button t-if="canDownload(attachment)" class="btn d-flex align-items-center w-100 h-100 rounded-0"
-                                t-att-class="env.inComposer ? 'justify-content-center' : 'justify-content-end'"
+                        <button t-if="canDownload(attachment)" class="btn d-flex align-items-center justify-content-center w-100 h-100 rounded-0"
                                 t-attf-class="bg-300"
                                 t-on-click.stop="() => this.onClickDownload(attachment)" title="Download"
                         >
