@@ -1,6 +1,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 import time
+from datetime import datetime
 
 class TiktokOrder(models.Model):
 	_name = 'tiktok.order'
