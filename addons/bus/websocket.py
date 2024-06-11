@@ -637,7 +637,7 @@ class Websocket:
         if not session:
             raise SessionExpiredException()
         with acquire_cursor(session.db) as cr:
-            env = api.Environment(cr, session.uid, session.context)
+            env = api.Environment(cr, session.uid, dict(session.context, lang=None))
             if session.uid is not None and not check_session(session, env):
                 raise SessionExpiredException()
             # Mark the notification request as processed.
