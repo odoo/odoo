@@ -196,6 +196,10 @@ class PortalChatter(http.Controller):
             }
         }
 
+    def _get_void_portal_messages_domain(self):
+        """Return a domain to filter out void messages."""
+        return ["|", ("body", "!=", ""), ("attachment_ids", "!=", False)]
+
     @http.route('/mail/chatter_fetch', type='json', auth='public', website=True)
     def portal_message_fetch(self, res_model, res_id, domain=False, limit=10, offset=0, **kw):
         # Only search into website_message_ids, so apply the same domain to perform only one search
@@ -206,7 +210,8 @@ class PortalChatter(http.Controller):
         domain = expression.AND([
             self._setup_portal_message_fetch_extra_domain(kw),
             field_domain,
-            [('res_id', '=', res_id), '|', ('body', '!=', ''), ('attachment_ids', '!=', False)]
+            [("res_id", "=", res_id)],
+            self._get_void_portal_messages_domain(),
         ])
 
         # Check access
