@@ -29,7 +29,7 @@ export class PaymentRazorpay extends PaymentInterface {
 
     _call_razorpay(data, action) {
         return this.env.services.orm.silent
-            .call("pos.payment.method", action, [[this.payment_method.id], data])
+            .call("pos.payment.method", action, [[this.payment_method_id.id], data])
             .catch(this._handle_odoo_connection_failure.bind(this));
     }
 
@@ -82,7 +82,7 @@ export class PaymentRazorpay extends PaymentInterface {
 
     _process_razorpay(cid) {
         const order = this.pos.get_order();
-        const line = order.paymentlines.find((paymentLine) => paymentLine.cid === cid);
+        const line = order.get_selected_paymentline();
 
         if (line.amount < 0) {
             this._showError(_t("Cannot process transactions with negative amount."));
@@ -111,7 +111,7 @@ export class PaymentRazorpay extends PaymentInterface {
      */
 
     async _waitForPaymentConfirmation() {
-        const paymentLine = this.pos.get_order()?.selected_paymentline;
+        const paymentLine = this.pos.get_order().get_selected_paymentline();
         if (!paymentLine || paymentLine.payment_status == "retry") {
             return false;
         }
