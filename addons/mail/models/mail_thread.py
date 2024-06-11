@@ -2303,9 +2303,11 @@ class MailThread(models.AbstractModel):
                     name, content = attachment
                     cid = False
                     info = {}
+                    voice = False
                 elif len(attachment) == 3:
                     name, content, info = attachment
                     cid = info and info.get('cid')
+                    voice = info and info.get('voice')
                 else:
                     continue
 
@@ -2334,15 +2336,18 @@ class MailThread(models.AbstractModel):
                 attachement_values_list.append(attachement_values)
 
                 # keep cid, name list and token synced with attachement_values_list length to match ids latter
-                attachement_extra_list.append((cid, name, token))
+                # Creating voice metadata if voice flag is set
+                attachement_extra_list.append((cid, name, token, voice))
 
             new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
             attach_cid_mapping, attach_name_mapping = {}, {}
-            for attachment, (cid, name, token) in zip(new_attachments, attachement_extra_list):
+            for attachment, (cid, name, token, voice) in zip(new_attachments, attachement_extra_list):
                 if cid:
                     attach_cid_mapping[cid] = (attachment.id, token)
                 if name:
                     attach_name_mapping[name] = (attachment.id, token)
+                if voice:
+                    attachment._post_add_create(voice=True)
                 m2m_attachment_ids.append((4, attachment.id))
 
             # note: right know we are only taking attachments and ignoring attachment_ids.
