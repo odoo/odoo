@@ -20608,7 +20608,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onPaste(ev) {
             if (this.env.model.getters.getEditionMode() !== "inactive") {
+                // let the browser clipboard work
                 ev.stopPropagation();
+            }
+            else {
+                // the user meant to paste in the sheet, not open the composer with the pasted content
+                // While we're not editing, we still have the focus and should therefore prevent
+                // the native "paste" to occur.
+                ev.preventDefault();
             }
         }
         /*
@@ -20617,10 +20624,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onInput(ev) {
             var _a, _b;
             if (!this.shouldProcessInputEvents) {
-                return;
-            }
-            if (ev.inputType === "insertFromPaste" &&
-                this.env.model.getters.getEditionMode() === "inactive") {
                 return;
             }
             ev.stopPropagation();
@@ -20939,10 +20942,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get containerStyle() {
             if (this.env.model.getters.getEditionMode() === "inactive" || !this.rect) {
-                return `
-        position: absolute;
-        z-index: -1000;
-      `;
+                return `z-index: -1000;`;
             }
             const isFormula = this.env.model.getters.getCurrentContent().startsWith("=");
             const cell = this.env.model.getters.getActiveCell();
@@ -43382,9 +43382,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.43';
-    __info__.date = '2024-06-04T06:31:27.868Z';
-    __info__.hash = '7bff796';
+    __info__.version = '16.0.44';
+    __info__.date = '2024-06-10T09:42:06.873Z';
+    __info__.hash = '25d16f6';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
