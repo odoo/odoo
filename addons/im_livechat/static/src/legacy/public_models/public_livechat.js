@@ -4,7 +4,6 @@ import PublicLivechat from "@im_livechat/legacy/legacy_models/public_livechat";
 
 import { attr, clear, one, Model } from "@im_livechat/legacy/model";
 
-import { unaccent } from "web.utils";
 import { deleteCookie, setCookie } from "web.utils.cookies";
 
 Model({
@@ -42,7 +41,7 @@ Model({
             deleteCookie("im_livechat_session");
             setCookie(
                 "im_livechat_session",
-                unaccent(JSON.stringify(this.widget.toData()), true),
+                encodeURIComponent(JSON.stringify(this.widget.toData()), true),
                 60 * 60,
                 "required"
             );

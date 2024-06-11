@@ -2,7 +2,6 @@
 
 import { attr, clear, one, Patch } from '@im_livechat/legacy/model';
 
-import {unaccent} from 'web.utils';
 import {setCookie} from 'web.utils.cookies';
 
 Patch({
@@ -44,7 +43,7 @@ Patch({
             this.widget._sendWelcomeMessage();
             this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
             this.env.services.bus_service.addChannel(this.messaging.publicLivechatGlobal.publicLivechat.uuid);
-            setCookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
+            setCookie('im_livechat_session', encodeURIComponent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60, 'required');
             this.update({ isOpeningChat: false });
         },
     },

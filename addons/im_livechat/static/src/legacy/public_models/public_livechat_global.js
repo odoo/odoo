@@ -50,7 +50,7 @@ Model({
             await this._willStartChatbot();
         },
         async _willStart() {
-            const strCookie = getCookie("im_livechat_session");
+            const strCookie = decodeURIComponent(getCookie("im_livechat_session"));
             let isSessionCookieAvailable = Boolean(strCookie);
             let cookie = JSON.parse(strCookie || "{}");
             if (isSessionCookieAvailable && cookie.visitor_uid !== session.user_id) {
@@ -116,7 +116,7 @@ Model({
                     }),
                 });
             } else if (this.history !== null && this.history.length !== 0) {
-                const sessionCookie = getCookie("im_livechat_session");
+                const sessionCookie = decodeURIComponent(getCookie("im_livechat_session"));
                 if (sessionCookie) {
                     this.update({ sessionCookie });
                 }
@@ -152,7 +152,7 @@ Model({
         },
 
         getVisitorUserId() {
-            const cookie = JSON.parse(getCookie("im_livechat_session") || "{}");
+            const cookie = JSON.parse(decodeURIComponent(getCookie("im_livechat_session")) || "{}");
             if ("visitor_uid" in cookie) {
                 return cookie.visitor_uid;
             }
@@ -164,7 +164,7 @@ Model({
          * this will deactivate the mail_channel, notify operator that visitor has left the channel.
          */
         leaveSession() {
-            const cookie = getCookie("im_livechat_session");
+            const cookie = decodeURIComponent(getCookie("im_livechat_session"));
             if (cookie) {
                 const channel = JSON.parse(cookie);
                 if (channel.uuid) {
