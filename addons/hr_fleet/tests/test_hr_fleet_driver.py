@@ -34,6 +34,11 @@ class TestHrFleetDriver(common.TransactionCase):
             "plan_to_change_car": False
         })
 
+        cls.car2 = cls.env["fleet.vehicle"].create({
+            "model_id": cls.model.id,
+            "plan_to_change_car": False
+        })
+
     def test_driver_sync_with_employee(self):
         """
         If an employee has a car and their partner has changed, the update should be synced with the fleet
@@ -43,3 +48,18 @@ class TestHrFleetDriver(common.TransactionCase):
         self.assertEqual(self.test_employee.work_contact_id, self.test_user.partner_id)
         self.car.action_accept_driver_change()
         self.assertEqual(self.car.driver_id, self.test_user.partner_id)
+
+    def test_driver_sync_with_employee_without_contact(self):
+        """
+        When we create an employee with a user_id, he doesn't have a
+        work_contact_id and we don't want to assign him all unassigned
+        cars.
+        """
+        self.assertEqual(self.car2.future_driver_id.id, False)
+        self.assertEqual(self.car2.driver_id.id, False)
+        self.env['hr.employee'].create({
+            'name': 'Test Employee 2',
+            'user_id': self.test_user.id,
+        })
+        self.assertEqual(self.car2.future_driver_id.id, False)
+        self.assertEqual(self.car2.driver_id.id, False)
