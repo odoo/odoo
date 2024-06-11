@@ -8,16 +8,10 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <field name="mobile" position="after">
-                    <field name="meeting_count"/>
-                </field>
-                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
-                    <a t-if="record.meeting_count.value>0" data-type="object" data-name="schedule_meeting"
-                       href="#" class="oe_kanban_action oe_kanban_action_a me-1">
-                        <span class="badge rounded-pill">
-                            <i class="fa fa-fw fa-calendar" aria-label="Meetings" role="img" title="Meetings"/>
-                            <span t-out="record.meeting_count.value" class="ms-1"/>
-                        </span>
+                <xpath expr="//footer/div" position="inside">
+                    <a t-if="record.meeting_count.value>0" type="object" name="schedule_meeting" class="btn btn-sm btn-link smaller" role="button">
+                        <i class="fa fa-calendar me-1" aria-label="Meetings" role="img" title="Meetings"/>
+                        <field name="meeting_count"/>
                     </a>
                 </xpath>
             </field>
