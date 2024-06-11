@@ -472,12 +472,13 @@ QUnit.test("Message unread counter", async () => {
     });
     const { openDiscuss } = await start();
     openDiscuss();
-    pyEnv.withGuest(guestId, () =>
-        rpc("/im_livechat/chat_post", {
-            message_content: "hu",
-            uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,
-        })
-    );
+    pyEnv.withGuest(guestId, () => {
+        rpc("/mail/message/post", {
+            post_data: { body: "hu", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        });
+    });
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });
 

@@ -47,6 +47,11 @@ export class Message extends Record {
     is_discussion;
     /** @type {boolean} */
     is_note;
+    isSeenBySelf = Record.attr(false, {
+        compute() {
+            return this.originThread?.selfMember?.seen_message_id?.id >= this.id;
+        },
+    });
     /** @type {boolean} */
     is_transient;
     linkPreviews = Record.many("LinkPreview", { inverse: "message" });
