@@ -1072,17 +1072,37 @@ class Channel(models.Model):
             'seen_message_id': last_message.id,
             'last_seen_dt': fields.Datetime.now(),
         })
-        if notify:
-            data = {
-                'channel_id': self.id,
-                'id': member.id,
-                'last_message_id': last_message.id,
-            }
-            data['partner_id' if current_partner else 'guest_id'] = current_partner.id if current_partner else current_guest.id
-            target = current_partner or current_guest
-            if self.channel_type in self._types_allowing_seen_infos():
-                target = self
-            self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
+        if not notify:
+            return
+        member_basic_info = {
+            "id": member.id,
+            "persona": {
+                "id": member.partner_id.id if member.partner_id else member.guest_id.id,
+                "type": "partner" if member.partner_id else "guest",
+            },
+            "thread": {
+                "id": self.id,
+                "model": "discuss.channel",
+            },
+            "seen_message_id": {"id": last_message.id} if last_message else False,
+        }
+        member_self_info = {
+            **member_basic_info,
+            "thread": {
+                "id": self.id,
+                "message_unread_counter": member.message_unread_counter,
+                # sudo: bus.bus: reading non-sensitive last id
+                "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
+                "model": "discuss.channel",
+                "seen_message_id": last_message.id
+            },
+        }
+        notifications = [
+            [current_partner or current_guest, "mail.record/insert", {"ChannelMember": member_self_info}],
+        ]
+        if self.channel_type in self._types_allowing_seen_infos():
+            notifications.append([self, "mail.record/insert", {"ChannelMember": member_basic_info}])
+        self.env["bus.bus"]._sendmany(notifications)
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification

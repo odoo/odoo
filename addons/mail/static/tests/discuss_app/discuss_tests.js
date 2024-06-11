@@ -2111,10 +2111,7 @@ QUnit.test("Read of unread chat where new message is deleted should mark as read
         ["channel_id", "=", channelId],
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
-    pyEnv["discuss.channel.member"].write([memberId], {
-        seen_message_id: messageId,
-        message_unread_counter: 1,
-    });
+    pyEnv["discuss.channel.member"].write([memberId], { message_unread_counter: 1 });
     const { openDiscuss } = await start();
     await openDiscuss();
     await contains("button", { text: "Marc Demo", contains: [".badge", { text: "1" }] });
