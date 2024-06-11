@@ -808,6 +808,10 @@ class PosConfig(models.Model):
             return
         self._notify("UPDATE_CUSTOMER_DISPLAY", order)
 
+    def _get_display_device_ip(self):
+        self.ensure_one()
+        return self.proxy_ip
+
     def _get_customer_display_data(self):
         self.ensure_one()
         return {
@@ -816,7 +820,7 @@ class PosConfig(models.Model):
             'type': self.customer_display_type,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
-            **({'proxy_ip': self.proxy_ip} if self.customer_display_type == 'proxy' else {}),
+            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type == 'proxy' else {}),
         }
 
     @api.model

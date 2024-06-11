@@ -113,7 +113,8 @@ export class Navbar extends Component {
         }
         if (this.pos.config.customer_display_type === "proxy") {
             this.notification.add("Connecting to the IoT Box");
-            fetch(`${deduceUrl(this.pos.config.proxy_ip)}/hw_proxy/customer_facing_display`, {
+            const proxyIP = this.pos.getDisplayDeviceIP();
+            fetch(`${deduceUrl(proxyIP)}/hw_proxy/customer_facing_display`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
