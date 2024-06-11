@@ -157,12 +157,12 @@ test("Odoo line chart runtime loads the data", async () => {
     expect(model.getters.getChartRuntime(chartId).chartJsConfig.data).toEqual({
         datasets: [
             {
-                backgroundColor: "#1F77B466",
+                backgroundColor: "rgb(31,119,180)",
                 borderColor: "rgb(31,119,180)",
                 data: [1, 3],
                 label: "Count",
                 lineTension: 0,
-                fill: "origin",
+                fill: false,
                 pointBackgroundColor: "rgb(31,119,180)",
             },
         ],
@@ -170,6 +170,32 @@ test("Odoo line chart runtime loads the data", async () => {
     });
     // it should have loaded the data
     expect.verifySteps(["web_read_group"]);
+});
+
+test("Area charts are supported", async () => {
+    const { model } = await createSpreadsheetWithChart({ type: "odoo_line" });
+    await waitForDataLoaded(model);
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    const definition = model.getters.getChartDefinition(chartId);
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...definition, fillArea: true, stacked: false },
+        id: chartId,
+        sheetId,
+    });
+    let runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
+    expect(runtime.options.scales.x.stacked).toBe(undefined);
+    expect(runtime.options.scales.y.stacked).toBe(undefined);
+    expect(runtime.data.datasets[0].fill).toBe("origin");
+    model.dispatch("UPDATE_CHART", {
+        definition: { ...definition, fillArea: true, stacked: true },
+        id: chartId,
+        sheetId,
+    });
+    runtime = model.getters.getChartRuntime(chartId).chartJsConfig;
+    expect(runtime.options.scales.x.stacked).toBe(undefined);
+    expect(runtime.options.scales.y.stacked).toBe(true);
+    expect(runtime.data.datasets[0].fill).toBe("origin");
 });
 
 test("Data reloaded strictly upon domain update", async () => {
