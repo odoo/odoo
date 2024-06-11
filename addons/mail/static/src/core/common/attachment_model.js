@@ -32,9 +32,6 @@ export class Attachment extends Record {
     }
 
     get isDeletable() {
-        if (this.message) {
-            return this.message.allowsEdition;
-        }
         return true;
     }
 
