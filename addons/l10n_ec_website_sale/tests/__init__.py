@@ -1,5 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import payment_method
-from . import sale_order
-from . import website
+from . import test_l10n_ec_website_sale
