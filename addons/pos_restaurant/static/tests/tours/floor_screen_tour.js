@@ -58,7 +58,8 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
             FloorScreen.clickEditButton("Rename"),
 
             TextInputPopup.inputText("100"),
-            Dialog.confirm(),
+            // pressing enter should confirm the text input popup
+            { trigger: "textarea", run: "press Enter", in_modal: true },
             FloorScreen.clickTable("100"),
             FloorScreen.selectedTableIs("100"),
 
