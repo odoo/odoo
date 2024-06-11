@@ -118,18 +118,18 @@ function _computePxByRem(toRem) {
  * @param {string} value
  * @param {string} unitTo
  * @param {string} [cssProp] - the css property on which the unit applies
- * @param {jQuery} [$target] - the jQuery element on which that css property
+ * @param {jQuery} [target] -  Element on which that css property
  *                             may change
  * @returns {number}
  */
-function _convertValueToUnit(value, unitTo, cssProp, $target) {
+function _convertValueToUnit(value, unitTo, cssProp, target) {
     const m = _getNumericAndUnit(value);
     if (!m) {
         return NaN;
     }
     const numValue = parseFloat(m[0]);
     const valueUnit = m[1];
-    return _convertNumericToUnit(numValue, valueUnit, unitTo, cssProp, $target);
+    return _convertNumericToUnit(numValue, valueUnit, unitTo, cssProp, target);
 }
 /**
  * Converts the given numeric value expressed in the given css unit into
@@ -141,11 +141,11 @@ function _convertValueToUnit(value, unitTo, cssProp, $target) {
  * @param {string} unitFrom
  * @param {string} unitTo
  * @param {string} [cssProp] - the css property on which the unit applies
- * @param {jQuery} [$target] - the jQuery element on which that css property
+ * @param {jQuery} [target] - Element on which that css property
  *                             may change
  * @returns {number}
  */
-function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
+function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, target) {
     if (Math.abs(value) < Number.EPSILON || unitFrom === unitTo) {
         return value;
     }
@@ -153,7 +153,7 @@ function _convertNumericToUnit(value, unitFrom, unitTo, cssProp, $target) {
     if (converter === undefined) {
         throw new Error(`Cannot convert '${unitFrom}' units into '${unitTo}' units !`);
     }
-    return value * converter(cssProp, $target);
+    return value * converter(cssProp, target);
 }
 /**
  * Returns the numeric value and unit of a css value.
@@ -180,7 +180,6 @@ function _getNumericAndUnit(value) {
  * @returns {boolean}
  */
 function _areCssValuesEqual(value1, value2, cssProp, target) {
-    const $target = $(target);
     // String comparison first
     if (value1 === value2) {
         return true;
@@ -196,7 +195,7 @@ function _areCssValuesEqual(value1, value2, cssProp, target) {
         for (const index of [0, 1]) {
             const part1 = parts1 && parts1.length > index ? parts1[index] : 'auto';
             const part2 = parts2 && parts2.length > index ? parts2[index] : 'auto';
-            if (!_areCssValuesEqual(part1, part2, pseudoPartProp, $target)) {
+            if (!_areCssValuesEqual(part1, part2, pseudoPartProp, target)) {
                 return false;
             }
         }
@@ -274,7 +273,7 @@ function _areCssValuesEqual(value1, value2, cssProp, target) {
         return false;
     }
     const numValue1 = data[0];
-    const numValue2 = _convertValueToUnit(value2, data[1], cssProp, $target);
+    const numValue2 = _convertValueToUnit(value2, data[1], cssProp, target);
     return (Math.abs(numValue1 - numValue2) < Number.EPSILON);
 }
 /**
@@ -345,7 +344,8 @@ function _normalizeColor(color) {
  * @returns {string|false} the src of the image or false if not parsable
  */
 function _getBgImageURL(el) {
-    const parts = _backgroundImageCssToParts($(el).css('background-image'));
+    const backgroundImageStyle = el.style.backgroundImage || getComputedStyle(el).backgroundImage;
+    const parts = _backgroundImageCssToParts(backgroundImageStyle);
     const string = parts.url || '';
     const match = string.match(/^url\((['"])(.*?)\1\)$/);
     if (!match) {
