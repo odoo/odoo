@@ -33,8 +33,6 @@ export class Attachment extends Record {
     get isDeletable() {
         if (this.message && this.originThread?.model === "discuss.channel") {
             return this.message.editable;
-        } else if (this.message) {
-            return this.message.allowsEdition;
         }
         return true;
     }
