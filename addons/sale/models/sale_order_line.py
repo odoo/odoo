@@ -8,7 +8,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, float_round
+from odoo.tools import float_is_zero, float_compare, float_round, format_date
 
 
 class SaleOrderLine(models.Model):
@@ -316,9 +316,11 @@ class SaleOrderLine(models.Model):
                 context = {'lang': lang}
                 dp_state = line._get_downpayment_state()
                 if dp_state == 'draft':
-                    name = _("%(line_description)s (Draft)", line_description=name)
+                    name = _('Down Payment: %s (Draft)', format_date(self.env, self.create_date.date()))
                 elif dp_state == 'cancel':
-                    name = _("%(line_description)s (Canceled)", line_description=name)
+                    name = _("Down Payment (Canceled)")
+                else:
+                    name = _("Down Payment")
                 del context
             line.name = name
 
