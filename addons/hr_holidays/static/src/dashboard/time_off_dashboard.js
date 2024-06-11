@@ -27,6 +27,10 @@ export class TimeOffDashboard extends Component {
 
         onWillStart(async () => {
             await this.loadDashboardData();
+            this.hasAccrualAllocation = await this.orm.call(
+                "hr.leave.type",
+                "has_accrual_allocation"
+            );
         });
     }
 
@@ -68,10 +72,6 @@ export class TimeOffDashboard extends Component {
     resetDate() {
         this.state.date = luxon.DateTime.now();
         this.loadDashboardData();
-    }
-
-    has_accrual_allocation() {
-        return this.state.holidays.some((leave_type) => leave_type[1]["has_accrual_allocation"]);
     }
 
     async openPendingRequests() {
