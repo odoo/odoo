@@ -20,7 +20,7 @@
             run: `text ${application.email}`,
         }, {
             content: "Complete phone number",
-            trigger: "input[name=partner_mobile]",
+            trigger: "input[name=partner_phone]",
             run: `text ${application.phone}`,
         }, {
             content: "Complete LinkedIn profile",

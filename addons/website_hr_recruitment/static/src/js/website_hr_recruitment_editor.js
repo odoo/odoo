@@ -20,7 +20,7 @@ FormEditorRegistry.add('apply_job', {
         type: 'char',
         required: true,
         fillWith: 'phone',
-        name: 'partner_mobile',
+        name: 'partner_phone',
         string: _t('Phone Number'),
     }, {
         type: 'char',
