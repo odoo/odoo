@@ -1,12 +1,8 @@
-from odoo import _, api, fields, models
+from odoo import _, api, models
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
-
-    service_tracking = fields.Selection(selection_add=[
-        ('event', 'Event Registration'),
-    ], ondelete={'event': 'set default'})
 
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == 'event':

@@ -150,6 +150,20 @@ class ProductTemplate(models.Model):
     )
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
+    service_tracking = fields.Selection(selection=[
+            ('no', 'Nothing'),
+        ],
+        string="Create on Order",
+        default="no",
+        compute="_compute_service_tracking",
+        required=True,
+        store=True,
+        readonly=False,
+    )
+
+    @api.depends('type')
+    def _compute_service_tracking(self):
+        self.filtered(lambda product: product.type != 'service').service_tracking = 'no'
 
     def _compute_purchase_ok(self):
         pass

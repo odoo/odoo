@@ -13,9 +13,11 @@
                 <field name="service_type" widget="radio" invisible="True"/>
                 <field name="visible_expense_policy" invisible="1"/>
             </field>
-            <field name="product_tooltip" position="before">
+            <field name="type" position="after">
                 <field name="invoice_policy" required="1" invisible="not sale_ok"/>
-                <field name="service_tracking" invisible="1 or type != 'service' or not sale_ok"/>
+            </field>
+            <field name="service_tracking" position="attributes">
+                <attribute name="invisible" add="not sale_ok" separator="or"/>
             </field>
             <group name="tags" position="inside">
                 <field name="expense_policy" widget="radio" invisible="not visible_expense_policy"/>

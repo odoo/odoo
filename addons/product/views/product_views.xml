@@ -75,6 +75,7 @@
                                 <group name="group_general">
                                     <field name="active" invisible="1"/>
                                     <field name="type" widget="radio" options="{'horizontal': True}"/>
+                                    <field name="service_tracking" invisible="1 or type != 'service'"/>
                                     <field name="product_tooltip"
                                         class="fst-italic text-muted"
                                         string=""
