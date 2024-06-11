@@ -97,9 +97,28 @@ options.registry.AddToCart = options.Class.extend({
      * Fetches the variants ids from the server
      */
     async _fetchVariants(productTemplateId) {
+<<<<<<< HEAD
         const response = await this.orm.searchRead(
             "product.product", [["product_tmpl_id", "=", parseInt(productTemplateId)]], ["id"]
         );
+||||||| parent of 3a73a85b3e13 (temp)
+        const response = await this._rpc({
+            model: 'product.product',
+            method: 'search_read',
+            domain: [
+                ["product_tmpl_id", "=", parseInt(productTemplateId)],
+            ],
+        });
+=======
+        const response = await this._rpc({
+            model: 'product.product',
+            method: 'search_read',
+            domain: [
+                ["product_tmpl_id", "=", parseInt(productTemplateId)],
+            ],
+            fields: ['id'],
+        });
+>>>>>>> 3a73a85b3e13 (temp)
         this.$target[0].dataset.variants = response.map(variant => variant.id);
     },
 
