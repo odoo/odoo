@@ -47,7 +47,7 @@ class SmsTracker(models.Model):
                 'trace_status': trace_status,
                 'failure_type': failure_type,
                 'failure_reason': failure_reason,
-                **{'sent_datetime': fields.Datetime.now() if trace_status == 'pending' else {}},
+                'sent_datetime': fields.Datetime.now() if trace_status in ['pending', 'sent'] else {},
             }
             traces.write(traces_values)
         return traces
