@@ -9,6 +9,7 @@ const parser = new CalendarArchParser();
 const DEFAULT_ARCH_RESULTS = {
     canCreate: true,
     canDelete: true,
+    canEdit: true,
     eventLimit: 5,
     fieldMapping: {
         date_start: "start_date",
@@ -70,6 +71,18 @@ test("canDelete", () => {
     expect(parseWith({ delete: "false" }).canDelete).toBe(false);
     expect(parseWith({ delete: "False" }).canDelete).toBe(false);
     expect(parseWith({ delete: "0" }).canDelete).toBe(false);
+});
+
+test("canEdit", () => {
+    expect(parseWith({ edit: "" }).canEdit).toBe(true);
+
+    expect(parseWith({ edit: "true" }).canEdit).toBe(true);
+    expect(parseWith({ edit: "True" }).canEdit).toBe(true);
+    expect(parseWith({ edit: "1" }).canEdit).toBe(true);
+
+    expect(parseWith({ edit: "false" }).canEdit).toBe(false);
+    expect(parseWith({ edit: "False" }).canEdit).toBe(false);
+    expect(parseWith({ edit: "0" }).canEdit).toBe(false);
 });
 
 test("eventLimit", () => {

@@ -29,6 +29,7 @@ export class CalendarArchParser {
         let scale = sessionScale || "week";
         let canCreate = true;
         let canDelete = true;
+        let canEdit = true;
         let quickCreate = true;
         let quickCreateViewId = null;
         let hasEditDialog = false;
@@ -83,6 +84,9 @@ export class CalendarArchParser {
                     }
                     if (node.hasAttribute("delete")) {
                         canDelete = exprToBoolean(node.getAttribute("delete"), true);
+                    }
+                    if (node.hasAttribute("edit")) {
+                        canEdit = exprToBoolean(node.getAttribute("edit"), true);
                     }
                     if (node.hasAttribute("quick_create")) {
                         quickCreate = exprToBoolean(node.getAttribute("quick_create"), true);
@@ -184,6 +188,7 @@ export class CalendarArchParser {
         return {
             canCreate,
             canDelete,
+            canEdit,
             eventLimit,
             fieldMapping,
             fieldNames: [...fieldNames],
