@@ -1,10 +1,9 @@
 import { registry } from "@web/core/registry";
 import { contains } from "@web/../tests/utils";
 
-const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
+const messagesContain = (text) => `.o-livechat-root:shadow .o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour", {
-    shadow_dom: ".o-livechat-root",
     steps: () => [
         {
             trigger: messagesContain("Hello! I'm a bot!"),
@@ -26,7 +25,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_test_page_tour
             run: "click",
         },
         {
-            trigger: 'li:contains("I want to buy the software")',
+            trigger: '.o-livechat-root:shadow li:contains("I want to buy the software")',
             run: "click",
         },
         {
