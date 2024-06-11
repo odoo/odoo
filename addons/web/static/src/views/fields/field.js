@@ -14,28 +14,31 @@ const isSmall = utils.isSmall;
 const viewRegistry = registry.category("views");
 const fieldRegistry = registry.category("fields");
 
+const supportedInfoValidation = {
+    type: Array,
+    element: Object,
+    shape: {
+        label: String,
+        name: String,
+        type: String,
+        availableTypes: { type: Array, element: String, optional: true },
+        default: { type: String, optional: true },
+        help: { type: String, optional: true },
+        choices: /* choices if type == selection */ {
+            type: Array,
+            element: Object,
+            shape: { label: String, value: String },
+            optional: true,
+        },
+    },
+    optional: true,
+};
+
 fieldRegistry.addValidation({
     component: { validate: (c) => c.prototype instanceof Component },
     displayName: { type: String, optional: true },
-    supportedOptions: {
-        type: Array,
-        element: Object,
-        shape: {
-            label: String,
-            name: String,
-            type: String,
-            availableTypes: { type: Array, element: String, optional: true },
-            default: { type: String, optional: true },
-            help: { type: String, optional: true },
-            choices: /* choices if type == selection */ {
-                type: Array,
-                element: Object,
-                shape: { label: String, value: String },
-                optional: true,
-            },
-        },
-        optional: true,
-    },
+    supportedAttributes: supportedInfoValidation,
+    supportedOptions: supportedInfoValidation,
     supportedTypes: { type: Array, element: String, optional: true },
     extractProps: { type: Function, optional: true },
     isEmpty: { type: Function, optional: true },
