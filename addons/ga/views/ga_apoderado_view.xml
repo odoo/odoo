@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="ga_apoderado_list" >
+            <field name="name">Ga Apoderado List</field>
+            <field name="model">ga.apoderado</field>
+            <field name="arch" type="xml">
+                <tree string="Apoderado" create="true" edit="true">
+                    <field name="codigo"/>
+                    <field name="ci"/>
+                    <field name="name"/>
+                    <field name="telefono" widget="integer"/>
+                    <field name="parentesco"/>
+                </tree>
+            </field>
+        </record>
+        
+
+        <record model="ir.ui.view" id="ga_apoderado" >
+            <field name="name">Ga Apoderado Form</field>
+            <field name="model">ga.apoderado</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                    <field name="codigo"/>
+                    <field name="ci"/>
+                    <field name="name"/>
+                    <field name="fecha_nacimiento"/>
+                    <field name="ocupacion"/>
+                    <field name="telefono"/>
+                    <field name="parentesco"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="ga.action_apoderado_window" >
+            <field name="name">Apoderados</field>
+            <field name="res_model">ga.apoderado</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name= "Gestion Academica" id="ga.menu_root"/>
+        
+        <menuitem name= "Creacion" id="ga.menu_1" parent="ga.menu_root"/>
+        <menuitem name= "Apoderado" id="ga.menu_1_apoderado_list" parent="ga.menu_1" action="ga.action_apoderado_window"/>
+      
+    </data>
+</odoo>
