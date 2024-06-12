@@ -161,7 +161,7 @@ class SendSMS(models.TransientModel):
                     raise UserError(_('Following numbers are not correctly encoded: %s', repr(invalid_numbers)))
                 composer.sanitized_numbers = ','.join(sanitized_numbers)
             else:
-                composer.sanitized_numbers = False
+                composer.sanitized_numbers = ''
 
     @api.depends('composition_mode', 'res_model', 'res_id', 'template_id')
     def _compute_body(self):
