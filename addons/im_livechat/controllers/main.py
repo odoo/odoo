@@ -110,6 +110,7 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public')
     @add_guest_to_context
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
+        store = StoreData()
         user_id = None
         country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
@@ -142,11 +143,11 @@ class LivechatController(http.Controller):
         )
         if not channel_vals:
             return False
-        channel_info = None
         if not persisted:
             operator_partner = request.env['res.partner'].sudo().browse(channel_vals['livechat_operator_id'])
             channel_info = {
                 'id': -1, # only one temporary thread at a time, id does not matter.
+                "isLoaded": True,
                 'model': 'discuss.channel',
                 'name': channel_vals['name'],
                 'state': 'open',
@@ -157,6 +158,7 @@ class LivechatController(http.Controller):
                     'steps': chatbot_script._get_welcome_steps().mapped(lambda s: {'scriptStep': {'id': s.id}}),
                 } if chatbot_script else None
             }
+            store.add({"Thread": [channel_info]})
         else:
             channel = request.env['discuss.channel'].with_context(
                 mail_create_nosubscribe=False,
@@ -176,13 +178,12 @@ class LivechatController(http.Controller):
             channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
-            channel_info = channel._channel_info()[0]
+            channel_info = channel._channel_info()
+            store.add({"Thread": channel_info})
+            store.add({"Thread": {"id": channel.id, "model": "discuss.channel", "isLoaded": not chatbot_script}})
             if guest:
-                channel_info['guest_token'] = guest._format_auth_cookie()
-        channel_info.update(isLoaded=not persisted or not chatbot_script)
-        store = StoreData()
+                store.add({"Store": {"guest_token": guest._format_auth_cookie()}})
         request.env["res.users"]._init_store_data(store)
-        store.add({"Thread": channel_info})
         return store.get_result()
 
     def _post_feedback_message(self, channel, rating, reason):

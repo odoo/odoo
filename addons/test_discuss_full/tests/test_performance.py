@@ -102,7 +102,7 @@ class TestDiscussFullPerformance(HttpCase):
             'anonymous_name': 'anon 1',
             'channel_id': self.im_livechat_channel.id,
             'previous_operator_id': self.users[0].partner_id.id,
-        })["Thread"]['id'])
+        })["Thread"][0]['id'])
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
         self.authenticate(None, None)
         with patch("odoo.http.GeoIP.country_code", new_callable=PropertyMock(return_value=self.env.ref('base.be').code)):
@@ -110,7 +110,7 @@ class TestDiscussFullPerformance(HttpCase):
                 'anonymous_name': 'anon 2',
                 'channel_id': self.im_livechat_channel.id,
                 'previous_operator_id': self.users[0].partner_id.id,
-            })["Thread"]['id'])
+            })["Thread"][0]['id'])
         guest_sudo = self.channel_livechat_2.channel_member_ids.filtered(lambda m: m.guest_id).guest_id.sudo()
         self.make_jsonrpc_request("/mail/message/post", {
             "post_data": {
