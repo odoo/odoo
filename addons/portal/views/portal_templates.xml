@@ -222,7 +222,6 @@
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <div class="o_portal_docs row g-2">
-                    <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
                     <div t-if="portal_alert_category_enable" class="o_portal_category row g-2 mt-3" id="portal_alert_category"/>
                     <div t-if="portal_client_category_enable" class="o_portal_category row g-2 mt-3" id="portal_client_category"/>
                     <div t-if="portal_service_category_enable" class="o_portal_category row g-2 mt-3" id="portal_service_category"/>
@@ -237,6 +236,7 @@
                             <t t-set="config_card" t-value="True"/>
                         </t>
                     </div>
+                    <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
                 </div>
             </div>
             <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
@@ -244,7 +244,8 @@
     </template>
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
-        <div t-att-class="'o_portal_index_card ' +  ('' if config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
+        <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
+        <div t-att-class="'o_portal_index_card ' +  ('' if force_show or config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
             <a t-att-href="url" t-att-title="title" t-attf-class="d-flex justify-content-start gap-2 gap-md-3 align-items-center py-3 pe-2 px-md-3 h-100 rounded text-decoration-none text-reset #{bg_color if bg_color else 'text-bg-light'}">
                 <div t-if="icon" class="o_portal_icon align-self-start">
                     <img t-attf-src="#{icon}"/>
@@ -252,7 +253,7 @@
                 <div>
                     <h5 t-attf-class="mt-0 mb-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
                         <t t-out="count"/>
-                        <span t-if="placeholder_count" t-att-class="'' if show_count else 'd-none'" t-att-data-placeholder_count="placeholder_count"/>
+                        <span t-if="placeholder_count and not force_show" t-att-class="'' if show_count else 'd-none'" t-att-data-placeholder_count="placeholder_count"/>
                         <span t-out="title"/>
                     </h5>
                     <p class="m-0 text-600">
