@@ -34,7 +34,7 @@ configuration of their taxes and fiscal positions manually.
         'account',
         'l10n_fr',
     ],
-    'auto_install': ['account', 'l10n_fr'],
+    'auto_install': ['account'],
     'data': [
         'data/account_chart_template_data.xml',
         'data/account_data.xml',
