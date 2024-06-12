@@ -111,6 +111,10 @@ export class WebsitePreview extends Component {
             this.websiteContext.translation,
         ]);
 
+        useEffect(isPublicRootReady => {
+            this.iframe.el.setAttribute('is-ready', isPublicRootReady);
+        }, () => [this.websiteContext.isPublicRootReady]);
+
         onMounted(() => {
             this.websiteService.blockPreview(true, 'load-iframe');
             this.iframe.el.addEventListener('load', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
@@ -397,7 +401,6 @@ export class WebsitePreview extends Component {
         }
 
         this.iframe.el.contentWindow.addEventListener('PUBLIC-ROOT-READY', (event) => {
-            this.iframe.el.setAttribute('is-ready', 'true');
             if (!this.websiteContext.edition && editable) {
                 this.addWelcomeMessage();
             }
@@ -496,7 +499,6 @@ export class WebsitePreview extends Component {
     }
 
     _onPageUnload() {
-        this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
         // underlying iframe, to avoid for white flashes (visible on
         // Chrome Windows/Linux).
