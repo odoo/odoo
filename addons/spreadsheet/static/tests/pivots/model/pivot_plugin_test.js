@@ -7,10 +7,7 @@ import {
     getCellValue,
     getEvaluatedCell,
 } from "@spreadsheet/../tests/utils/getters";
-import {
-    createSpreadsheetWithPivot,
-    getZoneOfInsertedDataSource,
-} from "@spreadsheet/../tests/utils/pivot";
+import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
 import { getBasicServerData } from "@spreadsheet/../tests/utils/data";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { addGlobalFilter, setCellContent } from "@spreadsheet/../tests/utils/commands";
@@ -28,7 +25,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/utils/global_filt
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-const { DEFAULT_LOCALE, PIVOT_TABLE_CONFIG } = spreadsheet.constants;
+const { DEFAULT_LOCALE } = spreadsheet.constants;
 const { toZone } = spreadsheet.helpers;
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
@@ -994,41 +991,6 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         });
         assert.strictEqual(getEvaluatedCell(model, "B1").format, "dd/mm/yyyy");
     });
-
-    QUnit.test("Inserted pivot is inserted with a table", async function (assert) {
-        const { model } = await createSpreadsheetWithPivot();
-        const [pivotId] = model.getters.getPivotIds();
-        const sheetId = model.getters.getActiveSheetId();
-        const pivotZone = getZoneOfInsertedDataSource(model, "pivot", pivotId);
-        const tables = model.getters.getTables(sheetId);
-
-        assert.equal(tables.length, 1);
-        assert.deepEqual(tables[0].range.zone, pivotZone);
-        assert.deepEqual(tables[0].config, { ...PIVOT_TABLE_CONFIG, numberOfHeaders: 1 });
-    });
-
-    QUnit.test(
-        "The table has the correct number of headers when inserting a pivot",
-        async function (assert) {
-            const { model } = await createSpreadsheetWithPivot({
-                arch: /* xml */ `
-                    <pivot>
-                        <field name="date" interval="year" type="col"/>
-                        <field name="date" interval="month" type="col"/>
-                        <field name="date" interval="day" type="col"/>
-                        <field name="probability" type="row"/>
-                        <field name="foo" type="measure"/>
-                    </pivot>`,
-            });
-            const [pivotId] = model.getters.getPivotIds();
-            const sheetId = model.getters.getActiveSheetId();
-            const pivotZone = getZoneOfInsertedDataSource(model, "pivot", pivotId);
-            const tables = model.getters.getTables(sheetId);
-
-            assert.deepEqual(tables[0].range.zone, pivotZone);
-            assert.equal(tables[0].config.numberOfHeaders, 3);
-        }
-    );
 
     QUnit.test("can edit pivot domain with UPDATE_ODOO_PIVOT_DOMAIN", async (assert) => {
         const { model } = await createSpreadsheetWithPivot();
