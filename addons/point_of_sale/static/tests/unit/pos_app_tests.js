@@ -1,3 +1,5 @@
+/** @odoo-module */
+/* global posmodel */
 import { Chrome } from "@point_of_sale/app/pos_app";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -9,6 +11,7 @@ import { EventBus } from "@odoo/owl";
 import { uiService } from "@web/core/ui/ui_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { PosDataService } from "@point_of_sale/app/models/data_service";
+import { RPCError } from "@web/core/network/rpc";
 
 const mockContextualUtilsService = {
     dependencies: ["pos", "localization"],
@@ -101,7 +104,16 @@ export class MockPosData {
                         },
                     ],
                 },
-                "res.partner": { relations: {}, fields: {}, data: [] },
+                "res.partner": {
+                    relations: {},
+                    fields: {
+                        vat: {
+                            string: "VAT",
+                            type: "string",
+                        },
+                    },
+                    data: [],
+                },
                 "stock.picking.type": { relations: {}, fields: {}, data: [] },
                 "pos.config": {
                     relations: {},
@@ -179,4 +191,37 @@ QUnit.test("mount the Chrome", async (assert) => {
     });
     assert.containsOnce(fixture, ".pos");
     assert.verifySteps(["disable loader"]);
+});
+
+QUnit.test("test unsynch data error filtering", async (assert) => {
+    const serverData = new MockPosData().data;
+    const fixture = getFixture();
+    assert.verifySteps([]);
+    const testEnv = await makeTestEnv({
+        serverData,
+        async mockRPC(route, args) {
+            if (route === "/web/dataset/call_kw/res.partner/create") {
+                const error = new RPCError();
+                error.exceptionName = "odoo.exceptions.ValidationError";
+                error.code = 200;
+                throw error;
+            }
+        },
+    });
+    await mount(Chrome, fixture, {
+        env: testEnv,
+        test: true,
+        props: { disableLoader: () => {} },
+    });
+    const partner_data = {
+        name: "Test 1",
+        vat: "BE40301926",
+    };
+    try {
+        await posmodel.data.create("res.partner", [partner_data]);
+    } catch {
+        assert.step("create failed");
+        assert.equal(posmodel.data.network.unsyncData.length, 0);
+    }
+    assert.verifySteps(["create failed"]);
 });
