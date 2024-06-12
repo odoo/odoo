@@ -38,6 +38,10 @@ patch(Thread.prototype, {
         return this.newestMessage?.isSelfAuthored;
     },
 
+    get membersThatCanSeen() {
+        return super.membersThatCanSeen.filter(({ persona }) => !persona.is_bot);
+    },
+
     get avatarUrl() {
         if (this.channel_type === "livechat") {
             return this.operator.avatarUrl;

@@ -48,16 +48,7 @@ export class Message extends Record {
     hasEveryoneSeen = Record.attr(false, {
         /** @this {import("models").Message} */
         compute() {
-            if (!this.thread) {
-                return false;
-            }
-            const otherDidNotSee = this.thread.channelMembers.filter((member) => {
-                return (
-                    member.persona.notEq(this.author) &&
-                    (!member.seen_message_id || member.seen_message_id.id < this.id)
-                );
-            });
-            return otherDidNotSee.length === 0;
+            return this.thread?.membersThatCanSeen.every((m) => m.hasSeen(this));
         },
     });
     isMessagePreviousToLastSelfMessageSeenByEveryone = Record.attr(false, {
@@ -80,13 +71,9 @@ export class Message extends Record {
     hasSomeoneSeen = Record.attr(false, {
         /** @this {import("models").Message} */
         compute() {
-            if (!this.thread) {
-                return false;
-            }
-            const otherSeen = this.thread.channelMembers.filter(
-                (m) => m.persona.notEq(this.author) && m.seen_message_id?.id >= this.id
-            );
-            return otherSeen.length > 0;
+            return this.thread?.membersThatCanSeen
+                .filter(({ persona }) => !persona.eq(this.author))
+                .some((m) => m.hasSeen(this));
         },
     });
     hasSomeoneFetched = Record.attr(false, {
