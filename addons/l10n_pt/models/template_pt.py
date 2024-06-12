@@ -32,3 +32,12 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'iva_pt_purchase_normal',
             },
         }
+
+    @template('pt', 'account.journal')
+    def _get_pt_account_account_journal(self):
+        return {
+            'sale': {
+                'refund_sequence': True,
+                'restrict_mode_hash_table': True,
+            },
+        }
