@@ -65,3 +65,5 @@ RUN su postgres -c "initdb -D /var/lib/postgres/data -E UTF-8"
 RUN cp /usr/share/pgsql/postgresql.conf.sample /var/lib/postgres/data/postgresql.conf
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
+
+USER odoo
