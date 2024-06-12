@@ -48,7 +48,12 @@ try:
             else:
                 raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
         if not phonenumbers.is_valid_number(phone_nbr):
-            raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
+            # Force format with international to force metadata to apply
+            formatted_intl = phonenumbers.format_number(phone_nbr, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+            phone_nbr_intl = phonenumbers.parse(formatted_intl, region=country_code or None, keep_raw_input=True)
+            if not phonenumbers.is_valid_number(phone_nbr_intl):
+                raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
+            return phone_nbr_intl
 
         return phone_nbr
 
