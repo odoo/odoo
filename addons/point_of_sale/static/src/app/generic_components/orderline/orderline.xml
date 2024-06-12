@@ -14,6 +14,7 @@
                         <t t-esc="line.price"/>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <ul class="info-list" t-attf-class="{{props.infoListClasses}}">
                     <li class="price-per-unit">
                         <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" />
@@ -35,6 +36,18 @@
                     <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
                     <t t-slot="default" />
                 </ul>
+||||||| parent of 952812e425ec (temp)
+                <div class="product-price d-inline-block text-end price fw-bolder">
+                    <t t-if="line.price === 'free'">
+                        Free
+                    </t>
+                    <t t-else="" t-esc="line.price"/>
+                </div>
+=======
+                <div class="product-price d-inline-block text-end price fw-bolder">
+                    <t t-esc="line.price"/>
+                </div>
+>>>>>>> 952812e425ec (temp)
             </div>
         </li>
     </t>
