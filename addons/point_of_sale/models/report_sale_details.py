@@ -214,8 +214,7 @@ class ReportSaleDetails(models.AbstractModel):
                     'discount': discount,
                     'uom': product.uom_id.name,
                     'total_paid': product_total,
-                    'base_amount': base_amount,
-                } for (product, price_unit, discount), (qty, product_total, base_amount) in product_list.items()], key=lambda l: l['product_name']),
+                } for (product, price_unit, discount), (qty, product_total) in product_list.items()], key=lambda l: l['product_name']),
             }
             products.append(category_dictionnary)
         products = sorted(products, key=lambda l: str(l['name']))
@@ -232,8 +231,7 @@ class ReportSaleDetails(models.AbstractModel):
                     'discount': discount,
                     'uom': product.uom_id.name,
                     'total_paid': product_total,
-                    'base_amount': base_amount,
-                } for (product, price_unit, discount), (qty, product_total, base_amount) in product_list.items()], key=lambda l: l['product_name']),
+                } for (product, price_unit, discount), (qty, product_total) in product_list.items()], key=lambda l: l['product_name']),
             }
             refund_products.append(category_dictionnary)
         refund_products = sorted(refund_products, key=lambda l: str(l['name']))
@@ -264,6 +262,7 @@ class ReportSaleDetails(models.AbstractModel):
         discount_number = 0
         discount_amount = 0
         invoiceList = []
+        totalPaymentsAmount = 0
         invoiceTotal = 0
         for session in sessions:
             discount_number += len(session.order_ids.filtered(lambda o: o.lines.filtered(lambda l: l.discount > 0)))
@@ -273,6 +272,7 @@ class ReportSaleDetails(models.AbstractModel):
                 'invoices': session._get_invoice_total_list(),
             })
             invoiceTotal += session._get_total_invoice()
+            totalPaymentsAmount += session.total_payments_amount
 
         for payment in payments:
             if payment.get('id'):
@@ -302,16 +302,16 @@ class ReportSaleDetails(models.AbstractModel):
             'discount_amount': discount_amount,
             'invoiceList': invoiceList,
             'invoiceTotal': invoiceTotal,
+            'total_paid': totalPaymentsAmount
         }
 
     def _get_products_and_taxes_dict(self, line, products, taxes, currency):
         key2 = (line.product_id, line.price_unit, line.discount)
         key1 = line.product_id.product_tmpl_id.pos_categ_ids[0].name if len(line.product_id.product_tmpl_id.pos_categ_ids) else _('Not Categorized')
         products.setdefault(key1, {})
-        products[key1].setdefault(key2, [0.0, 0.0, 0.0])
+        products[key1].setdefault(key2, [0.0, 0.0])
         products[key1][key2][0] += line.qty
-        products[key1][key2][1] += line.currency_id.round(line.price_unit * line.qty * (100 - line.discount) / 100.0)
-        products[key1][key2][2] += line.price_subtotal
+        products[key1][key2][1] += line.price_subtotal_incl
 
         if line.tax_ids_after_fiscal_position:
             line_taxes = line.tax_ids_after_fiscal_position.sudo().compute_all(line.price_unit * (1-(line.discount or 0.0)/100.0), currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
@@ -337,13 +337,13 @@ class ReportSaleDetails(models.AbstractModel):
             total_cat = 0
             for product in category_dict['products']:
                 qty_cat += product['quantity']
-                total_cat += product['base_amount']
+                total_cat += product['total_paid']
             category_dict['total'] = total_cat
             category_dict['qty'] = qty_cat
         # IMPROVEMENT: It would be better if the `products` are grouped by pos.order.line.id.
         unique_products = list({tuple(sorted(product.items())): product for category in categories for product in category['products']}.values())
-        all_qty = sum([product['quantity'] for product in unique_products])
-        all_total = sum([product['base_amount'] for product in unique_products])
+        all_qty = sum(product['quantity'] for product in unique_products)
+        all_total = sum(product['total_paid'] for product in unique_products)
 
         return categories, {'total': all_total, 'qty': all_qty}
 

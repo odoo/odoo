@@ -2287,14 +2287,14 @@ class PosSession(models.Model):
     def _load_onboarding_data(self):
         if not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessDenied()
-        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', noupdate=True, kind='data')
         shop_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
         if shop_config and shop_config.active:
             self._load_onboarding_main_config_data(shop_config)
 
     @api.model
     def _load_onboarding_main_config_data(self, shop_config):
-        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', kind='data')
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_main_config.xml', None, mode='init', noupdate=True, kind='data')
         if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
             self.env['pos.session'].create({
                 'config_id': shop_config.id,
