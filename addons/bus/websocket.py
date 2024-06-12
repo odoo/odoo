@@ -812,11 +812,11 @@ class WebsocketConnectionHandler:
         """
         if not cls.websocket_allowed(request):
             raise ServiceUnavailable("Websocket is disabled in test mode")
-        cls._handle_public_configuration(request)
+        public_session = cls._handle_public_configuration(request)
         try:
             response = cls._get_handshake_response(request.httprequest.headers)
             socket = request.httprequest._HTTPRequest__environ['socket']
-            session, db, httprequest = request.session, request.db, request.httprequest
+            session, db, httprequest = (public_session or request.session), request.db, request.httprequest
             response.call_on_close(lambda: cls._serve_forever(
                 Websocket(socket, session),
                 db,
@@ -865,9 +865,11 @@ class WebsocketConnectionHandler:
         headers = request.httprequest.headers
         origin_url = urlparse(headers.get('origin'))
         if origin_url.netloc != headers.get('host') or origin_url.scheme != request.httprequest.scheme:
-            request.session = root.session_store.new()
-            request.session.update(get_default_session(), db=request.session.db)
-            request.session.is_explicit = True
+            session = root.session_store.new()
+            session.update(get_default_session(), db=request.session.db)
+            root.session_store.save(session)
+            return session
+        return None
 
     @classmethod
     def _assert_handshake_validity(cls, headers):

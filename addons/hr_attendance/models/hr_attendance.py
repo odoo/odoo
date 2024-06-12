@@ -163,17 +163,7 @@ class HrAttendance(models.Model):
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Retrieve expected attendance intervals
-            expected_attendances = emp.resource_calendar_id._attendance_intervals_batch(
-                start, stop, emp.resource_id
-            )[emp.resource_id.id]
-            # Substract Global Leaves and Employee's Leaves
-            leave_intervals = emp.resource_calendar_id._leave_intervals_batch(
-                start, stop, emp.resource_id, domain=AND([
-                    self._get_overtime_leave_domain(),
-                    [('company_id', 'in', [False, emp.company_id.id])],
-                ])
-            )
-            expected_attendances -= leave_intervals[False] | leave_intervals[emp.resource_id.id]
+            expected_attendances = emp._get_expected_attendances(start, stop, domain=AND([self._get_overtime_leave_domain(), [('company_id', 'in', [False, emp.company_id.id])]]))
 
             # working_times = {date: [(start, stop)]}
             working_times = defaultdict(lambda: [])
