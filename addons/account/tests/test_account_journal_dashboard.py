@@ -107,7 +107,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'currency_id': currency.id,
             'invoice_line_ids': [
-                (0, 0, {'name': 'test', 'price_unit': 200})
+                (0, 0, {'name': 'test', 'price_unit': 200, 'tax_ids': None})
             ],
         })
         invoice.action_post()
