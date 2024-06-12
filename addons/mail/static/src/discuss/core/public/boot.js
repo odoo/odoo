@@ -11,14 +11,11 @@ import { makeEnv, startServices } from "@web/env";
     await whenReady();
 
     const mainComponentsRegistry = registry.category("main_components");
-    mainComponentsRegistry.add("DiscussPublic", {
-        Component: DiscussPublic,
-        props: { data: odoo.discuss_data },
-    });
+    mainComponentsRegistry.add("DiscussPublic", { Component: DiscussPublic });
 
     const env = makeEnv();
     await startServices(env);
-    env.services["mail.store"].inPublicPage = true;
+    env.services["mail.store"].insert(odoo.discuss_data);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, getTemplate, dev: env.debug });
 })();
