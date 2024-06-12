@@ -89,7 +89,11 @@ patch(MockServer.prototype, {
         }
         if (route === "/discuss/channel/info") {
             const id = args.channel_id;
-            return this._mockDiscussChannelChannelInfo([id])[0];
+            const channelInfos = this._mockDiscussChannelChannelInfo([id]);
+            if (!channelInfos.length) {
+                return;
+            }
+            return { Thread: channelInfos };
         }
         if (args.model === "discuss.channel" && args.method === "add_members") {
             const ids = args.args[0];
