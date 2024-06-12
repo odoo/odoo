@@ -97,6 +97,11 @@ class SlideChannelInvite(models.TransientModel):
             'recipient_ids': [(4, slide_channel_partner.partner_id.id)]
         }
 
+        # if user wants to override FROM by configuring the email template
+        # take it into account
+        if self.template_id.email_from and self.template_id.email_from != self.env.user.email_formatted:
+            mail_values['email_from'] = self.template_id.email_from
+
         # optional support of notif_layout in context
         notif_layout = self.env.context.get('notif_layout', self.env.context.get('custom_layout'))
         if notif_layout:
