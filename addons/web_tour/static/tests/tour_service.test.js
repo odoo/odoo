@@ -166,6 +166,7 @@ test("points to next step", async () => {
         steps: () => [
             {
                 trigger: "button.inc",
+                run: "click",
             },
         ],
     });
@@ -193,7 +194,7 @@ test("points to next step", async () => {
 test("next step with new anchor at same position", async () => {
     tourRegistry.add("tour1", {
         sequence: 10,
-        steps: () => [{ trigger: "button.foo" }, { trigger: "button.bar" }],
+        steps: () => [{ trigger: "button.foo", run: "click" }, { trigger: "button.bar", run: "click"}],
     });
     await makeMockEnv();
 
@@ -498,7 +499,7 @@ test("check tour with inactive steps", async () => {
 test("pointer is added on top of overlay's stack", async () => {
     registry.category("web_tour.tours").add("tour1", {
         sequence: 10,
-        steps: () => [{ trigger: ".modal .a" }, { trigger: ".open" }],
+        steps: () => [{ trigger: ".modal .a", run: "click" }, { trigger: ".open", run: "click"}],
     });
     await makeMockEnv({});
     class DummyDialog extends Component {
@@ -633,6 +634,7 @@ test("should show only 1 pointer at a time", async () => {
         steps: () => [
             {
                 trigger: ".interval input",
+                run: "edit 5",
             },
         ],
     });
@@ -641,6 +643,7 @@ test("should show only 1 pointer at a time", async () => {
         steps: () => [
             {
                 trigger: "button.inc",
+                run: "click",
             },
         ],
     });
@@ -673,7 +676,7 @@ test("perform edit on next step", async () => {
         steps: () => [
             {
                 trigger: ".interval input",
-                run: "click",
+                run: "edit 5",
             },
             {
                 trigger: "button.inc",
@@ -792,7 +795,7 @@ test("scroller pointer to reach next step", async () => {
 
     registry.category("web_tour.tours").add("tour_des_flandres", {
         sequence: 10,
-        steps: () => [{ trigger: "button.inc", content: "Click to increment" }],
+        steps: () => [{ trigger: "button.inc", content: "Click to increment", run: "click"}],
     });
     await makeMockEnv();
     class Root extends Component {
