@@ -552,8 +552,8 @@ class MrpWorkorder(models.Model):
         return total
 
     @api.model
-    def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=[], start_date=None, stop_date=None, scale=None):
-        gantt_data = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, start_date=start_date, stop_date=stop_date, scale=scale)
+    def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=[], progress_bar_fields=None, start_date=None, stop_date=None, scale=None):
+        gantt_data = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, progress_bar_fields=progress_bar_fields, start_date=start_date, stop_date=stop_date, scale=scale)
         if 'workcenter_id' not in gantt_data['unavailabilities']:
             workcenter_ids = set()
             if groupby and 'workcenter_id' in groupby:
