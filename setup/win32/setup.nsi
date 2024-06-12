@@ -136,6 +136,7 @@ Var ProxyTokenPwd
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE ComponentLeave
 !insertmacro MUI_PAGE_COMPONENTS
 Page Custom ShowPostgreSQL LeavePostgreSQL
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 Page Custom ShowProxyTokenDialogPage
@@ -172,6 +173,7 @@ LangString DESC_PostgreSQL_Hostname ${LANG_ENGLISH} "Hostname"
 LangString DESC_PostgreSQL_Port ${LANG_ENGLISH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_ENGLISH} "Username"
 LangString DESC_PostgreSQL_Password ${LANG_ENGLISH} "Password"
+LangString WARNING_NginxInUserFolder ${LANG_ENGLISH} "You can not install Nginx in a user folder. Please choose another folder installation like C:\odoo"
 LangString Profile_AllInOne ${LANG_ENGLISH} "Odoo Server And PostgreSQL Server"
 LangString Profile_Server ${LANG_ENGLISH} "Odoo Server Only"
 LangString Profile_IOT ${LANG_ENGLISH} "Odoo IoT"
@@ -197,6 +199,7 @@ LangString DESC_PostgreSQL_Hostname ${LANG_FRENCH} "Hôte"
 LangString DESC_PostgreSQL_Port ${LANG_FRENCH} "Port"
 LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
+LangString WARNING_NginxInUserFolder ${LANG_FRENCH} "Vous ne pouvez pas installer Nginx dans un dossier utilisateur. Merci de changer le dossier d'installation comme C:\odoo"
 LangString Profile_AllInOne ${LANG_FRENCH} "Serveur Odoo Et Serveur PostgreSQL"
 LangString Profile_Server ${LANG_FRENCH} "Seulement Le Serveur Odoo"
 LangString Profile_IOT ${LANG_FRENCH} "Odoo IoT"
@@ -570,6 +573,18 @@ Function ComponentLeave
         MessageBox MB_ICONEXCLAMATION|MB_OK $(DESC_CanNotInstallPostgreSQL)
         Abort
     Done:
+FunctionEnd
+
+Function DirectoryLeave
+    # Nginx won't start if it is in a user (sub-)folder
+    ${If} ${SectionIsSelected} ${Nginx}    
+        StrLen $0 $PROFILE
+        StrCpy $0 $INSTDIR $0
+        StrCmp $0 $PROFILE 0 PathGood
+            MessageBox MB_ICONEXCLAMATION|MB_OK $(WARNING_NginxInUserFolder)
+            Abort
+    ${EndIf}
+    PathGood:
 FunctionEnd
 
 Function LaunchLink
