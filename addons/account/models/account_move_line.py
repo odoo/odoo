@@ -897,6 +897,11 @@ class AccountMoveLine(models.Model):
         if self.company_id and tax_ids:
             tax_ids = tax_ids._filter_taxes_by_company(self.company_id)
 
+        if not tax_ids and self.move_id.is_sale_document(include_receipts=True):
+            tax_ids = self.move_id.company_id.account_sale_tax_id
+        elif not tax_ids and self.move_id.is_purchase_document(include_receipts=True):
+            tax_ids = self.move_id.company_id.account_purchase_tax_id
+
         if tax_ids and self.move_id.fiscal_position_id:
             tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
 
