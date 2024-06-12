@@ -164,8 +164,10 @@
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false" edit="true" expand="context.get('expand', False)" multi_edit="1" sample="1">
+                    <field name="quick_edit_mode" invisible="1"/>
                     <field name="move_id" column_invisible="True"/>
-                    <field name="invoice_date" string="Invoice Date" optional="hide"/>
+                    <field name="invoice_date" string="Invoice Date" optional="hide" invisible="quick_edit_mode"/>
+                    <field name="invoice_date" string="Invoice Date" optional="show" invisible="not quick_edit_mode"/>
                     <field name="date" readonly="1"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
@@ -461,9 +463,11 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+                    <field name="quick_edit_mode" invisible="1"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="made_sequence_hole" column_invisible="True"/>
-                    <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'"/>
+                    <field name="invoice_date" string="Invoice Date" optional="hide" readonly="state != 'draft'" invisible="quick_edit_mode"/>
+                    <field name="invoice_date" string="Invoice Date" optional="show" readonly="state != 'draft'" invisible="not quick_edit_mode"/>
                     <field name="date" readonly="state in ['cancel', 'posted']"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
                     <field name="partner_id" optional="show" readonly="state != 'draft'"/>
