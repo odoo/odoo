@@ -44,6 +44,9 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
             ...ProductScreen.clickOrderline("Combo Product 8"),
             ...ProductScreen.selectedOrderlineHas("Combo Product 8", "1.0", "30.00"),
 
+            // check that there is no price shown on the parent line
+            ...inLeftSide(Order.doesNotHaveLine({productName: "Office Combo", price: "0.0"})),
+
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
             ...ProductScreen.clickCustomer("Partner Test 1"),
