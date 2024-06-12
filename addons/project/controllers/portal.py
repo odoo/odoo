@@ -376,7 +376,7 @@ class ProjectCustomerPortal(CustomerPortal):
         Task_sudo = Task.sudo()
 
         # default sort by value
-        if not sortby or (sortby == 'milestone' and not milestones_allowed):
+        if not sortby or sortby not in searchbar_sortings or (sortby == 'milestone' and not milestones_allowed):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
