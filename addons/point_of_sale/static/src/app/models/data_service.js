@@ -119,7 +119,6 @@ export class PosData extends Reactive {
         options = [],
     }) {
         this.network.loading = true;
-
         try {
             let result = true;
 
@@ -167,7 +166,8 @@ export class PosData extends Reactive {
             this.setOnline();
             return result;
         } catch (error) {
-            if (queue) {
+            const skipError = error.constructor.name != "ConnectionLostError";
+            if (queue && !skipError) {
                 this.network.unsyncData.push({ type, model, ids, values });
             }
 
@@ -184,7 +184,6 @@ export class PosData extends Reactive {
         await this.mutex.exec(async () => {
             while (this.network.unsyncData.length > 0) {
                 const result = await this.execute(this.network.unsyncData[0]);
-
                 if (result) {
                     this.network.unsyncData.shift();
                 } else {
