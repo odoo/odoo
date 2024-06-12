@@ -150,6 +150,10 @@ function getLocalStorageFold() {
     };
 }
 
+function getPropertyHandleElement(propertyName) {
+    return queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
+}
+
 class Partner extends models.Model {
     display_name = fields.Char();
     properties = fields.Properties({
@@ -2555,4 +2559,73 @@ test("new property, change record, change property type", async () => {
 
     await contains(".o_pager_previous").click();
     expect(".o_property_field .o_property_field_value input").toHaveValue("0");
+});
+
+test.tags("desktop")("properties: moving single property to 2nd group in auto split mode", async () => {
+    await makePropertiesGroupView([false]);
+    const { moveTo, drop } = await contains(getPropertyHandleElement("property_1"), {
+        visible: false,
+    }).drag();
+    const secondGroup = queryFirst(".o_property_group:last-of-type");
+    await moveTo(secondGroup, "bottom");
+    await drop();
+    expect(getGroups()).toEqual([
+        [["GROUP 1", "property_gen_2"]],
+        [
+            ["GROUP 2", "property_gen_3"],
+            ["Property 1", "property_1"],
+        ],
+    ]);
+});
+
+test.tags("desktop")("properties: moving single property to 1st group", async () => {
+    await makePropertiesGroupView([true, true, false]);
+
+    await contains(getPropertyHandleElement("property_3"), {
+        visible: false,
+    }).dragAndDrop(getPropertyHandleElement("property_1"));
+    expect(getGroups()).toEqual([
+        [
+            ["SEPARATOR 1", "property_1"],
+            ["Property 3", "property_3"],
+        ],
+        [["SEPARATOR 2", "property_2"]],
+    ]);
+});
+
+test.tags("desktop")("properties: split, moving property from 2nd group to 1st", async () => {
+    await makePropertiesGroupView([true, false, false]);
+
+    await contains(getPropertyHandleElement("property_3"), {
+        visible: false,
+    }).dragAndDrop(getPropertyHandleElement("property_2"), "top");
+    expect(getGroups()).toEqual([
+        [
+            ["SEPARATOR 1", "property_1"],
+            ["Property 3", "property_3"],
+            ["Property 2", "property_2"],
+        ],
+        [["GROUP 2", "property_gen_2"]],
+    ]);
+});
+
+test.tags("desktop")("properties: split, moving property from 1st group to 2nd", async () => {
+    await makePropertiesGroupView([true, false, false, false, false, false]);
+
+    await contains(getPropertyHandleElement("property_3"), {
+        visible: false,
+    }).dragAndDrop(getPropertyHandleElement("property_6"), "top");
+    expect(getGroups()).toEqual([
+        [
+            ["SEPARATOR 1", "property_1"],
+            ["Property 2", "property_2"],
+            ["Property 4", "property_4"],
+        ],
+        [
+            ["GROUP 2", "property_gen_2"],
+            ["Property 5", "property_5"],
+            ["Property 3", "property_3"],
+            ["Property 6", "property_6"],
+        ],
+    ]);
 });
