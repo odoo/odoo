@@ -89,6 +89,14 @@ export class Thread extends Record {
         onDelete: (r) => r.delete(),
         sort: (m1, m2) => m1.id - m2.id,
     });
+    /**
+     * To be overridden.
+     * The purpose is to exclude technical channelMembers like bots and avoid
+     * "wrong" seen message indicator
+     */
+    get membersThatCanSeen() {
+        return this.channelMembers;
+    }
     typingMembers = Record.many("ChannelMember", { inverse: "threadAsTyping" });
     otherTypingMembers = Record.many("ChannelMember", {
         /** @this {import("models").Thread} */

@@ -89,6 +89,13 @@ export class ChannelMember extends Record {
     get memberSince() {
         return this.create_date ? deserializeDateTime(this.create_date) : undefined;
     }
+
+    /**
+     * @param {import("models").Message} message
+     */
+    hasSeen(message) {
+        return this.persona.eq(message.author) || this.seen_message_id?.id >= message.id;
+    }
 }
 
 ChannelMember.register();
