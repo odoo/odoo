@@ -606,6 +606,8 @@ test("Open 'Add Custom Filter' dialog", async () => {
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search></search>`,
     });
     await toggleSearchBarMenu();
     expect(queryAllTexts`.o_filter_menu .dropdown-item`).toEqual(["Add Custom Filter"]);
@@ -623,6 +625,8 @@ test("Default leaf in 'Add Custom Filter' dialog is based on ID (if no special f
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
     });
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
@@ -637,6 +641,8 @@ test("Default leaf in 'Add Custom Filter' dialog is based on first special field
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
     });
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
@@ -649,6 +655,8 @@ test("Default connector is '|' (any)", async () => {
     await mountWithSearch(SearchBarMenu, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
     });
     await toggleSearchBarMenu();
     await openAddCustomFilterDialog();
@@ -795,6 +803,8 @@ test("display of is (not) (not) set in facets", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
     });
     expect(getFacetTexts()).toEqual([]);
     expect(searchBar.env.searchModel.domain).toEqual([]);
@@ -852,6 +862,8 @@ test("Add a custom filter: notification on invalid domain", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "foo",
         searchMenuTypes: ["filter"],
+        searchViewId: false,
+        searchViewArch: `<search/>`,
     });
 
     await toggleSearchBarMenu();

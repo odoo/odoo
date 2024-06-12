@@ -56,6 +56,7 @@ export class WithSearch extends Component {
                 view: useService("view"),
                 field: useService("field"),
                 name: useService("name"),
+                dialog: useService("dialog"),
             },
             this.props.searchModelArgs
         );

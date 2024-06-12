@@ -136,6 +136,11 @@ export class SearchBar extends Component {
         for (const searchItem of this.searchItemsFields) {
             this.items.push(...this.getItems(searchItem, trimmedQuery));
         }
+
+        this.items.push({
+            title: _t("Add a custom filter"),
+            isAddCustomFilterButton: true,
+        });    
     }
 
     /**
@@ -359,6 +364,10 @@ export class SearchBar extends Component {
      * @param {Object} item
      */
     selectItem(item) {
+        if (item.isAddCustomFilterButton) {
+            return this.env.searchModel.spawnCustomFilterDialog();
+        }
+
         const searchItem = this.getSearchItem(item.searchItemId);
         if (
             (searchItem.type === "field" && searchItem.fieldType === "properties") ||
