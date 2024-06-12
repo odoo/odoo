@@ -7,7 +7,7 @@
         <field name="name">hr.attendance.tree</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false">
+            <tree string="Employee attendances" decoration-success="color == 10" decoration-danger="color == 1" sample="1" duplicate="false" js_class="attendance_list_view">
                 <field name="employee_id" widget="many2one_avatar_user"/>
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
@@ -258,41 +258,7 @@
             }
         </field>
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_attendance">
-                Ready to track attendances ?
-                <div class="d-flex align">
-                    <div class="mx-5" >
-                        <img src="/hr_attendance/static/img/mock-tablet.png" height="180" class="mb-2"/>
-                        <div class="row justify-content-center mt-1">
-                            <a type="action" class="btn btn-primary d-block col-6" name="%(action_try_kiosk)d">
-                                Try the kiosk
-                            </a>
-                        </div>
-                    </div>
-                    <div class="mx-5" >
-                        <img src="/hr_attendance/static/img/attendance_dot.gif" height="180" class="mb-2"/>
-                        <p class="mt-2"><em>Try the top
-                            <i class="fa fa-circle text-danger" role="img" aria-label="Attendance"/>
-                            icon (e.g for work from home)</em></p>
-                    </div>
-                </div>
-                <div class="d-flex gap-3 align-items-center or-separator">
-                    <hr class="flex-grow-1"/>
-                    or
-                    <hr class="flex-grow-1"/>
-                </div>
-                <div class="px-2 py-2">
-                    <div class="m-2">
-                        Try the backend and reporting:
-                    </div>
-                    <div class="row justify-content-center">
-                        <a type="action" class="btn btn-secondary d-block col-2" name="%(action_load_demo_data)d">
-                            Load sample data
-                        </a>
-                    </div>
-                </div>
-            </p>
+        <field name="help">
         </field>
     </record>
 

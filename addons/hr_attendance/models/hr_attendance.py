@@ -2,6 +2,7 @@
 
 import pytz
 
+from calendar import monthrange
 from collections import defaultdict
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -439,20 +440,21 @@ class HrAttendance(models.Model):
             'target': 'new'
         }
 
-    def _load_demo_data(self):
-        # Check if demo data was already installed
+    @api.model
+    def hasDemoData(self):
         if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
-            raise AccessDenied()
-        employee_sj = self.env.ref('hr_attendance.employee_sj', raise_if_not_found=False)
-        if employee_sj:
-            return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'success',
-                'message': _("Demo data was already loaded."),
-            }
-        }
+            return True
+        # This record only exists if the scenario has been already launched
+        demo_tag = self.env.ref('hr_attendance.employee_category_demo', raise_if_not_found=False)
+        if demo_tag:
+            return True
+        return self.env['ir.module.module'].search_count([
+            '&',
+                ('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
+                ('demo', '=', True)
+        ])
+
+    def _load_demo_data(self):
         # Load employees, schedules, departments and partners
         convert.convert_file(self.env, 'hr_attendance', 'data/scenarios/hr_attendance.xml', None, mode='init', kind='data')
 
@@ -463,7 +465,8 @@ class HrAttendance(models.Model):
         # Retrieve employee from xml file
         # Calculate attendances records for the previous month and the current until today
         now = datetime.now()
-        date_range = now.day + (now.replace(day=31) - relativedelta(months=1)).day
+        previous_month_datetime = (now - relativedelta(months=1))
+        date_range = now.day + monthrange(previous_month_datetime.year, previous_month_datetime.month)[1]
         city_coordinates = (50.27, 5.31)
         city_coordinates_exception = (51.01, 2.82)
         city_dict = {
