@@ -112,7 +112,7 @@ function describeWhyStepFailed(step) {
     } else if (!stepState.isVisible) {
         return "Element has been found but isn't displayed. (Use 'step.allowInvisible: true,' if you want to skip this check)";
     } else if (!stepState.isEnabled) {
-        return "Element has been found but is disabled. (If this step does not run action so that you only want to check that element is visible, you can use 'step.isCheck: true,')";
+        return "Element has been found but is disabled.";
     } else if (stepState.isBlocked) {
         return "Element has been found but DOM is blocked by UI.";
     } else if (!stepState.hasRun) {

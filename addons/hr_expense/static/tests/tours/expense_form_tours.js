@@ -50,6 +50,5 @@ registry.category("web_tour.tours").add('create_expense_no_employee_access_tour'
     {
         content: "Check",
         trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
-        isCheck: true,
     },
 ]});

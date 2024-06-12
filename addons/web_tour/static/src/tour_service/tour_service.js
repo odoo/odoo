@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { EventBus, markup, whenReady, reactive } from "@odoo/owl";
+import { EventBus, markup, whenReady, reactive, validate } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { MacroEngine } from "@web/core/macro";
@@ -59,6 +59,45 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @typedef {"manual" | "auto"} TourMode
  */
 
+/**
+ * Check properties of tourStep
+ * @param {TourStep} tourStep
+ */
+function checkTourStepKeyValues(tourStep) {
+    const stepschema = {
+        id: { type: String, optional: true },
+        trigger: { type: String },
+        extra_trigger: { type: String, optional: true },
+        alt_trigger: { type: String, optional: true },
+        skip_trigger: { type: String, optional: true },
+        content: { type: [String, Object], optional: true }, //allow object for _t && markup
+        position: { type: String, optional: true },
+        edition: { type: String, optional: true },
+        run: { type: [String, Function], optional: true },
+        allowInvisible: { type: Boolean, optional: true },
+        allowDisabled: { type: Boolean, optional: true },
+        auto: { type: Boolean, optional: true },
+        in_modal: { type: Boolean, optional: true },
+        width: { type: Number, optional: true },
+        timeout: { type: Number, optional: true },
+        consumeVisibleOnly: { type: Boolean, optional: true },
+        consumeEvent: { type: String, optional: true },
+        mobile: { type: Boolean, optional: true },
+        title: { type: String, optional: true },
+        shadow_dom: { type: Boolean, optional: true },
+        debugHelp: { type: String, optional: true },
+        noPrepend: { type: Boolean, optional: true },
+    };
+
+    try {
+        validate(tourStep, stepschema);
+        return true;
+    } catch (error) {
+        console.error(`Error for step ${JSON.stringify(tourStep, null, 4)}\n${error.message}`);
+        return false;
+    }
+}
+
 export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
     dependencies: ["orm", "effect", "ui", "overlay", "localization"],
@@ -82,7 +121,7 @@ export const tourService = {
                         throw new Error(`tour.steps has to be a function that returns TourStep[]`);
                     }
                     if (!steps) {
-                        steps = tour.steps();
+                        steps = tour.steps().filter(checkTourStepKeyValues);
                     }
                     return steps;
                 },

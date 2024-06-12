@@ -23,7 +23,6 @@ export function clickMenuDropdownOption(name) {
 export function isCashMoveButtonHidden() {
     return [
         {
-            extraTrigger: ".pos-topheader",
             trigger: ".pos-topheader:not(:contains(Cash In/Out))",
         },
     ];
