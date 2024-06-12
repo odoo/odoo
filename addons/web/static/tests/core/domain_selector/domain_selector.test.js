@@ -154,7 +154,7 @@ test("building a domain with a datetime", async () => {
         domain: `[("datetime", "=", "2017-03-27 15:42:00")]`,
         isDebugMode: true,
         update(domain) {
-            expect(domain).toBe(`[("datetime", "=", "2017-02-26 15:42:00")]`);
+            expect(domain).toBe(`[("datetime", "=", "2017-03-26 15:42:00")]`);
         },
     });
 
@@ -166,11 +166,11 @@ test("building a domain with a datetime", async () => {
 
     // Change the date in the datepicker
     await contains(".o_datetime_input").click();
-    await contains(getPickerCell("26").at(0)).click();
+    await contains(getPickerCell("26")).click();
     await contains(getPickerApplyButton()).click();
 
     // The input field should display the date and time in the user's timezone
-    expect(".o_datetime_input").toHaveValue("02/26/2017 16:42:00");
+    expect(".o_datetime_input").toHaveValue("03/26/2017 16:42:00");
 });
 
 test("building a domain with an invalid path", async () => {

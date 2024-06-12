@@ -188,7 +188,7 @@ test("RemainingDaysField on a date field in form view", async () => {
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
 
-    await click(getPickerCell("9").at(0));
+    await click(getPickerCell("9"));
     await animationFrame();
     await click(".o_form_button_save");
     await animationFrame();
@@ -253,7 +253,7 @@ test("RemainingDaysField on a datetime field in form view", async () => {
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(1, { message: "datepicker should be opened" });
 
-    await click(getPickerCell("9").at(0));
+    await click(getPickerCell("9"));
     await animationFrame();
     await click(".o_form_button_save");
     await animationFrame();
