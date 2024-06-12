@@ -54,8 +54,8 @@ class AccountPayment(models.Model):
                 or tx_sudo.payment_method_id
             )
             if (
-                tx_sudo.provider_id.support_refund
-                and payment_method.support_refund
+                tx_sudo.provider_id.support_refund != 'none'
+                and payment_method.support_refund != 'none'
                 and tx_sudo.operation != 'refund'
             ):
                 # Only consider refund transactions that are confirmed by summing the amounts of

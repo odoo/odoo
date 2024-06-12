@@ -12,7 +12,7 @@ from odoo.tests import tagged
 class TestAccountPayment(AccountPaymentCommon):
 
     def test_no_amount_available_for_refund_when_not_supported(self):
-        self.provider.support_refund = False
+        self.provider.support_refund = 'none'
         tx = self._create_transaction('redirect', state='done')
         tx._post_process()  # Create the payment
         self.assertEqual(
