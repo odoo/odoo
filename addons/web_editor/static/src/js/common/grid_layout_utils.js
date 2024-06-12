@@ -6,6 +6,7 @@ import {descendants, preserveCursor} from "@web_editor/js/editor/odoo-editor/src
 const rowSize = 50; // 50px.
 // Maximum number of rows that can be added when dragging a grid item.
 export const additionalRowLimit = 10;
+const defaultGridPadding = 10; // 10px (see `--grid-item-padding-(x|y)` CSS variables).
 
 /**
  * Returns the grid properties: rowGap, rowSize, columnGap and columnSize.
@@ -176,11 +177,14 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         // Placing the column.
         const style = window.getComputedStyle(columnEl);
         // Horizontal placement.
-        const columnLeft = isImageColumn ? imageEl.offsetLeft : columnEl.offsetLeft;
+        const borderLeft = parseFloat(style.borderLeft);
+        const columnLeft = isImageColumn && !borderLeft ? imageEl.offsetLeft : columnEl.offsetLeft;
         // Getting the width of the column.
         const paddingLeft = parseFloat(style.paddingLeft);
-        const width = isImageColumn ? parseFloat(imageEl.scrollWidth)
+        let width = isImageColumn ? parseFloat(imageEl.scrollWidth)
             : parseFloat(columnEl.scrollWidth) - (allBackgroundColor ? 0 : 2 * paddingLeft);
+        const borderX = borderLeft + parseFloat(style.borderRight);
+        width += borderX + (allBackgroundColor || isImageColumn ? 0 : 2 * defaultGridPadding);
         let columnSpan = Math.round((width + columnGap) / (columnSize + columnGap));
         if (columnSpan < 1) {
             columnSpan = 1;
@@ -189,14 +193,17 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         const columnEnd = columnStart + columnSpan;
 
         // Vertical placement.
-        const columnTop = isImageColumn ? imageEl.offsetTop : columnEl.offsetTop;
+        const borderTop = parseFloat(style.borderTop);
+        const columnTop = isImageColumn && !borderTop ? imageEl.offsetTop : columnEl.offsetTop;
         // Getting the top and bottom paddings and computing the row offset.
         const paddingTop = parseFloat(style.paddingTop);
         const paddingBottom = parseFloat(style.paddingBottom);
         const rowOffsetTop = Math.floor((paddingTop + rowGap) / (rowSize + rowGap));
         // Getting the height of the column.
-        const height = isImageColumn ? parseFloat(imageEl.scrollHeight)
+        let height = isImageColumn ? parseFloat(imageEl.scrollHeight)
             : parseFloat(columnEl.scrollHeight) - (allBackgroundColor ? 0 : paddingTop + paddingBottom);
+        const borderY = borderTop + parseFloat(style.borderBottom);
+        height += borderY + (allBackgroundColor || isImageColumn ? 0 : 2 * defaultGridPadding);
         const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
         const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + (allBackgroundColor || isImageColumn ? 0 : rowOffsetTop);
         const rowEnd = rowStart + rowSpan;
@@ -278,6 +285,12 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
     if (_checkIfImageColumn(columnEl)) {
         _convertImageColumn(columnEl);
     }
+
+    // Taking the grid padding into account.
+    const paddingX = parseFloat(rowEl.style.getPropertyValue("--grid-item-padding-x")) || defaultGridPadding;
+    const paddingY = parseFloat(rowEl.style.getPropertyValue("--grid-item-padding-y")) || defaultGridPadding;
+    columnWidth += 2 * paddingX;
+    columnHeight += 2 * paddingY;
 
     // Computing the column and row spans.
     const gridProp = _getGridProperties(rowEl);
