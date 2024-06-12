@@ -390,8 +390,36 @@
             </field>
         </record>
 
+        <record id="action_repair_picking_type_kanban" model="ir.actions.act_window">
+            <field name="name">Repair Overview</field>
+            <field name="path">repair-types</field>
+            <field name="res_model">stock.picking.type</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="domain">[('code', '=', 'repair_operation')]</field>
+            <field name="view_id" ref="stock.stock_picking_type_kanban"/>
+        </record>
+
+        <record id="action_repair_overview" model="ir.actions.server">
+            <field name="name">stock.repair.type.overview</field>
+            <field name="model_id" ref="model_stock_picking_type"/>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_repair_overview()
+            </field>
+        </record>
+
         <menuitem id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"
                   web_icon="repair,static/description/icon.png"/>
+
+        <menuitem
+            id="repair_picking_type_menu"
+            name="Overview"
+            action="action_repair_overview"
+            groups="stock.group_stock_user"
+            parent="menu_repair_order"
+            sequence="0"
+        />
 
         <menuitem id="repair_order_menu" name="Orders" action="action_repair_order_tree" groups="stock.group_stock_user"
                   parent="menu_repair_order"/>
