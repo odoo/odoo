@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('mailing_portal_unsubscribe_from_documen
             trigger: "div#o_mailing_subscription_form_blocklisted:not(:has(p:contains('You will not receive any news from those mailing lists you are a member of')))",
             run: "click",
         }, {
-            contnet: "Warning will not receive anything anymore",
+            content: "Warning will not receive anything anymore",
             trigger: "div#o_mailing_subscription_form_blocklisted p:contains('You will not hear from us anymore.')",
             run: "click",
         }, {

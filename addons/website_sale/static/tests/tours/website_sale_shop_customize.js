@@ -49,7 +49,7 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
         },
         ...wTourUtils.clickOnSave(),
         {
-            context: "check variant price",
+            content: "check variant price",
             trigger: ':iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("50.4")',
         },
         {

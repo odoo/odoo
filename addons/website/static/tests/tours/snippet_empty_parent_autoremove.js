@@ -35,7 +35,6 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
     {
         content: "Check that #wrap is empty",
         trigger: ':iframe #wrap:empty',
-        isCheck:true,
     },
 
     // Cover: test that parallax, bg-filter and shape are not treated as content

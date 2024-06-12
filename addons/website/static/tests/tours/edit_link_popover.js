@@ -138,7 +138,6 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover_1', {
     {
         content: "Check that the modal is closed",
         trigger: ":iframe html:not(.modal-body)",
-        isCheck:true,
     }
 ]);
 

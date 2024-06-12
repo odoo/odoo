@@ -47,7 +47,7 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             trigger: ':iframe .js_product_change',
         },
         {
-            context: "check variant price",
+            content: "check variant price",
             trigger: ':iframe .form-check:contains("Aluminium") .badge:contains("+") .oe_currency_value:contains("55.44")',
         },
         {

@@ -15,7 +15,6 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
         {
             content: "Click join",
             trigger: "button[title='Join Channel']",
-            extraTrigger: ".o-mail-Thread",
             run: "click",
         },
         {
