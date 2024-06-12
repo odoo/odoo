@@ -174,6 +174,21 @@ class TestMrpMulticompany(common.TransactionCase):
         with self.assertRaises(UserError):
             mo.button_mark_done()
 
+    def test_is_kit(self):
+        """ Check that is_kits is company dependant """
+        product = self.env['product.product'].create({'name': 'Kit Kat'})
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'company_id': self.company_a.id,
+            'type': 'phantom',
+        })
+
+        self.assertFalse(product.with_context(allowed_company_ids=self.company_b.ids).is_kits)
+        product.invalidate_cache() # Make sure compute is retriggered
+        self.assertTrue(product.with_context(allowed_company_ids=self.company_a.ids).is_kits)
+        product.invalidate_cache() # Make sure compute is retriggered
+        self.assertTrue(product.with_context(allowed_company_ids=(self.company_a + self.company_b).ids).is_kits)
 
     def test_partner_1(self):
         """ On a product without company, as a user of Company B, check it is not possible to use a
