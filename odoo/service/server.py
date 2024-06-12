@@ -786,6 +786,8 @@ class PreforkServer(CommonServer):
     def worker_spawn(self, klass, workers_registry):
         self.generation += 1
         worker = klass(self)
+        # Empty the cursor pool, we dont want them to be shared among forked workers.
+        odoo.sql_db.close_all()
         pid = os.fork()
         if pid != 0:
             worker.pid = pid
@@ -871,6 +873,10 @@ class PreforkServer(CommonServer):
                               pid,
                               worker.watchdog_timeout)
                 self.worker_kill(pid, signal.SIGKILL)
+
+    def check_registries(self):
+        for registry in Registry.registries.d.values():
+            registry.check_signaling()
 
     def process_spawn(self):
         if config['http_enable']:
@@ -959,9 +965,6 @@ class PreforkServer(CommonServer):
             self.stop()
             return rc
 
-        # Empty the cursor pool, we dont want them to be shared among forked workers.
-        odoo.sql_db.close_all()
-
         _logger.debug("Multiprocess starting")
         while 1:
             try:
@@ -969,6 +972,7 @@ class PreforkServer(CommonServer):
                 self.process_signals()
                 self.process_zombie()
                 self.process_timeout()
+                self.check_registries()
                 self.process_spawn()
                 self.sleep()
             except KeyboardInterrupt:
