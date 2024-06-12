@@ -5548,7 +5548,7 @@ Fields:
             else:
                 (key, comparator, value) = d
                 if comparator in ('child_of', 'parent_of'):
-                    result.append(self.search([('id', 'in', self.ids), d]))
+                    result.append(self.with_context(active_test=False).search([('id', 'in', self.ids), d]))
                     continue
                 if key.endswith('.id'):
                     key = key[:-3]
