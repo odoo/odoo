@@ -82,7 +82,8 @@
                         </a>
                     </t>
                     <a href="#" t-on-click.prevent="" t-att-class="{'ps-3 pe-2 text-truncate': item.isFieldProperty }" t-att-title="item.title">
-                        <t t-if="item.isChild">
+                        <t t-if="item.isAddCustomFilterButton"><span class="text-action">Add Custom Filter</span></t>
+                        <t t-elif="item.isChild">
                             <t t-esc="item.label"/>
                         </t>
                         <t t-elif="!item.isFieldProperty" > Search </t> <b t-esc="item.searchItemDescription"/> <t t-if="item.preposition"> <t t-esc="item.preposition"/>: <b class="fst-italic text-primary" t-esc="item.label"/> </t>
