@@ -249,9 +249,9 @@ class PurchaseOrder(models.Model):
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
+                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm().exists()
                 seq = 0
-                for move in sorted(moves, key=lambda move: move.date):
+                for move in sorted(moves, key=lambda _m: _m.date):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
