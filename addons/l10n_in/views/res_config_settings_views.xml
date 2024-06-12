@@ -29,6 +29,21 @@
                     </setting>
                 </block>
             </app>
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
+                <block title="Indian Localization" invisible="country_code != 'IN'">
+                    <div class="d-flex gap-3">
+                        <label string="TDS" for="l10n_in_tds_toggle"/>
+                        <field name="l10n_in_tds_toggle"
+                               force_save="1"
+                               options="{'autosave': False}"
+                               readonly="l10n_in_tds_toggle"
+                               widget="boolean_toggle"/>
+                        <span class="text-warning" invisible="l10n_in_tds_toggle">
+                            Once TDS is enabled, it cannot be disabled.
+                        </span>
+                    </div>
+                </block>
+            </xpath>
         </field>
     </record>
 </odoo>

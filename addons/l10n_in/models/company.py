@@ -12,6 +12,8 @@ class ResCompany(models.Model):
         ],
         string="HSN Code Digit",
     )
+    l10n_in_tds_toggle = fields.Boolean(string="Toggle Indian TDS")
+    l10n_in_tan = fields.Char(string="TAN", help="Tax Deduction and Collection Account Number")
 
     def create(self, vals):
         res = super().create(vals)
