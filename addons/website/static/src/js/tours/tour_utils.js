@@ -63,7 +63,6 @@ function selectColorPalette(position = "left") {
         content: markup(_t(`<b>Select</b> a Color Palette.`)),
         position: position,
         run: 'click',
-        location: position === 'left' ? '#oe_snippets' : undefined,
     };
 }
 
@@ -122,7 +121,6 @@ function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabe
         alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
         position: position,
         run: 'click',
-        location: position === 'left' ? '#oe_snippets' : undefined,
     };
 }
 

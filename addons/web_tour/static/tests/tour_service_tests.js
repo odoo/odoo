@@ -104,6 +104,55 @@ QUnit.module("Tour service", (hooks) => {
         assert.strictEqual(sortedTours[0].name, "Tour 3");
     });
 
+    QUnit.test("Step Tour validity", async function (assert) {
+        patchWithCleanup(console, {
+            error: (msg) => assert.step(msg),
+        });
+        const steps = [
+            {
+                Belgium: true,
+                wins: "of course",
+                EURO2024: true,
+                trigger: "button.foo",
+            },
+            {
+                my_title: "EURO2024",
+                trigger: "button.bar",
+                doku: "Lukaku 10",
+            },
+            {
+                trigger: "button.bar",
+                run: ["Enjoy euro 2024"],
+            },
+            {
+                trigger: "button.bar",
+                run() {},
+            },
+        ];
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            steps: () => steps,
+        });
+        const env = await makeTestEnv({});
+        const waited_error1 = `Error for step ${JSON.stringify(
+            steps[0],
+            null,
+            4
+        )}\nInvalid object: unknown key 'Belgium', unknown key 'wins', unknown key 'EURO2024'`;
+        const waited_error2 = `Error for step ${JSON.stringify(
+            steps[1],
+            null,
+            4
+        )}\nInvalid object: unknown key 'my_title', unknown key 'doku'`;
+        const waited_error3 = `Error for step ${JSON.stringify(
+            steps[2],
+            null,
+            4
+        )}\nInvalid object: 'run' is not a string or function`;
+        env.services.tour_service.startTour("tour1");
+        assert.verifySteps([waited_error1, waited_error2, waited_error3]);
+    });
+
     QUnit.test("override existing tour by using saveAs", async function (assert) {
         registry
             .category("web_tour.tours")
@@ -885,7 +934,7 @@ QUnit.module("Tour service", (hooks) => {
         await mock.advanceTime(10000);
 
         const expectedError = [
-            "error: Tour tour3 failed at step .button1. Element has been found but is disabled. (If this step does not run action so that you only want to check that element is visible, you can use 'step.isCheck: true,')",
+            "error: Tour tour3 failed at step .button1. Element has been found but is disabled.",
         ];
         assert.verifySteps(expectedError);
     });

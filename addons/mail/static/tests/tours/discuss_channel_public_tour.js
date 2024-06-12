@@ -6,7 +6,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
     steps: () => [
         {
             trigger: ".o-mail-DiscussPublic",
-            extraTrigger: ".o-mail-Thread",
         },
         {
             content: "Check that we are on channel page",
@@ -24,7 +23,6 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                 }
                 document.body.classList.add("o_discuss_channel_public_modules_loaded");
             },
-            extraTrigger: ".o_discuss_channel_public_modules_loaded",
         },
         {
             content: "Wait for all modules loaded check in previous step",

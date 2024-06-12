@@ -75,7 +75,6 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value',
     {
         content: "check price",
         trigger: '.oe_currency_value:contains("750")',
-        isCheck: true,
     },
     {
         content: 'click on the first option to select it',
@@ -85,7 +84,6 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value',
     {
         content: "check price of options is correct",
         trigger: '.oe_currency_value:contains("750")',
-        isCheck: true,
     },
     {
         content: "add to cart",
@@ -96,6 +94,5 @@ registry.category("web_tour.tours").add('tour_shop_multi_checkbox_single_value',
     {
         content: "check choice was correctly saved",
         trigger: '#cart_products div div.text-muted>span:contains("Toppings: cheese")',
-        isCheck: true,
     },
 ]});
