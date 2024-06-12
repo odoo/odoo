@@ -142,6 +142,10 @@ class AccountReport(models.Model):
         string="Favorite Filters", help="If activated, user-defined filters on journal items can be selected on this report",
         compute=lambda x: x._compute_report_option_filter('filter_aml_ir_filters'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
+    deferred_options_reload = fields.Boolean(
+        string='Deferred options reload', help="Enables the selection of multiple filters before applying them and reloading the report (recommended for large databases)",
+        readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
 
     def _compute_report_option_filter(self, field_name, default_value=False):
         # We don't depend on the different filter fields on the root report, as we don't want a manual change on it to be reflected on all the reports
