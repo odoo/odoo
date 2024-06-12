@@ -49,7 +49,7 @@ class TestImLivechatMessage(HttpCase):
             'previous_operator_id': self.users[0].partner_id.id,
             'country_id': self.env.ref('base.in').id,
             'channel_id': im_livechat_channel.id,
-        })["Thread"]['id'])
+        })["Thread"][0]['id'])
         record_rating = self.env['rating.rating'].create({
             'res_model_id': self.env['ir.model']._get('discuss.channel').id,
             'res_id': channel_livechat_1.id,

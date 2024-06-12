@@ -11,11 +11,11 @@ class TestImLivechatSessionHistory(TestImLivechatCommon):
         self.env["bus.presence"].create({"user_id": operator.id, "status": "online"})
         self.livechat_channel.user_ids |= operator
         self.authenticate(None, None)
-        infos = self.make_jsonrpc_request("/im_livechat/get_session", {
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
             "channel_id": self.livechat_channel.id,
             "anonymous_name": "Visitor",
             "previous_operator_id": operator.partner_id.id
         })
-        channel = self.env["discuss.channel"].browse(infos["Thread"]["id"])
+        channel = self.env["discuss.channel"].browse(data["Thread"][0]["id"])
         channel.with_user(operator).message_post(body="Hello, how can I help you?")
         self.start_tour("/web", "im_livechat_history_back_and_forth_tour", login="operator", step_delay=25)

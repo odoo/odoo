@@ -68,16 +68,20 @@ async function get_session(request) {
         ]);
         const res = ResUsers._init_store_data();
         return Object.assign(res, {
-            Thread: {
-                id: -1,
-                model: "discuss.channel",
-                isLoaded: true,
-                name: channelVals["name"],
-                chatbot_current_step_id: channelVals.chatbot_current_step_id,
-                state: "open",
-                operator: ResPartner.mail_partner_format([operatorPartner.id])[operatorPartner.id],
-                channel_type: "livechat",
-            },
+            Thread: [
+                {
+                    id: -1,
+                    model: "discuss.channel",
+                    isLoaded: true,
+                    name: channelVals["name"],
+                    chatbot_current_step_id: channelVals.chatbot_current_step_id,
+                    state: "open",
+                    operator: ResPartner.mail_partner_format([operatorPartner.id])[
+                        operatorPartner.id
+                    ],
+                    channel_type: "livechat",
+                },
+            ],
         });
     }
     const channelId = DiscussChannel.create(channelVals);
@@ -91,12 +95,9 @@ async function get_session(request) {
     const [memberId] = DiscussChannelMember.search(memberDomain);
     DiscussChannelMember.write([memberId], { fold_state: "open" });
     const res = ResUsers._init_store_data();
-    return Object.assign(res, {
-        Thread: {
-            isLoaded: true,
-            ...DiscussChannel._channel_info([channelId])[0],
-        },
-    });
+    Object.assign(res, { Thread: DiscussChannel._channel_info([channelId]) });
+    res.Thread[0].isLoaded = true;
+    return res;
 }
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);
