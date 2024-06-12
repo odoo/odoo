@@ -1,8 +1,14 @@
-import { click, queryAll, queryAllTexts, queryAllValues, queryFirst } from "@odoo/hoot-dom";
 import { expect } from "@odoo/hoot";
+import {
+    click,
+    queryAll,
+    queryAllTexts,
+    queryAllValues,
+    queryFirst,
+    queryText,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-const PICKER_ROWS = 6;
 const PICKER_COLS = 7;
 
 /**
@@ -60,15 +66,17 @@ export function assertDateTimePicker(expectedParams) {
     expect(".o_date_picker").toHaveCount(date.length);
 
     let selectedCells = 0;
+    let invalidCells = 0;
     let outOfRangeCells = 0;
     let todayCells = 0;
     for (let i = 0; i < date.length; i++) {
         const { cells, daysOfWeek, weekNumbers } = date[i];
         const cellEls = queryAll(`.o_date_picker:nth-child(${i + 1}) .o_date_item_cell`);
-        expect(cellEls.length).toBe(PICKER_ROWS * PICKER_COLS, {
+        const pickerRows = cells.length;
+        expect(cellEls.length).toBe(pickerRows * PICKER_COLS, {
             message: `picker should have ${
-                PICKER_ROWS * PICKER_COLS
-            } cells (${PICKER_ROWS} rows and ${PICKER_COLS} columns)`,
+                pickerRows * PICKER_COLS
+            } cells (${pickerRows} rows and ${PICKER_COLS} columns)`,
         });
 
         if (daysOfWeek) {
@@ -94,46 +102,41 @@ export function assertDateTimePicker(expectedParams) {
         const expectedCells = cells.flatMap((row, rowIndex) =>
             row.map((cell, colIndex) => {
                 const cellEl = cellEls[rowIndex * PICKER_COLS + colIndex];
-
-                // Check flags
                 let value = cell;
-                const isSelected = Array.isArray(cell);
-                if (isSelected) {
+                if (Array.isArray(cell)) {
+                    // Selected
                     value = value[0];
-                }
-                const isToday = typeof value === "string";
-                if (isToday) {
-                    value = Number(value);
-                }
-                const isOutOfRange = value < 0;
-                if (isOutOfRange) {
-                    value = Math.abs(value);
-                }
-
-                // Assert based on flags
-                if (isSelected) {
                     selectedCells++;
                     expect(cellEl).toHaveClass("o_selected");
                 }
-                if (isOutOfRange) {
-                    outOfRangeCells++;
-                    expect(cellEl).toHaveClass("o_out_of_range");
-                }
-                if (isToday) {
+                if (typeof value === "string") {
+                    // Today
+                    value = Number(value);
                     todayCells++;
                     expect(cellEl).toHaveClass("o_today");
                 }
-
-                return value;
+                if (value === 0) {
+                    // Out of range
+                    value = "";
+                    outOfRangeCells++;
+                    expect(cellEl).toHaveClass("o_out_of_range");
+                } else if (value < 0) {
+                    // Invalid
+                    value = Math.abs(value);
+                    invalidCells++;
+                    expect(cellEl).toHaveAttribute("disabled");
+                }
+                return String(value);
             })
         );
 
-        expect(cellEls.map((cell) => Number(queryAllTexts(cell)[0]))).toEqual(expectedCells, {
+        expect(cellEls.map((cell) => queryText(cell))).toEqual(expectedCells, {
             message: `cell content should match the expected values: [${expectedCells.join(", ")}]`,
         });
     }
 
     expect(".o_selected").toHaveCount(selectedCells);
+    expect(".o_datetime_button[disabled]").toHaveCount(invalidCells);
     expect(".o_out_of_range").toHaveCount(outOfRangeCells);
     expect(".o_today").toHaveCount(todayCells);
 }

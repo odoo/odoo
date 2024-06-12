@@ -67,7 +67,7 @@
         }
     }
 
-    .o_today:not(.o_out_of_range) span {
+    .o_today span {
         position: relative;
 
         &::after {
@@ -81,10 +81,6 @@
             border-radius: $border-radius-pill;
             background: $danger;
         }
-    }
-
-    .o_out_of_range {
-        color: var(--gray-400);
     }
 
     .o_time_picker_select {

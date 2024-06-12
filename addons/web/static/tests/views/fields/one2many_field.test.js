@@ -4599,7 +4599,7 @@ test("one2many and onchange (with date)", async () => {
 
     contains("td:eq(0)").click();
     await contains("td:eq(0) .o_field_date input").click();
-    contains(getPickerCell("1").at(0)).click();
+    contains(getPickerCell("1")).click();
     await clickSave();
 
     expect.verifySteps(["get_views", "web_read", "onchange", "web_save"]);
