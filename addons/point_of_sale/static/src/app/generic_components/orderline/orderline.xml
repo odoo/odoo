@@ -16,6 +16,7 @@
                     </div>
                     <div t-if="props.showTaxGroupLabels" t-esc="line.taxGroupLabels" class="text-end" style="width: 2rem"/>
                 </div>
+<<<<<<< saas-17.4
                 <ul class="info-list" t-attf-class="{{props.infoListClasses}}">
                     <li class="price-per-unit">
                         <em t-esc="line.qty" class="qty fst-normal fw-bolder me-1" /> <t t-if="line.unit" t-esc="line.unit" />
@@ -37,6 +38,18 @@
                     <li t-foreach="line.packLotLines or []" t-as="lot" t-key="lot_index" t-esc="lot" />
                     <t t-slot="default" />
                 </ul>
+||||||| b89cc16bac8b67faa9c370978c55a61c7e8db16c
+                <div class="product-price d-inline-block text-end price fw-bolder">
+                    <t t-if="line.price === 'free'">
+                        Free
+                    </t>
+                    <t t-else="" t-esc="line.price"/>
+                </div>
+=======
+                <div class="product-price d-inline-block text-end price fw-bolder">
+                    <t t-esc="line.price"/>
+                </div>
+>>>>>>> 28fe1de2aa25809821308107bc77e03038a65998
             </div>
         </li>
     </t>
