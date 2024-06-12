@@ -5,6 +5,7 @@ from datetime import timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import float_compare
 from odoo.exceptions import UserError
 
@@ -20,7 +21,7 @@ class SaleOrderLine(models.Model):
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     qty_available_today = fields.Float(compute='_compute_qty_at_date')
-    warehouse_id = fields.Many2one(related='order_id.warehouse_id')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True)
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
@@ -28,6 +29,28 @@ class SaleOrderLine(models.Model):
     customer_lead = fields.Float(
         compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
         inverse='_inverse_customer_lead')
+
+    @api.depends('route_id', 'order_id.warehouse_id', 'product_packaging_id', 'product_id')
+    def _compute_warehouse_id(self):
+        for line in self:
+            line.warehouse_id = line.order_id.warehouse_id
+            if line.route_id:
+                domain = [
+                    ('location_dest_id', '=', line.order_id.partner_shipping_id.property_stock_customer.id),
+                    ('action', '!=', 'push'),
+                ]
+                # prefer rules on the route itself even if they pull from a different warehouse than the SO's
+                rules = sorted(
+                    self.env['stock.rule'].search(
+                        domain=expression.AND([[('route_id', '=', line.route_id.id)], domain]),
+                        order='route_sequence, sequence'
+                    ),
+                    # if there are multiple rules on the route, prefer those that pull from the SO's warehouse
+                    # or those that are not warehouse specific
+                    key=lambda rule: 0 if rule.location_src_id.warehouse_id in (False, line.order_id.warehouse_id) else 1
+                )
+                if rules:
+                    line.warehouse_id = rules[0].location_src_id.warehouse_id
 
     @api.depends('is_storable', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
     def _compute_qty_to_deliver(self):
@@ -224,7 +247,7 @@ class SaleOrderLine(models.Model):
             'date_planned': date_planned,
             'date_deadline': date_deadline,
             'route_ids': self.route_id,
-            'warehouse_id': self.order_id.warehouse_id or False,
+            'warehouse_id': self.warehouse_id,
             'partner_id': self.order_id.partner_shipping_id.id,
             'location_final_id': self.order_id.partner_shipping_id.property_stock_customer,
             'product_description_variants': self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants(),
