@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_tax_form_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n_hu_edi</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_hu_tax_type" attrs="{'invisible': [('country_code', '!=', 'HU')]}"/>
+                <field name="l10n_hu_tax_reason" attrs="{'invisible': [('country_code', '!=', 'HU')], 'required':[('country_code','=','HU'),('l10n_hu_tax_type','!=','VAT')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_tax_template_form_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.tax.template.form.l10n_hu_edi</field>
+        <field name="model">account.tax.template</field>
+        <field name="inherit_id" ref="account.view_account_tax_template_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="l10n_hu_tax_type"/>
+                <field name="l10n_hu_tax_reason"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_invoice_tree_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.invoice.tree.l10n_hu_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="before">
+                <field name="l10n_hu_delivery_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_move_kanban_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.invoice.kanban.l10n_hu_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="before">
+                <field name="l10n_hu_delivery_date"/>
+            </xpath>
+            <xpath expr="//templates//t[@t-esc='record.date.value']" position="replace">
+                <t t-if="record.l10n_hu_delivery_date.value" t-esc="record.l10n_hu_delivery_date.value"/>
+                <t t-else="else" t-esc="record.date.value"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_hu_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='show_name_warning']" position="after">
+                <field name="l10n_hu_show_delivery_date" invisible="1"/>
+            </xpath>
+            <xpath expr="//label[@for='invoice_date']" position="before">
+                <field name="l10n_hu_delivery_date" attrs="{'invisible': [('l10n_hu_show_delivery_date', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//label[@for='journal_id']" position="before">
+                <field name="l10n_hu_payment_mode" attrs="{'invisible': [('country_code', '!=', 'HU')]}"/>
+            </xpath>
+            <xpath expr="//div[@name='journal_div']//field[@name='currency_id']" position="after">
+                <span class="oe_inline o_form_label mx-3" groups="base.group_multi_currency" attrs="{'invisible': ['|',('country_code', '!=', 'HU'),('move_type', '=', 'entry')]}"> at </span>
+                <field name="l10n_hu_currency_rate" groups="base.group_multi_currency" attrs="{'invisible': ['|',('country_code', '!=', 'HU'),('move_type', '=', 'entry')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='currency_id' and @groups='!account.group_account_readonly,base.group_multi_currency']" position="replace">
+                <label for="currency_id" groups="!account.group_account_readonly,base.group_multi_currency"/>
+                <div name="currency_div" class="d-flex" groups="!account.group_account_readonly,base.group_multi_currency">
+                    <field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <span class="oe_inline o_form_label mx-3" attrs="{'invisible': [('country_code', '!=', 'HU')]}"> at </span>
+                    <field name="l10n_hu_currency_rate" attrs="{'invisible': [('country_code', '!=', 'HU')]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_move_filter_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.move.select.l10n_hu_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="before">
+                <field name="l10n_hu_payment_mode"/>
+                <field name="l10n_hu_delivery_date"/>
+            </xpath>
+            <xpath expr="//filter[@name='date']" position="before">
+                <filter string="Delivery Date" name="l10n_hu_delivery_date" date="l10n_hu_delivery_date"/>
+            </xpath>
+            <xpath expr="//group//filter[@name='by_date']" position="before">
+                <filter string="Payment Mode" name="by_payment_mode" domain="[]" context="{'group_by': 'l10n_hu_payment_mode'}" help="Journal Entries by Payment Mode"/>
+                <filter string="Delivery Date" name="by_delivery_date" domain="[]" context="{'group_by': 'l10n_hu_delivery_date'}" help="Journal Entries by Delivery Date"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
