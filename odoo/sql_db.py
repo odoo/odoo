@@ -25,6 +25,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.sql import Composable
 from werkzeug import urls
+import logging
 
 import odoo
 from . import tools
@@ -729,6 +730,8 @@ class ConnectionPool(object):
         return dsn1 == dsn2
 
 
+_logger = logging.getLogger(__name__)
+
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
@@ -736,6 +739,7 @@ class Connection(object):
         self.__dbname = dbname
         self.__dsn = dsn
         self.__pool = pool
+        self.__conn = None
 
     @property
     def dsn(self):
@@ -748,12 +752,30 @@ class Connection(object):
         return self.__dbname
 
     def cursor(self):
-        _logger.debug('create cursor to %r', self.dsn)
-        return Cursor(self.__pool, self.__dbname, self.__dsn)
+        _logger.debug('Creating cursor to %r', self.dsn)
+        try:
+            if self.__conn is None or self.__conn.closed:
+                self.__conn = psycopg2.connect(**self.dsn)
+        except psycopg2.Error as e:
+            _logger.error('Error connecting to database: %s', e)
+            raise
+        return Cursor(self.__pool, self.__dbname, self.__dsn, self.__conn)
+
+    def __enter__(self):
+        return self.cursor()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self.__conn is not None and not self.__conn.closed:
+            self.__conn.close()
+            _logger.debug('Connection to %r closed', self.dsn)
+        if exc_type is not None:
+            _logger.error('Exception occurred: %s', exc_value)
+            return False  # Propagate the exception
 
     def __bool__(self):
-        raise NotImplementedError()
+        return bool(self.__conn)
     __nonzero__ = __bool__
+
 
 def connection_info_for(db_or_uri):
     """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)
