@@ -384,7 +384,9 @@ export class Chatter extends Component {
             this.reloadParentView();
         }
         this.state.isAttachmentBoxOpened = true;
-        this.rootRef.el.scrollTop = 0;
+        if (this.rootRef.el) {
+            this.rootRef.el.scrollTop = 0;
+        }
         this.state.thread.scrollTop = "bottom";
     }
 
