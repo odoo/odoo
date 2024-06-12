@@ -2,6 +2,8 @@
 import logging
 from unittest.mock import patch
 
+import psycopg2
+
 import odoo
 from odoo.addons.point_of_sale.models.pos_order import PosOrder
 from odoo.addons.point_of_sale.models.pos_session import PosSession
@@ -171,3 +173,27 @@ class TestPosCapture(TestPoSCommon):
         self.env['pos.order'].create_from_ui(order1)
         # Should automatically remove the attachment for this order after sync
         self.assert_activity_and_attachment(session, 0)
+
+    def test_capture_db_error(self):
+        # open a session
+        session = self.open_new_session()
+
+        orders = [self.create_ui_order_data([(self.product1, 1)])]
+
+        def mocked_process_order(*args):
+            """ force a database error """
+            self.env.cr.execute("select __non_existing_field__ from pos_order")
+
+        def mocked_handle_order_process_fail(*args):
+            """ acces db to check if transaction is still usable"""
+            self.env.cr.execute("select 1")
+            self.assertEqual(self.cr.fetchone()[0], 1)
+
+        with patch.object(PosOrder, '_process_order', mocked_process_order),\
+            patch.object(PosSession, '_handle_order_process_fail', mocked_handle_order_process_fail),\
+            odoo.tools.misc.mute_logger("odoo.sql_db"),\
+            self.assertLogs('odoo.addons.point_of_sale.models.pos_order', level=logging.ERROR):
+            try:
+                self.env['pos.order'].create_from_ui(orders)
+            except psycopg2.DatabaseError:
+                pass
