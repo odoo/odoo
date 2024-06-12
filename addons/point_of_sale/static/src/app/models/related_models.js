@@ -137,11 +137,10 @@ function processModelDefs(modelDefs) {
 }
 
 export class Base {
-    constructor({ models, records, model, raw }) {
+    constructor({ models, records, model }) {
         this.models = models;
         this.records = records;
         this.model = model;
-        this._raw = raw;
     }
     /**
      * Called during instantiation when the instance is fully-populated with field values.
@@ -234,19 +233,15 @@ export class Base {
 
         return serializedData;
     }
-    get raw() {
-        if (this.id in this._raw) {
-            return this._raw[this.id];
-        }
-
-        return {};
-    }
     _getCacheSet(fieldName) {
         const cacheName = `_${fieldName}`;
         if (!(cacheName in this)) {
             this[cacheName] = new Set();
         }
         return this[cacheName];
+    }
+    get raw() {
+        return this._raw ?? {};
     }
 }
 
@@ -374,11 +369,10 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
         }
 
         const Model = modelClasses[model] || Base;
-        const record = reactive(
-            new Model({ models, records, model: models[model], raw: baseData[model] })
-        );
+        const record = reactive(new Model({ models, records, model: models[model] }));
         const id = vals["id"];
         record.id = id;
+        record._raw = baseData[model][id];
         records[model][id] = record;
 
         const fields = getFields(model);
