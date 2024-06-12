@@ -13,6 +13,9 @@
             <xpath expr="//field[@name='custom_quantity']" position="attributes">
                 <attribute name="invisible">move_quantity == 'move'</attribute>
             </xpath>
+            <xpath expr='//field[@name="extra_html"]' position="before">
+                <field name="packaging_labels"/>
+            </xpath>
         </field>
     </record>
 </odoo>
