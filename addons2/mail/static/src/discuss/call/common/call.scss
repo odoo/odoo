@@ -1,0 +1,69 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o-discuss-Call {
+    height: 50%; // ensures that the view returns to the right height when resized
+    min-height: 50%;
+    background: var(--o-discuss-Call-bgColor, #{$dark});
+
+    &.o-minimized {
+        height: 20%; // ensures that the view returns to the right height when resized
+        min-height: #{"max(20%, 130px)"};
+    }
+}
+
+.o-discuss-Call-main {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.o-discuss-Call-sidebar {
+    width: 120px;
+    min-width: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0.3vw;
+    }
+}
+
+.o-discuss-Call-sidebarCard {
+    aspect-ratio: 16/9;
+}
+
+.o-discuss-Call-mainCardStyle {
+    width: var(--width);
+    height: var(--height);
+    min-width: var(--width);
+    min-height: var(--height);
+    aspect-ratio: 16/9;
+}
+
+.o-discuss-Call-sidebarToggler {
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o-discuss-Call-sidebar {
+
+    &::-webkit-scrollbar {
+        background: map-get($grays, '900');
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: map-get($grays, '700');
+    }
+}
+
+.o-discuss-Call-sidebarToggler {
+    color: white;
+    border-radius: 10px 0px 0px 10px;
+    border-right: 0px;
+    background-color: lighten(black, 10%);
+}

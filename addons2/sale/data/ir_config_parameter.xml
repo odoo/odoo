@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="default_confirmation_template" model="ir.config_parameter">
+        <field name="key">sale.default_confirmation_template</field>
+        <field name="value" ref="sale.mail_template_sale_confirmation"/>
+    </record>
+
+    <record id="default_invoice_email_template" model="ir.config_parameter">
+        <field name="key">sale.default_invoice_email_template</field>
+        <field name="value" ref="account.email_template_edi_invoice"/>
+    </record>
+
+</odoo>

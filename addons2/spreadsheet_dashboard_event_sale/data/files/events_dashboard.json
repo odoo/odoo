@@ -1,0 +1,1533 @@
+{
+    "version": 12,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 44,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "18": {
+                    "size": 40
+                },
+                "19": {
+                    "size": 40
+                },
+                "31": {
+                    "size": 40
+                },
+                "32": {
+                    "size": 40
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "style": 1,
+                    "content": "[Events Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"stage_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"stage_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "border": 1
+                },
+                "A19": {
+                    "style": 1,
+                    "content": "[Top Venues](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"address_id\",\"!=\",false]],\"context\":{\"group_by\":[\"address_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"address_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "border": 1
+                },
+                "A20": {
+                    "style": 2,
+                    "content": "=_t(\"Venue\")",
+                    "border": 2
+                },
+                "A21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",1)"
+                },
+                "A22": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",2)"
+                },
+                "A23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",3)"
+                },
+                "A24": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",4)"
+                },
+                "A25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",5)"
+                },
+                "A26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",6)"
+                },
+                "A27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",7)"
+                },
+                "A28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",8)"
+                },
+                "A29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",9)"
+                },
+                "A30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(1,\"#address_id\",10)"
+                },
+                "A32": {
+                    "style": 1,
+                    "content": "[Top Tags](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"tag_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"tag_ids\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"tag_ids\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "border": 1
+                },
+                "A33": {
+                    "style": 2,
+                    "content": "=_t(\"Tag\")",
+                    "border": 2
+                },
+                "A34": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",1)"
+                },
+                "A35": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",2)"
+                },
+                "A36": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",3)"
+                },
+                "A37": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",4)"
+                },
+                "A38": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",5)"
+                },
+                "A39": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",6)"
+                },
+                "A40": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",7)"
+                },
+                "A41": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",8)"
+                },
+                "A42": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",9)"
+                },
+                "A43": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(3,\"#tag_ids\",10)"
+                },
+                "B7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "B20": {
+                    "style": 2,
+                    "border": 2
+                },
+                "B21": {
+                    "style": 6
+                },
+                "B23": {
+                    "style": 6
+                },
+                "B25": {
+                    "style": 6
+                },
+                "B27": {
+                    "style": 6
+                },
+                "B29": {
+                    "style": 6
+                },
+                "B33": {
+                    "style": 2,
+                    "border": 2
+                },
+                "B34": {
+                    "style": 6
+                },
+                "B36": {
+                    "style": 6
+                },
+                "B38": {
+                    "style": 6
+                },
+                "B40": {
+                    "style": 6
+                },
+                "B42": {
+                    "style": 6
+                },
+                "C7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "C20": {
+                    "style": 7,
+                    "content": "=_t(\"Events\")",
+                    "border": 2
+                },
+                "C21": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",1)"
+                },
+                "C22": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",2)"
+                },
+                "C23": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",3)"
+                },
+                "C24": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",4)"
+                },
+                "C25": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",5)"
+                },
+                "C26": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",6)"
+                },
+                "C27": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",7)"
+                },
+                "C28": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",8)"
+                },
+                "C29": {
+                    "style": 6,
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",9)"
+                },
+                "C30": {
+                    "content": "=ODOO.PIVOT(1,\"__count\",\"#address_id\",10)"
+                },
+                "C33": {
+                    "style": 7,
+                    "content": "=_t(\"Events\")",
+                    "border": 2
+                },
+                "C34": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",1)"
+                },
+                "C35": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",2)"
+                },
+                "C36": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",3)"
+                },
+                "C37": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",4)"
+                },
+                "C38": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",5)"
+                },
+                "C39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",6)"
+                },
+                "C40": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",7)"
+                },
+                "C41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",8)"
+                },
+                "C42": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",9)"
+                },
+                "C43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(3,\"__count\",\"#tag_ids\",10)"
+                },
+                "D7": {
+                    "style": 5
+                },
+                "D20": {
+                    "style": 2
+                },
+                "D33": {
+                    "style": 2
+                },
+                "E7": {
+                    "style": 1,
+                    "content": "[Registration Status](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"state\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"state\"]},\"modelName\":\"event.registration\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"kanban\"],[false,\"list\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees\"})",
+                    "border": 1
+                },
+                "E19": {
+                    "style": 1,
+                    "content": "[Top Templates](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"event_type_id\",\"!=\",false]],\"context\":{\"group_by\":[\"event_type_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"event_type_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "border": 1
+                },
+                "E20": {
+                    "style": 2,
+                    "content": "=_t(\"Template\")",
+                    "border": 2
+                },
+                "E21": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",1)"
+                },
+                "E22": {
+                    "style": 8,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",2)"
+                },
+                "E23": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",3)"
+                },
+                "E24": {
+                    "style": 8,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",4)"
+                },
+                "E25": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",5)"
+                },
+                "E26": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",6)"
+                },
+                "E27": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",7)"
+                },
+                "E28": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",8)"
+                },
+                "E29": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",9)"
+                },
+                "E30": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(2,\"#event_type_id\",10)"
+                },
+                "E32": {
+                    "style": 1,
+                    "content": "[Top Organizers](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"organizer_id\",\"!=\",false]],\"context\":{\"group_by\":[\"organizer_id\"],\"pivot_measures\":[\"__count\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"organizer_id\"]},\"modelName\":\"event.event\",\"views\":[[false,\"kanban\"],[false,\"calendar\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Events\"})",
+                    "border": 1
+                },
+                "E33": {
+                    "style": 2,
+                    "content": "=_t(\"Organizer\")",
+                    "border": 2
+                },
+                "E34": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",1)"
+                },
+                "E35": {
+                    "style": 8,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",2)"
+                },
+                "E36": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",3)"
+                },
+                "E37": {
+                    "style": 8,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",4)"
+                },
+                "E38": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",5)"
+                },
+                "E39": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",6)"
+                },
+                "E40": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",7)"
+                },
+                "E41": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",8)"
+                },
+                "E42": {
+                    "style": 3,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",9)"
+                },
+                "E43": {
+                    "style": 4,
+                    "content": "=ODOO.PIVOT.HEADER(4,\"#organizer_id\",10)"
+                },
+                "F7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "F20": {
+                    "style": 2,
+                    "border": 2
+                },
+                "F21": {
+                    "style": 6
+                },
+                "F23": {
+                    "style": 6
+                },
+                "F25": {
+                    "style": 6
+                },
+                "F27": {
+                    "style": 6
+                },
+                "F29": {
+                    "style": 6
+                },
+                "F33": {
+                    "style": 2,
+                    "border": 2
+                },
+                "F34": {
+                    "style": 6
+                },
+                "F36": {
+                    "style": 6
+                },
+                "F38": {
+                    "style": 6
+                },
+                "F40": {
+                    "style": 6
+                },
+                "F42": {
+                    "style": 6
+                },
+                "G7": {
+                    "style": 5,
+                    "border": 1
+                },
+                "G20": {
+                    "style": 7,
+                    "content": "=_t(\"Events\")",
+                    "border": 2
+                },
+                "G21": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",1)"
+                },
+                "G22": {
+                    "style": 9,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",2)"
+                },
+                "G23": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",3)"
+                },
+                "G24": {
+                    "style": 9,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",4)"
+                },
+                "G25": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",5)"
+                },
+                "G26": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",6)"
+                },
+                "G27": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",7)"
+                },
+                "G28": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",8)"
+                },
+                "G29": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",9)"
+                },
+                "G30": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(2,\"__count\",\"#event_type_id\",10)"
+                },
+                "G33": {
+                    "style": 7,
+                    "content": "=_t(\"Events\")",
+                    "border": 2
+                },
+                "G34": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",1)"
+                },
+                "G35": {
+                    "style": 9,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",2)"
+                },
+                "G36": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",3)"
+                },
+                "G37": {
+                    "style": 9,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",4)"
+                },
+                "G38": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",5)"
+                },
+                "G39": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",6)"
+                },
+                "G40": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",7)"
+                },
+                "G41": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",8)"
+                },
+                "G42": {
+                    "style": 6,
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",9)"
+                },
+                "G43": {
+                    "format": 1,
+                    "content": "=ODOO.PIVOT(4,\"__count\",\"#organizer_id\",10)"
+                },
+                "A8": {
+                    "border": 2
+                },
+                "B8": {
+                    "border": 2
+                },
+                "B19": {
+                    "border": 1
+                },
+                "B32": {
+                    "border": 1
+                },
+                "C8": {
+                    "border": 2
+                },
+                "C19": {
+                    "border": 1
+                },
+                "C32": {
+                    "border": 1
+                },
+                "E8": {
+                    "border": 2
+                },
+                "F8": {
+                    "border": 2
+                },
+                "F19": {
+                    "border": 1
+                },
+                "F32": {
+                    "border": 1
+                },
+                "G8": {
+                    "border": 2
+                },
+                "G19": {
+                    "border": 1
+                },
+                "G32": {
+                    "border": 1
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "d9898682-9b91-4fe2-9900-a4b2583eb459",
+                    "x": 525,
+                    "y": 178,
+                    "width": 475,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "background": "#FFFFFF",
+                        "legendPosition": "none",
+                        "metaData": {
+                            "groupBy": [
+                                "state"
+                            ],
+                            "measure": "__count",
+                            "order": null,
+                            "resModel": "event.registration"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {
+                                "registration_view_hide_group_by_create_date_week": 1
+                            },
+                            "domain": [],
+                            "groupBy": [
+                                "state"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_bar",
+                        "verticalAxisPosition": "left",
+                        "stacked": true
+                    }
+                },
+                {
+                    "id": "092dd971-dc10-41c5-96c4-d760820e9cf2",
+                    "x": 0,
+                    "y": 178,
+                    "width": 475,
+                    "height": 230,
+                    "tag": "chart",
+                    "data": {
+                        "title": "",
+                        "background": "#FFFFFF",
+                        "legendPosition": "none",
+                        "metaData": {
+                            "groupBy": [
+                                "stage_id"
+                            ],
+                            "measure": "__count",
+                            "order": null,
+                            "resModel": "event.event"
+                        },
+                        "searchParams": {
+                            "comparison": null,
+                            "context": {},
+                            "domain": [],
+                            "groupBy": [
+                                "stage_id"
+                            ],
+                            "orderBy": []
+                        },
+                        "type": "odoo_bar",
+                        "verticalAxisPosition": "left",
+                        "stacked": true
+                    }
+                },
+                {
+                    "id": "18361546-49c2-4212-88eb-b2ee50127d41",
+                    "x": 0,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Events",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D3"
+                    }
+                },
+                {
+                    "id": "98d2b15d-9117-4ecf-9732-dc62df949dc1",
+                    "x": 210,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Revenue",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E4",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D4"
+                    }
+                },
+                {
+                    "id": "6510bff8-7b28-42c6-af4b-c750bed2205c",
+                    "x": 420,
+                    "y": 0,
+                    "width": 200,
+                    "height": 120,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": "Attendees",
+                        "type": "scorecard",
+                        "background": "",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2"
+                    }
+                }
+            ],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        },
+        {
+            "id": "3fad37db-0a40-46e9-bcc8-967eebf0bca4",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 101,
+            "rows": {},
+            "cols": {
+                "1": {
+                    "size": 93
+                },
+                "2": {
+                    "size": 93
+                },
+                "3": {
+                    "size": 93
+                },
+                "4": {
+                    "size": 93
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "style": 2,
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Attendees\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Events\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "B1": {
+                    "style": 2,
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "=ODOO.PIVOT(5,\"__count\")"
+                },
+                "B3": {
+                    "content": "=ODOO.PIVOT(9,\"__count\")"
+                },
+                "B4": {
+                    "content": "=ODOO.PIVOT(7,\"sale_price_untaxed\")"
+                },
+                "C1": {
+                    "style": 2,
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "=ODOO.PIVOT(6,\"__count\")"
+                },
+                "C3": {
+                    "content": "=ODOO.PIVOT(10,\"__count\")"
+                },
+                "C4": {
+                    "content": "=ODOO.PIVOT(8,\"sale_price_untaxed\")"
+                },
+                "D1": {
+                    "style": 10,
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "D4": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(B4)"
+                },
+                "E1": {
+                    "style": 10,
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(C3)"
+                },
+                "E4": {
+                    "style": 6,
+                    "content": "=FORMAT.LARGE.NUMBER(C4)"
+                },
+                "F1": {
+                    "style": 2
+                },
+                "G1": {
+                    "style": 2
+                },
+                "H1": {
+                    "style": 2
+                },
+                "I1": {
+                    "style": 2
+                },
+                "J1": {
+                    "style": 2
+                },
+                "K1": {
+                    "style": 2
+                },
+                "L1": {
+                    "style": 2
+                },
+                "M1": {
+                    "style": 2
+                },
+                "N1": {
+                    "style": 2
+                },
+                "O1": {
+                    "style": 2
+                },
+                "P1": {
+                    "style": 2
+                },
+                "Q1": {
+                    "style": 2
+                },
+                "R1": {
+                    "style": 2
+                },
+                "S1": {
+                    "style": 2
+                },
+                "T1": {
+                    "style": 2
+                },
+                "U1": {
+                    "style": 2
+                },
+                "V1": {
+                    "style": 2
+                },
+                "W1": {
+                    "style": 2
+                },
+                "X1": {
+                    "style": 2
+                },
+                "Y1": {
+                    "style": 2
+                },
+                "Z1": {
+                    "style": 2
+                }
+            },
+            "conditionalFormats": [],
+            "figures": [],
+            "areGridLinesVisible": true,
+            "isVisible": true
+        }
+    ],
+    "entities": {},
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "fontSize": 16,
+            "bold": true
+        },
+        "2": {
+            "bold": true
+        },
+        "3": {
+            "fillColor": "#f2f2f2",
+            "textColor": "#741b47"
+        },
+        "4": {
+            "textColor": "#741b47"
+        },
+        "5": {
+            "fontSize": 16
+        },
+        "6": {
+            "fillColor": "#f2f2f2"
+        },
+        "7": {
+            "bold": true,
+            "align": "right"
+        },
+        "8": {
+            "fillColor": "",
+            "textColor": "#741b47"
+        },
+        "9": {
+            "fillColor": ""
+        },
+        "10": {
+            "bold": true,
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "0"
+    },
+    "borders": {
+        "1": {
+            "bottom": [
+                "thin",
+                "#000"
+            ]
+        },
+        "2": {
+            "top": [
+                "thin",
+                "#000"
+            ]
+        }
+    },
+    "revisionId": "88ae2f03-e72d-4c89-b5d3-60e1fe051f1f",
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ","
+        }
+    },
+    "chartOdooMenusReferences": {
+        "d9898682-9b91-4fe2-9900-a4b2583eb459": "event.event_main_menu",
+        "092dd971-dc10-41c5-96c4-d760820e9cf2": "event.event_main_menu",
+        "18361546-49c2-4212-88eb-b2ee50127d41": "event.menu_event_event",
+        "98d2b15d-9117-4ecf-9732-dc62df949dc1": "event_sale.menu_action_show_revenues",
+        "6510bff8-7b28-42c6-af4b-c750bed2205c": "event.menu_action_registration"
+    },
+    "odooVersion": 4,
+    "lists": {},
+    "listNextId": 1,
+    "pivots": {
+        "1": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "address_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "1",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.event",
+            "rowGroupBys": [
+                "address_id"
+            ],
+            "name": "Event by Venue",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "2": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "event_type_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "2",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.event",
+            "rowGroupBys": [
+                "event_type_id"
+            ],
+            "name": "Event by Template",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "3": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "tag_ids",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "3",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.event",
+            "rowGroupBys": [
+                "tag_ids"
+            ],
+            "name": "Event by Tags",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "4": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [
+                [
+                    "organizer_id",
+                    "!=",
+                    false
+                ]
+            ],
+            "id": "4",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.event",
+            "rowGroupBys": [
+                "organizer_id"
+            ],
+            "name": "Event by Organizer",
+            "sortedColumn": {
+                "groupId": [
+                    [],
+                    []
+                ],
+                "measure": "__count",
+                "order": "desc"
+            }
+        },
+        "5": {
+            "colGroupBys": [],
+            "context": {
+                "registration_view_hide_group_by_create_date_week": 1
+            },
+            "domain": [],
+            "id": "5",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.registration",
+            "rowGroupBys": [],
+            "name": "attendees - current",
+            "sortedColumn": null
+        },
+        "6": {
+            "colGroupBys": [],
+            "context": {
+                "registration_view_hide_group_by_create_date_week": 1
+            },
+            "domain": [],
+            "id": "6",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.registration",
+            "rowGroupBys": [],
+            "name": "attendees - previous",
+            "sortedColumn": null
+        },
+        "7": {
+            "colGroupBys": [],
+            "context": {
+                "pivot_measures": [
+                    "__count__",
+                    "sale_price_untaxed",
+                    "sale_price"
+                ]
+            },
+            "domain": [],
+            "id": "7",
+            "measures": [
+                {
+                    "field": "sale_price_untaxed"
+                }
+            ],
+            "model": "event.sale.report",
+            "rowGroupBys": [],
+            "name": "untaxed revenue - current",
+            "sortedColumn": null
+        },
+        "8": {
+            "colGroupBys": [],
+            "context": {
+                "pivot_measures": [
+                    "__count__",
+                    "sale_price_untaxed",
+                    "sale_price"
+                ]
+            },
+            "domain": [],
+            "id": "8",
+            "measures": [
+                {
+                    "field": "__count"
+                },
+                {
+                    "field": "sale_price_untaxed"
+                },
+                {
+                    "field": "sale_price"
+                }
+            ],
+            "model": "event.sale.report",
+            "rowGroupBys": [],
+            "name": "untaxed revenue - previous",
+            "sortedColumn": null
+        },
+        "9": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [],
+            "id": "9",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.event",
+            "rowGroupBys": [],
+            "name": "events - current",
+            "sortedColumn": null
+        },
+        "10": {
+            "colGroupBys": [],
+            "context": {},
+            "domain": [],
+            "id": "10",
+            "measures": [
+                {
+                    "field": "__count"
+                }
+            ],
+            "model": "event.event",
+            "rowGroupBys": [],
+            "name": "events - previous",
+            "sortedColumn": null
+        }
+    },
+    "pivotNextId": 11,
+    "globalFilters": [
+        {
+            "id": "f849aaa6-4c1a-43f6-9c0b-7a5ea9c83eae",
+            "type": "date",
+            "label": "Date",
+            "defaultValue": "last_year",
+            "rangeType": "relative",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "2": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "3": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "4": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "5": {
+                    "field": "event_begin_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "6": {
+                    "field": "event_begin_date",
+                    "type": "datetime",
+                    "offset": -1
+                },
+                "7": {
+                    "field": "event_date_begin",
+                    "type": "date",
+                    "offset": 0
+                },
+                "8": {
+                    "field": "event_date_begin",
+                    "type": "date",
+                    "offset": -1
+                },
+                "9": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "10": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": -1
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_begin_date",
+                    "type": "datetime",
+                    "offset": 0
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "date_begin",
+                    "type": "datetime",
+                    "offset": 0
+                }
+            }
+        },
+        {
+            "id": "62e15eb2-9410-4803-b189-5fa789a7e94f",
+            "type": "relation",
+            "label": "Venue",
+            "modelName": "res.partner",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "address_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "address_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "address_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "address_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "9": {
+                    "field": "address_id",
+                    "type": "many2one"
+                },
+                "10": {
+                    "field": "address_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.address_id",
+                    "type": "many2one"
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "address_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "d9cfb0b0-01a0-45be-996e-723f4283000b",
+            "type": "relation",
+            "label": "Template",
+            "modelName": "event.type",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "9": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                },
+                "10": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.event_type_id",
+                    "type": "many2one"
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "event_type_id",
+                    "type": "many2one"
+                }
+            }
+        },
+        {
+            "id": "43c04fb0-d3b7-47c8-852b-b823c36df0ee",
+            "type": "relation",
+            "label": "Tags",
+            "modelName": "event.tag",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "2": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "3": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "4": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "5": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "6": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "7": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "8": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "9": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                },
+                "10": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_id.tag_ids",
+                    "type": "many2many"
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "tag_ids",
+                    "type": "many2many"
+                }
+            }
+        },
+        {
+            "id": "4a35bef8-8a57-48ae-8dc6-5883d97cc9da",
+            "type": "relation",
+            "label": "Organizer",
+            "modelName": "res.partner",
+            "defaultValue": [],
+            "defaultValueDisplayNames": [],
+            "rangeType": "year",
+            "defaultsToCurrentPeriod": false,
+            "pivotFields": {
+                "1": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                },
+                "2": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                },
+                "3": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                },
+                "4": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                },
+                "5": {
+                    "field": "event_organizer_id",
+                    "type": "many2one"
+                },
+                "6": {
+                    "field": "event_organizer_id",
+                    "type": "many2one"
+                },
+                "7": {
+                    "field": "event_id.organizer_id",
+                    "type": "many2one"
+                },
+                "8": {
+                    "field": "event_id.organizer_id",
+                    "type": "many2one"
+                },
+                "9": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                },
+                "10": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                }
+            },
+            "listFields": {},
+            "graphFields": {
+                "d9898682-9b91-4fe2-9900-a4b2583eb459": {
+                    "field": "event_organizer_id",
+                    "type": "many2one"
+                },
+                "092dd971-dc10-41c5-96c4-d760820e9cf2": {
+                    "field": "organizer_id",
+                    "type": "many2one"
+                }
+            }
+        }
+    ]
+}

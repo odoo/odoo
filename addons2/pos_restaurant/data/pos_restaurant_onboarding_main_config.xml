@@ -1,0 +1,486 @@
+<odoo>
+     <!-- Pos Config -->
+    <record model="pos.config" id="pos_config_main_restaurant">
+        <field name="name">Restaurant</field>
+        <field name="iface_printbill">True</field>
+    </record>
+
+    <!-- Closed Sessions -->
+    <!-- forcecreate is set to false in order to not create record when updating the db -->
+
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="base" eval="[{
+                'xml_id': 'pos_restaurant.payment_method',
+                'record': obj().env.ref('pos_restaurant.pos_config_main_restaurant')._get_payment_method('bank'),
+                'noupdate': True,
+            }]" />
+    </function>
+
+    <!-- Closed Session 3 -->
+
+    <record id="pos_closed_session_3" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
+        <field name="config_id" ref="pos_config_main_restaurant" />
+        <field name="user_id" ref="base.user_admin" />
+        <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="stop_at"
+            eval="(DateTime.today() + relativedelta(days=-1, hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+
+    <record id="pos_closed_order_3_1" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_closed_session_3" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">ClosedDemo/0005</field>
+        <field name="state">paid</field>
+        <field name="amount_total">14.0</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">14.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00000-003-1001</field>
+    </record>
+
+    <record id="pos_closed_orderline_3_1_1" model="pos.order.line" forcecreate="False">
+        <field name="name">Closed Orderline 3.1.1</field>
+        <field name="product_id" ref="pos_food_margherita" />
+        <field name="price_subtotal">7.0</field>
+        <field name="price_subtotal_incl">7.0</field>
+        <field name="price_unit">7.0</field>
+        <field name="order_id" ref="pos_closed_order_3_1" />
+        <field name="full_product_name">Margherita</field>
+    </record>
+
+    <record id="pos_closed_orderline_3_1_2" model="pos.order.line" forcecreate="False">
+        <field name="name">Closed Orderline 3.1.2</field>
+        <field name="product_id" ref="pos_food_funghi" />
+        <field name="price_subtotal">7.0</field>
+        <field name="price_subtotal_incl">7.0</field>
+        <field name="price_unit">7.0</field>
+        <field name="order_id" ref="pos_closed_order_3_1" />
+        <field name="full_product_name">Funghi</field>
+    </record>
+
+    <record id="pos_payment_1" model="pos.payment" forcecreate="False">
+        <field name="payment_method_id" ref="pos_restaurant.payment_method" />
+        <field name="pos_order_id" ref="pos_closed_order_3_1" />
+        <field name="amount">14.0</field>
+    </record>
+
+    <record id="pos_closed_order_3_2" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_closed_session_3" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">ClosedDemo/0006</field>
+        <field name="state">paid</field>
+        <field name="amount_total">7.0</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">7.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00000-003-1002</field>
+    </record>
+
+    <record id="pos_closed_orderline_3_2_1" model="pos.order.line" forcecreate="False">
+        <field name="name">Closed Orderline 3.2.1</field>
+        <field name="product_id" ref="pos_food_vege" />
+        <field name="price_subtotal">7.0</field>
+        <field name="price_subtotal_incl">7.0</field>
+        <field name="price_unit">7.0</field>
+        <field name="order_id" ref="pos_closed_order_3_2" />
+        <field name="full_product_name">Vegetarian</field>
+    </record>
+
+    <record id="pos_payment_2" model="pos.payment" forcecreate="False">
+        <field name="payment_method_id" ref="pos_restaurant.payment_method" />
+        <field name="pos_order_id" ref="pos_closed_order_3_2" />
+        <field name="amount">7.0</field>
+    </record>
+
+    <function model="pos.session" name="action_pos_session_closing_control"
+        eval="[[ref('pos_closed_session_3')]]" />
+
+    <!-- Closed Session 4 -->
+
+    <record id="pos_closed_session_4" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
+        <field name="config_id" ref="pos_config_main_restaurant" />
+        <field name="user_id" ref="base.user_admin" />
+        <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="stop_at"
+            eval="(DateTime.today() + relativedelta(days=-1, hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+    </record>
+
+    <record id="pos_closed_order_4_1" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_closed_session_4" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">ClosedDemo/0007</field>
+        <field name="state">paid</field>
+        <field name="amount_total">6.7</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">6.7</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00000-004-1001</field>
+    </record>
+
+    <record id="pos_closed_orderline_4_1_1" model="pos.order.line" forcecreate="False">
+        <field name="name">Closed Orderline 4.1.1</field>
+        <field name="product_id" ref="water" />
+        <field name="price_subtotal">2.20</field>
+        <field name="price_subtotal_incl">2.20</field>
+        <field name="price_unit">2.20</field>
+        <field name="order_id" ref="pos_closed_order_4_1" />
+        <field name="full_product_name">Water</field>
+    </record>
+
+    <record id="pos_closed_orderline_4_1_2" model="pos.order.line" forcecreate="False">
+        <field name="name">Closed Orderline 4.1.2</field>
+        <field name="product_id" ref="pos_food_bolo" />
+        <field name="price_subtotal">4.5</field>
+        <field name="price_subtotal_incl">4.5</field>
+        <field name="price_unit">4.5</field>
+        <field name="order_id" ref="pos_closed_order_4_1" />
+        <field name="full_product_name">Pasta Bolognese</field>
+    </record>
+
+    <record id="pos_payment_3" model="pos.payment" forcecreate="False">
+        <field name="payment_method_id" ref="pos_restaurant.payment_method" />
+        <field name="pos_order_id" ref="pos_closed_order_4_1" />
+        <field name="amount">6.7</field>
+    </record>
+
+    <record id="pos_closed_order_4_2" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_closed_session_4" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">ClosedDemo/0008</field>
+        <field name="state">paid</field>
+        <field name="amount_total">28.0</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">28.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00000-004-1002</field>
+    </record>
+
+    <record id="pos_closed_orderline_4_2_1" model="pos.order.line" forcecreate="False">
+        <field name="name">Closed Orderline 4.2.1</field>
+        <field name="product_id" ref="pos_food_cheeseburger" />
+        <field name="price_subtotal">28.0</field>
+        <field name="price_subtotal_incl">28.0</field>
+        <field name="price_unit">7.0</field>
+        <field name="qty">4</field>
+        <field name="order_id" ref="pos_closed_order_4_2" />
+        <field name="full_product_name">Cheese Burger</field>
+    </record>
+
+    <record id="pos_payment_4" model="pos.payment" forcecreate="False">
+        <field name="payment_method_id" ref="pos_restaurant.payment_method" />
+        <field name="pos_order_id" ref="pos_closed_order_4_2" />
+        <field name="amount">28.0</field>
+    </record>
+
+    <function model="pos.session" name="action_pos_session_closing_control"
+        eval="[[ref('pos_closed_session_4')]]" />
+
+    <!-- Floors: Main Floor -->
+    <record id="floor_main" model="restaurant.floor">
+        <field name="name">Main Floor</field>
+        <field name="background_color">rgb(249,250,251)</field>
+        <field name="pos_config_ids" eval="[(6, 0, [ref('pos_restaurant.pos_config_main_restaurant')])]" />
+    </record>
+
+    <record id="table_01" model="restaurant.table">
+        <field name="name">1</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">50</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_02" model="restaurant.table">
+        <field name="name">2</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">212</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_03" model="restaurant.table">
+        <field name="name">3</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">374</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_04" model="restaurant.table">
+        <field name="name">4</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">536</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_05" model="restaurant.table">
+        <field name="name">5</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">698</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_06" model="restaurant.table">
+        <field name="name">6</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">860</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_07" model="restaurant.table">
+        <field name="name">7</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,109,109)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">50</field>
+        <field name="position_v">280</field>
+    </record>
+
+    <record id="table_08" model="restaurant.table">
+        <field name="name">8</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,109,109)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">212</field>
+        <field name="position_v">280</field>
+    </record>
+
+    <record id="table_09" model="restaurant.table">
+        <field name="name">9</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,109,109)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">698</field>
+        <field name="position_v">280</field>
+    </record>
+
+    <record id="table_10" model="restaurant.table">
+        <field name="name">10</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,109,109)</field>
+        <field name="shape">square</field>
+        <field name="width">100</field>
+        <field name="height">100</field>
+        <field name="position_h">860</field>
+        <field name="position_v">280</field>
+    </record>
+
+    <record id="table_11" model="restaurant.table">
+        <field name="name">11</field>
+        <field name="floor_id" ref="pos_restaurant.floor_main" />
+        <field name="seats">4</field>
+        <field name="color">rgb(78,210,190)</field>
+        <field name="shape">round</field>
+        <field name="width">210</field>
+        <field name="height">210</field>
+        <field name="position_h">400</field>
+        <field name="position_v">230</field>
+    </record>
+
+    <!-- Restaurant Floor: Patio -->
+
+    <record id="floor_patio" model="restaurant.floor">
+        <field name="name">Patio</field>
+        <field name="background_color">rgb(130, 233, 171)</field>
+        <field name="pos_config_ids" eval="[(6, 0, [ref('pos_restaurant.pos_config_main_restaurant')])]" />
+    </record>
+
+    <!-- Patio: Left table row -->
+
+    <record id="table_21" model="restaurant.table">
+        <field name="name">1</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">100</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_22" model="restaurant.table">
+        <field name="name">2</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">100</field>
+        <field name="position_v">166</field>
+    </record>
+
+    <record id="table_23" model="restaurant.table">
+        <field name="name">3</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">100</field>
+        <field name="position_v">283</field>
+    </record>
+
+    <record id="table_24" model="restaurant.table">
+        <field name="name">4</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">100</field>
+        <field name="position_v">400</field>
+    </record>
+
+    <!-- Patio: Right table row -->
+
+    <record id="table_25" model="restaurant.table">
+        <field name="name">5</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">800</field>
+        <field name="position_v">50</field>
+    </record>
+
+    <record id="table_26" model="restaurant.table">
+        <field name="name">6</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">800</field>
+        <field name="position_v">166</field>
+    </record>
+
+    <record id="table_27" model="restaurant.table">
+        <field name="name">7</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">800</field>
+        <field name="position_v">283</field>
+    </record>
+
+    <record id="table_28" model="restaurant.table">
+        <field name="name">8</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">2</field>
+        <field name="color">rgb(53,211,116)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">85</field>
+        <field name="position_h">800</field>
+        <field name="position_v">400</field>
+    </record>
+
+    <!-- Patio: Center table block -->
+
+    <record id="table_29" model="restaurant.table">
+        <field name="name">9</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,191,109)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">120</field>
+        <field name="position_h">330</field>
+        <field name="position_v">100</field>
+    </record>
+
+    <record id="table_29" model="restaurant.table">
+        <field name="name">9</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,191,109)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">120</field>
+        <field name="position_h">330</field>
+        <field name="position_v">100</field>
+    </record>
+
+    <record id="table_30" model="restaurant.table">
+        <field name="name">10</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,191,109)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">120</field>
+        <field name="position_h">560</field>
+        <field name="position_v">100</field>
+    </record>
+
+    <record id="table_31" model="restaurant.table">
+        <field name="name">11</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,191,109)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">120</field>
+        <field name="position_h">330</field>
+        <field name="position_v">315</field>
+    </record>
+
+    <record id="table_32" model="restaurant.table">
+        <field name="name">12</field>
+        <field name="floor_id" ref="pos_restaurant.floor_patio" />
+        <field name="seats">4</field>
+        <field name="color">rgb(235,191,109)</field>
+        <field name="shape">square</field>
+        <field name="width">130</field>
+        <field name="height">120</field>
+        <field name="position_h">560</field>
+        <field name="position_v">315</field>
+    </record>
+</odoo>

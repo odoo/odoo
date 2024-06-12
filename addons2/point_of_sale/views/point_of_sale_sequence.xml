@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="seq_pos_session" model="ir.sequence">
+        <field name="name">POS Session</field>
+        <field name="code">pos.session</field>
+        <field name="prefix">POS/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False" />
+    </record>
+</data>
+</odoo>

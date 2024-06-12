@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+	<t 
+		t-name="muk_web_dialog.Dialog"
+		t-inherit="web.Dialog" 
+		t-inherit-mode="extension" 
+	>
+	    <xpath expr="//div[@t-attf-class='modal-{{props.size}}']" position="attributes">
+	    	<attribute name="t-attf-class">modal-{{ this.data?.size || 'lg' }}</attribute>
+	    </xpath>
+	</t>
+
+	<t 
+		t-name="muk_web_dialog.Dialog.header"
+		t-inherit="web.Dialog.header" 
+		t-inherit-mode="extension" 
+	>
+	    <xpath expr="//h4[hasclass('modal-title')]" position="attributes">
+	    	<attribute name="class" add="flex-shrink-0 w-75" separator=" " />
+	    </xpath>
+	    <xpath expr="//t[@t-if='!fullscreen']/button" position="before">
+	    	<div class="w-100">
+		    	<button 
+		    		t-if="!fullscreen"
+		    		type="button" 
+		    		class="btn float-end me-2 mk_btn_dialog_size" 
+		    		t-on-click="() => this.env.dialogData.size = this.env.dialogData.size === 'fs' ? this.env.dialogData.initalSize : 'fs'"
+		    	>
+		            <i t-attf-class="fa fa-lg {{ this.env.dialogData.size === 'fs' ? 'fa-compress' : 'fa-expand' }}" />
+		        </button>
+	        </div>
+	    </xpath>
+	</t>
+	
+</templates>

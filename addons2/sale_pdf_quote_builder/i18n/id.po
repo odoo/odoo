@@ -1,0 +1,210 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_pdf_quote_builder
+# 
+# Translators:
+# Wil Odoo, 2023
+# Abe Manyo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: Abe Manyo, 2024\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,print_report_name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+msgstr ""
+"(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
+"'Order - %s' % (object.name)"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "<i class=\"fa fa-arrow-right\"/> Download examples"
+msgstr "<i class=\"fa fa-arrow-right\"/> Unduh contoh"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,help:sale_pdf_quote_builder.field_product_document__attached_on
+msgid ""
+"Allows you to share the document with your customers within a sale.\n"
+"Leave it empty if you don't want to share this document with sales customer.\n"
+"Quotation: the document will be sent to and accessible by customers at any time.\n"
+"e.g. this option can be useful to share Product description files.\n"
+"Confirmed order: the document will be sent to and accessible by customers.\n"
+"e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
+"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+msgstr ""
+"Memungkinkan Anda untuk membagikan dokumen dengan pelanggan Anda dalam sale.\n"
+"Biarkan kosong bila Anda tidak ingin membagikan dokumen ini dengan pelanggan sales.\n"
+"Quotation: dokumen akan dikirim ke dan dapat diakses oleh pelanggan kapanpun juga.\n"
+"Order dikonfirmasi: dokumen akan dikirim ke dan dapat diakses oleh pelanggan.\n"
+"contoh opsi ini dapat berguna untuk membagikan User Manual atau konten digital yang dibeli pada ecommerce.\n"
+"Inside qutoe: Dokumen akan dimasukkan dalam pdf quotation di antara halaman header dan table quotation."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_company
+msgid "Companies"
+msgstr "Perusahaan-Perusahaan"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_res_config_settings
+msgid "Config Settings"
+msgstr "Pengaturan Konfig"
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/utils.py:0
+#, python-format
+msgid ""
+"It seems that we're not able to process this pdf inside a quotation. It is "
+"either encrypted, or encoded in a format we do not support."
+msgstr ""
+"Sepertinya kami tidak dapat memproses pdf ini di dalam quotation. Ini karena"
+" dienkripsi, atau di-encode dalam format yang tidak kami dukung."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer
+msgid "Footer pages"
+msgstr "Halaman footer"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header
+msgid "Header pages"
+msgstr "Halaman header"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields.selection,name:sale_pdf_quote_builder.selection__product_document__attached_on__inside
+msgid "Inside quote"
+msgstr "Inside quote"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "Learn more from the documentation."
+msgstr "Pelajari lebih lanjut dari dokumentasi."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid ""
+"Make your quote attractive by adding header pages, product descriptions and "
+"footer pages to your quote."
+msgstr ""
+"Buat quotation Anda lebih indah dengan menambahkan header halaman, "
+"keterangan produk dan footer halaman ke quotation Anda."
+
+#. module: sale_pdf_quote_builder
+#. odoo-python
+#: code:addons/sale_pdf_quote_builder/models/product_document.py:0
+#, python-format
+msgid "Only PDF documents can be attached inside a quote."
+msgstr "Hanya dokumen PDF yang dapat dilampirkan di dalam quote."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid "PDF Quote Builder"
+msgstr "Pembuat Quotation PDF"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.res_config_settings_view_form
+msgid "PDF Quote builder"
+msgstr "Pembuat Quotation PDF"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_product_document
+msgid "Product Document"
+msgstr "Dokumen Produk"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Products descriptions are pdf documents you can add directly on products.\n"
+"                            To do so, go on a product, find the \"product documents\" button, then add a\n"
+"                            new pdf document with a visibility set as \"Inside Quotes\". For each product\n"
+"                            in the quote, if the product has an \"inside quotes\" document, this document\n"
+"                            will be added after header pages and before the quotation details."
+msgstr ""
+"Keterangan produk adalah dokumen pdf yang dapat ditambahkan langsung ke produk.\n"
+"                            Untuk melakukan hal tersebut, pergi ke produk, cari tombol \"dokumen produk\", lalu tambahkan\n"
+"                            dokumen pdf baru dengan visibilitas yang ditetapkan sebagai \"Inside Quotes\". Untuk setiap produk\n"
+"                            di quote, bila produk memiliki dokumen \"inside quotes\", dokumen ini\n"
+"                            akan ditambahkan setelah halaman header dan sebelum detail quotation."
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Provide header pages and footer pages to compose an attractive quotation\n"
+"                            with more information about your company, your products and your services.\n"
+"                            The pdf of your quotes will be built by putting together header pages,\n"
+"                            product descriptions, details of the quote and then the footer pages.\n"
+"                            If empty, it will use those define in the company settings.<br/>"
+msgstr ""
+"Sediakan halaman header dan footer untuk membuat quotation yang menarik\n"
+"                            dengan lebih banyak informasi mengenai perusahaan, produk dan layanan Anda.\n"
+"                            Pdf quote akan akan dibuat dengan menaruh bersama halaman header,\n"
+"                            keterangan produk, detail quotation dan halaman footer.\n"
+"                            Bila kosong,akan menggunakan yang didefinisikan di pengaturan perusahaan. <br/>"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.actions.report,name:sale_pdf_quote_builder.action_report_saleorder_raw
+msgid "Quotation / Order"
+msgstr "Penawaran / Order"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order_template
+msgid "Quotation Template"
+msgstr "Kutipan Template"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_ir_actions_report
+msgid "Report Action"
+msgstr "Laporkan Action"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_footer_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_footer_name
+msgid "Sale Footer Name"
+msgstr "Nama Footer Sale"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_company__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_res_config_settings__sale_header_name
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_sale_order_template__sale_header_name
+msgid "Sale Header Name"
+msgstr "Nama Header Sale"
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model,name:sale_pdf_quote_builder.model_sale_order
+msgid "Sales Order"
+msgstr "Order Penjualan"
+
+#. module: sale_pdf_quote_builder
+#: model_terms:ir.ui.view,arch_db:sale_pdf_quote_builder.sale_order_template_form
+msgid ""
+"Some information specific to the quote (customer name, quotation reference, ... )\n"
+"                            can be injected in these documents using pdf forms.\n"
+"                            Refer to the documentation to know more about this feature."
+msgstr ""
+"Beberapa informasi spesifik mengenai quote (nama pelanggan, referensi quotation, ... )\n"
+"                            dapat dimasukkan ke dokumen ini menggunakan formulir pdf.\n"
+"                            Rujuk ke dokumentasi untuk mengetahui lebih lanjut mengenai fitur ini."
+
+#. module: sale_pdf_quote_builder
+#: model:ir.model.fields,field_description:sale_pdf_quote_builder.field_product_document__attached_on
+msgid "Visible at"
+msgstr "Tampak pada"

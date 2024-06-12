@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data noupdate="1">
+
+    <!-- Add a Channel Rule to demonstrate our bot on the '/contactus' page -->
+
+    <record id="website_livechat_channel_rule_chatbot" model="im_livechat.channel.rule">
+        <field name="regex_url">/contactus</field>
+        <field name="sequence">5</field>
+        <field name="action">auto_popup</field>
+        <field name="auto_popup_timer">2</field>
+        <field name="chatbot_script_id" ref="im_livechat.chatbot_script_welcome_bot"/>
+        <field name="channel_id" ref="im_livechat.im_livechat_channel_data"/>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Product template -->
+        <record id="jys_product_template_form_inherit" model="ir.ui.view">
+            <field name="name">jys.shopee.product.template.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options']" position="inside">
+                    <div>
+                        <field name="is_shopee"/>
+                        <label for="is_shopee"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="jys_product_template_only_form_inherit" model="ir.ui.view">
+            <field name="name">jys.shopee.product.template.only.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="%(action_shopee_add_product)d" type="action" string="Add Product to Shopee" invisible="is_shopee == False"/>
+                    <button name="%(action_shopee_update_product)d" type="action" string="Update Product to Shopee" invisible="is_shopee == False"/>
+
+                    <div style="clear: both;"/>
+                </xpath>
+                <xpath expr="//field[@name='default_code']" position="after">
+                    <field name="shopee_sku"/>
+                </xpath>
+                <xpath expr="//page[@name='general_information']" position="after">
+                    <page string="Shopee" invisible="is_shopee == False">
+                        <separator string="Items"/>
+                        <field name="shopee_product_ids" nolabel="1" readonly="0">
+                            <tree editable="bottom">
+                                <field name="shop_id"/>
+                                <!-- <field name="name"/> -->
+                                <field name="item_id"/>
+                                <field name="price"/>
+                            </tree>
+                        </field>
+                       
+                        <!-- <field name="shopee_product_image_ids" nolabel="1" string="Images">
+                            <tree string="Images" editable="bottom">
+                                <field name="image" widget="image" nolabel="1"/>
+                            </tree>
+                        </field> -->
+                        <!-- <separator string="Upload Image"/> -->
+
+                        <separator string="Image"/>
+                        <button name="action_open_delete_confirmation_wizard" type="object" string="Delete All Image" class="oe_highlight shopee-button-delete" invisible="not shopee_product_image_ids"/>
+
+                        <field name="shopee_product_image_ids" widget="kanban" string="Images">
+                            <kanban create="0">
+                                <field name="image"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="o_kanban_image" style="width: 300px; height: 300px; border: 0px solid white; display: flex; align-items: center; justify-content: center;">
+                                            <img alt="Image" t-att-src="kanban_image('shopee.product.image', 'image', record.id.raw_value)" style="width: 100%; height: 100%"/>
+                                        </div>
+                                        <button name="unlink" type="object" class="fa fa-trash"/>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Upload Image">
+                                <sheet>
+                                    <group>
+                                        <field name="image" widget="image"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                        <field name="upload_product_image_ids" widget="many2many_binary" string="Images" nolabel="1" context="{'upload_shopee_image': True}"/>
+                    
+                        <!-- <separator string="Upload Image"/>
+                        <field name="upload_product_image_ids" widget="kanban" string="Images">
+                            <kanban>
+                                <field name="raw"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="o_kanban_image" style="width: 300px; height: 300px; border: 0px solid white; display: flex; align-items: center; justify-content: center;">
+                                            <img alt="Image" t-att-src="kanban_image('ir.attachment', 'raw', record.id.raw_value)" style="width: 100%; height: 100%"/>
+                                        </div>
+                                        <button name="unlink" type="object" class="fa fa-trash"/>
+                                    </t>
+
+                                </templates>
+                            </kanban>
+                            <form string="Upload Image">
+                                <sheet>
+                                    <group>
+                                        <field name="res_id" invisible="1"/>
+                                        <field name="name"/>
+                                        <field name="datas" widget="image"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field> -->
+
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="jys_product_template_kanban_inherit" model="ir.ui.view">
+            <field name="name">jys.shopee.product.template.kanban</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_properties']" position="after">
+                    <field name="is_shopee" invisible="1"/> 
+                    <div style="display: inline-block; float:right;">
+                        <img src="/jys_shopee/static/img/shopee_logo.png" alt="Shopee" style="width: 24px; height: 24px; display:flex; flex-direction: row-reverse" invisible="is_shopee == False"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Product variant -->
+        <record id="view_shopee_product_product_form" model="ir.ui.view">
+            <field name="name">shopee.product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_code']" position="after">
+                    <field name="variation_sku"/>
+                </xpath>
+                <xpath expr="//div[@name='options']" position="inside">
+                    <div>
+                        <field name="is_sync_shopee"/>
+                        <label for="is_sync_shopee"/>
+                    </div>
+                </xpath>
+                <xpath expr="//page[@name='sales']" position="after">
+                    <page name="shopee_variations" string="Shopee" invisible="is_shopee == False">
+                        <field name="shopee_product_variant_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="shop_id"/>
+                                <field name="variation_id"/>
+                                <!-- <field name="price_after_tax" readonly="1"/> -->
+                                <field name="price" readonly="1"/>
+                                <!-- <field name="tax_amount" readonly="1"/> -->
+                            </tree>
+                        </field>
+
+                        <separator string="Image"/>
+                        <button name="action_open_delete_confirmation_wizard" type="object" string="Delete All Image" class="oe_highlight shopee-button-delete" invisible="not shopee_product_var_image_ids"/>
+
+                        <field name="shopee_product_var_image_ids" widget="kanban" string="Images">
+                            <kanban create="0">
+                                <field name="image"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="o_kanban_image" style="width: 300px; height: 300px; border: 0px solid white; display: flex; align-items: center; justify-content: center;">
+                                            <img alt="Image" t-att-src="kanban_image('shopee.product.image.variant', 'image', record.id.raw_value)" style="width: 100%; height: 100%"/>
+                                        </div>
+                                        <button name="unlink" type="object" class="fa fa-trash"/>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Upload Image">
+                                <sheet>
+                                    <group>
+                                        <field name="image" widget="image"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                        <field name="upload_product_var_image_ids" widget="many2many_binary" string="Images" nolabel="1" context="{'upload_shopee_image': True}"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

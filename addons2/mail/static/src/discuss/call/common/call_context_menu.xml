@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.CallContextMenu">
+        <div class="d-flex flex-column p-3">
+            <input t-if="!isSelf" type="range" min="0.0" max="1" step="0.01" t-att-value="volume" t-on-change="onChangeVolume" class="form-range"/>
+            <t t-if="env.debug and !isSelf and rtc.state.connectionType === rtcConnectionTypes.P2P">
+                <hr class="w-100 border-top"/>
+                <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
+                <div><span class="fw-bolder">To peer: </span><t t-out="outboundConnectionTypeText"/></div>
+                <div><span class="fw-bolder">From peer: </span><t t-out="inboundConnectionTypeText"/></div>
+                <div><span class="fw-bolder">Connection: </span><t t-out="props.rtcSession.connectionState"/></div>
+                <div><span class="fw-bolder">ICE: </span><t t-out="props.rtcSession.iceState"/></div>
+                <div><span class="fw-bolder">DTLS: </span><t t-out="props.rtcSession.dtlsState"/></div>
+                <div><span class="fw-bolder">Data channel: </span><t t-out="props.rtcSession.dataChannelState"/></div>
+                <div t-if="props.rtcSession.audioError"><span class="fw-bolder">Audio player: </span><t t-out="props.rtcSession.audioError"/></div>
+                <div t-if="props.rtcSession.videoError"><span class="fw-bolder">Video player: </span><t t-out="props.rtcSession.videoError"/></div>
+                <hr class="w-100 border-top"/>
+                <div><span class="fw-bolder">ICE gathering: </span><t t-out="props.rtcSession.iceGatheringState"/></div>
+                <div><span class="fw-bolder">Packets sent: </span><t t-out="props.rtcSession.packetsSent"/></div>
+                <div><span class="fw-bolder">Packets received: </span><t t-out="props.rtcSession.packetsReceived"/></div>
+                <div><span class="fw-bolder">Log step: </span><t t-out="props.rtcSession.logStep"/></div>
+            </t>
+            <t t-elif="env.debug and isSelf and rtc.state.connectionType === rtcConnectionTypes.SERVER">
+                <div><span class="fw-bolder">Connection type: </span><t t-out="rtc.state.connectionType"/></div>
+                <div><span class="fw-bolder">RTC Session ID: </span><t t-out="props.rtcSession.id"/></div>
+                <hr class="w-100 border-top"/>
+                <div><span class="fw-bolder">Upload: </span><t t-out="outboundConnectionTypeText"/></div>
+                <div><span class="fw-bolder">up ICE: </span><t t-out="state.uploadStats.iceState"/></div>
+                <div><span class="fw-bolder">up DTLS: </span><t t-out="state.uploadStats.dtlsState"/></div>
+                <div><span class="fw-bolder">Packets sent: </span><t t-out="state.uploadStats.packetsSent"/></div>
+                <div><span class="fw-bolder">available bitrate: </span><t t-out="state.uploadStats.availableOutgoingBitrate"/></div>
+                <hr class="w-100 border-top"/>
+                <div><span class="fw-bolder">Download: </span><t t-out="inboundConnectionTypeText"/></div>
+                <div><span class="fw-bolder">down ICE: </span><t t-out="state.downloadStats.iceState"/></div>
+                <div><span class="fw-bolder">down DTLS: </span><t t-out="state.downloadStats.dtlsState"/></div>
+                <div><span class="fw-bolder">Packets received: </span><t t-out="state.downloadStats.packetsReceived"/></div>
+                <t t-if="state.producerStats.audio">
+                    <hr class="w-100 border-top"/>
+                    <div><span class="fw-bolder">microphone</span></div>
+                    <div><span class="fw-bolder">codec: </span><t t-out="state.producerStats.audio.codec"/></div>
+                    <div><span class="fw-bolder">clock rate: </span><t t-out="state.producerStats.audio.clockRate"/></div>
+                </t>
+                <t t-if="state.producerStats.camera and props.rtcSession.isCameraOn">
+                    <hr class="w-100 border-top"/>
+                    <div><span class="fw-bolder">camera</span></div>
+                    <div><span class="fw-bolder">codec: </span><t t-out="state.producerStats.camera.codec"/></div>
+                    <div><span class="fw-bolder">clock rate: </span><t t-out="state.producerStats.camera.clockRate"/></div>
+                </t>
+                <t t-if="state.producerStats.screen and props.rtcSession.isScreenSharingOn">
+                    <hr class="w-100 border-top"/>
+                    <div><span class="fw-bolder">screen</span></div>
+                    <div><span class="fw-bolder">codec: </span><t t-out="state.producerStats.screen.codec"/></div>
+                    <div><span class="fw-bolder">clock rate: </span><t t-out="state.producerStats.screen.clockRate"/></div>
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectUpdateListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-component='props.Renderer']" position="before">
+            <ProjectRightSidePanel
+                context="props.context"
+                domain="props.domain"
+            />
+        </xpath>
+    </t>
+
+</templates>

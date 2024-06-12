@@ -1,0 +1,69 @@
+.o-bg-black {
+    background-color: rgba(0, 0, 0, var(--bg-opacity, 1));
+}
+
+.o-discuss-badge {
+    --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
+    color: white !important;
+    background-color: var(--o-discuss-badge-bg) !important;
+
+    &.o-muted {
+        --o-discuss-badge-bg: #{$gray-400};
+    }
+}
+
+.o-discuss-badge, .o-discuss-badgeShape {
+    display: flex;
+    transform: translate(0, 0) !important; // cancel systray style on badge
+    font-size: 0.7em !important;
+}
+
+.o-min-height-0 {
+    min-height: 0;
+}
+
+.o-min-width-0 {
+    min-width: 0;
+}
+
+.o-smaller {
+    font-size: smaller;
+}
+
+.o-text-white {
+    color: #FFF;
+}
+
+.o-yellow {
+    color: $yellow;
+}
+
+.o-z-index-1 {
+    z-index: 1;
+}
+
+a.o_mail_redirect, a.o_channel_redirect {
+    @include button-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+    @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
+    padding: map-get($spacers, 1);
+}
+
+.o-mail-DiscussSystray {
+    --border-color: #{$o-gray-300} !important; // cancel custom border color of dropdown
+}
+
+.o-mail-DiscussSystray-class {
+    margin-top: - $o-navbar-padding-v; // cancel navbar padding
+    margin-bottom: - $o-navbar-padding-v; // cancel navbar padding
+    display: flex;
+    align-items: center;
+
+    &:hover, &.show {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+}
+
+.o-mail-systrayFullscreenDropdownMenu {
+    top: $o-navbar-height !important;
+    height: calc(100% - #{$o-navbar-height}); // no bottom-0 otherwise performance issue
+}

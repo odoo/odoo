@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_view_form_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_loyalty</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='pos-loyalty']" position="inside">
+                <div class="content-group" invisible="not module_loyalty">
+                    <div class="mt16 o_light_label" id="pos_gift_card_settings" invisible="is_kiosk_mode">
+                        <field name="pos_gift_card_settings" colspan="4" nolabel="1" widget="radio"/>
+                    </div>
+                    <div class="mt8">
+                        <button name="%(loyalty.loyalty_program_discount_loyalty_action)d" icon="oi-arrow-right" type="action" string="Discount &amp; Loyalty" class="btn-link"/>
+                    </div>
+                    <div class="mt8" id="button_loyalty_program" invisible="is_kiosk_mode">
+                        <button name="%(loyalty.loyalty_program_gift_ewallet_action)d" icon="oi-arrow-right" type="action" string="Gift cards &amp; eWallet" class="btn-link"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainField">
+        <div t-att-class="{ o_inline_mode: !props.editInDialog }">
+            <t t-set="resModel" t-value="getResModel()"/>
+            <t t-if="resModel">
+                <t t-if="props.isFoldable and state.folded and state.isValid">
+                    <div class="d-flex align-items-center" t-on-click="() => state.folded = false">
+                        <i data-tooltip="Modify filter" class="fa fa-lg fa-caret-right pe-2"/>
+                        <div class="d-print-contents">
+                            <t t-if="!state.facets.length">
+                                <span>Match <strong>all records</strong></span>
+                                <t t-if="!props.readonly">
+                                    <button class="btn btn-sm btn-primary o_domain_add_first_node_button mx-2" t-on-click.stop="() => this.addCondition()">
+                                        <i class="fa fa-plus"/> Add condition
+                                    </button>
+                                </t>
+                            </t>
+                            <t t-foreach="state.facets" t-as="facet" t-key="facet_index">
+                                <div class="d-inline-flex align-items-stretch text-nowrap px-1 position-relative"
+                                    role="listitem"
+                                    tabindex="0"
+                                    >
+                                    <div class="o_searchview_facet_label rounded-start-2 btn btn-primary rounded-end-0 p-0" role="button">
+                                        <i class="px-1 small fa fa-filter" role="image"/>
+                                    </div>
+                                    <div class="o_facet_values d-flex align-items-center px-2 bg-200 rounded-end-2 text-wrap">
+                                        <small class="o_facet_value" t-esc="facet"/>
+                                    </div>
+                                </div>
+                            </t>
+                            <t t-if="state.isValid">
+                                <button class="btn btn-sm btn-link o_domain_show_selection_button" data-tooltip="Show matching records" type="button" t-on-click.stop="onButtonClick">
+                                    <t t-esc="state.recordCount" /> record(s)
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="d-flex">
+                        <a t-if="props.isFoldable and state.isValid" t-on-click="fold">
+                            <i class="fa fa-lg fa-caret-down pe-2"></i>
+                        </a>
+                        <DomainSelector
+                            resModel="resModel"
+                            domain="getDomain()"
+                            readonly="props.readonly or props.editInDialog"
+                            update.bind="update"
+                            isDebugMode="!!env.debug"
+                            className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+                        />
+                    </div>
+                    <div class="o_field_domain_panel d-flex align-items-center gap-2 mt-1">
+                        <i class="oi oi-arrow-right" role="img" aria-label="Domain" title="Domain" />
+                        <t t-if="state.isValid === null and state.recordCount === null">
+                            <i class="fa fa-circle-o-notch fa-spin ms-2" role="img" aria-label="Loading" title="Loading" />
+                        </t>
+                        <t t-else="">
+                            <t t-if="state.isValid">
+                                <button class="btn btn-sm btn-link o_domain_show_selection_button" type="button" t-on-click.stop="onButtonClick">
+                                    <t t-esc="state.recordCount" /> record(s)
+                                </button>
+                            </t>
+                            <t t-else="">
+                                <span class="text-warning" role="alert">
+                                    <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning" /> Invalid domain
+                                </span>
+                            </t>
+                            <t t-if="!!env.debug and !props.readonly">
+                                <button
+                                    class="btn btn-sm btn-icon fa fa-refresh o_refresh_count"
+                                    role="img"
+                                    aria-label="Refresh"
+                                    title="Refresh"
+                                    t-on-click="() => this.checkProps()"
+                                />
+                            </t>
+                        </t>
+                        <t t-if="props.editInDialog and !props.readonly">
+                            <button class="btn btn-sm btn-primary o_field_domain_dialog_button" t-on-click.prevent="onEditDialogBtnClick">Edit Domain</button>
+                        </t>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <div>Select a model to add a filter.</div>
+            </t>
+        </div>
+    </t>
+
+</templates>

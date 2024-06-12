@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tiktok_item_tree" model="ir.ui.view">
+            <field name="name">tiktok.item.tree</field>
+            <field name="model">tiktok.item</field>
+            <field name="arch" type="xml">
+                <tree string="Tiktok Items">
+                    <field name="name"/>
+                    <field name="shop_id"/>
+                    <field name="item_id"/>
+                    <field name="status"/>
+                    <field name="date_update"/>
+                    <field name="is_created"/>
+                    <field name="is_updated"/>
+                    <field name="is_variant_updated"/>
+                    <field name="is_done"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tiktok_item_form" model="ir.ui.view">
+            <field name="name">tiktok.item.form</field>
+            <field name="model">tiktok.item</field>
+            <field name="arch" type="xml">
+                <form string="Tiktok Items">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="shop_id" required="1"/>
+                            <field name="item_id" required="1"/>
+                            <field name="status" required="1"/>
+                            <field name="date_update" readonly="1"/>
+                            <field name="is_created"/>
+                            <field name="is_updated"/>
+                            <field name="is_variant_updated"/>
+                            <field name="is_done"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_tiktok_item_search" model="ir.ui.view">
+            <field name="name">tiktok.item.search</field>
+            <field name="model">tiktok.item</field>
+            <field name="arch" type="xml">
+                <search string="Tiktok Items">
+                    <field name="name" string="Item" filter_domain="['|',('name','ilike',self),('item_id','ilike',self)]"/>
+                    <field name="shop_id"/>
+                    <separator/>
+                    <filter string="Done" name="done" domain="[('is_done','=',True)]"/>
+                    <filter string="Not Done" name="not_done" domain="[('is_done','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="SKU" name="sku" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Item ID" name="item_id" domain="[]" context="{'group_by':'item_id'}"/>
+                        <filter string="Shops" name="shops" domain="[]" context="{'group_by':'shop_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_jys_tiktok_item" model="ir.actions.act_window">
+            <field name="name">Items</field>
+            <field name="res_model">tiktok.item</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>

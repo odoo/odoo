@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ProductsWidget">
+        <div class="products-widget d-flex flex-column flex-grow-1 overflow-auto" t-ref="products-widget">
+            <t t-set="showCategoryImages" t-value="getShowCategoryImages()" />
+            <div class="products-widget-control d-flex bg-view shadow-sm justify-content-between" t-att-class="{ 'h-12': showCategoryImages }">
+                <CategorySelector
+                    categories="getCategories()"
+                    onClick="(id) => this.pos.setSelectedCategoryId(id)"
+                    showImage="showCategoryImages"
+                    class="ui.isSmall ? 'scrollbar-hidden' : ''"
+                />
+                <Input tModel="[pos, 'searchProductWord']"
+                    class="'p-2'"
+                    isSmall="ui.isSmall"
+                    placeholder="'Search products...'"
+                    icon="{type: 'fa', value: 'fa-search'}"
+                    debounceMillis="500" />
+            </div>
+            <div class="product-list-container flex-grow-1 overflow-y-auto">
+                <div t-if="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                    <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
+                        <ProductCard
+                            class="pos.productViewMode"
+                            name="product.display_name"
+                            productId="product.id"
+                            price="product.getFormattedUnitPrice()"
+                            imageUrl="pos.show_product_images and product.getImageUrl()"
+                            onClick="() =>this.pos.addProductToCurrentOrder(product)"
+                            productInfo="true"
+                            onProductInfoClick="() => this.onProductInfoClick(product)"
+                        />
+                    </t>
+                </div>
+                <div t-else="" class="product-list-empty no-results-message text-center mt-5">
+                    <t t-if="searchWord">
+                        <p>No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                    </t>
+                    <t t-else="">
+                        <t t-if="pos.posHasValidProduct()">
+                            <p>There are no products in this category.</p>
+                        </t>
+                        <t t-else="">
+                            <div t-if="!state.loadingDemo">
+                                <p class="text-large">No products available. Explore <a role="button" class="button-no-demo fw-bolder" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="button-no-demo fw-bolder" t-on-click="createNewProducts">create your own</a>.</p>
+                            </div>
+                            <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
+                                <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">
+                                    <div class="o_spinner d-flex flex-column mb-4">
+                                        <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                                        Loading...
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+                <div t-if="searchWord" class="search-more-button d-flex justify-content-center">
+                    <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>
+                </div>
+                <div class="portal search-database-button no-results-message" t-att-class="{ 'd-none':  !shouldShowButton }"></div>
+            </div>
+        </div>
+    </t>
+</templates>

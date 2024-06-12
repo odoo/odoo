@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Open Session -->
+
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="base" eval="[{
+                'xml_id': 'pos_restaurant.pos_open_session_2',
+                'record': obj().env.ref('pos_restaurant.pos_config_main_restaurant').current_session_id,
+                'noupdate': True,
+                }]" />
+    </function>
+
+    <record id="pos_open_order_2" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_open_session_2" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">Restaurant/00001</field>
+        <field name="state">draft</field>
+        <field name="amount_total">22.90</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">0.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00002-001-0000</field>
+        <field name="table_id" ref="table_01" />
+        <field name="customer_count">8</field>
+    </record>
+
+    <record id="pos_orderline_2" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 2</field>
+        <field name="product_id" ref="coke" />
+        <field name="price_subtotal">4.40</field>
+        <field name="price_subtotal_incl">4.40</field>
+        <field name="price_unit">2.20</field>
+        <field name="qty">2</field>
+        <field name="order_id" ref="pos_open_order_2" />
+        <field name="full_product_name">Coca-Cola</field>
+        <field name="uuid">00000000-0000-4000-000000000000</field>
+    </record>
+
+    <record id="pos_orderline_3" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 3</field>
+        <field name="product_id" ref="pos_food_chirashi" />
+        <field name="price_subtotal">18.5</field>
+        <field name="price_subtotal_incl">18.5</field>
+        <field name="price_unit">9.25</field>
+        <field name="qty">2</field>
+        <field name="order_id" ref="pos_open_order_2" />
+        <field name="full_product_name">Salmon and Avocado</field>
+        <field name="uuid">00000000-0000-4000-000000000001</field>
+    </record>
+
+    <record id="pos_open_order_3" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_open_session_2" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">Restaurant/00002</field>
+        <field name="state">draft</field>
+        <field name="amount_total">21.8</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">0.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00002-002-0000</field>
+        <field name="table_id" ref="table_02" />
+        <field name="customer_count">3</field>
+    </record>
+
+    <record id="pos_orderline_4" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 4</field>
+        <field name="product_id" ref="pos_food_temaki" />
+        <field name="price_subtotal">14.0</field>
+        <field name="price_subtotal_incl">14.0</field>
+        <field name="price_unit">14.0</field>
+        <field name="qty">1</field>
+        <field name="order_id" ref="pos_open_order_3" />
+        <field name="full_product_name">Lunch Temaki mix 3pc</field>
+        <field name="uuid">00000000-0000-4000-000000000002</field>
+    </record>
+
+    <record id="pos_orderline_5" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 5</field>
+        <field name="product_id" ref="pos_food_mozza" />
+        <field name="price_subtotal">7.8</field>
+        <field name="price_subtotal_incl">7.8</field>
+        <field name="price_unit">3.9</field>
+        <field name="qty">2</field>
+        <field name="order_id" ref="pos_open_order_3" />
+        <field name="full_product_name">Mozzarella Sandwich</field>
+        <field name="uuid">00000000-0000-4000-000000000003</field>
+    </record>
+
+    <record id="pos_open_order_4" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_open_session_2" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">Restaurant/00003</field>
+        <field name="state">draft</field>
+        <field name="amount_total">10.5</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">0.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00002-003-0000</field>
+        <field name="table_id" ref="table_04" />
+        <field name="customer_count">5</field>
+    </record>
+
+    <record id="pos_orderline_6" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 6</field>
+        <field name="product_id" ref="pos_food_chicken" />
+        <field name="price_subtotal">3.0</field>
+        <field name="price_subtotal_incl">3.0</field>
+        <field name="price_unit">3.0</field>
+        <field name="qty">1</field>
+        <field name="order_id" ref="pos_open_order_4" />
+        <field name="full_product_name">Chicken Curry Sandwich</field>
+        <field name="uuid">00000000-0000-4000-000000000004</field>
+    </record>
+
+    <record id="pos_orderline_7" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 7</field>
+        <field name="product_id" ref="pos_food_bacon" />
+        <field name="price_subtotal">7.5</field>
+        <field name="price_subtotal_incl">7.5</field>
+        <field name="price_unit">7.5</field>
+        <field name="qty">1</field>
+        <field name="order_id" ref="pos_open_order_4" />
+        <field name="full_product_name">Bacon Burger</field>
+        <field name="uuid">00000000-0000-4000-000000000005</field>
+    </record>
+
+    <record id="pos_open_order_5" model="pos.order" forcecreate="False">
+        <field name="session_id" ref="pos_open_session_2" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="name">Restaurant/00004</field>
+        <field name="state">draft</field>
+        <field name="amount_total">5.5</field>
+        <field name="amount_tax">0.0</field>
+        <field name="amount_paid">0.0</field>
+        <field name="amount_return">0.0</field>
+        <field name="pos_reference">Order 00002-004-0000</field>
+        <field name="table_id" ref="table_06" />
+        <field name="customer_count">1</field>
+    </record>
+
+    <record id="pos_orderline_8" model="pos.order.line" forcecreate="False">
+        <field name="name">Orderline 8</field>
+        <field name="product_id" ref="pos_food_4formaggi" />
+        <field name="price_subtotal">5.5</field>
+        <field name="price_subtotal_incl">5.5</field>
+        <field name="price_unit">5.5</field>
+        <field name="qty">1</field>
+        <field name="order_id" ref="pos_open_order_5" />
+        <field name="full_product_name">Pizza 4 Formaggi</field>
+    </record>
+
+    <function model="pos.session" name="_set_last_order_preparation_change"
+            eval="[[ref('pos_open_order_2'), ref('pos_open_order_3'), ref('pos_open_order_4')]]"/>
+</odoo>

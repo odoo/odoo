@@ -1,0 +1,56 @@
+.s_donation:not([data-vcss]) {
+    @include o-input-number-no-arrows();
+
+    .s_donation_btn {
+        transition: background 0.2s;
+
+        &:focus {
+            box-shadow: none !important;
+        }
+    }
+    #s_donation_amount_input {
+        border: none;
+        outline: none;
+        max-width: 145px;
+        background-color: transparent;
+        font-size: inherit;
+        color: inherit;
+
+        &::placeholder {
+            opacity: 0.6;
+            color: inherit;
+        }
+    }
+    .s_donation_range_slider_wrap {
+        // not at 100% to prevent the bubble overflowing the viewport
+        // to the right (with small device when set with max value)
+        width: 90%;
+
+        #s_donation_range_slider {
+            margin-bottom: 50px;
+        }
+        .s_range_bubble {
+            position: absolute;
+            left: 0%;
+            margin-top: 28px;
+            padding: 0.5rem 1rem;
+            color: color-contrast(o-color('primary'));
+            background: map-get($theme-colors, 'primary');
+            @include font-size(1.15rem);
+            border-radius: 0.3rem;
+            transform: translateX(-50%);
+    
+            &::after {
+                content: "";
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                width: 0;
+                border-style: solid;
+                border-color: map-get($theme-colors, 'primary') transparent;
+                border-width: 0 5px 5px;
+                margin-left: -5px;
+            }
+        }
+    }
+}

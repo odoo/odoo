@@ -1,0 +1,12 @@
+.o_accordion_toggle {
+    @include caret();
+
+    &.open {
+        @include caret('up');
+    }
+
+    &::after {
+        @include o-position-absolute($top: 0, $right: 0);
+        transform: translate(-0.6em, 0.8em) /*rtl:translate(0.6em, 0.8em) scaleX(-1)*/;
+    }
+}

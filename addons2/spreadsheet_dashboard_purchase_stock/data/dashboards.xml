@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="spreadsheet_dashboard_purchase" model="spreadsheet.dashboard">
+        <field name="name">Purchase</field>
+        <field name="spreadsheet_binary_data" type="base64" file="spreadsheet_dashboard_purchase_stock/data/files/purchase_dashboard.json"/>
+        <field name="dashboard_group_id" ref="spreadsheet_dashboard.spreadsheet_dashboard_group_logistics"/>
+        <field name="group_ids" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
+        <field name="sequence">100</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.website</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                    <span name="website_menu">
+                        <label for="website_menu" string="Website Submenu"/>
+                        <field name="website_menu"/>
+                    </span>
+                    <span name="community_menu" invisible="1">
+                        <label for="community_menu" string="Community"/>
+                        <field name="community_menu"/>
+                    </span>
+                    <span name="menu_register_cta" class="d-inline-block">
+                        <label for="menu_register_cta" string="Register Button"/>
+                        <field name="menu_register_cta"/>
+                    </span>
+            </xpath>
+            <page name="event_type_communication" position="after">
+                <page string="Questions" name="page_questions">
+                    <field name="question_ids" class="w-100">
+                        <tree sample="1">
+                            <field name="title"/>
+                            <field name="is_mandatory_answer" string="Mandatory"/>
+                            <field name="once_per_order" string="Once per Order"/>
+                            <field name="question_type" />
+                            <field name="answer_ids" widget="many2many_tags"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

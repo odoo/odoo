@@ -1,0 +1,16 @@
+div.o_product_catalog_quantity {
+    input[type="number"] {
+        // Remove arrow buttons input type="number"
+        appearance: textfield;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            appearance: none;
+            margin: 0;
+        }
+    }
+}
+
+.o_kanban_view .o_kanban_renderer .o_kanban_record .o_product_added {
+    background-color: $o-component-active-bg;
+    border-color: $o-component-active-border;
+}

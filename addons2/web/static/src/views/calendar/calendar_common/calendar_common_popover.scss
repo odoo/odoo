@@ -1,0 +1,103 @@
+// Variables
+$o-cw-popup-avatar-size: 16px;
+
+.o_cw_popover {
+    width: 448px;
+    z-index: $zindex-modal - 1;
+    font-size: $font-size-base;
+
+    .card-header,
+    .card-header .popover-header {
+        font-size: 1.05em;
+        font-weight: 500;
+        line-height: 1;
+    }
+
+    .card-footer, .modal-footer {
+        --btn-group-gap: -1px;
+        background: none;
+    }
+
+    .o_footer_shrink {
+        padding-top: 0px;
+        padding-bottom: 0px;
+    }
+    .o_cw_popover_close {
+        cursor: pointer;
+    }
+
+    .o_calendar_avatars {
+        line-height: 1;
+    }
+
+    .o_calendar_avatars img {
+        margin-right: 0.4rem;
+        width: $o-cw-popup-avatar-size;
+        height: $o-cw-popup-avatar-size;
+        border-radius: 100%;
+    }
+
+    .list-group-item {
+        padding: 0.5rem 1rem;
+        border: none;
+    }
+
+    .o_cw_popover_fields_secondary {
+        max-height: 170px; // Fallback for old browsers
+        max-height: 25vh;
+        overflow: auto;
+        padding-bottom: 1px; // prevents the scrollbar to show when not needed
+
+        &::-webkit-scrollbar {
+            background: map-get($grays, "200");
+            width: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: map-get($grays, "500");
+        }
+    }
+
+    .fc-rtl & {
+        text-align: right;
+        .o_calendar_avatars {
+            > div {
+                justify-content: flex-end;
+            }
+            img {
+                order: 2;
+                margin: 0 0 0 0.4rem;
+            }
+        }
+    }
+// ===============  Generate color classes ===============
+    .card-header {
+        padding-left: 2px;
+    }
+}
+
+@for $i from 1 through length($o-colors-complete) {
+    $color: nth($o-colors-complete, $i);
+    $color-subtle: mix($o-white, $color, 55%);
+
+    .modal.o_technical_modal.o_modal_full .modal-dialog .modal-content.o_calendar_color_#{$i - 1} {
+        .modal-header {
+            background-color: $color-subtle;
+
+            .btn {
+                color: $body-color;
+            }
+        }
+    }
+
+    .o_cw_popover.o_calendar_color_#{$i - 1} {
+        .card-header,
+        .card-header .popover-header {
+            background-color: lighten($color-subtle, 10%);
+            color: color-contrast($color-subtle);
+        }
+
+        .card-header {
+            border-color: mix($card-border-color, $color-subtle);
+        }
+    }
+}

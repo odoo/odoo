@@ -1,0 +1,147 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_sms
+# 
+# Translators:
+# jonasyngvi, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"PO-Revision-Date: 2023-10-26 23:09+0000\n"
+"Last-Translator: jonasyngvi, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: is\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
+
+#. module: stock_sms
+#: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
+msgid ""
+"\n"
+"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
+msgstr ""
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Cancel"
+msgstr "Eyða"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Confirm"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_confirm_stock_sms
+msgid "Confirm Stock SMS"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: stock_sms
+#: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
+msgid "Delivery: Send by SMS Text Message"
+msgstr ""
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Disable SMS"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
+msgid "Has Received Warning Stock Sms"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+msgid "ID"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
+msgid "Pick"
+msgstr ""
+
+#. module: stock_sms
+#. odoo-python
+#: code:addons/stock_sms/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+#, python-format
+msgid "SMS"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Confirmation"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Template"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
+msgid "SMS Validation with stock move"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+msgid "SMS sent to the customer once the order is delivered."
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid ""
+"You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
+"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+msgstr ""

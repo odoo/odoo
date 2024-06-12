@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!--
+        This template is used to generate the SVG containing the signature when
+        using mode 'auto'.
+
+        The following variables have to be defined:
+            - width: (number) the width of the resulting image in px
+            - height: (number) the height of the resulting image in px
+            - font: base64 encoded font to use
+            - text: (string) the name to draw
+            - type: (string)
+                -> if set to 'signature', it will adapt the characters width to
+                fit the whole text in the image.
+                -> otherwise, it will adapt the space between characters to fill
+                the image with the text.
+    -->
+    <t t-name="web.sign_svg_text" name="SVG Signature Text">
+        <svg t-att-width="width" t-att-height="height" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+                <style type="text/css">
+                    @font-face {
+                        font-family: "font";
+                        src: url(data:font/ttf;base64,<t t-esc="font"/>) format("woff");
+                        font-weight: normal;
+                        font-style: normal;
+                    }
+                </style>
+            </defs>
+            <!-- adapt textLength to prevent distortion and left overflow with small words -->
+            <text t-esc="text" x="50%" t-att-y="height * 3 / 5" t-att-font-size="height * 3 / 5"
+                t-att-textLength="width * 4 / 5 * (type === 'signature' ? Math.min(1, text.length / 7) : 1)"
+                t-att-lengthAdjust="'spacing' + (type === 'signature' ? 'AndGlyphs' : '')"
+                t-attf-style="font-family:'font'; stroke: none; fill: {{color}};"  text-anchor="middle"/>
+        </svg>
+    </t>
+
+    <!-- Template for the widget webSignNameAndDraw. -->
+    <t t-name="web.NameAndSignature">
+        <div class="o_web_sign_name_and_signature">
+            <div t-if="!props.noInputName" class="o_web_sign_name_group">
+                <label class="col-form-label" t-att-for="'o_web_sign_name_input_' + htmlId">Full Name</label>
+                <input type="text" name="signer" t-att-id="'o_web_sign_name_input_' + htmlId" class="o_web_sign_name_input form-control" t-on-input="onInputSignName" t-att-value="props.signature.name" t-ref="signNameInput" placeholder="Type your name to sign" required=""/>
+            </div>
+
+            <!--
+                Overflow hidden is necessary because the card has a rounded
+                border, but we remove the padding from the body, so the canvas
+                will overflow on the corners without this rule.
+            -->
+            <div t-if="state.showSignatureArea" class="o_web_sign_signature_group bg-100 card mt-3" style="overflow: hidden;">
+                <div class="card-header bg-transparent">
+                    <div class="row g-0">
+                        <div t-if="!props.noInputName or defaultName" class="col-auto">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignAuto" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ state.signMode === 'auto' ? 'active': '' }}">
+                                Auto
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('draw')" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ state.signMode === 'draw' ? 'active': '' }}">
+                                Draw
+                            </a>
+                        </div>
+                        <div class="col-auto">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignLoad" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ state.signMode === 'load' ? 'active': '' }}">
+                                Load
+                            </a>
+                        </div>
+
+                        <div class="col-auto division ms-auto"></div>
+
+                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto'" showCaret="true" togglerClass="'btn btn-link fa fa-font'">
+                            <t t-foreach="fonts" t-as="font" t-key="font_index">
+                                <DropdownItem onSelected="() => this.onSelectFont(font_index)">
+                                    <img class="img-fluid" t-att-src="getSVGTextFont(font)"/>
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+
+                        <div t-if="state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link fa fa-trash"/>
+                        </div>
+
+                        <div t-if="state.signMode === 'load'" class="o_web_sign_load_file col-auto">
+                            <button type="button" id="loadFileXml" t-on-click="uploadFile"
+                                class="btn btn-link fa fa-upload" />
+                            <input t-ref="signInputLoad" type="file" role="button" name="files[]" class="d-none" t-on-change="onChangeSignLoadInput"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_signature_stroke position-absolute"/>
+
+                <div t-if="state.showSignatureArea" t-ref="signature" t-att-style="signatureStyle" class="o_web_sign_signature p-0 bg-transparent position-relative"/>
+
+                <div t-if="loadIsInvalid" t-attf-class="o_web_sign_load_invalid card-footer d-none">
+                    <div class="alert alert-danger mb-0" role="alert">
+                        This file is invalid. Please select an image.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

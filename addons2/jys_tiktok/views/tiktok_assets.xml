@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <template id="tiktok_assets_backend" name="Tiktok Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/jys_tiktok/static/src/delete_confirmation.js"></script>
+        </xpath>
+    </template> -->
+
+    <!-- <record id="tiktok_assets_backend" model="ir.asset">
+        <field name="name">Tiktok Assets</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">/jys_tiktok/static/src/delete_confirmation.js</field>
+        <field name="sequence" eval="99"/>
+    </record> -->
+
+    <record id="tiktok_css_assets_backend" model="ir.asset">
+        <field name="name">Tiktok CSS Assets</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">/jys_tiktok/static/src/custom.css</field>
+        <field name="sequence" eval="99"/>
+    </record>
+</odoo>

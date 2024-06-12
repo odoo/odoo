@@ -1,0 +1,166 @@
+:root .o_hidden {
+    // Add `:root` as parent selector to increase '.o_hidden' hierarchy.
+    // The aim is to ensure that it overrides any bootstrap default layout
+    // class (eg. d-flex).
+    // TODO: After migrating to BTS5 review how layout/visibility classes
+    // interfere with each other.
+    display: none!important;
+}
+
+.o_disabled {
+    pointer-events: none;
+    opacity: $o-opacity-disabled;
+}
+
+.o_text_overflow {
+    @include o-text-overflow;
+}
+
+.dropdown-menu {
+    max-height: $o-dropdown-max-height;
+    overflow: auto;
+    background-clip: border-box;
+}
+.dropdown-toggle {
+    white-space: nowrap;
+
+    &.o-no-caret {
+        &::before, &::after {
+            content: normal;
+        }
+    }
+}
+
+.o_catch_attention {
+    position: relative;
+    z-index: 1;
+    animation: catchAttention 200ms ease 0s infinite normal;
+}
+
+// ----------------------------------------------------------------------------
+// Render a "tree-view" design on a set of vertical elements
+
+// @param {number} --treeEntry-padding-h - Entry's horizzontal padding.
+// @param {number} --treeEntry-padding-v - Entry's vertical padding.
+// @param {number} --treeEntry--before-top - Vertical-line top position.
+// @param {string} --treeEntry--after-display - Horizzontal-line display mode.
+// @param {color}  --treeEntry--beforeAfter-color - Lines color
+// @param {color}  --treeEntry--beforeAfter-left - Lines left position
+// ----------------------------------------------------------------------------
+.o_treeEntry {
+    $-padding-h: var(--treeEntry-padding-h, #{map-get($spacers, 4)});
+    $-padding-v: var(--treeEntry-padding-v, #{map-get($spacers, 2)});
+
+    padding-left: $-padding-h;
+    position: relative;
+
+    &:before, &:after {
+        position: absolute;
+        left: var(--treeEntry--beforeAfter-left, calc(#{$-padding-h} * .5));
+        background: var(--treeEntry--beforeAfter-color, #{$border-color});
+        content: '';
+    }
+
+    &:before {
+        top: var(--treeEntry--before-top, 0);
+        width: 1px;
+        height: 100%;
+    }
+
+    &:after {
+        display: var(--treeEntry--after-display, initial);
+        top: calc(.5em + #{$-padding-v});
+        width: calc(#{$-padding-h} * .5);
+        height: 1px;
+    }
+
+    &:last-of-type:before {
+        height: calc(.5em + #{$-padding-v});
+    }
+}
+
+// bounce effect
+@keyframes catchAttention {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+    0% {
+        transform: translateY(-30%);
+    }
+    20% {
+        transform: translateY(-25%);
+    }
+    40% {
+        transform: translateY(-20%);
+    }
+    60% {
+        transform: translateY(-15%);
+    }
+    80% {
+        transform: translateY(-10%);
+    }
+    100% {
+        transform: translateY(-5%);
+    }
+}
+
+span.o_force_ltr {
+    display: inline;
+}
+.o_force_ltr {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+/* rtl:raw:
+[type="tel"],
+[type="url"],
+[type="email"],
+[type="number"],
+.o_force_ltr {
+  text-align: end !important;
+}
+*/
+
+// To fill the available space while keeping aspect ratio (crop).
+// Assuming the important part of the image is its center.
+.o_object_fit_cover {
+    object-fit: cover;
+}
+
+.o_object_fit_contain {
+    object-fit: contain;
+}
+
+.o_image_24_cover {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
+
+.o_image_40_cover {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.o_image_64_cover {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+// Keep ratio but avoid cropping (so part of the background becomes visible).
+.o_image_64_contain {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+// When having a square is not necessary, the image will take less space if any
+// of its width or height is smaller than 64px.
+.o_image_64_max {
+    max-width: 64px;
+    max-height: 64px;
+}

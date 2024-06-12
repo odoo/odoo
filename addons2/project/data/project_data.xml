@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Stages -->
+    <record id="project_project_stage_0" model="project.project.stage">
+        <field name="sequence">10</field>
+        <field name="name">To Do</field>
+    </record>
+
+    <record id="project_project_stage_1" model="project.project.stage">
+        <field name="sequence">15</field>
+        <field name="name">In Progress</field>
+    </record>
+
+    <record id="project_project_stage_2" model="project.project.stage">
+        <field name="sequence">20</field>
+        <field name="name">Done</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <record id="project_project_stage_3" model="project.project.stage">
+        <field name="sequence">25</field>
+        <field name="name">Canceled</field>
+        <field name="fold" eval="True"/>
+    </record>
+</odoo>

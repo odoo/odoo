@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FieldTooltip">
+
+        <p t-if="field.help" class="o-tooltip--help" role="tooltip">
+            <t t-esc="field.help"/>
+        </p>
+
+        <ul class="o-tooltip--technical" t-if="debug" role="tooltip">
+            <li data-item="field" t-if="field and field.label">
+                <span class="o-tooltip--technical--title">Label:</span>
+                <t t-esc="field.label"/>
+            </li>
+            <li data-item="field" t-if="field and field.name">
+                <span class="o-tooltip--technical--title">Field:</span>
+                <t t-esc="field.name"/>
+            </li>
+            <li data-item="object" t-if="resModel">
+                <span class="o-tooltip--technical--title">Model:</span>
+                <t t-esc="resModel"/>
+            </li>
+            <t t-if="field">
+                <li t-if="field.type" data-item="type" >
+                    <span class="o-tooltip--technical--title">Type:</span>
+                    <t t-esc="field.type"/>
+                </li>
+                <li t-if="field.widget" data-item="widget">
+                    <span class="o-tooltip--technical--title">Widget:</span>
+                    <t t-if="field.widgetDescription" t-esc="field.widgetDescription"/>
+                    <t t-if="field.widget">
+                        (<t t-esc="field.widget"/>)
+                    </t>
+                </li>
+                <li t-if="field.context" data-item="context">
+                    <span class="o-tooltip--technical--title">Context:</span>
+                    <t t-esc="field.context"/>
+                </li>
+                <li t-if="field.domain" data-item="domain">
+                    <span class="o-tooltip--technical--title">Domain:</span>
+                    <t t-esc="field.domain.length === 0 ? '[]' : field.domain"/>
+                </li>
+                <li t-if="field.invisible" data-item="invisible">
+                    <span class="o-tooltip--technical--title">Invisible:</span>
+                    <t t-esc="field.invisible"/>
+                </li>
+                <li t-if="field.column_invisible" data-item="column_invisible">
+                    <span class="o-tooltip--technical--title">Column invisible:</span>
+                    <t t-esc="field.column_invisible"/>
+                </li>
+                <li t-if="field.required" data-item="required">
+                    <span class="o-tooltip--technical--title">Required:</span>
+                    <t t-esc="field.required"/>
+                </li>
+                <li t-if="field.readonly" data-item="readonly">
+                    <span class="o-tooltip--technical--title">Readonly:</span>
+                    <t t-esc="field.readonly"/>
+                </li>
+                <li t-if="field.default" data-item="default">
+                    <span class="o-tooltip--technical--title">Default:</span>
+                    <t t-esc="field.default"/>
+                </li>
+                <li t-if="field.changeDefault" data-item="changeDefault">
+                    <span class="o-tooltip--technical--title">Change default:</span>
+                    Yes
+                </li>
+                <li t-if="field.relation" data-item="relation">
+                    <span class="o-tooltip--technical--title">Relation:</span>
+                    <t t-esc="field.relation"/>
+                </li>
+                <li t-if="field.selection" data-item="selection">
+                    <span class="o-tooltip--technical--title">Selection:</span>
+                    <ul class="o-tooltip--technical">
+                        <li t-foreach="field.selection" t-as="option" t-key="option_index">
+                            [<t t-esc="option[0]"/>]
+                            <t t-if="option[1]"> - </t>
+                            <t t-esc="option[1]"/>
+                        </li>
+                    </ul>
+                </li>
+            </t>
+        </ul>
+    </t>
+
+</templates>

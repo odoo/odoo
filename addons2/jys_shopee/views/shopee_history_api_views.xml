@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_shopee_history_api_tree" model="ir.ui.view">
+            <field name="name">shopee.history.api.tree</field>
+            <field name="model">shopee.history.api</field>
+            <field name="arch" type="xml">
+                <tree string="Shopee API Logs" create="false" decoration-danger="state in ('failed', 'skipped')" decoration-info="state=='partial'" decoration-success="state=='success'">
+                    <field name="name"/>
+                    <field name="shop_id"/>
+                    <field name="total_inserted"/>
+                    <field name="total_updated"/>
+                    <field name="total_affected"/>
+                    <field name="total_skipped"/>
+                    <field name="create_date" string="Date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_shopee_history_api_form" model="ir.ui.view">
+            <field name="name">shopee.history.api.form</field>
+            <field name="model">shopee.history.api</field>
+            <field name="arch" type="xml">
+                <form string="Shopee API Logs" create="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,failed,skipped,partial,success"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" required="1"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="shop_id" required="1"/>
+                            <field name="total_inserted"/>
+                            <field name="total_updated"/>
+                            <field name="total_affected"/>
+                            <field name="total_skipped"/>
+                            <field name="create_date" readonly="1" string="Date"/>
+                            <field name="timestamp" readonly="1"/>
+                            <field name="running_date"/>
+                            <field name="is_order_date" invisible="name != 'Get Orders List'"/>
+                        </group>
+                        <notebook>
+                            <page string="Affected Records">
+                                <field name="affected_list" placeholder="Affected..."/>
+                            </page>
+                            <page string="Skipped Records">
+                                <field name="skipped_list" placeholder="Skipped..."/>
+                            </page>
+                            <page string="Additional Info">
+                                <field name="additional_info" placeholder="Info..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_shopee_history_api_popup" model="ir.ui.view">
+            <field name="name">shopee.history.api.form</field>
+            <field name="model">shopee.history.api</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form string="History API">
+                    <group col="4">
+                        <div colspan="4" invisible="state != 'failed'">
+                            <p><strong>Failed, please share this screen to Developer</strong></p>
+                        </div>
+                        <div colspan="4" invisible="not context.get('is_more')">
+                            <p><strong><field name="additional_info" nolabel="1" readonly="1"/></strong></p>
+                        </div>
+
+                        <field name="shop_id" readonly="1" colspan="4"/>
+                        <field name="state" readonly="1" colspan="4"/>
+                        
+                        <field name="total_inserted" readonly="1" colspan="4"/>
+                        <field name="total_updated" readonly="1"  colspan="4"/>
+                        <field name="total_affected" readonly="1" colspan="4"/>
+                        <field name="total_skipped" readonly="1" colspan="4"/>
+
+                    </group>
+                    <footer>
+                        <button name="action_view_form" string="View Log" type="object" class="oe_highlight"/>
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_jys_shopee_history_api" model="ir.actions.act_window">
+            <field name="name">History API</field>
+            <field name="res_model">shopee.history.api</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>
