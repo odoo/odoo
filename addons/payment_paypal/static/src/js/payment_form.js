@@ -7,7 +7,17 @@ import { rpc, RPCError } from '@web/core/network/rpc';
 
 paymentForm.include({
     inlineFormValues: undefined,
+    inlineForm: undefined,
+    paypalColor: 'blue',
     // #=== DOM MANIPULATION ===#
+    async start() {
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        this.inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
+        this.inlineForm = this._getInlineForm(radio);
+        this.paypalColor = radio.dataset['paypalColor']
+
+        return await this._super(...arguments);
+    },
 
     /**
      * Prepare the inline form of Demo for direct payment.
@@ -31,6 +41,11 @@ paymentForm.include({
         document.getElementById("loading").classList.remove("d-none");
         this._hideInputs();
         this._setPaymentFlow('direct');
+        Object.assign(this.paymentContext, {
+            tokenizationRequested: false,
+            providerId: providerId,
+            paymentMethodId: paymentOptionId,
+        });
         // PayPal Code
         // Helper / Utility functions
         let url_to_head = (url) => {
@@ -48,9 +63,7 @@ paymentForm.include({
         }
         const paypal_sdk_url = "https://www.paypal.com/sdk/js";
         //https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-        this.inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
-        const paypalColor = radio.dataset['paypalColor']
+
         const { client_id, currency, intent, amount, payee } = this.inlineFormValues
         url_to_head(
             paypal_sdk_url + "?client-id=" + client_id +
@@ -65,8 +78,8 @@ paymentForm.include({
                     //Custom JS here
                 },
                 style: { //https://developer.paypal.com/sdk/js/reference/#link-style
-                    color: paypalColor,
-                    label: 'pay'
+                    color: this.paypalColor,
+                    label: 'paypal'
                 },
 
                 createOrder: this._paypalOnSubmit.bind(this),
@@ -86,14 +99,8 @@ paymentForm.include({
                             console.log("error on approve", error);
                         });
                 },
-
-                onCancel: function (data) {
-                    this._displayErrorDialog(_t("Payment processing failed"), data);
-                },
-
-                onError: function (err) {
-                    this._displayErrorDialog(_t("Payment processing failed"), err);
-                }
+                onCancel: this._paypalOnError.bind(this),
+                onError: this._paypalOnError.bind(this),
             });
             paypal_buttons.render('#o_provider_payment_submit_button');
         })
@@ -112,7 +119,7 @@ paymentForm.include({
     _paypalOnSubmit(state, component) {
         // Create the transaction and retrieve the processing values.
         const { currency, intent, amount, payee } = this.inlineFormValues
-        rpc(
+        return rpc(
             this.paymentContext['transactionRoute'],
             this._prepareTransactionRouteParams(),
         ).then(processingValues => {
@@ -123,12 +130,13 @@ paymentForm.include({
                 currency: currency,
                 amount: amount,
                 payee: payee,
+                reference: component.reference
             }).then((order_id) => {
                 console.log("Created order id", order_id)
                 return order_id;
             }).catch(error => {
                 if (error instanceof RPCError) {
-                    inlineForm._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                    this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
                 } else {
                     return Promise.reject(error);
                 }
@@ -154,5 +162,13 @@ paymentForm.include({
             return;
         }
     },
-
+    /**
+     * Handle the error event of the component.
+     * @private
+     * @param {object} error - The error in the component.
+     * @return {void}
+     */
+    _paypalOnError(error) {
+        this._displayErrorDialog(_t("Payment processing failed"), error.message);
+    },
 });

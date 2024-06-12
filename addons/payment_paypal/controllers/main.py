@@ -35,7 +35,7 @@ class PaypalController(http.Controller):
          Creates an order and returns it as a JSON response.
         """
         data = {
-            'intent': kwargs['intent'],
+            'intent': kwargs['intent'].upper(),
             'purchase_units': [
                 {
                     'reference_id': kwargs['reference'],
@@ -44,22 +44,12 @@ class PaypalController(http.Controller):
                         'value': kwargs['amount'],
                     },
                     "payee": kwargs['payee'],
-                    "shipping": {
-                        "address": {
-                            "address_line_1": "123 Townsend St",
-                            "address_line_2": "Floor 6",
-                            "admin_area_2": "San Francisco",
-                            "admin_area_1": "CA",
-                            "postal_code": "94107",
-                            "country_code": "US"
-                        }
-                    },
                 },
             ],
         }
         # Make the payment request to Paypal
         try:
-            paypal = request.env['payment.provider'].search([('code','=','paypal')],limit=1)
+            paypal = request.env['payment.provider'].search([('code','=','paypal')], limit=1)
             response_content = paypal._paypal_make_request(
                 endpoint='/v2/checkout/orders',
                 payload=data,                
@@ -84,6 +74,7 @@ class PaypalController(http.Controller):
                 endpoint='/v2/checkout/orders/' + kwargs['order_id'] + '/' + kwargs['intent'],
                 payload={},
             )
+            print("PAID",response)
         except Forbidden:
             _logger.exception("Could not create transaction")
 

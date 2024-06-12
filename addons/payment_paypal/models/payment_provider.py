@@ -2,6 +2,7 @@
 
 import json
 import logging
+import re
 import requests
 
 from odoo import _, fields, models
@@ -43,7 +44,6 @@ class PaymentProvider(models.Model):
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'paypal').update({
             'support_manual_capture': 'full_only',
-            'support_tokenization': True,
         })
 
     #=== BUSINESS METHODS ===#
@@ -105,6 +105,9 @@ class PaymentProvider(models.Model):
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
+        phone_prefix = self.company_id.country_id.phone_code
+        formatted_phone = self.company_id.phone.replace(str(phone_prefix), '')
+        formatted_phone = re.sub('[^0-9]','', formatted_phone)
         inline_form_values = {
             'client_id': self.paypal_client_id,
             'amount': amount,
@@ -115,8 +118,8 @@ class PaymentProvider(models.Model):
                 "display_data": {
                     "business_email":  self.company_id.email,
                     "business_phone": {
-                        "country_code": self.company_id.country_id.code,
-                        "national_number": self.company_id.phone,
+                        "country_code": phone_prefix,
+                        "national_number": formatted_phone,
                     },
                     "brand_name": self.company_id.name,
                 }
