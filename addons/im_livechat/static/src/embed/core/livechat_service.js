@@ -114,7 +114,7 @@ export class LivechatService {
      * @param {Object} values
      */
     updateSession(values) {
-        const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
+        const session = this.sessionCookie || {};
         Object.assign(session, {
             visitor_uid: this.visitorUid,
             ...values,
@@ -123,7 +123,7 @@ export class LivechatService {
         this.cookie.deleteCookie(this.OPERATOR_COOKIE);
         this.cookie.setCookie(
             this.SESSION_COOKIE,
-            JSON.stringify(session).replaceAll("→", " "),
+            encodeURIComponent(JSON.stringify(session)),
             60 * 60 * 24
         ); // 1 day cookie.
         if (session?.operator_pid) {
@@ -138,7 +138,7 @@ export class LivechatService {
      * never be called if the session was not persisted.
      */
     async leaveSession({ notifyServer = true } = {}) {
-        const session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "{}");
+        const session = this.sessionCookie || {};
         this.cookie.deleteCookie(this.SESSION_COOKIE);
         this.state = SESSION_STATE.CLOSED;
         if (!session?.uuid || !notifyServer) {
@@ -149,7 +149,7 @@ export class LivechatService {
     }
 
     async getSession({ persisted = false } = {}) {
-        let session = JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? false);
+        let session = this.sessionCookie;
         if (session?.uuid && this.state === SESSION_STATE.NONE) {
             // Channel is already created on the server.
             session.messages = await this.rpc("/im_livechat/chat_history", {
@@ -195,14 +195,16 @@ export class LivechatService {
     }
 
     get sessionCookie() {
-        return JSON.parse(this.cookie.current[this.SESSION_COOKIE] ?? "false");
+        return this.cookie.current[this.SESSION_COOKIE]
+            ? JSON.parse(decodeURIComponent(this.cookie.current[this.SESSION_COOKIE]))
+            : false;
     }
 
     get shouldRestoreSession() {
         if (this.state !== SESSION_STATE.NONE) {
             return false;
         }
-        return Boolean(this.cookie.current[this.SESSION_COOKIE]);
+        return Boolean(this.sessionCookie);
     }
 
     get shouldDeleteSession() {
