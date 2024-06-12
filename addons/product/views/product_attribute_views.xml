@@ -50,7 +50,7 @@
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
                                 <field name="display_type" column_invisible="True"/>
-                                <field name="is_custom"
+                                <field name="is_custom" width="120px"
                                        column_invisible="parent.display_type == 'multi'"/>
                                 <field name="html_color"
                                        widget="color"
@@ -61,7 +61,7 @@
                                        options="{'size': [70, 70]}"
                                        class="oe_avatar text-start float-none"
                                        column_invisible="parent.display_type != 'color'"/>
-                                <field name="default_extra_price"/>
+                                <field name="default_extra_price" width="160px"/>
                                 <button name="action_open_product_template_attribute_value"
                                         type="object"
                                         string="View products"
