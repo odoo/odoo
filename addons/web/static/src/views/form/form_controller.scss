@@ -12,10 +12,13 @@
     }
 }
 
-// XXS form view specific rules
-@mixin form-break-table {
+// Form view rules to break the default table layout
+@mixin form-break-table($-is-editable: false) {
+    --fieldWidget-margin-bottom: 0;
+
     grid-template-columns: 1fr;
     margin-bottom: $o-form-spacing-unit * 4;
+    row-gap: 0;
 
     .o_wrap_field {
         .o_cell {
@@ -26,14 +29,8 @@
             }
 
             .o_field_widget {
-                margin-bottom: $o-form-spacing-unit * 2;
-
                 &:not(.o_field_boolean){
                     width: 100%;
-                }
-
-                > .o_field_widget {
-                    margin-bottom: 0;
                 }
 
                 &.o_field_boolean {
@@ -47,9 +44,17 @@
             }
         }
     }
+
+    @if $-is-editable {
+        .o_address_type, .o_address_format {
+            --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 2};
+        }
+    }
 }
 
 .o_form_view {
+    --fieldWidget-margin-bottom: #{$o-form-spacing-unit};
+
     @include media-breakpoint-up(md) {
         display: flex;
         flex-flow: column nowrap;
@@ -314,8 +319,9 @@
         }
 
         > .o_field_widget {
+            --fieldWidget-margin-bottom: 0;
+
             align-self: flex-start;
-            margin-bottom: 0px;
         }
     }
 
@@ -567,11 +573,8 @@
         }
     }
 
-    // Form fields
+    // One2Many List views
     .o_field_widget {
-        margin-bottom: $o-form-spacing-unit;
-
-        // One2Many List views
         .o_list_table {
             &.table-striped {
                 > tbody {
@@ -595,7 +598,7 @@
     }
     .o_field_widget, .btn {
         .o_field_widget {
-            margin-bottom: 0px;
+            --fieldWidget-margin-bottom: 0;
         }
     }
     .o_cell:not(.o_field_cell) .o_form_uri > span:first-child {
@@ -1054,6 +1057,10 @@
         .o_inner_group {
             @include form-break-table;
         }
+
+        .o_form_editable .o_inner_group {
+            @include form-break-table($-is-editable: true);
+        }
     }
 }
 
@@ -1109,7 +1116,7 @@
             @include media-breakpoint-down(md) {
                 &:not(.oe_subtotal_footer) > .o_cell {
                     > .o_field_widget {
-                        margin-bottom: $o-form-spacing-unit * 4;
+                        --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 4};
                     }
                 }
             }
@@ -1126,6 +1133,10 @@
 .o_form_view.o_xxs_form_view {
     .o_inner_group {
         @include form-break-table;
+    }
+
+    .o_form_editable .o_inner_group {
+        @include form-break-table($-is-editable: true);
     }
 }
 
