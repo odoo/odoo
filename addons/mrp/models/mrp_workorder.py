@@ -552,38 +552,35 @@ class MrpWorkorder(models.Model):
         return total
 
     @api.model
-    def gantt_unavailability(self, start_date, end_date, scale, group_bys=None, rows=None):
+    def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=[], start_date=None, stop_date=None, scale=None):
+        gantt_data = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, start_date=start_date, stop_date=stop_date, scale=scale)
+        if 'workcenter_id' not in gantt_data['unavailabilities']:
+            workcenter_ids = set()
+            if groupby and 'workcenter_id' in groupby:
+                for group in gantt_data['groups']:
+                    res_id = group['workcenter_id'][0] if group['workcenter_id'] else False
+                    workcenter_ids.add(res_id)
+            else:
+                for record in gantt_data['records']:
+                    res_id = record['workcenter_id']['id'] if record.get('workcenter_id') else False
+                    workcenter_ids.add(res_id)
+            start, stop = fields.Datetime.from_string(start_date), fields.Datetime.from_string(stop_date)
+            gantt_data['unavailabilities']['workcenter_id'] = self._gantt_unavailability('workcenter_id', workcenter_ids, start, stop, scale)
+        return gantt_data
+
+    @api.model
+    def _gantt_unavailability(self, field, res_ids, start, stop, scale):
         """Get unavailabilities data to display in the Gantt view."""
-        workcenter_ids = set()
+        if field != 'workcenter_id':
+            return super()._gantt_unavailability(field, res_ids, start, stop, scale)
 
-        def traverse_inplace(func, row, **kargs):
-            res = func(row, **kargs)
-            if res:
-                kargs.update(res)
-            for row in row.get('rows'):
-                traverse_inplace(func, row, **kargs)
+        workcenters = self.env['mrp.workcenter'].browse(res_ids)
+        unavailability_mapping = workcenters._get_unavailability_intervals(start, stop)
 
-        def search_workcenter_ids(row):
-            if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
-                workcenter_ids.add(row.get('resId'))
-
-        for row in rows:
-            traverse_inplace(search_workcenter_ids, row)
-        start_datetime = fields.Datetime.to_datetime(start_date)
-        end_datetime = fields.Datetime.to_datetime(end_date)
-        workcenters = self.env['mrp.workcenter'].browse(workcenter_ids)
-        unavailability_mapping = workcenters._get_unavailability_intervals(start_datetime, end_datetime)
-
-        def add_unavailability(row, workcenter_id=None):
-            if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
-                workcenter_id = row.get('resId')
-            if workcenter_id:
-                row['unavailabilities'] = [{'start': interval[0], 'stop': interval[1]} for interval in unavailability_mapping[workcenter_id]]
-                return {'workcenter_id': workcenter_id}
-
-        for row in rows:
-            traverse_inplace(add_unavailability, row)
-        return rows
+        result = {}
+        for workcenter in workcenters:
+            result[workcenter.id] = [{'start': interval[0], 'stop': interval[1]} for interval in unavailability_mapping[workcenter.id]]
+        return result
 
     def button_start(self):
         if any(wo.working_state == 'blocked' for wo in self):
