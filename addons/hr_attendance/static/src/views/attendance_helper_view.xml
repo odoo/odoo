@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_attendance.AttendanceActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p class="oe_view_nocontent_attendance">
+                    <h3 class="py-2">
+                        Ready to track attendances ?
+                    </h3>
+                    <div class="d-flex align py-2">
+                        <div class="mx-5" >
+                            <img src="/hr_attendance/static/img/mock-tablet.png" height="180" class="mb-2"/>
+                            <div class="row justify-content-center mt-1">
+                                <a type="object" class="btn btn-primary d-block col-6" t-on-click="() => this.LoadTryKiosk()">
+                                    Try the kiosk
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mx-5" >
+                            <img src="/hr_attendance/static/img/attendance_dot.gif" height="180" class="mb-2"/>
+                            <h3 class="mt-2"><em>Try the top
+                                <i class="fa fa-circle text-danger" role="img" aria-label="Attendance"/>
+                                icon (e.g for work from home)</em></h3>
+                        </div>
+                    </div>
+                    <t t-if="!state.hasDemoData">
+                        <div class="d-flex gap-3 align-items-center or-separator">
+                            <hr class="flex-grow-1"/>
+                            or
+                            <hr class="flex-grow-1"/>
+                        </div>
+                        <div class="px-2 py-2">
+                            <h3 class="m-2 py-2">
+                                Try the backend and reporting:
+                            </h3>
+                            <div class="row justify-content-center">
+                                <a type="object" class="btn btn-secondary d-block col-2" t-on-click="() => this.loadAttendanceScenario()">
+                                    Load sample data
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </p>
+            </div>
+        </div>
+    </t>
+</odoo>
