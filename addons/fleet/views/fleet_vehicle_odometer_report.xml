@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_odometer_report_view_search" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.view.search</field>
+        <field name="model">fleet.vehicle.odometer.report</field>
+        <field name="arch" type="xml">
+            <search string="Fleet Vehicle Odometer Analysis">
+                <field name="name" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="category_id"/>
+                <field name="recorded_date"/>
+                <field name="monthly_km"/>
+                <filter name="filter_date_start" date="recorded_date" default_period="this_year"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_report_view_pivot" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.report.view.pivot</field>
+        <field name="model">fleet.vehicle.odometer.report</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="recorded_date" type="col" interval="month" />
+                <field name="category_id" type="row" />
+                <field name="vehicle_id" type="row" />
+                <field name="monthly_km" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_report_view_graph" model="ir.ui.view">
+        <field name="name">fleet.vehicle.odometer.report.view.graph</field>
+        <field name="model">fleet.vehicle.odometer.report</field>
+        <field name="arch" type="xml">
+            <graph string="Vehicle Odometer Timeline" stacked="0" cumulated="1" type="line" sample="1">
+                <field name="recorded_date" interval="month"/>
+                <field name="category_id"/>
+                <field name="vehicle_id"/>
+                <field name="monthly_km" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_odometer_reporting_action" model="ir.actions.act_window">
+        <field name="name">Odometer Analysis</field>
+        <field name="res_model">fleet.vehicle.odometer.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="fleet.fleet_vehicle_odometer_report_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+              No data for odometer analysis
+            </p>
+            <p>
+              Manage efficiently your vehicle Odometers with Odoo.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_fleet_odometer_reporting_odometer"
+              name="Odometers"
+              parent="menu_fleet_reporting"
+              action="fleet_vehicle_odometer_reporting_action"
+              sequence="2"
+              groups="fleet_group_manager"/>
+</odoo>
