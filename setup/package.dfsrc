@@ -32,3 +32,5 @@ RUN apt-get update -qq &&  \
 COPY requirements.txt /opt/release/requirements.txt
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
+
+USER odoo
