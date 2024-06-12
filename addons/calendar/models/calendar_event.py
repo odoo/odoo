@@ -627,7 +627,7 @@ class Meeting(models.Model):
     def write(self, values):
         detached_events = self.env['calendar.event']
         recurrence_update_setting = values.pop('recurrence_update', None)
-        update_recurrence = recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1
+        update_recurrence = recurrence_update_setting in ('all_events', 'future_events') and len(self) == 1 and self.recurrence_id
         break_recurrence = values.get('recurrency') is False
 
         if any(vals in self._get_recurrent_fields() for vals in values) and not (update_recurrence or values.get('recurrency')):
