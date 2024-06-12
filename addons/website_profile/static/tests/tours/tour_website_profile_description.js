@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add('website_profile_description', {
         run: "click",
     }, {
         content: "Add some content",
-        trigger: ".odoo-editor-editable p",
+        trigger: ".odoo-editor-editable",
         run: "editor content <p>code here</p>",
     }, {
         content: "Save changes",
