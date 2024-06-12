@@ -4,13 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 17.4alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-15 23:04+0000\n"
-"PO-Revision-Date: 2024-01-15 23:04+0000\n"
+"POT-Creation-Date: 2024-06-17 11:23+0000\n"
+"PO-Revision-Date: 2024-06-17 11:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,7 +28,7 @@ msgstr ""
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.report_invoice_document
 msgid "<b>Document Date: </b>"
-msgstr ""
+msgstr "<b>Data del documento: </b>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_move_send_inherit_l10n_it_edi
@@ -42,9 +41,9 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-question-circle ml4\" role=\"img\" aria-label=\"Warning\" "
 "invisible=\"not l10n_it_edi_readonly_xml_export\" title=\"Crea la Fattura "
-"Elettronica per l'invio all'Agenzia delle Entrate.\nViene impostato a readonly "
-"se è già stato creato un resoconto, per evitare disallineamenti.\n Per "
-"riabilitarlo, cancellare l'allegato PDF.\"/>"
+"Elettronica per l'invio all'Agenzia delle Entrate.&#10;Viene impostato a "
+"readonly se è già stato creato un resoconto, per evitare "
+"disallineamenti.&#10; Per riabilitarlo, cancellare l'allegato PDF.\"/>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
@@ -108,11 +107,11 @@ msgstr "È già stato registrato un servizio ufficiale o di prova."
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"An error occurred while downloading updates from the Proxy Server: (%s) %s"
+"An error occurred while downloading updates from the Proxy Server: "
+"(%(code)s) %(message)s"
 msgstr ""
-"Errore nello scaricamento degli aggiornamenti dal Proxy Server: (%s) %s"
+"Errore nello scaricamento degli aggiornamenti dal Proxy Server: (%(code)s) %(message)s"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -133,7 +132,6 @@ msgstr "Allegato dall'XML"
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Bank account not found, useful informations from XML file:"
 msgstr "Conto bancario non trovato, informazioni utili dal file XML:"
@@ -167,7 +165,8 @@ msgstr ""
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
 "Cannot apply Reverse Charge to bills which contains both services and goods."
-msgstr "Impossibile applicare l'inversione contabile ad una fattura che contiene sia"
+msgstr ""
+"Impossibile applicare l'inversione contabile ad una fattura che contiene sia"
 " beni che servizi."
 
 #. module: l10n_it_edi
@@ -222,37 +221,25 @@ msgstr "L' azienda compare nel registro delle imprese"
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
-msgid "Company/ies should have a Country when used for simplified invoices."
-msgstr "La/e azienda/e deve/devono avere una Nazione quando usata/e per fatture semplificate."
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "Company/ies should have a Tax System"
 msgstr "La/e azienda/e deve/devono avere un Regime Fiscale."
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
+#: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "Company/ies should have a VAT number or Codice Fiscale."
 msgstr "La/e azienda/e deve/devono avere una Partita IVA o un Codice Fiscale."
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
-msgid "Company/ies should have a VAT number."
-msgstr "La/e azienda/e deve/devono avere una Partita IVA."
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/res_partner.py:0
+#: code:addons/l10n_it_edi/models/res_company.py:0
 msgid ""
-"Company/ies should have a complete address, verify their Street, City, Zipcode"
-" and Country."
+"Company/ies should have a complete address, verify their Street, City, "
+"Zipcode and Country."
 msgstr ""
-"La/e azienda/e deve/devono avere un indirizzo completo, verifica l'indirizzo,"
-" la città, il Codice Postale."
+"La/e azienda/e deve/devono avere un indirizzo completo, verifica "
+"l'indirizzo, la città, il Codice Postale."
 
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_res_config_settings
@@ -321,6 +308,13 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_document_type
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_document_type
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_document_type
+msgid "Document Types"
+msgstr "Tipi di documento"
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Document date invalid in XML file: %s"
@@ -330,11 +324,6 @@ msgstr "Data documento non valida nel file XML: %s"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_checkbox_xml_export
 msgid "E-invoice XML"
 msgstr "Fattura Elettronica XML"
-
-#. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_account_edi_format
-msgid "EDI format"
-msgstr "Formato EDI"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
@@ -350,19 +339,18 @@ msgstr "Fatturazione Elettronica"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"Error uploading the e-invoice file %s.\n"
-"%s"
+"Error uploading the e-invoice file %(file)s.\n"
+"%(error)s"
 msgstr ""
-"Errore nell'invio della Fattura Elettronica %s.\n"
-"%s"
+"Errore nell'invio della Fattura Elettronica %(file)s.\n"
+"%(error)s"
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/wizard/account_move_send.py:0
-msgid "Errors occured while creating the e-invoice file."
-msgstr "Errore nella creazione della Fattura Elettronica."
+msgid "Errors occurred while creating the e-invoice file:"
+msgstr "Errore nella creazione della Fattura Elettronica:"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_id
@@ -390,8 +378,8 @@ msgid ""
 "Go to Applications page and update the 'Italia - Fatturazione Elettronica' "
 "module."
 msgstr ""
-"Aggiornare il modulo 'Italia - Fatturazione Elettronca' dalla pagina"
-" Applicazioni"
+"Aggiornare il modulo 'Italia - Fatturazione Elettronca' dalla pagina "
+"Applicazioni"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
@@ -451,14 +439,15 @@ msgstr "Riferimento fattura"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-msgid "Invoices to check"
+msgid "Invoice(s) to check"
 msgstr "Fatture da controllare"
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Invoices must have exactly one VAT tax set per line."
-msgstr "Le fatture devono avere esattamente una tassa IVA impostata per linea."
+msgstr ""
+"Le fatture devono avere esattamente una tassa IVA impostata per linea."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__is_edi_proxy_active
@@ -471,16 +460,21 @@ msgid "Italian EDI"
 msgstr "EDI Italia"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_actionable_errors
-msgid "L10N It Edi Actionable Errors"
-msgstr "Lista di Avvertimenti con Azioni"
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid "Italian Electronic Invoicing"
 msgstr "Fatturazione Elettronica Italiana"
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_move
+msgid "Journal Entry"
+msgstr "Registrazione contabile"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_actionable_errors
+msgid "L10N It Edi Actionable Errors"
+msgstr "Lista di Avvertimenti con Azioni"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_file
@@ -655,7 +649,6 @@ msgstr "E-mail PEC"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
 msgid "Partner not found, useful informations from XML file:"
 msgstr "Partner non trovato, informazioni dal file XML:"
 
@@ -663,7 +656,9 @@ msgstr "Partner non trovato, informazioni dal file XML:"
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 msgid "Partner(s) should have a Country when used for simplified invoices."
-msgstr "Il/i Partner deve/devono avere una Nazione quando usato/i per fatture semplificate."
+msgstr ""
+"Il/i Partner deve/devono avere una Nazione quando usato/i per fatture "
+"semplificate."
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -717,8 +712,9 @@ msgstr "Per favore, seleziona il regime fiscale a cui sei soggetto."
 #. odoo-python
 #: code:addons/l10n_it_edi/wizard/account_move_send.py:0
 msgid "Please upgrade the Italian EDI module to update this widget."
-msgstr "Per favore aggiorna il modulo Italiano per l'EDI per avere"
-" la nuova versione di questo riquadro."
+msgstr ""
+"Per favore aggiorna il modulo Italiano per l'EDI per avere la nuova versione"
+" di questo riquadro."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_office
@@ -826,6 +822,12 @@ msgid "Service momentarily unavailable"
 msgstr "Servizio momentaneamente non disponibile"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+msgid "Settings"
+msgstr "Impostazioni"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_share_capital
 msgid "Share capital actually paid up"
 msgstr "Capitale sociale investito"
@@ -840,11 +842,179 @@ msgstr "Socio"
 msgid "Socio unico"
 msgstr ""
 
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td01
+msgid ""
+"TD01 - Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> "
+"are completed)"
+msgstr ""
+"TD01 - Fattura (immediata o accompagnatoria se <DatiTrasporto> o <DatiDDT> "
+"sono compilati)"
 
 #. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_account_tax
-msgid "Tax"
-msgstr "Imposta"
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td02
+msgid "TD02 - Deposit/advance on invoice"
+msgstr "TD02 - Deposito/anticipo su fattura"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td03
+msgid "TD03 - Deposit/advance on parcel"
+msgstr "TD03 - Deposito/anticipo sulla parcella"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td04
+msgid "TD04 - Credit note"
+msgstr "TD04 - Nota di credito"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td05
+msgid "TD05 - Debit note"
+msgstr "TD05 - Nota di debito"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td06
+msgid "TD06 - Parcel"
+msgstr "TD06 - Parcel"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td07
+msgid "TD07 - Simplified invoice"
+msgstr "TD07 - Fattura semplificata"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td08
+msgid "TD08 - Simplified credit note"
+msgstr "TD08 - Nota di credito semplificata"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td09
+msgid "TD09 - Simplified debit note"
+msgstr "TD09 - Nota di debito semplificata"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td10
+msgid "TD10 - Invoice for intra-community purchase of goods"
+msgstr "TD10 - Fattura per acquisto intracomunitario di beni"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td11
+msgid "TD11 - Invoice for intra-community purchase of services"
+msgstr "TD11 - Fattura per acquisto di servizi intracomunitari"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td16
+msgid ""
+"TD16 - Internal reverse charge self-invoice (Article 17 of Presidential "
+"Decree no. 633/72 for invoices with Natura subcodes 'N6')"
+msgstr ""
+"TD16 - Autofattura interna in reverse charge (art. 17 del D.P.R. n. 633/72 per le fatture con i sottocodici Natura 'N6')"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td17
+msgid ""
+"TD17 - Self-invoice for purchases of foreign services (both within and "
+"outside the EU) - Alternative to esterometro"
+msgstr ""
+"TD17 - Autofattura per acquisti di servizi esteri (sia all'interno che "
+"extra UE) - Alternativa all'esterometro"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td18
+msgid ""
+"TD18 - Self-invoice for the purchase of intra-community goods - Alternative "
+"to esterometro"
+msgstr ""
+"TD18 - Autofattura per acquisto di beni intracomunitari - Alternativa "
+"all'esterometro"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td19
+msgid ""
+"TD19 - Self-invoice for foreign goods (both intra and non-EU) already "
+"present in Italy (Article 17 paragraph 2 of Presidential Decree 633/72) - "
+"Alternative to esterometro"
+msgstr ""
+"TD19 - Autofattura per merci estere (sia intra che extra UE) già "
+"presenti in Italia (art. 17 comma 2 del DPR 633/72) - "
+"Alternativa all'esterometro"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td20
+msgid ""
+"TD20 - Self-invoice Report (ex art.6 c8 471/97 or art.46 c5 331/93), or for "
+"invoice not received or for a lower amount"
+msgstr ""
+"TD20 - Rapporto di autofattura (ex art.6 c8 471/97 o art.46 c5 331/93), oppure per "
+"fattura non ricevuta o di importo inferiore"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td21
+msgid "TD21 - Self-invoice for ceiling clearance"
+msgstr "TD21 - Autofattura per l'altezza del soffitto"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td22
+msgid ""
+"TD22 - Self-invoice for extraction of goods from VAT warehouse without VAT "
+"liability"
+msgstr "TD22 - Autofattura per estrazione di beni da deposito IVA senza IVA "
+"responsabilità"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td23
+msgid ""
+"TD23 - Self-invoice for extraction of goods from VAT warehouse with VAT "
+"liability"
+msgstr ""
+"TD23 - Autofattura per estrazione di beni da deposito IVA con IVA "
+"responsabilità"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td24
+msgid ""
+"TD24 - Deferred invoice (Article 21, paragraph 4, third period letter to "
+"Presidential Decree 633/72)"
+msgstr ""
+"TD24 - Fattura differita (art. 21, comma 4, terzo periodo lettera a "
+"DPR 633/72)"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td25
+msgid ""
+"TD25 - Deferred invoice (Article 21, paragraph 4, third period, letter b "
+"(Dropshipping))"
+msgstr ""
+"TD25 - Fattura differita (art. 21, comma 4, terzo periodo, lettera b "
+"'Dropshipping')"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td26
+msgid ""
+"TD26 - Transfer of depreciable assets and for internal transfers (ex art.36 "
+"Presidential Decree 633/72)"
+msgstr ""
+"TD26 - Cessione di beni ammortizzabili e per trasferimenti interni (ex art.36 "
+"DPR 633/72)"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td27
+msgid ""
+"TD27 - Self-invoice for self-consumption or for free transfers without "
+"recourse"
+msgstr ""
+"TD27 - Autofattura per autoconsumo o per cessione gratuita senza "
+"pro solvendo"
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td28
+msgid ""
+"TD28 - Self-invoice for Italian tax from foreign suppliers identified but "
+"not established in Italy and for purchases from San Marino with VAT (paper "
+"invoice)"
+msgstr ""
+"TD28 - Autofattura per imposta italiana da fornitori esteri identificati ma "
+"non stabiliti in Italia e per acquisti da San Marino con IVA (carta "
+"fattura)"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_tax_system
@@ -909,53 +1079,85 @@ msgstr "L'azienda non è in stato di liquidazione"
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s can't be forward to %s (Public Administration) by the SdI at the moment.\n"
+"The e-invoice file %(file)s can't be forward to %(partner)s (Public Administration) by the SdI at the moment.\n"
 "It will try again for 10 days, after which it will be considered accepted, but you will still have to send it by post or e-mail."
 msgstr ""
-"Il file di Fattura Elettronica %s non può essere spedito a %s (Pubblica Amministrazione) dall'SdI al momento.\n"
+"Il file di Fattura Elettronica %(file)s non può essere spedito a %(partner)s (Pubblica Amministrazione) dall'SdI al momento.\n"
 "Il SdI proverà per 10 giorno, dopo i quali sarà considerato accettato, ma dovrai comunque inviarlo via posta o e-mail."
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s couldn't be forwarded to %s.\n"
+"The e-invoice file %(file)s couldn't be forwarded to %(partner)s.\n"
 "Please remember to send it via post or e-mail."
 msgstr ""
-"La Fattura Elettronica %s non può essere spedita a %s.\n"
+"La Fattura Elettronica %(file)s non può essere spedita a %(partner)s.\n"
 "Per favore, ricordati di inviarla via posta o e-mail."
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s has been accepted by %s (Public Administration), a "
-"payment will be issued soon"
+"The e-invoice file %(file)s has been accepted by %(partner)s (Public "
+"Administration), a payment will be issued soon"
 msgstr ""
-"La Fattura Elettronica %s è stata accettata da %s (Pubblica "
+"La Fattura Elettronica %(file)s è stata accettata da %s (Pubblica "
 "Amministrazione), un pagamento verrà effettuato presto."
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s has been accepted by the SdI.\n"
-"The SdI is trying to forward it to %s.\n"
+"The e-invoice file %(file)s has been accepted by the SdI.\n"
+"The SdI is trying to forward it to %(partner)s.\n"
 "It will try for up to 2 days, after which you'll eventually need to send it the invoice to the partner by post or e-mail."
 msgstr ""
-"La Fattura Elettronica %s è stata accettata dal SdI.\n"
-"Il SdI proverà a inviarla a %s.\n"
+"La Fattura Elettronica %(file)s è stata accettata dal SdI.\n"
+"Il SdI proverà a inviarla a %(partner)s.\n"
 "Proverà ad inviarla per due giorni, dopo i quali dovrai inviare la fattura al Partner via posta o e-mail."
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s has been refused by %s (Public Administration).\n"
+"The e-invoice file %(file)s has been refused by %(partner)s (Public Administration).\n"
 "You have 5 days from now to issue a full refund for this invoice, then contact the PA partner to create a new one according to their requests and submit it."
 msgstr ""
-"La Fattura Elettronica %s è stata rifiutata da %s (Pubblica Amministrazione).\n"
+"La Fattura Elettronica %(file)s è stata rifiutata da %(partner)s (Pubblica Amministrazione).\n"
 "Hai cinque giorni per stornarla, poi contatta il Partner della PA per crearne una nuova e reinviarla.\n"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s is duplicated.\n"
+"Original message from the SdI: %(message)s"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
+"The %(partner)s (Public Administration) had 15 days to either accept or refused this document,but since they did not reply, it's now considered accepted."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s was accepted and succesfully forwarded it to "
+"%(partner)s by the SdI."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The e-invoice file %(file)s was succesfully sent to the SdI.\n"
+"%(partner)s has 15 days to accept or reject it."
+msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -968,35 +1170,6 @@ msgstr "La Fattura Elettronica %s è stata inviata in modalità Demo."
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The e-invoice file %s has not been found on the EDI Proxy server."
 msgstr "La Fattura Elettronica %s non è presente sul Proxy Server"
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice file %s is duplicated.\n"
-"Original message from the SdI: %s"
-msgstr ""
-"La Fattura Elettronica %s è duplicata.\n"
-"Messaggio originale dal SdI: %s"
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice file %s is succesfully sent to the SdI. The invoice is now considered fiscally relevant.\n"
-"The %s (Public Administration) had 15 days to either accept or refused this document,but since they did not reply, it's now considered accepted."
-msgstr ""
-"La fattura è stata trasmessa con successo. La Fattura Elettronica è ora fiscalmente rilevante.\n"
-"%s (Pubblica Amministrazione) aveva 15 giorni per accettare o rifiutare questo documento, ma non hanno risposto, quindi è considerata accettata."
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice file %s was accepted and succesfully forwarded it to %s by the"
-" SdI."
-msgstr ""
-"La Fattura Elettronica %s è accettata e inoltrata con successo a %s dal SdI"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1018,21 +1191,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
-"The e-invoice file %s was succesfully sent to the SdI.\n"
-"%s has 15 days to accept or reject it."
+"The e-invoice filename %(file)s is duplicated. Please check the FatturaPA Filename sequence.\n"
+"Original message from the SdI: %(message)s"
 msgstr ""
-"La Fattura Elettronica %s è stata inviata con successo al SdI.\n"
-"%s ha 15 giorni per accettarla o rifiutarla."
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"The e-invoice filename %s is duplicated. Please check the FatturaPA Filename sequence.\n"
-"Original message from the SdI: %s"
-msgstr ""
-"La Fattura Elettronica %s è duplicata. Per favore controlla la Sequenza Nome Fattura Elettronica.\n"
-"Messaggio originale dal SdI: %s"
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1047,7 +1208,8 @@ msgid ""
 "The invoices you're trying to send have incomplete or incorrect data, please"
 " verify before sending."
 msgstr ""
-"Le fatture che stai cercando di inviare sono incomplete o incorrette, per favore controlla."
+"Le fatture che stai cercando di inviare sono incomplete o incorrette, per "
+"favore controlla."
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
@@ -1184,7 +1346,6 @@ msgstr "Visualizza Impostazioni"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "View invoice(s)"
 msgstr "Visualizza Fatture"
 
@@ -1208,16 +1369,6 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_config_settings.py:0
-msgid ""
-"You must explicitly allow Odoo to process invoices for this company before "
-"using Test or Official modes."
-msgstr ""
-"Devi accettare esplicitamente i termini e le condizioni d'uso nelle "
-"impostazioni prima di poter utilizzare le modalità Test o Ufficiale."
-
-#. module: l10n_it_edi
-#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "You must select a tax representative."
 msgstr "Devi selezionare un rappresentante fiscale"
@@ -1235,13 +1386,12 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
 msgid ""
 "Your company's VAT number and Fiscal Code haven't been found in the buyer "
 "and/or seller sections inside the document."
 msgstr ""
-"La Partita IVA e il Codice Fiscale della tua Azienda non sono stati "
-"trovati nelle sezioni acquirente e/o venditore del documento."
+"La Partita IVA e il Codice Fiscale della tua Azienda non sono stati trovati "
+"nelle sezioni acquirente e/o venditore del documento."
 
 #. module: l10n_it_edi
 #. odoo-python

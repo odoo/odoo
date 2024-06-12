@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.4alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-17 13:40+0000\n"
-"PO-Revision-Date: 2024-06-17 13:40+0000\n"
+"POT-Creation-Date: 2024-06-17 11:23+0000\n"
+"PO-Revision-Date: 2024-06-17 11:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -292,6 +292,13 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_document_type
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_document_type
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_document_type
+msgid "Document Types"
+msgstr ""
+
+#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Document date invalid in XML file: %s"
@@ -344,6 +351,14 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_codice_fiscale
 msgid "Fiscal code of your company"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/wizard/account_move_send.py:0
+msgid ""
+"Go to Applications page and update the 'Italia - Fatturazione Elettronica' "
+"module."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -427,6 +442,11 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_actionable_errors
+msgid "L10N It Edi Actionable Errors"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_file
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_file
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_edi_attachment_file
@@ -485,6 +505,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__l10n_it_edi_register
 msgid "L10N It Edi Register"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move_send__l10n_it_edi_warning_message
+msgid "L10N It Edi Warning Message"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -641,6 +666,12 @@ msgid "Please select the Tax system to which you are subjected."
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/wizard/account_move_send.py:0
+msgid "Please upgrade the Italian EDI module to update this widget."
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_eco_index_office
 msgid "Province of the register-of-companies office"
 msgstr ""
@@ -762,6 +793,154 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__su
 msgid "Socio unico"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td01
+msgid ""
+"TD01 - Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> "
+"are completed)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td02
+msgid "TD02 - Deposit/advance on invoice"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td03
+msgid "TD03 - Deposit/advance on parcel"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td04
+msgid "TD04 - Credit note"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td05
+msgid "TD05 - Debit note"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td06
+msgid "TD06 - Parcel"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td07
+msgid "TD07 - Simplified invoice*"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td08
+msgid "TD08 - Simplified credit note*"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td09
+msgid "TD09 - Simplified debit note*"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td10
+msgid "TD10 - Invoice for intra-community purchase of goods*"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td11
+msgid "TD11 - Invoice for intra-community purchase of services*"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td16
+msgid ""
+"TD16 - Internal reverse charge self-invoice (Article 17 of Presidential "
+"Decree no. 633/72 for invoices with Natura subcodes 'N6')"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td17
+msgid ""
+"TD17 - Self-invoice for purchases of foreign services (both within and "
+"outside the EU) - Alternative to esterometro"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td18
+msgid ""
+"TD18 - Self-invoice for the purchase of intra-community goods - Alternative "
+"to esterometro"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td19
+msgid ""
+"TD19 - Self-invoice for foreign goods (both intra and non-EU) already "
+"present in Italy (Article 17 paragraph 2 of Presidential Decree 633/72) - "
+"Alternative to esterometro"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td20
+msgid ""
+"TD20 - Self-invoice Report (ex art.6 c8 471/97 or art.46 c5 331/93), or for "
+"invoice not received or for a lower amount"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td21
+msgid "TD21 - Self-invoice for ceiling clearance"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td22
+msgid ""
+"TD22 - Self-invoice for extraction of goods from VAT warehouse without VAT "
+"liability"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td23
+msgid ""
+"TD23 - Self-invoice for extraction of goods from VAT warehouse with VAT "
+"liability"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td24
+msgid ""
+"TD24 - Deferred invoice (Article 21, paragraph 4, third period letter to "
+"Presidential Decree 633/72)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td25
+msgid ""
+"TD25 - Deferred invoice (Article 21, paragraph 4, third period, letter b "
+"(Dropshipping))"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td26
+msgid ""
+"TD26 - Transfer of depreciable assets and for internal transfers (ex art.36 "
+"Presidential Decree 633/72)"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td27
+msgid ""
+"TD27 - Self-invoice for self-consumption or for free transfers without "
+"recourse"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_document_type__td28
+msgid ""
+"TD28 - Self-invoice for Italian tax from foreign suppliers identified but "
+"not established in Italy and for purchases from San Marino with VAT (paper "
+"invoice)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -932,6 +1111,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "The e-invoice has been refused by the SdI."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid ""
+"The invoices you're trying to send have incomplete or incorrect data, please"
+" verify before sending."
 msgstr ""
 
 #. module: l10n_it_edi

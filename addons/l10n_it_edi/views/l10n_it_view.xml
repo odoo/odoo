@@ -147,6 +147,7 @@
                                 <field name="l10n_it_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
                                 <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                <field name="l10n_it_document_type"/>
                             </group>
                             <field name="l10n_it_partner_pa" invisible="1"/>
                             <group invisible="not l10n_it_partner_pa">

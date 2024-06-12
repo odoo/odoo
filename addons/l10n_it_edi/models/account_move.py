@@ -107,9 +107,47 @@ class AccountMove(models.Model):
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute='_compute_l10n_it_partner_pa')
 
+    l10n_it_document_type = fields.Selection(
+        selection=[
+            ('TD01', "TD01 - Invoice (Immediate or Accompanying if <DatiTrasporto> or <DatiDDT> are completed)"),
+            ('TD02', "TD02 - Deposit/advance on invoice"),
+            ('TD03', "TD03 - Deposit/advance on parcel"),
+            ('TD04', "TD04 - Credit note"),
+            ('TD05', "TD05 - Debit note"),
+            ('TD06', "TD06 - Parcel"),
+            ('TD07', "TD07 - Simplified invoice*"),
+            ('TD08', "TD08 - Simplified credit note*"),
+            ('TD09', "TD09 - Simplified debit note*"),
+            ('TD10', "TD10 - Invoice for intra-community purchase of goods*"),
+            ('TD11', "TD11 - Invoice for intra-community purchase of services*"),
+            ('TD16', "TD16 - Internal reverse charge self-invoice (Article 17 of Presidential Decree no. 633/72 for invoices with Natura subcodes 'N6')"),
+            ('TD17', "TD17 - Self-invoice for purchases of foreign services (both within and outside the EU) - Alternative to esterometro"),
+            ('TD18', "TD18 - Self-invoice for the purchase of intra-community goods - Alternative to esterometro"),
+            ('TD19', "TD19 - Self-invoice for foreign goods (both intra and non-EU) already present in Italy (Article 17 paragraph 2 of Presidential Decree 633/72) - Alternative to esterometro"),
+            ('TD20', "TD20 - Self-invoice Report (ex art.6 c8 471/97 or art.46 c5 331/93), or for invoice not received or for a lower amount"),
+            ('TD21', "TD21 - Self-invoice for ceiling clearance"),
+            ('TD22', "TD22 - Self-invoice for extraction of goods from VAT warehouse without VAT liability"),
+            ('TD23', "TD23 - Self-invoice for extraction of goods from VAT warehouse with VAT liability"),
+            ('TD24', "TD24 - Deferred invoice (Article 21, paragraph 4, third period letter to Presidential Decree 633/72)"),
+            ('TD25', "TD25 - Deferred invoice (Article 21, paragraph 4, third period, letter b (Dropshipping))"),
+            ('TD26', "TD26 - Transfer of depreciable assets and for internal transfers (ex art.36 Presidential Decree 633/72)"),
+            ('TD27', "TD27 - Self-invoice for self-consumption or for free transfers without recourse"),
+            ('TD28', "TD28 - Self-invoice for Italian tax from foreign suppliers identified but not established in Italy and for purchases from San Marino with VAT (paper invoice)")
+        ],
+        compute='_compute_l10n_it_document_type',
+        store=True,
+        readonly=False,
+        string='Document Types',
+    )
+
     # -------------------------------------------------------------------------
     # Computes
     # -------------------------------------------------------------------------
+
+    @api.depends('line_ids')
+    def _compute_l10n_it_document_type(self):
+        for move in self:
+            move.l10n_it_document_type = move._l10n_it_edi_get_document_type()
 
     @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
     def _compute_l10n_it_partner_pa(self):
@@ -363,7 +401,7 @@ class AccountMove(models.Model):
 
         # Flags
         is_self_invoice = self.l10n_it_edi_is_self_invoice
-        document_type = self._l10n_it_edi_get_document_type()
+        document_type = self.l10n_it_document_type
 
         # Represent if the document is a reverse charge refund in a single variable
         reverse_charge = document_type in ['TD16', 'TD17', 'TD18', 'TD19']
@@ -507,6 +545,22 @@ class AccountMove(models.Model):
             and self.amount_total <= 400
         )
 
+    def _l10n_it_edi_fee_statement(self):
+        """
+            This function will return a boolean depending on the lines, if the value of the lines with a product being
+            a service is bigger than the ones with a good, we can assume that it's a fee statement
+        """
+        self.ensure_one()
+        service_value = 0
+        good_or_conso_value = 0
+        for line in self.invoice_line_ids.filtered(lambda l: l.display_type not in ('line_note', 'line_section')):
+            if line.product_id.type == "service":
+                service_value += line.price_total
+            else:
+                good_or_conso_value += line.price_total
+
+        return service_value > good_or_conso_value
+
     def _l10n_it_edi_features_for_document_type_selection(self):
         """ Returns a dictionary of features to be compared with the TDxx FatturaPA
             document type requirements. """
@@ -522,6 +576,7 @@ class AccountMove(models.Model):
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
+            'fee_statement': self._l10n_it_edi_fee_statement(),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -531,16 +586,33 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
-                     'downpayment': False},
+                     'downpayment': False,
+                     'fee_statement': False},
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': True},
+            'TD03': {'move_types': ['out_invoice'],
+                     'import_type': 'in_invoice',
+                     'self_invoice': False,
+                     'simplified': False,
+                     'downpayment': False,
+                     'fee_statement': True},
             'TD04': {'move_types': ['out_refund'],
                      'import_type': 'in_refund',
                      'self_invoice': False,
                      'simplified': False},
+            'TD05': {'move_types': ['in_refund'],
+                     'import_type': 'in_refund',
+                     'self_invoice': False,
+                     'simplified': False},
+            'TD06': {'move_types': ['out_invoice'],
+                     'import_type': 'in_invoice',
+                     'self_invoice': False,
+                     'simplified': False,
+                     'downpayment': True,
+                     'fee_statement': True},
             'TD07': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
