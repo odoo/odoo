@@ -1159,13 +1159,19 @@ export class Orderline extends PosModel {
         }
         return listOfAttributes;
     }
+    getPriceString() {
+        return this.get_discount_str() === "100"
+            ? // free if the discount is 100
+            _t("Free")
+            : (this.comboLines && this.comboLines.length > 0)
+            ? // empty string if it is a combo parent line
+            ""
+            : this.env.utils.formatCurrency(this.get_display_price(), this.currency);
+    }
     getDisplayData() {
         return {
             productName: this.get_full_product_name(),
-            price:
-                this.get_discount_str() === "100"
-                    ? "free"
-                    : this.env.utils.formatCurrency(this.get_display_price()),
+            price: this.getPriceString(),
             qty: this.get_quantity_str(),
             unit: this.get_unit().name,
             unitPrice: this.env.utils.formatCurrency(this.get_unit_display_price()),
