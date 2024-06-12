@@ -76,6 +76,22 @@ class TestPhonenumbersPatch(BaseCase):
                     self.assertEqual(parsed_phone.number_of_leading_zeros, parse_test_line.gt_number_of_leading_zeros,
                         "Parsed country code number differs from expected country code")
 
+    def test_region_BR_monkey_patch(self):
+        """ Test Brazil phone numbers patch for added 9 in mobile numbers
+        It should not be added for fixed lines numbers"""
+        if not phonenumbers:
+            self.skipTest('Cannot test without phonenumbers module installed.')
+
+        # Mobile number => 9 should be added
+        parsed = phonenumbers.parse('11 6123 4567', region="BR")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+55 11 96123-4567')
+
+        # Fixed line => 9 should not be added
+        parsed = phonenumbers.parse('11 2345 6789', region="BR")
+        formatted = phonenumbers.format_number(parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+        self.assertEqual(formatted, '+55 11 2345-6789')
+
     def test_region_CI_monkey_patch(self):
         """Makes sure that patch for Ivory Coast phone numbers work"""
         parse_test_lines_CI = (
