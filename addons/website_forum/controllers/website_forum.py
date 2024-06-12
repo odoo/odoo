@@ -404,8 +404,8 @@ class WebsiteForum(WebsiteProfile):
     def forum_post(self, forum, **post):
         user = request.env.user
         if not user.email or not tools.single_email_re.match(user.email):
-            slug = request.env['ir.http']._slug
-            return request.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
+            return request.redirect(
+                f'/forum/user/{request.session.uid}?forum_id={forum.id}&forum_origin={request.httprequest.path}')
         values = self._prepare_user_values(forum=forum, searches={}, new_question=True)
         return request.render("website_forum.new_question", values)
 
@@ -674,7 +674,6 @@ class WebsiteForum(WebsiteProfile):
             elif post.get('forum_id'):
                 forums = request.env['forum.forum'].browse(int(post['forum_id']))
                 values.update({
-                    'edit_button_url_param': 'forum_id=%s' % str(post['forum_id']),
                     'forum_filtered': forums.name,
                 })
             else:

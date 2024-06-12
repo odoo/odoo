@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.urls
@@ -75,7 +74,6 @@ class WebsiteProfile(http.Controller):
             'user': user,
             'main_object': user,
             'is_profile_page': True,
-            'edit_button_url_param': '',
         }
 
     @http.route([
@@ -106,43 +104,24 @@ class WebsiteProfile(http.Controller):
 
     # Edit Profile
     # ---------------------------------------------------
-    @http.route('/profile/edit', type='http', auth="user", website=True)
-    def view_user_profile_edition(self, **kwargs):
-        user_id = int(kwargs.get('user_id', 0))
-        countries = request.env['res.country'].search([])
-        if user_id and request.env.user.id != user_id and request.env.user._is_admin():
-            user = request.env['res.users'].browse(user_id)
-            values = self._prepare_user_values(searches=kwargs, user=user, is_public_user=False)
-        else:
-            values = self._prepare_user_values(searches=kwargs)
-        values.update({
-            'email_required': kwargs.get('email_required'),
-            'countries': countries,
-            'url_param': kwargs.get('url_param'),
-        })
-        return request.render("website_profile.user_profile_edit_main", values)
-
     def _profile_edition_preprocess_values(self, user, **kwargs):
         values = {
             'name': kwargs.get('name'),
             'website': kwargs.get('website'),
             'email': kwargs.get('email'),
             'city': kwargs.get('city'),
-            'country_id': int(kwargs.get('country')) if kwargs.get('country') else False,
-            'website_description': kwargs.get('description'),
+            'country_id': kwargs.get('country_id'),
+            'website_description': kwargs.get('website_description'),
         }
 
-        if 'clear_image' in kwargs:
-            values['image_1920'] = False
-        elif kwargs.get('ufile'):
-            image = kwargs.get('ufile').read()
-            values['image_1920'] = base64.b64encode(image)
+        if 'image_1920' in kwargs:
+            values['image_1920'] = kwargs.get('image_1920')
 
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
-            values['website_published'] = kwargs.get('website_published') == 'True'
+            values['website_published'] = kwargs.get('website_published')
         return values
 
-    @http.route('/profile/user/save', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/profile/user/save', type='jsonrpc', auth='user', methods=['POST'], website=True)
     def save_edited_profile(self, **kwargs):
         user_id = int(kwargs.get('user_id', 0))
         if user_id and request.env.user.id != user_id and request.env.user._is_admin():
@@ -152,10 +131,6 @@ class WebsiteProfile(http.Controller):
         values = self._profile_edition_preprocess_values(user, **kwargs)
         whitelisted_values = {key: values[key] for key in sorted(user._self_accessible_fields()[1]) if key in values}
         user.write(whitelisted_values)
-        if kwargs.get('url_param'):
-            return request.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))
-        else:
-            return request.redirect("/profile/user/%d" % user.id)
 
     # Ranks and Badges
     # ---------------------------------------------------

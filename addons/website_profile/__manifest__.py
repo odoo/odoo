@@ -8,6 +8,7 @@
     'summary': 'Access the website profile of the users',
     'description': "Allows to access the website profile of the users and see their statistics (karma, badges, etc..)",
     'depends': [
+        'html_editor',
         'website_partner',
         'gamification'
     ],
@@ -20,9 +21,12 @@
     ],
     'assets': {
         'web.assets_frontend': [
+            'web/static/src/views/fields/file_handler.*',
             'website_profile/static/src/scss/website_profile.scss',
+            'website_profile/static/src/components/**/*',
             'website_profile/static/src/interactions/**/*',
             ('remove', 'website_profile/static/src/interactions/**/*.edit.js'),
+            ('include', 'html_editor.assets_editor'),
         ],
         'website.assets_edit_frontend': [
             'website_profile/static/src/**/*.edit.js',
