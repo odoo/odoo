@@ -42,6 +42,9 @@ class MailMail(models.Model):
         # super() already cleans pseudo-void content from editor
         body = super()._prepare_outgoing_body()
 
+        return self._prepare_outgoing_body_apply_mailing_tracking(body)
+
+    def _prepare_outgoing_body_apply_mailing_tracking(self, body):
         if body and self.mailing_id and self.mailing_trace_ids:
             for match in set(re.findall(tools.URL_REGEX, body)):
                 href = match[0]

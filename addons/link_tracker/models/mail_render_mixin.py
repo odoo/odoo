@@ -39,6 +39,7 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not html or is_html_empty(html):
             return html
+        blacklist = self._shorten_links_get_default_blacklist(blacklist)
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         short_schema = base_url + '/r/'
 
@@ -61,6 +62,10 @@ class MailRenderMixin(models.AbstractModel):
 
         return new_html
 
+    def _shorten_links_get_default_blacklist(self, blacklist):
+        """Overridable to add default blacklisted urls."""
+        return blacklist
+
     @api.model
     def _shorten_links_text(self, content, link_tracker_vals, blacklist=None, base_url=None):
         """ Shorten links in a string content. Works like ``_shorten_links`` but
@@ -70,6 +75,7 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not content:
             return content
+        blacklist = self._shorten_links_get_default_blacklist(blacklist)
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         shortened_schema = base_url + '/r/'
         unsubscribe_schema = base_url + '/sms/'

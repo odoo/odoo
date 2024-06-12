@@ -36,7 +36,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         useRecordObserver((record) => {
             if (record.data.mailing_model_id && this.wysiwyg) {
-                this._hideIrrelevantTemplates(record);
+                this._onModelChange(record);
             }
         });
     }
@@ -189,6 +189,10 @@ export class MassMailingHtmlField extends HtmlField {
         this.wysiwyg.$iframeBody.addClass('o_mass_mailing_iframe');
 
         this.onIframeUpdated();
+    }
+
+    _onModelChange(record) {
+        this._hideIrrelevantTemplates(record);
     }
 
     async _onSnippetsLoaded() {
