@@ -91,7 +91,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         image_png = base64.b64encode(f.read())
 
         # create the template, without creating the variants
-        template = self.env['product.template'].with_context(create_product_product=True).create({
+        template = self.env['product.template'].with_context(create_product_product=False).create({
             'name': 'A Colorful Image',
             'product_template_image_ids': [(0, 0, {'name': 'image 1', 'image_1920': image_gif}), (0, 0, {'name': 'image 4', 'image_1920': image_svg})],
         })
@@ -301,7 +301,7 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
         }])
 
         # create the template, without creating the variants
-        template = self.env['product.template'].with_context(create_product_product=True).create({
+        template = self.env['product.template'].with_context(create_product_product=False).create({
             'name': 'Test subject',
         })
 
@@ -380,7 +380,7 @@ class TestEnvironmentWebsiteSaleImage(odoo.tests.HttpCase):
         f.seek(0)
         blue_image = base64.b64encode(f.read())
 
-        self.template = self.env['product.template'].with_context(create_product_product=True).create({
+        self.template = self.env['product.template'].with_context(create_product_product=False).create({
             'name': 'Test Remove Image',
             'image_1920': blue_image,
         })
