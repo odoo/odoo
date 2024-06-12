@@ -994,13 +994,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         new_moves = self.env['stock.move'].concat(*new_moves)
         new_moves = new_moves.sudo()._action_confirm()
 
-        # Remaining from action_confirm to adapt
-        # if new_push_moves:
-        #     neg_push_moves = new_push_moves.filtered(lambda sm: float_compare(sm.product_uom_qty, 0, precision_rounding=sm.product_uom.rounding) < 0)
-        #     (new_push_moves - neg_push_moves).sudo()._action_confirm()
-        #     # Negative moves do not have any picking, so we should try to merge it with their siblings
-        #     neg_push_moves._action_confirm(merge_into=neg_push_moves.move_orig_ids.move_dest_ids)
-
         return new_moves
 
     def _merge_moves_fields(self):
@@ -1428,17 +1421,34 @@ Please change the quantity done or the rounding precision of your unit of measur
         if merge:
             moves = self._merge_moves(merge_into=merge_into)
 
-        # Transform remaining move in return in case of negative initial demand
         neg_r_moves = moves.filtered(lambda move: float_compare(
             move.product_uom_qty, 0, precision_rounding=move.product_uom.rounding) < 0)
 
-        # TODO for next version: rethink negative procurement. For now do nothing if initial move is processed
-        neg_r_moves.write({
-            'move_orig_ids': [Command.clear()],
-            'move_dest_ids': [Command.clear()],
-        })
-        moves -= neg_r_moves
-        neg_r_moves.unlink()
+        # Push remaining quantities to next step
+        neg_to_push = neg_r_moves.filtered(lambda move: move.location_final_id and move.location_dest_id != move.location_final_id)
+        new_push_moves = self.env['stock.move']
+        if neg_to_push:
+            new_push_moves = neg_to_push._push_apply()
+
+        # Transform remaining move in returns in case of negative initial demand
+        for move in neg_r_moves:
+            move.location_id, move.location_dest_id, move.location_final_id = move.location_dest_id, move.location_id, move.location_id
+            orig_move_ids, dest_move_ids = [], []
+            for m in move.move_orig_ids | move.move_dest_ids:
+                from_loc, to_loc = m.location_id, m.location_dest_id
+                if float_compare(m.product_uom_qty, 0, precision_rounding=m.product_uom.rounding) < 0:
+                    from_loc, to_loc = to_loc, from_loc
+                if to_loc == move.location_id:
+                    orig_move_ids += m.ids
+                elif move.location_dest_id == from_loc:
+                    dest_move_ids += m.ids
+            move.move_orig_ids, move.move_dest_ids = [Command.set(orig_move_ids)], [Command.set(dest_move_ids)]
+            move.product_uom_qty *= -1
+            if move.picking_type_id.return_picking_type_id:
+                move.picking_type_id = move.picking_type_id.return_picking_type_id
+            # We are returning some products, we must take them in the source location
+            move.procure_method = 'make_to_stock'
+        neg_r_moves._assign_picking()
 
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation + those expected to be auto-assigned
         moves.filtered(lambda move: move.state in ('confirmed', 'partially_available')
@@ -1446,6 +1456,12 @@ Please change the quantity done or the rounding precision of your unit of measur
                             or move.picking_type_id.reservation_method == 'at_confirm'
                             or (move.reservation_date and move.reservation_date <= fields.Date.today())))\
              ._action_assign()
+
+        if new_push_moves:
+            neg_push_moves = new_push_moves.filtered(lambda sm: float_compare(sm.product_uom_qty, 0, precision_rounding=sm.product_uom.rounding) < 0)
+            (new_push_moves - neg_push_moves).sudo()._action_confirm()
+            # Negative moves do not have any picking, so we should try to merge it with their siblings
+            neg_push_moves._action_confirm(merge_into=neg_push_moves.move_orig_ids.move_dest_ids)
         return moves
 
     def _prepare_procurement_origin(self):
@@ -1965,9 +1981,10 @@ Please change the quantity done or the rounding precision of your unit of measur
                 moves_state_to_write['assigned'].add(move.id)
             elif move.quantity and float_compare(move.quantity, move.product_uom_qty, precision_rounding=rounding) <= 0:
                 moves_state_to_write['partially_available'].add(move.id)
-            elif move.procure_method == 'make_to_order' and not move.move_orig_ids:
-                moves_state_to_write['waiting'].add(move.id)
-            elif move.move_orig_ids and any(orig.state not in ('done', 'cancel') for orig in move.move_orig_ids):
+            elif (move.procure_method == 'make_to_order' and not move.move_orig_ids) or\
+                 (move.move_orig_ids and any(float_compare(orig.product_uom_qty, 0, precision_rounding=orig.product_uom.rounding) > 0
+                                             and orig.state not in ('done', 'cancel') for orig in move.move_orig_ids)):
+                # In the process of merging a negative move, we may still have a negative move in the move_orig_ids at that point.
                 moves_state_to_write['waiting'].add(move.id)
             else:
                 moves_state_to_write['confirmed'].add(move.id)
