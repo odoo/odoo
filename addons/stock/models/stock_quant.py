@@ -235,9 +235,6 @@ class StockQuant(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        """ Override to set the `inventory_quantity` field if we're in "inventory mode" as well
-        as to compute the sum of the `available_quantity` field.
-        """
         if 'available_quantity' in fields:
             if 'quantity' not in fields:
                 fields.append('quantity')
