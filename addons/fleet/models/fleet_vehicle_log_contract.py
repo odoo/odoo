@@ -120,7 +120,7 @@ class FleetVehicleLogContract(models.Model):
         self.write({'state': 'expired'})
 
     @api.model
-    def scheduler_manage_contract_expiration(self):
+    def scheduler_manage_contract_expiration(self, batch_size=1000):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
         params = self.env['ir.config_parameter'].sudo()
@@ -142,14 +142,22 @@ class FleetVehicleLogContract(models.Model):
                 'fleet.mail_act_fleet_contract_to_renew', contract.expiration_date,
                 user_id=contract.user_id.id)
 
-        expired_contracts = self.search([('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today() )])
+        expired_domain = [('state', 'not in', ['expired', 'closed']), ('expiration_date', '<',fields.Date.today())]
+        expired_contracts = self.search(expired_domain, limit=batch_size)
         expired_contracts.write({'state': 'expired'})
+        remaining_expired_contract = 0 if len(expired_contracts) < batch_size else self.search_count(expired_domain)
 
-        futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
+        future_domain = [('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())]
+        futur_contracts = self.search(future_domain, limit=batch_size)
         futur_contracts.write({'state': 'futur'})
+        remaining_future_contract = 0 if len(futur_contracts) < batch_size else self.search_count(future_domain)
 
-        now_running_contracts = self.search([('state', '=', 'futur'), ('start_date', '<=', fields.Date.today())])
+        now_running_domain = [('state', '=', 'futur'), ('start_date', '<=', fields.Date.today())]
+        now_running_contracts = self.search(now_running_domain, limit=batch_size)
         now_running_contracts.write({'state': 'open'})
+        remaining_now_running_contract = 0 if len(now_running_contracts) < batch_size else self.search_count(now_running_domain)
 
-    def run_scheduler(self):
-        self.scheduler_manage_contract_expiration()
+        self.env['ir.cron']._notify_progress(
+            done=len(nearly_expired_contracts) + len(expired_contracts) + len(futur_contracts) + len(now_running_contracts),
+            remaining=remaining_expired_contract + remaining_future_contract + remaining_now_running_contract,
+        )
