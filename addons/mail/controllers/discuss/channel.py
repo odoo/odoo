@@ -8,6 +8,8 @@ from odoo import fields, http
 from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import StoreData
+
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
@@ -44,7 +46,9 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             return
-        return channel._channel_info()[0]
+        store = StoreData()
+        store.add({"Thread": channel._channel_info()})
+        return store.get_result()
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
