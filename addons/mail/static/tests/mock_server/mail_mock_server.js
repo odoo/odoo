@@ -274,7 +274,13 @@ async function discuss_channel_info(request) {
     const DiscussChannel = this.env["discuss.channel"];
 
     const { channel_id } = await parseRequestParams(request);
-    return DiscussChannel._channel_info([channel_id])[0];
+    const res = {};
+    const channelInfos = DiscussChannel._channel_info([channel_id]);
+    if (!channelInfos.length) {
+        return;
+    }
+    Object.assign(res, { Thread: channelInfos });
+    return res;
 }
 
 registerRoute("/discuss/channel/members", discuss_channel_members);
