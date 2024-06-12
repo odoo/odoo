@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.s_chart_option">
+    <WeRow title.translate="Background">
+        <t t-set="option" t-value="props.snippetOption"/>
+        <t t-call="web_editor.snippet_options_background_color_widget"/>
+    </WeRow>
+    <WeSelect title.translate="Type" attributeName="'type'" attributeDefaultValue="'bar'">
+        <WeButton selectDataAttribute="'bar'" name="'bar_chart_opt'">Bar Vertical</WeButton>
+        <WeButton selectDataAttribute="'horizontalBar'" name="'horizontal_bar_chart_opt'">Bar Horizontal</WeButton>
+        <WeButton selectDataAttribute="'line'" name="'line_chart_opt'">Line</WeButton>
+        <WeButton selectDataAttribute="'pie'">Pie</WeButton>
+        <WeButton selectDataAttribute="'doughnut'">Doughnut</WeButton>
+        <WeButton selectDataAttribute="'radar'">Radar</WeButton>
+    </WeSelect>
+    <WeCheckbox title.translate="Stacked"
+        name="'stacked_chart_opt'"
+        dependencies="'bar_chart_opt, horizontal_bar_chart_opt'"
+        selectDataAttribute="'false|true'"
+        attributeName="'stacked'"
+        noPreview="'true'"
+    />
+    <WeSelect title.translate="Legend" attributeName="'legendPosition'" attributeDefaultValue="'top'">
+        <WeButton selectDataAttribute="'none'">None</WeButton>
+        <WeButton selectDataAttribute="'top'">Top</WeButton>
+        <WeButton selectDataAttribute="'left'">Left</WeButton>
+        <WeButton selectDataAttribute="'bottom'">Bottom</WeButton>
+        <WeButton selectDataAttribute="'right'">Right</WeButton>
+    </WeSelect>
+    <WeCheckbox title.translate="Tooltip"
+        selectDataAttribute="'false|true'"
+        attributeName="'tooltipDisplay'"
+        noPreview="'true'"
+    />
+    <we-matrix>
+        <table>
+            <tbody>
+                <tr>
+                    <th/>
+                    <th t-foreach="renderContext.datasets" t-as="dataset" t-key="dataset_index">
+                        <t t-set="backgroundColor" t-value="dataset.backgroundColor"/>
+                        <t t-if="!isCSSColor(backgroundColor)">
+                            <t t-set="backgroundColor" t-value="'var(--' + backgroundColor + ')'"/>
+                        </t>
+                        <input t-att-value="dataset.label" type="text"
+                            t-att-style="'border: 2px solid ' + backgroundColor + ';'"
+                            t-on-focus="() => { this.onCellFocus(dataset_index, -1); }"
+                            t-on-change="(ev) => { this.setDatasetLabel(dataset_index, ev.target.value); }"
+                            t-on-input="(ev) => { this.setDatasetLabel(dataset_index, ev.target.value); }"
+                        />
+                    </th>
+                    <th>
+                        <we-button title="Add Set"
+                            class="add_column fa fa-fw fa-plus o_we_link o_we_text_success d-inline-block"
+                            t-on-click="() => { this.onAddDataset(); }"
+                        />
+                    </th>
+                </tr>
+                <tr t-foreach="renderContext.labels" t-as="label" t-key="label_index">
+                    <th>
+                        <input t-att-value="label" type="text"
+                            t-on-focus="() => { this.onCellFocus(-1, label_index); }"
+                            t-on-change="(ev) => { this.setRowLabel(label_index, ev.target.value); }"
+                            t-on-input="(ev) => { this.setRowLabel(label_index, ev.target.value); }"
+                        />
+                    </th>
+                    <td t-foreach="renderContext.datasets" t-as="dataset" t-key="dataset_index">
+                        <input t-att-value="dataset.data[label_index]" type="number" 
+                            t-on-focus="() => { this.onCellFocus(dataset_index, label_index); }"
+                            t-on-change="(ev) => { this.setCellValue(dataset_index, label_index, ev.target.value); }"
+                            t-on-input="(ev) => { this.setCellValue(dataset_index, label_index, ev.target.value); }"
+                        />
+                    </td>
+                    <td>
+                        <we-button title="Remove Row"
+                            t-if="label_index === renderContext.focusedLabelIndex and renderContext.labels.length > 1"
+                            class="o_we_text_danger o_we_link fa fa-fw fa-minus"
+                            t-on-click="() => { this.onRemoveRow(label_index); }"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <we-button title="Add Row"
+                            class="add_row fa fa-fw fa-plus o_we_link o_we_text_success d-inline-block"
+                            t-on-click="() => { this.onAddRow(); }"
+                        />
+                    </th>
+                    <td t-foreach="renderContext.datasets" t-as="dataset" t-key="dataset_index">
+                        <we-button title="Remove Set"
+                            t-if="dataset_index === renderContext.focusedDatasetIndex and renderContext.datasets.length > 1"
+                            class="o_we_text_danger o_we_link fa fa-fw fa-minus"
+                            t-on-click="() => { this.onRemoveDataset(dataset_index); }"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </we-matrix>
+    <WeInput title.translate="Min Axis" dependencies="'bar_chart_opt, horizontal_bar_chart_opt, line_chart_opt'"
+        step="'1'" selectDataAttribute="''" attributeName="'minValue'"
+    />
+    <WeInput title.translate="Max Axis" dependencies="'bar_chart_opt, horizontal_bar_chart_opt, line_chart_opt'"
+        step="'1'" selectDataAttribute="''" attributeName="'maxValue'"
+    />
+    <WeColorpicker title.translate="Background" name="'chart_bg_color_opt'"
+        colorChange="''" attributeName="'backgroundColor'"
+        noPreview="'true'"
+    />
+    <WeColorpicker title.translate="Border" name="'chart_border_color_opt'"
+        colorChange="''" attributeName="'borderColor'"
+        noPreview="'true'"
+    />
+    <WeInput title.translate="Border Width" selectDataAttribute="'2px'" attributeName="'borderWidth'" unit="'px'"/>
+</t>
+
+</templates>
