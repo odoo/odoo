@@ -8,21 +8,6 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } from "@odoo/owl";
 
-function formatMinutes(value) {
-    if (value === false) {
-        return "";
-    }
-    const isNegative = value < 0;
-    if (isNegative) {
-        value = Math.abs(value);
-    }
-    let min = Math.floor(value);
-    let sec = Math.round((value % 1) * 60);
-    sec = `${sec}`.padStart(2, "0");
-    min = `${min}`.padStart(2, "0");
-    return `${isNegative ? "-" : ""}${min}:${sec}`;
-}
-
 export class MrpTimer extends Component {
     static template = "mrp.MrpTimer";
     static props = {
@@ -57,7 +42,7 @@ export class MrpTimer extends Component {
     }
 
     get durationFormatted() {
-        return formatMinutes(this.state.duration);
+        return luxon.Duration.fromObject({minute: this.state.duration }).toFormat("mm:ss");
     }
 
     _runTimer() {
@@ -114,7 +99,7 @@ class MrpTimerField extends Component {
         if (this.props.record.data[this.props.name] != this.duration && this.props.record.dirty) {
             this.duration = this.props.record.data[this.props.name];
         }
-        return formatMinutes(this.duration);
+        return luxon.Duration.fromObject({ minute: this.duration }).toFormat("mm:ss");
     }
 
     get ongoing() {
@@ -128,4 +113,3 @@ export const mrpTimerField = {
 };
 
 registry.category("fields").add("mrp_timer", mrpTimerField);
-registry.category("formatters").add("mrp_timer", formatMinutes);
