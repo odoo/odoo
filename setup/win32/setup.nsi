@@ -87,7 +87,7 @@ Unicode True
 
 Name '${DISPLAY_NAME}'
 Caption "${PRODUCT_NAME} ${VERSION} Setup"
-OutFile "odoo_setup_${VERSION}.exe"
+OutFile "${TOOLSDIR}\server\odoo_setup_${VERSION}.exe"
 SetCompressor /SOLID /FINAL lzma
 ShowInstDetails hide
 
@@ -219,7 +219,7 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     File /r /x "src" "${TOOLSDIR}\nssm-2.24\*"
 
     SetOutPath "$INSTDIR\server"
-    File /r /x "wkhtmltopdf" /x "enterprise" "..\..\*"
+    File /r /x "wkhtmltopdf" /x "enterprise" "${TOOLSDIR}\server\*"
 
     SetOutPath "$INSTDIR\vcredist"
     File /r "${TOOLSDIR}\vcredist\*.exe"
@@ -229,7 +229,7 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
     nsExec::Exec '"$INSTDIR\vcredist\vc_redist.x64.exe" /q'
 
     SetOutPath "$INSTDIR\thirdparty"
-    File /r "${STATIC_PATH}\wkhtmltopdf\*"
+    File /r "${TOOLSDIR}\wkhtmltopdf\*"
 
     # If there is a previous install of the Odoo Server, keep the login/password from the config file
     WriteIniStr "$INSTDIR\server\odoo.conf" "options" "db_host" $TextPostgreSQLHostname
@@ -267,7 +267,7 @@ Section $(TITLE_PostgreSQL) SectionPostgreSQL
     nsExec::Exec 'net user openpgsvc /delete'
 
     DetailPrint "Downloading PostgreSQl"
-    inetc::get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /POPUP
+    NScurl::http get "$postgresql_url" "$TEMP/$postgresql_exe_filename" /PAGE /END
     pop $0
 
     ReadRegStr $0 HKLM "System\CurrentControlSet\Control\ComputerName\ActiveComputerName" "ComputerName"

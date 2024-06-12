@@ -35,3 +35,5 @@ COPY requirements.txt /opt/release/requirements.txt
 RUN pip3 install -r /opt/release/requirements.txt
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
+
+USER odoo
