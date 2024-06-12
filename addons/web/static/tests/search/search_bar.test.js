@@ -269,7 +269,7 @@ test("select an autocomplete field", async () => {
     });
 
     await editSearch("a");
-    expect(`.o_searchview_autocomplete li`).toHaveCount(3);
+    expect(`.o_searchview_autocomplete li`).toHaveCount(4);
 
     keyDown("Enter");
     await animationFrame();
@@ -437,7 +437,7 @@ test("select autocompleted many2one", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([]);
 
     await editSearch("rec");
-    await contains(".o_searchview_autocomplete li:last-child").click();
+    await contains(".o_searchview_autocomplete li:nth-last-child(2)").click();
     expect(searchBar.env.searchModel.domain).toEqual([["bar", "child_of", "rec"]]);
 
     await removeFacet("Bar rec");
@@ -478,22 +478,22 @@ test("autocompletion with a boolean field", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([]);
 
     await editSearch("y");
-    expect(`.o_searchview_autocomplete li`).toHaveCount(1);
-    expect(`.o_searchview_autocomplete li:last-child`).toHaveText("Search Bool for: Yes");
+    expect(`.o_searchview_autocomplete li`).toHaveCount(2);
+    expect(`.o_searchview_autocomplete li:nth-last-child(2)`).toHaveText("Search Bool for: Yes");
 
     // select "Yes"
-    await contains(".o_searchview_autocomplete li:last-child").click();
+    await contains(".o_searchview_autocomplete li:nth-last-child(2)").click();
     expect(searchBar.env.searchModel.domain).toEqual([["bool", "=", true]]);
 
     await removeFacet("Bool Yes");
     expect(searchBar.env.searchModel.domain).toEqual([]);
 
     await editSearch("No");
-    expect(`.o_searchview_autocomplete li`).toHaveCount(1);
-    expect(`.o_searchview_autocomplete li:last-child`).toHaveText("Search Bool for: No");
+    expect(`.o_searchview_autocomplete li`).toHaveCount(2);
+    expect(`.o_searchview_autocomplete li:nth-last-child(2)`).toHaveText("Search Bool for: No");
 
     // select "No"
-    await contains(".o_searchview_autocomplete li:last-child").click();
+    await contains(".o_searchview_autocomplete li:nth-last-child(2)").click();
     expect(searchBar.env.searchModel.domain).toEqual([["bool", "=", false]]);
 });
 
@@ -659,6 +659,7 @@ test("many2one_reference fields are supported in search view", async () => {
     expect(queryAllTexts`.o_searchview ul li.dropdown-item`).toEqual([
         "Search Foo for: 12",
         "Search Resource ID for: 12",
+        "Add Custom Filter",
     ]);
 
     keyDown("ArrowDown");
@@ -669,7 +670,7 @@ test("many2one_reference fields are supported in search view", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([]);
 
     await editSearch("1a");
-    expect(queryAllTexts`.o_searchview ul li.dropdown-item`).toEqual(["Search Foo for: 1a"]);
+    expect(queryAllTexts`.o_searchview ul li.dropdown-item`).toEqual(["Search Foo for: 1a", "Add Custom Filter"]);
 
     await validateSearch();
     expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "1a"]]);
@@ -697,7 +698,7 @@ test("check kwargs of a rpc call with a domain", async () => {
     });
 
     await editSearch("F");
-    expect(`.o_searchview_autocomplete li`).toHaveCount(3);
+    expect(`.o_searchview_autocomplete li`).toHaveCount(4);
 
     keyDown("ArrowDown");
     keyDown("ArrowDown");
@@ -837,7 +838,7 @@ test("search a property", async () => {
     await editSearch("a");
     await contains(".o_expand").click();
 
-    expect(`.o_searchview_input_container li`).toHaveCount(8);
+    expect(`.o_searchview_input_container li`).toHaveCount(9);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
@@ -847,12 +848,13 @@ test("search a property", async () => {
         "My Tags (Bar 1) for: A",
         "My Tags (Bar 1) for: AA",
         "My Text (Bar 2) for: a",
+        "Add Custom Filter",
     ]);
 
     // click again on the expand icon to hide the properties
     await contains(".o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(1);
-    expect(queryAllTexts`.o_searchview_input_container li`).toEqual(["Search Properties"]);
+    expect(`.o_searchview_input_container li`).toHaveCount(2);
+    expect(queryAllTexts`.o_searchview_input_container li`).toEqual(["Search Properties", "Add Custom Filter"]);
 
     // search for a partner, and expand the many2many property
     click(`.o_searchview_input`);
@@ -860,7 +862,7 @@ test("search a property", async () => {
     await editSearch("Bo");
     await contains(".o_expand").click();
     await contains("li:nth-child(3) .o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(6);
+    expect(`.o_searchview_input_container li`).toHaveCount(7);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
@@ -868,22 +870,24 @@ test("search a property", async () => {
         "Bob",
         "Bobby",
         "My Text (Bar 2) for: Bo",
+        "Add Custom Filter",
     ]);
 
     // fold all the properties (included the search result)
     await contains(".o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(1);
-    expect(queryAllTexts`.o_searchview_input_container li`).toEqual(["Search Properties"]);
+    expect(`.o_searchview_input_container li`).toHaveCount(2);
+    expect(queryAllTexts`.o_searchview_input_container li`).toEqual(["Search Properties", "Add Custom Filter"]);
 
     // unfold all the properties but fold the search result
     await contains(".o_expand").click();
     await contains("li:nth-child(3) .o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(4);
+    expect(`.o_searchview_input_container li`).toHaveCount(5);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
         "My Partners (Bar 1)",
         "My Text (Bar 2) for: Bo",
+        "Add Custom Filter",
     ]);
 
     // select Bobby
@@ -899,7 +903,7 @@ test("search a property", async () => {
     await contains(".o_cp_searchview").click();
     await editSearch("a");
     await contains(".o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(8);
+    expect(`.o_searchview_input_container li`).toHaveCount(9);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
@@ -909,6 +913,7 @@ test("search a property", async () => {
         "My Tags (Bar 1) for: A",
         "My Tags (Bar 1) for: AA",
         "My Text (Bar 2) for: a",
+        "Add Custom Filter",
     ]);
 
     // select the selection option "AA"
@@ -951,7 +956,7 @@ test("search a property", async () => {
     await editSearch("Ali");
     await contains(".o_expand").click();
     await contains("li:nth-child(2) .o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(6);
+    expect(`.o_searchview_input_container li`).toHaveCount(7);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
@@ -959,6 +964,7 @@ test("search a property", async () => {
         "Alicia",
         "My Partners (Bar 1)",
         "My Text (Bar 2) for: Ali",
+        "Add Custom Filter",
     ]);
     await contains(".o_searchview_input_container li:nth-child(4)").click();
     expect(searchBar.env.searchModel.domain).toEqual([
@@ -971,7 +977,7 @@ test("search a property", async () => {
     await contains(".o_cp_searchview").click();
     await editSearch("A");
     await contains(".o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(8);
+    expect(`.o_searchview_input_container li`).toHaveCount(9);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
@@ -981,6 +987,7 @@ test("search a property", async () => {
         "My Tags (Bar 1) for: A",
         "My Tags (Bar 1) for: AA",
         "My Text (Bar 2) for: A",
+        "Add Custom Filter",
     ]);
 
     await contains(".o_searchview_input_container li:nth-child(7)").click();
@@ -997,7 +1004,7 @@ test("search a property", async () => {
     await contains(".o_cp_searchview").click();
     await editSearch("B");
     await contains(".o_expand").click();
-    expect(`.o_searchview_input_container li`).toHaveCount(6);
+    expect(`.o_searchview_input_container li`).toHaveCount(7);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
@@ -1005,6 +1012,7 @@ test("search a property", async () => {
         "My Selection (Bar 1) for: B",
         "My Tags (Bar 1) for: B",
         "My Text (Bar 2) for: B",
+        "Add Custom Filter",
     ]);
     await contains(".o_searchview_input_container li:nth-child(5)").click();
     expect(searchBar.env.searchModel.domain).toEqual([
@@ -1039,13 +1047,14 @@ test("search a property", async () => {
         ["bar", "=", 1],
         ["properties.my_tags", "in", "b"],
     ]);
-    expect(`.o_searchview_input_container li`).toHaveCount(5);
+    expect(`.o_searchview_input_container li`).toHaveCount(6);
     expect(queryAllTexts`.o_searchview_input_container li`).toEqual([
         "Search Properties",
         "My Partner (Bar 1)",
         "(no result)",
         "My Partners (Bar 1)",
         "My Text (Bar 2) for: Bobby",
+        "Add Custom Filter",
     ]);
 
     // test the navigation with keyboard
@@ -1140,7 +1149,7 @@ test("search a property: definition record id in the context", async () => {
     await editSearch("a");
     await contains(".o_expand").click();
     expect(["web_search_read"]).toVerifySteps();
-    expect(`.o_searchview_input_container li`).toHaveCount(2);
+    expect(`.o_searchview_input_container li`).toHaveCount(3);
     expect(queryAll`.o_searchview_input_container li`[1]).toHaveText("My Text (Bar 2) for: a");
 });
 
@@ -1379,7 +1388,6 @@ test("edit a field", async () => {
     expect(`.o_searchview_facet.o_facet_with_domain .o_searchview_facet_label`).toHaveCount(1);
 
     await editSearch("def");
-    keyDown("ArrowDown");
     keyDown("Enter"); // select
     await animationFrame();
     expect(getFacetTexts()).toEqual(["Foo\nabc\nor\ndef"]);
@@ -1599,6 +1607,7 @@ test("select autocompleted many2one with allowed_company_ids domain", async () =
         "Search Bar for: rec",
         "Second record",
         "Third record",
+        "Add Custom Filter",
     ]);
 
     serverState.userContext = { allowed_company_ids: [1] };
@@ -1608,5 +1617,24 @@ test("select autocompleted many2one with allowed_company_ids domain", async () =
     expect(queryAllTexts(`.o_searchview_input_container li`)).toEqual([
         "Search Bar for: rec",
         "Second record",
+        "Add Custom Filter",
     ]);
+});
+
+test("dropdown menu last element is 'Add Custom Filter'", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="foo"/>
+            </search>
+        `,
+    });
+    await editSearch("a");
+    await animationFrame();
+    const dropdownMenu = queryFirst('.o_searchview_autocomplete');
+    const lastElement = dropdownMenu.querySelector('li:last-child');
+    expect(lastElement.textContent.trim()).toBe("Add Custom Filter");
 });

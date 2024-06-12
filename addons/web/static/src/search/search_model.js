@@ -20,6 +20,8 @@ import { EventBus, toRaw } from "@odoo/owl";
 import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { _t } from "@web/core/l10n/translation";
 import { useGetTreeDescription } from "@web/core/tree_editor/utils";
+import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
+import { getDefaultDomain } from "@web/core/domain_selector/utils";
 
 const { DateTime } = luxon;
 
@@ -168,10 +170,11 @@ export class SearchModel extends EventBus {
      */
     setup(services) {
         // services
-        const { field: fieldService, name: nameService, orm, view } = services;
+        const { field: fieldService, name: nameService, orm, view, dialog } = services;
         this.orm = orm;
         this.fieldService = fieldService;
         this.viewService = view;
+        this.dialog = dialog;
 
         this.getDomainTreeDescription = useGetTreeDescription(fieldService, nameService);
 
@@ -1003,6 +1006,22 @@ export class SearchModel extends EventBus {
             this.query.push({ searchItemId, intervalId });
         }
         this._notify();
+    }
+
+    async spawnCustomFilterDialog() {
+        const domain = getDefaultDomain(this.searchViewFields);
+        this.dialog.add(DomainSelectorDialog, {
+            resModel: this.resModel,
+            defaultConnector: "|",
+            domain,
+            context: this.domainEvalContext,
+            onConfirm: (domain) => this.splitAndAddDomain(domain),
+            disableConfirmButton: (domain) => domain === `[]`,
+            title: _t("Add Custom Filter"),
+            confirmButtonText: _t("Add"),
+            discardButtonText: _t("Cancel"),
+            isDebugMode: this.isDebugMode,
+        });
     }
 
     /**

@@ -12,7 +12,7 @@ export function getDefaultCondition(fieldDefs) {
     return condition(fieldDef.name, operator, value);
 }
 
-function getDefaultDomain(fieldDefs) {
+export function getDefaultDomain(fieldDefs) {
     return domainFromTree(getDefaultCondition(fieldDefs));
 }
 
