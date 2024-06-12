@@ -180,17 +180,22 @@ const PRECISION_LEVELS = new Map()
             if (additionalMonth) {
                 startDates.push(date.plus({ month: 1 }));
             }
-            return startDates.map((date, i) => {
+
+            /** @type {WeekItem[]} */
+            const lastWeeks = [];
+            let shouldAddLastWeek = false;
+
+            const dayItems = startDates.map((date, i) => {
                 const monthRange = [date.startOf("month"), date.endOf("month")];
                 /** @type {WeekItem[]} */
                 const weeks = [];
 
                 // Generate 6 weeks for current month
                 let startOfNextWeek = getStartOfWeek(monthRange[0]);
-                for (let w = 0; w < 6; w++) {
+                for (let w = 0; w < WEEKS_PER_MONTH; w++) {
                     const weekDayItems = [];
                     // Generate all days of the week
-                    for (let d = 0; d < 7; d++) {
+                    for (let d = 0; d < DAYS_PER_WEEK; d++) {
                         const day = startOfNextWeek.plus({ day: d });
                         const range = [day, day.endOf("day")];
                         const dayItem = toDateItem({
@@ -201,11 +206,20 @@ const PRECISION_LEVELS = new Map()
                             extraClass: dayCellClass?.(day) || "",
                         });
                         weekDayItems.push(dayItem);
-                        if (d === 6) {
+                        if (d === DAYS_PER_WEEK - 1) {
                             startOfNextWeek = day.plus({ day: 1 });
                         }
+                        if (w === WEEKS_PER_MONTH - 1) {
+                            shouldAddLastWeek ||= !dayItem.isOutOfRange;
+                        }
                     }
-                    weeks.push(toWeekItem(weekDayItems));
+
+                    const weekItem = toWeekItem(weekDayItems);
+                    if (w === WEEKS_PER_MONTH - 1) {
+                        lastWeeks.push(weekItem);
+                    } else {
+                        weeks.push(weekItem);
+                    }
                 }
 
                 // Generate days of week labels
@@ -225,6 +239,15 @@ const PRECISION_LEVELS = new Map()
                     weeks,
                 };
             });
+
+            if (shouldAddLastWeek) {
+                // Add last empty week item if the other month has an extra week
+                for (let i = 0; i < dayItems.length; i++) {
+                    dayItems[i].weeks.push(lastWeeks[i]);
+                }
+            }
+
+            return dayItems;
         },
     })
     .set("months", {
@@ -291,6 +314,9 @@ const PRECISION_LEVELS = new Map()
 const GRID_COUNT = 10;
 const GRID_MARGIN = 1;
 const NULLABLE_DATETIME_PROPERTY = [DateTime, { value: false }, { value: null }];
+
+const DAYS_PER_WEEK = 7;
+const WEEKS_PER_MONTH = 6;
 
 /** @extends {Component<DateTimePickerProps>} */
 export class DateTimePicker extends Component {
