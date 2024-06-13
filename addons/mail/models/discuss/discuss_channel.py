@@ -1124,7 +1124,7 @@ class Channel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    @api.returns('self', lambda channel: channel._channel_info()[0])
+    @api.returns('self', channel_to_store_data)
     def channel_create(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
@@ -1147,7 +1147,7 @@ class Channel(models.Model):
         return new_channel
 
     @api.model
-    @api.returns('self', lambda channel: channel._channel_info()[0])
+    @api.returns('self', channel_to_store_data)
     def create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 

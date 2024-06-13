@@ -155,7 +155,8 @@ export class ChannelSelector extends Component {
                         this.store.internalUserGroupId,
                     ])
                     .then((data) => {
-                        const channel = this.discussCoreCommonService.createChannelThread(data);
+                        const { Thread } = this.store.insert(data);
+                        const [channel] = Thread;
                         channel.open();
                     });
             } else {

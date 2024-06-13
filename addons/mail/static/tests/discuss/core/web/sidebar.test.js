@@ -84,5 +84,6 @@ test("unknown channel can be displayed and interacted with", async () => {
     await click("div[title='Leave this channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Not So Secret" }],
     });
+    await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });
