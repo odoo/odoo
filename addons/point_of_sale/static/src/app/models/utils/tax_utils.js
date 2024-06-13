@@ -1,29 +1,5 @@
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
-export const getPriceUnitAfterFiscalPosition = (
-    taxes,
-    priceUnit,
-    product,
-    productDefaultValues,
-    fiscalPosition,
-    models
-) => {
-    if (!fiscalPosition) {
-        return priceUnit;
-    }
-
-    const newTaxes = getTaxesAfterFiscalPosition(taxes, fiscalPosition, models);
-    return accountTaxHelpers.adapt_price_unit_to_another_taxes(
-        priceUnit,
-        accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-            productDefaultValues,
-            product
-        ),
-        taxes,
-        newTaxes
-    );
-};
-
 export const getTaxesValues = (
     taxes,
     priceUnit,

@@ -174,7 +174,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             ProductScreen.clickDisplayedProduct("Product Test"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
-            ProductScreen.totalAmountIs("86.96"),
+            ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
@@ -187,7 +187,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
-            ProductScreen.totalAmountIs("-86.96"),
+            ProductScreen.totalAmountIs("100.00"),
         ].flat(),
 });
 
