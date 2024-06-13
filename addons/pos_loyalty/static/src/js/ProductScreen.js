@@ -159,7 +159,6 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                 }
             }
             await super._addProduct(product, options);
-            await order._updatePrograms();
             if (rewardsToApply.length == 1) {
                 const reward = rewardsToApply[0];
                 order._applyReward(reward.reward, reward.coupon_id, { product: product.id });
