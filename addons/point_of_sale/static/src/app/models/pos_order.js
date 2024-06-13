@@ -88,7 +88,6 @@ export class PosOrder extends Base {
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
-        this.receiptDate ||= formatDateTime(luxon.DateTime.now());
         return {
             orderlines: this.lines.map((l) => omit(l.getDisplayData(), "internalNote")),
             paymentlines,
@@ -103,7 +102,7 @@ export class PosOrder extends Base {
             name: this.name,
             invoice_id: null, //TODO
             cashier: this.employee_id?.name || this.user_id?.name,
-            date: this.receiptDate,
+            date: formatDateTime(luxon.DateTime.fromFormat(this.date_order, "yyyy-MM-dd HH:mm:ss")),
             pos_qr_code:
                 this.company.point_of_sale_use_ticket_qr_code &&
                 this.finalized &&
