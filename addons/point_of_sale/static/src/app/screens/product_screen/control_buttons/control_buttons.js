@@ -70,11 +70,6 @@ export class ControlButtons extends Component {
         this.currentOrder.update({
             fiscal_position_id: selectedFiscalPosition ? selectedFiscalPosition.id : false,
         });
-        // IMPROVEMENT: The following is the old implementation and I believe
-        // there could be a better way of doing it.
-        for (const line of this.currentOrder.lines) {
-            line.set_quantity(line.qty);
-        }
     }
     async clickPricelist() {
         // Create the list to be passed to the SelectionPopup.

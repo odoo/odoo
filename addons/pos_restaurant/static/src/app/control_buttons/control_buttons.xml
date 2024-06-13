@@ -26,12 +26,19 @@
                 <button class="btn btn-light rounded-0 fw-bolder" t-on-click="clickTransferOrder">
                     <i class="oi oi-arrow-right me-1" />Transfer / Merge
                 </button>
-                <button t-if="pos.config.takeaway"
-                        t-attf-class="{{ currentOrder.takeaway ? 'btn-primary' : 'btn-light'}} btn rounded-0 fw-bolder"
-                        t-on-click="clickTakeAway">
-                    <i class="fa fa-car me-1" />Take-away
-                </button>
             </t>
+        </xpath>
+        <xpath expr="//button[hasclass('o_fiscal_position_button')]" position="after">
+            <button t-if="pos.config.takeaway and props.wrapped"
+                t-attf-class="{{ currentOrder.takeaway ? 'btn-primary' : 'btn-light'}} btn rounded-0 fw-bolder"
+                t-on-click="clickTakeAway">
+                <i t-attf-class="{{ currentOrder.takeaway ? 'fa fa-car' : 'fa fa-cutlery'}} me-1"></i>
+                <span t-if="currentOrder.takeaway">Takaway</span>
+                <span t-else="">Dine in</span>
+            </button>
+        </xpath>
+        <xpath expr="//button[hasclass('o_fiscal_position_button')]" position="attributes">
+            <attribute name="t-if">!pos.config.takeaway</attribute>
         </xpath>
     </t>
 </templates>

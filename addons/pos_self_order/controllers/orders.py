@@ -90,30 +90,17 @@ class PosSelfOrderController(http.Controller):
                     price_extra_child = sum(attr.price_extra for attr in selected_attributes)
                     price_unit += pos_order_line.combo_line_id.combo_price + price_extra_child
 
-                    price_unit_fp = child_product._get_price_unit_after_fp(price_unit, pos_config.currency_id, fiscal_pos)
                     taxes = fiscal_pos.map_tax(child_product.taxes_id) if fiscal_pos else child_product.taxes_id
-                    pdetails = taxes.compute_all(price_unit_fp, pos_config.currency_id, pos_order_line.qty, child_product)
+                    pdetails = taxes.compute_all(price_unit, pos_config.currency_id, pos_order_line.qty, child_product)
 
                     pos_order_line.write({
-                        'price_unit': price_unit_fp,
+                        'price_unit': price_unit,
                         'price_subtotal': pdetails.get('total_excluded'),
                         'price_subtotal_incl': pdetails.get('total_included'),
                         'price_extra': price_extra_child,
                         'tax_ids': child_product.taxes_id,
                     })
                 lst_price = 0
-
-            price_unit_fp = product._get_price_unit_after_fp(lst_price, pos_config.currency_id, fiscal_pos)
-            taxes_after_fp = fiscal_pos.map_tax(product.taxes_id) if fiscal_pos else product.taxes_id
-            pdetails = taxes_after_fp.compute_all(price_unit_fp, pos_config.currency_id, line.qty, product)
-
-            line.write({
-                'price_unit': price_unit_fp,
-                'price_subtotal': pdetails.get('total_excluded'),
-                'price_subtotal_incl': pdetails.get('total_included'),
-                'tax_ids': product.taxes_id,
-                'price_extra': price_extra,
-            })
 
     @http.route('/pos-self-order/get-orders', auth='public', type='json', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens):

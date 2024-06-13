@@ -6,7 +6,6 @@ import { formatFloat, roundDecimals, roundPrecision, floatIsZero } from "@web/co
 import { roundCurrency, formatCurrency } from "./utils/currency";
 import { _t } from "@web/core/l10n/translation";
 import {
-    getPriceUnitAfterFiscalPosition,
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
@@ -299,10 +298,7 @@ export class PosOrderline extends Base {
         let order_line_price = orderline
             .get_product()
             .get_price(orderline.order_id.pricelist_id, this.get_quantity());
-        order_line_price = roundDecimals(
-            orderline.compute_fixed_price(order_line_price),
-            this.currency.decimal_places
-        );
+        order_line_price = roundDecimals(order_line_price, this.currency.decimal_places);
 
         const isSameCustomerNote =
             (Boolean(orderline.get_customer_note()) === false &&
@@ -347,11 +343,9 @@ export class PosOrderline extends Base {
             : isNaN(parseFloat(price))
             ? 0
             : parseFloat("" + price);
-        this.price_unit = this.compute_fixed_price(
-            roundDecimals(
-                parsed_price || 0,
-                this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
-            )
+        this.price_unit = roundDecimals(
+            parsed_price || 0,
+            this.models["decimal.precision"].find((dp) => dp.name === "Product Price").digits
         );
     }
 
@@ -396,7 +390,7 @@ export class PosOrderline extends Base {
     }
 
     get_taxed_lst_unit_price() {
-        const priceUnit = this.compute_fixed_price(this.get_lst_price());
+        const priceUnit = this.get_lst_price();
         const product = this.get_product();
 
         let taxes = product.taxes_id;
@@ -522,25 +516,6 @@ export class PosOrderline extends Base {
         };
     }
 
-    compute_fixed_price(price) {
-        const product = this.get_product();
-        const taxes = this.tax_ids || product.taxes_id;
-
-        // Fiscal position.
-        const order = this.order_id;
-        if (order && order.fiscal_position_id) {
-            price = getPriceUnitAfterFiscalPosition(
-                taxes,
-                price,
-                product,
-                this.config._product_default_values,
-                order.fiscal_position_id,
-                this.models
-            );
-        }
-        return price;
-    }
-
     display_discount_policy() {
         return this.order_id.pricelist_id
             ? this.order_id.pricelist_id.discount_policy
@@ -548,9 +523,7 @@ export class PosOrderline extends Base {
     }
 
     get_lst_price() {
-        return this.compute_fixed_price(
-            this.product_id.get_price(this.config.pricelist_id, 1, this.price_extra)
-        );
+        return this.product_id.get_price(this.config.pricelist_id, 1, this.price_extra);
     }
 
     is_last_line() {

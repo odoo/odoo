@@ -22,11 +22,7 @@ import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboLines } from "../models/utils/compute_combo_lines";
 import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
-import {
-    getPriceUnitAfterFiscalPosition,
-    getTaxesAfterFiscalPosition,
-    getTaxesValues,
-} from "../models/utils/tax_utils";
+import { getTaxesAfterFiscalPosition, getTaxesValues } from "../models/utils/tax_utils";
 import { QRPopup } from "@point_of_sale/app/utils/qr_code_popup/qr_code_popup";
 import { ReceiptScreen } from "../screens/receipt_screen/receipt_screen";
 import { PaymentScreen } from "../screens/payment_screen/payment_screen";
@@ -1087,21 +1083,13 @@ export class PosStore extends Reactive {
 
     getProducePriceDetails(product, p = false) {
         const pricelist = this.getDefaultPricelist();
-        let price = p === false ? product.get_price(pricelist, 1) : p;
+        const price = p === false ? product.get_price(pricelist, 1) : p;
 
         let taxes = product.taxes_id;
 
         // Fiscal position.
         const order = this.get_order();
         if (order && order.fiscal_position_id) {
-            price = getPriceUnitAfterFiscalPosition(
-                taxes,
-                price,
-                product,
-                this.config._product_default_values,
-                order.fiscal_position_id,
-                this.models
-            );
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
 
