@@ -7,6 +7,7 @@ from itertools import groupby
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
+from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 from odoo.tools.sql import create_index
@@ -1499,12 +1500,19 @@ class SaleOrder(models.Model):
 
     # MAIL #
 
+    def _discard_tracking(self):
+        self.ensure_one()
+        return (
+            self.state == 'draft'
+            and request and request.env.context.get('catalog_skip_tracking')
+        )
+
     def _track_finalize(self):
         """ Override of `mail` to prevent logging changes when the SO is in a draft state. """
         if (len(self) == 1
             # The method _track_finalize is sometimes called too early or too late and it
             # might cause a desynchronization with the cache, thus this condition is needed.
-            and self.env.cache.contains(self, self._fields['state']) and self.state == 'draft'):
+            and self.env.cache.contains(self, self._fields['state']) and self._discard_tracking()):
             self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
             self.env.flush_all()
             return
@@ -1941,6 +1949,7 @@ class SaleOrder(models.Model):
                  sale order and the quantity selected.
         :rtype: float
         """
+        request.update_context(catalog_skip_tracking=True)
         sol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
         if sol:
             if quantity != 0:
