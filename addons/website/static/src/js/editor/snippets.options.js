@@ -4433,6 +4433,11 @@ registerWebsiteOption("vertical_alignment", {
     target: ".row",
 });
 
+registerWebsiteOption("share_social_media", {
+    template: "website.share_social_media_option",
+    selector: ".s_share, .s_social_media",
+});
+
 options.registry.SnippetMove.include({
     /**
      * @override

@@ -225,6 +225,26 @@
         <WeButton class="'fa fa-fw fa-align-right'" tooltip.translate="Right" selectClass="'text-end'"/>
     </WeButtonGroup>
 </t>
+<t t-name="website.share_social_media_option">
+    <WeSelect title.translate="Title Position" applyTo="'.s_share_title, .s_social_media_title'">
+        <WeButton selectClass="'d-block'">Top</WeButton>
+        <WeButton selectClass="''">Left</WeButton>
+        <WeButton selectClass="'d-none'">None</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Layout" applyTo="'.fa'">
+        <WeButton selectClass="'rounded shadow-sm'">Square</WeButton>
+        <WeButton selectClass="'rounded-empty-circle shadow-sm'">Circle</WeButton>
+        <WeButton selectClass="'rounded-circle shadow-sm'">Disk</WeButton>
+        <WeButton selectClass="'fa-stack'">None</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Size" applyTo="'.fa'">
+        <WeButton selectClass="''">Small</WeButton>
+        <WeButton selectClass="'fa-2x'">Medium</WeButton>
+        <WeButton selectClass="'fa-3x'">Big</WeButton>
+    </WeSelect>
+    <!-- Compatibility, keep reverse logical, don't use `icon_color` -->
+    <WeCheckbox title.translate="Color" selectClass="'no_icon_color|'"/>
+</t>
 <t t-name="website.s_google_map_option">
     <WeGpsPicker title.translate="Address"
         selectDataAttribute="''" attributeName="'mapGps'"
