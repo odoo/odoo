@@ -1123,7 +1123,12 @@ class ResourceCalendarLeaves(models.Model):
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
         default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', 'in', [company_id, False])]", check_company=True, index=True)
+    calendar_id = fields.Many2one(
+        'resource.calendar', 'Working Hours',
+        compute='_compute_calendar_id', store=True, readonly=False,
+        domain="[('company_id', 'in', [company_id, False])]",
+        check_company=True, index=True,
+    )
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
@@ -1144,8 +1149,12 @@ class ResourceCalendarLeaves(models.Model):
 
     @api.onchange('resource_id')
     def onchange_resource(self):
-        if self.resource_id:
-            self.calendar_id = self.resource_id.calendar_id
+        pass
+
+    @api.depends('resource_id.calendar_id')
+    def _compute_calendar_id(self):
+        for leave in self.filtered('resource_id'):
+            leave.calendar_id = leave.resource_id.calendar_id
 
     def _copy_leave_vals(self):
         self.ensure_one()
