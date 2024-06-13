@@ -18,7 +18,7 @@
                                  help="Activate this to start using Indian services in the production environment.">
                             <field name="l10n_in_edi_production_env"/>
                             <div class='mt8'
-                                 invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_edi_ewaybill)">
+                                 invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_ewaybill)">
                                 <button name="l10n_in_edi_buy_iap"
                                         title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
                                         icon="fa-arrow-right"
@@ -43,7 +43,7 @@
                                  help="Connect to NIC (National Informatics Center) to submit e-waybill on posting."
                                  company_dependent="1"
                                  documentation="/applications/finance/fiscal_localizations/india.html#indian-e-waybill">
-                            <field name="module_l10n_in_edi_ewaybill" class="oe_inline"/>
+                            <field name="module_l10n_in_ewaybill" class="oe_inline"/>
                         </setting>
                         <setting name="india_gstin_status_api_settings"
                                  string="Check GST Number Status"

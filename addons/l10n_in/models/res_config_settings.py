@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 
 
@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False
     )
     module_l10n_in_edi = fields.Boolean('Indian Electronic Invoicing')
-    module_l10n_in_edi_ewaybill = fields.Boolean('Indian Electronic Waybill')
+    module_l10n_in_ewaybill = fields.Boolean('Indian Electronic Waybill')
     module_l10n_in_gstin_status = fields.Boolean('Check GST Number Status')
     module_l10n_in_withholding = fields.Boolean('Indian TDS and TCS')
     l10n_in_hsn_code_digit = fields.Selection(related='company_id.l10n_in_hsn_code_digit', readonly=False)
@@ -33,3 +33,14 @@ class ResConfigSettings(models.TransientModel):
             'url': self.env["iap.account"].get_credits_url(service_name=IAP_SERVICE_NAME),
             'target': '_new'
         }
+
+    def _l10n_in_check_gst_number(self):
+        if not self.company_id.vat:
+            action = {
+                'view_mode': 'form',
+                'res_model': 'res.company',
+                'type': 'ir.actions.act_window',
+                'res_id': self.company_id.id,
+                'views': [[self.env.ref('base.view_company_form').id, 'form']],
+            }
+            raise RedirectWarning(_("Please enter a GST number in company."), action, _("Go to Company"))
