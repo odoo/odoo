@@ -1,0 +1,22 @@
+/** @odoo-module */
+
+import wTourUtils from '@website/js/tours/tour_utils';
+
+wTourUtils.registerWebsitePreviewTour('client_action_iframe_fallback', {
+    test: true,
+    url: '/',
+},
+() => [
+    {
+        content: "Ensure we are on the expected page",
+        trigger: ':iframe html[data-view-xmlid="website.homepage"]',
+    }, {
+        content: "Ensure the iframe fallback is not loaded in test mode",
+        trigger: 'body',
+        run: () => {
+            if (document.querySelector('iframe[src="/website/iframefallback"]')) {
+                console.error("The iframe fallback shouldn't be inside the DOM.");
+            }
+        },
+    },
+]);

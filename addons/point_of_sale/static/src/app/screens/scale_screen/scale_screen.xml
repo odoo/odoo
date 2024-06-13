@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ScaleScreen">
+        <Dialog title="props.product?.display_name || 'Unnamed Product'">
+            <div class="weight js-weight m-2 p-4 rounded bg-view text-center fs-1" t-esc="productWeightString" />
+            <div class="d-flex flex-row gap-2 m-2">
+                <div class="product-price d-flex align-items-center justify-content-center flex-grow-1 rounded text-bg-info bg-opacity-25 text-info fs-2"
+                    t-esc="env.utils.formatCurrency(productPrice) + '/' + productUom" />
+                <div class="computed-price flex-grow-1 p-3 bg-view rounded text-center fs-2 fw-bold" t-esc="computedPriceString" />
+            </div>
+            <t t-set-slot="footer">
+                <div class="buy-product btn btn-lg btn-primary d-flex align-items-center justify-content-center mx-2 mb-2 cursor-pointer" t-on-click="confirm">
+                    Order
+                    <i class="fa fa-angle-double-right ms-2"></i>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,137 @@
+$o-wevent-bg-color-base: $gray-100;
+$o-wevent-bg-color-base-contrast: color-contrast($o-wevent-bg-color-base);
+$o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
+$o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
+$o-wevent-color: $body-color;
+
+.o_wevent_index, .o_wevent_event {
+
+    @for $-size from 1 through length($o-colors) {
+        .o_event_color_#{$-size - 1}, .o_badge_color_#{$-size - 1} {
+            // Get the actual color from "backend tags" (or custom grey in case of event_0)
+            $-color: if($-size == 1, $o-wevent-bg-color-dark, nth($o-colors, $-size));
+
+            // Check if the website palette is dark and adjust lightness
+            // according to the website palette.
+            $-is-website-palette-dark: color-contrast($body-color) == $color-contrast-dark;
+            $-bg-lightness-adjusted: if($-is-website-palette-dark, -30%, -5%);
+
+            // Compute background-color and text-color values for different uses
+            $-bg-solid: adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%);
+            $-color-solid: color-contrast($-bg-solid, $min-contrast-ratio: 3);
+
+            $-bg-solid-hover: if($-color-solid == $color-contrast-light, shade-color($-bg-solid, $btn-hover-bg-shade-amount), tint-color($-bg-solid, $btn-hover-bg-tint-amount));
+            $-color-solid-hover: color-contrast($-bg-solid-hover, $min-contrast-ratio: 3);
+
+            $-bg-light: mix($-bg-solid, $body-bg, 5%);
+            $-color-light: color-contrast($-bg-light, $min-contrast-ratio: 3);
+
+            // Print CSS variables.
+            --base: #{$-color};
+
+            --bg-solid: #{$-bg-solid};
+            --color-solid: #{$-color-solid};
+
+            --bg-solid--hover: #{$-bg-solid-hover};
+            --color-solid--hover: #{$-color-solid-hover};
+
+            --bg-light: #{$-bg-light};
+            --color-light: #{$-color-light};
+
+            // Assign default values
+            background-color: var(--bg, var(--bg-solid));
+            color: var(--color, var(--color-solid));
+        }
+    }
+
+    .o_event_color_light {
+        --bg: var(--bg-light);
+        --color: var(--color-light);
+    }
+
+    .o_badge, .o_badge_clickable {
+        --bg: var(--bg-solid);
+        --color: var(--color-solid);
+    }
+
+    .o_badge_clickable:hover {
+        --bg: var(--bg-solid--hover);
+        --color: var(--color-solid--hover);
+    }
+
+    /*
+     * COMMON MENU STYLING
+     */
+
+    .o_wevent_index_topbar_filters {
+        .dropdown-menu {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+    }
+
+    /*
+     * COMMON TO ALL ONLINE-* PAGES
+     */
+
+    .o_wevent_online {
+        // unpublished badge: put opacity to distinguish form other badges
+        .o_wevent_online_badge_unpublished{
+            opacity: 0.4;
+        }
+
+        .o_wesession_list_item {
+            margin: map-get($spacers, 2) 0;
+            border: 1px solid var(--o-border-color);
+            border-left: 3px solid var(--base);
+        }
+
+        .event_track > div {
+            border-top: 3px solid var(--base);
+        }
+
+        .o_wevent_online_page_container {
+
+            // Sponsor Avatar
+            .o_wevent_online_page_avatar {
+                min-width: 64px;
+                img {
+                    max-width: 96px;
+                }
+            }
+        }
+    }
+
+    // To be more efficiently implemented by using default Bootstrap accordion
+    // components
+    .o_wevent_collapse_link:not(.collapsed) .oi {
+        transform: rotate(180deg);
+    }
+
+    .o_wevent_cta  {
+        color: #fff;
+        background-color: $o-enterprise-color;
+        border: $o-enterprise-color;
+        &:hover {
+            color: #fff;
+            background-color: #624159;
+            border-color: #52374b;
+        }
+        &:focus {
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(134, 102, 126, 0.5);
+        }
+    }
+}
+
+.o_wevent_badge {
+    padding: ($spacer * .5) $spacer;
+    border-radius: 10rem;
+    font-weight: $font-weight-normal;
+}
+
+.modal-open {
+    > .modal-backdrop {
+        z-index: $zindex-dropdown - 1;
+    }
+}

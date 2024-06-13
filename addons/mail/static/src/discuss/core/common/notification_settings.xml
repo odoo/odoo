@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.NotificationSettings">
+        <div class="o-discuss-NotificationSettings">
+            <t t-if="props.thread.mute_until_dt">
+                <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover" t-on-click="selectUnmute">
+                    <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
+                        <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Channel</span>
+                        <span class="fw-normal o-smaller" t-out="store.settings.getMuteUntilText(props.thread.mute_until_dt)"/>
+                    </div>
+                </button>
+            </t>
+            <div t-else="" class="d-flex">
+                <Dropdown t-if="props.thread.channel_type === 'channel'" position="'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column py-0 my-0'">
+                    <button class="btn w-100 d-flex p-1 opacity-75 opacity-100-hover">
+                        <div class="d-flex flex-grow-1 align-items-center px-2 py-1 w-100 rounded">
+                            <span class="text-wrap text-start text-break">Mute Channel</span>
+                            <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
+                            <i class="fa fa-arrow-right ms-2"/>
+                        </div>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="store.settings.MUTES" t-as="item" t-key="item.id">
+                            <DropdownItem class="'o-mail-NotificationSettings-muteDuration btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" onSelected="()=>this.setMute(item.value)"><button class="btn p-0 mx-2 text-wrap text-start text-break" t-out="item.name"/></DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+                <div t-else="" class="d-flex flex-column text-truncate">
+                    <div class="d-flex align-items-center rounded px-3 py-2 m-0">
+                        <span class="fs-6 fw-bold text-wrap text-start text-break">Mute Channel</span>
+                    </div>
+                    <hr class="solid mx-2 my-0"/>
+                    <t t-foreach="store.settings.MUTES" t-as="item" t-key="item.id">
+                        <button class="o-mail-NotificationSettings-muteDuration btn rounded d-flex align-items-center fs-6 fw-normal px-3 py-2 m-0 opacity-75 opacity-100-hover" t-att-title="item.name" t-on-click="() => this.setMute(item.value)" t-out="item.name"/>
+                    </t>
+                </div>
+            </div>
+            <t t-if="props.thread.channel_type === 'channel'">
+                <hr class="solid mx-2 my-0"/>
+                <button class="btn d-flex w-100 px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => props.thread.updateCustomNotifications(false)">
+                    <div class="d-flex flex-grow-1 align-items-center p-2 rounded">
+                        <div class="d-flex flex-column align-items-start">
+                            <span class="fs-6 fw-normal text-wrap text-start text-break">Use Default</span>
+                            <span class="fw-bolder o-smaller"><t t-out="store.settings.NOTIFICATIONS.find((n) => n.id === store.settings.channel_notifications).name"/></span>
+                        </div>
+                        <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
+                        <input class="form-check-input" type="radio" t-att-checked="!props.thread.custom_notifications"/>
+                    </div>
+                </button>
+                <t t-foreach="store.settings.NOTIFICATIONS" t-as="item" t-key="item.id">
+                    <button class="btn w-100 d-flex px-1 py-0 opacity-75 opacity-100-hover" t-on-click="() => props.thread.updateCustomNotifications(item.id)">
+                        <div class="d-flex flex-grow-1 align-items-center p-2 rounded">
+                            <span class="fs-6 fw-normal text-wrap text-start text-break" t-esc="item.name"/>
+                            <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
+                            <input class="form-check-input ms-2" type="radio" t-att-checked="props.thread.custom_notifications === item.id"/>
+                        </div>
+                    </button>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

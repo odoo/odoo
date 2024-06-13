@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account_peppol.ActionButtons">
+        <xpath expr="//div[hasclass('action_buttons')]" position="inside">
+            <div class="d-flex" colspan="3">
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary me-1"
+                            t-on-click="createReceiver"
+                            t-if="proxyState === 'sender' and (smpRegistration or this.state.isSettingsView)">
+                            Register as a receiver
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="updateDetails"
+                            t-if="['sender', 'smp_registration', 'receiver'].includes(proxyState) and this.state.isSettingsView">
+                            Update contact details
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="migrate"
+                            t-if="proxyState === 'receiver' and migrationPrepared === false and ediMode != 'demo'">
+                            Migrate registration to another service
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary me-1"
+                            t-on-click="checkCode"
+                            t-if="['not_registered', 'in_verification'].includes(proxyState)">
+                            <t t-out="createButtonLabel"/>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="sendCode"
+                            t-att-disabled="this.state.isSmsButtonDisabled"
+                            t-if="proxyState === 'in_verification'">
+                            Send again
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <!--
+                    we will show Deregister/Discard in two situations:
+                    1. The user is currently in the registration wizard, they are not registered/in verification
+                       (e.g. we've sent them the SMS code). They will see it as a "Discard" button
+                    2. The user is *not* seeing the wizard, but the regular Settings view. We'll show
+                       this as a Deregister button, as they are already registered as either a sender
+                       or a receiver.
+                    -->
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="deregister"
+                            t-if="migrationPrepared === false">
+                            <t t-out="deregisterUserButtonLabel"/>
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

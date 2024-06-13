@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loyalty_program_view_form_inherit_sale_loyalty" model="ir.ui.view">
+        <field name="name">loyalty.program.view.form.inherit.sale.loyalty</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='available_on']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[@id='o_loyalty_program_availabilities']" position="inside">
+                <span class="d-inline-block">
+                    <field name="sale_ok" class="w-auto me-0"/>
+                    <label for="sale_ok" class="me-3"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

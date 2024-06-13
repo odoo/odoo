@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- ldap installer Form View -->
+        <record id="view_ldap_installer_form" model="ir.ui.view">
+            <field name="name">res.company.ldap.form</field>
+            <field name="model">res.company.ldap</field>
+            <field name="arch" type="xml">
+                <form string="LDAP Configuration">
+                    <group>
+                        <field name="company"/>
+                        <newline/>
+                        <group string="Server Information">
+                              <field name="ldap_server"/>
+                              <field name="ldap_server_port"/>
+                              <field name="ldap_tls"/>
+                        </group>
+                        <group string="Login Information">
+                              <field name="ldap_binddn"/>
+                              <field name="ldap_password" password="True"/>
+                        </group>
+                        <group string="Process Parameter">
+                             <field name="ldap_base"/>
+                             <field name="ldap_filter"/>
+                             <field name="sequence"/>
+                        </group>
+                        <group string="User Information">
+                             <field name="create_user"/>
+                             <field name="user"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_company_ldap_view_tree" model="ir.ui.view">
+            <field name="name">res.company.ldap.tree</field>
+            <field name="model">res.company.ldap</field>
+            <field name="arch" type="xml">
+                <tree string="LDAP Configuration">
+                    <field name="company"/>
+                    <field name="ldap_server"/>
+                    <field name="ldap_server_port"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ldap installer  action -->
+        <record id="action_ldap_installer" model="ir.actions.act_window">
+             <field name="name">Setup your LDAP Server</field>
+             <field name="res_model">res.company.ldap</field>
+             <field name="view_mode">tree,form</field>
+        </record>
+
+</odoo>

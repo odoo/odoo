@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[contains(text(), 'Backend')]" position="attributes">
+            <attribute name="t-if">
+                !pos.config.module_pos_hr or employeeIsAdmin()
+            </attribute>
+        </xpath>
+        <xpath expr="//DropdownItem[contains(text(), 'Close Register')]" position="attributes">
+            <attribute name="t-if">
+                !pos.config.module_pos_hr or employeeIsAdmin()
+            </attribute>
+        </xpath>
+        <xpath expr="//CashierName" position="after">
+            <button t-if="pos.config.module_pos_hr" class="btn btn-light fa fa-lg fa-lock text-success px-3" title="Lock" t-on-click="showLoginScreen"/>
+        </xpath>
+    </t>
+
+</templates>

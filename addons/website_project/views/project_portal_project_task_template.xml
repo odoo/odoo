@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_portal_my_task" name="My Task website" inherit_id="project.portal_my_task">
+        <xpath expr="//t[@t-set='title']" position="replace">
+            <t t-set="additional_title" t-value="task.name"/>
+        </xpath>
+    </template>
+</odoo>

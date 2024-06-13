@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_lv" model="res.partner" forcecreate="1">
+        <field name="name">LV Company</field>
+        <field name="street">Mana iela</field>
+        <field name="city">Rīga</field>
+        <field name="country_id" ref="base.lv"/>
+
+        <field name="zip">LV-1010</field>
+        <field name="phone">+371 20 00 00 00</field>
+        <field name="email">info@uznemums.lv</field>
+        <field name="website">www.uznemums.lv</field>
+    </record>
+
+    <record id="base.demo_company_lv" model="res.company" forcecreate="1">
+        <field name="name">LV Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_lv"/>
+    </record>
+
+    <record id="base.demo_bank_lv" model="res.partner.bank" forcecreate="1">
+        <field name="acc_number">LV97HABA0012345678910</field>
+        <field name="partner_id" ref="base.partner_demo_company_lv"/>
+        <field name="company_id" ref="base.demo_company_lv"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_lv')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_lv'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>lv</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_lv')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

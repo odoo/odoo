@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_hr.CashierName" t-inherit="point_of_sale.CashierName" t-inherit-mode="extension">
+        <xpath expr="//div" position="attributes">
+            <attribute name="t-on-click">selectCashier</attribute>
+        </xpath>
+    </t>
+
+</templates>

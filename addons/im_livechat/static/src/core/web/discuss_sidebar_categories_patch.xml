@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.DiscussSidebarCategory" t-inherit="mail.DiscussSidebarCategory" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='actions']" position="inside">
+            <i
+                t-if="store.has_access_livechat and category.livechatChannel and category.open"
+                class="ms-1"
+                t-att-class="{
+                    'fa fa-sign-out text-danger': category.livechatChannel.hasSelfAsMember,
+                    'fa fa-sign-in text-success': !category.livechatChannel.hasSelfAsMember
+                }"
+                t-attf-class="{{ hover_class }}"
+                t-on-click="() => category.livechatChannel.hasSelfAsMember ? category.livechatChannel.leave({ notify: false }) : category.livechatChannel.join({ notify: false })"
+                t-att-title="category.livechatChannel.hasSelfAsMember ? category.livechatChannel.leaveTitle : category.livechatChannel.joinTitle"
+                role="img"
+            />
+        </xpath>
+    </t>
+</templates>

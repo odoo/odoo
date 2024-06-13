@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="hr_homeworking_calendar.CalendarCommonRendererHeader" t-inherit="web.CalendarCommonRendererHeader" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_cw_day_number')]" position="after">
+            <t t-if="scale != 'month'" t-call="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation"/>
+        </xpath>
+    </t>
+
+    <t t-name="hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation">
+        <t t-if="multiCalendar">
+            <t t-call="hr_homeworking_calendar.MultiCalendarButtonWorkLocation"/>
+        </t>
+        <t t-else="">
+            <t t-call="hr_homeworking_calendar.SingleCalendarButtonWorkLocation"/>
+        </t>
+    </t>
+
+    <div t-name="hr_homeworking_calendar.MultiCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
+        <div class="o_homework_multi d-flex gap-1 ms-1">
+            <t t-foreach="Object.keys(worklocation)" t-as="location" t-key="location">
+                <t t-foreach="worklocation[location]" t-as="wl" t-key="wl.id">
+                    <div class="o_homeworking_content wl_action" t-att-data-location="location" t-att-data-id="wl.id" t-att-data-employee="wl.employeeId">
+                        <i t-attf-class="o_homework_content d-flex align-items-center justify-content-center flex-wrap border border-1 rounded-circle me-0 fa {{iconMap[wl.icon] || 'fa-map-marker'}} wl_color_{{wl.colorIndex}}"/>
+                    </div>
+                </t>
+                <span class="fw-bolder" t-esc="worklocation[location][0].title"/>
+            </t>
+        </div>
+        <button t-if="!workLocationSetForCurrentUser" class="o_worklocation_text bg-info bg-opacity-25 border-0 rounded-pill px-lg-2 py-0 text-nowrap opacity-0 opacity-100-hover wl_action" data-create="1">
+            <i class="add_wl fa fa-map-marker me-lg-1" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <div t-name="hr_homeworking_calendar.SingleCalendarButtonWorkLocation" class="o_worklocation_btn w-100 d-flex align-items-center">
+        <div t-if="workLocationSetForCurrentUser" class="w-100 d-flex align-items-center wl_action o_homework_single">
+            <t t-if="worklocation.display">
+                <button t-attf-class='o_worklocation_text border-0 rounded-pill px-lg-2 py-0 text-nowrap wl_color_{{worklocation.colorIndex}}'>
+                    <i t-attf-class="fa {{iconMap[worklocation.icon] || 'fa-map-marker'}} me-lg-1" aria-hidden="true"></i>
+                    <span class="d-none d-lg-inline fw-bold" t-esc="worklocation.title"/>
+                </button>
+                <button t-if="showLine" t-attf-class="o_worklocation_line d-lg-block w-100 border-0 p-0 wl_color_{{worklocation.colorIndex}}"/>
+            </t>
+            <t t-else="">
+                <button t-if="showLine" t-attf-class="o_worklocation_line d-lg-block w-100 border-0 p-0 wl_color_{{worklocation.colorIndex}}"/>
+            </t>
+        </div>
+        <div t-else="" class="w-100 d-flex align-items-center opacity-0 opacity-100-hover wl_action" data-create="1">
+            <button t-if="!workLocationSetForCurrentUser" class="o_worklocation_text bg-info bg-opacity-25 border-0 rounded-pill px-lg-2 py-0 text-nowrap">
+                <i class="fa fa-map-marker me-lg-1" aria-hidden="true"></i>
+                <span class="d-lg-inline fw-bold">Set Location</span>
+            </button>
+            <button t-if="showLine" class="o_worklocation_line d-lg-block w-100 bg-info bg-opacity-25 border-0 p-0"/>
+        </div>
+    </div>
+</templates>

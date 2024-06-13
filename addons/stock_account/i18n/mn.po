@@ -1,0 +1,938 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_account
+#
+# Translators:
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2022
+# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
+# Bayarkhuu Bataa, 2022
+# Munkhbaatar g <muuguu17@gmail.com>, 2022
+# Ganbaatar Buriad <Ganbaatar@asterisk-tech.mn>, 2022
+# hish, 2022
+# Minj P <pminj322@gmail.com>, 2022
+# Насан-Очир <nasaaskii@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023\n"
+"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid " Product cost updated from %(previous)s to %(new_cost)s."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_quant.py:0
+msgid " [Accounted on %s]"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">Use a negative added value to record a decrease in the product value</small>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "<b>Set other input/output accounts on specific </b>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
+msgid "<span class=\"o_stat_text\">Valuation</span>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Product</span>"
+msgstr "<span>Бараа</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>Тоо хэмжээ</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>SN/LN</span>"
+msgstr "<span>Цувралын дугаар</span>"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Дансны модны загвар"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
+msgid "Account Move"
+msgstr "Ажил гүйлгээ"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "Account Stock Properties"
+msgstr "Агуулахын санхүү тохиргоо"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_request_count__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__date
+msgid "Accounting Date"
+msgstr "Санхүүгийн огноо"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
+msgid "Accounting Entries"
+msgstr "Санхүүгийн гүйлгээ"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Accounting Information"
+msgstr "Санхүүгийн мэдээлэл"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Add Manual Valuation"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Add additional cost (transport, customs, ...) in the value of the product."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Added Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
+msgid "Added value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Affect landed costs on reception operations and split them among products to update their cost price."
+msgstr "Барааны орлогын үе шатанд бусад зардлыг нэмж тодорхойлон бараануудад тараан суулгаснаар тэдгээрийн өртөгийг шинэчлэх боломжтой."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+msgid "Analytic Account Line"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
+msgid "Automated"
+msgstr "Автоматлагдсан"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
+msgid "Automatic Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
+msgid "Average Cost"
+msgstr "Дундаж өртөг"
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
+msgid "Average Cost (AVCO)"
+msgstr "Дундаж өртөг (AVCO)"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation."
+msgstr "%s барааны агуулахын орлогын данс олдсонгүй. Энэ гүйлгээг хийхийн тулд барааны ангилал эсвэл байрлал дээр зохих дансыг тохируулна уу."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation."
+msgstr "%s барааны агуулахын зарлагын данс олдсонгүй. Энэ гүйлгээг хийхийн тулд барааны ангилал эсвэл байрлал дээр зохих дансыг тохируулна уу."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"
+msgstr "Өртөг тооцох аргыг засах нь чухал өөрчлөлт бөгөөд таны барааны өртөгөөрх нөөцийн дүнд нөлөөлнө. Та үүнийг өөрчлөхдөө итгэлтэй байна уу?"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
+msgid "Choose a date to get the valuation at that date"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__company_id
+msgid "Company"
+msgstr "Компани"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Тохиргооны тохируулга"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Configuration error. Please configure the price difference account on the product or its category to process this operation."
+msgstr "Тохиргооны алдаа. Энэ гүйлгээг хийхийн тулд та бараа эсвэл барааны ангилал дээр үнийн зөрүүний дансыг тохируулна уу."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
+msgid "Costing Method"
+msgstr "Өртөг тооцох арга"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Costing method change for product category %s: from %s to %s."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
+msgid "Counterpart Account"
+msgstr "Харьцсан данс"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
+msgid ""
+"Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
+"                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+msgid "Country Code"
+msgstr "Улсын код"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_uid
+msgid "Created by"
+msgstr "Үүсгэсэн этгээд"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_date
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__currency_id
+msgid "Currency"
+msgstr "Валют"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
+msgid "Current Quantity"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Current Value"
+msgstr "Одоогийн утга"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Date"
+msgstr "Огноо"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
+msgid "Date at which the accounting entries will be created in case of automated inventory valuation. If empty, the inventory date will be used."
+msgstr "Барааны нөөцийн тооллогоос автоматаар үүсэх санхүүгийн ажил гүйлгээний огноо нь ямар байхыг тодорхойлно. Хэрэв хоосон орхивол тооллогын огноог ашиглана."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr "Агуулахын үйл ажиллагаанд ашиглагдах үндсэн хэмжих нэгж"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr "Нэхэмжлэл дээр серийн дугаар харуулах"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
+msgid "Display Name"
+msgstr "Дэлгэрэнгүй нэр"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
+msgstr "Нэхэмжлэл дээр серийн дугаар харуулах"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Due to a change of product category (from %s to %s), the costing method                                has changed for product template %s: from %s to %s."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
+msgid "First In First Out (FIFO)"
+msgstr "Эхэнд орсон нь эхэнд гарах (FIFO)"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Бүлэглэх..."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Has Remaining Qty"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Incoming"
+msgstr "Ирж буй"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_location
+msgid "Inventory Locations"
+msgstr "Нөөцийн байрлалууд"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/account_chart_template.py:0
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Inventory Valuation"
+msgstr "Өртөгийн бичилт"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_line_id
+msgid "Invoice Line"
+msgstr "Нэхэмжлэлийн мөр"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
+msgid "Invoice value correction with invoice currency"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
+msgid "Journal Entry"
+msgstr "Ажил гүйлгээ"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move_line
+msgid "Journal Item"
+msgstr "Журналын бичилт"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
+msgid "Landed Costs"
+msgstr "Өртөгт шингэх зардал"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_uid
+msgid "Last Updated by"
+msgstr "Сүүлд зассан этгээд"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_date
+msgid "Last Updated on"
+msgstr "Сүүлд зассан огноо"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
+msgid "Linked To"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Lots & Serial numbers will appear on the invoice"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
+msgid "Manual"
+msgstr "Гараар"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "Manual Stock Valuation: %s."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "Manual Stock Valuation: No Reason Given."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_product__valuation
+#: model:ir.model.fields,help:stock_account.field_product_template__valuation
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__property_valuation
+msgid ""
+"Manual: The accounting entries to value the inventory are not posted automatically.\n"
+"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
+"        "
+msgstr ""
+"Гараар: Бараа материалын дансны бичилт автоматаар хөтлөгдөхгүй.\n"
+"         Автомат: Компанид бараа орлогодох, зарлагадах тухай бүрд бараа материалын дансны бичилт автоматаар хөтлөгдөнө."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Moved Quantity"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value
+msgid "New value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
+msgid "New value by quantity"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Open Valuation Layer"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+msgid "Other Info"
+msgstr "Бусад мэдээлэл"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Outgoing"
+msgstr "Гарч буй"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_template
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Product"
+msgstr "Бараа"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_category
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Product Category"
+msgstr "Барааны ангилал"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Барааны хөдөлгөөн (Дэлгэрэнгүй)"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Product Revaluation"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
+msgid "Product Template"
+msgstr "Барааны загвар"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_product_product
+msgid "Product Variant"
+msgstr "Барааны хувилбар"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Product value manually modified (from %s to %s)"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
+msgid "Quantity Svl"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr "Нөөцийн бүртгэл"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason"
+msgstr "Шалтгаан"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason of the revaluation"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
+msgid "Reference"
+msgstr "Холбогдол"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
+msgid "Related product"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
+msgid "Remaining Qty"
+msgstr "Үлдэгдэл тоо хэмжээ"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
+msgid "Remaining Value"
+msgstr "Үлдэгдэл өртөг"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Буцаалтын баримт"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_return_picking_line
+msgid "Return Picking Line"
+msgstr "Буцаалтын баримтын мөр"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "Revaluation of %s"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Revalue"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
+msgid "Standard Price"
+msgstr "Стандарт өртөг"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_product__cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template__cost_method
+#: model:ir.model.fields,help:stock_account.field_stock_quant__cost_method
+msgid ""
+"Standard Price: The products are valued at their standard cost defined on the product.\n"
+"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
+"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
+"        "
+msgstr ""
+"Стандарт өртөг: Бараа дээр тохируулсан стандарт буюу тогтмол өртөгөөр барааны өртөгөөрх нөөц хэмжигдэнэ.\n"
+"        Дундаж өртөг (AVCO): Барааны нөөц  жинлэсэн дундаж өртөгөөр хэмжигдэнэ.\n"
+"        Эхэлж ирсэн нь эхэлж гарах (FIFO): Компанид эхэлж орлогод авсан өртөгөөр эхэлж зарлага гаргана."
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_stock_accounting_automatic
+msgid "Stock Accounting Automatic"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
+msgid "Stock Input Account"
+msgstr "Ирж буй барааны өртөгийн данс"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
+msgid "Stock Journal"
+msgstr "Бараа материалын журнал"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
+msgid "Stock Move"
+msgstr "Барааны хөдөлгөөн"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
+msgid "Stock Output Account"
+msgstr "Гарч буй барааны өртөгийн данс"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quantity_history
+msgid "Stock Quantity History"
+msgstr "Агуулахын нөөцийн түүх"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_forecasted_product_product
+msgid "Stock Replenishment Report"
+msgstr "Нөөц дүүргэлтийн тайлан"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr "Тооллого хийх захиалга"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
+#: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
+#: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
+msgid "Stock Valuation"
+msgstr "Журналын бичилт"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
+msgid "Stock Valuation Account"
+msgstr "Бараа материалын данс"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
+msgid "Stock Valuation Account (Incoming)"
+msgstr "Бараа материалын данс (Орлого)"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
+msgid "Stock Valuation Account (Outgoing)"
+msgstr "Бараа материалын данс (Зарлага)"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
+msgid "Technical field to correctly show the currently selected company's currency that corresponds to the totaled value of the product's valuation layers"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Улсын ISO код нь хоёр тэмдэгтэй байна.\n"
+"Та үүнийг хурдан хайлтад хэрэглэх боломжтой."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "The Stock Input and/or Output accounts cannot be the same as the Stock Valuation account."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "The action leads to the creation of a journal entry, for which you don't have the access rights."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "The added value doesn't have any impact on the stock valuation"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "The move lines are not in a consistent state: some are entering and other are leaving the company."
+msgstr "Барааны хөдөлгөөнүүд ижил шинж чанартай байх ёстой: зарим нь орлогынх, зарим нь зарлагын хөдөлгөөн байна."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "The move lines are not in a consistent states: they are doing an intercompany in a single step while they should go through the intercompany transit location."
+msgstr "Барааны хөдөлгөөнүүд тохиромжгүй нөхцөл байдалтай байна: компани хоорондын урсгалыг нэг алхамаар хийх гэж оролдож байна. Үүний оронд компани хоорондын дундын байрлал ашиглах ёстой."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "The move lines are not in a consistent states: they do not share the same origin or destination company."
+msgstr "Барааны хөдөлгөөнүүд тохиромжгүй нөхцөл байдалтай байна: эдгээр хөдөлгөөн нь ижил эх баримттай эсвэл ижил хүргэх компанитай байх ёсгүй."
+
+#. module: stock_account
+#: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
+#: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
+msgid "There are no valuation layers. Valuation layers are created when there are product moves that impact the valuation of the stock."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
+msgid "Total Remaining Quantity"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
+msgid "Total Remaining Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
+msgid "Total Value"
+msgstr "Нийт Өртөг Үнэ"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_picking
+msgid "Transfer"
+msgstr "Шилжүүлэг"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
+#: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
+msgid "Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order"
+msgstr "Холбогдох Борлуулалтын захиалга/Худалдан авах захиалгын хүргэсэн/хүлээн авсан тоо хэмжээг бууруулах"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+msgid "Unit Cost"
+msgstr "Нэгж өртөг"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
+msgid "Unit Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
+msgid "Unit of Measure"
+msgstr "Хэмжих нэгж"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
+#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
+msgid "Update quantities on SO/PO"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
+msgid "Used for real-time inventory valuation. When set on a virtual location (non internal type), this account will be used to hold the value of products being moved from an internal location into this location, instead of the generic Stock Output Account set on the product. This has no effect for internal locations."
+msgstr "Барааны өртөгийн байнгын систем. Хийсвэр байрлал дээр (төрөл нь дотоод бус байх) данс тохируулсан тохиолдолд дотоод байрлалаас хасагдаж буй барааны өртөгийн дүнг тухайн дансанд хөтлөнө. Энэ тохиолдолд барааны тохиргоо дээрх Гарч буй барааны өртөгийн данс ашиглагдахгүй. Дотоод байрлал руу шилжүүлж буй тохиолдолд ямар нэг дансны бичилт хийгдэхгүй."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
+msgid "Used for real-time inventory valuation. When set on a virtual location (non internal type), this account will be used to hold the value of products being moved out of this location and into an internal location, instead of the generic Stock Output Account set on the product. This has no effect for internal locations."
+msgstr "Барааны өртөгийн байнгын систем. Хийсвэр байрлал дээр (төрөл нь дотоод бус байх) данс тохируулсан тохиолдолд дотоод байрлалаас хасагдаж буй барааны өртөгийн дүнг тухайн дансанд хөтлөнө. Энэ тохиолдолд барааны тохиргоо дээрх Гарч буй барааны өртөгийн данс ашиглагдахгүй. Дотоод байрлал руу шилжүүлж буй тохиолдолд ямар нэг дансны бичилт хийгдэхгүй."
+
+#. module: stock_account
+#: model:ir.ui.menu,name:stock_account.menu_valuation
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
+msgid "Valuation"
+msgstr "Өртөгийн дүн"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
+msgid "Valuation Currency"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
+msgid "Valuation Report"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
+msgid "Valuation at Date"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Valuation method change for product category %s: from %s to %s."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
+msgid "Value"
+msgstr "Утга"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
+msgid "Value On Hand:"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
+msgid "Value Svl"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "Warning"
+msgstr "Анхааруулга"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
+msgid "When automated inventory valuation is enabled on a product, this account will hold the current value of the products."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
+msgid ""
+"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"                It can also directly be set on each product."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
+msgid "When doing automated inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
+msgid "Wizard model to reavaluate a stock inventory for a product"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "You cannot revalue a product with a standard cost method."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+msgid "You cannot revalue a product with an empty or negative stock."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "You cannot update the cost of a product in automated valuation as it leads to the creation of a journal entry, for which you don't have the access rights."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "You don't have any input valuation account defined on your product category. You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "You don't have any stock input account defined on your product category. You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "You don't have any stock journal defined on your product category, check if you have installed a chart of accounts."
+msgstr "Таны барааны ангилалд ямар нэг агуулахын журнал тохируулагдаагүй байна, санхүүгийн дансны мод суулгасан эсэхээ нягтална уу."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "You don't have any stock valuation account defined on your product category. You must define one before processing this operation."
+msgstr "Таны барааны ангилалд ямар нэг барааны данс тохируулагдаагүй байна. Энэ үйлдлийг хийхээс өмнө дансаа тохируулах шаардлагатай."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "You must set a counterpart account on your product category."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "by"
+msgstr "аар"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "for"
+msgstr "дараахид"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+msgid "locations"
+msgstr ""

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SyncPopup">
+        <Dialog class="'p-0'">
+            <t t-set-slot="header">
+                <h4 class="modal-title">Records to synchronize</h4>
+                <div class="total-orders fw-bolder">
+                    Total <t t-esc="pos.data.network.unsyncData.length"/>
+                </div>
+            </t>
+            <div class="payment-methods-overview overflow-auto">
+                <div class="w-100">
+                    <t t-foreach="this.pos.data.network.unsyncData" t-as="data" t-key="data_index">
+                        <div class="d-flex align-item-center border rounded mb-1">
+                            <div class="col wide p-2 d-flex flex-column">
+                                <span class="fw-bolder">Model</span>
+                                <span t-esc="data.args[0].model"/>
+                            </div>
+                            <div class="col wide p-2 d-flex flex-column">
+                                <span class="fw-bolder">Date</span>
+                                <span t-esc="data.date.toFormat('dd/MM/yyyy HH:mm:ss')"/>
+                            </div>
+                            <div class="col wide p-2 d-flex flex-column">
+                                <span class="fw-bolder">Count</span>
+                                <span t-esc="this.getCount(data.args[0])"/>
+                            </div>
+                            <div class="col wide p-2 d-flex flex-column">
+                                <span class="fw-bolder">Retry</span>
+                                <span t-esc="data.try"/>
+                            </div>
+                            <div class="col p-2 d-flex flex-column">
+                                <span class="fw-bolder">Delete</span>
+                                <i class="fa fa-trash cursor-pointer" aria-hidden="true" t-on-click="() => this.delete(data.uuid)"></i>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="modal-footer-left d-flex gap-2">
+                    <div class="modal-footer-left d-flex gap-2">
+                        <button class="button highlight btn btn-lg btn-primary" t-on-click="confirm">Synchronize</button>
+                        <button class="button btn btn-lg btn-secondary" t-on-click="props.close">Close</button>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

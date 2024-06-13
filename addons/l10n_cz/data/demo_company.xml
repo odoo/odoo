@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_cz" model="res.partner" forcecreate="1">
+        <field name="name">CZ Company</field>
+        <field name="vat">CZ12345679</field>
+        <field name="street">Pařížská Street 25/31</field>
+        <field name="city">Praha</field>
+        <field name="country_id" ref="base.cz"/>
+        <field name="state_id" ref="base.state_L"/>
+        <field name="zip"/>
+        <field name="phone">+420 5 12 34 56 78</field>
+        <field name="email">info@company.czexample.com</field>
+        <field name="website">www.czexample.com</field>
+    </record>
+
+    <record id="base.demo_company_cz" model="res.company" forcecreate="1">
+        <field name="name">CZ Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_cz"/>
+    </record>
+
+    <record id="base.demo_bank_cz" model="res.partner.bank" forcecreate="1">
+        <field name="acc_number">CZ6050517873128883346693</field>
+        <field name="partner_id" ref="base.partner_demo_company_cz"/>
+        <field name="company_id" ref="base.demo_company_cz"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_cz')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_cz'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>cz</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_cz')"/>
+    </function>
+</odoo>

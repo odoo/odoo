@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductScreen">
+        <div class="product-screen d-flex h-100 bg-100">
+            <div t-att-class="{'flex-grow-1': ui.isSmall, 'd-none': ui.isSmall and pos.mobile_pane !== 'left'}"
+                class="leftpane d-flex flex-column border-end bg-200" >
+                <OrderSummary />
+                <div class="pads border-top">
+                    <ControlButtons t-if="!ui.isSmall" onClickMore.bind="displayAllControlPopup"/>
+                    <div class="subpads d-flex">
+                        <ActionpadWidget
+                            partner="currentOrder?.get_partner()"
+                            actionName="constructor.numpadActionName"
+                            actionType="'payment'"
+                            onClickMore.bind="displayAllControlPopup" />
+                        <Numpad buttons="getNumpadButtons()" onClick.bind="onNumpadClick"/>
+                    </div>
+                </div>
+            </div>
+            <div class="rightpane d-flex flex-grow-1 flex-column bg-view w-60 bg-100" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
+                <div class="overflow-y-auto flex-grow-1">
+                    <CategorySelector class="'d-grid p-1 gap-1'" style="'grid-template-columns: repeat(4, 1fr);'"
+                        categories="getCategoriesAndSub()" onClick="(id) => this.pos.setSelectedCategory(id)"/>
+                    <CameraBarcodeScanner t-if="pos.scanning"/>
+                    <div t-elif="productsToDisplay.length != 0 and pos.posHasValidProduct()" t-attf-class="product-list {{this.pos.productListViewMode}} p-1">
+                        <ProductCard
+                            t-foreach="productsToDisplay" t-as="product" t-key="product.id"
+                            class="pos.productViewMode"
+                            name="getProductName(product)"
+                            productId="product.id"
+                            color="product.pos_categ_ids?.at(-1)?.color"
+                            price="pos.getProductPriceFormatted(product)"
+                            imageUrl="pos.config.show_product_images and product.getImageUrl()"
+                            onClick.bind="() => this.addProductToOrder(product)"
+                            productInfo="true"
+                            onProductInfoClick.bind="() => this.onProductInfoClick(product)" />
+                    </div>
+                    <div t-else="" class="flex-grow-1 text-center mt-5">
+                        <p t-if="searchWord">No products found for <b>"<t t-esc="searchWord"/>"</b> in this category.</p>
+                        <p t-elif="pos.posHasValidProduct()">There are no products in this category.</p>
+                    </div>
+                    <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
+                        <button class="btn btn-primary btn-lg" t-on-click="onPressEnterKey">Search more</button>
+                    </div>
+                </div>
+                <t t-if="ui.isSmall">
+                    <div class="product-reminder d-flex justify-content-center align-items-center py-1 text-bg-warning bg-opacity-50 fw-bolder" t-if="pos.get_order().get_selected_orderline() and pos.hasJustAddedProduct" t-key="animationKey" >
+                        <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/> <t t-esc="selectedOrderlineTotal"/></span>
+                    </div>
+                    <div class="switchpane d-flex">
+                        <button t-if="!pos.scanning" class="btn-switchpane pay-button btn w-50 rounded-0 fw-bolder" t-attf-class="{{ currentOrder.is_empty() ? 'btn-secondary' : 'btn-primary' }}" t-on-click="() => this.pos.pay()">
+                            <span class="fs-1 d-block">Pay</span>
+                            <span t-esc="total" />
+                        </button>
+                        <button class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder review-button" t-on-click="switchPane">
+                            <span class="fs-1 d-block">Cart</span>
+                            <span><t t-esc="items"/> items</span>
+                        </button>
+                        <button t-if="pos.scanning" class="btn-switchpane btn w-50 btn-secondary rounded-0 fw-bolder" t-on-click="() => this.pos.scanning = false">
+                            <span class="fs-1 d-block">Products</span>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

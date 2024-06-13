@@ -1,0 +1,87 @@
+//------------------------------------------------------------------------------
+// Select2
+//------------------------------------------------------------------------------
+// Redefine select2 dropdown color values in variables to be easily handled.
+// eg. for the dark mode
+
+.select2-container .select2-choice {
+    background-color: $dropdown-bg;
+    background-image: var(--select2-background-image, linear-gradient(to top, #eee 0%, #fff 50%));
+    color: var(--select2-color, #444);
+}
+
+.select2-container.select2-drop-above .select2-choice {
+    background-image: var(--select2__dropAbove-background-image, linear-gradient(to top, #eee 0%, #fff 90%));
+}
+
+.select2-drop-mask {
+    background-color: $o-view-background-color;
+}
+
+.select2-drop {
+    background-color: $dropdown-bg;
+    color: $o-main-text-color;
+}
+
+.select2-container:not(.select2-dropdown-open) .select2-choice .select2-arrow {
+    background: var(--select2__arrow-background, linear-gradient(to top, #ccc 0%, #eee 60%));
+}
+
+.select2-search input,
+html[dir="rtl"] .select2-search input,
+.select2-search input.select2-active {
+    background-color: var(--select2__searchInput-background-color, #fff);
+    background-repeat: no-repeat;
+}
+
+.select2-search input {
+    background-image: var(--select2__searchInput-background-image, url('/web/static/lib/select2/select2.png'), linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0);
+    background-position: 100% -22px;
+}
+
+html[dir="rtl"] .select2-search input {
+    background-image: var(--select2__searchInput-background-image, url('/web/static/lib/select2/select2.png'), linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0);
+    background-position: -37px -22px;
+}
+
+.select2-search input.select2-active {
+    background-image: var(--select2__searchInput-background-image--active, url('/web/static/lib/select2/select2-spinner.gif'), linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0);
+    background-position: 100%;
+}
+
+.select2-dropdown-open .select2-choice {
+    box-shadow: var(--select2-box-shadow, 0 1px 0 #fff inset);
+}
+
+.select2-results .select2-highlighted {
+    background: $o-brand-primary;
+    color: var(--select2__resultsHighlighted-color, #fff);
+}
+
+.select2-results {
+    .select2-no-results, .select2-searching, .select2-ajax-error, .select2-selection-limit {
+        background: $dropdown-bg;
+        color: $o-main-text-color;
+    }
+}
+
+.select2-container .select2-choice,
+.select2-container.select2-drop-above .select2-choice,
+.select2-drop,
+.select2-drop.select2-drop-above,
+.select2-drop-auto-width,
+.select2-container .select2-choice .select2-arrow,
+html[dir="rtl"] .select2-container .select2-choice .select2-arrow,
+.select2-search input {
+    border-color: var(--select2-border-color, #aaa);
+}
+
+.select2-drop-active,
+.select2-drop.select2-drop-above.select2-drop-active,
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices,
+.select2-dropdown-open.select2-drop-above .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choices,
+.form-control.select2-container.select2-dropdown-open {
+    border-color: var(--select2-border-color--active, #5897fb);
+}

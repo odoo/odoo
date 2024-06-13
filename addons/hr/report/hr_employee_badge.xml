@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_print_badge" model="ir.actions.report">
+        <field name="name">Print Badge</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr.print_employee_badge</field>
+        <field name="report_file">hr.print_employee_badge</field>
+        <field name="paperformat_id" ref="hr.paperformat_hr_employee_badge"/>
+        <field name="print_report_name">'Badge - %s' % (object.name).replace('/', '')</field>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="print_employee_badge">
+        <t t-call="web.basic_layout">
+            <div class="page">
+                <div class="oe_structure"></div>
+                <t t-foreach="docs" t-as="employee">
+                    <div style="display: inline-block; page-break-inside: avoid; width: 243pt; height: 153pt; border: 1pt solid black; border-radius:8pt; margin:5pt; padding: 2pt;">
+                        <div class="oe_structure"></div>
+                        <table style="width: 100%; height: 100%; border-spacing: 4pt; border-collapse: separate;" class="table-borderless">
+                            <tr>
+                                <td style="width: 33%;">
+                                    <table style="width: 100%; height: 100%; text-align: center;" class="table-borderless">
+                                        <t t-if="employee.company_id.logo">
+                                            <tr style="height:30%; padding-top: 4pt; padding-bottom: 2pt">
+                                                <td>
+                                                    <img t-att-src="image_data_uri(employee.company_id.logo)" style="max-height: 40pt; max-width: 100%;" alt="Company Logo"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr style="height:70%;">
+                                            <td style="height: 100%; width: 100%; padding-top: 2pt; padding-bottom: 4pt;">
+                                                <img t-att-src="image_data_uri(employee.avatar_1920)" style="max-height: 100pt; max-width: 100%;" alt="Employee Image"/>
+                                            </td> 
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="width:67%; height:100%; vertical-align: top;">
+                                    <table style="width: 100%; height: 100%; text-align: center;" class="table-borderless">
+                                        <tr><th><span style="font-size: 15pt;" t-out="employee.name">Marc Demo</span></th></tr>
+                                        <tr><td><span style="font-size: 10pt;" t-out="employee.job_id.name">Software Developer</span></td></tr>
+                                        <tr style="height: 100%;">
+                                            <td style="vertical-align: bottom; padding-bottom: 4pt;">
+                                                <div t-if="employee.barcode" t-field="employee.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 120, 'img_style': 'max-width:100%;', 'img_align': 'center'}">
+                                                    12345678901
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="oe_structure"></div>
+                    </div>
+                </t>
+                <div class="oe_structure"></div>
+            </div>
+        </t>
+    </template>
+</odoo>

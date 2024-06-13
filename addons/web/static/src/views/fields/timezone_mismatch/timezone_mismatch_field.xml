@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TimezoneMismatchField" t-inherit="web.SelectionField" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <span t-if="mismatch"
+                class="o_tz_warning fa fa-exclamation-triangle position-static align-self-center m-0 ms-2"
+                t-att-title="mismatchTitle" />
+        </xpath>
+    </t>
+
+</templates>

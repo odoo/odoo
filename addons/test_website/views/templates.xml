@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="multi_url" model="website.page">
+        <field name="name">Multi URL test</field>
+        <field name="url">/multi_url</field>
+        <field name="website_published">False</field>
+        <field name="type">qweb</field>
+        <field name="key">test_website.multi_url</field>
+        <field name="website_published">True</field>
+        <field name="arch" type="xml">
+            <t t-name='multi_url'>
+                <div>
+                    <a id='get' href="/get">get</a>
+                    <form id='post' action="/post">post</form>
+                    <a id='get_post' href="/get_post">get_post</a>
+                    <a id='get_post_nomultilang' href="/get_post_nomultilang">get_post_nomultilang</a>
+                </div>
+            </t>
+        </field>
+    </record>
+
+    <!-- /model_item item page -->
+    <template id="model_item" name="Model item">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <section t-cache="record">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" t-field="record.name"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.test.website</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='plausbile_setting']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="website_test_setting">
+                    <button type="object" name="action_website_test_setting" string="Website test setting" class="btn-link" icon="fa-arrow-right"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

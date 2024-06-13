@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="google_map">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <title>World Map</title>
+        <link rel="stylesheet" type="text/css" href="/website_google_map/static/src/css/website_google_map.css"/>
+    </head>
+    <body t-att-data-partner-url="partner_url or None">
+        <script>
+            var odoo_partner_data = <t t-out="partner_data"/>;
+        </script>
+        <div id="odoo-google-map"></div>
+        <t t-if="google_maps_api_key">
+            <script t-attf-src="//maps.google.com/maps/api/js?key=#{google_maps_api_key}"></script>
+        </t>
+        <t t-else="1">
+            <script src="//maps.google.com/maps/api/js"></script>
+        </t>
+        <script type="text/javascript" src="/website_google_map/static/src/lib/markerclusterer.js"></script>
+        <script type="text/javascript" src="/website_google_map/static/src/js/website_google_map.js"></script>
+    </body>
+</html>
+</template>
+</odoo>

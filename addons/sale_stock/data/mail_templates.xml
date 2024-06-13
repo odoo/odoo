@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="exception_on_so">
+            <div>
+                Exception(s) occurred on the sale order(s):
+                <t t-foreach="sale_order_ids" t-as="sale_order">
+                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>.
+                </t>
+                Manual actions may be needed.
+                <div class="mt16">
+                    <p>Exception(s):</p>
+                    <ul t-foreach="order_exceptions" t-as="exception">
+                        <li>
+                            <t t-set="order_line" t-value="exception[0]"/>
+                            <t t-set="new_qty" t-value="exception[1][0]"/>
+                            <t t-set="old_qty" t-value="exception[1][1]"/>
+                                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="order_line.order_id.id"><t t-esc="order_line.order_id.name"/></a>:
+                                <t t-esc="new_qty"/> <t t-esc="order_line.product_uom.name"/> of <t t-esc="order_line.product_id.name"/>
+                                <t t-if="cancel">
+                                    cancelled
+                                </t>
+                                <t t-if="not cancel">
+                                    ordered instead of <t t-esc="old_qty"/> <t t-esc="order_line.product_uom.name"/>
+                                </t>
+                          </li>
+                    </ul>
+                </div>
+                <div class="mt16" t-if="not cancel and impacted_pickings">
+                    <p>Impacted Transfer(s):</p>
+                    <ul t-foreach="impacted_pickings" t-as="picking">
+                        <li><a href="#" data-oe-model="stock.picking" t-att-data-oe-id="picking.id"><t t-esc="picking.name"/></a></li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+
+        <template id="exception_on_picking">
+            <div>
+                Exception(s) occurred on the picking:
+                <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-esc="origin_picking.name"/></a>.
+                Manual actions may be needed.
+                <div class="mt16">
+                    <p>Exception(s):</p>
+                    <ul t-foreach="moves_information" t-as="exception">
+                        <t t-set="move" t-value="exception[0]"/>
+                        <t t-set="new_qty" t-value="exception[1][0]"/>
+                        <t t-set="old_qty" t-value="exception[1][1]"/>
+                        <li>
+                        <t t-esc="new_qty"/> <t t-esc="move.product_uom.name"/>
+                        of <t t-esc="move.product_id.display_name"/> processed instead of <t t-esc="old_qty"/> <t t-esc="move.product_uom.name"/></li>
+                    </ul>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

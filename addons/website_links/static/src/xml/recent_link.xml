@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="website_links.RecentLink">
+        <div class="row mb16">
+            <div class="col-md-1 col-2 text-center">
+                <h4><t t-esc="widget.link_obj.count"/></h4>
+                <p class="text-muted" style="margin-top: -5px;">clicks</p>
+            </div>
+            <div class="col-md-7 col-7">
+                <h4 class="truncate_text">
+                    <img t-attf-src="http://www.google.com/s2/favicons?domain={{ widget.link_obj.url }}" loading="lazy" alt="Icon" onerror="this.src='/website_links/static/img/default_favicon.png'"/>
+                    <a class="no-link-style" t-att-href="widget.link_obj.url"><t t-esc="widget.link_obj.title"/></a>
+                </h4>
+                <p class="text-muted mb0" style="margin-top: -5px;">
+                    <span class="o_website_links_short_url text-muted" style="position:relative;">
+                        <span id="o_website_links_host"><t t-esc="widget.link_obj.short_url_host"/></span><span id="o_website_links_code"><t t-esc="widget.link_obj.code"/></span>
+                    </span>
+
+                    <span class="o_website_links_edit_tools" style="display:none;">
+                        <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary" href="#">ok</a> or
+                        <a class="o_website_links_cancel_edit" href="#">cancel</a>
+                    </span>
+
+                    <a class="o_website_links_edit_code" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
+
+                    <br/>
+                    <span class="badge text-bg-success"><t t-esc="widget.link_obj.campaign_id[1]"/></span>
+                    <span class="badge text-bg-success"><t t-esc="widget.link_obj.medium_id[1]"/></span>
+                    <span class="badge text-bg-success"><t t-esc="widget.link_obj.source_id[1]"/></span>
+                </p>
+                <p class='o_website_links_code_error' style='color:red;font-weight:bold;'></p>
+            </div>
+
+            <div class="col-md-4 col-2">
+                <button class="btn btn-info btn_shorten_url_clipboard mt8">Copy</button>
+                <a role="button" t-attf-href="{{widget.link_obj.short_url}}+" class="btn btn-warning mt8">Stats</a>
+            </div>
+        </div>
+    </t>
+</templates>

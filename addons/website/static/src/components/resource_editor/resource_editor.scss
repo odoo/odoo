@@ -1,0 +1,80 @@
+$o-we-ace-color: #2F3129 !default;
+
+.o_resource_editor {
+    background: $o-we-ace-color;
+    color: white;
+    display: flex;
+    flex-flow: column nowrap;
+    opacity: 0.97;
+
+    .o_resource_editor_title {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        padding: $grid-gutter-width/4;
+
+        > .o_resource_editor_type_switcher > button::after {
+            @include o-caret-down;
+            margin-left: 4px;
+        }
+
+        > * {
+            flex: 0 0 auto;
+            margin: 0 $grid-gutter-width/4;
+
+            &.o_resource_editor_filter {
+                display: flex;
+                align-items: center;
+                font-size: 11px;
+            }
+
+            &.o_resource_editor_resource_list {
+                flex: 1 1 auto;
+                min-width: 60px;
+            }
+        }
+    }
+
+    #resource-editor-id {
+        flex: 0 0 auto;
+        padding: $grid-gutter-width/4 $grid-gutter-width/2;
+        background-color: lighten($o-we-ace-color, 10%);
+
+        .o_resource_editor_resource_info {
+            color: #ebecee;
+        }
+    }
+
+    #resource-editor {
+        @mixin ace-line-error-mixin {
+            content: "";
+            z-index: 1000;
+            display: flex;
+            background-color: $o-we-color-danger;
+            color: white;
+            font-size: 1.2em;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+        }
+
+        flex: 1 1 auto;
+        .ace_gutter {
+            .ace_gutter-cell.o_error {
+                position: relative;
+
+                &::before {
+                    @include o-position-absolute(-100vh, 0, -100vh);
+                    @include ace-line-error-mixin;
+                    width: 2px;
+                }
+                &::after {
+                    @include o-position-absolute(-100%, 0, -100%, 0);
+                    @include ace-line-error-mixin;
+                    font-family: FontAwesome;
+                    content: "\f071";
+                }
+            }
+        }
+    }
+}

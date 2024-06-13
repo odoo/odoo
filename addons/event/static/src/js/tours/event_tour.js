@@ -1,0 +1,70 @@
+/** @odoo-module **/
+
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
+
+import EventAdditionalTourSteps from "@event/js/tours/event_steps";
+
+import { markup } from "@odoo/owl";
+
+registry.category("web_tour.tours").add('event_tour', {
+    url: '/web',
+    rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
+    sequence: 210,
+    steps: () => [stepUtils.showAppsMenuItem(), {
+    trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
+    content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
+    position: 'bottom',
+    edition: 'enterprise',
+    run: "click",
+}, {
+    trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
+    content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
+    edition: 'community',
+    run: "click",
+}, {
+    trigger: '.o-kanban-button-new',
+    extra_trigger: '.o_event_kanban_view',
+    content: markup(_t("Let's create your first <b>event</b>.")),
+    position: 'bottom',
+    width: 175,
+    run: "click",
+}, {
+    trigger: '.o_event_form_view div[name="name"] textarea',
+    content: markup(_t("This is the <b>name</b> your guests will see when registering.")),
+    run: "edit Odoo Experience 2020",
+}, {
+    trigger: '.o_event_form_view div[name="date_begin"]',
+    content: _t("Open date range picker. Pick a Start date for your event"),
+    run: function () {
+        const el1 = this.anchor.querySelector('input[data-field="date_begin"]');
+        el1.value = '09/30/2020 08:00:00';
+        el1.dispatchEvent(new Event("change"));
+        const el2 = this.anchor.querySelector('input[data-field="date_end"]');
+        el2.value = '10/02/2020 23:00:00';
+        el2.dispatchEvent(new Event("change"));
+        el1.click();
+    },
+}, {
+    content: _t("Apply change."),
+    trigger: '.o_datetime_picker .o_datetime_buttons .o_apply',
+    in_modal: false,
+    run: "click",
+}, {
+    trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
+    content: markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
+    run: "click",
+}, stepUtils.autoExpandMoreButtons(),
+...new EventAdditionalTourSteps()._get_website_event_steps(), {
+    trigger: '.o_event_form_view div[name="stage_id"]',
+    content: _t("Now that your event is ready, click here to move it to another stage."),
+    position: 'bottom',
+    run: "click",
+}, {
+    trigger: 'ol.breadcrumb li.breadcrumb-item:first',
+    extra_trigger: '.o_event_form_view div[name="stage_id"]',
+    content: markup(_t("Use the <b>breadcrumbs</b> to go back to your kanban overview.")),
+    position: 'bottom',
+    run: 'click',
+}].filter(Boolean)});

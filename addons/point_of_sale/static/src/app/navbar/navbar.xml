@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.Navbar">
+        <div class="pos-topheader d-flex align-items-center p-0 m-0 bg-white border-bottom">
+            <div t-if="!ui.isSmall" class="pos-branding d-flex justify-content-between h-100 p-0 my-0 text-start">
+                <img class="pos-logo h-75 ms-3 align-self-center" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
+            </div>
+            <button t-if="pos.showBackButton()" class="back-button btn d-flex align-items-center" t-on-click="onClickBackButton">
+                <i class="fa fa-2x fa-angle-left pb-1" role="img" aria-label="Go Back" title="Go Back" />
+            </button>
+            <div class="pos-rightheader d-flex ms-auto h-100 px-1" t-if="pos.shouldShowNavbarButtons()">
+                <div class="status-buttons d-flex flex-grow-1  justify-content-end h-100">
+                    <button class="btn btn-outline my-2" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
+                        <i class="fa fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+                    </button>
+                    <Input tModel="[pos, 'searchProductWord']"
+                        class="'p-2'"
+                        isSmall="ui.isSmall"
+                        placeholder="'Search products...'"
+                        icon="{type: 'fa', value: 'fa-search'}"
+                        debounceMillis="500"
+                        t-if="pos.showSearchButton()" />
+                    <CashierName />
+                    <ProxyStatus t-if="pos.config.use_proxy" />
+                    <button t-if="pos.config.customer_display_type !== 'none'" t-on-click="openCustomerDisplay" class="btn btn-light fa fa-fw fa-desktop text-success pe-4" title="Customer Display" />
+                    <SyncNotification />
+                </div>
+                <Dropdown>
+                    <button class="btn btn-outline fa fa-bars" />
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.pos.onTicketButtonClick()">
+                            Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2" t-esc="orderCount"/>
+                        </DropdownItem>
+                        <DropdownItem t-if="showCashMoveButton" onSelected="() => this.onCashMoveButtonClick()">
+                            Cash In/Out
+                        </DropdownItem>
+                        <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
+                            Switch Product View
+                        </DropdownItem>
+                        <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
+                            Create Product
+                        </DropdownItem>
+                        <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
+                            Print Report
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => pos.closePos()">
+                            Backend
+                        </DropdownItem>
+                        <DropdownItem onSelected="() => this.closeSession()">
+                            Close Register
+                        </DropdownItem>
+                        <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
+                            Debug Window
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </div>
+        </div>
+    </t>
+
+</templates>

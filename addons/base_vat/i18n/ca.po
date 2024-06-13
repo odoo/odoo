@@ -1,0 +1,120 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_vat
+#
+# Translators:
+# M Palau <mpalau@tda.ad>, 2022
+# jabelchi, 2022
+# Quim - eccit <quim@eccit.com>, 2022
+# marcescu, 2022
+# jabiri7, 2022
+# Ivan Espinola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Martin Trigaux, 2023
+# martioodo hola, 2023
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: martioodo hola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Empreses"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustos de configuració"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Posició fiscal"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service."
+msgstr "Si aquesta casella de selecció està marcada, no podrà salvar un contacte si el seu número d'IVA no pot ser verificat pel servei de vies europees."
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
+msgid "Technical field display a message to the user if the VIES check fails."
+msgstr "El camp tècnic mostra un missatge a l'usuari si la comprovació de VIES falla."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"El %(vat_label)s  número [%(wrong_vat)s] no sembla vàlid.\n"
+"Nota: el format esperat és %(expected_format)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"El %(vat_label)s número [%(wrong_vat)s] per  %(record_label)s a no sembla vàlid.\n"
+"Nota: el format esperat és %(expected_format)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The VAT number %s failed the VIES VAT validation check."
+msgstr "El NIF %s ha fallat la comprovació de validació del número d'IVA al VIES."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+msgid "The country detected for this foreign VAT number does not match the one set on this fiscal position."
+msgstr "El país detectat per a aquest número estranger de l'IVA no coincideix amb el establert en aquesta posició fiscal."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "VAT"
+msgstr "CIF/NIF"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr "Verifica els números d'IVA"
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr "Verifica els números de l'IVA utilitzant el servei European VIES"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+msgid "fiscal position [%s]"
+msgstr "posició fiscal [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "partner [%s]"
+msgstr "soci [%s]"

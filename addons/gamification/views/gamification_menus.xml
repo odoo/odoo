@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- menus in settings - technical feature required -->
+    <menuitem id="gamification_menu"
+              name="Gamification Tools"
+              parent="base.menu_administration"
+              groups="base.group_no_one" />
+
+    <menuitem id="gamification_challenge_menu"
+              parent="gamification_menu"
+              action="challenge_list_action"
+              sequence="0"/>
+    <menuitem id="gamification_goal_menu"
+              parent="gamification_menu"
+              action="goal_list_action"
+              sequence="10"/>
+    <menuitem id="gamification_definition_menu"
+              parent="gamification_menu"
+              action="goal_definition_list_action"
+              sequence="20"/>
+    <menuitem id="gamification_badge_menu"
+              parent="gamification_menu"
+              action="badge_list_action"
+              sequence="30"/>
+    <menuitem id="gamification_karma_ranks_menu"
+              parent="gamification_menu"
+              action="gamification_karma_ranks_action"
+              sequence="40"/>
+    <menuitem id="gamification_karma_tracking_menu"
+              parent="gamification_menu"
+              action="gamification_karma_tracking_action"
+              sequence="50"/>
+</odoo>

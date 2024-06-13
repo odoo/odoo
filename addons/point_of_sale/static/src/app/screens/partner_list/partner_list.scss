@@ -1,0 +1,27 @@
+.partner-list {
+    tr {
+            &:hover {
+                cursor: pointer;
+                background: $o-gray-200;
+            }
+            &:active {
+                background-color: $o-component-active-bg;
+            }
+    }
+}
+
+@include media-breakpoint-down(lg) {
+    .partner-list {
+        table {
+            border: transparent;
+        }
+        .partner-list {
+            thead {
+                display: none;
+            }
+            td {
+                padding: 0;
+            }
+        }
+    }
+}

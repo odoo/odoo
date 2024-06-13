@@ -1,0 +1,24 @@
+.o_menu_systray.o_website_systray {
+    --NavBar-entry-padding-left: #{$o-navbar-entry-padding-h};
+    --NavBar-entry-padding-right: #{$o-navbar-entry-padding-h};
+    --NavBar-separator-margin-v: 10px; // equal to $o-navbar-padding-v in web_enterprise
+    --border-color: #{darken($primary, 10%)};
+
+    .o_user_menu {
+        margin: -$o-navbar-padding-v 0;
+        border-right: $border-width solid var(--border-color);
+        padding: $o-navbar-padding-v 0;
+    }
+
+    .o_nav_entry, .o_menu_systray_item > a, .o_menu_systray_item > button {
+        height: auto;
+        margin-top: -$o-navbar-padding-v;
+        margin-bottom: -$o-navbar-padding-v;
+        padding-top: $o-navbar-padding-v;
+        padding-bottom: $o-navbar-padding-v;
+    }
+
+    .o_website_systray_separator {
+        margin: var(--NavBar-separator-margin-v) 0;
+    }
+}

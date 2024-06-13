@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_picking_form_inherit_l10n_it_ddt" model="ir.ui.view">
+        <field name="name">stock.picking.form.l10n.it.ddt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='do_print_picking']" position="after">
+                <field name="l10n_it_show_print_ddt_button" invisible="1"/>
+                <button name="%(l10n_it_stock_ddt.action_report_ddt)d" type="action" string="Print"
+                        invisible="not l10n_it_show_print_ddt_button"
+                        groups="base.group_user"/>
+            </xpath>
+            <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                <attribute name="invisible">l10n_it_show_print_ddt_button or picking_type_code == 'outgoing' and country_code == 'IT'</attribute>
+            </xpath>
+            <group name='carrier_data' position="after">
+                <group string="DDT Information" invisible="country_code != 'IT' or picking_type_code != 'outgoing'">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_it_ddt_number"/>
+                    <field name="l10n_it_transport_reason"/>
+                    <field name="l10n_it_transport_method"/>
+                    <field name="l10n_it_transport_method_details"/>
+                    <field name="l10n_it_parcels"/>
+                </group>
+            </group>
+        </field>
+   </record>
+
+    <record id="view_picking_search_inherit_l10n_it_ddt" model="ir.ui.view">
+        <field name="name">stock.picking.search.l10n.it.ddt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="l10n_it_ddt_number"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_picking_tree_inherit_l10n_it_ddt" model="ir.ui.view">
+        <field name="name">stock.picking.tree.l10n.it.ddt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="l10n_it_ddt_number" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>

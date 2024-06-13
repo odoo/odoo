@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="project.DependOnIdsListRowsRenderer" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-foreach='list.records']" position="after">
+        <tr class="o_data_row">
+            <td t-if="nbHiddenRecords" t-att-colspan="nbCols" style="text-align:center;">
+                <i class="text-muted">
+                    This task is currently blocked by <t t-out="nbHiddenRecords"/> (other) tasks to which you do not have access.
+                </i>
+            </td>
+        </tr>
+        </xpath>
+    </t>
+</templates>

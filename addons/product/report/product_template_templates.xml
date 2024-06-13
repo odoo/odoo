@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- IMPORTANT: explictly include col/row otherwise studio won't load report correctly -->
+<template id="report_producttemplatelabel2x7">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-set="columns" t-value="2"/>
+            <t t-set="rows" t-value="7"/>
+            <t t-call="product.report_productlabel"/>
+        </div>
+    </t>
+</template>
+
+<template id="report_producttemplatelabel4x7">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-set="columns" t-value="4"/>
+            <t t-set="rows" t-value="7"/>
+            <t t-call="product.report_productlabel"/>
+        </div>
+    </t>
+</template>
+
+<template id="report_producttemplatelabel4x12">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-set="columns" t-value="4"/>
+            <t t-set="rows" t-value="12"/>
+            <t t-set="price_included" t-value="True"/>
+            <t t-call="product.report_productlabel"/>
+        </div>
+    </t>
+</template>
+
+<template id="report_producttemplatelabel4x12noprice">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-set="columns" t-value="4"/>
+            <t t-set="rows" t-value="12"/>
+            <t t-set="price_included" t-value="False"/>
+            <t t-call="product.report_productlabel"/>
+        </div>
+    </t>
+</template>
+
+<template id="report_producttemplatelabel_dymo">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-call="product.report_productlabel_dymo"/>
+        </div>
+    </t>
+</template>
+
+</odoo>

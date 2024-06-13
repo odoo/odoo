@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_sale_pricelist_form_view" model="ir.ui.view">
+        <field name="name">website_sale.pricelist.form</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="model">product.pricelist</field>
+        <field name="arch" type="xml">
+            <group name="pricelist_availability" position="after">
+                <group name="pricelist_website" string="Website">
+                    <field name="company_id" invisible="1"/>
+                    <field name="website_id" options="{'no_create': True}"/>
+                    <field name="selectable"/>
+                    <field name="code"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="website_sale_pricelist_tree_view" model="ir.ui.view">
+        <field name="name">product.pricelist.tree.inherit.product</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="currency_id" position="after">
+                <field name="selectable"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

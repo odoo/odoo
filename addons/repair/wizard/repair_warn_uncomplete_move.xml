@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_repair_warn_uncomplete_move" model="ir.ui.view">
+        <field name="name">repair.warn.uncomplete.move.view.form</field>
+        <field name="model">repair.warn.uncomplete.move</field>
+        <field name="arch" type="xml">
+            <form string="Uncomplete Move(s)">
+                <p>
+                For some of the parts, there is a difference between the initial demand and the actual quantity that was used.<br/>
+                Are you sure you want to confirm ?
+                </p>
+                <footer>
+                    <button name="action_validate" string="Validate" type="object" class="btn-primary" />
+                    <button string="Discard" special="cancel" data-hotkey="z" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

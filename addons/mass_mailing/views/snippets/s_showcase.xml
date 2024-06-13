@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_showcase" name="Showcase">
+    <div class="s_showcase o_mail_snippet_general pt48 pb48">
+        <!-- TODO: (below) issue with height: `fit-content` is not supported, can we calculate it in px in translation ?
+        empty div height is 0 unless table has defined height (div.col-1 > div.w-50.h100.border-end)-->
+        <div class="container" style="height: fit-content;">
+            <div class="row s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
+                <div class="col-sm text-sm-end">
+                    <div class="row">
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex flex-sm-row-reverse mb-2 align-items-center">
+                                <i class="fa fa-2x fa-desktop text-secondary me-3 me-sm-0 ms-sm-3"/>
+                                <h3>First feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex flex-sm-row-reverse mb-2 align-items-center">
+                                <i class="fa fa-2x fa-paint-brush text-secondary me-3 me-sm-0 ms-sm-3"/>
+                                <h3>Second feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-1 o_not_editable">
+                    <div class="w-50 h-100 border-end o_not_editable"/>
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex mb-2 align-items-center">
+                                <i class="fa fa-2x fa-heart text-secondary me-3"/>
+                                <h3>Another feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex mb-2 align-items-center">
+                                <i class="fa fa-2x fa-gift text-secondary me-3"/>
+                                <h3>Last Feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container pt32" style="text-align: center;" align="center">
+            <a href="#" class="btn btn-primary">Discover all the features</a>
+        </div>
+    </div>
+</template>
+
+</odoo>

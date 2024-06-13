@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='mobileTopbar']" position="after">
+            <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
+            <DiscussSidebar t-else=""/>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="inside">
+            <MessagingMenu t-if="ui.isSmall"/>
+            <t t-else="" t-call="mail.Discuss.loading"/>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="replace">
+            <div class="h-100 d-flex flex-column">
+                <ControlPanel t-if="!ui.isSmall"/>
+                <t>$0</t>
+            </div>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="attributes">
+            <attribute name="class" add="h-0" remove="h-100" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="mail.Discuss.loading">
+        <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
+            <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
+        </div>
+    </t>
+</templates>

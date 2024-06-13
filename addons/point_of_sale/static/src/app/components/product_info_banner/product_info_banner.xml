@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductInfoBanner">
+        <div t-attf-class="{{ bannerClass }}"
+            class="section-product-info-title d-flex text-info bg-opacity-25 mx-n3 mt-n3 px-3 pb-2 pt-3 mb-3">
+            <div class="d-flex flex-column">
+                <span class="h4" t-esc="props.product.name"/>
+                <span t-if="this.props.product.type !== 'service'" class="h4">
+                    <span>On hand: </span>
+                    <span t-if="this.fetchStock.status === 'success' || this.props.info"><t t-esc="this.state.available_quantity"/></span>
+                    <span t-elif="this.fetchStock.status === 'error'">N/A</span>
+                    <i t-else="" class="fa fa-fw fa-spin fa-circle-o-notch" aria-hidden="true" />
+                </span>
+            </div>
+            <div t-att-class="{ 'align-items-end': !this.ui.isSmall }" class="d-flex flex-column">
+                <span class="h4"><t t-esc="this.env.utils.formatCurrency(state.price_with_tax)"/></span>
+                <span class="h4">VAT: <t t-esc="state.tax_name || 0" /> | VAT: <t t-esc="this.env.utils.formatCurrency(state.tax_amount)" /></span>
+            </div>
+        </div>
+    </t>
+</templates>

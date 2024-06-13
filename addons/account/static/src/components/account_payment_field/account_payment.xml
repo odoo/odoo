@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountPaymentField">
+        <div>
+            <t t-set="info" t-value="this.getInfo()"/>
+            <t t-if="info.outstanding">
+                <div>
+                    <strong class="float-start" id="outstanding" t-out="info.title"/>
+                </div>
+            </t>
+            <table style="width:100%;">
+                <t t-foreach="info.lines" t-as="line" t-key="line_index">
+                    <tr>
+                    <t t-if="info.outstanding">
+                        <td>
+                            <a title="assign to invoice"
+                               role="button"
+                               class="oe_form_field btn btn-secondary outstanding_credit_assign"
+                               t-att-data-id="line.id"
+                               style="margin-right: 0px; padding-left: 5px; padding-right: 5px;"
+                               href="#"
+                               data-bs-toggle="tooltip"
+                               t-on-click.prevent="() => this.assignOutstandingCredit(info.moveId, line.id)">Add</a>
+                        </td>
+                        <td style="max-width: 11em;">
+                            <a t-att-title="line.date"
+                               role="button"
+                               class="oe_form_field btn btn-link open_account_move"
+                               t-on-click="() => this.openMove(line.move_id)"
+                               style="margin-right: 5px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; padding-left: 0px; width:100%; text-align:left;"
+                               data-bs-toggle="tooltip"
+                               t-att-payment-id="account_payment_id"
+                               t-out="line.journal_name"/>
+                        </td>
+                    </t>
+                    <t t-if="!info.outstanding">
+                        <td>
+                           <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line_index" style="margin-right:5px;" aria-label="Info" title="Journal Entry Info" data-bs-toggle="tooltip" t-on-click.stop="(ev) => this.onInfoClick(ev, line)"></a>
+                        </td>
+                        <td t-if="!line.is_exchange">
+                            <i class="o_field_widget text-start o_payment_label">Paid on <t t-out="line.date"></t></i>
+                        </td>
+                        <td t-if="line.is_exchange" colspan="2">
+                            <i class="o_field_widget text-start text-muted text-start">
+                                <span class="oe_form_field oe_form_field_float oe_form_field_monetary fw-bold">
+                                    <t t-out="line.amount_formatted"/>
+                                </span>
+                                <span> Exchange Difference</span>
+                            </i>
+                        </td>
+                    </t>
+                    <td t-if="!line.is_exchange" style="text-align:right;">
+                        <span class="oe_form_field oe_form_field_float oe_form_field_monetary" style="margin-left: -10px;">
+                            <t t-out="line.amount_formatted"/>
+                        </span>
+                    </td>
+                    </tr>
+                </t>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="account.AccountPaymentPopOver">
+        <div class="account_payment_popover">
+            <h3 t-if="props.title" class="o_popover_header"><t t-out="props.title"/></h3>
+            <div class="px-2">
+                <div>
+                    <table>
+                        <tr>
+                            <td><strong>Amount: </strong></td>
+                            <td>
+                                <t t-out="props.amount_company_currency"></t>
+                                <t t-if="props.amount_foreign_currency">
+                                    (<span class="fa fa-money"/> <t t-out="props.amount_foreign_currency"/>)
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memo: </strong></td>
+                            <td>
+                                <div style="width: 200px; word-wrap: break-word">
+                                    <t t-out="props.ref"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date: </strong></td>
+                            <td><t t-out="props.date"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Journal: </strong></td>
+                            <td><t t-out="props.journal_name"/><span t-if="props.payment_method_name"> (<t t-out="props.payment_method_name"/>)</span></td>
+                        </tr>
+                        <tr t-if="props.company_name">
+                            <td><strong>Branch: </strong></td>
+                            <td><t t-out="props.company_name"/></td>
+                        </tr>
+                    </table>
+                </div>
+                <button class="btn btn-sm btn-primary js_unreconcile_payment float-start" t-if="!props.is_exchange" style="margin-top:5px; margin-bottom:5px;" groups="account.group_account_invoice" t-on-click="() => props._onRemoveMoveReconcile(props.move_id, props.partial_id)">Unreconcile</button>
+                <button class="btn btn-sm btn-secondary js_open_payment float-end" style="margin-top:5px; margin-bottom:5px;" t-on-click="() => props._onOpenMove(props.move_id)">View</button>
+            </div>
+        </div>
+    </t>
+
+</templates>

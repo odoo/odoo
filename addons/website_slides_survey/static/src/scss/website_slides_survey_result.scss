@@ -1,0 +1,15 @@
+// Certification Share modal on survey result page
+
+/*
+When website is installed, modal overlaps the navbar. And to fix that,
+'top' css property has been utilized. As a side-effect, it shows white
+stripe in some survey related pages (due to hidden navbar).
+
+So we simply set the 'top' to 0 to for avoiding it for those pages. Thankfully,
+for such pages, there's a separate asset bundle where we include this file, and
+so it won't affect the rest of the website pages.
+*/
+
+#wrapwrap .modal {
+    top: 0;
+}

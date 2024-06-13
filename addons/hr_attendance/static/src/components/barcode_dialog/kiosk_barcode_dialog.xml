@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.BarcodeDialog" t-inherit="web.BarcodeDialog">
+        <xpath expr="//CropOverlay" position="before">
+                <div t-if="isFreshDb" class="alert alert-info" role="alert">
+                    <div class="mb-2">
+                        No Badge ID on your employee, do you want to set a barcode to test ?
+                    </div>
+                    <div class="input-group">
+                        <input id="manual_barcode" t-model="state.barcode" type="text" name="barcode"
+                            class="input-group-text w-25" t-ref="demobadgeID"/>
+                        <button type="button" class="btn btn-primary" t-on-click="setBadgeID">
+                            Set Badge ID
+                        </button>
+                    </div>
+                </div>
+        </xpath>
+    </t>
+</templates>

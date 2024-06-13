@@ -1,0 +1,35 @@
+<templates id="template" xml:space="preserve">
+
+    <!-- Template for the widget SignatureForm. -->
+    <t t-name="portal.SignatureForm">
+        <div t-ref="root">
+            <div t-if="state.success" class="alert alert-success" role="status">
+                <span t-if="state.success.message" t-esc="state.success.message"/>
+                <span t-else="">Thank You!</span>
+                <a t-if="state.success.redirect_url" t-att-href="state.success.redirect_url">
+                    <t t-if="state.success.redirect_message" t-esc="state.success.redirect_message"/>
+                    <t t-else="">Click here to see your document.</t>
+                </a>
+            </div>
+            <t t-else="">
+                <NameAndSignature t-props="nameAndSignatureProps"/>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="csrfToken"/>
+                    <div class="o_web_sign_name_and_signature"/>
+                    <div class="o_portal_sign_controls my-3">
+                        <div t-if="state.error" class="o_portal_sign_error_msg alert alert-danger" role="status">
+                            <t t-esc="state.error"/>
+                        </div>
+                        <div class="text-end my-3">
+                            <button type="submit" class="o_portal_sign_submit btn btn-primary" t-on-click.prevent="onClickSubmit" t-att-disabled="signature.isSignatureEmpty ? 'disabled' : ''">
+                                <i class="fa fa-check me-1"/>
+                                <t t-esc="sendLabel"/>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </t>
+        </div>
+    </t>
+
+</templates>

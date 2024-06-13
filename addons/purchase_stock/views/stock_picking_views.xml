@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="purchase_help_message_template" inherit_id="stock.help_message_template">
+        <xpath expr="//p[@name='top_help_message']/t[@name='receipt_message']" position="replace">
+            <t t-if="picking_type_code == 'incoming'">
+                No receipt yet! Automate them with purchase orders.
+            </t>
+        </xpath>
+        <xpath expr="//p[@name='bottom_help_message']" position="after">
+            <a t-if="picking_type_code == 'incoming'" class="btn btn-secondary" name="purchase.purchase_form_action" type="action">Purchase Orders</a>
+        </xpath>
+    </template>
+
+</odoo>

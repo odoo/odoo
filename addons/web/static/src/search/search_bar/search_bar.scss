@@ -1,0 +1,19 @@
+// = Search Bar
+// ============================================================================
+
+.o_searchview_facet {
+    @keyframes animate {
+        from {
+            opacity: .5;
+            transform: translateY(20%);
+        }
+    }
+
+    animation: animate .25s ease-out;
+
+    .btn, .btn:focus {
+        // Boostrap plays around with the z-index of buttons, but this is not needed here
+        // It was causing issues with the hotkey overlay
+        z-index: 0;
+    }
+}

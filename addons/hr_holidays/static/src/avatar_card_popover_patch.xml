@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.AvatarCardPopover" t-inherit-mode="extension">
+        <xpath expr="//span[@name='icon']" position="inside">
+            <i t-elif="user.im_status === 'leave_online'" class="fa fa-fw fa-plane text-success" title="Online" role="img" aria-label="User is online"/>
+            <i t-elif="user.im_status === 'leave_away'" class="fa fa-fw fa-plane text-warning" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-elif="user.im_status === 'leave_offline'" class="fa fa-fw fa-plane text-700" title="Out of office" role="img" aria-label="User is out of office"/>
+        </xpath>
+    </t>
+</templates>

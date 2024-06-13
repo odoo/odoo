@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resource_calendar_view_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.view.tree.inherit.hr.contract</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.view_resource_calendar_tree"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="contracts_count"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="resource_calendar_view_form" model="ir.ui.view">
+        <field name="name">resource.calendar.view.form.inherit.hr.contract</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_open_contracts"
+                        type="object" icon="fa-book" groups="hr_contract.group_hr_contract_manager">
+                    <field name="contracts_count" string="Contracts" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

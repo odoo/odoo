@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+		<!-- Bakery scenario config -->
+        <record id="pos_category_breads" model="pos.category">
+			<field name="name">Breads</field>
+			<field name="image_128" type="base64" file="point_of_sale/static/img/breads-icon.png" />
+		</record>
+        <record id="pos_category_pastries" model="pos.category">
+			<field name="name">Pastries</field>
+			<field name="image_128" type="base64" file="point_of_sale/static/img/pastries-icon.png" />
+		</record>
+
+		<!-- Bakery products -->
+		<record model="product.product" id="product_wholemeal_loaf">
+			<field name="name">Wholemeal loaf</field>
+			<field name="list_price">2.99</field>
+			<field name="standard_price">2.69</field>
+			<field name="description_sale">High fibre loaf. Baked with fine wholemeal flour to give a soft texture.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_wholemeal_loaf.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="categ_id" ref="product.product_category_1"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
+		<record model="product.product" id="product_tiger_white_loaf">
+			<field name="name">Tiger white loaf</field>
+			<field name="list_price">2.75</field>
+			<field name="standard_price">2.48</field>
+			<field name="description_sale">Tiger bloomer. Baked for a soft inside, with its distinctive savoury crackled crust.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_tiger_white_loaf.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="categ_id" ref="product.product_category_1"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
+		<record model="product.product" id="product_butter_croissant">
+			<field name="name">Butter Croissant</field>
+			<field name="list_price">1.20</field>
+			<field name="standard_price">1.08</field>
+			<field name="description_sale">Flaky all butter pastry, layered for a light and golden croissant.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_butter_croissant.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="categ_id" ref="product.product_category_1"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_apple_pie">
+			<field name="name">Apple Pie</field>
+			<field name="list_price">12.00</field>
+			<field name="standard_price">10.8</field>
+			<field name="description_sale">Shortcrust pastry with a Bramley apple filling.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_apple_pie.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="categ_id" ref="product.product_category_1"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_cherry_pie">
+			<field name="name">Cherry Pie</field>
+			<field name="list_price">14.00</field>
+			<field name="standard_price">12.6</field>
+			<field name="description_sale">Shortcrust pastry with a Morello cherry filling.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_cherry_pie.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="categ_id" ref="product.product_category_1"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_sourdough_loaf">
+			<field name="name">Sourdough Loaf</field>
+			<field name="list_price">3.50</field>
+			<field name="standard_price">3.15</field>
+			<field name="description_sale">Artisan sourdough bread with a crisp crust and soft interior.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_sourdough_loaf.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="categ_id" ref="product.product_category_1"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
+		<record model="product.product" id="product_multigrain_bread">
+			<field name="name">Multigrain Bread</field>
+			<field name="list_price">3.25</field>
+			<field name="standard_price">2.93</field>
+			<field name="description_sale">Hearty multigrain loaf with seeds and grains for extra nutrition.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_multigrain_bread.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
+		<record model="product.product" id="product_rye_bread">
+			<field name="name">Rye Bread</field>
+			<field name="list_price">4.00</field>
+			<field name="standard_price">3.60</field>
+			<field name="description_sale">Dense and dark, made with rye flour, perfect for sandwiches.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_rye_bread.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
+		<record model="product.product" id="product_cinnamon_roll">
+			<field name="name">Cinnamon Roll</field>
+			<field name="list_price">1.75</field>
+			<field name="standard_price">1.57</field>
+			<field name="description_sale">Soft dough with a buttery cinnamon filling, topped with cream cheese icing.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_cinnamon_roll.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_pain_au_chocolat">
+			<field name="name">Pain au Chocolat</field>
+			<field name="list_price">1.50</field>
+			<field name="standard_price">1.35</field>
+			<field name="description_sale">Rich buttery pastry with a dark chocolate center.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_pain_au_chocolat.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_blueberry_muffin">
+			<field name="name">Blueberry Muffin</field>
+			<field name="list_price">1.80</field>
+			<field name="standard_price">1.62</field>
+			<field name="description_sale">Moist and fluffy muffins bursting with blueberries.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_blueberry_muffin.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_bagel">
+			<field name="name">Bagel</field>
+			<field name="list_price">1.25</field>
+			<field name="standard_price">1.13</field>
+			<field name="description_sale">Chewy and dense bagel, perfect for sandwiches or with cream cheese.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_pain_au_chocolat.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_breads')])]" />
+		</record>
+		<record model="product.product" id="product_cheese_croissant">
+			<field name="name">Cheese Croissant</field>
+			<field name="list_price">1.65</field>
+			<field name="standard_price">1.49</field>
+			<field name="description_sale">Flaky croissant filled with creamy cheese, a savory twist on a classic.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_cheese_croissant.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+		<record model="product.product" id="product_pecan_pie">
+			<field name="name">Pecan Pie</field>
+			<field name="list_price">15.00</field>
+			<field name="standard_price">13.50</field>
+			<field name="description_sale">Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt.</field>
+			<field name="type">consu</field>
+			<field name="weight">0.01</field>
+			<field name="uom_id" ref="uom.product_uom_unit"/>
+			<field name="uom_po_id" ref="uom.product_uom_unit"/>
+			<field name="image_1920" type="base64" file="point_of_sale/static/img/product_pecan_pie.png"/>
+			<field name="available_in_pos" eval="True"/>
+			<field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_pastries')])]" />
+		</record>
+	</data>
+</odoo>

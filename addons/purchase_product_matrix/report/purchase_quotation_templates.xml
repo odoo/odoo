@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="grid_report_purchaseorder_template_inherit" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//table[hasclass('table')]" position="before">
+            <t t-call="product_matrix.matrix">
+                <t t-set="order" t-value="o"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

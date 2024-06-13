@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale_product_configurator.product">
+        <td class="o_sale_product_configurator_img py-3 px-0">
+            <img
+                t-if="this.props.id"
+                class="w-100"
+                t-att-src="'/web/image/product.product/'+this.props.id+'/image_128'"
+                alt="Product Image"/>
+            <img
+                t-else=""
+                class="w-100"
+                t-att-src="'/web/image/product.template/'+this.props.product_tmpl_id+'/image_128'"
+                alt="Product Image"/>
+        </td>
+        <td class="p-3" t-att-colspan="this.props.optional ? 2:false">
+            <div class="mb-4 text-break" name="o_sale_product_configurator_name">
+                <h5 t-out="this.props.display_name"/>
+                <div
+                    t-if="this.props.description_sale"
+                    t-out="this.props.description_sale"
+                    class="text-muted small"/>
+                <div t-if="!this.env.isPossibleCombination(this.props)" class="alert alert-warning mt-3">
+                    <span>This option or combination of options is not available</span>
+                </div>
+            </div>
+            <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
+                <PTAL t-props="ptal" productTmplId="this.props.product_tmpl_id"/>
+            </t>
+        </td>
+        <td class="o_sale_product_configurator_qty py-3 px-0 text-end">
+            <div t-if="!this.props.optional" class="input-group justify-content-end">
+                <button
+                    class="btn btn-secondary d-none d-md-inline-block"
+                    aria-label="Remove one"
+                    t-on-click="decreaseQuantity">
+                    <i class="fa fa-minus"/>
+                </button>
+                <input
+                    class="form-control quantity border-bottom border-top text-center"
+                    name="product_quantity"
+                    type="number"
+                    t-att-value="this.props.quantity"
+                    t-on-change="setQuantity"/>
+                <button
+                    class="btn btn-secondary d-none d-md-inline-block"
+                    aria-label="Add one"
+                    t-on-click="increaseQuantity">
+                    <i class="fa fa-plus"/>
+                </button>
+            </div>
+            <div t-else="">
+                <h5 class="text-nowrap" t-out="getFormattedPrice()"/>
+            </div>
+            <a
+                class="d-block mt-2"
+                role="button"
+                t-if="!this.props.optional &amp;&amp; this.env.mainProductTmplId !== this.props.product_tmpl_id"
+                t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)">
+                Remove product
+            </a>
+        </td>
+        <td class="o_sale_product_configurator_price py-3 px-0 text-end" name="price">
+            <div t-if="!this.props.optional" class="input-group justify-content-end">
+                <h5 class="text-nowrap" t-out="getFormattedPrice()"/>
+            </div>
+            <div t-else="">
+                <button
+                    t-if="this.props.optional"
+                    class="btn btn-secondary"
+                    t-att-class="{'disabled': !this.env.isPossibleCombination(this.props)}"
+                    t-on-click="() => this.env.addProduct(this.props.product_tmpl_id)">
+                    <i class="fa fa-plus"/> Add
+                </button>
+            </div>
+        </td>
+    </t>
+</templates>

@@ -1,0 +1,31 @@
+// SearchBar Menu
+// ============================================================================
+.o_search_bar_menu {
+    $-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2 });
+
+    max-width: $-menu-max-width;
+    .o_dropdown_container {
+        border-color: $dropdown-divider-bg !important;
+        min-width: 220px;
+    }
+
+    .o_accordion_values .o_input {
+        max-width: 17ch;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @include media-breakpoint-up(lg) {
+        .o_favorite_menu {
+            max-width: calc(#{$-menu-max-width} / 3);
+        }
+
+        .o_filter_menu, .o_group_by_menu {
+            max-width: calc(#{$-menu-max-width} / 6);
+        }
+
+        .o_comparison_menu + .o_favorite_menu {
+            max-width: calc(#{$-menu-max-width} / 4);
+        }
+    }
+}

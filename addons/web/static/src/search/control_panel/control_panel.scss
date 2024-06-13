@@ -1,0 +1,99 @@
+.o_control_panel {
+    border-bottom: var(--ControlPanel-border-bottom, #{$o-control-panel-border-bottom});
+    background-color: $o-control-panel-background-color;
+
+    .o_control_panel_breadcrumbs {
+        --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
+        min-width: 200px;
+    }
+
+    @include media-breakpoint-down(md) {
+        &.o_mobile_sticky {
+            @include o-position-sticky();
+            z-index: 10;
+        }
+    }
+
+    @include media-breakpoint-up(lg) {
+        .o_control_panel_breadcrumbs, .o_control_panel_navigation {
+            flex: 1
+        }
+
+        .o_control_panel_actions {
+            min-width: MIN(500px, 33%);
+        }
+    }
+
+    @include media-breakpoint-up(xl) {
+        .o_control_panel_actions {
+            min-width: MIN(600px, 33%);
+        }
+    }
+
+    .o_cp_switch_buttons {
+        .btn, .btn:focus {
+            // Boostrap plays around with the z-index of buttons, but this is not needed here
+            // It was causing issues with the hotkey overlay
+            z-index: 0;
+        }
+    }
+}
+
+.o_x2m_control_panel {
+    display: flex;
+    flex-flow: row wrap;
+
+    .o_cp_buttons {
+        display: flex;
+        margin-right: auto;
+    }
+    .o_cp_pager {
+        display: flex;
+        margin-left: auto;
+    }
+}
+
+.o_embedded_line {
+    flex: 1 1 0%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.o_dragged_embedded_action {
+    transition: transform 0.5s;
+    transform: rotate(2deg);
+    opacity: 0.8;
+}
+
+.o_embedded_actions {
+    opacity: 0;
+    max-height: 0;
+    align-self: center;
+    overflow: hidden;
+    transition: opacity 0.5s, max-height 1.0s ease;
+}
+
+.o_embedded_actions_buttons_wrapper {
+    max-width: 80%;
+}
+
+.o_embedded_actions.visible {
+    opacity: 1;
+    max-height: 500px;
+}
+
+.o_save_current_view {
+    color: $link-color;
+}
+
+@include media-breakpoint-down(md) {
+    .o_rtl .o_control_panel .o_back_button:before {
+        transform: rotate(180deg);
+    }
+}
+
+@media print {
+    .o_control_panel {
+        display: none;
+    }
+}

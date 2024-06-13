@@ -1,0 +1,71 @@
+label.o_wbooth_category_unavailable {
+    opacity: 0.5;
+    overflow: hidden;
+}
+
+#o_wbooth_contact_details_form {
+
+    .col-form-label {
+        width: 200px;
+    }
+
+}
+
+.o_wbooth_registration_form label {
+
+    position: relative;
+
+    & > input {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    &:not(.o_wbooth_category_unavailable) > input + div {
+        cursor: pointer;
+    }
+
+    &:not(.o_wbooth_category_unavailable):hover > input + div {
+        opacity: .8;
+    }
+
+    & > input:checked + div,
+    &:hover > input:checked + div {
+        --o-border-color: #{$primary};
+
+        box-shadow: 0 0 0 ($border-width * 2) $primary;
+    }
+
+    & img {
+        min-height: 250px;
+    }
+
+}
+
+.o_wbooth_booths .form-check{
+    position: relative;
+    padding-left: 0;
+
+    & > input {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    & > input + label {
+        padding: map-get($spacers, 2) map-get($spacers, 3);
+        border: $card-border-width solid $card-border-color;
+        border-radius: $btn-border-radius;
+        background: $card-bg;
+        color: $card-color;
+    }
+
+    & > input:checked + label,
+    &:hover > input:checked + label {
+        --o-border-color: #{$primary};
+
+            box-shadow: 0 0 0 ($border-width) $primary;
+    }
+}
+
+.o_wevent_booth_category {
+    background-color: $o-wevent-bg-color-light;
+}

@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_view_form" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager" />
+        <field name="arch" type="xml">
+            <field name='duration_display' position="after">
+                <div invisible="not employee_id or not overtime_deductible or employee_overtime &lt;= 0">
+                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" style="width: 6rem;" /> Extra Hours Available
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_form_overtime" model="ir.ui.view">
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form" />
+        <field name="arch" type="xml">
+            <field name='duration_display' position="after">
+                <div invisible="not employee_id or not overtime_deductible or employee_overtime &lt;= 0">
+                    <field name="employee_overtime" nolabel="1" widget="float_time" class="text-success" style="max-width: 6rem;" /> Extra Hours Available
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

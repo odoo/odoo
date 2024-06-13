@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit_sale_stock"
+        name="Orders Shipping Followup"
+        inherit_id="sale.sale_order_portal_content">
+        <tbody id="sale_info_table" position="inside">
+            <tr t-if="sale_order.incoterm">
+                <th class="pb-0">Incoterm:</th>
+                <td class="w-100 pb-0 text-wrap">
+                    <p t-if="sale_order.incoterm_location">
+                        <span t-field="sale_order.incoterm.code"/> <br/>
+                        <span t-field="sale_order.incoterm_location"/>
+                    </p>
+                    <p t-else="" t-field="sale_order.incoterm.code" class="m-0"/>
+                </td>
+            </tr>
+        </tbody>
+
+        <div id="sale_invoices" position="after">
+            <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing').sorted('date', reverse=True)[:3]"/>
+            <div t-if="delivery_orders" class="col-12 col-lg-6 mb-4">
+                <h5 class="mb-1">Last Delivery Orders</h5>
+                <hr class="mt-1 mb-2"/>
+                <div class="d-flex flex-column gap-2">
+                    <t t-foreach="delivery_orders" t-as="picking">
+                        <t t-set="delivery_report_url"
+                           t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                        <div name="delivery_order"
+                            class="d-flex flex-column">
+                            <div name="delivery_details" class="d-flex align-items-center justify-content-between">
+                                <a t-att-href="delivery_report_url">
+                                    <span t-esc="picking.name"/>
+                                </a>
+                                <div t-if="picking.state == 'done'">
+                                    <span class="small badge rounded-pill text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-truck"/> Shipped
+                                    </span>
+                                    <a class="badge rounded-pill text-bg-secondary orders_label_text_align" target="_blank"
+                                        t-att-href="'/my/picking/return/pdf/%s?%s' % (picking.id, keep_query())">
+                                        RETURN
+                                    </a>
+                                </div>
+                                <span t-elif="picking.state == 'cancel'"
+                                    class="small badge rounded-pill text-bg-danger orders_label_text_align">
+                                    <i class="fa fa-fw fa-times"/>Cancelled
+                                </span>
+                                <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                    class="small badge rounded-pill text-bg-info orders_label_text_align">
+                                    <i class="fa fa-fw fa-clock-o"/>Preparation
+                                </span>
+                            </div>
+                            <div class="small d-lg-inline-block" t-if="picking.date_done or picking.scheduled_date">
+                                Date:
+                                <span class="text-muted"
+                                        t-field="picking.date_done"
+                                        t-options="{'date_only': True}"/>
+                                <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                        class="text-muted"
+                                        t-field="picking.scheduled_date"
+                                        t-options="{'date_only': True}"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-set="returns" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'incoming')"/>
+            <div t-if="returns" class="col-12 col-lg-6 mb-4">
+                <h4 class="mb-1">Returns</h4>
+                <hr class="mt-1 mb-2"/>
+                <t t-foreach="returns" t-as="picking">
+                    <t t-set="delivery_report_url"
+                        t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                    <div name="return">
+                        <div name="return_details" class="d-flex justify-content-between align-items-center">
+                            <a t-att-href="delivery_report_url">
+                                <span t-esc="picking.name"/>
+                            </a>
+                            <span t-if="picking.state == 'done'"
+                                class="small badge rounded-pill text-bg-success orders_label_text_align">
+                                <i class="fa fa-fw fa-truck"/> Received
+                            </span>
+                            <span t-elif="picking.state == 'cancel'"
+                                class="small badge rounded-pill text-bg-danger orders_label_text_align">
+                                <i class="fa fa-fw fa-times"/> Cancelled
+                            </span>
+                            <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                class="small badge rounded-pill text-bg-info orders_label_text_align">
+                                <i class="fa fa-fw fa-clock-o"/> Awaiting arrival
+                            </span>
+                        </div>
+                        <div class="small d-lg-inline-block">
+                            Date:
+                            <span class="text-muted"
+                                t-field="picking.date_done"
+                                t-options="{'date_only': True}"/>
+                            <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                class="text-muted"
+                                t-field="picking.scheduled_date"
+                                t-options="{'date_only': True}"/>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
+
+</odoo>

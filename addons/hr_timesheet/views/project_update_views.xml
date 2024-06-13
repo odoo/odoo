@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_update_view_search_inherit" model="ir.ui.view">
+            <field name="name">project.update.view.search.inherit</field>
+            <field name="model">project.update</field>
+            <field name="inherit_id" ref="project.project_update_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_updates']" position='after'>
+                    <filter string="My Team's Updates" name="my_team_updates" domain="[('user_id.employee_parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Department's Updates" name="my_department_updates" domain="[('user_id.employee_id.member_of_department', '=', True)]"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="project_update_view_kanban_inherit" model="ir.ui.view">
+            <field name="name">project.update.view.kanban.inherit</field>
+            <field name="model">project.update</field>
+            <field name="inherit_id" ref="project.project_update_view_kanban"/>
+            <field name="arch" type="xml">
+                <b id="tasks_stats" position='after'>
+                    <field name="display_timesheet_stats" invisible="1"/>
+                    <div invisible="not display_timesheet_stats">
+                        <field name="timesheet_time"/><span invisible="not allocated_time"> / <field name="allocated_time"/></span> <field name="uom_id" no_open="1"/><span invisible="not allocated_time"> (<field name="timesheet_percentage"/>%)</span>
+                    </div>
+                </b>
+            </field>
+        </record>
+    </data>
+</odoo>

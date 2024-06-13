@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RecordSelector" >
+        <RecordAutocomplete
+            resModel="props.resModel"
+            value="displayName"
+            domain="props.domain"
+            context="props.context"
+            className="'h-100 o_record_selector'"
+            fieldString="props.fieldString"
+            placeholder="props.placeholder"
+            multiSelect="false"
+            getIds="() => []"
+            update.bind="update"
+        />
+    </t>
+
+</templates>

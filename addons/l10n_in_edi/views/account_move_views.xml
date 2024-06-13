@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in_edi" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info_group']" position="inside">
+                <field name="l10n_in_edi_show_cancel" invisible="1"/>
+                <field name="l10n_in_edi_cancel_reason" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
+                <field name="l10n_in_edi_cancel_remarks" invisible="country_code != 'IN' or state != 'posted' or not l10n_in_edi_show_cancel"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

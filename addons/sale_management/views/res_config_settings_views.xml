@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="online_signature" position="after">
+                <setting id="standardized_offers_setting"
+                         company_dependent="1"
+                         documentation="/applications/sales/sales/send_quotations/quote_template.html"
+                         help="Create standardized offers with default products">
+                    <field name="group_sale_order_template"/>
+                    <div class="content-group" invisible="not group_sale_order_template">
+                        <div class="mt16">
+                            <label for="company_so_template_id" class="o_light_label mr8"/>
+                            <field name="company_so_template_id" class="oe_inline"/>
+                        </div>
+                        <div class="mt8">
+                            <button name="%(sale_management.sale_order_template_action)d" icon="oi-arrow-right" type="action" string="Quotation Templates" class="btn-link"/>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+            <app name="sale_management" position="attributes">
+                <attribute name="notApp">0</attribute>
+            </app>
+        </field>
+    </record>
+
+</odoo>

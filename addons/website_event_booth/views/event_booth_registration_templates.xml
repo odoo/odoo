@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_registration_details" name="Event Booth Registration Details">
+        <t t-call="website_event_booth.event_booth_layout">
+            <div class="d-flex flex-wrap align-items-center justify-content-between mt-3">
+                <div class="d-flex align-items-center">
+                    <a class="d-inline d-md-none btn btn-light me-2" t-attf-href="/event/#{slug(event)}/booth?#{keep_query('booth_category_id', 'booth_ids')}" title="Go back">
+                        <i class="oi oi-chevron-left" role="img"/>
+                    </a>
+                    <h4 class="my-0">Get A Booth</h4>
+                </div>
+                <t t-call="website_event_booth.event_booth_order_progress">
+                    <t t-set="step" t-value="'STEP_DETAILS_FORM'"/>
+                </t>
+            </div>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_booth_registration_inner_1"/>
+            <form method="post"
+                id="o_wbooth_contact_details_form"
+                t-att-data-event-id="event.id"
+                class="col-12 col-lg-9 col-xl-8 js_website_submit_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="booth_category_id" t-att-value="booth_category.id"/>
+                <input type="hidden" name="event_booth_ids" t-att-value="event_booths.ids"/>
+                <div id="o_wbooth_contact_details" class="pt-4">
+                    <h5 class="h5 my-3">Contact Details</h5>
+                    <div class="row mb-3">
+                        <label class="col-form-label col-sm-auto">
+                            <span>Name</span>
+                            <span> *</span>
+                        </label>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" name="contact_name" required="True"
+                                   t-att-value="default_contact.get('name', '')"/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-form-label col-sm-auto">
+                            <span>Email</span>
+                            <span> *</span>
+                        </label>
+                        <div class="col-sm">
+                            <input type="email" class="form-control" name="contact_email" required="True"
+                                   t-att-value="default_contact.get('email', '')"/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-form-label col-sm-auto">Phone</label>
+                        <div class="col-sm">
+                            <input type="tel" class="form-control" name="contact_phone"
+                                   t-att-value="default_contact.get('phone', '')"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_wbooth_registration_error_section alert alert-danger d-none mt-4" role="alert">
+                    <i class="fa fa-exclamation-triangle me-2" role="img" aria-label="Error" title="Error"/>
+                    <span class="o_wbooth_registration_error_message"/>
+                </div>
+                <div class="row pt24 pb48">
+                    <label class="col-form-label col-sm-auto d-none d-sm-inline"/>
+                    <div class="col-sm">
+                        <button type="submit" class="btn btn-primary o_wbooth_registration_confirm">
+                            <span>Book my Booths</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_booth_registration_inner_2"/>
+        </t>
+    </template>
+
+</data></odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-MessagingMenu-header')]" position="inside">
+            <div class="flex-grow-1"/>
+            <t t-if="ui.isSmall and (store.discuss.activeTab !== 'main' or !env.inDiscussApp)">
+                <div t-if="state.addingChat or state.addingChannel" class="w-100 p-1 bg-light" t-ref="selector">
+                    <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
+                    <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
+                    <ChannelSelector category="category" autofocus="true"/>
+                </div>
+            </t>
+            <button t-if="!ui.isSmall and !store.discuss.isActive" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+                New Message
+            </button>
+            <t t-if="ui.isSmall">
+                <t t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp">
+                    <button t-if="!state.addingChat and !state.addingChannel" class="w-50 m-1 me-0 btn btn-primary" t-on-click.stop="onClickStartMeeting">
+                        Start a meeting
+                    </button>
+                    <button t-if="store.discuss.activeTab !== 'channel' and !state.addingChat" t-att-class="ui.isSmall ? 'w-50 p-2 btn btn-secondary m-1' : 'btn btn-link p-2'" t-on-click.stop="onClickNewMessage">
+                        Start a conversation
+                    </button>
+                </t>
+                <button t-if="store.discuss.activeTab === 'channel' and !state.addingChannel" class="w-50 p-2 btn btn-secondary m-1" t-on-click.stop="() => this.state.addingChannel = true">
+                    New Channel
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

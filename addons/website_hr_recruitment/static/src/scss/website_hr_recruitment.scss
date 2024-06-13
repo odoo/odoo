@@ -1,0 +1,102 @@
+
+.o_jobs_topbar_filters {
+    .dropdown-toggle {
+        .fa {
+            margin-right: .4em;
+        }
+
+        &:after {
+            margin-left: 1.2em;
+        }
+    }
+
+    .dropdown-menu {
+        margin-top: $navbar-padding-y;
+        min-width: 12rem;
+    }
+}
+
+.o_website_hr_recruitment_jobs_list {
+    #jobs_grid {
+        .o_job_infos {
+            .fa {
+                color: theme-color('secondary');
+                margin-right: .5rem;
+            }
+        }
+
+        .card {
+            &, * {
+                transition: all .1s;
+            }
+
+            &:hover {
+                box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        .o_jobs_unpublished {
+            opacity: .6;
+        }
+    }
+
+    .o_website_hr_recruitment_job_description {
+        //The ellipsis may not be supported on all platforms, the text will just break for them
+        max-height: 60px; //Limit to 3 lines
+        line-height: 20px;
+        -webkit-line-clamp: 3;
+        -moz-line-clamp: 3;
+        -ms-line-clamp: 3;
+        line-clamp: 3;
+        word-break: break-word;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -ms-box-orient: vertical;
+        box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+.o_linkedin_icon {
+    position: absolute;
+    height: 100%;
+    padding: 2px 5px;
+    margin: 0!important;
+    border-radius: 0.25rem;
+    background-color: #f5993c;
+    filter: invert(1);
+}
+
+.o_apply_description_link:hover {
+    filter: brightness(90%);
+    background-color: #fff;
+    color: #35979c;
+}
+
+.o_resume_input {
+    border-color: #35979c;
+}
+
+.o_resume_input::file-selector-button {
+    color: #35979c;
+    border-color: #35979c;
+    background-color: #fff;
+}
+
+%o_website_hr_recruitment_hover {
+    transition: .5s;
+
+    &:hover {
+        transform: scale(1.01, 1.01);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.25) !important;
+    }
+}
+.o_jobs_image_gallery.s_image_gallery img {
+    @extend %o_website_hr_recruitment_hover;
+}
+#jobs_section, #jobs_thankyou {
+    .s_company_team .o_jobs_hr_recruiter {
+        @extend %o_website_hr_recruitment_hover;
+    }
+}

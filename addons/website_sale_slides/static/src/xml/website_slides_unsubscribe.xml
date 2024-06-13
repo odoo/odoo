@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="website_slides.SlideUnsubscribeDialog" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if=&quot;state.mode === 'leave'&quot;] //p[last()]" position="after">
+            <t t-if="props.enroll === 'payment'">
+                <p class="d-flex align-items-center gap-3 alert alert-warning mb-0">
+                    <i class="fa fa-exclamation-triangle fa-3x"></i>
+                    <div>
+                        This course is paid.<br/>
+                        Leaving the course and re-enrolling afterwards means that you'll be charged again.
+                    </div>
+                </p>
+            </t>
+        </xpath>
+    </t>
+
+</templates>
