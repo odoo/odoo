@@ -3373,7 +3373,15 @@ class MailThread(models.AbstractModel):
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
-        return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+        res = self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+        if 'original_id' in self.env['ir.attachment']._fields:
+            # If the image is SVG: We take the png version if exist otherwise we take the svg
+            # If the image is not SVG: We take the original one if exist otherwise we take it
+            svg_ids = res.filtered(lambda attachment: attachment.mimetype == 'image/svg+xml')
+            non_svg_ids = res - svg_ids
+            original_ids = res.mapped('original_id')
+            res = res.filtered(lambda attachment: (attachment in svg_ids and attachment not in original_ids) or (attachment in non_svg_ids and attachment.original_id not in non_svg_ids))
+        return res
 
     def _get_mail_thread_data(self, request_list):
         res = {'hasWriteAccess': False, 'hasReadAccess': True}
