@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_in
+#   * l10n_in
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 18.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-20 04:52+0000\n"
-"PO-Revision-Date: 2024-11-20 04:52+0000\n"
+"POT-Creation-Date: 2024-11-21 05:41+0000\n"
+"PO-Revision-Date: 2024-11-21 05:41+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -279,7 +279,18 @@ msgid "Deemed Export"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_iap_account__display_name
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_product_template__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_res_country_state__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_in.field_uom_uom__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -386,6 +397,12 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
+#: code:addons/l10n_in/models/res_config_settings.py:0
+msgid "Go to Company"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid "Go to Company configuration"
 msgstr ""
@@ -416,6 +433,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/product_template.py:0
 msgid "HSN code field must consist solely of digits and be %s in length."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_move_line.py:0
+msgid "HSN code is not set in product line %(name)s"
 msgstr ""
 
 #. module: l10n_in
@@ -459,7 +482,18 @@ msgid "IAP Account"
 msgstr ""
 
 #. module: l10n_in
+#: model:ir.model.fields,field_description:l10n_in.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_in.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_in.field_iap_account__id
 #: model:ir.model.fields,field_description:l10n_in.field_l10n_in_port_code__id
+#: model:ir.model.fields,field_description:l10n_in.field_product_template__id
+#: model:ir.model.fields,field_description:l10n_in.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_in.field_res_country_state__id
+#: model:ir.model.fields,field_description:l10n_in.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_in.field_uom_uom__id
 msgid "ID"
 msgstr ""
 
@@ -498,7 +532,7 @@ msgid "Indian Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_in
-#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_edi_ewaybill
+#: model:ir.model.fields,field_description:l10n_in.field_res_config_settings__module_l10n_in_ewaybill
 msgid "Indian Electronic Waybill"
 msgstr ""
 
@@ -538,6 +572,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/template_in.py:0
 msgid "Intra State"
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
+#: code:addons/l10n_in/models/account_move_line.py:0
+msgid "Invalid HSN Code (%(hsn_code)s) in product line %(product_line)s"
 msgstr ""
 
 #. module: l10n_in
@@ -815,6 +855,12 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
+#: code:addons/l10n_in/models/res_config_settings.py:0
+msgid "Please enter a GST number in company."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid "Please set a valid TIN Number on the Place of Supply %s"
 msgstr ""
@@ -893,13 +939,17 @@ msgstr ""
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.sgst_tag_account
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst
-#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
 msgid "SGST"
 msgstr ""
 
 #. module: l10n_in
 #: model:account.account.tag,name:l10n_in.tax_tag_sgst_rc
 msgid "SGST (RC)"
+msgstr ""
+
+#. module: l10n_in
+#: model_terms:ir.ui.view,arch_db:l10n_in.l10n_in_report_invoice_document_inherit
+msgid "SGST/UTGST"
 msgstr ""
 
 #. module: l10n_in
