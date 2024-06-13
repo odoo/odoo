@@ -174,7 +174,6 @@ export class Thread extends Record {
     });
     /** @type {integer|undefined} */
     followersCount;
-    isAdmin = false;
     loadOlder = false;
     loadNewer = false;
     get importantCounter() {

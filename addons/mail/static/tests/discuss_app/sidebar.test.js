@@ -319,6 +319,7 @@ test("sidebar: open channel and leave it", async () => {
     await click(".btn[title='Leave this channel']", {
         parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
     });
+    await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
     await assertSteps(["action_unfollow"]);
@@ -1173,6 +1174,7 @@ test("Can leave channel", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
     await click("[title='Leave this channel']");
+    await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
 });
 

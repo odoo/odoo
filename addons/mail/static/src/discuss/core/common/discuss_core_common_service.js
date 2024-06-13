@@ -126,28 +126,13 @@ export class DiscussCoreCommon {
         });
     }
 
-    /**
-     * todo: merge this with store.Thread.insert() (?)
-     *
-     * @returns {Thread}
-     */
-    createChannelThread(serverData) {
-        const thread = this.store.Thread.insert({
-            ...serverData,
-            model: "discuss.channel",
-            isAdmin:
-                serverData.channel_type !== "group" &&
-                serverData.create_uid === this.store.self.userId,
-        });
-        return thread;
-    }
-
     async createGroupChat({ default_display_mode, partners_to }) {
         const data = await this.orm.call("discuss.channel", "create_group", [], {
             default_display_mode,
             partners_to,
         });
-        const channel = this.createChannelThread(data);
+        const { Thread } = this.store.insert(data);
+        const [channel] = Thread;
         channel.open();
         return channel;
     }
