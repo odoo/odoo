@@ -27,7 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'account_activa_account_1122003',
                 'income_currency_exchange_account_id': 'account_activa_account_9212003',
                 'expense_currency_exchange_account_id': 'account_activa_account_9113006',
-                'account_sale_tax_id': 'tax3sale',
-                'account_purchase_tax_id': 'tax3purchase',
+                'account_sale_tax_id': 'tax1sale',
+                'account_purchase_tax_id': 'tax1purchase',
             },
         }
