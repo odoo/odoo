@@ -30,6 +30,16 @@ export class QtyAtDatePopover extends Component {
             },
         });
     }
+
+    openWarehouses() {
+        this.actionService.doAction("sale_stock.action_server_order_line_warehouse_select", {
+            additionalContext: {
+                active_model: 'sale.order.line',
+                active_id: this.props.record.resId,
+                sale_order_line_id: this.props.record.resId,
+            },
+        });
+    }
 }
 
 

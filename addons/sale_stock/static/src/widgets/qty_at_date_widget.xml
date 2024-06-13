@@ -66,6 +66,11 @@
             <i class="oi oi-fw o_button_icon oi-arrow-right"></i>
             View Forecast
         </button>
+        <button t-if="!props.record.data.is_mto" class="text-start btn btn-link"
+            type="button" t-on-click="openWarehouses">
+            <i class="oi oi-fw o_button_icon oi-arrow-right"></i>
+            Select Warehouse
+        </button>
         </div>
     </t>
 </template>
