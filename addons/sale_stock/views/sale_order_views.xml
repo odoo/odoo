@@ -81,7 +81,7 @@
                                     datetime.time(0,0,0)
                                 ).to_utc().strftime('%Y-%m-%d %H:%M:%S')
                             )
-                            and delivery_status == 'pending'
+                            and delivery_status in ['pending', 'started']
                             and effective_date &lt;= commitment_date
                             or delivery_status == 'partial'
                         )
@@ -92,7 +92,7 @@
                     <field name="delivery_status"
                         decoration-success="delivery_status == 'full'"
                         decoration-warning="delivery_status == 'partial'"
-                        decoration-info="delivery_status == 'pending'"
+                        decoration-info="delivery_status in ['pending', 'started']"
                         widget="badge"
                         optional="hide"/>
                 </field>
