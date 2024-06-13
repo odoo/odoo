@@ -8,7 +8,7 @@ from operator import itemgetter
 from re import findall as regex_findall
 
 from odoo import _, api, Command, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.tools.misc import clean_context, OrderedSet, groupby
@@ -204,6 +204,18 @@ class StockMove(models.Model):
                 location_dest = move.picking_id.location_dest_id
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
+                if not location_dest:
+                    raise RedirectWarning(
+                        message=_("The default destination of '%s' picking type must be set", move.picking_type_id.name),
+                        action={
+                            'res_model': 'stock.picking.type',
+                            'res_id': move.picking_type_id.id,
+                            'type': 'ir.actions.act_window',
+                            'views': [(False, 'form')],
+                            'view_mode': 'form',
+                        },
+                        button_text=_('Edit Picking settings'),
+                    )
             if location_dest and move.location_final_id and move.location_final_id._child_of(location_dest):
                 location_dest = move.location_final_id
             move.location_dest_id = location_dest
