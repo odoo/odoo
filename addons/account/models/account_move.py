@@ -253,7 +253,16 @@ class AccountMove(models.Model):
     made_sequence_hole = fields.Boolean(compute='_compute_made_sequence_hole')
     show_name_warning = fields.Boolean(store=False)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
-    country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
+    country_code = fields.Char(compute='_compute_country_code')
+
+    @api.depends('company_id', 'fiscal_position_id')
+    def _compute_country_code(self):
+        for move in self:
+            if move.fiscal_position_id.foreign_vat:
+                move.country_code = move.fiscal_position_id.country_id.code
+            else:
+                move.country_code = move.company_id.account_fiscal_country_id.code
+
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
 
     # === Hash Fields === #

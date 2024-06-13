@@ -6,8 +6,10 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//block[@id='invoicing_settings']" position="after">
+                <field name="multi_vat_foreign_country_ids" invisible="1"/>
+                <field name="account_fiscal_country_id" invisible="1"/>
                 <block title="Hungarian Electronic Invoicing"
-                       invisible="country_code != 'HU'"
+                       invisible="%(base.hu)d not in (multi_vat_foreign_country_ids + [account_fiscal_country_id])"
                        groups="account.group_account_manager"
                        name="l10n_hu_edi_settings">
                     <setting company_dependent="1" string="NAV Credentials"

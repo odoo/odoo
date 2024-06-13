@@ -327,7 +327,7 @@ class AccountMove(models.Model):
             'company_vat_invalid': {
                 'records': self.company_id.filtered(
                     lambda c: (
-                        (c.vat and not hu_vat_regex.fullmatch(c.vat))
+                        (c.account_fiscal_country_id.code == 'HU' and c.vat and not hu_vat_regex.fullmatch(c.vat))
                         or (c.l10n_hu_group_vat and not hu_vat_regex.fullmatch(c.l10n_hu_group_vat))
                     )
                 ),
@@ -339,10 +339,15 @@ class AccountMove(models.Model):
                 'message': _('Please set company Country, Zip, City and Street!'),
                 'action_text': _('View Company/ies'),
             },
-            'company_not_huf': {
-                'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
-                'message': _('Please use HUF as company currency!'),
-                'action_text': _('View Company/ies'),
+            'fiscal_position_vat_invalid': {
+                'records': self.fiscal_position_id.filtered(
+                    lambda p: (
+                        p.country_id.code == 'HU'
+                        and not hu_vat_regex.fullmatch(p.foreign_vat)
+                    )
+                ),
+                'message': _('Please enter the Hungarian VAT number in 12345678-1-12 format!'),
+                'action_text': _('View Fiscal Position(s)'),
             },
             'partner_vat_missing': {
                 'records': self.partner_id.commercial_partner_id.filtered(
