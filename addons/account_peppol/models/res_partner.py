@@ -14,19 +14,7 @@ TIMEOUT = 10
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    account_peppol_is_endpoint_valid = fields.Boolean(
-        string="PEPPOL endpoint validity",
-        help="The partner's EAS code and PEPPOL endpoint are valid",
-        compute="_compute_account_peppol_is_endpoint_valid", store=True,
-        copy=False,
-    )
-    account_peppol_validity_last_check = fields.Date(
-        string="Checked on",
-        help="Last Peppol endpoint verification",
-        compute="_compute_account_peppol_is_endpoint_valid", store=True,
-        copy=False,
-    )
-    account_peppol_verification_label = fields.Selection(
+    account_peppol_verification_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
             ('not_valid', 'Not valid'),  # does not exist on Peppol at all
@@ -34,9 +22,8 @@ class ResPartner(models.Model):
             ('valid', 'Valid'),
         ],
         string='Peppol endpoint validity',
-        compute='_compute_account_peppol_verification_label',
-        copy=False,
-    )  # field to compute the label to show for partner endpoint
+        compute='_compute_account_peppol_verification_state',
+    )
     is_peppol_edi_format = fields.Boolean(compute='_compute_is_peppol_edi_format')
 
     # -------------------------------------------------------------------------
@@ -61,11 +48,7 @@ class ResPartner(models.Model):
         return etree.fromstring(response.content)
 
     @api.model
-    def _check_peppol_participant_exists(self, edi_identification, check_company=False, ubl_cii_format=False):
-        participant_info = self._get_participant_info(edi_identification)
-        if participant_info is None:
-            return False
-
+    def _check_peppol_participant_exists(self, participant_info, edi_identification, check_company=False):
         participant_identifier = participant_info.findtext('{*}ParticipantIdentifier')
         service_metadata = participant_info.find('.//{*}ServiceMetadataReference')
         service_href = ''
@@ -90,16 +73,15 @@ class ResPartner(models.Model):
                     access_point_contact = access_point_info.findtext('.//{*}TechnicalContactUrl') or access_point_info.findtext('.//{*}TechnicalInformationUrl')
             return access_point_contact
 
-        return self._check_document_type_support(participant_info, ubl_cii_format)
+        return True
 
     def _check_document_type_support(self, participant_info, ubl_cii_format):
-        service_metadata = participant_info.find('.//{*}ServiceMetadataReferenceCollection')
-        if service_metadata is None:
-            return False
-
+        service_references = participant_info.findall(
+            '{*}ServiceMetadataReferenceCollection/{*}ServiceMetadataReference'
+        )
         document_type = self.env['account.edi.xml.ubl_21']._get_customization_ids()[ubl_cii_format]
-        for service in service_metadata.iterfind('{*}ServiceMetadataReference'):
-            if document_type in parse.unquote_plus(service.attrib.get('href', '')):
+        for service in service_references:
+            if document_type in parse.unquote_plus(service.get('href', '')):
                 return True
         return False
 
@@ -113,26 +95,9 @@ class ResPartner(models.Model):
             partner.is_peppol_edi_format = partner.ubl_cii_format not in (False, 'facturx', 'oioubl_201', 'ciusro')
 
     @api.depends('peppol_eas', 'peppol_endpoint', 'ubl_cii_format')
-    def _compute_account_peppol_is_endpoint_valid(self):
+    def _compute_account_peppol_verification_state(self):
         for partner in self:
             partner.button_account_peppol_check_partner_endpoint()
-
-    @api.depends('account_peppol_is_endpoint_valid', 'account_peppol_validity_last_check')
-    def _compute_account_peppol_verification_label(self):
-        for partner in self:
-            if not partner.account_peppol_validity_last_check:
-                partner.account_peppol_verification_label = 'not_verified'
-            elif (
-                partner.is_peppol_edi_format
-                and (participant_info := self._get_participant_info(f'{partner.peppol_eas}:{partner.peppol_endpoint}'.lower())) is not None
-                and not partner._check_document_type_support(participant_info, partner.ubl_cii_format)
-            ):
-                # the partner might exist on the network, but not be able to receive that specific format
-                partner.account_peppol_verification_label = 'not_valid_format'
-            elif partner.account_peppol_is_endpoint_valid:
-                partner.account_peppol_verification_label = 'valid'
-            else:
-                partner.account_peppol_verification_label = 'not_valid'
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -150,10 +115,23 @@ class ResPartner(models.Model):
         """
         self.ensure_one()
 
-        if not (self.peppol_eas and self.peppol_endpoint) or not self.is_peppol_edi_format:
-            self.account_peppol_is_endpoint_valid = False
+        if (
+            not (self.peppol_eas and self.peppol_endpoint)
+            or not self.is_peppol_edi_format
+        ):
+            self.account_peppol_verification_state = 'not_verified'
+            return False
+
+        edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
+        participant_info = self._get_participant_info(edi_identification)
+        if participant_info is None:
+            self.account_peppol_verification_state = 'not_valid'
         else:
-            edi_identification = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
-            self.account_peppol_validity_last_check = fields.Date.context_today(self)
-            self.account_peppol_is_endpoint_valid = bool(self._check_peppol_participant_exists(edi_identification, ubl_cii_format=self.ubl_cii_format))
+            is_participant_on_network = self._check_peppol_participant_exists(participant_info, edi_identification)
+            if is_participant_on_network:
+                is_valid_format = self._check_document_type_support(participant_info, self.ubl_cii_format)
+                self.account_peppol_verification_state = 'valid' if is_valid_format else 'not_valid_format'
+            else:
+                self.account_peppol_verification_state = 'not_valid'
+
         return False

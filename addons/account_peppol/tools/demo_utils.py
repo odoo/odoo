@@ -82,8 +82,7 @@ def _mock_make_request(func, self, *args, **kwargs):
 
 def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     self.ensure_one()
-    self.account_peppol_validity_last_check = fields.Date.today()
-    self.account_peppol_is_endpoint_valid = True
+    self.account_peppol_verification_state = 'valid'
 
 def _mock_user_creation(func, self, *args, **kwargs):
     func(self, *args, **kwargs)
