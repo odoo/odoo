@@ -10,6 +10,7 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
     events: {
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
+        "change select[name='state_id']": "_onChangeState",
     },
 
     /**
@@ -44,6 +45,14 @@ publicWidget.registry.websiteSaleAddress = publicWidget.Widget.extend({
             return;
         }
         return this._changeCountry();
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeState: function (ev) {
+        return Promise.resolve();
     },
 
     /**
