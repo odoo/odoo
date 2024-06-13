@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value" });
@@ -33,15 +33,15 @@ test("StatInfoField formats decimal precision", async () => {
     });
 
     // formatFloat renders according to this.field.digits
-    expect(".oe_stat_button .o_field_widget .o_stat_value:eq(0)").toHaveText("0.4", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_value:eq(0)").toHaveText("0.4", {
         message: "Default precision should be [16,1]",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_value:eq(1)").toHaveText("10.00", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_value:eq(1)").toHaveText("10.00", {
         message: "Currency decimal precision should be 2",
     });
 });
 
-test("StatInfoField in form view", async () => {
+test.tags("desktop")("StatInfoField in form view on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -57,18 +57,46 @@ test("StatInfoField in form view", async () => {
         `,
     });
 
-    expect(".oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
         message: "should have one stat button",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
         message: "should have 10 as value",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_text").toHaveText("int_field", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveText("int_field", {
         message: "should have 'int_field' as text",
     });
 });
 
-test("StatInfoField in form view with specific label_field", async () => {
+test.tags("mobile")("StatInfoField in form view on mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="items" type="object" icon="fa-gear">
+                        <field name="int_field" widget="statinfo" />
+                    </button>
+                </div>
+            </form>
+        `,
+    });
+
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+        message: "should have one stat button",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+        message: "should have 10 as value",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveText("int_field", {
+        message: "should have 'int_field' as text",
+    });
+});
+
+test.tags("desktop")("StatInfoField in form view with specific label_field on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -89,18 +117,51 @@ test("StatInfoField in form view with specific label_field", async () => {
         `,
     });
 
-    expect(".oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
         message: "should have one stat button",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
         message: "should have 10 as value",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_text").toHaveText("yop", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveText("yop", {
         message: "should have 'yop' as text, since it is the value of field foo",
     });
 });
 
-test("StatInfoField in form view with no label", async () => {
+test.tags("mobile")("StatInfoField in form view with specific label_field on mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="items" type="object" icon="fa-gear">
+                            <field string="Useful stat button" name="int_field" widget="statinfo" options="{'label_field': 'foo'}" />
+                        </button>
+                    </div>
+                    <group>
+                        <field name="foo" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        `,
+    });
+
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+        message: "should have one stat button",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+        message: "should have 10 as value",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveText("yop", {
+        message: "should have 'yop' as text, since it is the value of field foo",
+    });
+});
+
+test.tags("desktop")("StatInfoField in form view with no label on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -117,13 +178,42 @@ test("StatInfoField in form view with no label", async () => {
             </form>
         `,
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
         message: "should have one stat button",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
         message: "should have 10 as value",
     });
-    expect(".oe_stat_button .o_field_widget .o_stat_text").toHaveCount(0, {
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveCount(0, {
+        message: "should not have any label",
+    });
+});
+
+test.tags("mobile")("StatInfoField in form view with no label on mobile", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="items" type="object" icon="fa-gear">
+                            <field string="Useful stat button" name="int_field" widget="statinfo" nolabel="1" />
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        `,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect("button.oe_stat_button .o_field_widget .o_stat_info").toHaveCount(1, {
+        message: "should have one stat button",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_value").toHaveText("10", {
+        message: "should have 10 as value",
+    });
+    expect("button.oe_stat_button .o_field_widget .o_stat_text").toHaveCount(0, {
         message: "should not have any label",
     });
 });

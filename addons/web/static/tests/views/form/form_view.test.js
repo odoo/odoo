@@ -292,43 +292,37 @@ test(`status bar rendering without buttons`, async () => {
     expect(`.o_form_sheet_bg > .o_form_statusbar > .o_statusbar_buttons`).toHaveCount(1);
 });
 
-test(`button box rendering on small screen`, async () => {
-    mockService("ui", (env) => {
-        Object.defineProperty(env, "isSmall", {
-            value: false,
-        });
-        return {
-            bus: new EventBus(),
-            size: 0,
-            isSmall: false,
-        };
-    });
-
+test.tags("mobile")(`button box rendering on small screen`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
         arch: `<form><sheet><div name="button_box"><button id="btn1">MyButton</button><button id="btn2">MyButton2</button><button id="btn3">MyButton3</button><button id="btn4">MyButton4</button></div></sheet></form>`,
         resId: 2,
     });
-    expect(`.o-form-buttonbox > button`).toHaveCount(2);
+    expect(`.o-form-buttonbox > button`).toHaveCount(0);
     expect(`.oe_stat_button .o_button_more`).toHaveCount(1);
 
     await contains(`div.oe_stat_button .o_button_more`).click();
+    expect(`.o-form-buttonbox-small button.oe_stat_button`).toHaveCount(4);
     expect(`.o-dropdown--menu #btn4`).toHaveCount(1);
 });
 
-test(`button box rendering on big screen`, async () => {
+test.tags("desktop")(`button box rendering on big screen`, async () => {
+    const bus = new EventBus();
     mockService("ui", (env) => {
         Object.defineProperty(env, "isSmall", {
             value: false,
         });
         return {
-            bus: new EventBus(),
-            size: 6,
-            isSmall: false,
+            bus,
+            get size() {
+                return SIZES.XXL;
+            },
+            get isSmall() {
+                return false;
+            },
         };
     });
-
     let btnString = "";
     for (let i = 0; i < 9; i++) {
         btnString += `<button class="oe_stat_button" id="btn${i}">My Button ${i}</button>`;
@@ -1759,7 +1753,7 @@ test.tags("desktop")(
     }
 );
 
-test(`rendering stat buttons with action`, async () => {
+test.tags("desktop")(`rendering stat buttons with action on desktop`, async () => {
     mockService("action", {
         doActionButton(params) {
             expect.step("doActionButton");
@@ -1792,11 +1786,49 @@ test(`rendering stat buttons with action`, async () => {
     });
     expect(`button.oe_stat_button`).toHaveCount(1);
 
-    await contains(`.oe_stat_button`).click();
+    await contains(`button.oe_stat_button`).click();
     expect.verifySteps(["doActionButton"]);
 });
 
-test(`rendering stat buttons without class`, async () => {
+test.tags("mobile")(`rendering stat buttons with action on mobile`, async () => {
+    mockService("action", {
+        doActionButton(params) {
+            expect.step("doActionButton");
+            expect(params.name).toBe("someaction");
+            expect(params.type).toBe("action");
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button" type="action" name="someaction">
+                            <field name="int_field"/>
+                        </button>
+                        <button class="oe_stat_button" name="some_action" type="action" invisible='bar'>
+                            <field name="bar"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="foo"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect(`button.oe_stat_button`).toHaveCount(1);
+
+    await contains(`button.oe_stat_button`).click();
+    expect.verifySteps(["doActionButton"]);
+});
+
+test.tags("desktop")(`rendering stat buttons without class on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -1819,7 +1851,31 @@ test(`rendering stat buttons without class`, async () => {
     expect(`button.oe_stat_button`).toHaveCount(1);
 });
 
-test(`rendering stat buttons without action`, async () => {
+test.tags("mobile")(`rendering stat buttons without class on mobile`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button>
+                            <field name="int_field"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="foo"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect(`button.oe_stat_button`).toHaveCount(1);
+});
+
+test.tags("desktop")(`rendering stat buttons without action on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -1845,7 +1901,34 @@ test(`rendering stat buttons without action`, async () => {
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
 });
 
-test(`readonly stat buttons stays disabled`, async () => {
+test.tags("mobile")(`rendering stat buttons without action on mobile`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button">
+                            <field name="int_field"/>
+                        </button>
+                        <button class="oe_stat_button" name="some_action" type="action" invisible='bar'>
+                            <field name="bar"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="foo"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
+});
+
+test.tags("desktop")(`readonly stat buttons stays disabled on desktop`, async () => {
     mockService("action", {
         async doActionButton(params) {
             if (params.name == "action_to_perform") {
@@ -1883,6 +1966,49 @@ test(`readonly stat buttons stays disabled`, async () => {
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
 
     await contains(`button[name=action_to_perform]`).click();
+    expect(`button.oe_stat_button[disabled]`).toHaveCount(1, {
+        message: "After performing the action, only one button should be disabled.",
+    });
+    expect.verifySteps(["action_to_perform"]);
+});
+
+test.tags("mobile")(`readonly stat buttons stays disabled on mobile`, async () => {
+    mockService("action", {
+        async doActionButton(params) {
+            if (params.name == "action_to_perform") {
+                expect.step("action_to_perform");
+            }
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button class="oe_stat_button">
+                            <field name="int_field"/>
+                        </button>
+                        <button class="oe_stat_button" type="action" name="some_action">
+                            <field name="bar"/>
+                        </button>
+                    </div>
+                    <group>
+                        <button type="action" name="action_to_perform">Run an action</button>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect(`button.oe_stat_button`).toHaveCount(2);
+    expect(`button.oe_stat_button[disabled]`).toHaveCount(1);
+
+    await contains(`button[name=action_to_perform]`).click();
+    await contains(".o-form-buttonbox .o_button_more").click();
     expect(`button.oe_stat_button[disabled]`).toHaveCount(1, {
         message: "After performing the action, only one button should be disabled.",
     });
@@ -4023,7 +4149,7 @@ test(`editing a translatable field in a duplicate record overrides translations`
     expect.verifySteps(["web_save", "web_override_translations"]);
 });
 
-test(`clicking on stat buttons in edit mode`, async () => {
+test.tags("desktop")(`clicking on stat buttons in edit mode on desktop`, async () => {
     mockService("action", {
         doActionButton() {
             expect.step("doActionButton");
@@ -4063,7 +4189,88 @@ test(`clicking on stat buttons in edit mode`, async () => {
     expect.verifySteps(["web_save", "doActionButton"]);
 });
 
-test(`clicking on stat buttons save and reload in edit mode`, async () => {
+test.tags("mobile")(`clicking on stat buttons in edit mode on mobile`, async () => {
+    mockService("action", {
+        doActionButton() {
+            expect.step("doActionButton");
+        },
+    });
+
+    onRpc("web_save", ({ args }) => expect(args[1].foo).toBe("tralala"));
+    onRpc(({ method }) => expect.step(method));
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div name="button_box">
+                        <button class="oe_stat_button" name="some_action" type="action">
+                            <field name="bar"/>
+                        </button>
+                    </div>
+                    <group>
+                        <field name="foo"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+    });
+    expect.verifySteps(["get_views", "web_read"]);
+
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
+    expect.verifySteps(["doActionButton"]);
+    expect(`.o_form_editable`).toHaveCount(1);
+
+    await contains(`.o_field_widget[name=foo] input`).edit("tralala");
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
+    expect(`.o_form_editable`).toHaveCount(1);
+    expect.verifySteps(["web_save", "doActionButton"]);
+});
+
+test.tags("desktop")(
+    `clicking on stat buttons save and reload in edit mode on desktop`,
+    async () => {
+        mockService("action", {
+            doActionButton() {},
+        });
+
+        onRpc("web_save", ({ args }) => {
+            // simulate an override of the model...
+            args[1].name = "GOLDORAK";
+        });
+
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <sheet>
+                    <div name="button_box">
+                        <button class="oe_stat_button" type="action">
+                            <field name="int_field" widget="statinfo" string="Some number"/>
+                        </button>
+                    </div>
+                <group>
+                    <field name="name"/>
+                </group>
+                </sheet>
+            </form>
+        `,
+            resId: 2,
+        });
+        expect(`.o_control_panel .o_breadcrumb`).toHaveText("second record");
+
+        await contains(`.o_field_widget[name=name] input`).edit("some other name");
+        await contains(`button.oe_stat_button`).click();
+        expect(`.o_control_panel .o_breadcrumb`).toHaveText("GOLDORAK");
+    }
+);
+
+test.tags("mobile")(`clicking on stat buttons save and reload in edit mode on mobile`, async () => {
     mockService("action", {
         doActionButton() {},
     });
@@ -4095,7 +4302,8 @@ test(`clicking on stat buttons save and reload in edit mode`, async () => {
     expect(`.o_control_panel .o_breadcrumb`).toHaveText("second record");
 
     await contains(`.o_field_widget[name=name] input`).edit("some other name");
-    await contains(`.oe_stat_button`).click();
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
     expect(`.o_control_panel .o_breadcrumb`).toHaveText("GOLDORAK");
 });
 
@@ -6206,7 +6414,7 @@ test(`context of onchanges contains the context of changed fields`, async () => 
     expect.verifySteps(["onchange"]);
 });
 
-test(`clicking on a stat button with a context`, async () => {
+test.tags("desktop")(`clicking on a stat button with a context on desktop`, async () => {
     mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
@@ -6232,11 +6440,42 @@ test(`clicking on a stat button with a context`, async () => {
         resId: 2,
         context: { some_context: true },
     });
-    await contains(`.oe_stat_button`).click();
+    await contains(`button.oe_stat_button`).click();
     expect.verifySteps(["doActionButton"]);
 });
 
-test(`clicking on a stat button with x2many in context`, async () => {
+test.tags("mobile")(`clicking on a stat button with a context on mobile`, async () => {
+    mockService("action", {
+        doActionButton({ buttonContext }) {
+            // button context should have been evaluated and given to the
+            // action, with magic keys but without previous context
+            expect(buttonContext).toEqual({ test: 2 });
+            expect.step("doActionButton");
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="action" name="1" context="{'test': id}">
+                            <field name="float_field" widget="statinfo"/>
+                        </button>
+                    </div>
+                </sheet>
+            </form>`,
+        resId: 2,
+        context: { some_context: true },
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
+    expect.verifySteps(["doActionButton"]);
+});
+
+test.tags("desktop")(`clicking on a stat button with x2many in context on desktop`, async () => {
     Partner._records[1].type_ids = [12];
 
     mockService("action", {
@@ -6264,11 +6503,44 @@ test(`clicking on a stat button with x2many in context`, async () => {
         resId: 2,
         context: { some_context: true },
     });
-    await contains(`.oe_stat_button`).click();
+    await contains(`button.oe_stat_button`).click();
     expect.verifySteps(["doActionButton"]);
 });
 
-test(`clicking on a stat button with no context`, async () => {
+test.tags("mobile")(`clicking on a stat button with x2many in context on mobile`, async () => {
+    Partner._records[1].type_ids = [12];
+
+    mockService("action", {
+        doActionButton({ buttonContext }) {
+            expect(buttonContext).toEqual({ test: [12] });
+            expect.step("doActionButton");
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="action" name="1" context="{'test': type_ids}">
+                            <field name="float_field" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="type_ids" invisible="1"/>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+        context: { some_context: true },
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
+    expect.verifySteps(["doActionButton"]);
+});
+
+test.tags("desktop")(`clicking on a stat button with no context on desktop`, async () => {
     mockService("action", {
         doActionButton({ buttonContext }) {
             // button context should have been evaluated and given to the
@@ -6295,7 +6567,39 @@ test(`clicking on a stat button with no context`, async () => {
         resId: 2,
         context: { some_context: true },
     });
-    await contains(`.oe_stat_button`).click();
+    await contains(`button.oe_stat_button`).click();
+    expect.verifySteps(["doActionButton"]);
+});
+
+test.tags("mobile")(`clicking on a stat button with no context on mobile`, async () => {
+    mockService("action", {
+        doActionButton({ buttonContext }) {
+            // button context should have been evaluated and given to the
+            // action, with magic keys but without previous context
+            expect(buttonContext).toEqual({});
+            expect.step("doActionButton");
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="action" name="1">
+                            <field name="float_field" widget="statinfo"/>
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        `,
+        resId: 2,
+        context: { some_context: true },
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
     expect.verifySteps(["doActionButton"]);
 });
 
@@ -6319,7 +6623,7 @@ test(`display a stat button outside a buttonbox`, async () => {
     expect(`button .o_field_widget .o_stat_value`).toHaveText("9");
 });
 
-test(`display something else than a button in a buttonbox`, async () => {
+test.tags("desktop")(`display something else than a button in a buttonbox on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -6340,11 +6644,35 @@ test(`display something else than a button in a buttonbox`, async () => {
     expect(`.o-form-buttonbox > label`).toHaveCount(1);
 });
 
-test(`invisible fields are not considered as visible in a buttonbox`, async () => {
+test.tags("mobile")(`display something else than a button in a buttonbox on mobile`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
         arch: `
+            <form>
+                <div name="button_box" class="oe_button_box">
+                    <button type="recordect" class="oe_stat_button" icon="fa-check-square">
+                        <field name="bar"/>
+                    </button>
+                    <label/>
+                </div>
+            </form>
+        `,
+        resId: 2,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect(`.o-form-buttonbox-small > .o-dropdown-item`).toHaveCount(2);
+    expect(`.o-form-buttonbox-small > .o-dropdown-item > .oe_stat_button`).toHaveCount(1);
+    expect(`.o-form-buttonbox-small > .o-dropdown-item > label`).toHaveCount(1);
+});
+
+test.tags("desktop")(
+    `invisible fields are not considered as visible in a buttonbox on desktop`,
+    async () => {
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
             <form>
                 <div name="button_box" class="oe_button_box">
                     <field name="foo" invisible="1"/>
@@ -6359,11 +6687,40 @@ test(`invisible fields are not considered as visible in a buttonbox`, async () =
                 </div>
             </form>
         `,
-        resId: 2,
-    });
-    expect(`.o-form-buttonbox > *`).toHaveCount(1);
-    expect(`.o-form-buttonbox`).toHaveClass("o_not_full");
-});
+            resId: 2,
+        });
+        expect(`.o-form-buttonbox > *`).toHaveCount(1);
+        expect(`.o-form-buttonbox`).toHaveClass("o_not_full");
+    }
+);
+
+test.tags("mobile")(
+    `invisible fields are not considered as visible in a buttonbox on mobile`,
+    async () => {
+        await mountView({
+            resModel: "partner",
+            type: "form",
+            arch: `
+            <form>
+                <div name="button_box" class="oe_button_box">
+                    <field name="foo" invisible="1"/>
+                    <field name="bar" invisible="1"/>
+                    <field name="int_field" invisible="1"/>
+                    <field name="float_field" invisible="1"/>
+                    <field name="display_name" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="date" invisible="1"/>
+                    <field name="datetime" invisible="1"/>
+                    <button type="recordect" class="oe_stat_button" icon="fa-check-square"/>
+                </div>
+            </form>
+        `,
+            resId: 2,
+        });
+        expect(`.o-form-buttonbox > *`).toHaveCount(1);
+        expect(`.o-form-buttonbox`).toHaveClass("o_full");
+    }
+);
 
 test(`display correctly buttonbox, in large size class`, async () => {
     mockService("ui", (env) => {
@@ -6769,7 +7126,7 @@ test(`open new record even with warning message`, async () => {
     expect(`.o_field_widget[name=foo] input`).toHaveValue("");
 });
 
-test(`render stat button with string inline`, async () => {
+test.tags("desktop")(`render stat button with string inline on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -6784,7 +7141,26 @@ test(`render stat button with string inline`, async () => {
             </form>
         `,
     });
-    expect(`.o_form_view .o-form-buttonbox .oe_stat_button`).toHaveText("Inventory Moves");
+    expect(`.o_form_view .o-form-buttonbox button.oe_stat_button`).toHaveText("Inventory Moves");
+});
+
+test.tags("mobile")(`render stat button with string inline on mobile`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button string="Inventory Moves" class="oe_stat_button" icon="oi-arrows-v"/>
+                    </div>
+                </sheet>
+            </form>
+        `,
+    });
+    await contains(".o-form-buttonbox .o_button_more").click();
+    expect(`.o-form-buttonbox-small button.oe_stat_button`).toHaveText("Inventory Moves");
 });
 
 test(`open one2many form containing one2many`, async () => {
@@ -7011,9 +7387,9 @@ test(`correct amount of buttons`, async () => {
         expect(`.o-form-buttonbox button.oe_stat_button`).toHaveCount(n);
     };
 
-    await assertFormContainsNButtonsWithSizeClass(SIZES.XS, 2);
-    await assertFormContainsNButtonsWithSizeClass(SIZES.VSM, 3);
-    await assertFormContainsNButtonsWithSizeClass(SIZES.SM, 4);
+    await assertFormContainsNButtonsWithSizeClass(SIZES.XS, 0);
+    await assertFormContainsNButtonsWithSizeClass(SIZES.VSM, 0);
+    await assertFormContainsNButtonsWithSizeClass(SIZES.SM, 0);
     await assertFormContainsNButtonsWithSizeClass(SIZES.MD, 7);
     await assertFormContainsNButtonsWithSizeClass(SIZES.LG, 3);
     await assertFormContainsNButtonsWithSizeClass(SIZES.XL, 4);
@@ -9573,7 +9949,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     expect(`[name=foo] span`).toHaveText("xphone");
 });
 
-test(`Action Button clicked with failing action`, async () => {
+test.tags("desktop")(`Action Button clicked with failing action on desktop`, async () => {
     expect.errors(1);
 
     class MyComponent extends Component {
@@ -9611,7 +9987,51 @@ test(`Action Button clicked with failing action`, async () => {
     });
     expect(`.o_form_view .test`).toHaveCount(1);
 
-    await contains(`.oe_stat_button`).click();
+    await contains(`button.oe_stat_button`).click();
+    expect(`.o_form_view .test`).toHaveCount(1);
+    expect.verifyErrors(["test"]);
+});
+
+test.tags("mobile")(`Action Button clicked with failing action on mobile`, async () => {
+    expect.errors(1);
+
+    class MyComponent extends Component {
+        static props = ["*"];
+        static template = xml`<div/>`;
+        setup() {
+            throw new Error("test");
+        }
+    }
+    registry.category("actions").add("someaction", MyComponent);
+
+    Partner._views = {
+        form: `
+            <form>
+                <sheet>
+                    <div name="button_box" class="oe_button_box test">
+                        <button class="oe_stat_button" type="action" name="someaction">
+                            Test
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        `,
+        search: `<search/>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_id: 1,
+        type: "ir.actions.act_window",
+        target: "current",
+        res_model: "partner",
+        view_mode: "form",
+        views: [[false, "form"]],
+    });
+    expect(`.o_form_view .test`).toHaveCount(1);
+
+    await contains(".o-form-buttonbox .o_button_more").click();
+    await contains(`button.oe_stat_button`).click();
     expect(`.o_form_view .test`).toHaveCount(1);
     expect.verifyErrors(["test"]);
 });
