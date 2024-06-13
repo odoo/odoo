@@ -295,22 +295,34 @@ export async function switchView(viewType) {
 // Pager
 //-----------------------------------------------------------------------------
 
-export function getPagerValue() {
-    return queryText(".o_pager .o_pager_value")
+/**
+ * @param {HTMLElement} root
+ */
+export function getPagerValue(root) {
+    return queryText(".o_pager .o_pager_value", { root })
         .split(/\s*-\s*/)
         .map(Number);
 }
 
-export function getPagerLimit() {
-    return parseInt(queryText(".o_pager .o_pager_limit"), 10);
+/**
+ * @param {HTMLElement} root
+ */
+export function getPagerLimit(root) {
+    return parseInt(queryText(".o_pager .o_pager_limit", { root }), 10);
 }
 
-export async function pagerNext() {
-    await contains(".o_pager button.o_pager_next").click();
+/**
+ * @param {HTMLElement} root
+ */
+export async function pagerNext(root) {
+    await contains(".o_pager button.o_pager_next", { root }).click();
 }
 
-export async function pagerPrevious() {
-    await contains(".o_pager button.o_pager_previous").click();
+/**
+ * @param {HTMLElement} root
+ */
+export async function pagerPrevious(root) {
+    await contains(".o_pager button.o_pager_previous", { root }).click();
 }
 
 /**
