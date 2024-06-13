@@ -3,6 +3,9 @@ import { Record } from "@mail/core/common/record";
 
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
+import { user } from "@web/core/user";
+
+const { DateTime } = luxon;
 
 export class ChannelMember extends Record {
     static id = "id";
@@ -23,6 +26,8 @@ export class ChannelMember extends Record {
     id;
     /** @type {luxon.DateTime} */
     last_interest_dt = Record.attr(undefined, { type: "datetime" });
+    /** @type {luxon.DateTime} */
+    last_seen_dt = Record.attr(undefined, { type: "datetime" });
     persona = Record.one("Persona", { inverse: "channelMembers" });
     thread = Record.one("Thread", { inverse: "channelMembers" });
     threadAsSelf = Record.one("Thread", {
@@ -96,6 +101,13 @@ export class ChannelMember extends Record {
      */
     hasSeen(message) {
         return this.persona.eq(message.author) || this.seen_message_id?.id >= message.id;
+    }
+    get lastSeenDt() {
+        return this.last_seen_dt
+            ? this.last_seen_dt.toLocaleString(DateTime.TIME_24_SIMPLE, {
+                  locale: user.lang?.replace("_", "-"),
+              })
+            : undefined;
     }
 }
 
