@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: ".o_form_status_indicator_buttons.invisible", // wait for save to be finished
 },
 {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
+    trigger: '.o_field_pol_product_many2one',
     run: "click",
 }, {
     trigger: '[name=product_template_id] button.fa-pencil', // edit the matrix

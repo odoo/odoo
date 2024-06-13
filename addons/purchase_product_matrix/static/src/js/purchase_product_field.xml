@@ -2,18 +2,17 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="purchase.PurchaseProductField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='hasExternalButton']" position="before">
-            <t t-if="isConfigurableTemplate">
-                <button
-                    type="button"
-                    class="btn btn-secondary fa fa-pencil"
-                    tabindex="-1"
-                    draggable="false"
-                    t-att-aria-label="configurationButtonHelp"
-                    t-att-data-tooltip="configurationButtonHelp"
-                    t-on-click="onEditConfiguration"/>
-            </t>
+    <t t-name="purchase.PurchaseProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+        <xpath expr="//button[@t-if='hasExternalButton']" position="before">
+            <button
+                t-if="isConfigurableTemplate"
+                type="button"
+                class="btn btn-link fa fa-pencil"
+                tabindex="-1"
+                draggable="false"
+                t-att-aria-label="configurationButtonHelp"
+                t-att-data-tooltip="configurationButtonHelp"
+                t-on-click="onEditConfiguration"/>
         </xpath>
     </t>
 
