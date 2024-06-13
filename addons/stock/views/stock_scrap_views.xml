@@ -60,6 +60,7 @@
                                 </div>
                                 <field name="lot_id" context="{'default_product_id': product_id}" invisible="not product_id or tracking == 'none'" readonly="state == 'done'" required="tracking != 'none'" groups="stock.group_production_lot"/>
                                 <field name="should_replenish" readonly="state == 'done'"/>
+                                <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                             </group>
                             <group>
                                 <field name="company_id" invisible="1" readonly="state == 'done'"/>
@@ -160,6 +161,7 @@
                                 invisible="not product_id or tracking == 'none'"
                                 readonly="state == 'done'"
                                 required="tracking != 'none'"/>
+                            <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
                         </group>
                         <group>
                             <field name="picking_id" invisible="1" readonly="state == 'done'"/>
