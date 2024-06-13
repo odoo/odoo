@@ -7,7 +7,7 @@
 
     <record id="hr_contract_admin" model="hr.contract">
         <field name="name">Mitchell Admin Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-1-1'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1))"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_admin').job_id.id"/>
@@ -20,8 +20,8 @@
 
     <record id="hr_contract_admin_new" model="hr.contract">
         <field name="name">Contract For Mitchell Admin</field>
-        <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
-        <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=1, month=1, day=1))"/>
         <field name="structure_type_id" ref="hr_contract.structure_type_employee"/>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="notes">This is Mitchell Admin's contract</field>
@@ -44,7 +44,7 @@
 
     <record id="hr_contract_mit" model="hr.contract">
         <field name="name">Marketing Executive Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1 if DateTime.today().date() &lt; DateTime(DateTime.today().year, 3, 1).date() else 0, month=3, day=1))"/>
         <field name="employee_id" ref="hr.employee_mit"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_mit').job_id.id"/>
@@ -57,7 +57,7 @@
 
     <record id="hr_contract_stw" model="hr.contract">
         <field name="name">Randall Lewis Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-2-1'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1 if DateTime.today().date() &lt; DateTime(DateTime.today().year, 2, 1).date() else 0, month=2, day=1))"/>
         <field name="date_end" eval="time.strftime('%Y')+'-12-1'"/>
         <field name="employee_id" ref="hr.employee_stw"/>
         <field name="job_id" model="hr.job"
@@ -84,7 +84,7 @@
 
     <record id="hr_contract_han" model="hr.contract">
         <field name="name">Walter Horton Contract</field>
-        <field name="date_start" eval="time.strftime('%Y')+'-3-1'"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1 if DateTime.today().date() &lt; DateTime(DateTime.today().year, 3, 1).date() else 0, month=3, day=1))"/>
         <field name="employee_id" ref="hr.employee_han"/>
         <field name="job_id" model="hr.job"
             eval="obj().env.ref('hr.employee_han').job_id.id"/>
