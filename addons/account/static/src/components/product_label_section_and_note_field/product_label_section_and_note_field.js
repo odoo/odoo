@@ -13,9 +13,15 @@ import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_la
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
+
+    setup() {
+        super.setup();
+        this.productColumnNames = ["product_id", "product_template_id"];
+    }
+
     getCellTitle(column, record) {
         // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (column.name === "product_id") {
+        if (this.productColumnNames.includes(column.name)) {
             return;
         }
         super.getCellTitle(column, record);
@@ -23,7 +29,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
 
     getActiveColumns(list) {
         let activeColumns = super.getActiveColumns(list);
-        const productCol = activeColumns.find((col) => col.name === "product_id");
+        const productCol = activeColumns.find((col) => this.productColumnNames.includes(col.name));
         const labelCol = activeColumns.find((col) => col.name === "name");
 
         if (productCol) {
@@ -33,7 +39,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
                 list.records.forEach((record) => (record.columnIsProductAndLabel = false));
             }
             activeColumns = activeColumns.filter((col) => col.name !== "name");
-            this.titleField = "product_id";
+            this.titleField = productCol.name;
         } else {
             this.titleField = "name";
         }
@@ -118,9 +124,9 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
         this.switchToLabel = false;
         this.columnIsProductAndLabel = useState({ value: this.props.record.columnIsProductAndLabel });
         this.labelNode = useRef("labelNodeRef");
-        useProductAndLabelAutoresize(this.labelNode, { targetParentName: "product_id" });
+        useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
         this.productNode = useRef("productNodeRef");
-        useProductAndLabelAutoresize(this.productNode, { targetParentName: "product_id" });
+        useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
 
         useEffect(
             () => {
@@ -138,10 +144,13 @@ export class ProductLabelSectionAndNoteField extends Many2OneField {
     }
 
     get productName() {
-        return this.props.record.data.product_id[1];
+        return this.props.record.data[this.props.name][1];
     }
 
     get label() {
+        if (this.props.record.data.name === this.productName) {
+            return;
+        }
         return this.props.record.data.name;
     }
 
