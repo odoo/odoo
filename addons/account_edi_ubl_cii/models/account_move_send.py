@@ -25,7 +25,7 @@ class AccountMoveSend(models.Model):
         return not move.invoice_pdf_report_id \
             and not move.ubl_cii_xml_id \
             and move.is_sale_document() \
-            and bool(move.partner_id.ubl_cii_format)
+            and bool(move.partner_id.commercial_partner_id.ubl_cii_format)
 
     def _get_available_field_values_in_multi(self, move):
         # EXTENDS 'account'
@@ -43,7 +43,7 @@ class AccountMoveSend(models.Model):
             wizard.checkbox_ubl_cii_label = False
             if wizard.mode in ('invoice_single', 'invoice_multi'):
                 code_to_label = dict(wizard.move_ids.partner_id._fields['ubl_cii_format'].selection)
-                codes = wizard.move_ids.partner_id.mapped('ubl_cii_format')
+                codes = wizard.move_ids.partner_id.commercial_partner_id.mapped('ubl_cii_format')
                 if any(codes):
                     wizard.checkbox_ubl_cii_label = ", ".join(code_to_label[c] for c in set(codes) if c)
 
@@ -80,7 +80,7 @@ class AccountMoveSend(models.Model):
         results = super()._get_placeholder_mail_attachments_data(move)
 
         if self.mode == 'invoice_single' and self._needs_ubl_cii_placeholder():
-            builder = move.partner_id._get_edi_builder()
+            builder = move.partner_id.commercial_partner_id._get_edi_builder()
             filename = builder._export_invoice_filename(move)
             results.append({
                 'id': f'placeholder_{filename}',
@@ -100,7 +100,7 @@ class AccountMoveSend(models.Model):
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if self.mode == 'invoice_single' and self.checkbox_ubl_cii_xml and self._get_default_enable_ubl_cii_xml(invoice):
-            builder = invoice.partner_id._get_edi_builder()
+            builder = invoice.partner_id.commercial_partner_id._get_edi_builder()
 
             xml_content, errors = builder._export_invoice(invoice)
             filename = builder._export_invoice_filename(invoice)
@@ -124,7 +124,7 @@ class AccountMoveSend(models.Model):
                     'res_field': 'ubl_cii_xml_file',  # Binary field
                 }
                 invoice_data['ubl_cii_xml_options'] = {
-                    'ubl_cii_format': invoice.partner_id.ubl_cii_format,
+                    'ubl_cii_format': invoice.partner_id.commercial_partner_id.ubl_cii_format,
                     'builder': builder,
                 }
 
