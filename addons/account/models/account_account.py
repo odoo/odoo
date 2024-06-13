@@ -736,9 +736,12 @@ class AccountAccount(models.Model):
                 amount_residual = (debit-credit),
                 amount_residual_currency = amount_currency
             WHERE full_reconcile_id IS NULL and account_id IN %s
+            RETURNING id
         """
         self.env.cr.execute(query, [tuple(self.ids)])
-        self.env['account.move.line'].invalidate_model(['amount_residual', 'amount_residual_currency', 'reconciled'])
+        lines = self.env['account.move.line'].browse(id for [id] in self.env.cr.fetchall())
+        lines.invalidate_recordset(['amount_residual', 'amount_residual_currency', 'reconciled'])
+        lines.modified(['amount_residual', 'amount_residual_currency', 'reconciled'])
 
     def _toggle_reconcile_to_false(self):
         '''Toggle the `reconcile´ boolean from True -> False

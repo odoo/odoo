@@ -758,6 +758,7 @@ class Channel(models.Model):
         self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
                             (fields.Datetime.now() if pinned else None, message_to_update.id))
         message_to_update.invalidate_recordset(['pinned_at'])
+        message_to_update.modified(["pinned_at"])
 
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
             'Message': {
