@@ -31,8 +31,10 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         run: "click",
     },
     {
+        trigger: '.modal div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
+    },
+    {
         content: "load parseltongue",
-        extra_trigger: '.modal div[name="lang_ids"] .rounded-pill .o_tag_badge_text:contains(Parseltongue)',
         trigger: '.modal-footer button[name=lang_install]',
         run: "click",
     },
@@ -93,9 +95,11 @@ wTourUtils.registerWebsitePreviewTour('automatic_editor_on_new_website', {
         run: "click",
     },
     {
+        trigger: ".o_menu_systray .o_user_menu",
+    },
+    {
         content: "Check that the homepage is loaded",
         trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
-        extra_trigger: ".o_menu_systray .o_user_menu",
         timeout: 30000,
     },
 ]);

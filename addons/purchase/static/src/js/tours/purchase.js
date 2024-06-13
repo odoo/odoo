@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import PurchaseAdditionalTourSteps from "@purchase/js/tours/purchase_steps";
+import { queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("purchase_tour", {
     url: "/web",
@@ -30,15 +31,21 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
+            trigger: ".o_purchase_order",
+            auto: true,
+        },
+        {
             trigger: ".o_list_button_add",
-            extra_trigger: ".o_purchase_order",
             content: _t("Let's create your first request for quotation."),
             position: "bottom",
             run: "click",
         },
         {
+            trigger: ".o_purchase_order",
+            auto: true,
+        },
+        {
             trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
-            extra_trigger: ".o_purchase_order",
             content: _t("Search a vendor name, or create one on the fly."),
             position: "bottom",
             run: "edit Agrolait",
@@ -50,24 +57,30 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
+            trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
+            auto: true,
+        },
+        {
             trigger: ".o_field_x2many_list_row_add > a",
-            extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
             content: _t("Add some products or services to your quotation."),
             position: "bottom",
             run: "click",
         },
         {
+            trigger: ".o_purchase_order",
+            auto: true,
+        },
+        {
             trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",
-            extra_trigger: ".o_purchase_order",
             content: _t("Select a product, or create a new one on the fly."),
             position: "right",
             run: function (actions) {
                 const input = this.anchor.querySelector("input");
                 actions.edit("DESK0001", input || this.anchor);
-                var $descriptionElement = $('.o_form_editable textarea[name="name"]');
+                const descriptionElement = queryFirst('.o_form_editable textarea[name="name"]');
                 // when description changes, we know the product has been created
-                $descriptionElement.change(function () {
-                    $descriptionElement.addClass("product_creation_success");
+                descriptionElement.addEventListener("change", () => {
+                    descriptionElement.classList.add("product_creation_success");
                 });
             },
         },
@@ -81,8 +94,11 @@ registry.category("web_tour.tours").add("purchase_tour", {
             auto: true,
         },
         {
+            trigger: ".o_purchase_order",
+            auto: true,
+        },
+        {
             trigger: ".o_form_editable input[name='product_qty'] ",
-            extra_trigger: ".o_purchase_order",
             content: _t("Indicate the product quantity you want to order."),
             position: "right",
             run: "edit 12.0",
@@ -93,27 +109,25 @@ registry.category("web_tour.tours").add("purchase_tour", {
             ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']"
         ),
         {
-            trigger: ".modal-content",
-            auto: true,
-            run: function (actions) {
-                // Check in case user must add email to vendor
-                var $input = $(".modal-content input[name='email']");
-                if ($input.length) {
-                    actions.edit("agrolait@example.com", $input);
-                    actions.click($(".modal-footer button"));
-                }
-            },
+            trigger: ".modal-content input[name='email']",
+            run: "edit agrolait@example.com",
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
-            extra_trigger: ".modal-footer button[name='action_send_mail']",
+            auto: true,
+        },
+        {
+            trigger: ".modal-footer button[name='action_send_mail']",
             content: _t("Send the request for quotation to your vendor."),
             position: "left",
             run: "click",
         },
         {
+            trigger: ".o_purchase_order",
+            auto: true,
+        },
+        {
             trigger: ".o_field_widget [name=price_unit]",
-            extra_trigger: ".o_purchase_order",
             content: _t(
                 "Once you get the price from the vendor, you can complete the purchase order with the right price."
             ),

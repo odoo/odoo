@@ -46,9 +46,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             },
         },
         {
+            trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+        },
+        {
             content: "Open full composer",
             trigger: "button[aria-label='Full composer']",
-            extra_trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
             run: "click",
         },
         {

@@ -56,9 +56,11 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         },
     },
     {
+        trigger: ".oe_snippet[name='Custom Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+    },
+    {
         content: "rename custom snippet",
         trigger: ".oe_snippet[name='Custom Banner'] we-button.o_rename_btn",
-        extra_trigger: ".oe_snippet[name='Custom Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
         run: "click",
     },
     {
@@ -87,9 +89,11 @@ wTourUtils.registerWebsitePreviewTour('test_custom_snippet', {
         },
     },
     {
+        trigger: ".oe_snippet[name='Bruce Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+    },
+    {
         content: "delete custom snippet",
         trigger: ".oe_snippet[name='Bruce Banner'] we-button.o_delete_btn",
-        extra_trigger: ".oe_snippet[name='Bruce Banner'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
         run: "click",
     },
     {

@@ -9,14 +9,16 @@ var BROKEN_STEP = {
     // to properly wait for the page to be saved & reloaded in order to fix the
     // race condition of a tour ending on a side-effect (with the possible
     // exception of somehow telling the harness / browser to do it)
-    trigger: 'body',
+    trigger: "body",
 };
-wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1', {
-    test: true,
-    url: '/test_page_view',
-    // 1. Edit the page through Edit Mode, it will COW the view
-    edition: true,
-},
+wTourUtils.registerWebsitePreviewTour(
+    "test_reset_page_view_complete_flow_part1",
+    {
+        test: true,
+        url: "/test_page_view",
+        // 1. Edit the page through Edit Mode, it will COW the view
+        edition: true,
+    },
     () => [
         {
             content: "drop a snippet",
@@ -40,23 +42,29 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part1'
             content: "add a broken t-field in page DOM",
             trigger: 'div.ace_line .ace_xml:contains("placeholder")',
             run: function () {
-                ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
+                ace.edit(document.querySelector("#resource-editor div"))
+                    .getSession()
+                    .insert({ row: 4, column: 1 }, '<t t-field="not.exist"/>\n');
             },
         },
         {
+            trigger: '.ace_content:contains("not.exist")',
+        },
+        {
             content: "save the html editor",
-            extra_trigger: '.ace_content:contains("not.exist")',
             trigger: ".o_resource_editor button:contains(Save)",
             run: "click",
         },
-        BROKEN_STEP
+        BROKEN_STEP,
     ]
 );
 
-wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2', {
-    test: true,
-    url: '/test_page_view',
-},
+wTourUtils.registerWebsitePreviewTour(
+    "test_reset_page_view_complete_flow_part2",
+    {
+        test: true,
+        url: "/test_page_view",
+    },
     () => [
         {
             content: "check that the view got fixed",
@@ -64,7 +72,7 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         },
         {
             content: "check that the inherited COW view is still there (created during edit mode)",
-            trigger: ':iframe #oe_structure_test_website_page .s_cover',
+            trigger: ":iframe #oe_structure_test_website_page .s_cover",
         },
         //4. Now break the inherited view created when dropping a snippet
         {
@@ -79,19 +87,21 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
         },
         {
             content: "select oe_structure view",
-            trigger: '.o_resource_editor_title .o_select_menu_toggler',
+            trigger: ".o_resource_editor_title .o_select_menu_toggler",
             run: "click",
         },
         {
             content: "select oe_structure view",
-            trigger: '.o_select_menu_menu .o_select_menu_item:contains(Test Page View)',
+            trigger: ".o_select_menu_menu .o_select_menu_item:contains(Test Page View)",
             run: "click",
         },
         {
             content: "add a broken t-field in page DOM",
             trigger: 'div.ace_line .ace_xml:contains("oe_structure_test_website_page")',
             run: function () {
-                ace.edit(document.querySelector('#resource-editor div')).getSession().insert({row: 4, column: 1}, '<t t-field="not.exist"/>\n');
+                ace.edit(document.querySelector("#resource-editor div"))
+                    .getSession()
+                    .insert({ row: 4, column: 1 }, '<t t-field="not.exist"/>\n');
             },
         },
         {
@@ -99,6 +109,6 @@ wTourUtils.registerWebsitePreviewTour('test_reset_page_view_complete_flow_part2'
             trigger: ".o_resource_editor button:contains(Save)",
             run: "click",
         },
-        BROKEN_STEP
+        BROKEN_STEP,
     ]
 );

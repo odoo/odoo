@@ -18,37 +18,53 @@ registry.category("web_tour.tours").add("sale_tour", {
             position: "right",
             edition: "community",
             run: "click",
-        }, {
+        },
+        {
             trigger: ".o_app[data-menu-xmlid='sale.sale_menu_root']",
             content: _t("Let’s create a beautiful quotation in a few clicks ."),
             position: "bottom",
             edition: "enterprise",
             run: "click",
-        }, {
+        },
+        {
+            trigger: ".o_sale_order",
+            auto: true,
+        },
+        {
             trigger: "button.o_list_button_add",
-            extra_trigger: ".o_sale_order",
             content: _t("Build your first quotation right here!"),
             position: "bottom",
             run: "click",
-        }, {
+        },
+        {
+            trigger: ".o_sale_order",
+            auto: true,
+        },
+        {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
-            extra_trigger: ".o_sale_order",
             content: _t("Search a customer name, or create one on the fly."),
             position: "right",
             run: "edit Agrolait",
-        }, {
+        },
+        {
             trigger: ".ui-menu-item > a:contains('Agrolait')",
             auto: true,
             in_modal: false,
             run: "click",
-        }, {
+        },
+        {
             trigger: ".o_field_x2many_list_row_add > a",
             content: _t("Click here to add some products or services to your quotation."),
             position: "bottom",
             run: "click",
-        }, {
-            trigger: ".o_field_widget[name='product_id'], .o_field_widget[name='product_template_id']",
-            extra_trigger: ".o_sale_order",
+        },
+        {
+            trigger: ".o_sale_order",
+            auto: true,
+        },
+        {
+            trigger:
+                ".o_field_widget[name='product_id'], .o_field_widget[name='product_template_id']",
             content: _t("Select a product, or create a new one on the fly."),
             position: "right",
             run: function (actions) {
@@ -64,21 +80,28 @@ registry.category("web_tour.tours").add("sale_tour", {
                     });
                 }
             },
-            id: "product_selection_step"
-        }, {
+            id: "product_selection_step",
+        },
+        {
             trigger: "a:contains('DESK0001')",
             auto: true,
             run: "click",
-        }, {
+        },
+        {
             trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
             auto: true,
-        }, {
+        },
+        {
+            trigger: ".oi-arrow-right", // Wait for product creation
+            auto: true,
+        },
+        {
             trigger: ".o_field_widget[name='price_unit'] input",
-            extra_trigger: ".oi-arrow-right",  // Wait for product creation
             content: _t("add the price of your product."),
             position: "right",
             run: "edit 10.0 && click .o_selected_row",
-        }, {
+        },
+        {
             trigger: ".o_field_monetary[name='price_subtotal']:contains(10.00)",
             auto: true,
             run: "click",
@@ -90,7 +113,6 @@ registry.category("web_tour.tours").add("sale_tour", {
         ),
         {
             trigger: ".modal-footer button[name='document_layout_save']",
-            extra_trigger: ".modal-footer button[name='document_layout_save']",
             content: _t("let's continue"),
             position: "bottom",
             skip_trigger: ".modal-footer button[name='action_send_mail']",
@@ -98,7 +120,6 @@ registry.category("web_tour.tours").add("sale_tour", {
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
-            extra_trigger: ".modal-footer button[name='action_send_mail']",
             content: _t("Go ahead and send the quotation."),
             position: "bottom",
             run: "click",
@@ -107,6 +128,6 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: "body:not(.modal-open)",
             auto: true,
             run: "click",
-        }
+        },
     ],
 });

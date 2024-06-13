@@ -16,7 +16,6 @@ function openRoot() {
     }, {
         content: "wait for client reload",
         trigger: 'body:not(.wait)',
-        run() {}
     }];
 }
 function openUserProfileAtSecurityTab() {
@@ -80,9 +79,12 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_enable_wizard]',
     run: "click",
-}, {
+},
+{
+    trigger: "div:contains(enter your password)",
+},
+{
     content: "Check that we have to enter enhanced security mode and input password",
-    extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
     run: "edit demo",
 }, {
@@ -92,7 +94,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, {
     content: "Check the wizard has opened",
     trigger: 'li:contains("When requested to do so")',
-    run() {}
 }, {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
@@ -114,7 +115,6 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
 }, {
     content: 'wait for rpc',
     trigger: 'body.got-token',
-    run() {}
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),
@@ -151,20 +151,17 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     content: "input code",
     trigger: 'input[name=totp_token]',
     async run(helpers) {
-        // TODO: if tours are ever async-aware the click should get moved out,
-        //       but currently there's no great way to make the tour wait until
-        //       we've retrieved and set the token: `:empty()` is aboutthe text
-        //       content of the HTML element, not the JS value property. We
-        //       could set a class but that's really no better than
-        //       procedurally clicking the button after we've set the input.
         const token = await rpc('/totphook');
         helpers.edit(token);
-        helpers.click('button:contains("Log in")');
     }
-}, {
+}, 
+{
+    trigger: `button:contains("Log in")`,
+    run: "click",
+},
+{
     content: "check we're logged in",
     trigger: ".o_user_menu .dropdown-toggle",
-    run() {}
 }]});
 
 registry.category("web_tour.tours").add('totp_login_device', {
@@ -200,9 +197,13 @@ registry.category("web_tour.tours").add('totp_login_device', {
     async run(helpers) {
         const token = await rpc('/totphook')
         helpers.edit(token);
-        helpers.click('button:contains("Log in")');
     }
-}, {
+},
+{
+    trigger: "button:contains(Log in)",
+    run: "click",
+},
+{
     content: "check we're logged in",
     trigger: ".o_user_menu .dropdown-toggle",
     run: 'click',
@@ -229,7 +230,6 @@ registry.category("web_tour.tours").add('totp_login_device', {
 },  {
     content: "check we're logged in without 2FA",
     trigger: ".o_user_menu .dropdown-toggle",
-    run() {}
 },
 // now go and disable two-factor authentication would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't
@@ -239,9 +239,12 @@ registry.category("web_tour.tours").add('totp_login_device', {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_disable]',
     run: "click",
-}, {
+},
+{
+    trigger: "div:contains(enter your password)",
+},
+{
     content: "Check that we have to enter enhanced security mode and input password",
-    extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
     run: "edit demo",
 }, {
@@ -297,7 +300,6 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
 }, {
     content: 'Wait for page',
     trigger: '.o_menu_brand:contains("Settings")',
-    run() {}
 }, {
     content: "Open Users menu",
     trigger: '[data-menu-xmlid="base.menu_users"]',
@@ -326,9 +328,12 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     content: "Select totp remover",
     trigger: 'span.dropdown-item:contains(Disable two-factor authentication)',
     run: "click",
-}, { // enhanced security yo
+},
+{
+    trigger: "div:contains(enter your password)",
+},
+{ // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
-    extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
     run: "edit admin",
 }, {

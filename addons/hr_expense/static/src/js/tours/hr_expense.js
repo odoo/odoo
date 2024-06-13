@@ -21,29 +21,41 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     position: 'bottom',
     edition: 'enterprise',
     run: "click",
-}, {
+},
+{
+    trigger: ".o_button_upload_expense",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_button_upload_expense',
     content: _t("It all begins here - let's go!"),
     position: 'bottom',
     mobile: false,
     run: "click",
-}, {
+},
+{
+    trigger: ".o_button_upload_expense",
+},
+{
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_button_upload_expense',
     content: _t("It all begins here - let's go!"),
     position: 'bottom',
     mobile: true,
     run: "click",
-}, {
+},
+{
+    trigger: ".o_hr_expense_form_view_view",
+},
+{
     trigger: '.o_field_widget[name="product_id"] .o_input_dropdown',
-    extra_trigger: '.o_hr_expense_form_view_view',
     content: _t("Enter a name then choose a category and configure the amount of your expense."),
     position: 'bottom',
     run: "click",
-}, {
+},
+{
+    trigger: ".o_hr_expense_form_view_view",
+},
+{
     trigger: '.o_form_status_indicator_dirty .o_form_button_save',
-    extra_trigger: '.o_hr_expense_form_view_view',
     content: markup(_t("Ready? You can save it manually or discard modifications from here. You don't <em>need to save</em> - Odoo will save eveyrthing for you when you navigate.")),
     position: 'bottom',
     run: "click",
@@ -70,8 +82,10 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 },
 stepUtils.openBurgerMenu(),
 {
+    trigger: ".o_main_navbar",
+},
+{
     trigger: "[data-menu-xmlid='hr_expense.menu_hr_expense_report']",
-    extra_trigger: '.o_main_navbar',
     content: _t("Let's check out where you can manage all your employees expenses"),
     position: "bottom",
     run: "click",

@@ -40,9 +40,11 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_redirect", {
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:last:contains('Tadam')",
-            extra_trigger:
+            trigger:
                 ".o-livechat-root:shadow .o-mail-Message:contains('Go to the /chatbot-redirect page')",
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Message:last:contains('Tadam')",
             run() {
                 const url = new URL(location.href);
                 if (url.pathname !== "/chatbot-redirect") {

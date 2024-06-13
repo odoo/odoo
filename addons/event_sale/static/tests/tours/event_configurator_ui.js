@@ -14,9 +14,12 @@ registry.category("web_tour.tours").add('event_configurator_tour', {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     edition: 'enterprise',
     run: "click",
-}, {
+},
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: ".o_list_button_add",
-    extra_trigger: ".o_sale_order",
     run: "click",
 }, {
     trigger: "a:contains('Add a product')",
