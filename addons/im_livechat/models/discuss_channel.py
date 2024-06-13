@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.osv import expression
 from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2html
 
@@ -146,9 +146,9 @@ class DiscussChannel(models.Model):
     def _email_livechat_transcript(self, email):
         company = self.env.user.company_id
         render_context = {
-            "company": company,
-            "channel": self,
-        }
+                    "company": company,
+                    "channel": self,
+                }
         mail_body = self.env['ir.qweb']._render('im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
         mail = self.env['mail.mail'].sudo().create({
@@ -156,8 +156,17 @@ class DiscussChannel(models.Model):
             'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
             'email_to': email,
+            'body': mail_body,
             'body_html': mail_body,
         })
+        mail.body_html = self.env['mail.render.mixin']._render_encapsulate(
+            'mail.mail_notification_layout', mail_body, context_record=self,
+            add_context={
+                'subtitles': [_('Livechat Conversation'), company.name],
+                'subtitles_highlight_2nd': True,
+                'message': mail.mail_message_id,
+                'is_html_empty': tools.is_html_empty,
+            })
         mail.send()
 
     def _get_channel_history(self):
