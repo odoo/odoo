@@ -21,14 +21,18 @@
                         </div>
                         <t t-elif="message.isPending" t-call="mail.Message.pendingStatus"/>
                         <t t-elif="!message.is_transient">
-                            <small t-if="isActive and props.showDates" class="o-mail-Message-date text-muted opacity-75 o-smaller mt-2">
-                                <t t-esc="message.dateSimple"/>
-                            </small>
-                            <div t-else="">
-                                <MessageSeenIndicator
-                                    t-if="props.message.isSelfAuthored and props.thread?.hasSeenFeature"
-                                    message="props.message"
-                                    thread="props.thread"/>
+                            <div class="d-flex flex-column">
+                                <div t-if="isActive and props.showDates">
+                                    <small class="o-mail-Message-date text-muted opacity-75 o-smaller mt-2">
+                                        <t t-esc="message.dateSimple"/>
+                                    </small>
+                                </div>
+                                <div>
+                                    <MessageSeenIndicator
+                                        t-if="props.message.isSelfAuthored and props.thread?.hasSeenFeature"
+                                        message="props.message"
+                                        thread="props.thread"/>
+                                </div>
                             </div>
                         </t>
                     </div>
