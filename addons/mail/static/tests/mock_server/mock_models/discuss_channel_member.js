@@ -95,10 +95,30 @@ export class DiscussChannelMember extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    _discuss_channel_member_format(ids) {
-        const kwargs = getKwArgs(arguments, "ids");
+    _discuss_channel_member_format(ids, fields) {
+        const kwargs = getKwArgs(arguments, "ids", "fields");
         ids = kwargs.ids;
+        fields = kwargs.fields;
         delete kwargs.ids;
+        delete kwargs.fields;
+
+        if (!fields) {
+            fields = {
+                channel: {},
+                create_date: true,
+                fetched_message_id: true,
+                id: true,
+                persona: {},
+                seen_message_id: true,
+                last_interest_dt: true,
+                new_message_separator: true,
+            };
+        }
+        if (fields.message_unread_counter && !fields.channel) {
+            throw new Error(
+                "'message_unread_counter' cannot be used without 'channel' in 'fields'"
+            );
+        }
 
         /** @type {import("mock_models").MailGuest} */
         const MailGuest = this.env["mail.guest"];
@@ -108,6 +128,7 @@ export class DiscussChannelMember extends models.ServerModel {
         const dataList = [];
         for (const member of members) {
             let persona;
+            const data = {};
             if (member.partner_id) {
                 persona = this._get_partner_data([member.id]);
             }
@@ -115,18 +136,41 @@ export class DiscussChannelMember extends models.ServerModel {
                 const [guest] = MailGuest._filter([["id", "=", member.guest_id]]);
                 persona = MailGuest._guest_format([guest.id])[guest.id];
             }
-            const data = {
-                create_date: member.create_date,
-                thread: { id: member.channel_id, model: "discuss.channel" },
-                id: member.id,
-                last_interest_dt: member.last_interest_dt,
-                new_message_separator: member.new_message_separator,
-                persona,
-                seen_message_id: member.seen_message_id ? { id: member.seen_message_id } : false,
-                fetched_message_id: member.fetched_message_id
+            if ("id" in fields) {
+                data.id = member.id;
+            }
+            if ("channel" in fields) {
+                data.thread = { id: member.channel_id, model: "discuss.channel" };
+            }
+            if ("create_date" in fields) {
+                data.create_date = member.create_date;
+            }
+            if ("persona" in fields) {
+                data.persona = persona;
+            }
+            if ("fetched_message_id" in fields) {
+                data.fetched_message_id = member.fetched_message_id
                     ? { id: member.fetched_message_id }
-                    : false,
-            };
+                    : false;
+            }
+            if ("seen_message_id" in fields) {
+                data.seen_message_id = member.seen_message_id
+                    ? { id: member.seen_message_id }
+                    : false;
+            }
+            if ("message_unread_counter" in fields) {
+                data.thread.message_unread_counter = this._compute_message_unread_counter([
+                    member.id,
+                ]);
+                data.thread.message_unread_counter_bus_id =
+                    this.env["bus.bus"].lastBusNotificationId;
+            }
+            if ("last_interest_dt" in fields) {
+                data.last_interest_dt = member.last_interest_dt;
+            }
+            if ("new_message_separator" in fields) {
+                data.new_message_separator = member.new_message_separator;
+            }
             dataList.push(data);
         }
         return dataList;
@@ -165,19 +209,20 @@ export class DiscussChannelMember extends models.ServerModel {
         });
         const message_unread_counter = this._compute_message_unread_counter([member.id]);
         this.env["discuss.channel.member"].write([member.id], { message_unread_counter });
+        const personaFields = {
+            partner: { id: true, name: true },
+            guest: { id: true, name: true },
+        };
+        const memberData = this._discuss_channel_member_format([member.id], {
+            id: true,
+            channel: {},
+            persona: personaFields,
+            message_unread_counter: true,
+            new_message_separator: true,
+        })[0];
+        memberData["syncUnread"] = sync;
         const [partner, guest] = this.env["res.partner"]._get_current_persona();
         const target = guest ?? partner;
-        const memberData = {
-            id: member.id,
-            new_message_separator: message_id,
-            thread: {
-                id: member.channel_id,
-                message_unread_counter,
-                message_unread_counter_bus_id: this.env["discuss.channel"].bus_last_id,
-                model: "discuss.channel",
-            },
-        };
-        memberData["syncUnread"] = sync;
         this.env["bus.bus"]._sendone(target, "mail.record/insert", { ChannelMember: memberData });
     }
 }

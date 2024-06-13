@@ -1103,11 +1103,11 @@ class Channel(models.Model):
             target = current_partner or current_guest
             if self.channel_type in self._types_allowing_seen_infos():
                 target = self
+            persona_fields = {"partner": {"id": True, "name": True}, "guest": {"id": True, "name": True}}
             self.env['bus.bus']._sendone(target, 'mail.record/insert', {
-                'ChannelMember': {
-                    'id': member.id,
-                    'seen_message_id': {'id': last_message.id} if last_message else None,
-                }
+                'ChannelMember': member._discuss_channel_member_format(fields={
+                    "id": True, "channel": {}, "persona": persona_fields, "seen_message_id": True
+                })[member]
             })
 
     def _types_allowing_seen_infos(self):
