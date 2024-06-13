@@ -1,4 +1,5 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo import Command
 
 
 class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
@@ -76,6 +77,10 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         cls.igst_sale_5 = cls.env["account.chart.template"].ref('igst_sale_5')
         cls.igst_sale_18 = cls.env["account.chart.template"].ref('igst_sale_18')
         cls.sgst_sale_18 = cls.env["account.chart.template"].ref('sgst_sale_18')
+        cls.gst_with_cess = (
+            cls.env['account.chart.template'].ref("sgst_sale_12")
+            + cls.env['account.chart.template'].ref("cess_5_plus_1591_sale")
+        )
 
         # === Products === #
         cls.product_a.write({
@@ -91,6 +96,17 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'standard_price': 1000.0,
             'taxes_id': cls.sgst_sale_5.ids,
             'supplier_taxes_id': cls.sgst_purchase_5.ids,
+        })
+        cls.product_with_cess = cls.env["product.product"].create({
+            "name": "product_with_cess",
+            "uom_id": cls.env.ref("uom.product_uom_unit").id,
+            "lst_price": 1000.0,
+            "standard_price": 800.0,
+            "property_account_income_id": cls.company_data["default_account_revenue"].id,
+            "property_account_expense_id": cls.company_data["default_account_expense"].id,
+            "taxes_id": [Command.set(cls.gst_with_cess.ids)],
+            "supplier_taxes_id": [Command.set(cls.sgst_purchase_5.ids)],
+            "l10n_in_hsn_code": "333333",
         })
 
         # === Fiscal Positions === #

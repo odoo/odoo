@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_ewaybill_cancel_form" model="ir.ui.view">
+            <field name="name">l10n.in.ewaybill.cancel.form</field>
+            <field name="model">l10n.in.ewaybill.cancel</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="cancel_reason"/>
+                            <field name="cancel_remarks"/>
+                        </group>
+                        <group></group>
+                    </group>
+                    <footer>
+                        <button string="Cancel Ewaybill"
+                                name="cancel_ewaybill"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="c"/>
+                        <button string="Discard"
+                                class="btn-secondary"
+                                special="cancel"
+                                data-hotkey="x"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+    </data>
+</odoo>
