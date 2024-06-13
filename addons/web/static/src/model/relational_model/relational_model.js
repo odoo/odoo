@@ -483,6 +483,10 @@ export class RelationalModel extends Model {
                 resIds: groupRecordResIds,
             }).then((records) => {
                 for (const group of groups) {
+                    if (!group.value) {
+                        group.values = { id: false };
+                        continue;
+                    }
                     group.values = records.find((r) => group.value && r.id === group.value);
                 }
             });
