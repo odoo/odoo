@@ -117,6 +117,12 @@
                         <MessageReactions message="message" openReactionMenu="openReactionMenu" t-if="message.reactions.length"/>
                     </div>
                 </div>
+                <MessageSeenIndicator
+                    t-if="props.message.isSelfAuthored and props.thread?.hasSeenFeature"
+                    className="'ms-1'"
+                    message="props.message"
+                    thread="props.thread"
+                />
             </div>
         </ActionSwiper>
     </t>

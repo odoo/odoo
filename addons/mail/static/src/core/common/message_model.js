@@ -596,6 +596,12 @@ export class Message extends Record {
             message_link_preview_ids: this.message_link_preview_ids.map((lpm) => lpm.id),
         });
     }
+
+    get channelMemberHaveSeen() {
+        return this.thread.membersThatCanSeen.filter(
+            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+        );
+    }
 }
 
 Message.register();

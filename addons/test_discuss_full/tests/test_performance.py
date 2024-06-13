@@ -1072,7 +1072,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
-                "last_seen_dt": member_0_last_seen_dt,
                 "new_message_separator": last_message.id + 1,
                 "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "seen_message_id": last_message.id,
