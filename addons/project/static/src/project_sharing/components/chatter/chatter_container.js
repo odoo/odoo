@@ -149,9 +149,6 @@ export class ChatterContainer extends Component {
         if (props.token) {
             params.token = props.token;
         }
-        if (props.domain) {
-            params.domain = props.domain;
-        }
         return params;
     }
 
