@@ -5,35 +5,38 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 
 function runHootItem() {
     const href = "/web/tests/next?debug=assets";
-    return {
-        type: "item",
-        description: _t("Run unit tests"),
-        href,
-        callback: () => browser.open(href),
-        sequence: 10,
-    };
+    if (window.location.href.includes("debug=assets")) {
+        return {
+            type: "item",
+            description: _t("Run unit tests"),
+            callback: () => browser.open(href),
+            sequence: 10,
+        };
+    }
 }
 
 function runJSTestsItem() {
     const href = "/web/tests?debug=assets";
-    return {
-        type: "item",
-        description: _t("Run QUnit tests (legacy)"),
-        href,
-        callback: () => browser.open(href),
-        sequence: 20,
-    };
+    if (window.location.href.includes("debug=assets")) {
+        return {
+            type: "item",
+            description: _t("Run QUnit tests (legacy)"),
+            callback: () => browser.open(href),
+            sequence: 20,
+        };
+    }
 }
 
 function runJSTestsMobileItem() {
     const href = "/web/tests/mobile?debug=assets";
-    return {
-        type: "item",
-        description: _t("Run QUnit mobile tests (legacy)"),
-        href,
-        callback: () => browser.open(href),
-        sequence: 30,
-    };
+    if (window.location.href.includes("debug=assets")) {
+        return {
+            type: "item",
+            description: _t("Run QUnit mobile tests (legacy)"),
+            callback: () => browser.open(href),
+            sequence: 30,
+        };
+    }
 }
 
 export function openViewItem({ env }) {
