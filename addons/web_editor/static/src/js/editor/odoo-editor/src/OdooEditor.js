@@ -4208,16 +4208,19 @@ export class OdooEditor extends EventTarget {
      */
     _resetLinkInSelection() {
         const selection = this.document.getSelection();
-        const [anchorLink, focusLink] = [selection.anchorNode, selection.focusNode]
+        const [anchorLink, focusLink] = [selection?.anchorNode, selection?.focusNode]
             .map(node => closestElement(node, 'a:not(.btn)'));
-        const singleLinkInSelection = anchorLink === focusLink && anchorLink && isLinkEligibleForZwnbsp(this.editable, anchorLink) && anchorLink;
-        if (singleLinkInSelection) {
+        const isSingleLinkInSelection =
+            anchorLink &&
+            anchorLink === focusLink &&
+            isLinkEligibleForZwnbsp(this.editable, anchorLink);
+        if (isSingleLinkInSelection) {
             this.observerUnactive('add.o_link_in_selection');
-            singleLinkInSelection.classList.add('o_link_in_selection');
+            anchorLink.classList.add('o_link_in_selection');
             this.observerActive('add.o_link_in_selection');
         }
         for (const link of this.editable.querySelectorAll('.o_link_in_selection')) {
-            if (link !== singleLinkInSelection) {
+            if (link !== anchorLink) {
                 this.observerUnactive('remove.o_link_in_selection');
                 link.classList.remove('o_link_in_selection');
                 this.observerActive('remove.o_link_in_selection');
