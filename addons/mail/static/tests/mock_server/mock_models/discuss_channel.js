@@ -58,11 +58,23 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const channel = this._filter([["id", "in", ids]])[0];
+        const custom_store = {
+            Thread: [
+                {
+                    id: channel.id,
+                    is_pinned: false,
+                    isLocallyPinned: false,
+                    model: "discuss.channel",
+                },
+            ],
+        };
+        const [partner] = ResPartner.read(this.env.user.partner_id);
         const [channelMember] = DiscussChannelMember._filter([
             ["channel_id", "in", ids],
             ["partner_id", "=", this.env.user.partner_id],
         ]);
         if (!channelMember) {
+            BusBus._sendone(partner, "discuss.channel/leave", custom_store);
             return true;
         }
         this.write([channel.id], {
@@ -76,16 +88,19 @@ export class DiscussChannel extends models.ServerModel {
                 subtype_xmlid: "mail.mt_comment",
             })
         );
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "discuss.channel/leave", { id: channel.id });
-        BusBus._sendone(channel, "mail.record/insert", {
+        // send custom store after message_post to avoid is_pinned reset to True
+        BusBus._sendone(partner, "discuss.channel/leave", custom_store);
+        const store = {
             Thread: {
                 id: channel.id,
                 channelMembers: [["DELETE", { id: channelMember.id }]],
                 memberCount: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
                 model: "discuss.channel",
             },
-        });
+        };
+        BusBus._sendone(channel, "mail.record/insert", store);
+        // limitation of mock server, partner already unsubscribed from channel
+        BusBus._sendone(partner, "mail.record/insert", store);
         return true;
     }
 

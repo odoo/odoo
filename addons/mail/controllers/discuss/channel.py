@@ -125,8 +125,8 @@ class ChannelController(http.Controller):
             ("is_self", "=", True),
         ])
         if not member:
-            raise NotFound()
-        return member._mark_as_read(last_message_id, sync=sync)
+            return  # ignore if the member left in the meantime
+        member._mark_as_read(last_message_id, sync=sync)
 
     @http.route("/discuss/channel/mark_as_unread", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

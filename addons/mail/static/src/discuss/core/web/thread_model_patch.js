@@ -44,4 +44,18 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.foldStateCount = 0;
     },
+    onPinStateUpdated() {
+        super.onPinStateUpdated();
+        if (!this.displayToSelf && !this.isLocallyPinned && this.eq(this.store.discuss.thread)) {
+            if (this.store.discuss.isActive) {
+                const newThread =
+                    this.store.discuss.channels.threads.find(
+                        (thread) => thread.displayToSelf || thread.isLocallyPinned
+                    ) || this.store.discuss.inbox;
+                newThread.setAsDiscussThread();
+            } else {
+                this.store.discuss.thread = undefined;
+            }
+        }
+    },
 });

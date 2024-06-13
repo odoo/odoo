@@ -30,11 +30,15 @@ export class DiscussCoreCommon {
             }
         });
         this.busService.subscribe("discuss.channel/leave", (payload) => {
-            const thread = this.store.Thread.insert(payload);
-            this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
-                type: "info",
-            });
-            thread.delete();
+            const { Thread } = this.store.insert(payload);
+            const [thread] = Thread;
+            if (thread.displayName) {
+                // Ignore if thread displayName (which might depend on knowledge of members for
+                // groups) is not known in the current tab.
+                this.notificationService.add(_t("You unsubscribed from %s.", thread.displayName), {
+                    type: "info",
+                });
+            }
         });
         this.busService.subscribe("discuss.channel/delete", (payload, { id: notifId }) => {
             const thread = this.store.Thread.insert({
