@@ -42,6 +42,8 @@ export class RtcSession extends Record {
     audioError;
     videoError;
     isTalking;
+    /** @type {number|undefined} */
+    negotiationTimeoutId;
     localVolume;
     /** @type {RTCPeerConnection} */
     peerConnection;
