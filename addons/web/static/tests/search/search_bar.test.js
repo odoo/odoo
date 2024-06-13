@@ -32,6 +32,7 @@ import {
     mountWithSearch,
     onRpc,
     removeFacet,
+    selectGroup,
     serverState,
     toggleMenuItem,
     toggleMenuItemOption,
@@ -1646,4 +1647,57 @@ test("dropdown menu last element is 'Add Custom Filter'", async () => {
     const dropdownMenu = queryFirst(".o_searchview_autocomplete");
     const lastElement = dropdownMenu.querySelector("li:last-child");
     expect(lastElement.textContent.trim()).toBe("Add Custom Filter");
+});
+
+test("order by count resets when there is no group left", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: ["groupBy", "filter"],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <filter string="Foo" name="foo" domain="[('foo', '=', 'qsdf')]"/>
+            </search>
+        `,
+    });
+    searchBar.env.searchModel.canOrderByCount = true;
+    await toggleSearchBarMenu();
+    await selectGroup("bool");
+    await selectGroup("bar");
+    await toggleMenuItem("Foo");
+    expect(".fa-sort").toHaveCount(1);
+    await contains(".fa-sort", { visible: false }).click();
+    expect(".fa-sort-numeric-desc").toHaveCount(1);
+    await contains(".fa-sort-numeric-desc").click();
+    expect(".fa-sort-numeric-asc").toHaveCount(1);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Foo");
+    expect(".fa-sort-numeric-asc").toHaveCount(1);
+
+    await toggleMenuItem("Foo");
+    await toggleMenuItem("Bool");
+    expect(".fa-sort-numeric-asc").toHaveCount(1);
+    await toggleMenuItem("Bar");
+    expect(".fa-sort-numeric-asc").toHaveCount(0);
+
+    await toggleMenuItem("Bar");
+    expect(".fa-sort-numeric-asc").toHaveCount(0);
+    expect(".fa-sort").toHaveCount(1);
+    await contains(".fa-sort", { visible: false }).click();
+    await contains(".fa-sort-numeric-desc").click();
+    expect(".fa-sort-numeric-asc").toHaveCount(1);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Bool");
+    expect(".fa-sort-numeric-asc").toHaveCount(1);
+
+    await contains(".o_facet_remove").click();
+    expect(".fa-sort-numeric-asc").toHaveCount(1);
+    await contains(".o_facet_remove").click();
+    expect(".o_searchview_facet").toHaveCount(0);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Bar");
+    expect(".fa-sort-numeric-asc").toHaveCount(0);
+    expect(".fa-sort").toHaveCount(1);
 });

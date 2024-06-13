@@ -140,7 +140,7 @@ export class SearchBar extends Component {
         this.items.push({
             title: _t("Add a custom filter"),
             isAddCustomFilterButton: true,
-        });    
+        });
     }
 
     /**
@@ -410,7 +410,10 @@ export class SearchBar extends Component {
 
     onFacetLabelClick(target, facet) {
         const { domain, groupId } = facet;
-        if (!domain) {
+        if (this.env.searchModel.canOrderByCount && facet.type === "groupBy") {
+            this.env.searchModel.switchGroupBySort();
+            return;
+        } else if (!domain) {
             return;
         }
         const { resModel } = this.env.searchModel;

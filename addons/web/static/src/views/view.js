@@ -179,6 +179,7 @@ export class View extends Component {
     static template = "web.View";
     static components = { WithSearch };
     static searchMenuTypes = ["filter", "groupBy", "favorite"];
+    static canOrderByCount = false;
     static defaultProps = {
         display: {},
         context: {},
@@ -387,6 +388,7 @@ export class View extends Component {
         const searchMenuTypes =
             props.searchMenuTypes || descr.searchMenuTypes || this.constructor.searchMenuTypes;
         viewProps.searchMenuTypes = searchMenuTypes;
+        const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
 
         const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
         // prepare the WithSearch component props
@@ -396,6 +398,7 @@ export class View extends Component {
             ...toRaw(props),
             hideCustomGroupBy: props.hideCustomGroupBy || descr.hideCustomGroupBy,
             searchMenuTypes,
+            canOrderByCount,
             SearchModel: descr.SearchModel,
         };
 

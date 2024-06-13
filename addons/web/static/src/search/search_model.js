@@ -175,6 +175,7 @@ export class SearchModel extends EventBus {
         this.fieldService = fieldService;
         this.viewService = view;
         this.dialog = dialog;
+        this.orderByCount = false;
 
         this.getDomainTreeDescription = useGetTreeDescription(fieldService, nameService);
 
@@ -226,6 +227,7 @@ export class SearchModel extends EventBus {
         this.hideCustomGroupBy = hideCustomGroupBy;
 
         this.searchMenuTypes = new Set(config.searchMenuTypes || ["filter", "groupBy", "favorite"]);
+        this.canOrderByCount = config.canOrderByCount;
 
         let { irFilters, loadIrFilters, searchViewArch, searchViewFields, searchViewId } = config;
         const loadSearchView =
@@ -540,6 +542,7 @@ export class SearchModel extends EventBus {
      */
     clearQuery() {
         this.query = [];
+        this.orderByCount = false;
         this._notify();
     }
 
@@ -653,6 +656,7 @@ export class SearchModel extends EventBus {
             return searchItem.groupId !== groupId;
         });
         this._checkComparisonStatus();
+        this._checkOrderByCountStatus();
         this._notify();
     }
 
@@ -913,6 +917,7 @@ export class SearchModel extends EventBus {
         const index = this.query.findIndex((queryElem) => queryElem.searchItemId === searchItemId);
         if (index >= 0) {
             this.query.splice(index, 1);
+            this._checkOrderByCountStatus();
         } else {
             if (searchItem.type === "favorite") {
                 this.query = [];
@@ -1002,6 +1007,7 @@ export class SearchModel extends EventBus {
         );
         if (index >= 0) {
             this.query.splice(index, 1);
+            this._checkOrderByCountStatus();
         } else {
             this.query.push({ searchItemId, intervalId });
         }
@@ -1022,6 +1028,15 @@ export class SearchModel extends EventBus {
             discardButtonText: _t("Cancel"),
             isDebugMode: this.isDebugMode,
         });
+    }
+
+    switchGroupBySort() {
+        if (this.orderByCount === "Desc") {
+            this.orderByCount = "Asc";
+        } else {
+            this.orderByCount = "Desc";
+        }
+        this._notify();
     }
 
     /**
@@ -1243,6 +1258,17 @@ export class SearchModel extends EventBus {
         );
         if (!dateFilterIsActive) {
             this.query = this.query.filter((queryElem) => queryElem.searchItemId !== id);
+        }
+    }
+
+    _checkOrderByCountStatus() {
+        if (
+            this.orderByCount &&
+            !this.query.some((item) =>
+                ["dateGroupBy", "groupBy"].includes(this.searchItems[item.searchItemId].type)
+            )
+        ) {
+            this.orderByCount = false;
         }
     }
 
@@ -1796,7 +1822,12 @@ export class SearchModel extends EventBus {
             if (type === "field") {
                 facet.title = title;
             } else {
-                facet.icon = FACET_ICONS[type];
+                if (type === "groupBy" && this.orderByCount) {
+                    facet.icon =
+                        FACET_ICONS[this.orderByCount === "Asc" ? "groupByAsc" : "groupByDesc"];
+                } else {
+                    facet.icon = FACET_ICONS[type];
+                }
                 facet.color = FACET_COLORS[type];
             }
             if (groupActiveItemDomains.length) {
@@ -2094,6 +2125,9 @@ export class SearchModel extends EventBus {
     _getOrderBy() {
         const groups = this._getGroups();
         const orderBy = [];
+        if (this.groupBy.length && this.orderByCount) {
+            orderBy.push({ name: "__count", asc: this.orderByCount === "Asc" });
+        }
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const { searchItemId } = activeItem;
