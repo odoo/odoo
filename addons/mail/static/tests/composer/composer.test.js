@@ -417,7 +417,7 @@ test('post message on channel with "Enter" keyboard shortcut', async () => {
     await contains(".o-mail-Message");
 });
 
-test.skip("leave command on channel", async () => {
+test("leave command on channel", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     await start();
@@ -429,7 +429,7 @@ test.skip("leave command on channel", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "general" });
-    await contains(".o-mail-Discuss", { text: "No conversation selected." });
+    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
     await contains(".o_notification", { text: "You unsubscribed from general." });
 });
 
@@ -473,7 +473,7 @@ test("leave command on chat", async () => {
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Chuck Norris" });
-    await contains(".o-mail-Discuss h4.text-muted", { text: "No conversation selected." });
+    await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
     await contains(".o_notification", { text: "You unpinned your conversation with Chuck Norris" });
 });
 

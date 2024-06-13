@@ -10,6 +10,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
+from odoo.addons.mail.tools.discuss import StoreData
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
@@ -338,26 +339,37 @@ class Channel(models.Model):
 
     def _action_unfollow(self, partner):
         self.message_unsubscribe(partner.ids)
-        member = self.env['discuss.channel.member'].search([('channel_id', '=', self.id), ('partner_id', '=', partner.id)])
+        custom_store = StoreData()
+        custom_channel_info = {
+            "id": self.id,
+            "is_pinned": False,
+            "isLocallyPinned": False,
+            "model": "discuss.channel",
+        }
+        custom_store.add({"Thread": custom_channel_info})
+        member = self.env["discuss.channel.member"].search(
+            [("channel_id", "=", self.id), ("partner_id", "=", partner.id)]
+        )
         if not member:
-            return True
-        channel_info = self._channel_info()[0]  # must be computed before leaving the channel (access rights)
+            self.env["bus.bus"]._sendone(partner, "discuss.channel/leave", custom_store.get_result())
+            return
         member.unlink()
-        # side effect of unsubscribe that wasn't taken into account because
-        # channel_info is called before actually unpinning the channel
-        channel_info['is_pinned'] = False
-        notification = Markup('<div class="o_mail_notification">%s</div>') % _('left the channel')
+        notification = Markup('<div class="o_mail_notification">%s</div>') % _("left the channel")
         # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
-        self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
-        self.env['bus.bus']._sendone(partner, 'discuss.channel/leave', channel_info)
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Thread': {
-                'channelMembers': [('DELETE', {'id': member.id})],
-                'id': self.id,
-                'memberCount': self.member_count,
-                'model': "discuss.channel",
-            }
-        })
+        self.sudo().message_post(
+            body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id
+        )
+        # send custom store after message_post to avoid is_pinned reset to True
+        self.env["bus.bus"]._sendone(partner, "discuss.channel/leave", custom_store.get_result())
+        store = StoreData()
+        channel_info = {
+            "channelMembers": [("DELETE", {"id": member.id})],
+            "id": self.id,
+            "memberCount": self.member_count,
+            "model": "discuss.channel",
+        }
+        store.add({"Thread": channel_info})
+        self.env["bus.bus"]._sendone(self, "mail.record/insert", store.get_result())
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
         """ Adds the given partner_ids and guest_ids as member of self channels. """

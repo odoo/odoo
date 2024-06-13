@@ -404,6 +404,9 @@ async function discuss_channel_mark_as_read(request) {
         ["channel_id", "=", channel_id],
         partner ? ["partner_id", "=", partner.id] : ["guest_id", "=", guest.id],
     ]);
+    if (!memberId) {
+        return; // ignore if the member left in the meantime
+    }
     return DiscussChannelMember._mark_as_read([memberId], last_message_id, sync);
 }
 

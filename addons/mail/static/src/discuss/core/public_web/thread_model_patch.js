@@ -20,9 +20,6 @@ patch(Thread.prototype, {
         } else {
             this.store.env.services["bus_service"].deleteChannel(this.busChannel);
         }
-        if (!this.displayToSelf && !this.isLocallyPinned && this.eq(this.store.discuss.thread)) {
-            this.store.discuss.thread = undefined;
-        }
     },
     setAsDiscussThread() {
         super.setAsDiscussThread(...arguments);
