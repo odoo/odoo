@@ -664,4 +664,34 @@ describe.tags("desktop")("DebugMenu", () => {
             ["partner", "m2o", 1, true, true, false],
         ]);
     });
+
+    test("display model view in developer tools", async () => {
+        serverState.debug = "1";
+        webModels.ResPartner._views.form = `<form><field name="name"/></form>`;
+        webModels.ResPartner._views.search = "<search/>";
+        webModels.ResPartner._records.push({ id: 88, name: "p1" });
+        webModels.IrModel._views.form = `
+            <form>
+                <field name="name"/>
+                <field name="model"/>
+            </form>`;
+        webModels.IrModel._views.search = "<search/>";
+
+        defineWebModels();
+        await mountWithCleanup(WebClient);
+        await getService("action").doAction({
+            name: "Partners",
+            res_model: "res.partner",
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+        });
+
+        await contains(".o_debug_manager button").click();
+        expect(queryAll(".dropdown-menu .dropdown-item")[1]).toHaveText("View Model: res.partner");
+        await contains(".dropdown-menu .dropdown-item:contains('View Model:')").click();
+
+        expect(".breadcrumb-item").toHaveCount(1);
+        expect(".o_breadcrumb .active").toHaveCount(1);
+        expect(".o_breadcrumb .active").toHaveText("Partner");
+    });
 });
