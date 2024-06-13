@@ -781,7 +781,7 @@ export class MockServer {
             if (type === "date") {
                 const date = DateTime.fromSQL(val);
                 if (aggregateFunction === "day") {
-                    return date.toFormat("yyyy-MM-dd");
+                    return date.toFormat("dd MMM yyyy");
                 } else if (aggregateFunction === "week") {
                     return `W${date.toFormat("WW kkkk")}`;
                 } else if (aggregateFunction === "quarter") {
@@ -796,7 +796,7 @@ export class MockServer {
                 if (aggregateFunction === "hour") {
                     return date.toFormat("HH:00 dd MMM");
                 } else if (aggregateFunction === "day") {
-                    return date.toFormat("yyyy-MM-dd");
+                    return date.toFormat("dd MMM yyyy");
                 } else if (aggregateFunction === "week") {
                     return `W${date.toFormat("WW kkkk")}`;
                 } else if (aggregateFunction === "quarter") {
@@ -895,7 +895,7 @@ export class MockServer {
                                 break;
                             }
                             case "day": {
-                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
+                                startDate = parseDateTime(value, { format: "dd MMM yyyy" });
                                 endDate = startDate.plus({ days: 1 });
                                 break;
                             }
