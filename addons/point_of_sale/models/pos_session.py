@@ -4,7 +4,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, _, Command, registry
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
@@ -254,10 +254,13 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
-        login_number = self.login_number + 1
-        self.write({
-            'login_number': login_number,
-        })
+        db_name = self._cr.dbname
+        db_registry = registry(db_name)
+        # Using a new cursor so the lock is held only as long as needed
+        with db_registry.cursor() as cr:
+            cr.execute('SELECT login_number FROM %s WHERE id = %%s FOR UPDATE NOWAIT' % self._table, (self.id,))
+            cr.execute('UPDATE %s SET login_number=login_number+1 WHERE id=%%s RETURNING login_number' % self._table, (self.id,))
+            login_number = cr.fetchone()[0]
         return login_number
 
     def action_pos_session_open(self):
