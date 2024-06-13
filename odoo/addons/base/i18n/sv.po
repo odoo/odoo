@@ -12105,7 +12105,7 @@ msgstr "<b invisible=\"not is_company\">Adress</b>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr "<kod>Kommando</kod>: x2many-kommandonas namnrymd"
+msgstr "<code>Command</code>: x2many-kommandonas namnrymd"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12113,7 +12113,7 @@ msgid ""
 "<code>UserError</code>: exception class for raising user-facing warning "
 "messages"
 msgstr ""
-"<kod>UserError</kod>: undantagsklass för att skapa varningsmeddelanden till "
+"<code>UserError</code>: undantagsklass för att skapa varningsmeddelanden till "
 "användaren"
 
 #. module: base
@@ -12139,7 +12139,7 @@ msgstr "<code>dateutil</code> (Python-modul)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr "<kod>env</kod>: miljö där åtgärden utlöses"
+msgstr "<code>env</code>: miljö där åtgärden utlöses"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12147,7 +12147,7 @@ msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
 msgstr ""
-"<kod>float_compare()</kod>: verktygsfunktion för att jämföra flyttal baserat"
+"<code>float_compare()</code>: verktygsfunktion för att jämföra flyttal baserat"
 " på en specifik precision"
 
 #. module: base
@@ -12157,7 +12157,7 @@ msgid ""
 "information in <code>ir.logging</code> table"
 msgstr ""
 "<code>log(message, level='info')</code>: loggningsfunktion för att "
-"registrera felsökningsinformation i <code>ir.logging-tabellen</code>"
+"registrera felsökningsinformation i <code>ir.logging</code> tabell"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12171,13 +12171,13 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>record</code>: record on which the action is triggered"
-msgstr "<kod>post</kod>: post där åtgärden utlöses"
+msgstr "<code>record</code>: post där åtgärden utlöses"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>record</code>: record on which the action is triggered; may be be void"
-msgstr "<code>post</code>: post som åtgärden utlöses på; kan vara ogiltig"
+msgstr "<code>record</code>: post som åtgärden utlöses på; kan vara ogiltig"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12381,8 +12381,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type == "
 "'many2many'\">to</span>"
 msgstr ""
-"<span invisible=\"evaluation_type != 'value' eller update_field_type == "
-"'many2many'\">to</span>"
+"<span invisible=\"evaluation_type != 'value' or update_field_type == "
+"'many2many'\">till</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -12392,7 +12392,7 @@ msgid ""
 "                        <span invisible=\"reset_mode != 'other_view'\">You need two views to compare.</span>"
 msgstr ""
 "<span invisible=\"reset_mode != 'soft'\">Denna vy har ingen tidigare version.</span>\n"
-"                        <span osynlig=\"reset_mode != 'hard'\">Den här vyn kommer inte från en fil.</span>\n"
+"                        <span invisible=\"reset_mode != 'hard'\">Den här vyn kommer inte från en fil.</span>\n"
 "                        <span invisible=\"reset_mode != 'other_view'\">Du behöver två vyer att jämföra.</span>"
 
 #. module: base
@@ -12403,8 +12403,8 @@ msgid ""
 "                                to this Python expression:\n"
 "                            </span>"
 msgstr ""
-"<span invisible=\"update_field_id != False eller evaluation_type == 'equation'\" class=\"text-muted\">Ställ in ett värde...</span>\n"
-"                            <span osynlig=\"utvärdering_typ != 'ekvation'\">\n"
+"<span invisible=\"update_field_id != False or evaluation_type == 'equation'\" class=\"text-muted\">Ställ in ett värde...</span>\n"
+"                            <span invisible=\"evaluation_type != 'equation'\">\n"
 "                                till detta Python-uttryck:\n"
 "                            </span>"
 
@@ -29260,7 +29260,7 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                                <code>self.env</code>, etc."
 msgstr ""
-"Andra funktioner är tillgängliga via <code>själv</code>, t.ex\n"
+"Andra funktioner är tillgängliga via <code>self</code>, t.ex\n"
 "                                               <code>self.env</code>, etc."
 
 #. module: base
@@ -29269,7 +29269,7 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                    <code>self.env</code>, etc."
 msgstr ""
-"Andra funktioner är tillgängliga via <code>själv</code>, t.ex\n"
+"Andra funktioner är tillgängliga via <code>self</code>, t.ex\n"
 "                                   <code>self.env</code>, etc."
 
 #. module: base
@@ -34926,7 +34926,7 @@ msgid ""
 msgstr ""
 "Fältet <strong>Beroenden</strong> listar de fält som\n"
 "                                                det aktuella fältet är beroende av. Det är en kommaseparerad lista över\n"
-"                                                fältnamn, till exempel <code>namn, storlek</code>. Du kan också hänvisa till\n"
+"                                                fältnamn, till exempel <code>name, size</code>. Du kan också hänvisa till\n"
 "                                                fält som är tillgängliga via andra relationsfält, till exempel\n"
 "                                               <code>partner_id.company_id.name</code>."
 
@@ -34941,7 +34941,7 @@ msgid ""
 msgstr ""
 "Fältet <strong>Beroenden</strong> listar de fält som\n"
 "                                    det aktuella fältet är beroende av. Det är en kommaseparerad lista över\n"
-"                                    fältnamn, till exempel <code>namn, storlek</code>. Du kan också hänvisa till\n"
+"                                    fältnamn, till exempel <code>name, size</code>. Du kan också hänvisa till\n"
 "                                    fält som är tillgängliga via andra relationsfält, till exempel\n"
 "                                   <code>partner_id.company_id.name</code>."
 
@@ -36315,8 +36315,7 @@ msgstr "Att uppgradera"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "To return an action, assign: <code>action = {...}</code>"
 msgstr ""
-"Om du vill returnera en åtgärd tilldelar du: <code>action =</code> <code> "
-"{...}</code>"
+"Om du vill returnera en åtgärd tilldelar du: <code>action = {...}</code>"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_to-do
