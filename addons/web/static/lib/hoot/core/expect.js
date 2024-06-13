@@ -1471,14 +1471,11 @@ export class Matchers {
     }
 
     /**
-     * Expects the received {@link Target} to contain a certain `amount` of elements:
-     * - {@link Number}: exactly `<amount>` element(s)
-     * - {@link false}: any amount of matching elements
+     * Expects the received {@link Target} to contain exactly `<amount>` element(s).
+     * Note that the `amount` parameter can be omitted, in which case it will match
+     * any amount of elements.
      *
-     * Note that the `amount` parameter can be omitted, in which case it will be
-     * implicitly resolved as `false` (= any).
-     *
-     * @param {number | false} [amount]
+     * @param {number} [amount]
      * @param {ExpectOptions} [options]
      * @example
      *  expect(".o_webclient").toHaveCount(1);
@@ -1490,14 +1487,14 @@ export class Matchers {
     toHaveCount(amount, options) {
         this._saveStack();
 
+        ensureArguments([
+            [amount, ["integer", null]],
+            [options, ["object", null]],
+        ]);
+
         if (isNil(amount)) {
             amount = false;
         }
-
-        ensureArguments([
-            [amount, ["integer"]],
-            [options, ["object", null]],
-        ]);
 
         return this._resolve({
             name: "toHaveCount",
