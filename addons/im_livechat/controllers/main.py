@@ -178,8 +178,7 @@ class LivechatController(http.Controller):
             channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
-            channel_info = channel._channel_info()
-            store.add({"Thread": channel_info})
+            channel._to_store(store)
             store.add({"Thread": {"id": channel.id, "model": "discuss.channel", "isLoaded": not chatbot_script}})
             if guest:
                 store.add({"Store": {"guest_token": guest._format_auth_cookie()}})

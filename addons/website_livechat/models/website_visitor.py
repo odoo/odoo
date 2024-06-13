@@ -103,7 +103,7 @@ class WebsiteVisitor(models.Model):
             'fold_state': 'open',
         })
         store = StoreData()
-        store.add({"Thread": discuss_channels._channel_info()})
+        discuss_channels._to_store(store)
         self.env['bus.bus']._sendone(operator.partner_id, "website_livechat.send_chat_request", store.get_result())
 
     def _merge_visitor(self, target):
