@@ -4,7 +4,6 @@
     <t t-name="web.SearchBarMenu">
         <Dropdown menuClass="'o_search_bar_menu d-flex flex-wrap flex-lg-nowrap w-100 w-md-auto mx-md-auto mt-2 py-3'"
                   position="'bottom-end'"
-                  holdOnHover="true"
                   state="this.props.dropdownState"
                   t-if="this.env.searchModel.searchMenuTypes.size">
             <button
@@ -131,33 +130,37 @@
                 <!-- Favorite -->
                 <t t-if="this.env.searchModel.searchMenuTypes.has('favorite')">
                     <div class="o_dropdown_container o_favorite_menu w-100 w-lg-auto h-100 px-3">
+                        <t t-set="sharedFavoritesItems" t-value="sharedFavorites" />
+                        <t t-set="favoriteItems" t-value="favorites" />
                         <div class="px-3 fs-5 mb-2">
                             <i class="me-2 text-favourite" t-att-class="facet_icons.favorite"/>
                             <h5 class="o_dropdown_title d-inline">Favorites</h5>
                         </div>
+                        <t t-foreach="favoriteItems" t-as="item" t-key="item.id">
+                            <t t-call="web.SearchBarMenu.FavoriteItem" />
+                        </t>
+                        <t t-if="favoriteItems.length">
+                            <div role="separator" class="dropdown-divider"/>
+                        </t>
+                        <t t-if="sharedFavoritesItems.length > 3">
+                            <AccordionItem class="'o_shared_favorites text-truncate'" description="'Shared filters'">
+                                <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
+                                    <t t-call="web.SearchBarMenu.FavoriteItem" />
+                                </t>
+                            </AccordionItem>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
+                                <t t-call="web.SearchBarMenu.FavoriteItem" />
+                            </t>
+                        </t>
+                        <div t-if="sharedFavoritesItems.length" role="separator" class="dropdown-divider"/>
                         <t t-set="currentGroup" t-value="null"/>
-                        <t t-foreach="favoriteItems" t-as="item" t-key="item.id or item.key">
+                        <t t-foreach="otherItems" t-as="item" t-key="item.key">
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                                 <div role="separator" class="dropdown-divider"/>
                             </t>
-                            <t t-if="item.type ==='favorite'">
-                                <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
-                                                    checked="item.isActive"
-                                                    closingMode="'none'"
-                                                    onSelected="() => this.onFavoriteSelected(item.id)"
-                                >
-                                    <span class="d-flex p-0 align-items-center justify-content-between">
-                                        <span t-out="item.description" title="item.description.length > 15 ? item.description : ''" class="text-truncate"/>
-                                        <i class="ms-1 o_icon_right fa fa-trash-o"
-                                           title="Delete item"
-                                           t-on-click.stop="() => this.openConfirmationDialog(item.id)"
-                                        />
-                                    </span>
-                                </CheckboxItem>
-                            </t>
-                            <t t-else="">
-                                <t t-component="item.Component"/>
-                            </t>
+                            <t t-component="item.Component"/>
                             <t t-set="currentGroup" t-value="item.groupNumber"/>
                         </t>
                     </div>
@@ -165,6 +168,23 @@
                 <t t-slot="default"/>
             </t>
         </Dropdown>
+    </t>
+
+    <t t-name="web.SearchBarMenu.FavoriteItem">
+        <t t-set="item" t-value="item" />
+        <CheckboxItem class="{ 'o_menu_item text-truncate': true, selected: item.isActive }"
+                            checked="item.isActive"
+                            closingMode="'none'"
+                            onSelected="() => this.onFavoriteSelected(item.id)"
+        >
+            <span class="d-flex p-0 align-items-center justify-content-between">
+                <span t-esc="item.description" t-att-title="item.description.length > 15 ? item.description : ''" class="text-truncate flex-grow-1"/>
+                <i class="ms-1 fa fa-trash-o"
+                    title="Delete item"
+                    t-on-click.stop="() => this.openConfirmationDialog(item.id, item.userId)"
+                />
+            </span>
+        </CheckboxItem>
     </t>
 
 </templates>
