@@ -58,4 +58,4 @@ class AccountMove(models.Model):
         return not self.invoice_pdf_report_id \
             and not self.ubl_cii_xml_id \
             and self.is_sale_document() \
-            and bool(self.partner_id.ubl_cii_format)
+            and bool(self.partner_id.commercial_partner_id.ubl_cii_format)
