@@ -31,6 +31,7 @@ class SaleOrder(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     delivery_status = fields.Selection([
         ('pending', 'Not Delivered'),
+        ('started', 'Started'),
         ('partial', 'Partially Delivered'),
         ('full', 'Fully Delivered'),
     ], string='Delivery Status', compute='_compute_delivery_status', store=True)
@@ -77,8 +78,11 @@ class SaleOrder(models.Model):
                 order.delivery_status = False
             elif all(p.state in ['done', 'cancel'] for p in order.picking_ids):
                 order.delivery_status = 'full'
-            elif any(p.state == 'done' for p in order.picking_ids):
+            elif any(p.state == 'done' for p in order.picking_ids) and any(
+                    l.qty_delivered for l in order.order_line):
                 order.delivery_status = 'partial'
+            elif any(p.state == 'done' for p in order.picking_ids):
+                order.delivery_status = 'started'
             else:
                 order.delivery_status = 'pending'
 
