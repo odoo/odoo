@@ -108,11 +108,7 @@ export class SearchBarMenu extends Component {
      */
     validateField(fieldName, field) {
         const { groupable, type } = field;
-        return (
-            groupable &&
-            fieldName !== "id" &&
-            GROUPABLE_TYPES.includes(type)
-        );
+        return groupable && fieldName !== "id" && GROUPABLE_TYPES.includes(type);
     }
 
     /**
@@ -156,13 +152,20 @@ export class SearchBarMenu extends Component {
     }
 
     // Favorite Panel
-    /**
-     * @returns {Array}
-     */
-    get favoriteItems() {
-        const favorites = this.env.searchModel.getSearchItems(
-            (searchItem) => searchItem.type === "favorite"
+
+    get favorites() {
+        return this.env.searchModel.getSearchItems(
+            (searchItem) => searchItem.type === "favorite" && searchItem.userId !== false
         );
+    }
+
+    get sharedFavorites() {
+        return this.env.searchModel.getSearchItems(
+            (searchItem) => searchItem.type === "favorite" && searchItem.userId === false
+        );
+    }
+
+    get otherItems() {
         const registryMenus = [];
         for (const item of favoriteMenuRegistry.getAll()) {
             if ("isDisplayed" in item ? item.isDisplayed(this.env) : true) {
@@ -173,21 +176,14 @@ export class SearchBarMenu extends Component {
                 });
             }
         }
-        return [...favorites, ...registryMenus];
+        return registryMenus;
     }
 
-    /**
-     * @param {number} itemId
-     */
     onFavoriteSelected(itemId) {
         this.env.searchModel.toggleSearchItem(itemId);
     }
 
-    /**
-     * @param {number} itemId
-     */
-    openConfirmationDialog(itemId) {
-        const { userId } = this.favoriteItems.find((item) => item.id === itemId);
+    openConfirmationDialog(itemId, userId) {
         const dialogProps = {
             title: _t("Warning"),
             body: userId
