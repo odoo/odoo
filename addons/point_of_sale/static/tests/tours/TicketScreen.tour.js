@@ -262,3 +262,19 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             Order.hasLine("Sugar", "-0.02", "-0.06"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("FiscalPositionTwoTaxIncluded", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickShowProductsMobile(),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.checkTaxAmount("9.09"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.changeFiscalPosition("test fp"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.checkTaxAmount("4.76"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
