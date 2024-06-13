@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ViewRangeSelector">
+        <div class="btn-group" t-att-class="{ 'ms-3': env.isSmall }">
+            <button class="btn btn-secondary" data-hotkey="p" t-on-click="() => this.selectRange('previous')" >
+                <i class="fa fa-arrow-left"/>
+            </button>
+            <button class="btn btn-secondary" data-hotkey="n" t-on-click="() => this.selectRange('next')">
+                <i class="fa fa-arrow-right"/>
+            </button>
+        </div>
+        <Dropdown state="dropdownState" menuClass="'o_view_range_menu'">
+            <div class="btn btn-secondary">
+                <i class="fa fa-calendar me-1"/>
+                <t t-if="state.rangeId === 'custom'">
+                    <t t-esc="`From: ${getFormattedDate(state.startDate)} to: ${getFormattedDate(state.stopDate)}`"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="dateDescription"/>
+                </t>
+            </div>
+            <t t-set-slot="content">
+                <t t-foreach="Object.entries(props.ranges)" t-as="range" t-key="range[0]">
+                    <DropdownItem class="{ 'selected': isSelected(range[0]) }" onSelected="() => this.selectRangeId(range[0])">
+                        <t t-esc="range[1].description" />
+                    </DropdownItem>
+                </t>
+                <div class="dropdown-divider"/>
+                <DropdownItem class="{ 'o_view_range_menu_custom_item py-0': true, 'selected': isSelected('custom') }" closingMode="'none'">
+                    <div class="d-flex align-items-center gap-1">
+                        <label>From </label>
+                        <span class="o_view_range_menu_picker o_input cursor-pointer px-1" t-ref="start-picker" t-on-click="() => startPicker.open()">
+                            <t t-esc="getFormattedDate(pickerValues.startDate)" />
+                        </span>
+                        <label>to </label>
+                        <span class="o_view_range_menu_picker o_input cursor-pointer px-1" t-ref="stop-picker" t-on-click="() => stopPicker.open()">
+                            <t t-esc="getFormattedDate(pickerValues.stopDate)" />
+                        </span>
+                        <button class="btn btn-sm btn-primary ms-1" t-on-click="onApply">Apply</button>
+                    </div>
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>
