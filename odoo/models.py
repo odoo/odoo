@@ -6208,6 +6208,7 @@ class BaseModel(metaclass=MetaModel):
             return self
 
         stack = []
+        domain = expression.domain_combine_anies(domain, self)
         for leaf in reversed(domain):
             if leaf == '|':
                 stack.append(stack.pop() | stack.pop())
