@@ -24,9 +24,13 @@
         content: _t("Let's try the Email Marketing app."),
         edition: 'community',
         run: "click",
-    }, {
+    },
+    {
+        trigger: ".o_mass_mailing_mailing_tree",
+        auto: true,
+    },
+    {
         trigger: '.o_list_button_add',
-        extra_trigger: '.o_mass_mailing_mailing_tree',
         content: markup(_t("Start by creating your first <b>Mailing</b>.")),
         position: 'bottom',
         run: "click",

@@ -39,8 +39,10 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
+            trigger: `.o_field_widget[name='holiday_status_id'] input:value("${leaveType}")`,
+        },
+        {
             trigger: "input[data-field=request_date_from]",
-            extra_trigger: `.o_field_widget[name='holiday_status_id'] input:value("${leaveType}")`,
             content: _t(
                 "You can select the period you need to take off, from start date to end date"
             ),
@@ -80,13 +82,10 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: "table.o_list_table",
-            content: _t("Select the request you just created"),
             position: "bottom",
-            run: function (actions) {
-                const rows = this.anchor.querySelectorAll("tr.o_data_row");
-                actions.click(rows[0]);
-            },
+            content: _t("Select the request you just created"),
+            trigger: "table.o_list_table tr.o_data_row:eq(0)",
+            run: "click",
         },
         {
             trigger: 'button[name="action_approve"]',

@@ -35,16 +35,19 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
+            trigger: ":iframe .o_mail_theme_selector_new",
+        },
+        {
             content: "Pick the basic theme",
             trigger: ':iframe #basic',
-            extra_trigger: ':iframe .o_mail_theme_selector_new',
             run: "click",
+        },
+        {
+            trigger: ":iframe html:not(:has(.o_mail_theme_selector_new))",
         },
         {
             content: "Make sure the snippets menu is hidden",
             trigger: 'html:has(#oe_snippets.d-none)',
-            extra_trigger: ':iframe html:not(:has(.o_mail_theme_selector_new))',
-            run: () => null, // no click, just check
         },
         ...stepUtils.saveForm(),
         {
@@ -53,9 +56,11 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
+            trigger: ":iframe .o_mail_theme_selector_new",
+        },
+        {
             content: "Fill in Subject",
             trigger: '#subject_0',
-            extra_trigger: ':iframe .o_mail_theme_selector_new',
             run: "edit Test Newsletter Theme",
         },
         {
@@ -76,7 +81,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Make sure the snippets menu is displayed",
             trigger: '#oe_snippets',
-            run: () => null, // no click, just check
         },
         ...stepUtils.discardForm(),
         {
@@ -87,7 +91,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Make sure the snippets menu is hidden",
             trigger: 'html:has(#oe_snippets.d-none)',
-            run: () => null,
         },
         {
             content: "Add some content to be selected afterwards",
@@ -104,7 +107,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Make sure the floating toolbar is visible",
             trigger: '#toolbar.oe-floating[style*="visible"]',
-            run: () => null,
         },
         {
             content: "Open the color picker",
@@ -124,7 +126,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Check that color was applied",
             trigger: ':iframe p font.text-o-color-1',
-            run: () => null,
         },
         ...stepUtils.saveForm(),
         {
@@ -140,7 +141,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Make sure the snippets menu is hidden",
             trigger: 'html:has(#oe_snippets.d-none)',
-            run: () => null,
         },
         {
             content: "Select content",
@@ -152,7 +152,6 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
         {
             content: "Make sure the floating toolbar is visible",
             trigger: '#toolbar.oe-floating[style*="visible"]',
-            run: () => null,
         },
         ...stepUtils.discardForm(),
     ]

@@ -8,8 +8,10 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
     url: '/shop?search=Super%20Chair',
     steps: () => [
         {
+            trigger: ".oe_search_found",
+        },
+        {
             content: 'select Super Chair',
-            extra_trigger: '.oe_search_found',
             trigger: '.oe_product_cart a:contains("Super Chair")',
             run: "click",
         },
@@ -20,8 +22,10 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         },
         tourUtils.goToCart(),
         {
+            trigger: 'form[name="coupon_code"]',
+        },
+        {
             content: 'insert discount code',
-            extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
             run: "edit 12345",
         },
@@ -45,8 +49,10 @@ registry.category("web_tour.tours").add('apply_discount_code_program_multi_rewar
         },
         // Try to reapply the same promo code
         {
+            trigger: 'form[name="coupon_code"]',
+        },
+        {
             content: 'insert discount code',
-            extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
             run: "edit 12345",
         },

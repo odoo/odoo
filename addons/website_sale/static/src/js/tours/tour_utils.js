@@ -126,7 +126,6 @@ function pay() {
     return {
         content: 'Pay',
         //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
-        // extra_trigger: '#payment_method input:checked,#payment_method:not(:has("input:radio:visible"))',
         trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)', 
         run: "click",
     };

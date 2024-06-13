@@ -34,8 +34,10 @@ wTourUtils.registerWebsitePreviewTour('website_controller_page_listing_layout', 
         run: "click",
     },
     {
+        trigger: "#oe_snippets .o_we_customize_panel",
+    },
+    {
         content: "open 'Layout' selector",
-        extra_trigger: '#oe_snippets .o_we_customize_panel',
         trigger: '[data-name="default_listing_layout"] we-toggler',
         run: "click",
     },

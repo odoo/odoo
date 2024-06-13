@@ -23,8 +23,10 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
         trigger: '.oe_price .oe_currency_value:contains("0.00")',
     },
     {
+        trigger: 'body:has(input[type="hidden"][name="product_id"][value="0"])',
+    },
+    {
         content: "click add to cart",
-        extra_trigger: 'body:has(input[type="hidden"][name="product_id"][value="0"])',
         trigger: '#add_to_cart',
         run: "click",
     },

@@ -13,9 +13,12 @@ registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions
         content: 'Skip question Q1',
         trigger: 'button.btn:contains("Continue")',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: 'div.js_question-wrapper:contains("Q2")',
+    },
+    {
         content: 'Skip question Q2',
-        extra_trigger: 'div.js_question-wrapper:contains("Q2")',
         trigger: 'button.btn:contains("Continue")',
         run: "click",
     }, {

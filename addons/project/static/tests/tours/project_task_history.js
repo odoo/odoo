@@ -36,10 +36,13 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Open the project app",
         trigger: ".o_app[data-menu-xmlid='project.menu_main_pm']",
         run: "click",
-    }, {
+    },
+    {
+        trigger: ".o_kanban_view",
+    },
+    {
         content: "Open Test History Project",
         trigger: "div span.o_text_overflow[title='Test History Project']",
-        extra_trigger: ".o_kanban_view",
         run: "click",
     }, {
         content: "Open Test History Task",
@@ -55,20 +58,29 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         content: "Go back to kanban view of tasks. this step is added because it takes some time to save the changes, so it's a sort of timeout to wait a bit for the save",
         trigger: ".o_back_button a",
         run: "click",
-    }, {
+    },
+    {
+        trigger: ".o_kanban_view",
+    },
+    {
         content: "Open Test History Task",
         trigger: "div strong.o_kanban_record_title:contains('Test History Task')",
-        extra_trigger: ".o_kanban_view",
         run: "click",
-    }, {
+    },
+    {
+        trigger: ".o_form_view",
+    },
+    {
         content: "Open History Dialog",
         trigger: ".o_cp_action_menus i.fa-cog",
-        extra_trigger: ".o_form_view",
         run: "click",
-    }, {
+    },
+    {
+        trigger: ".dropdown-menu",
+    },
+    {
         content: "Open History Dialog",
         trigger: ".o_menu_item i.fa-history",
-        extra_trigger: ".dropdown-menu",
         run: "click",
     }, {
         content: "Verify that 4 revisions are displayed (default empty description after the creation of the task + 3 edits)",

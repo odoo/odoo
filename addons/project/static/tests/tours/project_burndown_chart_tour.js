@@ -17,10 +17,13 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: `Open "Burndown Chart Test" project's "Burndown Chart" view`,
     trigger: '.o_kanban_manage_reporting div[role="menuitem"] a:contains("Burndown Chart")',
     run: "click",
-}, {
+},
+{
+    trigger: ".o_graph_renderer",
+},
+{
     content: 'The sort buttons are not rendered',
     trigger: '.o_graph_renderer:not(:has(.btn-group[role=toolbar][aria-label="Sort graph"]))',
-    extra_trigger: '.o_graph_renderer',
     run: "click",
 }, {
     content: 'Remove the project search "Burndown Chart Test"',

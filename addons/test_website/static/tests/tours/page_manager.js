@@ -49,9 +49,12 @@ registry.category("web_tour.tours").add('test_website_page_manager', {
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_kanban_renderer",
+},
+{
     content: "Click on List View",
-    extra_trigger: '.o_kanban_renderer',
     trigger: '.o_cp_switch_buttons .o_list',
     run: "click",
 }, {

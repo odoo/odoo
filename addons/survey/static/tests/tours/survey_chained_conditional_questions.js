@@ -16,10 +16,13 @@ registry.category("web_tour.tours").add('test_survey_chained_conditional_questio
         content: 'Answer Q1 with Answer 1',
         trigger: 'div.js_question-wrapper:contains("Q1") label:contains("Answer 1")',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: 'div.js_question-wrapper:contains("Q4")',
+    },
+    {
         content: 'Answer Q2 with Answer 1',
         trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 1")',
-        extra_trigger: 'div.js_question-wrapper:contains("Q4")',
         run: "click",
     }, {
         content: 'Answer Q3 with Answer 1',

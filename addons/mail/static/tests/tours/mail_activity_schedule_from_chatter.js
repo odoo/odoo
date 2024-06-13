@@ -19,7 +19,9 @@ registry.category("web_tour.tours").add("mail_activity_schedule_from_chatter", {
             trigger: "input[id*='activity_type_id']:value('Call')",
         },
         {
-            extra_trigger: "button:contains('Schedule')",
+            trigger: "button:contains('Schedule')",
+        },
+        {
             trigger: "input[id*='activity_type_id']",
             run: "click",
         },

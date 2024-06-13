@@ -11,10 +11,13 @@ registry.category("web_tour.tours").add("product_attribute_multi_type", {
         content: "navigate to the sale app",
         trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: ".o_sale_order",
+    },
+    {
         content: "create a new order",
         trigger: '.o_list_button_add',
-        extra_trigger: ".o_sale_order",
         run: "click",
     }, {
         content: "search the partner",

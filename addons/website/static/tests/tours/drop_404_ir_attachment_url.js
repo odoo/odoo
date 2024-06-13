@@ -15,10 +15,13 @@ wTourUtils.registerWebsitePreviewTour('drop_404_ir_attachment_url', {
         content: 'Click on the snippet image',
         trigger: ':iframe .s_404_snippet img',
         run: "click",
-    }, {
+    },
+    {
+        trigger: ".snippet-option-ReplaceMedia",
+    },
+    {
         content: 'Once the image UI appears, check the image has no size (404)',
         trigger: ':iframe .s_404_snippet img',
-        extra_trigger: '.snippet-option-ReplaceMedia',
         run: function () {
             const imgEl = this.anchor;
             if (!imgEl.complete

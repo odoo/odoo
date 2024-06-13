@@ -25,8 +25,11 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: `edit SomeChannel_${new Date().getTime()}`,
         },
         {
+            trigger: ".o-discuss-ChannelSelector-suggestion",
+            auto: true,
+        },
+        {
             trigger: ".o-discuss-ChannelSelector-list",
-            extra_trigger: ".o-discuss-ChannelSelector-suggestion",
             content: markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
             run() {

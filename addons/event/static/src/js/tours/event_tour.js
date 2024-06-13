@@ -23,9 +23,12 @@ registry.category("web_tour.tours").add('event_tour', {
     content: markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     edition: 'community',
     run: "click",
-}, {
+},
+{
+    trigger: ".o_event_kanban_view",
+},
+{
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_event_kanban_view',
     content: markup(_t("Let's create your first <b>event</b>.")),
     position: 'bottom',
     width: 175,
@@ -61,9 +64,12 @@ registry.category("web_tour.tours").add('event_tour', {
     content: _t("Now that your event is ready, click here to move it to another stage."),
     position: 'bottom',
     run: "click",
-}, {
+},
+{
+    trigger: `.o_event_form_view div[name="stage_id"]`,
+},
+{
     trigger: 'ol.breadcrumb li.breadcrumb-item:first',
-    extra_trigger: '.o_event_form_view div[name="stage_id"]',
     content: markup(_t("Use the <b>breadcrumbs</b> to go back to your kanban overview.")),
     position: 'bottom',
     run: 'click',

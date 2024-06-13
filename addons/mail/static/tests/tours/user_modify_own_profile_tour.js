@@ -20,9 +20,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
             run: "edit updatedemail@example.com",
         },
         {
+            trigger: "body.modal-open",
+        },
+        {
             content: "Save the form",
             trigger: 'button[name="preference_save"]',
-            extra_trigger: "body.modal-open",
         },
         {
             content: "Wait until the modal is closed",

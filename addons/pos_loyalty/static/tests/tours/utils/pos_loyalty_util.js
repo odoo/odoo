@@ -33,9 +33,11 @@ export function claimReward(rewardName) {
     return [
         ProductScreen.clickControlButton("Reward"),
         {
-            content: "select reward",
             // There should be description because a program always has a name.
-            extra_trigger: ".selection-item span:nth-child(2)",
+            trigger: ".selection-item span:nth-child(2)",
+        },
+        {
+            content: "select reward",
             trigger: `.selection-item:contains("${rewardName}")`,
             run: "click",
         },
