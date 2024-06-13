@@ -17,7 +17,7 @@ export class ButtonBox extends Component {
     setup() {
         const ui = useService("ui");
         onWillRender(() => {
-            const maxVisibleButtons = [3, 4, 5, 7, 4, 5, 8][ui.size] || 8;
+            const maxVisibleButtons = [0, 0, 0, 7, 4, 5, 8][ui.size] ?? 8;
             const allVisibleButtons = Object.entries(this.props.slots)
                 .filter(([_, slot]) => this.isSlotVisible(slot))
                 .map(([slotName]) => slotName);
@@ -27,8 +27,9 @@ export class ButtonBox extends Component {
                 this.isFull = allVisibleButtons.length === maxVisibleButtons;
             } else {
                 // -1 for "More" dropdown
-                this.visibleButtons = allVisibleButtons.slice(0, maxVisibleButtons - 1);
-                this.additionalButtons = allVisibleButtons.slice(maxVisibleButtons - 1);
+                const splitIndex = Math.max(maxVisibleButtons - 1, 0);
+                this.visibleButtons = allVisibleButtons.slice(0, splitIndex);
+                this.additionalButtons = allVisibleButtons.slice(splitIndex);
                 this.isFull = true;
             }
         });
