@@ -142,3 +142,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
         so_2.action_confirm()
         po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id), ('state', '!=', 'cancel')], limit=1)
         self.assertFalse(po)
+
+        # we run the scheduler
+        self.env['procurement.group'].run_scheduler()
+        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id), ('state', '!=', 'cancel')], limit=1)
+        self.assertFalse(po)
