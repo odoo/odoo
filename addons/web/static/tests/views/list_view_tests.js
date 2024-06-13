@@ -8346,6 +8346,30 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["button_method"]);
     });
 
+    QUnit.test("groupby node with a button when many2one is None", async function (assert) {
+        serverData.models.foo.fields.currency_id.sortable = true;
+        serverData.models.foo.records.forEach((rec) => (rec.currency_id = false));
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree default_group_by="currency_id">
+                    <field name="foo"/>
+                    <groupby name="currency_id">
+                        <field name="display_name" />
+                        <button string="Button 1" type="object" name="button_method"/>
+                    </groupby>
+                </tree>`,
+        });
+
+        assert.containsOnce(target, ".o_list_table_grouped");
+        assert.containsNone(target, ".o_group_header.o_group_open button");
+        await click(target, ".o_group_header:first-child");
+        assert.containsOnce(target, ".o_group_header.o_group_open");
+        assert.containsNone(target, ".o_group_header button");
+    });
+
     QUnit.test("groupby node with a button in inner groupbys", async function (assert) {
         await makeView({
             type: "list",
