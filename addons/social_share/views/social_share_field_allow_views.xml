@@ -1,0 +1,52 @@
+<odoo>
+<!--Fields-->
+<record id="view_social_share_field_allow_list" model="ir.ui.view">
+    <field name="name">social.share.field.allow.list</field>
+    <field name="model">social.share.field.allow</field>
+    <field name="arch" type="xml">
+        <tree editable="bottom" create="1" delete="1" multi_edit="1">
+            <field name="model_id" column_invisible="1"/>
+            <field name="field_id" domain="[('model_id', '=?', model_id)]"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_social_share_field_allow_search" model="ir.ui.view">
+    <field name="name">social.share.field.allow.search</field>
+    <field name="model">social.share.field.allow</field>
+    <field name="arch" type="xml">
+        <search string="Search Allowed Fields">
+            <group expand="0" string="Group By">
+                <field name="model_id"/>
+                <filter string="Model" name="by_model" domain="[]" context="{'group_by': 'model_id'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_social_share_field_allow">
+    <field name="name">Share Campaign Allowed Field</field>
+    <field name="res_model">social.share.field.allow</field>
+    <field name="search_view_id" ref="view_social_share_field_allow_search"/>
+    <field name="context">{'search_default_by_model': True}</field>
+    <field name="view_mode">tree</field>
+</record>
+
+<!--Models-->
+
+<record id="view_social_share_model_allow_list" model="ir.ui.view">
+    <field name="name">social.share.model.allow.list</field>
+    <field name="model">social.share.model.allow</field>
+    <field name="arch" type="xml">
+        <tree editable="bottom" create="1" delete="1" multi_edit="1">
+            <field name="model_id"/>
+        </tree>
+    </field>
+</record>
+
+<record model="ir.actions.act_window" id="action_social_share_model_allow">
+    <field name="name">Share Campaign Allowed Model</field>
+    <field name="res_model">social.share.model.allow</field>
+    <field name="view_mode">tree</field>
+</record>
+</odoo>

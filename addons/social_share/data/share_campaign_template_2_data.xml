@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <record id="social_share_template_card_2" model="social.share.campaign.template">
+        <field name="name">Card Template 2</field>
+        <field name="parent_variant_id" ref="social_share.social_share_template_card_1"/>
+        <field name="layers" eval="[Command.clear()]"/>
+    </record>
+    <!--Copy the layers of the first template with updated values-->
+    <function model="social.share.template.render.element" name="copy">
+        <value eval="[ref('social_share.social_share_template_element_t1_background_black')]"/>
+        <value eval="{'template_id': ref('social_share.social_share_template_card_2')}"/>
+    </function>
+    <function model="social.share.template.render.element" name="copy">
+        <value eval="[ref('social_share.social_share_template_element_t1_button')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 765, 'y_pos': 464, 'x_size': 300, 'y_size': 70
+        }"/>
+    </function>
+    <function model="social.share.template.render.element" name="_copy_with_dependencies">
+        <value eval="[ref('social_share.social_share_template_element_t1_button_shape')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 765, 'y_pos': 464, 'x_size': 386, 'y_size': 86,
+        }"/>
+        <value eval="['button']"/>
+    </function>
+    <function model="social.share.template.render.element" name="copy">
+        <value eval="[ref('social_share.social_share_template_element_t1_header')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 80, 'y_pos': 174, 'x_size': 1040, 'y_size': 150,
+        }"/>
+    </function>
+    <function model="social.share.template.render.element" name="copy">
+        <value eval="[ref('social_share.social_share_template_element_t1_subheader')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 80, 'y_pos': 344, 'x_size': 1040, 'y_size': 100,
+        }"/>
+    </function>
+    <function model="social.share.template.render.element" name="copy">
+        <value eval="[ref('social_share.social_share_template_element_t1_profile_picture')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 80, 'y_pos': 470, 'x_size': 80, 'y_size': 80
+        }"/>
+    </function>
+    <function model="social.share.template.render.element" name="_copy_with_dependencies">
+        <value eval="[ref('social_share.social_share_template_element_t1_profile_name')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 184, 'y_pos': 470,
+        }"/>
+        <value eval="['image-1']"/>
+    </function>
+    <function model="social.share.template.render.element" name="_copy_with_dependencies">
+        <value eval="[ref('social_share.social_share_template_element_t1_profile_title')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 184, 'y_pos': 510,
+        }"/>
+        <value eval="['section-1']"/>
+    </function>
+    <function model="social.share.template.render.element" name="copy">
+        <value eval="[ref('social_share.social_share_template_element_t1_odoo_logo')]"/>
+        <value eval="{
+            'template_id': ref('social_share.social_share_template_card_2'),
+            'x_pos': 980, 'y_pos': 80
+        }"/>
+    </function>
+</data></odoo>

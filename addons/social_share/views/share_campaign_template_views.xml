@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_share_campaign_template_form">
+        <field name="name">social.share.campaign.template.form</field>
+        <field name="model">social.share.campaign.template</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign Template">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_variant_id"/>
+                            <field name="layers">
+                                <tree>
+                                    <field name='sequence' widget='handle'/>
+                                    <field name='role'/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="image" widget="image" options="{'size': [700, 366]}" nolabel="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_social_share_campaign_template">
+        <field name="name">Share Campaign Template</field>
+        <field name="res_model">social.share.campaign.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</data></odoo>

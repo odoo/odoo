@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_social_share_campaign_template_element_form">
+        <field name="name">social.share.template.render.element.form</field>
+        <field name="model">social.share.template.render.element</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign Template">
+                <sheet>
+                    <group>
+                        <group>
+                        <field name="role"/>
+                        <field name="render_type"/>
+                        <field name="value_type"/>
+                        <field name="model" invisible="1"/>
+                        <group invisible="render_type != 'text'">
+                            <field name="text" invisible="value_type != 'static'"/>
+                            <field name="field_path"
+                                   widget="DynamicModelFieldSelectorChar"
+                                   required="1" readonly="not model" invisible="value_type != 'field'"
+                                   options="{'model': 'model', 'follow_relations': False}"/>
+                            <field name="text_align"/>
+                            <field name="text_align_vert"/>
+                            <field name="text_font_ids"/>
+                            <field name="text_font_size"/>
+                            <field name="text_color"/>
+                        </group>
+                        <group invisible="render_type != 'image'">
+                            <field name="image" widget="image" nolabel="1" invisible="value_type != 'dynamic'"/>
+                            <field name="field_path"
+                                   widget="DynamicModelFieldSelectorChar"
+                                   required="1" readonly="not model" invisible="value_type != 'field'"
+                                   options="{'model': 'model', 'follow_relations': False}"/>
+                            <field name="shape"/>
+                        </group>
+                        <group invisible="render_type != 'shape'">
+                            <field name="shape"/>
+                            <field name="color"/>
+                        </group>
+                        </group>
+
+                        <group>
+                            <field name="sequence" string="Depth"/>
+                            <field name="x_pos"/>
+                            <field name="y_pos"/>
+                            <field name="x_size"/>
+                            <field name="y_size"/>
+                            <field name="required_element_ids"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_social_share_campaign_template_element">
+        <field name="name">Share Campaign Template element</field>
+        <field name="res_model">social.share.template.render.element</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</data></odoo>

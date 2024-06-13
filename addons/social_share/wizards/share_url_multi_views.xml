@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record model="ir.ui.view" id="view_share_url_share_form_multi">
+        <field name="name">social.share.url.share.multi.form</field>
+        <field name="model">social.share.url.share.multi</field>
+        <field name="arch" type="xml">
+            <form string="Create Link"><sheet>
+                <group>
+                    <field name="share_campaign_id" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="domain" widget="domain" options="{'model': 'model', 'in_dialog': True}"/>
+                    <field name="message"/>
+                </group>
+                <footer>
+                    <button string="Send &amp; Close" class="btn btn-primary" name="action_send" type="object"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </sheet></form>
+        </field>
+    </record>
+</data></odoo>

@@ -1,0 +1,10 @@
+<odoo>
+<data>
+    <template id="social_share_robots" inherit_id="website.robots">
+        <xpath expr="//t[@t-out='request.website.sudo().robots_txt']" position="before">
+            User-agent: *
+            Allow: /social_share/
+        </xpath>
+    </template>
+</data>
+</odoo>
