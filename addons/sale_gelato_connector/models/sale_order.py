@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
     def send_gelato_order_request(self):
         headers = {
             'Content-Type': 'application/json',
-            'X-API-KEY': 'dada2370-fb2d-4800-8a3a-80fbdf331ef9-826e7758-6a44-4bf6-9dbd-d7d1daabc250:c5524bcc-2dff-4efb-aeb3-03a8b08a0e56'
+            'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
         }
 
         orderUrl = "https://order.gelatoapis.com/v4/orders"
@@ -26,9 +26,10 @@ class SaleOrder(models.Model):
 
         headers = {
             'Content-Type': 'application/json',
-            'X-API-KEY': 'dada2370-fb2d-4800-8a3a-80fbdf331ef9-826e7758-6a44-4bf6-9dbd-d7d1daabc250:c5524bcc-2dff-4efb-aeb3-03a8b08a0e56'
+            'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
         }
-        requests.request("POST", orderUrl, data=orderJson, headers=headers)
+        request = requests.request("POST", orderUrl, data=orderJson, headers=headers)
+        print(request)
 
     def action_confirm(self):
         super().action_confirm()
@@ -55,15 +56,15 @@ class SaleOrder(models.Model):
         gelato_items = []
         for sale_order_line in self.order_line:  # maybe here check if line is a gelato line
             gelato_item = {
-                "itemReferenceId": sale_order_line.product_id.product_tmpl_id.id,
-                "productUid": str(sale_order_line.product_id.product_tmpl_id.gelato_reference),
+                "itemReferenceId": sale_order_line.product_id.id,
+                "productUid": str(sale_order_line.product_id.gelato_reference),
                 "files": [
                     {
                     "type": "default",
-                    "url": str(sale_order_line.product_id.product_tmpl_id.photo_url)
+                    "url": str(sale_order_line.product_id.product_tmpl_id.gelato_photo_url)
                     }
                 ],
-                "quantity": int(sale_order_line. product_uom_qty)
+                "quantity": int(sale_order_line.product_uom_qty)
             }
             gelato_items.append(gelato_item)
 
@@ -86,7 +87,7 @@ class SaleOrder(models.Model):
 
         headers = {
             'Content-Type': 'application/json',
-            'X-API-KEY': 'dada2370-fb2d-4800-8a3a-80fbdf331ef9-826e7758-6a44-4bf6-9dbd-d7d1daabc250:c5524bcc-2dff-4efb-aeb3-03a8b08a0e56'
+            'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
         }
 
         requests.request("POST", url=url, data=orderJson, headers=headers)  # this gets shipping methods and their price
