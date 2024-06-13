@@ -53,6 +53,10 @@ class StockScrap(models.Model):
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
     should_replenish = fields.Boolean(string='Replenish Quantities', help="Trigger replenishment for scrapped products")
+    scrap_reason_tag_ids = fields.Many2many(
+        comodel_name='stock.scrap.reason.tag',
+        string='Scrap Reason',
+    )
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -221,3 +225,17 @@ class StockScrap(models.Model):
                 'context': ctx,
                 'target': 'new'
             }
+
+
+class StockScrapReasonTag(models.Model):
+    _name = 'stock.scrap.reason.tag'
+    _description = 'Scrap Reason Tag'
+    _order = 'sequence, id'
+
+    name = fields.Char(string="Name", required=True, translate=True)
+    sequence = fields.Integer(default=10)
+    color = fields.Char(string="Color", default='#3C3C3C')
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', "Tag name already exists!"),
+    ]
