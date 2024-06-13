@@ -2142,6 +2142,26 @@ Please change the quantity done or the rounding precision of your unit of measur
                                                          order='priority desc, date asc, id asc')
         moves_to_reserve._action_assign()
 
+    def _rollup_move_dests_fetch(self):
+        seen = set(self.ids)
+        self.fetch(['move_dest_ids'])
+        move_dest_ids = set(self.move_dest_ids.ids)
+        while not move_dest_ids.issubset(seen):
+            seen |= move_dest_ids
+            to_visit = self.browse(move_dest_ids)
+            to_visit.fetch(['move_dest_ids'])
+            move_dest_ids = set(to_visit.move_dest_ids.ids)
+
+    def _rollup_move_origs_fetch(self):
+        seen = set(self.ids)
+        self.fetch(['move_orig_ids'])
+        move_orig_ids = set(self.move_orig_ids.ids)
+        while not move_orig_ids.issubset(seen):
+            seen |= move_orig_ids
+            to_visit = self.browse(move_orig_ids)
+            to_visit.fetch(['move_orig_ids'])
+            move_orig_ids = set(to_visit.move_orig_ids.ids)
+
     def _rollup_move_dests(self, seen=False):
         if not seen:
             seen = OrderedSet()

@@ -615,7 +615,7 @@ class StockMoveLine(models.Model):
             return 0, False
         if action == "available":
             available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
-        elif action == "reserved" and not self.move_id._should_bypass_reservation():
+        elif action == "reserved" and not self.move_id._should_bypass_reservation(location):
             self.env['stock.quant']._update_reserved_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner)
         if available_qty < 0 and lot:
             # see if we can compensate the negative quants with some untracked quants

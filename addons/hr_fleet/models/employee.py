@@ -58,8 +58,9 @@ class Employee(models.Model):
         if car_ids:
             raise ValidationError(_('Cannot remove address from employees with linked cars.'))
 
-
     def write(self, vals):
+        if 'user_id' in vals:
+            self._sync_employee_cars(self.env['res.users'].browse(vals['user_id']))
         res = super().write(vals)
         #Update car partner when it is changed on the employee
         if 'work_contact_id' in vals:
@@ -75,14 +76,15 @@ class Employee(models.Model):
             vehicles._compute_mobility_card()
         return res
 
-    def _sync_user(self, user, employee_has_image=False):
-        cars = self.env['fleet.vehicle'].search(['|', ('future_driver_id', '=', self.work_contact_id.id), ('driver_id', '=', self.work_contact_id.id)])
-        for car in cars:
-            if car.future_driver_id == self.work_contact_id:
-                car.future_driver_id = user.partner_id
-            if car.driver_id == self.work_contact_id:
-                car.driver_id = user.partner_id
-        return super()._sync_user(user, employee_has_image)
+    def _sync_employee_cars(self, user):
+        if self.work_contact_id and self.work_contact_id != user.partner_id:
+            cars = self.env['fleet.vehicle'].search(['|', ('future_driver_id', '=', self.work_contact_id.id), ('driver_id', '=', self.work_contact_id.id), ('company_id', '=', self.company_id.id)])
+            for car in cars:
+                if car.future_driver_id == self.work_contact_id:
+                    car.future_driver_id = user.partner_id
+                if car.driver_id == self.work_contact_id:
+                    car.driver_id = user.partner_id
+
 
 class EmployeePublic(models.Model):
     _inherit = 'hr.employee.public'

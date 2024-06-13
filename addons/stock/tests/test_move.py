@@ -5098,6 +5098,48 @@ class StockMove(TransactionCase):
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
 
+    def test_scrap_11(self):
+        """ Use a sublocation as scrap location.
+        When moving the product back to stock ensure
+        the quant is not edited expect on quantity
+        """
+        # 10 units are available in stock
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
+        scrap_location = self.env['stock.location'].create({
+            'name': 'Scrap',
+            'location_id': self.stock_location.id,
+            'usage': 'internal',
+            'scrap_location': True,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product, scrap_location, 10)
+        picking = self.env['stock.picking'].create({
+            'name': 'A single picking with one move to scrap',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move = self.env['stock.move'].create({
+            'name': 'A move to confirm and scrap its product',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom_qty': 10.0,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        self.assertEqual(move.quantity, 10)
+        move.move_line_ids.location_id = scrap_location
+
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+
+        # Check the quant
+        quant = self.env['stock.quant']._gather(self.product, self.stock_location, strict=True)
+        quant_scrap = self.env['stock.quant']._gather(self.product, scrap_location)
+        self.assertEqual(quant.quantity, 20)
+        self.assertFalse(quant_scrap.reserved_quantity)
+        self.assertFalse(quant_scrap.quantity)
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """
