@@ -1,4 +1,4 @@
-import { Component, useRef } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler, WithEnv } from "@web/core/utils/components";
 
@@ -9,6 +9,13 @@ export class OverlayContainer extends Component {
 
     setup() {
         this.root = useRef("root");
+        this.state = useState({ rootEl: null });
+        useEffect(
+            () => {
+                this.state.rootEl = this.root.el;
+            },
+            () => [this.root.el]
+        );
     }
 
     get sortedOverlays() {
@@ -16,7 +23,7 @@ export class OverlayContainer extends Component {
     }
 
     isVisible(overlay) {
-        return overlay.rootId === this.root.el?.getRootNode()?.host?.id;
+        return overlay.rootId === this.state.rootEl?.getRootNode()?.host?.id;
     }
 
     handleError(overlay, error) {
