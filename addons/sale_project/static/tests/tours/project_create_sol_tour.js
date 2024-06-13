@@ -26,9 +26,12 @@ registry.category("web_tour.tours").add('project_create_sol_tour', {
         content: "Select the customer in the autocomplete dropdown",
         auto: true,
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: 'div.o_notebook_headers',
+    },
+    {
         trigger: 'a.nav-link[name="settings"]',
-        extra_trigger: 'div.o_notebook_headers',
         content: 'Click on Settings tab to configure this project.',
         run: "click",
     }, {

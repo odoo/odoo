@@ -22,9 +22,13 @@ registry.category("web_tour.tours").add('crm_tour', {
     position: 'bottom',
     edition: 'enterprise',
     run: "click",
-}, {
+},
+{
+    trigger: ".o_opportunity_kanban",
+    auto: true,
+},
+{
     trigger: '.o-kanban-button-new',
-    extra_trigger: '.o_opportunity_kanban',
     content: markup(_t("<b>Create your first opportunity.</b>")),
     position: 'bottom',
     run: "click",
@@ -43,22 +47,34 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t("Now, <b>add your Opportunity</b> to your Pipeline.")),
     position: "bottom",
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_opportunity_kanban",
+    auto: true,
+},
+{
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-of-type .oe_kanban_content",
-    extra_trigger: ".o_opportunity_kanban",
     content: markup(_t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle.")),
     position: "right",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(2))",
-}, {
+}, 
+{
+    trigger: ".o_opportunity_kanban",
+    auto: true,
+},
+{
     // Choose the element that is not going to be moved by the previous step.
     trigger: ".o_opportunity_kanban .o_kanban_group:nth-child(2) .o_kanban_record .o-mail-ActivityButton",
-    extra_trigger: ".o_opportunity_kanban",
     content: markup(_t("Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep track of everything you have to do!</i>")),
     position: "bottom",
     run: "click",
-}, {
+},
+{
+    trigger: ".o_opportunity_kanban",
+    auto: true,
+},
+{
     trigger: ".o-mail-ActivityListPopover button:contains(Schedule an activity)",
-    extra_trigger: ".o_opportunity_kanban",
     content: markup(_t("Let's <b>Schedule an Activity.</b>")),
     position: "bottom",
     width: 200,
@@ -74,9 +90,13 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
     position: "bottom",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
-},  {
+},
+{
+    trigger: ".o_opportunity_kanban",
+    auto: true,
+},
+{
     trigger: ".o_kanban_record",
-    extra_trigger: ".o_opportunity_kanban",
     content: _t("Let’s have a look at an Opportunity."),
     position: "right",
     run: "click",

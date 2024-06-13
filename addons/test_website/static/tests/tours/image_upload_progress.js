@@ -48,10 +48,13 @@ const setupSteps = [{
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Text - Image'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
     run: "drag_and_drop :iframe #wrap",
-}, {
+}, 
+{
+    trigger: "body.editor_has_snippets",
+},
+{
     content: "drop a snippet",
     trigger: "#oe_snippets .oe_snippet[name='Image Gallery'] .oe_snippet_thumbnail:not(.o_we_already_dragging)",
-    extra_trigger: "body.editor_has_snippets",
     run: "drag_and_drop :iframe #wrap",
 }];
 
@@ -222,10 +225,13 @@ wTourUtils.registerWebsitePreviewTour('test_image_upload_progress_unsplash', {
         content: "click on unsplash result", // note that unsplash is mocked
         trigger: "img[alt~=fox]",
         run: "click",
-    }, {
+    }, 
+    {
+        trigger: ".o_notification_close",
+    },
+    {
         content: "check that the upload progress bar is correctly shown",
         // ensure it is there so we are sure next step actually test something
-        extra_trigger: '.o_notification_close',
         trigger: ".o_we_progressbar:contains('fox'):contains('File has been uploaded')",
         in_modal: false,
     }, {

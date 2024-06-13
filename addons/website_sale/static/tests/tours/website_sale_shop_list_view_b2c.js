@@ -20,9 +20,11 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             run: "click",
         },
         {
+            trigger: ":iframe #product_details",
+        },
+        {
             content: "check products list is disabled initially (when on /product page)",
             trigger: ':iframe body:not(:has(.js_product_change))',
-            extra_trigger: ':iframe #product_details',
         },
         ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
@@ -31,8 +33,10 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             run: "click",
         },
         {
+            trigger: "#oe_snippets .o_we_customize_panel",
+        },
+        {
             content: "open 'Variants' selector",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
             trigger: '[data-name="variants_opt"] we-toggler',
             run: "click",
         },

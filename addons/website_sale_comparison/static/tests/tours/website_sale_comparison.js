@@ -27,13 +27,17 @@
         run: "click",
     },
     {
+        trigger: ".comparator-popover",
+    },
+    {
         content: "check popover is now open and compare button contains two products",
-        extra_trigger: '.comparator-popover',
         trigger: ' .o_product_circle:contains(2)',
     },
     {
+        trigger: '.o_product_row:contains("Warranty")',
+    },
+    {
         content: "check products name are correct in the comparelist",
-        extra_trigger: '.o_product_row:contains("Warranty")',
         trigger: '.o_product_row:contains("Conference Chair")',
     },
     // test form product page
@@ -43,8 +47,10 @@
         run: "click",
     },
     {
+        trigger: "#product_details",
+    },
+    {
         content: "check compare button is still there and contains 2 products",
-        extra_trigger: '#product_details',
         trigger: '.o_product_circle:contains(2)',
     },
     {
@@ -57,8 +63,10 @@
         run: "click",
     },
     {
+        trigger: ".comparator-popover",
+    },
+    {
         content: "check the comparelist is now open and contains 3rd product with correct variant",
-        extra_trigger: '.comparator-popover',
         trigger: '.o_product_row:contains("Customizable Desk (Steel, White)")',
     },
     {
@@ -70,14 +78,18 @@
         },
     },
     {
+        trigger: 'img[class*="product_detail_img"]:not([data-image-to-change])',
+    },
+    {
         content: "click on compare button to add in comparison list when variant changed",
-        extra_trigger: 'img[class*="product_detail_img"]:not([data-image-to-change])',
         trigger: '.o_add_compare_dyn',
         run: "click",
     },
     {
+        trigger: '.o_product_circle:contains(4)',
+    },
+    {
         content: "comparelist contains 4th product with correct variant",
-        extra_trigger: '.o_product_circle:contains(4)',
         trigger: '.o_product_row:contains("Customizable Desk (Steel, Black)")',
         allowInvisible: true, //trigger is not visible .o_product_panel_content => display: none;
     },
@@ -91,8 +103,10 @@
         run: "click",
     },
     {
+        trigger: 'body:not(:has(.carousel-indicators))', // there is 1 image on the custom variant
+    },
+    {
         content: "click on compare button to add in comparison list when variant changed",
-        extra_trigger: 'body:not(:has(.carousel-indicators))', // there is 1 image on the custom variant
         trigger: '.o_add_compare_dyn',
         run: "click",
     },
@@ -132,8 +146,10 @@
         trigger: '#o_comparelist_table:not(:contains("Customizable Desk (Steel, Black)"))',
     },
     {
+        trigger: 'body:has(.o_product_row:contains("Warranty") .o_remove)',
+    },
+    {
         content: "open compare menu",
-        extra_trigger: 'body:has(.o_product_row:contains("Warranty") .o_remove)',
         trigger: '.o_product_panel_header',
         run: "click",
     },

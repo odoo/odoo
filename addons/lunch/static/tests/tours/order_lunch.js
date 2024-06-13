@@ -19,15 +19,19 @@ registry.category("web_tour.tours").add('order_lunch_tour', {
     run: "click",
 },
 {
+    trigger: ".o_search_panel_filter_value .form-check-input:checked",
+},
+{
     trigger: "div[role=article]",
-    extra_trigger: '.o_search_panel_filter_value .form-check-input:checked',
     content: _t("Click on a product you want to order and is available."),
     position: 'bottom',
     run: "click",
 },
 {
+    trigger: `button[name="add_to_cart"]`,
+},
+{
     trigger: 'textarea[name="note"]',
-    extra_trigger: 'button[name="add_to_cart"]',
     content: _t("Add additionnal information about your order."),
     position: 'bottom',
     run: "edit allergy to peanuts",

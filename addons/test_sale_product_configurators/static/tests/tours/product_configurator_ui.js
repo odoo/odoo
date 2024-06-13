@@ -13,9 +13,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".o_sale_order",
+},
+{
     trigger: '.o_list_button_add',
-    extra_trigger: '.o_sale_order',
     run: "click",
 }, {
     trigger: '.o_required_modifier[name=partner_id] input',
@@ -50,9 +53,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
 }, {
     trigger: 'label[style="background-color:#FFFFFF"] input',
     run: "click",
-}, {
+}, 
+{
+    trigger: ".modal-footer",
+},
+{
     trigger: '.btn-primary:not(:disabled):contains("Confirm")',
-    extra_trigger: '.modal-footer',
 }, {
     trigger: 'span:contains("Aluminium"):eq(1)',
     run: "click",

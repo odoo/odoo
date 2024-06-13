@@ -361,7 +361,9 @@ registry.category("web_tour.tours").add('test_add_new_line', {
     test: true,
     steps: () => [
         {
-            extra_trigger: '.o_form_editable',
+            trigger: ".o_form_editable",
+        },
+        {
             trigger: '.o_field_x2many_list_row_add > a',
             run: "click",
         },

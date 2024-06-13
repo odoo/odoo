@@ -27,21 +27,33 @@ registry.category("web_tour.tours").add('survey_tour', {
     content: _t("Let's get started!"),
     position: 'bottom',
     run: "click",
-}, {
+}, 
+{
+    trigger: '.js_question-wrapper span:contains("How frequently")',
+    auto: true,
+},
+{
     trigger: 'button[type=submit]',
-    extra_trigger: '.js_question-wrapper span:contains("How frequently")',
     content: _t("Whenever you pick an answer, Odoo saves it for you."),
     position: 'bottom',
     run: "click",
-}, {
+}, 
+{
+    trigger: '.js_question-wrapper span:contains("How many")',
+    auto: true,
+},
+{
     trigger: 'button[type=submit]',
-    extra_trigger: '.js_question-wrapper span:contains("How many")',
     content: _t("Only a single question left!"),
     position: 'bottom',
     run: "click",
-}, {
+}, 
+{
+    trigger: '.js_question-wrapper span:contains("How likely")',
+    auto: true,
+},
+{
     trigger: 'button[value=finish]',
-    extra_trigger: '.js_question-wrapper span:contains("How likely")',
     content: _t("Now that you are done, submit your form."),
     position: 'bottom',
     run: "click",

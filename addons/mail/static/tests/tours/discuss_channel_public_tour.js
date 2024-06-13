@@ -47,9 +47,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
+            trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+        },
+        {
             content: "Check the earlier provided attachment is listed",
             trigger: '.o-mail-AttachmentCard[title="text.txt"]',
-            extra_trigger: ".o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Send message",
@@ -93,10 +95,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             },
         },
         {
+            trigger: ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
+        },
+        {
             content: "Check the earlier provided extra attachment is listed",
             trigger: '.o-mail-Message .o-mail-Composer .o-mail-AttachmentCard[title="extra.txt"]',
-            extra_trigger:
-                ".o-mail-Message .o-mail-Composer .o-mail-AttachmentCard:not(.o-isUploading)", // waiting the attachment to be uploaded
         },
         {
             content: "Save edited message",
