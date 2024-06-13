@@ -81,7 +81,7 @@ export class PaymentVivaWallet extends PaymentInterface {
             terminalId: line.payment_method_id.viva_wallet_terminal_id,
             cashRegisterId: this.pos.get_cashier().name,
             amount: line.amount * 100,
-            currencyCode: this.pos.currency.iso_numeric, // Viva wallet only uses EUR 978
+            currencyCode: this.pos.currency.iso_numeric.toString(),
             merchantReference: line.sessionId + "/" + this.pos.session.id,
             customerTrns: customerTrns,
             preauth: false,
