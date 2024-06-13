@@ -1241,3 +1241,21 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'reconciled': False,
             },
         ])
+
+    def test_register_payment_amount_update_then_date_update(self):
+        ''' When updating the amount then changing the payment date,
+        the amount should stay the same as the user input
+        '''
+
+        PaymentRegister = self.env['account.payment.register']
+        invoices = [
+            (self.out_invoice_2, 2000.0, '2017-07-01'),
+            (self.out_invoice_3, 100, '2017-07-01'),
+            (self.out_invoice_2, 200, '2017-07-01'),
+        ]
+
+        for invoice, new_amount, new_date in invoices:
+            wizard = Form(PaymentRegister.with_context(active_model='account.move', active_ids=invoice.ids))
+            wizard.amount = new_amount
+            wizard.payment_date = fields.Date.from_string(new_date)
+            self.assertEqual(wizard.amount, new_amount, f"Amount in payment is not correct expected value: {new_amount}, actual value {wizard.amount}")

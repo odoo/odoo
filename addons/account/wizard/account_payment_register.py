@@ -4,7 +4,7 @@ from lxml import etree
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, frozendict
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -388,11 +388,21 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date')
     def _compute_amount(self):
         for wizard in self:
-            if wizard.source_currency_id == wizard.currency_id:
-                # Same currency.
-                wizard.amount = wizard.source_amount_currency
-            else:
-                wizard.amount = wizard.source_currency_id._convert(wizard.source_amount_currency, wizard.currency_id, wizard.company_id, wizard.payment_date or fields.Date.today())
+            wizard.amount = wizard.source_amount_currency if float_is_zero(wizard.amount, precision_rounding=2) else wizard.amount
+
+            old_currency = self.env.context.get('old_currency_id')
+
+            if wizard.currency_id != old_currency:
+                base_currency_id = old_currency if old_currency else wizard.source_currency_id
+
+                wizard.amount = base_currency_id._convert(
+                    wizard.amount,
+                    wizard.currency_id,
+                    wizard.company_id,
+                    wizard.payment_date or fields.Date.today()
+                )
+
+                self.env.context['old_currency_id'] = wizard.currency_id
 
     @api.depends('amount')
     def _compute_payment_difference(self):
