@@ -13,6 +13,7 @@ from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
+_audit_logger = logging.getLogger('audit.res.config')
 
 
 class ResConfigModuleInstallationMixin(object):
@@ -172,6 +173,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     """
     _name = 'res.config.settings'
     _description = 'Config Settings'
+
+    _audit = False
+    _res_config_audit_fields = True
 
     def _valid_field_parameter(self, field, name):
         return (
@@ -553,8 +557,13 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 # drop if the value is the same
                 if old_value == new_value:
                     vals.pop(field.name)
-
-        return super().create(vals_list)
+        # Doesn't use default logging mechanism as write on res.config create a new record
+        previous_settings = self.search([], order='create_date desc', limit=1)
+        res = super().create(vals_list)
+        for record, data in res._get_modified_value(self._res_config_audit_fields, vals_list, {res.id: previous_settings}):
+            _audit_logger.getChild("write").info("Settings modified for %r by user %r (#%d)", data,
+                self.env.user.login, self.env.user.id)
+        return res
 
     def action_open_template_user(self):
         action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")

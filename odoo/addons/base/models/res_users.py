@@ -149,6 +149,8 @@ class Groups(models.Model):
         ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
     ]
 
+    _audit = {'name', 'users', 'model_access', 'rule_groups', 'menu_access', 'view_access', 'category_id', 'share'}
+
     @api.constrains('users')
     def _check_one_user_type(self):
         self.users._check_one_user_type()
@@ -362,6 +364,9 @@ class Users(models.Model):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login!')
     ]
+
+    _audit = {'partner_id', 'login', 'active', 'name', 'email', 'groups_id', 'share', 'company_id', 'company_ids'}
+    _audit_wo_value = {'password', 'new_password', 'signature'}
 
     def init(self):
         cr = self.env.cr
