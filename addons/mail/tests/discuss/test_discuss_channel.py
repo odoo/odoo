@@ -199,22 +199,28 @@ class TestChannelInternals(MailCommon, HttpCase):
     @users('employee')
     def test_channel_info_mark_as_read(self):
         """ In case of concurrent channel_seen RPC, ensure the oldest call has no effect. """
-        chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get((self.partner_employee | self.user_admin.partner_id).ids)
+        pids = (self.partner_employee | self.user_admin.partner_id).ids
+        chat = self.env['discuss.channel'].with_user(self.user_admin).channel_get(pids)
         msg_1 = self._add_messages(chat, 'Body1', author=self.user_employee.partner_id)
         msg_2 = self._add_messages(chat, 'Body2', author=self.user_employee.partner_id)
         self_member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
         self_member._mark_as_read(msg_2.id)
-        self_member_info = next(filter(lambda d: d['id'] == self_member.id, chat._channel_info()[0]['channelMembers'][0][1]))
+        init_store = StoreData()
+        init_store.add({"Thread": chat._channel_info()})
+        init_channel_info = init_store.get_result()["Thread"][0]
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
+        self_member_info = next(filter(lambda d: d['id'] == self_member.id, init_channel_info['channelMembers'][0][1]))
         self.assertEqual(
             self_member_info['seen_message_id']['id'],
             msg_2.id,
             "Last message id should have been updated"
         )
-
         self_member._mark_as_read(msg_1.id)
+        final_store = StoreData()
+        final_store.add({"Thread": chat._channel_info()})
+        final_channel_info = init_store.get_result()["Thread"][0]
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self_member_info = next(filter(lambda d: d['id'] == self_member.id, chat._channel_info()[0]['channelMembers'][0][1]))
+        self_member_info = next(filter(lambda d: d['id'] == self_member.id, final_channel_info['channelMembers'][0][1]))
         self.assertEqual(
             self_member_info['seen_message_id']['id'],
             msg_2.id,
