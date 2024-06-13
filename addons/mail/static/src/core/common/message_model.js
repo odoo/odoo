@@ -407,6 +407,12 @@ export class Message extends Record {
             { type: "success" }
         );
     }
+
+    get channelMemberHaveSeen() {
+        return this.thread.membersThatCanSeen.filter(
+            (m) => m.hasSeen(this) && m.persona.notEq(this.author)
+        );
+    }
 }
 
 Message.register();

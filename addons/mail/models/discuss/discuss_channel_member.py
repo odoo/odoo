@@ -220,6 +220,7 @@ class ChannelMember(models.Model):
                 "id": True,
                 "persona": {},
                 "seen_message_id": True,
+                "last_seen_dt": True,
             }
         if extra_fields:
             fields.update(extra_fields)
@@ -236,6 +237,8 @@ class ChannelMember(models.Model):
                 data['thread'] = member.channel_id._channel_format(fields=fields.get('channel')).get(member.channel_id)
             if 'create_date' in fields:
                 data['create_date'] = odoo.fields.Datetime.to_string(member.create_date)
+            if 'last_seen_dt' in fields:
+                data['last_seen_dt'] = odoo.fields.Datetime.to_string(member.last_seen_dt)
             if 'persona' in fields:
                 if member.partner_id:
                     # sudo: res.partner - calling _partner_data_to_store related to a member is considered acceptable
