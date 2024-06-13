@@ -2,12 +2,15 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
-import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
+import { many2OneField } from '@web/views/fields/many2one/many2one_field';
 import { ProductMatrixDialog } from "@product_matrix/js/product_matrix_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import {
+    ProductLabelSectionAndNoteField
+} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 
-export class PurchaseOrderLineProductField extends Many2OneField {
+export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "purchase.PurchaseProductField";
     setup() {
         super.setup();
@@ -45,7 +48,7 @@ export class PurchaseOrderLineProductField extends Many2OneField {
             if (this.props.record.data.product_id != result.product_id.id) {
                 this.props.record.update({
                     // TODO right name get (same problem as configurator)
-                    product_id: [result.product_id, 'whatever'],
+                    product_id: [result.product_id, result.product_name],
                 });
             }
         } else {

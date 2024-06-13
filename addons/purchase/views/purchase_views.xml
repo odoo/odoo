@@ -207,7 +207,7 @@
                         <page string="Products" name="products">
                             <field name="tax_country_id" invisible="1"/>
                             <field name="order_line"
-                                widget="section_and_note_one2many"
+                                widget="product_label_section_and_note_field_o2m"
                                 mode="tree,kanban"
                                 context="{'default_state': 'draft'}"
                                 readonly="state in ('done', 'cancel')">
@@ -230,6 +230,7 @@
                                     <field name="sequence" widget="handle"/>
                                     <field
                                         name="product_id"
+                                        widget="product_label_section_and_note_field"
                                         readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
                                         required="not display_type"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
