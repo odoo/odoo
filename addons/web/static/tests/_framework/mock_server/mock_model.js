@@ -889,7 +889,7 @@ const parseView = (model, params) => {
             node.setAttribute("on_change", "1");
         }
     }
-    for (const [name, { node }] of Object.entries(groupbyNodes)) {
+    for (const [name, node] of Object.entries(groupbyNodes)) {
         const field = fields[name];
         if (!isM2OField(field)) {
             throw new MockServerError("cannot group: 'groupby' can only target many2one fields");
