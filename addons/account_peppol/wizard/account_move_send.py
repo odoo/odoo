@@ -71,7 +71,7 @@ class AccountMoveSend(models.TransientModel):
             warnings = {}
 
             invalid_partners = wizard.move_ids.partner_id.commercial_partner_id.filtered(
-                lambda partner: not partner.account_peppol_is_endpoint_valid)
+                lambda partner: partner.peppol_verification_state != 'valid')
             ubl_warning_already_displayed = wizard.warnings and 'account_edi_ubl_cii_configure_partner' in wizard.warnings
             if invalid_partners and not ubl_warning_already_displayed:
                 warnings['account_peppol_warning_partner'] = {
@@ -188,7 +188,7 @@ class AccountMoveSend(models.TransientModel):
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
                     continue
 
-                if not partner.account_peppol_is_endpoint_valid:
+                if partner.peppol_verification_state != 'valid':
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
