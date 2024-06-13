@@ -325,12 +325,12 @@ class Users(models.Model):
              "a change of password, the user has to login again.")
     signature = fields.Html(string="Email Signature", compute='_compute_signature', readonly=False, store=True)
     active = fields.Boolean(default=True)
-    active_partner = fields.Boolean(related='partner_id.active', readonly=True, string="Partner is Active")
+    active_partner = fields.Boolean(related='partner_id.active', string="Partner is Active")
     action_id = fields.Many2one('ir.actions.actions', string='Home Action',
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=lambda s: s._default_groups())
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
-    login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
+    login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication')
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies")
