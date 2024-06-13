@@ -90,6 +90,50 @@ class AccountBalance(models.Model):
         return {'balance_info': balance_info}
 
     @api.model
+    def get_balance_by_customer(self, customer_id, end_date):
+        # Define search criteria to filter account move lines based on the customer
+        domain = [
+            ('partner_id', '=', customer_id),
+            ('date', '<=', end_date)
+        ]
+
+        # Retrieve account move lines based on the criteria
+        move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
+
+        # Prepare balance info
+        balance_info = [{
+            'customer_id': customer_id,
+            'date': end_date,
+            'balance': move_line.balance,
+        }] if move_line else []
+
+        # Return the balance data
+        return {'balance_info': balance_info}
+
+    @api.model
+    def get_balance_by_vendor(self, vendor_id, end_date):
+        # Define search criteria to filter account move lines based on the vendor
+        domain = [
+            ('partner_id', '=', vendor_id),
+            ('date', '<=', end_date)
+        ]
+
+        # Retrieve account move lines based on the criteria
+        move_line = self.env['account.move.line'].search(domain, order='date DESC', limit=1)
+
+        # Prepare balance info
+        balance_info = [{
+            'vendor_id': vendor_id,
+            'date': end_date,
+            'balance': move_line.balance,
+        }] if move_line else []
+
+        # Return the balance data
+        return {'balance_info': balance_info}
+
+
+
+    @api.model
     def get_all_customers(self):
         # Define the domain to filter partners based on the customer tag
         domain = [('category_id.name', '=', 'Customer')]
@@ -160,6 +204,88 @@ class AccountBalance(models.Model):
 
             })
 
+        return {
+            'ledger_data': ledger_data,
+        }
+
+    @api.model
+    def general_ledger_report_by_vendor(self, partner_id, start_date, end_date):
+        # Define the domain to filter move lines based on the partner and date range
+        domain = [
+            ('partner_id', '=', partner_id),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ]
+
+        # Search for account move lines that match the domain
+        move_lines = self.env['account.move.line'].search(domain)
+
+        ledger_data = []
+
+        for line in move_lines:
+            # Get analytic line information related to the move line
+            analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
+            analytic_account_id = analytic_info.account_id if analytic_info else ""
+            analytic_account_name = analytic_account_id.name if analytic_info else ""
+            analytic_account_amount = analytic_info.amount if analytic_info else ""
+
+            partner_type = 'Vendor' if line.partner_id else ""
+
+            # Append move line data to the ledger data list
+            ledger_data.append({
+                'date': line.date,
+                'debit': line.debit,
+                'credit': line.credit,
+                'account_root_id': line.account_root_id.id,
+                'analytic_move_id': analytic_info.id,
+                'analytic_account_amount': analytic_account_amount,
+                'analytic_account_name': analytic_account_name,
+                'partner_id': line.partner_id.name,
+                'partner_type': partner_type,
+            })
+
+        # Return the ledger data
+        return {
+            'ledger_data': ledger_data,
+        }
+
+    @api.model
+    def general_ledger_report_by_customer(self, partner_id, start_date, end_date):
+        # Define the domain to filter move lines based on the partner and date range
+        domain = [
+            ('partner_id', '=', partner_id),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date)
+        ]
+
+        # Search for account move lines that match the domain
+        move_lines = self.env['account.move.line'].search(domain)
+
+        ledger_data = []
+
+        for line in move_lines:
+            # Get analytic line information related to the move line
+            analytic_info = self.env['account.analytic.line'].search([('move_line_id', '=', line.id)], limit=1)
+            analytic_account_id = analytic_info.account_id if analytic_info else ""
+            analytic_account_name = analytic_account_id.name if analytic_info else ""
+            analytic_account_amount = analytic_info.amount if analytic_info else ""
+
+            partner_type = 'Customer' if line.partner_id else ""
+
+            # Append move line data to the ledger data list
+            ledger_data.append({
+                'date': line.date,
+                'debit': line.debit,
+                'credit': line.credit,
+                'account_root_id': line.account_root_id.id,
+                'analytic_move_id': analytic_info.id,
+                'analytic_account_amount': analytic_account_amount,
+                'analytic_account_name': analytic_account_name,
+                'partner_id': line.partner_id.name,
+                'partner_type': partner_type,
+            })
+
+        # Return the ledger data
         return {
             'ledger_data': ledger_data,
         }
