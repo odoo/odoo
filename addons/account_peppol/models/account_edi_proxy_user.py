@@ -85,7 +85,8 @@ class AccountEdiProxyClientUser(models.Model):
     def _check_company_on_peppol(self, company, edi_identification):
         if (
             not company.account_peppol_migration_key
-            and (participant_info := company.partner_id._check_peppol_participant_exists(edi_identification, check_company=True))
+            and (participant_info := company.partner_id._get_participant_info(edi_identification)) is not None
+            and company.partner_id._check_peppol_participant_exists(participant_info, edi_identification, check_company=True)
         ):
             error_msg = _(
                 "A participant with these details has already been registered on the network. "
