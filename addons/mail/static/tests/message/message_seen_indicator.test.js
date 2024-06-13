@@ -473,3 +473,91 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
     await contains(".o-mail-Message", { text: "channel-msg" });
     await contains(".o-mail-MessageSeenIndicator i", { count: 0 }); // none in channel
 });
+
+test("Show everyone seen title on message seen indicator", async () => {
+    const pyEnv = await startServer();
+    const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
+    const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_1, last_seen_dt: "2024-06-01 12:00" }),
+            Command.create({ partner_id: partnerId_2, last_seen_dt: "2024-06-01 13:00" }),
+        ],
+        channel_type: "group",
+    });
+    const mesageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const [memberId_1, memberId_2] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", [partnerId_1, partnerId_2]],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId_1], {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId_2], {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Seen by everyone']");
+});
+
+test("Title show some member seen info (partial seen), click show dialog with full info", async () => {
+    // last member flagged as not seen so that it doesn't show "Seen by everyone" but list names instead
+    const pyEnv = await startServer();
+    const partners = [];
+    for (let i = 0; i < 12; i++) {
+        partners.push({ name: `User ${i}` });
+    }
+    const partnerIds = pyEnv["res.partner"].create(partners);
+    const channelMemberIds = [];
+    for (const partner_id of partnerIds) {
+        channelMemberIds.push(
+            Command.create({
+                partner_id,
+                last_seen_dt: partner_id === partnerIds.at(-1) ? false : "2024-06-01 12:00",
+            })
+        );
+    }
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            Command.create({
+                partner_id: serverState.partnerId,
+                last_seen_dt: "2024-06-01 12:00",
+            }),
+            ...channelMemberIds,
+        ],
+        channel_type: "group",
+    });
+    const mesageId = pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "<p>Test</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const members = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "in", partnerIds.filter((p) => p !== partnerIds.at(-1))],
+    ]);
+    pyEnv["discuss.channel.member"].write(members, {
+        seen_message_id: mesageId,
+        fetched_message_id: mesageId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("[title='Seen by User 0, User 1, User 2 and 8 others']");
+    await click(".o-mail-MessageSeenIndicator");
+    await contains("li", { count: 11 });
+    for (let i = 0; i < 11; i++) {
+        await contains("li", { text: `User ${i}` }); // Not checking datetime because HOOT mocking of tz do not work
+    }
+});
