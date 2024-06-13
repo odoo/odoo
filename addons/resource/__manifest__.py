@@ -36,7 +36,11 @@ associated to every resource. It also manages the leaves of every resource.
             ('remove', 'resource/static/tests/components/**/*'),
         ],
         'web.qunit_suite_tests': [
-            'resource/static/tests/components/*.js',
+            'resource/static/tests/legacy/components/*.js',
+        ],
+        "web.assets_unit_tests": [
+            "resource/static/tests/**/*",
+            ("remove", "resource/static/tests/legacy/components/*.js"),
         ],
     },
     'license': 'LGPL-3',
