@@ -103,24 +103,26 @@
         }
     }
 
-    > * + * {
+    &:not(.o-form-buttonbox-small) > * + * {
         margin-left: -$border-width;
     }
 
-    .oe_stat_button,
-    .oe_stat_button > button {
-        border-radius: 0;
-    }
+    @include media-breakpoint-up(md) {
+        .oe_stat_button,
+        .oe_stat_button > button {
+            border-radius: 0;
+        }
 
-    > .oe_stat_button:first-child,
-    > div:first-child > .oe_stat_button {
-        @include border-start-radius($border-radius);
-    }
+        > .oe_stat_button:first-child,
+        > div:first-child > .oe_stat_button {
+            @include border-start-radius($border-radius);
+        }
 
-    > button.oe_stat_button:last-child,
-    > div:last-child > .oe_stat_button,
-    > div.oe_stat_button:last-child > button {
-        @include border-end-radius($border-radius);
+        > button.oe_stat_button:last-child,
+        > div:last-child > .oe_stat_button,
+        > div.oe_stat_button:last-child > button {
+            @include border-end-radius($border-radius);
+        }
     }
 
     // "More" button and dropdown
@@ -156,6 +158,32 @@
 
     .o_pie_value {
         @extend %-stat-button-value;
+    }
+}
+
+.o-form-buttonbox-small {
+    --button-box-gap: 1px;
+    --button-box-per-row: 2;
+    --button-box-border-color: #{map-get(map-get($o-btns-bs-outline-override, 'secondary'), 'border')};
+
+    display: grid;
+    grid-template-columns: repeat(var(--button-box-per-row), minmax(0, 1fr));
+    overflow: hidden;
+    inset-inline-end: $spacer;
+    gap: var(--button-box-gap);
+
+    > span .o_field_widget, .o_stat_info, .o_stat_value {
+        @include text-truncate;
+    }
+
+    .oe_stat_button,
+    .oe_stat_button > button {
+        border-color: transparent;
+        border-radius: 0;
+    }
+
+    > .o-dropdown-item {
+        outline: $btn-border-width solid var(--button-box-border-color);
     }
 }
 
