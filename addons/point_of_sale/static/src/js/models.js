@@ -680,8 +680,8 @@ class PosGlobalState extends PosModel {
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    const price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, this.currency.rounding, true).total_excluded
-                    return this.compute_all(new_included_taxes, price_without_taxes, 1, this.currency.rounding, false).total_included
+                    //If previous tax and new tax where both included in price. The price including tax is the same
+                    return price;
                 }
                 else{
                     return this.compute_all(mapped_included_taxes, price, 1, this.currency.rounding, true).total_excluded;
