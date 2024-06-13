@@ -59,8 +59,5 @@ class HolidaysRequest(models.Model):
             ('employee_id', populate.compute(compute_employee_id)),
             ('request_date_from', populate.compute(compute_request_date_from)),
             ('request_date_to', populate.compute(compute_request_date_to)),
-            ('state', populate.randomize([
-                'draft',
-                'confirm',
-            ])),
+            ('state', populate.constant('confirm')),
         ]

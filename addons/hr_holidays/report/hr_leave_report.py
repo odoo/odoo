@@ -24,7 +24,6 @@ class LeaveReport(models.Model):
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     holiday_status_id = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
     state = fields.Selection([
-        ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
