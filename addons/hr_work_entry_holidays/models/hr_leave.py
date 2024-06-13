@@ -121,11 +121,11 @@ class HrLeave(models.Model):
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, employee_ids=employee_ids):
             return super().create(vals_list)
 
-    def action_confirm(self):
+    def action_reset_confirm(self):
         start = min(self.mapped('date_from'), default=False)
         stop = max(self.mapped('date_to'), default=False)
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, employee_ids=self.employee_id.ids):
-            return super().action_confirm()
+            return super().action_reset_confirm()
 
     def _get_leaves_on_public_holiday(self):
         return super()._get_leaves_on_public_holiday().filtered(

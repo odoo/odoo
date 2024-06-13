@@ -26,7 +26,6 @@ class HrEmployeeBase(models.AbstractModel):
              'Total based on all the time off types without overriding limit.')
     current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
         selection=[
-            ('draft', 'New'),
             ('confirm', 'Waiting Approval'),
             ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'),
@@ -245,7 +244,7 @@ class HrEmployeeBase(models.AbstractModel):
                 hr_vals['manager_id'] = values['parent_id']
             if values.get('department_id') is not None:
                 hr_vals['department_id'] = values['department_id']
-            holidays = self.env['hr.leave'].sudo().search(['|', ('state', 'in', ['draft', 'confirm']), ('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
+            holidays = self.env['hr.leave'].sudo().search(['|', ('state', '=', 'confirm'), ('date_from', '>', today_date), ('employee_id', 'in', self.ids)])
             holidays.write(hr_vals)
             allocations = self.env['hr.leave.allocation'].sudo().search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             allocations.write(hr_vals)
