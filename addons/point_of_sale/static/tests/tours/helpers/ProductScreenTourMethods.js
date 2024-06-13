@@ -436,3 +436,12 @@ export function closePos() {
         },
     ];
 }
+
+export function checkTaxAmount(number) {
+    return inLeftSide([
+        {
+            content: `check order tax amount`,
+            trigger: `.subentry:contains("${number}")`,
+        },
+    ]);
+}

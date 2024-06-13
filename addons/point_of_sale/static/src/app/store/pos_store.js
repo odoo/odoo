@@ -1417,6 +1417,11 @@ export class PosStore extends Reactive {
         }
 
         const newTaxes = this.getTaxesAfterFiscalPosition(taxes, fiscalPosition);
+        const newTaxeInlcuded = newTaxes.some((taxe) => taxe.price_include);
+        const oldTaxeIncluded = taxes.some((taxe) => taxe.price_include);
+        if (newTaxeInlcuded && oldTaxeIncluded) {
+            return priceUnit;
+        }
         return accountTaxHelpers.adapt_price_unit_to_another_taxes(
             priceUnit,
             accountTaxHelpers.eval_taxes_computation_prepare_product_values(
