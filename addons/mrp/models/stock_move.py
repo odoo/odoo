@@ -694,6 +694,11 @@ class StockMove(models.Model):
         self.ensure_one()
         return self._determine_is_manual_consumption(self.bom_line_id)
 
+    def _set_consumed_quantity(self, qty_producing, product_qty):
+        self.ensure_one()
+        if not self.picked and not float_is_zero(product_qty, 2):
+            self.quantity = (self.product_qty * qty_producing) / product_qty
+
     @api.model
     def _determine_is_manual_consumption(self, bom_line):
         return bom_line and bom_line.manual_consumption

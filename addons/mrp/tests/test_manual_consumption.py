@@ -208,6 +208,8 @@ class TestManualConsumption(TestMrpCommon):
 
         # Pick manual move
         move_manual.picked = True
+        # Can't change the quantity when the move is picked
+        move_auto.picked = False
 
         # Now we change quantity to 7. Automatic move will change quantity, but manual move will still be 5 because it has been already picked.
         mo_form = Form(mo)
