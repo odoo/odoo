@@ -4317,8 +4317,9 @@ class TestFieldParametersValidation(TransactionCase):
 def select(model, *fnames):
     """ Return the expected query string to SELECT the given columns. """
     table = model._table
+    model_fields = model._fields
     terms = ", ".join(
-        f'"{table}"."{fname}"'
+        f'"{table}"."{fname}"' if not model_fields[fname].translate else f'"{table}"."{fname}"->>%s'
         for fname in ['id'] + list(fnames)
     )
     return f'SELECT {terms} FROM "{table}" WHERE ("{table}"."id" IN %s)'
