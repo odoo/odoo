@@ -1018,12 +1018,14 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         ''' draft -> posted '''
-        # Do not allow to post if the account is required but not trusted
+        # Do not allow posting if the account is required but not trusted
         for payment in self:
             if payment.require_partner_bank_account and not payment.partner_bank_id.allow_out_payment:
                 raise UserError(_(
-                    "To record payments with %(method_name)s, the recipient bank account must be manually validated. You should go on the partner bank account in order to validate it.",
+                    "To record payments with %(method_name)s, the recipient bank account must be manually validated. "
+                    "You should go on the partner bank account of %(partner)s in order to validate it.",
                     method_name=self.payment_method_line_id.name,
+                    partner=payment.partner_id.display_name,
                 ))
 
         self.move_id._post(soft=False)
