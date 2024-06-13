@@ -5,7 +5,8 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Component, onWillRender } from "@odoo/owl";
+import { user } from "@web/core/user";
+import { Component, onWillRender, onWillStart } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class QtyAtDatePopover extends Component {
@@ -17,6 +18,11 @@ export class QtyAtDatePopover extends Component {
     };
     setup() {
         this.actionService = useService("action");
+
+        onWillStart(async () => {
+            this.hasMultiWarehousesGroup = await user.hasGroup('stock.group_stock_multi_warehouses');
+            console.log('hasMultiWarehousesGroup', this.hasMultiWarehousesGroup);
+        });
     }
 
     openForecast() {
@@ -27,6 +33,16 @@ export class QtyAtDatePopover extends Component {
                 warehouse_id: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id[0],
                 move_to_match_ids: this.props.record.data.move_ids.records.map(record => record.resId),
                 sale_line_to_match_id: this.props.record.resId,
+            },
+        });
+    }
+
+    openWarehouses() {
+        this.actionService.doAction("sale_stock.action_server_order_line_warehouse_select", {
+            additionalContext: {
+                active_model: 'sale.order.line',
+                active_id: this.props.record.resId,
+                sale_order_line_id: this.props.record.resId,
             },
         });
     }
