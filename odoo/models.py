@@ -6406,7 +6406,7 @@ class BaseModel(metaclass=MetaModel):
         if origin is not None:
             origin = origin.id
         record = self.browse((NewId(origin, ref),))
-        record._update_cache(values, validate=False)
+        record._update_cache(values, validate=True if origin is not None else False)
 
         return record
 
