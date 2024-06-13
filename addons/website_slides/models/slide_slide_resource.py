@@ -42,9 +42,9 @@ class SlideResource(models.Model):
             if to_update:
                 new_name = _("Resource")
                 if resource.resource_type == 'file' and (resource.data or resource.file_name):
-                    new_name = self.file_name
+                    new_name = resource.file_name
                 elif resource.resource_type == 'url':
-                    new_name = self.link
+                    new_name = resource.link
                 resource.name = new_name
 
     @api.depends('name', 'file_name')
