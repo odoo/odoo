@@ -1057,7 +1057,9 @@ class Channel(models.Model):
         if not pinned:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": self._channel_info()[0]})
+            store = StoreData()
+            store.add({"Thread": self._channel_info()})
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', store.get_result())
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification

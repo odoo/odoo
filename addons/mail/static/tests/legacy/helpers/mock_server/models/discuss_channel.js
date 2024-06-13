@@ -690,9 +690,9 @@ patch(MockServer.prototype, {
                 id: channel.id,
             });
         } else {
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
-                Thread: this._mockDiscussChannelChannelInfo([channel.id])[0],
-            });
+            const store = {};
+            Object.assign(store, { Thread: this._mockDiscussChannelChannelInfo([channel.id]) });
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", store);
         }
     },
     /**

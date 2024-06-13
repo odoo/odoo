@@ -524,9 +524,9 @@ export class DiscussChannel extends models.ServerModel {
                 id: channel.id,
             });
         } else {
-            BusBus._sendone(partner, "mail.record/insert", {
-                Thread: this._channel_info([channel.id])[0],
-            });
+            const store = {};
+            Object.assign(store, { Thread: this._channel_info([channel.id]) });
+            BusBus._sendone(partner, "mail.record/insert", store);
         }
     }
 
