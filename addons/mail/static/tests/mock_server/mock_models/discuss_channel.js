@@ -222,7 +222,9 @@ export class DiscussChannel extends models.ServerModel {
         );
         const [partner] = ResPartner.read(this.env.user.partner_id);
         this._broadcast(id, [partner]);
-        return this._channel_info([id])[0];
+        const store = {};
+        Object.assign(store, { Thread: this._channel_info([id]) });
+        return store;
     }
 
     /** @param {number[]} ids */
@@ -599,7 +601,9 @@ export class DiscussChannel extends models.ServerModel {
             id,
             partners.map((partner) => partner.id)
         );
-        return this._channel_info([id])[0];
+        const store = {};
+        Object.assign(store, { Thread: this._channel_info([id]) });
+        return store;
     }
 
     /** @param {number} id */

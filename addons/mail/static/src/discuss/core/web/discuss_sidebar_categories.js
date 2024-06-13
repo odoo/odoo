@@ -83,7 +83,7 @@ export class DiscussSidebarCategories extends Component {
      * @param {import("models").Thread} thread
      */
     async leaveChannel(thread) {
-        if (thread.channel_type !== "group" && thread.isAdmin) {
+        if (thread.channel_type !== "group" && thread.create_uid === thread.store.self.userId) {
             await this.askConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
