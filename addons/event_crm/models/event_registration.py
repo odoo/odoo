@@ -32,13 +32,18 @@ class EventRegistration(models.Model):
         # as registrations can be automatically confirmed, or even created directly
         # with a state given in values
         if not self.env.context.get('event_lead_rule_skip'):
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')]).sudo()._run_on_registrations(registrations)
+            # take rules based either on current registrations event, either cross
+            # event; filter out those linked to other event
+            rules = self.env['event.lead.rule'].search(['|', ('event_id', '=', False), ('event_id', 'in', registrations.event_id.ids)]).sudo()
+            rules.filtered(lambda r: r.lead_creation_trigger == 'create')._run_on_registrations(registrations)
+
             open_registrations = registrations.filtered(lambda reg: reg.state == 'open')
             if open_registrations:
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(open_registrations)
+                rules.filtered(lambda r: r.lead_creation_trigger == 'open')._run_on_registrations(open_registrations)
+
             done_registrations = registrations.filtered(lambda reg: reg.state == 'done')
             if done_registrations:
-                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(done_registrations)
+                rules.filtered(lambda r: r.lead_creation_trigger == 'done')._run_on_registrations(done_registrations)
 
         return registrations
 

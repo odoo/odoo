@@ -160,51 +160,64 @@ class EventMailScheduler(models.Model):
                 raise ValidationError(_('The template which is referenced should be coming from %(model_name)s model.', model_name=model))
 
     def execute(self):
-        for scheduler in self:
-            now = fields.Datetime.now()
+        todo = self._filter_to_skip(keep_per_registration=True)
+        valid_mail_schedulers = todo.filtered(lambda s: s.notification_type == "mail")._filter_template_ref(notification_type="mail")
+        for scheduler in todo:
             if scheduler.interval_type == 'after_sub':
-                if self.env.context.get('event_mail_registration_ids'):
-                    new_registrations = self.env['event.registration'].search([
-                        ('id', 'in', self.env.context['event_mail_registration_ids']),
-                        ('event_id', '=', scheduler.event_id.id),
-                    ]) - scheduler.mail_registration_ids.registration_id
-                else:
-                    new_registrations = scheduler.event_id.registration_ids.filtered_domain(
-                        [('state', 'not in', ('cancel', 'draft'))]
-                    ) - scheduler.mail_registration_ids.registration_id
-                scheduler._create_missing_mail_registrations(new_registrations)
-
-                # execute scheduler on registrations
-                scheduler.mail_registration_ids.execute()
-                total_sent = len(scheduler.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
+                scheduler._execute_after_subscription()
+            elif scheduler.notification_type == 'mail' and scheduler in valid_mail_schedulers:
+                scheduler.event_id.mail_attendees(scheduler.template_ref.id)
                 scheduler.update({
-                    'mail_done': total_sent >= (scheduler.event_id.seats_reserved + scheduler.event_id.seats_used),
-                    'mail_count_done': total_sent,
+                    'mail_done': True,
+                    'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel')),
                 })
-            else:
-                # before or after event -> one shot email
-                if scheduler.mail_done or scheduler.notification_type != 'mail':
-                    continue
-                # no template -> ill configured, skip and avoid crash
-                if not scheduler.template_ref:
-                    continue
-                # do not send emails if the mailing was scheduled before the event but the event is over
-                if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.mail_attendees(scheduler.template_ref.id)
-                    # Mail is sent to all attendees (unconfirmed as well), so count all attendees
-                    scheduler.update({
-                        'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
-                    })
         return True
+
+    def _execute_after_subscription(self, registration_limit=1000):
+        """ 'after_sub' scheduler management. It currently does two main things
+          * generate missing 'event.mail.registrations' which are scheduled
+            communication linked to registrations;
+          * launch registration-based communication, splitting in batches as
+            it may imply a lot of computation. When having more than given
+            limit to handle, schedule another call of cron to avoid having to
+            wait another cron interval check;
+        """
+        # fillup on subscription lines
+        if self.env.context.get('event_mail_registration_ids'):
+            new_registrations = self.env['event.registration'].search([
+                ('id', 'in', self.env.context['event_mail_registration_ids']),
+                ('event_id', '=', self.event_id.id),
+            ])
+        else:
+            new_registrations = self.event_id.registration_ids.filtered_domain(
+                [('state', 'not in', ('cancel', 'draft'))]
+            )
+        self._create_missing_mail_registrations(new_registrations)
+
+        # execute scheduler on registrations: limit number of registrations
+        # globally; if we have more next cron will handle them
+        todo = self.mail_registration_ids._filter_to_skip()
+        relaunch = len(todo) > registration_limit
+        todo[:registration_limit].execute()
+        total_sent = len(self.mail_registration_ids.filtered(lambda reg: reg.mail_sent))
+        self.update({
+            'mail_done': total_sent >= (self.event_id.seats_reserved + self.event_id.seats_used),
+            'mail_count_done': total_sent,
+        })
+        if relaunch:
+            self.env.ref('event.event_mail_scheduler')._trigger()
 
     def _create_missing_mail_registrations(self, registrations):
         new = []
         for scheduler in self:
-            new += [{
-                'registration_id': registration.id,
-                'scheduler_id': scheduler.id,
-            } for registration in registrations]
+            new += [
+                {
+                    'registration_id': registration.id,
+                    'scheduler_id': scheduler.id,
+                }
+                for registration in registrations
+                if registration not in scheduler.mail_registration_ids.registration_id
+            ]
         if new:
             return self.env['event.mail.registration'].create(new)
         return self.env['event.mail.registration']
@@ -217,6 +230,61 @@ class EventMailScheduler(models.Model):
             self.interval_unit,
             self.interval_type,
             '%s,%i' % (self.template_ref._name, self.template_ref.id)
+        )
+
+    def _filter_template_ref(self, notification_type="mail"):
+        """ Check for valid template reference: existing, working template """
+        tpl_model, tpl_description = self._filter_template_ref_type_info(notification_type)
+
+        schedulers = self.filtered(lambda s: s.notification_type == notification_type)
+        if not schedulers:
+            return self.browse()
+
+        invalid = self.browse()
+        template_ids = set()
+        for scheduler in schedulers:
+            if scheduler.template_ref._name != tpl_model:
+                invalid += scheduler
+            else:
+                template_ids.add(scheduler.template_ref.id)
+        existing_templates = self.env[tpl_model].browse(template_ids).exists()
+        missing = schedulers.filtered(lambda s: s not in invalid and s.template_ref not in existing_templates)
+        for scheduler in missing:
+            _logger.warning(
+                "Cannot process scheduler %s (event %s - ID %s) as it refers to non-existent %s (ID %s)",
+                scheduler.id, scheduler.event_id.name, scheduler.event_id.id,
+                tpl_description, scheduler.template_ref.id
+            )
+        for scheduler in invalid:
+            _logger.warning(
+                "Cannot process scheduler %s (event %s - ID %s) as it refers to invalid template %s (ID %s) (%s instead of %s)",
+                scheduler.id, scheduler.event_id.name, scheduler.event_id.id,
+                scheduler.template_ref.name, scheduler.template_ref.id,
+                scheduler.template_ref._name, tpl_description)
+        return self - missing - invalid
+
+    def _filter_template_ref_type_info(self, notification_type):
+        return "mail.template", _("mail template")
+
+    def _filter_to_skip(self, keep_type=None, keep_per_registration=False):
+        """ Filter schedulers to skip: already done or scheduled for later
+
+        :param str keep_type: if given, a 'notification_type' defined on the
+          scheduler e.g. 'mail' or 'sms' (with sms module);
+        """
+        now = fields.Datetime.now()
+        return self.filtered(
+            lambda scheduler:
+                not scheduler.mail_done
+                and (keep_type is None or scheduler.notification_type == keep_type)  # optional notification type filter
+                and (keep_per_registration or scheduler.interval_type != 'after_sub')  # keep registration based only if asked
+                and (
+                    scheduler.interval_type == 'after_sub'
+                    or (
+                        scheduler.scheduled_date <= now
+                        and (scheduler.interval_type == 'after_event' or scheduler.event_id.date_end > now)
+                    )
+                )
         )
 
     @api.model
@@ -297,16 +365,14 @@ class EventMailRegistration(models.Model):
     mail_sent = fields.Boolean('Mail Sent')
 
     def execute(self):
-        now = fields.Datetime.now()
-        todo = self.filtered(lambda reg_mail:
-            not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
-            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
-            reg_mail.scheduler_id.notification_type == 'mail'
-        )
-        done = self.browse()
-        for reg_mail in todo:
-            organizer = reg_mail.scheduler_id.event_id.organizer_id
+        todo = self._filter_to_skip(keep_type='mail')
+
+        # Exclude schedulers linked to invalid/unusable templates
+        valid_schedulers = todo.scheduler_id._filter_template_ref(notification_type="mail")
+        valid = todo.filtered(lambda r: r.scheduler_id in valid_schedulers)
+
+        for scheduler, reg_mails in valid.grouped('scheduler_id').items():
+            organizer = scheduler.event_id.organizer_id
             company = self.env.company
             author = self.env.ref('base.user_root').partner_id
             if organizer.email:
@@ -319,21 +385,31 @@ class EventMailRegistration(models.Model):
             email_values = {
                 'author_id': author.id,
             }
-            template = None
-            try:
-                template = reg_mail.scheduler_id.template_ref.exists()
-            except MissingError:
-                pass
-
-            if not template:
-                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
-                continue
-
-            if not template.email_from:
+            if not scheduler.template_ref.email_from:
                 email_values['email_from'] = author.email_formatted
-            template.send_mail(reg_mail.registration_id.id, email_values=email_values)
-            done |= reg_mail
-        done.write({'mail_sent': True})
+            try:
+                scheduler.template_ref.send_mail_batch(reg_mails.registration_id.ids, email_values=email_values)
+            except Exception as e:  # noqa: BLE001 we should never raise and rollback here
+                _logger.warning('An issue happened when sending mail template ID %s. Received error %s',
+                                scheduler.template_ref.id, e)
+        valid.write({'mail_sent': True})
+
+    def _filter_to_skip(self, keep_type=None):
+        """ Filter mail registrations to skip: already done, registrations
+        canceled (or draft), scheduled for later. Optional can be filtered
+        on a scheduler notification type to keep.
+
+        :param str keep_type: if given, a 'notification_type' defined on the
+          scheduler e.g. 'mail' or 'sms' (with sms module);
+        """
+        now = fields.Datetime.now()
+        return self.filtered(
+            lambda reg_mail:
+                not reg_mail.mail_sent  # not already done
+                and reg_mail.registration_id.state in ['open', 'done']  # notify only active
+                and reg_mail.scheduled_date and reg_mail.scheduled_date <= now  # really scheduled
+                and (keep_type is None or reg_mail.scheduler_id.notification_type == keep_type)  # optional type filter
+        )
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):

@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+import logging
+
+from odoo import api, fields, models, _
+
+_logger = logging.getLogger(__name__)
 
 
 class EventTypeMail(models.Model):
@@ -41,27 +45,25 @@ class EventMailScheduler(models.Model):
         super(EventMailScheduler, self - sms_mails)._compute_template_model_id()
 
     def execute(self):
-        for scheduler in self:
-            now = fields.Datetime.now()
-            if scheduler.interval_type != 'after_sub' and scheduler.notification_type == 'sms':
-                # before or after event -> one shot email
-                if scheduler.mail_done:
-                    continue
-                # no template -> ill configured, skip and avoid crash
-                if not scheduler.template_ref:
-                    continue
-                # Do not send SMS if the communication was scheduled before the event but the event is over
-                if scheduler.scheduled_date <= now and (scheduler.interval_type != 'before_event' or scheduler.event_id.date_end > now):
-                    scheduler.event_id.registration_ids.filtered(lambda registration: registration.state != 'cancel')._message_sms_schedule_mass(
-                        template=scheduler.template_ref,
-                        mass_keep_log=True
-                    )
-                    scheduler.update({
-                        'mail_done': True,
-                        'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel'))
-                    })
+        oneshot_sms = self._filter_to_skip(keep_type='sms')._filter_template_ref(notification_type="sms")
+        for scheduler in oneshot_sms:
+            scheduler.event_id.registration_ids.filtered(
+                lambda registration: registration.state != 'cancel'
+            )._message_sms_schedule_mass(
+                template=scheduler.template_ref,
+                mass_keep_log=True
+            )
+            scheduler.update({
+                'mail_done': True,
+                'mail_count_done': len(scheduler.event_id.registration_ids.filtered(lambda r: r.state != 'cancel')),
+            })
 
-        return super(EventMailScheduler, self).execute()
+        return super(EventMailScheduler, self - oneshot_sms).execute()
+
+    def _filter_template_ref_type_info(self, notification_type):
+        if notification_type == "sms":
+            return "sms.template", _("SMS template")
+        return super()._filter_template_ref_type_info(notification_type)
 
     @api.onchange('notification_type')
     def set_template_ref_model(self):
@@ -76,18 +78,21 @@ class EventMailRegistration(models.Model):
     _inherit = 'event.mail.registration'
 
     def execute(self):
-        now = fields.Datetime.now()
-        todo = self.filtered(lambda reg_mail:
-            not reg_mail.mail_sent and \
-            reg_mail.registration_id.state in ['open', 'done'] and \
-            (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
-            reg_mail.scheduler_id.notification_type == 'sms'
-        )
-        for reg_mail in todo:
-            reg_mail.registration_id._message_sms_schedule_mass(
-                template=reg_mail.scheduler_id.template_ref,
-                mass_keep_log=True
-            )
-        todo.write({'mail_sent': True})
+        todo = self._filter_to_skip(keep_type='sms')
 
-        return super(EventMailRegistration, self).execute()
+        # Exclude schedulers linked to invalid/unusable templates
+        valid_schedulers = todo.scheduler_id._filter_template_ref(notification_type="sms")
+        valid = todo.filtered(lambda r: r.scheduler_id in valid_schedulers)
+
+        for scheduler, reg_mails in valid.grouped('scheduler_id').items():
+            try:
+                reg_mails.registration_id._message_sms_schedule_mass(
+                    template=scheduler.template_ref,
+                    mass_keep_log=True,
+                )
+            except Exception as e:  # noqa: BLE001 we should never raise and rollback here
+                _logger.warning('An issue happened when sending sms template ID %s. Received error %s',
+                                scheduler.template_ref.id, e)
+        valid.write({'mail_sent': True})
+
+        return super().execute()
