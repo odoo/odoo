@@ -14,6 +14,7 @@ export const listView = {
     ArchParser: ListArchParser,
     Model: RelationalModel,
     buttonTemplate: "web.ListView.Buttons",
+    canOrderByCount: true,
 
     limit: 80,
 
