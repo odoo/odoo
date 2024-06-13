@@ -360,9 +360,6 @@ export class DiscussChannel extends models.ServerModel {
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        if (partners_to.length === 0) {
-            return false;
-        }
         if (!partners_to.includes(this.env.user.partner_id)) {
             partners_to.push(this.env.user.partner_id);
         }
@@ -377,7 +374,9 @@ export class DiscussChannel extends models.ServerModel {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return this._channel_info([channel.id])[0];
+                const res = {};
+                Object.assign(res, { Thread: this._channel_info([channel.id]) });
+                return res;
             }
         }
         const id = this.create({
@@ -395,7 +394,9 @@ export class DiscussChannel extends models.ServerModel {
             id,
             partners.map(({ id }) => id)
         );
-        return this._channel_info([id])[0];
+        const res = {};
+        Object.assign(res, { Thread: this._channel_info([id]) });
+        return res;
     }
 
     /** @param {number[]} ids */
