@@ -519,7 +519,7 @@ patch(MockServer.prototype, {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return this._mockDiscussChannelChannelInfo([channel.id])[0];
+                return { Thread: this._mockDiscussChannelChannelInfo([channel.id]) };
             }
         }
         const id = this.pyEnv["discuss.channel"].create({
@@ -535,7 +535,7 @@ patch(MockServer.prototype, {
             id,
             partners.map(({ id }) => id)
         );
-        return this._mockDiscussChannelChannelInfo([id])[0];
+        return { Thread: this._mockDiscussChannelChannelInfo([id]) };
     },
     /**
      * Simulates `_channel_basic_info` on `discuss.channel`.
