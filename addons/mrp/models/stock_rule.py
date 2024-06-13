@@ -73,8 +73,17 @@ class StockRule(models.Model):
                     domain += (('procurement_group_id', '=', group.id),)
                 mo = self.env['mrp.production'].sudo().search(domain, limit=1)
             if not mo:
-                new_productions_values_by_company[procurement.company_id.id]['values'].append(rule._prepare_mo_vals(*procurement, bom))
-                new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
+                procurement_qty = procurement.product_qty
+                batch_size = procurement.values.get('batch_size', procurement_qty)
+                vals = rule._prepare_mo_vals(*procurement, bom)
+                while float_compare(procurement_qty, 0, precision_rounding=procurement.product_uom.rounding) > 0:
+                    current_qty = min(procurement_qty, batch_size)
+                    new_productions_values_by_company[procurement.company_id.id]['values'].append({
+                        **vals,
+                        'product_qty': procurement.product_uom._compute_quantity(current_qty, bom.product_uom_id) if bom else current_qty,
+                    })
+                    new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
+                    procurement_qty -= current_qty
             else:
                 self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
                     'mo_id': mo.id,
