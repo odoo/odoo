@@ -15,3 +15,4 @@ List of contributors:
 Dario Bösch boesch@simpit.ch https://github.com/simpit-boesch
 Lukas Eisner eisner@simpit.ch https://github.com/simpit-eisner
 Mario Burger burger@simpit.ch https://github.com/marioburger
+Matthias Morf morf@simpit.ch https://github.com/simpit-morf

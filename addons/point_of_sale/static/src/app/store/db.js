@@ -386,7 +386,7 @@ export class PosDB {
         if (partner.parent_name) {
             str += "|" + partner.parent_name;
         }
-        str = "" + partner.id + ":" + str.replace(":", "").replace(/\n/g, " ") + "\n";
+        str = "" + partner.id + ":" + str.replaceAll(":", "").replace(/\n/g, " ") + "\n";
         return str;
     }
     add_partners(partners) {
