@@ -16,7 +16,7 @@
                 </button>
                 <div class="carousel-indicators s_image_gallery_indicators_bars">
                     <t t-foreach="images" t-as="image" t-key="image_index">
-                        <button type="button" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
+                        <button type="button" aria-label="Carousel indicator" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
                     </t>
                 </div>
                 <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
