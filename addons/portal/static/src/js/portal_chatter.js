@@ -212,10 +212,6 @@ var PortalChatter = publicWidget.Widget.extend({
                 'pid': self.options['pid'],
             });
         }
-        // add domain
-        if (this.get('domain')) {
-            data['domain'] = this.get('domain');
-        }
         return data;
     },
     /**
