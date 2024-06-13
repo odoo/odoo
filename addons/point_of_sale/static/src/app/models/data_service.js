@@ -214,14 +214,15 @@ export class PosData extends Reactive {
             };
         }
 
-        const { models, records, indexedRecords } = createRelatedModels(
+        // const { models, records, indexedRecords } = createRelatedModels(
+        const { models, records } = createRelatedModels(
             relations,
             modelClasses,
             this.opts.databaseIndex
         );
 
         this.records = records;
-        this.indexedRecords = indexedRecords;
+        // this.indexedRecords = indexedRecords;
         this.fields = fields;
         this.relations = relations;
         this.models = models;

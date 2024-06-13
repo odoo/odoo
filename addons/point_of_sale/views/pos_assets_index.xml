@@ -34,10 +34,8 @@
                 'pos_config_id': pos_config_id,
                 'access_token': access_token,
                 'debug': debug,
-            })"/>;
-            // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
-            // what is genuinely necessary, and not the whole backend.
-            odoo.loadMenusPromise = Promise.resolve();
+            })
+            "/>;
         </script>
 
         <t t-call="web.conditional_assets_tests">
