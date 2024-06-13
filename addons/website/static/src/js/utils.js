@@ -381,6 +381,7 @@ export function generateGMapIframe() {
     iframeEl.setAttribute('marginheight', '0');
     iframeEl.setAttribute('marginwidth', '0');
     iframeEl.setAttribute('src', 'about:blank');
+    iframeEl.setAttribute('aria-label', _t("Map"));
     return iframeEl;
 }
 

@@ -2143,6 +2143,7 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         this.$indicators.append($('<button>', {
             'data-bs-target': '#' + this.$target.attr('id'),
             'data-bs-slide-to': $items.length,
+            'aria-label': _t('Carousel indicator'),
         }));
         this.$indicators.append(' ');
         // Need to remove editor data from the clone so it gets its own.
