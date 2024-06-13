@@ -509,7 +509,8 @@
                                     <field name="move_lines_count" column_invisible="True"/>
                                     <field name="state" column_invisible="True" force_save="1"/>
                                     <field name="product_uom_qty" string="To Produce" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or parent.is_locked)"/>
-                                    <field name="quantity" string="Produced" column_invisible="parent.state == 'draft'" readonly="has_tracking != 'none'"/>
+                                    <field name="quantity" column_invisible="parent.state == 'draft'" readonly="has_tracking != 'none'"/>
+                                    <field name="picked" string="Produced" column_invisible="parent.state == 'draft'" optional="show"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="cost_share" optional="hide"/>
                                     <field name="show_details_visible" column_invisible="True"/>

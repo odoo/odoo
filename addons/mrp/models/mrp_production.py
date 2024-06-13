@@ -1202,7 +1202,7 @@ class MrpProduction(models.Model):
                 continue
 
             # sudo needed for portal users
-            if move.sudo()._should_bypass_set_qty_producing():
+            if move in self.move_raw_ids and move.sudo()._should_bypass_set_qty_producing():
                 continue
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)

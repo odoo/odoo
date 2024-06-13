@@ -609,6 +609,10 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.state in ('done', 'cancel'):
                 continue
+            moves = (self.move_raw_ids + self.production_id.move_byproduct_ids.filtered(lambda m: m.operation_id == self.operation_id))
+            for move in moves:
+                move._set_consumed_quantity(workorder.production_id.qty_producing, workorder.production_id.product_qty)
+            moves.picked = True
             workorder.end_all()
             vals = {
                 'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
