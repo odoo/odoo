@@ -8,7 +8,6 @@ websiteSaleAddress.include({
         {},
         websiteSaleAddress.prototype.events,
         {
-            "change select[name='state_id']": "_onChangeState",
             "change select[name='city_id']": "_onChangeCity",
         }
     ),
@@ -16,6 +15,7 @@ websiteSaleAddress.include({
     start: function () {
         this._super.apply(this, arguments);
 
+        this.elementCountry = this.addressForm.country_id;
         this.isPeruvianCompany = this.countryCode === 'PE';
         if (this.isPeruvianCompany) {
             this.elementState = this.addressForm.state_id;
@@ -37,7 +37,10 @@ websiteSaleAddress.include({
     },
 
     async _onChangeState() {
-        if (this.isPeruvianCompany) {
+        await this._super(...arguments);
+        let selectedCountry = this.elementCountry.value ?
+            this.elementCountry.selectedOptions[0].getAttribute('code') : '';
+        if (this.isPeruvianCompany && selectedCountry === "PE") {
             const stateId = this.elementState.value;
             let choices = [];
             if (stateId)  {
@@ -65,9 +68,8 @@ websiteSaleAddress.include({
     async _changeCountry(init=false) {
         await this._super(...arguments);
         if (this.isPeruvianCompany) {
-            const countrySelect = this.addressForm.country_id;
-            let selectedCountry = countrySelect.value ?
-                countrySelect.selectedOptions[0].getAttribute('code') : '';
+            let selectedCountry = this.elementCountry.value ?
+                this.elementCountry.selectedOptions[0].getAttribute('code') : '';
             if (selectedCountry == 'PE') {
                 let cityInput = this.addressForm.city;
                 if (cityInput.value) {
