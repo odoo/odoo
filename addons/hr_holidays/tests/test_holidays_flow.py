@@ -191,12 +191,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             self.assertEqual(hol2.state, 'refuse',
                             'hr_holidays: hr_user should not be able to reset a refused leave request')
 
-            # HrManager resets the request
-            hol2_manager_group = hol2.with_user(self.user_hrmanager_id)
-            hol2_manager_group.action_draft()
-            self.assertEqual(hol2.state, 'draft',
-                            'hr_holidays: resetting should lead to draft state')
-
             employee_id = self.ref('hr.employee_admin')
             # cl can be of maximum 20 days for employee_admin
             hol3_status = holiday_status_paid_time_off.with_context(employee_id=employee_id)
@@ -212,10 +206,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.
             hol3.action_refuse()
             self.assertEqual(hol3.state, 'refuse', 'hr_holidays: refuse should lead to refuse state')
-            # I again set to draft and then confirm.
-            hol3.action_draft()
-            self.assertEqual(hol3.state, 'draft', 'hr_holidays: resetting should lead to draft state')
-            hol3.action_confirm()
+            # Reset to confirm.
+            hol3.action_reset_confirm()
             self.assertEqual(hol3.state, 'confirm', 'hr_holidays: confirming should lead to confirm state')
             # I validate the holiday request by clicking on "To Approve" button.
             hol3.action_validate()

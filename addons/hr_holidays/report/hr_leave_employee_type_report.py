@@ -22,7 +22,6 @@ class LeaveReport(models.Model):
         ('planned', 'Planned')
     ])
     state = fields.Selection([
-        ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),

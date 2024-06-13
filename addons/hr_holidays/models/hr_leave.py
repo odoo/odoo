@@ -84,9 +84,6 @@ class HolidaysRequest(models.Model):
                 defaults['holiday_status_id'] = lt.id
                 defaults['request_unit_custom'] = False
 
-        if 'state' in fields_list and not defaults.get('state'):
-            defaults['state'] = 'confirm' if lt.leave_validation_type != 'no_validation' else 'draft'
-
         if 'request_date_from' in fields_list and 'request_date_from' not in defaults:
             defaults['request_date_from'] = fields.Date.today()
         if 'request_date_to' in fields_list and 'request_date_to' not in defaults:
@@ -123,13 +120,12 @@ class HolidaysRequest(models.Model):
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False, copy=False)
     private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
     state = fields.Selection([
-        ('draft', 'To Submit'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved'),
         ('cancel', 'Cancelled'),
-        ], string='Status', compute='_compute_state', store=True, tracking=True, copy=False, readonly=False,
+        ], string='Status', store=True, tracking=True, copy=False, readonly=False, default='confirm',
         help="The status is set to 'To Submit', when a time off request is created." +
         "\nThe status is 'To Approve', when time off request is confirmed by user." +
         "\nThe status is 'Refused', when time off request is refused by manager." +
@@ -312,10 +308,6 @@ class HolidaysRequest(models.Model):
         query = self.sudo()._search(domain)
         return [('id', 'in', query)]
 
-    @api.depends('holiday_status_id')
-    def _compute_state(self):
-        for leave in self:
-            leave.state = 'confirm' if leave.validation_type != 'no_validation' else 'draft'
 
     @api.depends('employee_id')
     def _compute_resource_calendar_id(self):
@@ -534,7 +526,7 @@ class HolidaysRequest(models.Model):
     def _compute_can_reset(self):
         for holiday in self:
             try:
-                holiday._check_approval_update('draft')
+                holiday._check_approval_update('confirm')
             except (AccessError, UserError):
                 holiday.can_reset = False
             else:
@@ -645,7 +637,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         if self.env.context.get('leave_skip_state_check'):
             return
         for holiday in self:
-            if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
+            if holiday.state in ['validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _check_validity(self):
@@ -765,14 +757,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 employee_id = values.get('employee_id', False)
                 leave_type_id = values.get('holiday_status_id')
 
-                # Handle no_validation
-                if mapped_validation_type[leave_type_id] == 'no_validation':
-                    values.update({'state': 'confirm'})
-
-                if 'state' not in values:
-                    # To mimic the behavior of compute_state that was always triggered, as the field was readonly
-                    values['state'] = 'confirm' if mapped_validation_type[leave_type_id] != 'no_validation' else 'draft'
-
                 # Handle double validation
                 if mapped_validation_type[leave_type_id] == 'both':
                     self._check_double_validation_rules(employee_id, values.get('state', False))
@@ -844,12 +828,12 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             for hol in self:
-                if hol.state not in ['draft', 'confirm', 'validate1', 'cancel']:
+                if hol.state not in ['confirm', 'validate1', 'cancel']:
                     raise UserError(error_message % state_description_values.get(self[:1].state))
                 if hol.date_from.date() < now:
                     raise UserError(_('You cannot delete a time off which is in the past'))
         else:
-            for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
+            for holiday in self.filtered(lambda holiday: holiday.state not in ['cancel', 'confirm']):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
 
     def unlink(self):
@@ -992,29 +976,15 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             }
         }
 
-    def action_draft(self):
-        if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
-            raise UserError(_('Time off request state must be "Refused" or "To Approve" in order to be reset to draft.'))
+    def action_reset_confirm(self):
+        if any(holiday.state not in ['cancel', 'refuse'] for holiday in self):
+            raise UserError(_('Time off request state must be "Refused" or "Cancelled" in order to be reset to "Confirmed".'))
         self.write({
-            'state': 'draft',
+            'state': 'confirm',
             'first_approver_id': False,
             'second_approver_id': False,
         })
         self.activity_update()
-        return True
-
-    def action_confirm(self):
-        # Technically, leaves should be in 'draft' to confirm them. However,
-        # due how the framework operates, it can happen that leaves are already
-        # confirmed when a confirm action is triggered again. In this case we
-        # should simply ignore these leaves and confirm the other ones.
-        to_confirm = self.filtered(lambda holiday: holiday.state == 'draft')
-        to_confirm.write({'state': 'confirm'})
-        holidays = to_confirm.filtered(lambda leave: leave.validation_type == 'no_validation')
-        if holidays:
-            # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
-            holidays.sudo().action_validate()
-        to_confirm.activity_update()
         return True
 
     def action_approve(self, check_state=True):
@@ -1147,7 +1117,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def action_refuse(self):
         current_employee = self.env.user.employee_id
-        if any(holiday.state not in ['draft', 'confirm', 'validate', 'validate1'] for holiday in self):
+        if any(holiday.state not in ['confirm', 'validate', 'validate1'] for holiday in self):
             raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
 
         self._notify_manager()
@@ -1256,10 +1226,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         for holiday in self:
             val_type = holiday.validation_type
 
-            if not is_manager and state != 'confirm':
-                if holiday.state == 'cancel' and state != 'draft':
+            if not is_manager:
+                if holiday.state == 'cancel' and state != 'confirm':
                     raise UserError(_('A cancelled leave cannot be modified.'))
-                if state == 'draft':
+                if state == 'confirm':
                     if holiday.state == 'refuse':
                         raise UserError(_('Only a Time Off Manager can reset a refused leave.'))
                     if holiday.date_from and holiday.date_from.date() <= fields.Date.today():
@@ -1335,9 +1305,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         confirm_activity = self.env.ref('hr_holidays.mail_act_leave_approval')
         approval_activity = self.env.ref('hr_holidays.mail_act_leave_second_approval')
         for holiday in self:
-            if holiday.state == 'draft':
-                to_clean |= holiday
-            elif holiday.state in ['confirm', 'validate1']:
+            if holiday.state in ['confirm', 'validate1']:
                 if holiday.holiday_status_id.leave_validation_type != 'no_validation':
                     if holiday.state == 'confirm':
                         activity_type = confirm_activity

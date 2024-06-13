@@ -21,7 +21,6 @@ class LeaveReportCalendar(models.Model):
     job_id = fields.Many2one('hr.job', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True)
     state = fields.Selection([
-        ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
@@ -41,7 +40,7 @@ class LeaveReportCalendar(models.Model):
     def init(self):
         tools.drop_view_if_exists(self._cr, 'hr_leave_report_calendar')
         self._cr.execute("""CREATE OR REPLACE VIEW hr_leave_report_calendar AS
-        (SELECT 
+        (SELECT
             hl.id AS id,
             hl.id AS leave_id,
             CONCAT(em.name, ': ', hl.duration_display) AS name,
@@ -73,7 +72,7 @@ class LeaveReportCalendar(models.Model):
                 ON co.id = em.company_id
             LEFT JOIN resource_calendar cc
                 ON cc.id = co.resource_calendar_id
-        WHERE 
+        WHERE
             hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
         );
         """)

@@ -77,7 +77,7 @@ class TestHolidaysOvertime(TransactionCase):
                     'holiday_status_id': self.leave_type_no_alloc.id,
                     'request_date_from': datetime(2021, 1, 4),
                     'request_date_to': datetime(2021, 1, 4),
-                    'state': 'draft',
+                    'state': 'confirm',
                 })
 
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -122,7 +122,7 @@ class TestHolidaysOvertime(TransactionCase):
         self.assertFalse(leave.overtime_id.exists(), "Overtime should be deleted")
         self.assertEqual(self.employee.total_overtime, 8)
 
-        leave.action_draft()
+        leave.action_reset_confirm()
         self.assertTrue(leave.overtime_id.exists(), "Overtime should be created")
         self.assertEqual(self.employee.total_overtime, 0)
 

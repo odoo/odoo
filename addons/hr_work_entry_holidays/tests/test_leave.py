@@ -160,7 +160,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
     def test_work_entry_generation_company_time_off(self):
         existing_leaves = self.env['hr.leave'].search([])
         existing_leaves.action_refuse()
-        existing_leaves.action_draft()
+        existing_leaves.action_reset_confirm()
         existing_leaves.unlink()
         start = date(2022, 8, 1)
         end = date(2022, 8, 31)

@@ -631,8 +631,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_from': '2022-01-03',
                 'request_date_to': '2022-01-06',
             })
-            leave_draft = Leave.create(leave_vals)
-            leave_draft.action_refuse()
+            leave_confirm = Leave.create(leave_vals)
+            leave_confirm.action_refuse()
             leave_vals.update({
                 'request_date_from': '2022-01-03',
                 'request_date_to': '2022-01-06',
