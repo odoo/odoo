@@ -15,6 +15,7 @@ from . import test_res_users
 from . import test_res_users_settings
 from . import test_translation_controller
 from . import test_uninstall
+from . import test_mail_canned_response
 from . import test_update_notification
 
 from .discuss import *
