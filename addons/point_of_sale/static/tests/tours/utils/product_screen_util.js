@@ -373,12 +373,6 @@ export function totalAmountIs(amount) {
 export function modeIsActive(mode) {
     return inLeftSide(Numpad.isActive(mode));
 }
-export function noDiscountApplied(originalPrice) {
-    return inLeftSide({
-        content: "no discount is applied",
-        trigger: `.orderline .info-list:not(:contains(${originalPrice}))`,
-    });
-}
 export function cashDifferenceIs(val) {
     return [
         {

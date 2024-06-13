@@ -55,20 +55,6 @@ patch(ControlButtons.prototype, {
         this.currentOrder.takeaway = isTakeAway;
         this.currentOrder.update({ fiscal_position_id: isTakeAway ? takeawayFp : defaultFp });
     },
-    async clickFiscalPosition() {
-        await super.clickFiscalPosition(...arguments);
-        const takeawayFp = this.pos.config.takeaway_fp_id;
-
-        if (!takeawayFp || !this.pos.config.module_pos_restaurant) {
-            return;
-        }
-
-        if (takeawayFp.id !== this.currentOrder.fiscal_position?.id) {
-            this.currentOrder.takeaway = false;
-        } else {
-            this.currentOrder.takeaway = true;
-        }
-    },
 });
 patch(ControlButtons, {
     components: {
