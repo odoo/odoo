@@ -859,6 +859,93 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="pos_user")
 
+    def test_fiscal_position_inclusive_and_exclusive_tax(self):
+        """ Test the mapping of fiscal position for both Tax Inclusive ans Tax Exclusive"""
+        # create a tax with price included
+        tax_inclusive_1 = self.env['account.tax'].create({
+            'name': 'Tax incl.20%',
+            'amount': 20,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        tax_exclusive_1 = self.env['account.tax'].create({
+            'name': 'Tax excl.20%',
+            'amount': 20,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        tax_inclusive_2 = self.env['account.tax'].create({
+            'name': 'Tax incl.10%',
+            'amount': 10,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        tax_exclusive_2 = self.env['account.tax'].create({
+            'name': 'Tax excl.10%',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        self.test_product_1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'available_in_pos': True,
+            'list_price': 100,
+            'taxes_id': [(6, 0, [tax_inclusive_1.id])],
+        })
+
+        self.test_product_2 = self.env['product.product'].create({
+            'name': 'Test Product 2',
+            'available_in_pos': True,
+            'list_price': 100,
+            'taxes_id': [(6, 0, [tax_exclusive_1.id])],
+        })
+
+        # create a fiscal position that map the tax
+        fiscal_position_1 = self.env['account.fiscal.position'].create({
+            'name': 'Incl. to Incl.',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_inclusive_1.id,
+                'tax_dest_id': tax_inclusive_2.id,
+            })],
+        })
+        fiscal_position_2 = self.env['account.fiscal.position'].create({
+            'name': 'Incl. to Excl.',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_inclusive_1.id,
+                'tax_dest_id': tax_exclusive_2.id,
+            })],
+        })
+        fiscal_position_3 = self.env['account.fiscal.position'].create({
+            'name': 'Excl. to Excl.',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_exclusive_1.id,
+                'tax_dest_id': tax_exclusive_2.id,
+            })],
+        })
+        fiscal_position_4 = self.env['account.fiscal.position'].create({
+            'name': 'Excl. to Incl.',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_exclusive_1.id,
+                'tax_dest_id': tax_inclusive_2.id,
+            })],
+        })
+
+        # add the fiscal position to the PoS
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [
+                    fiscal_position_1.id,
+                    fiscal_position_2.id,
+                    fiscal_position_3.id,
+                    fiscal_position_4.id,
+                ])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionIncl', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionExcl', login="pos_user")
+
     def test_06_pos_discount_display_with_multiple_pricelist(self):
         """ Test the discount display on the POS screen when multiple pricelists are used."""
         test_product = self.env['product.product'].create({

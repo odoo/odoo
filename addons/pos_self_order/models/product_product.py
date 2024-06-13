@@ -72,45 +72,6 @@ class ProductProduct(models.Model):
             if attributes_by_ptal_id.get(id) is not None
         ]
 
-    def _get_price_unit_after_fp(self, lst_price, currency, fiscal_position):
-        self.ensure_one()
-
-        taxes = self.taxes_id
-
-        mapped_included_taxes = self.env['account.tax']
-        new_included_taxes = self.env['account.tax']
-
-        for tax in taxes:
-            mapped_taxes = fiscal_position.map_tax(tax)
-            if mapped_taxes and any(mapped_taxes.mapped('price_include')):
-                new_included_taxes |= mapped_taxes
-            if tax.price_include and not (tax in mapped_taxes):
-                mapped_included_taxes |= tax
-
-        if mapped_included_taxes:
-            if new_included_taxes:
-                price_untaxed = mapped_included_taxes.compute_all(
-                    lst_price,
-                    currency,
-                    1,
-                    handle_price_include=True,
-                )['total_excluded']
-                return new_included_taxes.compute_all(
-                    price_untaxed,
-                    currency,
-                    1,
-                    handle_price_include=False,
-                )['total_included']
-            else:
-                return mapped_included_taxes.compute_all(
-                    lst_price,
-                    currency,
-                    1,
-                    handle_price_include=True,
-                )['total_excluded']
-        else:
-            return lst_price
-
     def write(self, vals_list):
         res = super().write(vals_list)
         if 'self_order_available' in vals_list:

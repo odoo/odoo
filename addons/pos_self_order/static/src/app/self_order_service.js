@@ -16,7 +16,6 @@ import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeo
 import { getOnNotified, constructFullProductName, deduceUrl } from "@point_of_sale/utils";
 import { computeComboLines } from "@point_of_sale/app/models/utils/compute_combo_lines";
 import {
-    getPriceUnitAfterFiscalPosition,
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
@@ -721,21 +720,13 @@ export class SelfOrder extends Reactive {
 
     getProductDisplayPrice(product) {
         const pricelist = this.config.pricelist_id;
-        let price = product.get_price(pricelist, 1);
+        const price = product.get_price(pricelist, 1);
 
         let taxes = product.taxes_id;
 
         // Fiscal position.
         const order = this.currentOrder;
         if (order && order.fiscal_position_id) {
-            price = getPriceUnitAfterFiscalPosition(
-                taxes,
-                price,
-                product,
-                this.config._product_default_values,
-                order.fiscal_position_id,
-                this.models
-            );
             taxes = getTaxesAfterFiscalPosition(taxes, order.fiscal_position_id, this.models);
         }
 

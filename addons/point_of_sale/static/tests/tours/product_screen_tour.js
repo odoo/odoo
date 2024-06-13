@@ -132,13 +132,49 @@ registry.category("web_tour.tours").add("FiscalPositionNoTax", {
             ProductScreen.clickDisplayedProduct("Test Product"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
-            ProductScreen.noDiscountApplied("100.00"),
-            ProductScreen.totalAmountIs("86.96"),
+            ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
             Order.doesNotHaveLine({ discount: "" }),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FiscalPositionIncl", {
+    test: true,
+    steps: () =>
+        [
+            Dialog.confirm("Open session"),
+            ProductScreen.clickDisplayedProduct("Test Product 1"),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickFiscalPosition("Incl. to Incl."),
+            ProductScreen.totalAmountIs("100.00"),
+            // changed fiscal position to Incl. to Excl.
+            ProductScreen.clickFiscalPosition("Incl. to Excl."),
+            ProductScreen.totalAmountIs("110.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FiscalPositionExcl", {
+    test: true,
+    steps: () =>
+        [
+            ProductScreen.clickDisplayedProduct("Test Product 2"),
+            ProductScreen.totalAmountIs("120.00"),
+            ProductScreen.clickFiscalPosition("Excl. to Excl."),
+            ProductScreen.totalAmountIs("110.00"),
+            // changed fiscal position to Excl. to Incl.
+            ProductScreen.clickFiscalPosition("Excl. to Incl."),
+            ProductScreen.totalAmountIs("100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
         ].flat(),
 });
 
