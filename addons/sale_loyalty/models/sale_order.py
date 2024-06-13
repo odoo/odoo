@@ -171,8 +171,9 @@ class SaleOrder(models.Model):
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
+            discounted_price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             tax_data = line.tax_id.compute_all(
-                line.price_unit,
+                discounted_price_unit,
                 quantity=line.product_uom_qty,
                 product=line.product_id,
                 partner=line.order_partner_id,
