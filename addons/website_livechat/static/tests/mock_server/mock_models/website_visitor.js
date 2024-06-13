@@ -46,11 +46,9 @@ export class WebsiteVisitor extends models.ServerModel {
             }
             const [partner] = ResPartner.read(serverState.partnerId);
             // notify operator
-            BusBus._sendone(
-                partner,
-                "website_livechat.send_chat_request",
-                DiscussChannel._channel_info([livechatId])[0]
-            );
+            const store = {};
+            Object.assign(store, { Thread: DiscussChannel._channel_info([livechatId]) });
+            BusBus._sendone(partner, "website_livechat.send_chat_request", store);
         }
     }
 }

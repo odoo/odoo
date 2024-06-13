@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
 import json
 
 from odoo import api, Command, fields, models, _
+from odoo.addons.mail.tools.discuss import StoreData
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import get_lang
@@ -80,33 +80,31 @@ class WebsiteVisitor(models.Model):
                 'livechat_visitor_id': visitor.id,
                 'livechat_active': True,
             })
-            discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
-            for channel in discuss_channels:
-                if not channel.livechat_visitor_id.partner_id:
-                    # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
-                    guest = self.env["mail.guest"].sudo().create(
-                        {
-                            "country_id": country.id,
-                            "lang": get_lang(channel.env).code,
-                            "name": _("Visitor #%d", channel.livechat_visitor_id.id),
-                            "timezone": visitor.timezone,
-                        }
-                    )
-                    channel.add_members(guest_ids=guest.ids, post_joined_message=False)
-            # Open empty chatter to allow the operator to start chatting with
-            # the visitor. Also open the visitor's chat window in order for it
-            # to be displayed at the next page load.
-            channel_members = self.env['discuss.channel.member'].sudo().search([
-                ('channel_id', 'in', discuss_channels.ids),
-            ])
-            channel_members.write({
-                'fold_state': 'open',
-            })
-            discuss_channels_info = discuss_channels._channel_info()
-            notifications = []
-            for discuss_channel_info in discuss_channels_info:
-                notifications.append([operator.partner_id, 'website_livechat.send_chat_request', discuss_channel_info])
-            self.env['bus.bus']._sendmany(notifications)
+        discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
+        for channel in discuss_channels:
+            if not channel.livechat_visitor_id.partner_id:
+                # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
+                guest = self.env["mail.guest"].sudo().create(
+                    {
+                        "country_id": country.id,
+                        "lang": get_lang(channel.env).code,
+                        "name": _("Visitor #%d", channel.livechat_visitor_id.id),
+                        "timezone": visitor.timezone,
+                    }
+                )
+                channel.add_members(guest_ids=guest.ids, post_joined_message=False)
+        # Open empty chatter to allow the operator to start chatting with
+        # the visitor. Also open the visitor's chat window in order for it
+        # to be displayed at the next page load.
+        channel_members = self.env['discuss.channel.member'].sudo().search([
+            ('channel_id', 'in', discuss_channels.ids),
+        ])
+        channel_members.write({
+            'fold_state': 'open',
+        })
+        store = StoreData()
+        store.add({"Thread": discuss_channels._channel_info()})
+        self.env['bus.bus']._sendone(operator.partner_id, "website_livechat.send_chat_request", store.get_result())
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """
