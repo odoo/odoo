@@ -31,12 +31,14 @@ class AccountBankStatementLine(models.Model):
         inherited=True,
         related='move_id.journal_id', store=True, readonly=False, precompute=True,
         index=False,  # covered by account_bank_statement_line_main_idx
+        required=True,
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
         inherited=True,
         related='move_id.company_id', store=True, readonly=False, precompute=True,
         index=False,  # covered by account_bank_statement_line_main_idx
+        required=True,
     )
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
