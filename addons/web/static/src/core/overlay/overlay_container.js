@@ -1,4 +1,4 @@
-import { Component, useRef } from "@odoo/owl";
+import { Component, onMounted, status, useRef } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler, WithEnv } from "@web/core/utils/components";
 
@@ -9,6 +9,13 @@ export class OverlayContainer extends Component {
 
     setup() {
         this.root = useRef("root");
+        // the first rendering ignores already registered overlays, it just renders the container
+        // (see @isVisible) ; once mounted, the root ref is set, and we can render the overlays.
+        onMounted(() => {
+            if (this.props.overlays.length) {
+                this.render();
+            }
+        });
     }
 
     get sortedOverlays() {
@@ -16,7 +23,9 @@ export class OverlayContainer extends Component {
     }
 
     isVisible(overlay) {
-        return overlay.rootId === this.root.el?.getRootNode()?.host?.id;
+        return (
+            status(this) === "mounted" && overlay.rootId === this.root.el.getRootNode()?.host?.id
+        );
     }
 
     handleError(overlay, error) {
