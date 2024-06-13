@@ -107,6 +107,9 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
                 this.state.selectedClient = clients[0];
                 this.clickNext();
             } else {
+	            if (event.target.value[0] == 0) {
+                    this.state.query = event.target.value.slice(1)
+                }
                 this.render();
             }
         }
