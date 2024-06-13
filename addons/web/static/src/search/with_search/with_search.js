@@ -38,6 +38,7 @@ export class WithSearch extends Component {
         dynamicFilters: { type: Array, element: Object, optional: true },
         hideCustomGroupBy: { type: Boolean, optional: true },
         searchMenuTypes: { type: Array, element: String, optional: true },
+        canOrderByCount: { type: Boolean, optional: true },
     };
 
     setup() {
