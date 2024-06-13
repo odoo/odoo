@@ -54,6 +54,16 @@ class ProductTemplate(models.Model):
         help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
+    service_tracking = fields.Selection(selection=[
+            ('no', 'Nothing'),
+        ],
+        string="Create on Order",
+        default="no",
+        compute="_compute_service_tracking",
+        required=True,
+        store=True,
+        readonly=False,
+    )
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
@@ -150,16 +160,6 @@ class ProductTemplate(models.Model):
     )
     # Properties
     product_properties = fields.Properties('Properties', definition='categ_id.product_properties_definition', copy=True)
-    service_tracking = fields.Selection(selection=[
-            ('no', 'Nothing'),
-        ],
-        string="Create on Order",
-        default="no",
-        compute="_compute_service_tracking",
-        required=True,
-        store=True,
-        readonly=False,
-    )
 
     @api.depends('type')
     def _compute_service_tracking(self):
