@@ -69,6 +69,8 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
+        if not self._check_page_visibility("hr_timesheet.portal_my_home_timesheet"):
+            return request.not_found()
         Timesheet = request.env['account.analytic.line']
         domain = Timesheet._timesheet_get_portal_domain()
         Timesheet_sudo = Timesheet.sudo()
