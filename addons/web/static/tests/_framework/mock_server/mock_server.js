@@ -373,6 +373,12 @@ export class MockServer {
                     return parentModel[method].call(model, ...args, kwargs);
                 }
             }
+
+            for (const [route, callback] of mockRpcRegistry.getEntries()) {
+                if (method === route) {
+                    return callback.call(this, params);
+                }
+            }
         }
 
         throw new MockServerError(`unimplemented ORM method: ${modelName}.${method}`);
