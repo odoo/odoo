@@ -170,6 +170,23 @@ class TestMrpOrder(TestMrpCommon):
         # check sub product availability state is assigned
         self.assertEqual(production_2.reservation_state, 'assigned', 'Production order should be availability for assigned state')
 
+    def test_workorder_sequence(self):
+        """ Test that workorders are correctly sequenced after creation and confirmation. """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        self.assertEqual(len(mo.workorder_ids), 3)
+        self.assertListEqual(mo.workorder_ids.mapped('sequence'), [100, 101, 102])
+        self.assertEqual(mo.workorder_ids[0].operation_id.bom_id.type, 'phantom')    # Kit operations should go first
+        with Form(mo) as mo_form_2:
+            with mo_form_2.workorder_ids.new() as wo:
+                wo.name = 'Do important stuff'
+                wo.workcenter_id = self.workcenter_2
+                wo.sequence = 103   # because when adding a new wo, it's always at the bottom of the list
+        mo.action_confirm()
+        self.assertEqual(mo.workorder_ids.mapped('sequence'), [100, 101, 102, 103])
+
+
     @freeze_time('2022-06-28 08:00')
     def test_end_date(self):
         """ End date must be the day the MO is done (regardless of lead times)"""
@@ -3300,7 +3317,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_2.date_start, datetime(2022, 10, 23, 12))
 
         with Form(mo_01) as mo_01_form:
-            with mo_01_form.workorder_ids.edit(1) as workorder:
+            with mo_01_form.workorder_ids.edit(0) as workorder:
                 workorder.date_start = datetime(2022, 10, 18, 12)
             mo_01 = mo_01_form.save()
 
@@ -3317,6 +3334,7 @@ class TestMrpOrder(TestMrpCommon):
                 workorder.date_start = datetime(2022, 10, 20, 12)
             mo_02 = mo_02_form.save()
         mo_02.action_confirm()
+        self.assertFalse(op_1.show_json_popover)
 
         with Form(mo_02) as mo_02_form:
             with mo_02_form.workorder_ids.new() as workorder:
@@ -3327,7 +3345,7 @@ class TestMrpOrder(TestMrpCommon):
 
         op_1, op_2 = mo_02.workorder_ids.sorted('id')
         self.assertEqual(op_1.date_start, datetime(2022, 10, 20, 12))
-        self.assertTrue(op_2.show_json_popover)
+        self.assertTrue(op_1.show_json_popover)
 
     @freeze_time('2023-03-01 12:00')
     def test_planning_cancelled_workorder(self):
