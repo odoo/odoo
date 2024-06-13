@@ -50,6 +50,7 @@ import {
     onMounted,
     onWillStart,
     onWillDestroy,
+    reactive,
     useComponent,
     useEffect,
     useEnv,
@@ -3514,19 +3515,32 @@ export class SnippetOptionComponent extends Component {
     };
 
     setup() {
+        this.renderContext = useState(this.props.snippetOption.instance.renderContext);
+        this.updateUI = false;
+
         useSubEnv({
             snippetOption: this.props.snippetOption.instance,
             userValueNotification: this.props.snippetOption.instance.onUserValueUpdate,
             registerUserValue: (userValue) => {
+                this.updateUI = true;
                 return this.props.snippetOption.instance.registerUserValue(userValue);
             },
             unregisterUserValue: (userValue) => {
                 return this.props.snippetOption.instance.unregisterUserValue(userValue);
             },
+            renderContext: this.renderContext,
         });
 
         onMounted(() => {
             this.props.onOptionMounted();
+            this.updateUI = false;
+        });
+
+        onPatched(() => {
+            if (this.updateUI) {
+                this.updateUI = false;
+                this.props.onOptionMounted();
+            }
         });
     }
 }
@@ -3612,9 +3626,8 @@ export class SnippetOption {
      * before the widgets are mounted.
      */
     async willStart() {
-       // return this._renderOriginalXML().then(uiFragment => {
-       //     this.uiFragment = uiFragment;
-       // });
+        const context = await this._getRenderContext();
+        this.renderContext = reactive({...context});
     }
     /**
      * @override
@@ -4437,6 +4450,18 @@ export class SnippetOption {
     _renderCustomXML(uiFragment) {
         return Promise.resolve();
     }
+    /**
+     * Allows options to share a context to their template / components.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    async _getRenderContext() {
+        return {};
+    }
+    /**
+     * 
+     */
     /**
      * @private
      * @param {jQuery} [$xml] - default to original xml content
