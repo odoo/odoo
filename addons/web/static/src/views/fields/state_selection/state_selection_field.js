@@ -1,7 +1,7 @@
 import { Component } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatSelection } from "../formatters";
@@ -11,7 +11,7 @@ export class StateSelectionField extends Component {
     static template = "web.StateSelectionField";
     static components = {
         Dropdown,
-        DropdownItem,
+        CheckboxItem,
     };
     static props = {
         ...standardFieldProps,

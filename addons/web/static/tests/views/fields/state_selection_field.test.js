@@ -123,6 +123,38 @@ test("StateSelectionField in form view", async () => {
     });
 });
 
+test("Check role attribute for dropdown items", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="selection" widget="state_selection"/>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    // Open the dropdown
+    click(".o_field_widget.o_field_state_selection .o_status");
+    await animationFrame();
+
+    // Assert that the dropdown is open
+    expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
+
+    // Assert that each dropdown item has role="checkbox"
+    const dropdownItems = queryAll(".o-dropdown--menu .dropdown-item");
+    dropdownItems.forEach(item => {
+        expect(item).toHaveAttribute("role", "menuitemcheckbox", {
+            message: "each dropdown item should have role='menuitemcheckbox'",
+        });
+    });
+});
+
 test("StateSelectionField with readonly modifier", async () => {
     await mountView({
         type: "form",

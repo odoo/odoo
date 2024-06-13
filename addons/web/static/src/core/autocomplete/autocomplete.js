@@ -382,13 +382,13 @@ export class AutoComplete extends Component {
             case "arrowup":
                 this.navigate(-1);
                 if (!this.isOpened) {
-                    this.open(true);
+                    this.open(this.inputRef.el.value.trim() !== this.props.value);
                 }
                 break;
             case "arrowdown":
                 this.navigate(+1);
                 if (!this.isOpened) {
-                    this.open(true);
+                    this.open(this.inputRef.el.value.trim() !== this.props.value);
                 }
                 break;
             default:
