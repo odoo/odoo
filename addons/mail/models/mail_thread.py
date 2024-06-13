@@ -3373,7 +3373,10 @@ class MailThread(models.AbstractModel):
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
-        return self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+        domain = [('res_id', '=', self.id), ('res_model', '=', self._name)]
+        if 'original_id' in self.env['ir.attachment']._fields:
+            domain.append(('original_id', '=', False))
+        return self.env['ir.attachment'].search(domain, order='id desc')
 
     def _get_mail_thread_data(self, request_list):
         res = {'hasWriteAccess': False, 'hasReadAccess': True}
