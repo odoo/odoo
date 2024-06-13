@@ -37,14 +37,12 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _channel_info(self):
-        """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
-            :rtype : list(dict)
-        """
-        channel_infos = super()._channel_info()
-        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+    def _to_store(self, store):
+        """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
+        super()._to_store(store)
         chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
         for channel in self:
+            channel_info = {"id": channel.id, "model": "discuss.channel"}
             if channel.chatbot_current_step_id:
                 # sudo: chatbot.script.step - returning the current script/step of the channel
                 current_step_sudo = channel.chatbot_current_step_id.sudo().with_context(lang=chatbot_lang)
@@ -60,22 +58,22 @@ class DiscussChannel(models.Model):
                     'message': {'id': step_message.id} if step_message else None,
                     'operatorFound': current_step_sudo.step_type == 'forward_operator' and len(channel.channel_member_ids) > 2,
                 }
-                channel_infos_dict[channel.id]["chatbot"] = {
+                channel_info["chatbot"] = {
                     'script': chatbot_script._format_for_frontend(),
                     'steps': [current_step],
                     'currentStep': current_step,
                 }
-            channel_infos_dict[channel.id]['anonymous_name'] = channel.anonymous_name
-            channel_infos_dict[channel.id]['anonymous_country'] = {
+            channel_info['anonymous_name'] = channel.anonymous_name
+            channel_info['anonymous_country'] = {
                 'code': channel.country_id.code,
                 'id': channel.country_id.id,
                 'name': channel.country_id.name,
             } if channel.country_id else False
             if channel.livechat_operator_id:
-                channel_infos_dict[channel.id]['operator'] = channel.livechat_operator_id.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[channel.livechat_operator_id]
+                channel_info['operator'] = channel.livechat_operator_id.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[channel.livechat_operator_id]
             if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
-                channel_infos_dict[channel.id]['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
-        return list(channel_infos_dict.values())
+                channel_info['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
+            store.add({"Thread": channel_info})
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

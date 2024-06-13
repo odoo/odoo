@@ -20,7 +20,7 @@ class DiscussChannelWebclientController(WebclientController):
             channels = request.env["discuss.channel"]._get_channels_as_member()
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
-            store.add({"Thread": channels._channel_info()})
+            channels._to_store(store)
             store.add({"Message": channels._get_last_messages()._message_format(for_current_user=True)})
 
 
@@ -47,7 +47,7 @@ class ChannelController(http.Controller):
         if not channel:
             return
         store = StoreData()
-        store.add({"Thread": channel._channel_info()})
+        channel._to_store(store)
         return store.get_result()
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")

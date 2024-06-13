@@ -26,7 +26,7 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 
 def channel_to_store_data(channel):
     store = StoreData()
-    store.add({"Thread": channel._channel_info()})
+    channel._to_store(store)
     return store.get_result()
 
 
@@ -737,8 +737,9 @@ class Channel(models.Model):
                     # sudo: res.company - context is required by ir.rules
                     allowed_company_ids=user_id.sudo().company_ids.ids
                 )
-                for channel_info in user_channels._channel_info():
-                    notifications.append((partner, 'mail.record/insert', {"Thread": channel_info}))
+                store = StoreData()
+                user_channels._to_store(store)
+                notifications.append((partner, 'mail.record/insert', store.get_result()))
         return notifications
 
     # ------------------------------------------------------------
@@ -870,16 +871,12 @@ class Channel(models.Model):
             'last_interest_dt': fields.Datetime.to_string(self.last_interest_dt),
         }
 
-    def _channel_info(self):
-        """ Get the informations header for the current channels
-            :returns a list of channels values
-            :rtype : list(dict)
-        """
+    def _to_store(self, store):
+        """Adds channel data to the given store."""
         if not self:
             return []
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        channel_infos = []
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
@@ -951,8 +948,7 @@ class Channel(models.Model):
                 'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))],
                 'rtcSessions': [('ADD', rtc_sessions_by_channel.get(channel, []))],
             })
-            channel_infos.append(info)
-        return channel_infos
+            store.add({"Thread": info})
 
     def _channel_fetch_message(self, last_id=False, limit=20):
         """ Return message values of the current channel.
@@ -1058,7 +1054,7 @@ class Channel(models.Model):
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
             store = StoreData()
-            store.add({"Thread": self._channel_info()})
+            self._to_store(store)
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', store.get_result())
 
     def _types_allowing_seen_infos(self):
@@ -1142,8 +1138,9 @@ class Channel(models.Model):
         new_channel.group_public_id = group.id if group else None
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        channel_info = new_channel._channel_info()[0]
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', {"Thread": channel_info})
+        store = StoreData()
+        new_channel._to_store(store)
+        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', store.get_result())
         return new_channel
 
     @api.model

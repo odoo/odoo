@@ -22,20 +22,23 @@ class DiscussChannel(models.Model):
         if self.livechat_active and not self.message_ids:
             self.sudo().unlink()
 
-    def _channel_info(self):
+    def _to_store(self, store):
         """
         Override to add visitor information on the mail channel infos.
         This will be used to display a banner with visitor informations
         at the top of the livechat channel discussion view in discuss module.
         """
-        channel_infos = super()._channel_info()
-        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        super()._to_store(store)
         for channel in self.filtered('livechat_visitor_id'):
-            channel_infos_dict[channel.id]["requested_by_operator"] = channel.create_uid in channel.livechat_operator_id.user_ids
+            channel_info = {
+                "id": channel.id,
+                "model": "discuss.channel",
+                "requested_by_operator": channel.create_uid in channel.livechat_operator_id.user_ids
+            }
             visitor = channel.livechat_visitor_id
             try:
                 country_id = visitor.partner_id.country_id or visitor.country_id
-                channel_infos_dict[channel.id]['visitor'] = {
+                channel_info['visitor'] = {
                     'name': visitor.partner_id.name or visitor.partner_id.display_name or visitor.display_name,
                     'country': {'id': country_id.id, 'code': country_id.code.lower()} if country_id else False,
                     'id': visitor.id,
@@ -48,7 +51,7 @@ class DiscussChannel(models.Model):
                 }
             except AccessError:
                 pass
-        return list(channel_infos_dict.values())
+            store.add({"Thread": channel_info})
 
     def _get_visitor_history(self, visitor):
         """

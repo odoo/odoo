@@ -113,8 +113,8 @@ class PublicPageController(http.Controller):
                 "inPublicPage": True,
                 "discuss_public_thread": {"id": channel.id, "model": "discuss.channel"},
             },
-            "Thread": channel._channel_info(),
         })
+        channel._to_store(store)
         return request.render(
             "mail.discuss_public_channel_template",
             {
