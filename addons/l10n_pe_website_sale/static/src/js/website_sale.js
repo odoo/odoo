@@ -3,7 +3,6 @@ import {WebsiteSale} from "@website_sale/js/website_sale";
 
 WebsiteSale.include({
     events: Object.assign({}, WebsiteSale.prototype.events, {
-        "change select[name='state_id']": "_onChangeState",
         "change select[name='city_id']": "_onChangeCity",
     }),
     start: function () {
@@ -40,17 +39,20 @@ WebsiteSale.include({
             }
         });
     },
-    _onChangeState: function () {
-        if (this.isPeruvianCompany) {
-            if (this.elementState.value === "" && this.elemenCountry.value !== '') {
-                this.elementState.options[1].selected = true;
+    _onChangeState: function (ev) {
+        return this._super.apply(this, arguments).then(() => {
+            let selectedCountry = this.elemenCountry.options[this.elemenCountry.selectedIndex].getAttribute("code");
+            if (this.isPeruvianCompany && selectedCountry === "PE") {
+                if (this.elementState.value === "" && this.elemenCountry.value !== '') {
+                    this.elementState.options[1].selected = true;
+                }
+                const state = this.elementState.value;
+                const rpcRoute = `/shop/state_infos/${state}`;
+                return this.autoFormat.length
+                    ? this._changeOption(state, rpcRoute, "cities", this.elementCities).then(() => this._onChangeCity())
+                    : undefined;
             }
-            const state = this.elementState.value;
-            const rpcRoute = `/shop/state_infos/${state}`;
-            return this.autoFormat.length
-                ? this._changeOption(state, rpcRoute, "cities", this.elementCities).then(() => this._onChangeCity())
-                : undefined;
-        }
+        });
     },
     _onChangeCity: function () {
         if (this.isPeruvianCompany) {

@@ -41,6 +41,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
         'submit': '_onClickConfirmOrder',
+        "change select[name='state_id']": "_onChangeState",
     }),
 
     /**
@@ -636,6 +637,13 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
             return;
         }
         return this._changeCountry();
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onChangeState: function (ev) {
+        return Promise.resolve();
     },
     /**
      * @private
