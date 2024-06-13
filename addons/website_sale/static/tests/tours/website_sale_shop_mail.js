@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { click, queryFirst } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import tourUtils from "@website_sale/js/tours/tour_utils";
 
@@ -29,12 +30,17 @@ registry.category("web_tour.tours").add('shop_mail', {
         run: "click",
     },
     {
-        trigger: ".modal-footer button[name='document_layout_save']",
-        extra_trigger: ".modal-footer button[name='document_layout_save']",
+        trigger: ".modal-footer",
         content: "let's continue",
         position: "bottom",
-        skip_trigger: ".modal-footer button[name='action_send_mail']",
-        run: "click",
+        run() {
+            const el =
+                queryFirst(`.modal-footer button[name='action_send_mail']`) ||
+                queryFirst(`.modal-footer button[name='document_layout_save']`);
+            if (el) {
+                click(el);
+            }
+        },
     },
     {
         content: "Open recipients dropdown",

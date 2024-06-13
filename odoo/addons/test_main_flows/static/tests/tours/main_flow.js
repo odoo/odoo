@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryFirst, click } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     test: true,
@@ -683,12 +683,17 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 },
 ...stepUtils.statusbarButtonsSteps('Send by Email', _t("Try to send it to email"), ".o_statusbar_status .dropdown-toggle:contains('Quotation')"),
 {
-    trigger: ".modal-footer button[name='document_layout_save']",
-    extra_trigger: ".modal-footer button[name='document_layout_save']",
+    trigger: ".modal-footer",
     content: _t("let's continue"),
     position: "bottom",
-    skip_trigger: ".modal-footer button[name='action_send_mail']",
-    run: "click",
+    run() {
+        const el =
+            queryFirst(`.modal-footer button[name='action_send_mail']`) ||
+            queryFirst(`.modal-footer button[name='document_layout_save']`);
+        if (el) {
+            click(el);
+        }
+    },
 }, {
     trigger: ".o_field_widget[name=email] input",
     content: _t("Enter an email address"),

@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import { markup } from "@odoo/owl";
+import { click, queryFirst } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add("sale_tour", {
     url: "/web",
@@ -89,12 +90,17 @@ registry.category("web_tour.tours").add("sale_tour", {
             ".o_statusbar_buttons button[name='action_quotation_send']",
         ),
         {
-            trigger: ".modal-footer button[name='document_layout_save']",
-            extra_trigger: ".modal-footer button[name='document_layout_save']",
+            trigger: ".modal-footer",
             content: _t("let's continue"),
             position: "bottom",
-            skip_trigger: ".modal-footer button[name='action_send_mail']",
-            run: "click",
+            run() {
+                const el =
+                    queryFirst(`.modal-footer button[name='action_send_mail']`) ||
+                    queryFirst(`.modal-footer button[name='document_layout_save']`);
+                if (el) {
+                    click(el);
+                }
+            },
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
