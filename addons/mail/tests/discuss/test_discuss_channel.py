@@ -136,7 +136,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         # `channel_get` should return a new channel the first time a partner is given
         channel = self.env["discuss.channel"].channel_get(partners_to=self.test_partner.ids)
         init_store = StoreData()
-        init_store.add({"Thread": channel._channel_info()})
+        channel._to_store(init_store)
         initial_channel_info = init_store.get_result()["Thread"][0]
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         self.assertEqual({m['persona']['id'] for m in initial_channel_info['channelMembers'][0][1]}, {self.partner_employee_nomail.id, self.test_partner.id})
@@ -144,7 +144,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         # `channel_get` should return the existing channel every time the same partner is given
         same_channel = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)
         same_channel_store = StoreData()
-        same_channel_store.add({"Thread": same_channel._channel_info()})
+        same_channel._to_store(same_channel_store)
         same_channel_info = same_channel_store.get_result()["Thread"][0]
         self.assertEqual(same_channel_info['id'], initial_channel_info['id'])
 
@@ -152,7 +152,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         together_pids = (self.partner_employee_nomail + self.test_partner).ids
         together_channel = self.env['discuss.channel'].channel_get(partners_to=together_pids)
         together_channel_store = StoreData()
-        together_channel_store.add({"Thread": together_channel._channel_info()})
+        together_channel._to_store(together_channel_store)
         together_channel_info = together_channel_store.get_result()["Thread"][0]
         self.assertEqual(together_channel_info['id'], initial_channel_info['id'])
 
@@ -161,7 +161,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         solo_pids = self.partner_employee_nomail.ids
         solo_channel = self.env['discuss.channel'].channel_get(partners_to=solo_pids)
         solo_channel_store = StoreData()
-        solo_channel_store.add({"Thread": solo_channel._channel_info()})
+        solo_channel._to_store(solo_channel_store)
         solo_channel_info = solo_channel_store.get_result()["Thread"][0]
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
@@ -171,7 +171,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         same_solo_pids = self.partner_employee_nomail.ids
         same_solo_channel = self.env['discuss.channel'].channel_get(partners_to=same_solo_pids)
         same_solo_channel_store = StoreData()
-        same_solo_channel_store.add({"Thread": same_solo_channel._channel_info()})
+        same_solo_channel._to_store(same_solo_channel_store)
         same_solo_channel_info = same_solo_channel_store.get_result()["Thread"][0]
         self.assertEqual(same_solo_channel_info['id'], solo_channel_info['id'])
 
@@ -206,7 +206,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self_member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.user_admin.partner_id)
         self_member._mark_as_read(msg_2.id)
         init_store = StoreData()
-        init_store.add({"Thread": chat._channel_info()})
+        chat._to_store(init_store)
         init_channel_info = init_store.get_result()["Thread"][0]
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         self_member_info = next(filter(lambda d: d['id'] == self_member.id, init_channel_info['channelMembers'][0][1]))
@@ -217,7 +217,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         )
         self_member._mark_as_read(msg_1.id)
         final_store = StoreData()
-        final_store.add({"Thread": chat._channel_info()})
+        chat._to_store(final_store)
         final_channel_info = init_store.get_result()["Thread"][0]
         # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
         self_member_info = next(filter(lambda d: d['id'] == self_member.id, final_channel_info['channelMembers'][0][1]))

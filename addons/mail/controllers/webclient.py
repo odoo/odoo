@@ -59,7 +59,7 @@ class WebclientController(http.Controller):
                 channels_domain = expression.AND(
                     [channels_domain, [("channel_type", "in", channel_types)]]
                 )
-            store.add({"Thread": request.env["discuss.channel"].search(channels_domain)._channel_info()})
+            request.env["discuss.channel"].search(channels_domain)._to_store(store)
 
     def _process_request_for_logged_in_user(self, store, **kwargs):
         if kwargs.get("failures"):
