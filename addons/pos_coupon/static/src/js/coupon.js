@@ -362,7 +362,7 @@ odoo.define('pos_coupon.pos', function (require) {
                  */
                 this.bookedCouponCodes = {};
             }
-            if (!this.activePromoProgramIds) {
+            if (!(this.activePromoProgramIds && this.activePromoProgramIds.length)) {
                 /**
                  * This field contains the ids of automatically/manually activated
                  * promo programs.
