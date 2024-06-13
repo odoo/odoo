@@ -46,6 +46,7 @@ class Home(web_home.Home):
                 error = _("Invalid authentication code format.")
             else:
                 request.session.finalize(request.env)
+                request.session.source = "2FA"
                 request.update_env(user=request.session.uid)
                 request.update_context(**request.session.context)
                 response = request.redirect(self._login_redirect(request.session.uid, redirect=redirect))
