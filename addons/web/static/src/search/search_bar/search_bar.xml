@@ -14,13 +14,14 @@
                 <!-- :hover overlay -->
                 <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
 
-                <div class="o_searchview_facet_label position-relative rounded-start-2 px-1"
+                <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0"
                     t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
                     t-att-role="facet.domain ? 'button' : 'img'"
                     t-att-class="{
-                        'text-bg-action d-flex align-items-center': facet.type == 'groupBy' || facet.type == 'comparison',
-                        'btn btn-primary rounded-end-0 p-0': facet.type == 'field' || facet.type == 'filter',
-                        'btn btn-favourite rounded-end-0 p-0': facet.type == 'favorite'
+                        'text-bg-action': facet.type == 'groupBy' || facet.type == 'comparison',
+                        'btn': facet.type == 'groupBy' and env.searchModel.canOrderByCount,
+                        'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
+                        'btn btn-favourite': facet.type == 'favorite'
                     }"
                     >
                     <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
@@ -32,6 +33,12 @@
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >
                         <i class="fa fa-fw fa-cog"/>
+                    </span>
+                    <span t-if="env.searchModel.canOrderByCount and facet.type === 'groupBy' and !env.searchModel.orderByCount"
+                        class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
+                        t-att-class="{'px-2 transition-base': !facet.icon}"
+                        >
+                        <i class="fa fa-fw fa-sort"/>
                     </span>
                 </div>
 

@@ -2812,6 +2812,91 @@ test(`list view not groupable`, async () => {
     expect(getFacetTexts()).toEqual([]);
 });
 
+test("group order by count", async () => {
+    let readGroupCount = 0;
+    onRpc("foo", "web_read_group", async ({ kwargs, parent }) => {
+        if (readGroupCount < 2) {
+            readGroupCount++;
+        } else {
+            expect(kwargs.groupby).toHaveLength(1);
+            expect.step(`read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
+            // The mock server cannot handle orderby count
+            kwargs.orderby = "";
+            return parent();
+        }
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+    });
+    await toggleSearchBarMenu();
+    await selectGroup("foo");
+    await selectGroup("currency_id");
+    expect("tr.o_group_header").toHaveCount(3, { message: "list should be grouped" });
+    await contains(".o_searchview_facet_label").click();
+    expect.verifySteps(["read_group foo order by __count DESC"]);
+    await contains("tr.o_group_header:eq(0)").click();
+    expect.verifySteps(["read_group currency_id order by __count DESC"]);
+    await contains(".o_searchview_facet_label").click();
+    expect.verifySteps([
+        "read_group foo order by __count ASC",
+        "read_group currency_id order by __count ASC",
+    ]);
+    await contains(".o_searchview_facet_label").click();
+    expect.verifySteps([
+        "read_group foo order by __count DESC",
+        "read_group currency_id order by __count DESC",
+    ]);
+});
+
+test("order by count reset", async () => {
+    let readGroupCount = 0;
+    onRpc("foo", "web_read_group", async ({ kwargs, parent }) => {
+        if (readGroupCount < 2) {
+            readGroupCount++;
+        } else {
+            expect(kwargs.groupby).toHaveLength(1);
+            expect.step(`read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
+            // The mock server cannot handle orderby count
+            kwargs.orderby = "";
+            return parent();
+        }
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<tree>
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+        searchViewArch: `
+            <search>
+                <filter name="my_filter" string="My Filter" domain="[('id', '=', 0)]"/>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await selectGroup("foo");
+    await selectGroup("currency_id");
+    await toggleMenuItem("My Filter");
+    await contains(".o_searchview_facet_label").click();
+    expect.verifySteps(["read_group foo order by ", "read_group foo order by __count DESC"]);
+    await toggleSearchBarMenu();
+    await toggleMenuItem("My Filter");
+    expect.verifySteps(["read_group foo order by __count DESC"]);
+    await toggleMenuItem("My Filter");
+    expect.verifySteps(["read_group foo order by __count DESC"]);
+    await toggleMenuItem("Currency");
+    expect.verifySteps(["read_group foo order by __count DESC"]);
+    await toggleMenuItem("Foo");
+    await toggleMenuItem("Foo");
+    expect.verifySteps(["read_group foo order by "]);
+});
+
 test(`selection changes are triggered correctly`, async () => {
     patchWithCleanup(ListController.prototype, {
         setup() {
