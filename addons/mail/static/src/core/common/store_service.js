@@ -638,8 +638,8 @@ export class Store extends BaseStore {
             partners_to: [id],
             force_open: forceOpen,
         });
-        const thread = this.Thread.insert(data);
-        return thread;
+        const { Thread } = this.store.insert(data);
+        return Thread[0];
     }
 
     async openChat(person) {
