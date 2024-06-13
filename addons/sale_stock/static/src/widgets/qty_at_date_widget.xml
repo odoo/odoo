@@ -2,7 +2,8 @@
 <template id="template" xml:space="preserve">
 
     <t t-name="sale_stock.QtyAtDate">
-        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
+        <a t-if="props.record.resId"
+            t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
             t-on-click="showPopup"
             t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''"
             t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"
@@ -65,6 +66,11 @@
             type="button" t-on-click="openForecast">
             <i class="oi oi-fw o_button_icon oi-arrow-right"></i>
             View Forecast
+        </button>
+        <button t-if="!props.record.data.is_mto &amp;&amp; hasMultiWarehousesGroup" class="text-start btn btn-link"
+            type="button" t-on-click="openWarehouses">
+            <i class="oi oi-fw o_button_icon oi-arrow-right"></i>
+            Select Warehouse
         </button>
         </div>
     </t>

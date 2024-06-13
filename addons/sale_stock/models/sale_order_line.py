@@ -395,6 +395,18 @@ class SaleOrderLine(models.Model):
                 pickings_to_confirm.action_confirm()
         return True
 
+    def order_line_warehouse_select_action(self):
+        action = self.env['ir.actions.actions']._for_xml_id('sale_stock.action_order_line_warehouse_select')
+        res = self.env['sale_stock.replenishment.warehouse.select'].create({
+            'sale_order_line_id': self.env.context['sale_order_line_id'],
+        })
+        action['name'] = _(
+            'Replenishment Information for %(product)s',
+            product=res.product_id.display_name,
+        )
+        action['res_id'] = res.id
+        return action
+
     def _update_line_quantity(self, values):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         line_products = self.filtered(lambda l: l.product_id.type == 'consu')
