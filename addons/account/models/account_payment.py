@@ -24,12 +24,14 @@ class AccountPayment(models.Model):
         inherited=True,
         related='move_id.journal_id', store=True, readonly=False, precompute=True,
         index=False,  # covered by account_payment_journal_id_company_id_idx
+        required=True,
     )
     company_id = fields.Many2one(
         comodel_name='res.company',
         inherited=True,
         related='move_id.company_id', store=True, readonly=False, precompute=True,
         index=False,  # covered by account_payment_journal_id_company_id_idx
+        required=True
     )
     is_reconciled = fields.Boolean(string="Is Reconciled", store=True,
         compute='_compute_reconciliation_status')
