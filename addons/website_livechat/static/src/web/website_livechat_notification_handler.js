@@ -4,10 +4,12 @@ export const websiteLivechatNotifications = {
     dependencies: ["bus_service", "mail.store"],
     start(env, { bus_service: busService, "mail.store": store }) {
         busService.subscribe("website_livechat.send_chat_request", (payload) => {
-            const channel = store.Thread.insert(payload);
-            const chatWindow = store.ChatWindow.insert({ thread: channel });
-            chatWindow.makeVisible();
-            chatWindow.focus();
+            const { Thread } = store.insert(payload);
+            for (const thread of Thread) {
+                const chatWindow = store.ChatWindow.insert({ thread });
+                chatWindow.makeVisible();
+                chatWindow.focus();
+            }
         });
     },
 };
