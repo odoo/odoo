@@ -88,7 +88,7 @@ export function getBasicServerData() {
                     [false, "form"],
                 ],
             },
-        }
+        },
     };
 }
 
@@ -327,7 +327,7 @@ export function getBasicData() {
                     sortable: true,
                     groupable: true,
                 },
-                active: { string: "Active", type: "bool", default: true, searchable: true },
+                active: { string: "Active", type: "boolean", default: true, searchable: true },
                 product_id: {
                     string: "Product",
                     type: "many2one",
@@ -458,7 +458,7 @@ export function getBasicData() {
         product: {
             fields: {
                 name: { string: "Product Name", type: "char" },
-                active: { string: "Active", type: "bool", default: true },
+                active: { string: "Active", type: "boolean", default: true },
                 properties_definitions: { type: "properties_definitions" },
             },
             records: [

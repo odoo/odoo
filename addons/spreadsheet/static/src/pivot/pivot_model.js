@@ -8,7 +8,7 @@ import { PivotModel } from "@web/views/pivot/pivot_model";
 import { helpers, constants, EvaluationError, SpreadsheetPivotTable } from "@odoo/o-spreadsheet";
 import { parseGroupField } from "./pivot_helpers";
 
-const { toString, toNumber, toBoolean, isDateField, pivotTimeAdapter } = helpers;
+const { toNormalizedPivotValue, toNumber, isDateField, pivotTimeAdapter } = helpers;
 const { DEFAULT_LOCALE } = constants;
 
 /**
@@ -17,63 +17,7 @@ const { DEFAULT_LOCALE } = constants;
  * @typedef {import("@odoo/o-spreadsheet").PivotDomain} PivotDomain
  */
 
-const UNSUPPORTED_FIELD_TYPES = ["one2many", "binary", "html"];
 export const NO_RECORD_AT_THIS_POSITION = Symbol("NO_RECORD_AT_THIS_POSITION");
-
-function isNotSupported(fieldType) {
-    return UNSUPPORTED_FIELD_TYPES.includes(fieldType);
-}
-
-function throwUnsupportedFieldError(field) {
-    throw new EvaluationError(
-        sprintf(_t("Field %(field)s is not supported because of its type (%(type)s)"), {
-            field: field.string,
-            type: field.type,
-        })
-    );
-}
-
-/**
- * Parses the value defining a pivot group in a PIVOT formula
- * e.g. given the following formula PIVOT.VALUE("1", "stage_id", "42", "status", "won"),
- * the two group values are "42" and "won".
- * @param {object} field
- * @param {number | boolean | string} groupValue
- * @param {"day" | "week" | "month" | "quarter" | "year" | undefined} granularity
- * @returns {number | boolean | string}
- */
-export function toNormalizedPivotValue(field, groupValue, granularity) {
-    const groupValueString =
-        typeof groupValue === "boolean"
-            ? toString(groupValue).toLocaleLowerCase()
-            : toString(groupValue);
-    if (isNotSupported(field.type)) {
-        throwUnsupportedFieldError(field);
-    }
-    // represents a field which is not set (=False server side)
-    if (groupValueString === "false") {
-        return false;
-    }
-    switch (field.type) {
-        case "datetime":
-        case "date":
-            return pivotTimeAdapter(granularity).normalizeFunctionValue(groupValueString, field);
-        case "selection":
-        case "char":
-        case "text":
-            return toString(groupValueString);
-        case "boolean":
-            return toBoolean(groupValueString);
-        case "float":
-        case "integer":
-        case "monetary":
-        case "many2one":
-        case "many2many":
-            return toNumber(groupValueString, DEFAULT_LOCALE);
-        default:
-            throwUnsupportedFieldError(field);
-    }
-}
 
 /**
  * This class is an extension of PivotModel with some additional information
@@ -161,8 +105,10 @@ export class OdooPivotModel extends PivotModel {
         if (groupValueString === NO_RECORD_AT_THIS_POSITION) {
             return "";
         }
-        const { field, granularity } = this.parseGroupField(groupFieldString);
-        const value = toNormalizedPivotValue(field, groupValueString, granularity);
+        const { field, granularity, dimensionWithGranularity } =
+            this.parseGroupField(groupFieldString);
+        const dimension = this.definition.getDimension(dimensionWithGranularity);
+        const value = toNormalizedPivotValue(dimension, groupValueString);
         const undef = _t("None");
         if (isDateField(field)) {
             const adapter = pivotTimeAdapter(granularity);
@@ -230,23 +176,18 @@ export class OdooPivotModel extends PivotModel {
     }
 
     /**
-     * @param {string} fieldName
+     * @param {import("@odoo/o-spreadsheet").PivotDimension} dimension
      * @returns {{ value: string | number | boolean, label: string }[]}
      */
-    getPossibleFieldValues(fieldName) {
-        const field = this.metaData.fields[fieldName];
-        if (!field) {
-            return [];
-        }
+    getPossibleFieldValues(dimension) {
         const valuesWithLabels = [];
         const valuesUniqueness = new Set();
-        const groupBys = (
-            this._isCol(fieldName) ? this.metaData.fullColGroupBys : this.metaData.fullRowGroupBys
-        )
-            .map(this.parseGroupField)
-            .map(({ field }) => field.name);
-        const tree = this._isCol(fieldName) ? this.data.colGroupTree : this.data.rowGroupTree;
-        const groupByIndex = groupBys.indexOf(fieldName);
+        const isCol = this._isCol(dimension.nameWithGranularity);
+        const groupBys = isCol ? this.definition.columns : this.definition.rows;
+        const tree = isCol ? this.data.colGroupTree : this.data.rowGroupTree;
+        const groupByIndex = groupBys.findIndex(
+            (d) => d.nameWithGranularity === dimension.nameWithGranularity
+        );
         const visitTree = (tree) => {
             const { values, labels } = tree.root;
             if (values[groupByIndex] && !valuesUniqueness.has(values[groupByIndex])) {
@@ -419,8 +360,7 @@ export class OdooPivotModel extends PivotModel {
         const rows = [];
         const cols = [];
         for (const node of domain) {
-            const { field, isPositional, granularity, dimensionWithGranularity } =
-                this.parseGroupField(node.field);
+            const { isPositional, dimensionWithGranularity } = this.parseGroupField(node.field);
             let value;
             if (isPositional) {
                 value = this._parsePivotFormulaWithPosition(
@@ -430,7 +370,8 @@ export class OdooPivotModel extends PivotModel {
                     rows
                 );
             } else {
-                value = toNormalizedPivotValue(field, node.value, granularity);
+                const dimension = this.definition.getDimension(dimensionWithGranularity);
+                value = toNormalizedPivotValue(dimension, node.value);
             }
             if (this._isCol(dimensionWithGranularity)) {
                 cols.push(value);
