@@ -1038,11 +1038,20 @@ export class DiscussChannel extends models.ServerModel {
             if (this._types_allowing_seen_infos().includes(channel.channel_type)) {
                 target = channel;
             }
+            const personaFields = {
+                partner: { id: true, name: true },
+                guest: { id: true, name: true },
+            };
             BusBus._sendone(target, "mail.record/insert", {
-                ChannelMember: {
-                    id: memberOfCurrentUser?.id,
-                    seen_message_id: message_id ? { id: message_id } : null,
-                },
+                ChannelMember: DiscussChannelMember._discuss_channel_member_format(
+                    [memberOfCurrentUser.id],
+                    {
+                        id: true,
+                        channel: {},
+                        persona: personaFields,
+                        seen_message_id: true,
+                    }
+                )[0],
             });
         }
     }
