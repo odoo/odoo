@@ -44,6 +44,7 @@ export const SEE_RECORDS_PIVOT = async (position, env) => {
 export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
     const cell = getters.getCorrespondingFormulaCell(position);
     const evaluatedCell = getters.getEvaluatedCell(position);
+    const pivotId = getters.getPivotIdFromPosition(position);
     const argsDomain = getters.getPivotDomainArgsFromPosition(position)?.domainArgs;
     return (
         evaluatedCell.type !== "empty" &&
@@ -52,7 +53,8 @@ export const SEE_RECORDS_PIVOT_VISIBLE = (position, getters) => {
         argsDomain !== undefined &&
         cell &&
         cell.isFormula &&
-        getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1
+        getNumberOfPivotFunctions(cell.compiledFormula.tokens) === 1 &&
+        getters.getPivotCoreDefinition(pivotId).type === "ODOO"
     );
 };
 

@@ -209,6 +209,34 @@ QUnit.test("Cannot see records of pivot formula without value", async function (
     assert.notOk(action.isVisible(env));
 });
 
+QUnit.test("Cannot see records of spreadsheet pivot", async function (assert) {
+    const { model, env } = await createSpreadsheetWithPivot();
+    setCellContent(model, "A11", "A");
+    setCellContent(model, "A12", "1");
+    setCellContent(model, "B11", "B");
+    setCellContent(model, "B12", "2");
+
+    model.dispatch("ADD_PIVOT", {
+        pivotId: "2",
+        pivot: {
+            type: "SPREADSHEET",
+            columns: [{ name: "A", order: "asc" }],
+            rows: [],
+            measures: [{ name: "B", aggregator: "sum" }],
+            name: "Pivot2",
+            dataSet: {
+                sheetId: model.getters.getActiveSheetId(),
+                zone: { top: 10, bottom: 11, left: 0, right: 1 },
+            },
+        },
+    });
+    setCellContent(model, "A13", `=PIVOT("2")`);
+    assert.strictEqual(getCellValue(model, "B15"), 2);
+    selectCell(model, "B15");
+    const action = await getActionMenu(cellMenuRegistry, ["pivot_see_records"], env);
+    assert.notOk(action.isVisible(env));
+});
+
 QUnit.test("See records is not visible on an empty cell", async function (assert) {
     const { env, model } = await createSpreadsheetWithPivot();
     assert.strictEqual(getCell(model, "A21"), undefined);
