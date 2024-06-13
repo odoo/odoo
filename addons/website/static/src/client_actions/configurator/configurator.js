@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { Dialog } from "@web/core/dialog/dialog";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
@@ -19,6 +20,7 @@ import {
     useSubEnv,
     onWillStart,
     useExternalListener,
+    onWillUnmount,
 } from "@odoo/owl";
 
 const ROUTES = {
@@ -74,6 +76,58 @@ const CUSTOM_BG_COLOR_ATTRS = ['menu', 'footer'];
 //------------------------------------------------------------------------------
 // Components
 //------------------------------------------------------------------------------
+
+class RetryOrSkipDialog extends Component {
+    static template = "website.Configurator.RetryOrSkipDialog";
+    static components = { Dialog };
+    static props = {
+        retry: Function,
+        skip: Function,
+        close: Function,
+        timeout: { type: Number, optional: true },
+        error: { type: Error, optional: true },
+    };
+
+    setup() {
+        this.timerRef = useRef("timer");
+        this.state = useState({ 
+            secondsLeft: this.props.timeout || 120,
+            showTraceback: false,
+        });
+        onMounted(() => {
+            this.interval = setInterval(() => {
+                this.state.secondsLeft = this.state.secondsLeft - 1;
+                if (this.state.secondsLeft < 1) {
+                    clearInterval(this.interval);
+                }
+            }, 1000);
+        });
+        onWillUnmount(() => {
+            clearInterval(this.interval);
+        });
+    }
+    /**
+     * Translated text with seconds remaining for the retry
+     * button.
+     * @returns {string}
+     */
+    get retryText() {
+        if (this.state.secondsLeft < 1) {
+            return _t("Retry");
+        } else {
+            return _t(
+                "Retry in %s",
+                luxon.Duration.fromObject({ seconds: this.state.secondsLeft}).toHuman("long")
+            );
+        }
+    }
+    /**
+     * Only in debug mode, throw the error again to show the error dialog.
+     */
+    triggerTraceback() {
+        throw this.props.error;
+    }
+}
 
 class SkipButton extends Component {}
 SkipButton.template = 'website.Configurator.SkipButton';
@@ -321,6 +375,7 @@ Object.assign(PaletteSelectionScreen, {
 class ApplyConfiguratorScreen extends Component {
     setup() {
         this.websiteService = useService('website');
+        this.dialogService = useService('dialog');
     }
 
     async applyConfigurator(themeName) {
@@ -342,7 +397,7 @@ class ApplyConfiguratorScreen extends Component {
                 if (retryCount < 3) {
                     return attemptConfiguratorApply(data, retryCount + 1);
                 }
-                document.querySelector('.o_website_loader_container').remove();
+                this.websiteService.hideLoader();
                 throw error;
             }
         };
@@ -377,15 +432,34 @@ class ApplyConfiguratorScreen extends Component {
                 'website_type': WEBSITE_TYPES[this.state.selectedType].name,
                 'logo_attachment_id': this.state.logoAttachmentId,
             };
-            const resp = await attemptConfiguratorApply(data);
+            try {
+                const resp = await attemptConfiguratorApply(data);
 
-            this.props.clearStorage();
+                this.props.clearStorage();
 
-            this.websiteService.prepareOutLoader();
-            // Here the website service goToWebsite method is not used because
-            // the web client needs to be reloaded after the new modules have
-            // been installed.
-            window.location.replace(`/web#action=website.website_preview&website_id=${encodeURIComponent(resp.website_id)}`);
+                this.websiteService.prepareOutLoader();
+                // Here the website service goToWebsite method is not used because
+                // the web client needs to be reloaded after the new modules have
+                // been installed.
+                window.location.replace(`/web#action=website.website_preview&website_id=${encodeURIComponent(resp.website_id)}`);
+            } catch (error) {
+                this.websiteService.prepareOutLoader();
+                console.error("Error while applying the configurator\n", error, error.data, error.data?.message);
+                let close;
+                const retry = await new Promise ((resolve) => {
+                    close = this.dialogService.add(RetryOrSkipDialog, {
+                        retry: () => resolve(true),
+                        skip: () => resolve(false),
+                        error,
+                    });
+                });
+                close();
+                if (retry) {
+                    return this.applyConfigurator(themeName);
+                } else {
+                    this.props.skip();
+                }
+            }
         }
     }
 }

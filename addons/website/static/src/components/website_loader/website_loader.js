@@ -44,6 +44,7 @@ export class WebsiteLoader extends Component {
                     return () => {
                         clearTimeout(this.trackModulesTimeout);
                         clearInterval(this.updateProgressInterval);
+                        this.updateProgressInterval = null;
                     };
                 }
             },
@@ -89,6 +90,7 @@ export class WebsiteLoader extends Component {
                 return () => {
                     window.removeEventListener("beforeunload", this.showRefreshConfirmation);
                     clearInterval(this.updateProgressInterval);
+                    this.updateProgressInterval = null;
                 };
             },
             () => [this.state.isVisible]
@@ -109,6 +111,7 @@ export class WebsiteLoader extends Component {
             clearInterval(messagesInterval);
             clearTimeout(this.trackModulesTimeout);
             clearInterval(this.updateProgressInterval);
+            this.updateProgressInterval = null;
         });
         // Action needed if the app automatically refreshes or redirects the
         // page without hiding/removing the WebsiteLoader. This should be
