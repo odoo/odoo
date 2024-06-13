@@ -1616,6 +1616,129 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_with_serial.qty_producing, 0)
         self.assertEqual(mo_without_serial.qty_producing, 0)
 
+    def test_consumed_and_produced_in_operation(self):
+        """
+            Check if component and byproduct quantities correctly changes when we
+            update the qty_producing and mark their respective operations from Consume
+            In Operation as done directly through the WO record
+        """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_byproducts')
+        demo = self.env['product.product'].create({
+            'name': 'DEMO'
+        })
+        comp1 = self.env['product.product'].create({
+            'name': 'COMP1'
+        })
+        comp2 = self.env['product.product'].create({
+            'name': 'COMP2'
+        })
+        comp3 = self.env['product.product'].create({
+            'name': 'COMP3'
+        })
+        bprod1 = self.env['product.product'].create({
+            'name': 'BPROD1'
+        })
+        bprod2 = self.env['product.product'].create({
+            'name': 'BPROD2'
+        })
+        bprod3 = self.env['product.product'].create({
+            'name': 'BPROD3'
+        })
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1", "time_start": 11})
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter 2", "time_start": 12})
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter 3", "time_start": 13})
+        bom = self.env['mrp.bom'].create({
+            'product_id': demo.id,
+            'product_tmpl_id': demo.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'operation_ids': [
+                Command.create({'name': 'OP1', 'workcenter_id': work_center_1.id, 'time_cycle': 12, 'sequence': 1}),
+                Command.create({'name': 'OP2', 'workcenter_id': work_center_2.id, 'time_cycle': 18, 'sequence': 2}),
+                Command.create({'name': 'OP3', 'workcenter_id': work_center_3.id, 'time_cycle': 24, 'sequence': 3})
+            ]
+        })
+        self.env['mrp.bom.line'].create([
+            {
+                'product_id': comp.id,
+                'product_qty': qty,
+                'bom_id': bom.id,
+                'operation_id': operation.id,
+            } for (comp, qty, operation) in zip([comp1, comp2, comp3], [1.0, 2.0, 3.0], bom.operation_ids)
+        ])
+        self.env['mrp.bom.byproduct'].create([
+            {
+                'product_id': bprod.id,
+                'product_qty': qty,
+                'bom_id': bom.id,
+                'operation_id': operation.id,
+            } for (bprod, qty, operation) in zip([bprod1, bprod2, bprod3], [1.0, 2.0, 3.0], bom.operation_ids)
+        ])
+
+        def _change_qty_producing_and_finish_wo(mo, new_qty, wo_index):
+            mo.qty_producing = new_qty
+            self.assertEqual(mo.qty_producing, new_qty)
+            wo = mo.workorder_ids.sorted()[wo_index]
+            wo.button_start()
+            wo.button_finish()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 5
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertRecordValues(mo.move_raw_ids + mo.move_byproduct_ids, [
+            {'picked': False, 'quantity': 5},
+            {'picked': False, 'quantity': 10},
+            {'picked': False, 'quantity': 15},
+            {'picked': False, 'quantity': 5},
+            {'picked': False, 'quantity': 10},
+            {'picked': False, 'quantity': 15},
+        ])
+
+        self.assertEqual(mo.qty_producing, 0)
+        mo.qty_producing = 5
+        self.assertEqual(mo.qty_producing, 5)
+        self.assertRecordValues(mo.move_raw_ids + mo.move_byproduct_ids, [
+            {'picked': False, 'quantity': 5},
+            {'picked': False, 'quantity': 10},
+            {'picked': False, 'quantity': 15},
+            {'picked': False, 'quantity': 5},
+            {'picked': False, 'quantity': 10},
+            {'picked': False, 'quantity': 15},
+        ])
+
+        _change_qty_producing_and_finish_wo(mo, 4, 0)
+        self.assertRecordValues(mo.move_raw_ids + mo.move_byproduct_ids, [
+            {'picked': True, 'quantity': 4},
+            {'picked': False, 'quantity': 10},
+            {'picked': False, 'quantity': 15},
+            {'picked': True, 'quantity': 4},
+            {'picked': False, 'quantity': 10},
+            {'picked': False, 'quantity': 15},
+        ])
+
+        _change_qty_producing_and_finish_wo(mo, 3, 1)
+        self.assertRecordValues(mo.move_raw_ids + mo.move_byproduct_ids, [
+            {'picked': True, 'quantity': 4},
+            {'picked': True, 'quantity': 6},
+            {'picked': False, 'quantity': 15},
+            {'picked': True, 'quantity': 4},
+            {'picked': True, 'quantity': 6},
+            {'picked': False, 'quantity': 15},
+        ])
+
+        _change_qty_producing_and_finish_wo(mo, 2, 2)
+        self.assertRecordValues(mo.move_raw_ids + mo.move_byproduct_ids, [
+            {'picked': True, 'quantity': 4},
+            {'picked': True, 'quantity': 6},
+            {'picked': True, 'quantity': 6},
+            {'picked': True, 'quantity': 4},
+            {'picked': True, 'quantity': 6},
+            {'picked': True, 'quantity': 6},
+        ])
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)
