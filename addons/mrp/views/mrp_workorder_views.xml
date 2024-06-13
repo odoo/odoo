@@ -111,6 +111,9 @@
             <xpath expr="//field[@name='show_json_popover']" position='before'>
                 <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only" title="Open Work Order" context="{'default_workcenter_id': workcenter_id}"/>
             </xpath>
+            <xpath expr="//field[@name='name']" position='before'>
+                <field name="sequence" widget="handle" column_invisible="parent.state != 'draft'"/>
+            </xpath>
         </field>
     </record>
 

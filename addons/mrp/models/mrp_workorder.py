@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
@@ -14,7 +13,10 @@ from odoo.tools import float_compare, format_datetime, float_is_zero, float_roun
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
-    _order = 'leave_id, date_start, id'
+    _order = 'sequence, leave_id, date_start, id'
+
+    def _default_sequence(self):
+        return self.operation_id.sequence or 100
 
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
@@ -26,6 +28,7 @@ class MrpWorkorder(models.Model):
 
     name = fields.Char(
         'Work Order', required=True)
+    sequence = fields.Integer("Sequence", default=_default_sequence)
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
@@ -470,7 +473,18 @@ class MrpWorkorder(models.Model):
 
     @api.model_create_multi
     def create(self, values):
+        check_for_phantom = False
+        all_sequences = [val.get('sequence') for val in values]
+        if len(set(all_sequences)) < len(values):
+            check_for_phantom = True
+            for index_val, val in enumerate(values):
+                val['sequence'] = index_val + 100
         res = super().create(values)
+        # We check if any kit bom operation was added in the workorders
+        if check_for_phantom and any(bom.type == 'phantom' for bom in res.operation_id.bom_id):
+            wo_phantom_first = res.sorted(lambda wo: wo.operation_id.bom_id.type, reverse=True)
+            for index_wo, wo in enumerate(wo_phantom_first):
+                wo.sequence = index_wo + 100
         # Auto-confirm manually added workorders.
         # We need to go through `_action_confirm` for all workorders of the current productions to
         # make sure the links between them are correct.
