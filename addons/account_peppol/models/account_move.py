@@ -36,7 +36,7 @@ class AccountMove(models.Model):
         for move in self:
             if all([
                 move.company_id.account_peppol_proxy_state in can_send,
-                move.commercial_partner_id.account_peppol_is_endpoint_valid,
+                move.commercial_partner_id.peppol_verification_state == 'valid',
                 move.state == 'posted',
                 move.is_sale_document(include_receipts=True),
                 not move.peppol_move_state,

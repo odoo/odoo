@@ -206,7 +206,17 @@ class ResCompany(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             vals = self._sanitize_peppol_endpoint(vals)
-        return super().create(vals_list)
+
+        res = super().create(vals_list)
+        if res:
+            for company in res:
+                self.env['ir.property']._set_default(
+                    'peppol_verification_state',
+                    'res.partner',
+                    'not_verified',
+                    company,
+                )
+        return res
 
     def write(self, vals):
         for company in self:

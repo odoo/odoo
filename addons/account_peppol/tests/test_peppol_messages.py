@@ -56,9 +56,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_endpoint': '2718281828',
         }])
 
-        cls.valid_partner.account_peppol_is_endpoint_valid = True
-        cls.valid_partner.account_peppol_validity_last_check = '2022-12-01'
-
         cls.env['res.partner.bank'].create({
             'acc_number': '0144748555',
             'partner_id': cls.env.company.partner_id.id,
@@ -148,7 +145,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             response.status_code = 404
             return response
         if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A2718281828'):
-            response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier></smp:ServiceGroup>'
+            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:2718281828</id:ParticipantIdentifier>
+            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="https://iap-services.odoo.com/iso6523-actorid-upis%3A%3A0208%3A0477472701/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
+            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
             return response
         if r.url.endswith('iso6523-actorid-upis%3A%3A0198%3Adk16356706'):
             response._content = b'<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0198:dk16356706</id:ParticipantIdentifier></smp:ServiceGroup>'
@@ -342,8 +341,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         })
         self.assertRecordValues(
             new_partner, [{
-                'account_peppol_verification_label': 'not_verified',
-                'account_peppol_is_endpoint_valid': False,
+                'peppol_verification_state': 'not_verified',
                 'peppol_eas': '0208',
                 'peppol_endpoint': False,
             }])
@@ -351,8 +349,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         new_partner.peppol_endpoint = '0477472701'
         self.assertRecordValues(
             new_partner, [{
-                'account_peppol_verification_label': 'valid',
-                'account_peppol_is_endpoint_valid': True,  # should validate automatically
+                'peppol_verification_state': 'valid',  # should validate automatically
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
             }])
@@ -360,14 +357,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         new_partner.peppol_endpoint = '3141592654'
         self.assertRecordValues(
             new_partner, [{
-                'account_peppol_verification_label': 'not_valid',
-                'account_peppol_is_endpoint_valid': False,
+                'peppol_verification_state': 'not_valid',
                 'peppol_eas': '0208',
                 'peppol_endpoint': '3141592654',
             }])
 
         new_partner.ubl_cii_format = False
-        self.assertFalse(new_partner.account_peppol_is_endpoint_valid)
+        self.assertFalse(new_partner.peppol_verification_state)
 
         # the participant exists on the network but cannot receive XRechnung
         new_partner.write({
@@ -376,8 +372,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         })
         self.assertRecordValues(
             new_partner, [{
-                'account_peppol_verification_label': 'not_valid_format',
-                'account_peppol_is_endpoint_valid': False,
+                'peppol_verification_state': 'not_valid_format',
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
             }])
