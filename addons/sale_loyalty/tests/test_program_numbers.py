@@ -1677,32 +1677,33 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         })
 
         order = self.empty_order
-        # Create taxes
-        self.tax_15pc_excl = self.env['account.tax'].create({
-            'name': "15% Tax excl",
-            'amount_type': 'percent',
-            'amount': 15,
-        })
+        # Create a fixed tax
         self.tax_10_fixed = self.env['account.tax'].create({
             'name': "10$ Fixed tax",
             'amount_type': 'fixed',
             'amount': 10,
         })
 
-        # Set tax and prices on products as neeed for the test
-        self.product_A.write({'list_price': 100})
+        # Set taxes on products as neeed for the test
         self.product_A.taxes_id = (self.tax_15pc_excl + self.tax_10_fixed)
+        self.product_C.taxes_id = self.tax_15pc_excl
 
-        # Add products in order
-        self.env['sale.order.line'].create({
+        # Add products in order (list_price=100 for both products)
+        self.env['sale.order.line'].create([{
             'product_id': self.product_A.id,
             'name': 'product A',
             'product_uom_qty': 1.0,
             'order_id': order.id,
-        })
+        }, {
+            'product_id': self.product_C.id,
+            'name': 'product C',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        }])
 
         self._auto_rewards(order, program)
 
+<<<<<<< HEAD:addons/sale_loyalty/tests/test_program_numbers.py
         self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
         self.assertEqual(order.amount_total, 67.5, '100$ + 15% tax + 10$ tax - 50%(discount) = 67.5$(total) ')
         self.assertEqual(order.amount_tax, 17.5, '15% tax + 10$ tax$ - 50%$(discount) = 17.5$(total) ')
@@ -1804,3 +1805,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self.assertEqual(order.order_line[0].tax_id, tax_15pc_excl)
         self.assertEqual(order.order_line[1].tax_id, tax_15pc_excl)
         self.assertEqual(order.amount_total, 156.0, '140$ + 15% - 5$ = 156$')
+||||||| parent of b10cc62039c9 (temp):addons/sale_coupon/tests/test_program_numbers.py
+        self.assertEqual(len(order.order_line), 2, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 67.5, '100$ + 15% tax + 10$ tax - 50%(discount) = 67.5$(total) ')
+        self.assertEqual(order.amount_tax, 17.5, '15% tax + 10$ tax$ - 50%$(discount) = 17.5$(total) ')
+=======
+        self.assertEqual(len(order.order_line), 3, 'Promotion should add 1 line')
+        self.assertEqual(order.amount_total, 125.0, '200$ + 15% tax + 10$ tax - 50%(discount) = 125$(total)')
+        self.assertEqual(order.amount_tax, 25.0, '15% tax on 200$ + 10$ tax$ - 50%$(discount) = 25$(total)')
+>>>>>>> b10cc62039c9 (temp):addons/sale_coupon/tests/test_program_numbers.py
