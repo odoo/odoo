@@ -1607,7 +1607,6 @@ export class Order extends PosModel {
         const paymentlines = this.paymentlines
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
-        this.receiptDate ||= formatDateTime(luxon.DateTime.now());
         return {
             orderlines: this.orderlines.map((l) => omit(l.getDisplayData(), "internalNote")),
             paymentlines,
@@ -1622,7 +1621,7 @@ export class Order extends PosModel {
             name: this.get_name(),
             invoice_id: null, //TODO
             cashier: this.cashier?.name,
-            date: this.receiptDate,
+            date: formatDateTime(this.date_order),
             pos_qr_code:
                 this.pos.company.point_of_sale_use_ticket_qr_code &&
                 (this.finalized || ["paid", "done", "invoiced"].includes(this.state)) &&
