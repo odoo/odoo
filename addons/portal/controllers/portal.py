@@ -5,6 +5,7 @@ import base64
 import json
 import math
 import re
+from odoo import api, fields, models, Command
 
 from werkzeug import urls
 
@@ -146,6 +147,11 @@ class CustomerPortal(Controller):
         # get customer sales rep
         sales_user_sudo = request.env['res.users']
         partner_sudo = request.env.user.partner_id
+        all_program_ids = request.env['loyalty.program'].search([])
+        # TODO: MATP improve filter (lambda is maybe less performante that use a field name)
+        program_ids = all_program_ids.filtered(lambda program:
+            any(partner_sudo == coupon.partner_id for coupon in program.coupon_ids)
+        )
         if partner_sudo.user_id and not partner_sudo.user_id._is_public():
             sales_user_sudo = partner_sudo.user_id
         else:
@@ -155,6 +161,7 @@ class CustomerPortal(Controller):
 
         return {
             'sales_user': sales_user_sudo,
+            'program_ids': program_ids,
             'page_name': 'home',
         }
 

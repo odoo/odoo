@@ -607,9 +607,16 @@
                     </table>
                 </div>
 
-                <div id="total" name="total" style="page-break-inside: avoid;">
-                    <div class="col-xs-7 col-md-5 ms-auto">
-                        <t t-call="sale.sale_order_portal_content_totals_table"/>
+                <div
+                    id="summary"
+                    name="summary"
+                    class="container"
+                    style="page-break-inside: avoid;"
+                >
+                    <div class="row row-cols-1 row-cols-sm-2 ">
+                        <div id="total" name="total" class="col">
+                            <t t-call="sale.sale_order_portal_content_totals_table"/>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -651,4 +658,5 @@
             <t t-call="#{sale_order._get_name_tax_totals_view()}"/>
         </table>
     </template>
+
 </odoo>

@@ -60,6 +60,20 @@
                 <t t-set="hide_intro" t-value="1"/>
             </t>
         </xpath>
+        <div name="total" position="before">
+            <div class="col">
+                <t t-foreach="sale_order.coupon_point_ids" t-as="coupon_points">
+                    <t t-call="loyalty.portal_loyalty_summary">
+                        <t t-set="program_name" t-value="coupon_points.coupon_id.program_id.name"/>
+                        <t t-set="balance" t-value="coupon_points.balance"/>
+                        <t t-set="issued" t-value="coupon_points.issued"/>
+                        <t t-set="used" t-value="coupon_points.used"/>
+                    </t>
+                </t>
+            </div>
+        </div>
     </template>
+
+    <!-- <template id="loyalty_summary" inherit_id="loyalty.portal_loyalty_summary" primary="True"></template> -->
 
 </odoo>

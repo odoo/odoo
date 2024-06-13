@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="portal_loyalty_modal.LoyaltyModal">
+        <Dialog title="title" footer="is_ewallet">
+            <span t-if="this.state.history" >
+                Last Movements <span class="text-info">(<t t-out="this.state.history.length"/>)</span>
+            </span>
+            <span t-else="">Not used</span>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th t-if="is_ewallet" scope="col">Description</th>
+                        <th t-if="is_loyalty" scope="col">Order</th>
+                        <th t-if="is_loyalty" scope="col">Date</th>
+                        <th t-if="is_loyalty" scope="col">Issued</th>
+                        <th t-if="is_loyalty" scope="col">Used</th>
+                        <th t-if="is_loyalty" scope="col">New Balance</th>
+                        <th t-else="" scope="col">Transaction</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <t t-foreach="this.state.history" t-as="transaction" t-key="transaction.id">
+                        <tr>
+                            <td t-if="is_ewallet">
+                                <t t-out="transaction.description"/>
+                            </td>
+                            <td t-if="is_loyalty">
+                                <a
+                                    t-if="transaction.sale_order"
+                                    t-attf-href="/my/orders/{{transaction.sale_order_id}}"
+                                >
+                                    <t t-out="transaction.sale_order"/>
+                                </a>
+                                <t t-else="">
+                                    Not an order.
+                                </t>
+                            </td>
+                            <td t-if="is_loyalty">
+                                <t t-out="this.formatDate(transaction.date)"/>
+                            </td>
+                            <td t-if="transaction.issued or is_loyalty">
+                                <p
+                                    t-att-class="transaction.issued ? 'text-success fw-bold' : ''"
+                                    t-out="is_loyalty ? transaction.issued : transaction.issued_display"
+                                />
+                            </td>
+                            <td t-if="transaction.used or is_loyalty">
+                                <p
+                                    t-att-class="transaction.used ? 'text-danger fw-bold' : ''"
+                                    t-out="is_loyalty ? transaction.used : transaction.used_display"
+                                />
+                            </td>
+                            <td t-if="is_loyalty"><t t-out="transaction.new_balance_display"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <t t-foreach="this.state.rewards" t-as="reward" t-key="reward.id">
+                <t t-out="reward.name"/>
+                <br/>
+            </t>
+            <t t-set-slot="header">
+                <t t-call="portal_loyalty_modal.LoyaltyModal.header">
+                    <t t-set="fullscreen" t-value="isFullscreen"/>
+                    <t t-set="dismiss" t-value="props.close"/>
+                </t>
+            </t>
+            <t t-set-slot="footer">
+                <!-- <select
+                    class="btn btn-link dropdown-toggle"
+                    t-on-change="onChangetopUpValue"
+                    t-on-click.stop="() =&gt; {}"
+                    t-att-id="props.id">
+                    <t t-foreach="topUpValues" t-as="value" t-key="value">
+                        <option
+                            t-attf-class="dropdown-item #{topUpValues[state.topUpIndex] == value and ' active' or ''}"
+                            t-att-selected="topUpValues[state.topUpIndex] === value"
+                            t-esc="value"
+                        />
+                    </t>
+                </select>
+
+                <select
+                    class="o_input pe-3 btn btn-secondary dropdown-toggle"
+                    t-on-change="onChangetopUpValue"
+                    t-on-click.stop="() =&gt; {}"
+                    t-att-id="props.id">
+                    <option
+                        t-esc="topUpValues[state.topUpIndex]"
+                    />
+                    <t t-foreach="topUpValues" t-as="value" t-key="value">
+                        <option
+                            t-attf-class="dropdown-item #{topUpValues[state.topUpIndex] == value and ' active' or ''}"
+                            t-att-selected="topUpValues[state.topUpIndex] === value"
+                            t-esc="value"
+                        />
+                    </t>
+                </select>
+
+                <Dropdown menuClass="'state_selection_field_menu'">
+                    <button class="btn btn-link d-flex p-0">
+                        <div class="d-flex align-items-center" >
+                            <span class="o_status_label ms-1" t-esc="topUpValues[state.topUpIndex]"/>
+                        </div>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="topUpValues" t-as="value" t-key="value">
+                            <DropdownItem
+                                class="`d-flex align-items-center ${topUpValues[state.topUpIndex] === value ? 'active' : ''}`"
+                            >
+                                <span t-esc="value"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown> -->
+
+
+                <div class="btn-group">
+                    <button id="portal_top_up_amount" data-bs-toggle="dropdown" class="btn btn-link dropdown-toggle">
+                        <t t-out="formatPoints(topUpValues[state.topUpIndex])"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
+                        <t t-foreach="topUpValues" t-as="val" t-key="val">
+                            <button
+                                t-attf-class="dropdown-item #{topUpValues[state.topUpIndex] == val and ' active' or ''}"
+                                t-on-click="() => {state.topUpIndex = topUpValues.indexOf(val)}"
+                            >
+                                <span t-out="formatPoints(val)"/>
+                            </button>
+                        </t>
+                    </div>
+                </div>
+
+                <!--
+                <div class="btn-group" t-if='this.state.history and this.state.history[0]'>
+                    <button id="portal_top_up_amount" data-bs-toggle="dropdown" class="btn btn-link dropdown-toggle">
+                        <t t-out="this.state.history[0].top_up_options[state.topUpIndex]"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="portal_searchbar_sortby">
+                        <t t-foreach="this.state.history[0].top_up_options" t-as="val" t-key="val">
+                            <button
+                                t-attf-class="dropdown-item #{this.state.history[0].top_up_options[state.topUpIndex] == val and ' active' or ''}"
+                                t-on-click="() => {state.topUpIndex = this.state.history[0].top_up_options.indexOf(val)}"
+                            >
+                                <span t-out="val"/>
+                            </button>
+                        </t>
+                    </div>
+                </div> -->
+                <button class="btn btn-primary" t-on-click="topUpNow">
+                    Top Up Now !!
+                </button>
+            </t>
+        </Dialog>
+    </t>
+
+    <t
+        t-name="portal_loyalty_modal.LoyaltyModal.header"
+        t-inherit="web.Dialog.header"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//h4[hasclass('modal-title')]" position="before">
+            <img
+                t-if="props.type == 'ewallet'"
+                src="https://cdn-icons-png.freepik.com/512/3757/3757881.png"
+                style="max-height: 3rem"
+            />
+            <img
+                t-if="props.type == 'loyalty'"
+                src="https://cdn3.vectorstock.com/i/1000x1000/14/77/loyalty-card-icon-flat-style-vector-29221477.jpg"
+                style="max-height: 3rem"
+            />
+        </xpath>
+        <xpath expr="//h4[hasclass('modal-title')]" position="attributes">
+            <attribute name="class" add="d-flex w-100 ps-3" separator=" "/>
+        </xpath>
+        <t t-if="!fullscreen" position="before">
+            <h3 class="pe-3" t-out="props.points"/>
+        </t>
+    </t>
+    <t
+        t-name="web.Dialog.LoyaltyModal"
+        t-inherit="web.Dialog"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//header[hasclass('modal-header')]" position="attributes">
+            <attribute name="class" add="d-flex justify-content-md-between" separator=" "/>
+        </xpath>
+    </t>
+</templates>

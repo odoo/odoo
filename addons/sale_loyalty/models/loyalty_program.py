@@ -7,6 +7,9 @@ from odoo import fields, models
 class LoyaltyProgram(models.Model):
     _inherit = 'loyalty.program'
 
+    # TODO: MATP create a Record to save the different value and et change this static value to a field
+    TOP_UP_VALUES = [25, 50, 100, 200, 88888.42424242]
+
     order_count = fields.Integer(compute='_compute_order_count')
     sale_ok = fields.Boolean(string="Sales", default=True)
 

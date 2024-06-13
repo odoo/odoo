@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+import os
+
+from odoo import api, fields, models
 
 
 class LoyaltyCard(models.Model):
@@ -12,6 +14,35 @@ class LoyaltyCard(models.Model):
         string="Order Reference",
         readonly=True,
         help="The sales order from which coupon is generated")
+
+    history_ids = fields.One2many(
+        comodel_name='sale.loyalty.history',
+        inverse_name='coupon_id',
+        ondelete='cascade',
+    )
+
+    # TODO: MATP Not use and probably not the best way :/ => check STOCK APP
+    barcode = fields.Char(
+        string='Barcode',
+        default=lambda self: str(int.from_bytes(os.urandom(8), 'little')),
+        readonly=True,
+        copy=False
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        coupons = super().create(vals_list)
+        for coupon in coupons:
+            if coupon.points:
+                coupon.history_ids = self.env['sale.loyalty.history'].create({
+                    'description': vals_list['description'],
+                    'coupon_id': coupon.id,
+                    'sale_order_id': coupon.order_id.id,
+                    'sale_order_name': coupon.order_id.name,
+                    'issued': coupon.points,
+                    'new_balance': coupon.points,
+                })
+        return coupons
 
     def _get_default_template(self):
         default_template = super()._get_default_template()

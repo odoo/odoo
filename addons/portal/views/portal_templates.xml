@@ -833,6 +833,81 @@
             <div class="o_my_contact mt-5" t-if="sales_user">
                 <t t-call="portal.portal_contact"/>
             </div>
+            <div class="o_modal_test_selector">
+                <t t-foreach="program_ids" t-as="program">
+                    <t t-if="program.program_type == 'loyalty'">
+                        <t
+                            t-if="program.coupon_ids"
+                            t-set="coupon_points_display"
+                            t-value="program.coupon_ids[0]._format_points(sum(
+                                coupon.points
+                                    for coupon in program.coupon_ids
+                                        if coupon.partner_id == user_id.partner_id
+                            ))"
+                        />
+                        <div
+                            t-attf-class="o_modal_test_event_click d-flex mb-2 position-relative rounded shadow-sm mt-3"
+                            role="button"
+                            data-type="loyalty"
+                            t-att-data-program-id="program.id"
+                            t-att-data-title="program.display_name"
+                            t-att-data-points="coupon_points_display"
+                            t-att-data-point-name="program.portal_point_name"
+                        >
+                            <span
+                                t-attf-class="o_notification_bar rounded-start"
+                                style="width: 0.5rem; background-color: var(--cyan)"
+                            />
+                            <div
+                                class="w-100 py-3 ps-3 pe-5 border border-start-0 rounded-end d-flex flex-row gap-3"
+                            >
+                                <img
+                                    class="object-fit-scale"
+                                    src="https://cdn3.vectorstock.com/i/1000x1000/14/77/loyalty-card-icon-flat-style-vector-29221477.jpg"
+                                    width="40"
+                                />
+                                <div class="d-flex flex-column gap-1">
+                                    <span t-out="program.display_name"/>
+                                    <p class="m-0 text-600">
+                                        <t t-out="len(program.reward_ids)"/> reward(s) is waiting for you !
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </t>
+                    <t t-else="" t-foreach="program.coupon_ids" t-as="coupon">
+                        <div
+                            t-attf-class="o_modal_test_event_click d-flex mb-2 position-relative rounded shadow-sm mt-3"
+                            role="button"
+                            data-type="ewallet"
+                            t-att-data-coupon-id="coupon.id"
+                            t-att-data-title="coupon.program_id.name"
+                            t-att-data-points="coupon.points_display"
+                            t-att-data-point-name="coupon.point_name"
+                            t-att-data-top-up-values="program.TOP_UP_VALUES"
+                        >
+                            <span
+                                t-attf-class="o_notification_bar rounded-start"
+                                style="width: 0.5rem; background-color: var(--cyan)"
+                            />
+                            <div
+                                class="w-100 py-3 ps-3 pe-5 border border-start-0 rounded-end d-flex flex-row gap-3"
+                            >
+                                <img
+                                    class="object-fit-scale"
+                                    src="https://cdn-icons-png.freepik.com/512/3757/3757881.png"
+                                    width="40"
+                                />
+                                <div class="d-flex flex-column gap-1">
+                                    <span t-out="coupon.program_id.name"/>
+                                    <p class="m-0 text-600" t-out="coupon.points_display"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
         </div>
     </template>
 </odoo>

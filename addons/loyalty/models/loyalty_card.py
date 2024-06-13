@@ -32,7 +32,7 @@ class LoyaltyCard(models.Model):
     currency_id = fields.Many2one(related='program_id.currency_id')
     # Reserved for this partner if non-empty
     partner_id = fields.Many2one('res.partner', index=True)
-    points = fields.Float(tracking=True)
+    points = fields.Float(default=0, tracking=True)
     point_name = fields.Char(related='program_id.portal_point_name', readonly=True)
     points_display = fields.Char(compute='_compute_points_display')
 

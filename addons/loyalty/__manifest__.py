@@ -19,6 +19,7 @@
         'views/loyalty_program_views.xml',
         'views/loyalty_reward_views.xml',
         'views/loyalty_rule_views.xml',
+        'views/portal_loyalty_summary_templates.xml',
         'views/res_partner_views.xml',
     ],
     'demo': [
@@ -31,6 +32,7 @@
             'loyalty/static/src/js/loyalty_list_view.js',
             'loyalty/static/src/scss/loyalty.scss',
             'loyalty/static/src/xml/loyalty_templates.xml',
+            'loyalty/static/src/xml/loyalty_summary_templates.xml',
         ],
     },
     'installable': True,

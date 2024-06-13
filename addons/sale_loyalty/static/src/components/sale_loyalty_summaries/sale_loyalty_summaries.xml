@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="sale_loyalty.SummariesComponent">
+        <div class="container">
+            <div class="row align-items-baseline">
+                <t t-foreach="history" t-as="coupon_id" t-key="coupon_id">
+                    <div class="col align-items-baseline">
+                        <t t-call="loyalty.loyalty_summary">
+                            <t t-set="program_name" t-value="history[coupon_id].program_name"/>
+                            <t t-set="balance" t-value="history[coupon_id].balance"/>
+                            <t t-set="issued" t-value="history[coupon_id].issued"/>
+                            <t t-set="used" t-value="history[coupon_id].used"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

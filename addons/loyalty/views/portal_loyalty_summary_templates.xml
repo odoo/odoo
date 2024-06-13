@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_loyalty_summary"  name="Layout Summary">
+        <table class="table table-sm">
+            <tbody>
+                <tr class="border-black">
+                    <td scope="row" class="text-nowrap"><strong>Loyalty cards: <t t-out="program_name"/></strong></td>
+                    <td class="text-end">
+                        <span t-out="balance"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">Issued</td>
+                    <td class="text-end">
+                        <span t-out="issued"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row">Used</td>
+                    <td class="text-end">
+                        <span t-out="used"/>
+                    </td>
+                </tr>
+                <tr class="border-black">
+                    <td scope="row"><strong>New Sold</strong></td>
+                    <td class="text-end">
+                        <span
+                            t-out="balance + issued - used"
+                        />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+</odoo>

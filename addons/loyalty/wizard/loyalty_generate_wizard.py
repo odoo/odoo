@@ -28,6 +28,12 @@ class LoyaltyGenerateWizard(models.TransientModel):
     valid_until = fields.Date()
     will_send_mail = fields.Boolean(compute='_compute_will_send_mail')
     confirmation_message = fields.Char(compute='_compute_confirmation_message')
+    description = fields.Char(
+        related='program_id.reward_ids.description',
+        readonly=False,
+        store=True,
+        translate=True,
+    )
 
     def _get_partners(self):
         self.ensure_one()
@@ -71,6 +77,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
             'points': self.points_granted,
             'expiration_date': self.valid_until,
             'partner_id': partner.id if self.mode == 'selected' else False,
+            'description': self.description,
         }
 
     def generate_coupons(self):
