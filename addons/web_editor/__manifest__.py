@@ -285,6 +285,10 @@ Odoo Web Editor widget.
         'web.qunit_suite_tests': [
             ('include', 'web_editor.assets_snippets_menu'),
             ('include', 'web_editor.backend_assets_wysiwyg'),
+            # TODO: Why we have included widget.js here instead web ?
+            # To have consistency with widget test included public_widget here
+            ('include', 'web.assets_frontend_minimal'),
+            'web/static/src/legacy/js/public/**/*',
 
             'web_editor/static/tests/**/*',
             'web_editor/static/src/js/editor/odoo-editor/test/utils.js'
