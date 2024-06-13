@@ -28,12 +28,12 @@ Patch({
             let date = new Date();
             for (const func of functions) {
                 if (new Date() - date > 100) {
-                    await new Promise((resolve) =>
-                        setTimeout(resolve, this.isInQUnitTest ? 0 : 50)
-                    );
+                    // await new Promise((resolve) =>
+                    //     setTimeout(resolve, this.isInQUnitTest ? 0 : 50)
+                    // );
                     date = new Date();
                 }
-                await func();
+                func();
             }
         },
         /**
