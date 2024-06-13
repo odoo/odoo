@@ -19,6 +19,37 @@ class StockQuant(models.Model):
              " If empty, the inventory date will be used.")
     cost_method = fields.Selection(related="product_categ_id.property_cost_method")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        product_ids = [val["product_id"] for val in vals_list]
+        tracked = self.env["product.product"].search([("id", "in", product_ids), ("tracking", "in", ['lot', 'serial'])])._ids
+
+        quants_of_tracked_product = [q for q in vals_list if q["product_id"] in tracked]
+        quants_of_untracked_product = [q for q in vals_list if q["product_id"] not in tracked]
+        product_ids = [val["product_id"] for val in quants_of_tracked_product]
+        location_ids = [val["location_id"] for val in quants_of_tracked_product]
+        query = self._search([
+            ('product_id', 'in', product_ids),
+            ('location_id', 'in', location_ids),
+            ('accounting_date', '<', fields.Date().today())], order='accounting_date desc')
+        # list of tuple of product_id, location_id and accounting_date
+        nearest_date_quants = self.env.execute_query(query.select('product_id', 'location_id', 'accounting_date'))
+        quant_groups = {}
+        for quant in nearest_date_quants:
+            key = (quant[0], quant[1])
+            if key not in quant_groups or quant[2] > quant_groups[key]:
+                quant_groups[key] = quant[2]
+
+        for quant in quants_of_tracked_product:
+            # nearest_date == date which is closest from today in past
+            key = (quant["product_id"], quant["location_id"])
+            if key in quant_groups:
+                quant["accounting_date"] = quant_groups[key]
+
+        vals_list = quants_of_tracked_product + quants_of_untracked_product
+        quants = super().create(vals_list)
+        return quants
+
     @api.model
     def _should_exclude_for_valuation(self):
         """
