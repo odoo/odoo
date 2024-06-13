@@ -1139,21 +1139,8 @@ export class PosStore extends Reactive {
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    const price_without_taxes = this.compute_all(
-                        mapped_included_taxes,
-                        price,
-                        1,
-                        this.currency.rounding,
-                        true
-                    ).total_excluded;
-                    price = this.compute_all(
-                        new_included_taxes,
-                        price_without_taxes,
-                        1,
-                        this.currency.rounding,
-                        false
-                    ).total_included;
-                } else {
+                    return { price: price };
+                } if (new_included_taxes.length >= 0) {
                     price = this.compute_all(
                         mapped_included_taxes,
                         price,

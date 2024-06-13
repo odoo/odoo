@@ -429,3 +429,12 @@ export function checkOrderlinesNumber(number) {
         },
     ];
 }
+
+export function checkTaxAmount(number) {
+    return inLeftSide([
+        {
+            content: `check order tax amount`,
+            trigger: `.subentry:contains("${number}")`,
+        },
+    ]);
+}
