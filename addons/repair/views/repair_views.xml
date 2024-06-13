@@ -402,6 +402,10 @@
 
         <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager"/>
 
-        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag"/>
+        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag" sequence="1"/>
+        <menuitem id="repair_menu_product_template" name="Products" action="stock.product_template_action_product"
+            parent="repair_menu_config" sequence="2"/>
+        <menuitem id="repair_menu_product_product" name="Product Variants" action="stock.stock_product_normal_action"
+            parent="repair_menu_config" sequence="3" groups="product.group_product_variant"/>
     </data>
 </odoo>
