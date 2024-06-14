@@ -137,9 +137,9 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel = self.env["discuss.channel"].channel_get(partners_to=self.test_partner.ids)
         init_store = StoreData()
         channel._to_store(init_store)
-        initial_channel_info = init_store.get_result()["Thread"][0]
-        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self.assertEqual({m['persona']['id'] for m in initial_channel_info['channelMembers'][0][1]}, {self.partner_employee_nomail.id, self.test_partner.id})
+        init_data = init_store.get_result()
+        initial_channel_info = init_data["Thread"][0]
+        self.assertEqual({m["persona"]["id"] for m in init_data["ChannelMember"]}, {self.partner_employee_nomail.id, self.test_partner.id})
 
         # `channel_get` should return the existing channel every time the same partner is given
         same_channel = self.env['discuss.channel'].channel_get(partners_to=self.test_partner.ids)
@@ -162,10 +162,10 @@ class TestChannelInternals(MailCommon, HttpCase):
         solo_channel = self.env['discuss.channel'].channel_get(partners_to=solo_pids)
         solo_channel_store = StoreData()
         solo_channel._to_store(solo_channel_store)
-        solo_channel_info = solo_channel_store.get_result()["Thread"][0]
+        solo_channel_data = solo_channel_store.get_result()
+        solo_channel_info = solo_channel_data["Thread"][0]
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
-        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self.assertEqual({m['persona']['id'] for m in solo_channel_info['channelMembers'][0][1]}, {self.partner_employee_nomail.id})
+        self.assertEqual({m["persona"]["id"] for m in solo_channel_data["ChannelMember"]}, {self.partner_employee_nomail.id})
 
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_pids = self.partner_employee_nomail.ids
@@ -207,9 +207,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         self_member._mark_as_read(msg_2.id)
         init_store = StoreData()
         chat._to_store(init_store)
-        init_channel_info = init_store.get_result()["Thread"][0]
-        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self_member_info = next(filter(lambda d: d['id'] == self_member.id, init_channel_info['channelMembers'][0][1]))
+        init_data = init_store.get_result()
+        self_member_info = next(filter(lambda d: d['id'] == self_member.id, init_data["ChannelMember"]))
         self.assertEqual(
             self_member_info['seen_message_id']['id'],
             msg_2.id,
@@ -218,9 +217,8 @@ class TestChannelInternals(MailCommon, HttpCase):
         self_member._mark_as_read(msg_1.id)
         final_store = StoreData()
         chat._to_store(final_store)
-        final_channel_info = init_store.get_result()["Thread"][0]
-        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self_member_info = next(filter(lambda d: d['id'] == self_member.id, final_channel_info['channelMembers'][0][1]))
+        final_data = init_store.get_result()
+        self_member_info = next(filter(lambda d: d['id'] == self_member.id, final_data["ChannelMember"]))
         self.assertEqual(
             self_member_info['seen_message_id']['id'],
             msg_2.id,
