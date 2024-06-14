@@ -6304,6 +6304,51 @@ test("quick create column with x_name as _rec_name", async () => {
     expect(".o_kanban_group").toHaveCount(3, { message: "should now have three columns" });
 });
 
+test.tags("desktop")("count of folded groups in empty kanban with sample data", async () => {
+    onRpc("web_read_group", () => {
+        return {
+            groups: [
+                {
+                    product_id: [1, "New"],
+                    product_id_count: 0,
+                    __domain: [],
+                },
+                {
+                    product_id: [2, "In Progress"],
+                    product_id_count: 0,
+                    __domain: [],
+                    __fold: true,
+                },
+            ],
+            length: 2,
+        };
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban sample="1">
+                <field name="product_id"/>
+                <templates>
+                    <div t-name="kanban-box">
+                        <field name="foo"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+        domain: [["id", "<", 0]],
+    });
+
+    expect(queryFirst(".o_content")).toHaveClass("o_view_sample_data");
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAll(".o_kanban_record").length > 0).toBe(true, {
+        message: "should contain sample records",
+    });
+    expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
+    expect(queryAllTexts(".o_kanban_group")).toEqual(["New", "In Progress"]);
+});
+
 test.tags("desktop")("quick create column and examples: with folded columns", async () => {
     registry.category("kanban_examples").add("test", {
         allowedGroupBys: ["product_id"],
@@ -6362,7 +6407,7 @@ test.tags("desktop")("quick create column and examples: with folded columns", as
     expect(".o_kanban_group").toHaveCount(2);
     expect(".o_kanban_group:not(.o_column_folded)").toHaveCount(1);
     expect(".o_kanban_group.o_column_folded").toHaveCount(1);
-    expect(queryAllTexts(".o_kanban_group")).toEqual(["not folded", "folded\n0"]);
+    expect(queryAllTexts(".o_kanban_group")).toEqual(["not folded", "folded"]);
 });
 
 test.tags("desktop")("quick create column's apply button's display text", async () => {
