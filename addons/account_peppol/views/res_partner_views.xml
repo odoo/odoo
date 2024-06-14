@@ -18,8 +18,8 @@
                     <div class="alert alert-warning"
                          colspan="2"
                          role="alert"
-                         invisible="not account_peppol_is_endpoint_valid or (bank_account_count != 0 and country_code)">
-                         To generate electronic invoices, also set a country and a bank account for this partner.
+                         invisible="not account_peppol_is_endpoint_valid or country_code">
+                         To generate complete electronic invoices, also set a country for this partner.
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='peppol_endpoint']" position="after">
