@@ -93,6 +93,8 @@ class TemplateResetMixin(models.AbstractModel):
         lang_false = {code: False for code, _ in self.env['res.lang'].get_installed() if code != 'en_US'}
         for template in self.filtered('template_fs'):
             external_id = template.get_external_id().get(template.id)
+            if not external_id:
+                raise UserError(_("External ID not found for template: %s", template.name))
             module, xml_id = external_id.split('.')
             fullpath = get_resource_path(*template.template_fs.split('/'))
             if fullpath:
