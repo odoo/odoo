@@ -106,7 +106,7 @@ class WebsiteBlog(http.Controller):
         use_cover = request.website.is_view_active('website_blog.opt_blog_cover_post')
         fullwidth_cover = request.website.is_view_active('website_blog.opt_blog_cover_post_fullwidth_design')
 
-        # if blog, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
+        # if blog and more than 1 blogs, we show blog title, if use_cover and not fullwidth_cover we need pager + latest always
         offset = (page - 1) * self._blog_post_per_page
         if not blog and use_cover and not fullwidth_cover and not tags and not date_begin and not date_end and not search:
             offset += 1
@@ -123,7 +123,7 @@ class WebsiteBlog(http.Controller):
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
         first_post = BlogPost
-        if posts and not blog and posts[0].website_published:
+        if posts and (not blog or len(blogs) == 1) and posts[0].website_published:
             first_post = posts[0]
         posts = posts[offset:offset + self._blog_post_per_page]
 
@@ -174,6 +174,7 @@ class WebsiteBlog(http.Controller):
             'search': fuzzy_search_term or search,
             'search_count': total,
             'original_search': fuzzy_search_term and search,
+            'cover_record': first_post or blog
         }
 
     @http.route([
