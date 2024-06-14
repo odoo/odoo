@@ -50,15 +50,23 @@ export class TimeOffDialogFormController extends FormController {
     deleteRecord() {
         this.props.onRecordDeleted(this.record);
         this.props.onCancelLeave();
-        if (this.record.data.can_cancel) {
-            this.leaveCancelWizard(this.record.resId, () => {
-                this.props.onLeaveCancelled();
-            });
-        }
+    }
+
+    cancelRecord() {
+        this.deleteRecord();
+        this.leaveCancelWizard(this.record.resId, () => {
+            this.props.onLeaveCancelled();
+        });
+    }
+
+    get canCancel() {
+        return !this.model.root.isNew && this.record.data.can_cancel;
     }
 
     get canDelete() {
-        return !this.model.root.isNew && (this.record.data.can_cancel || this.record.data.state && !['validate', 'refuse', 'cancel'].includes(this.record.data.state));
+        return !this.canCancel
+            && this.record.data.state
+            && !['validate', 'refuse', 'cancel'].includes(this.record.data.state);
     }
 }
 
