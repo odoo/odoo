@@ -1645,6 +1645,7 @@ class TestBoM(TestMrpCommon):
                 }),
             ]
         })
+<<<<<<< HEAD
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_normal.id)
         line_values = report_values['lines']
         self.assertEqual(line_values['availability_state'], 'unavailable')
@@ -1664,3 +1665,39 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_kit.id)
         line_values = report_values['lines']
         self.assertEqual(line_values['availability_state'], 'available')
+||||||| parent of 0b7e67e58a51 (temp)
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Operation',
+            'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+            'bom_id': bom.id,
+        })
+        bom.bom_line_ids.operation_id = operation
+        bom.byproduct_ids.operation_id = operation
+        self.assertEqual(operation.bom_id, bom)
+        operation.bom_id = self.bom_1
+        self.assertEqual(operation.bom_id, self.bom_1)
+        self.assertFalse(bom.bom_line_ids.operation_id)
+        self.assertFalse(bom.byproduct_ids.operation_id)
+=======
+        operation_1, operation_2 = self.env['mrp.routing.workcenter'].create([
+            {
+                'name': 'Operation 1',
+                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'bom_id': bom.id,
+            },
+            {
+                'name': 'Operation 2',
+                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'bom_id': bom.id,
+            }
+        ])
+        bom.bom_line_ids.operation_id = operation_1
+        bom.byproduct_ids.operation_id = operation_1
+        operation_2.blocked_by_operation_ids = operation_1
+        self.assertEqual(operation_1.bom_id, bom)
+        operation_1.bom_id = self.bom_1
+        self.assertEqual(operation_1.bom_id, self.bom_1)
+        self.assertFalse(bom.bom_line_ids.operation_id)
+        self.assertFalse(bom.byproduct_ids.operation_id)
+        self.assertFalse(operation_2.blocked_by_operation_ids)
+>>>>>>> 0b7e67e58a51 (temp)
