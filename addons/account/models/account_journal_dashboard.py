@@ -808,9 +808,9 @@ class account_journal(models.Model):
 
     def _get_journal_dashboard_outstanding_payments(self):
         self.env.cr.execute("""
-            SELECT move.journal_id AS journal_id,
-                   move.company_id AS company_id,
-                   move.currency_id AS currency,
+            SELECT payment.journal_id AS journal_id,
+                   payment.company_id AS company_id,
+                   payment.currency_id AS currency,
                    SUM(CASE
                        WHEN payment.payment_type = 'outbound' THEN -payment.amount
                        ELSE payment.amount
@@ -818,11 +818,11 @@ class account_journal(models.Model):
                    SUM(amount_company_currency_signed) AS amount_total_company
               FROM account_payment payment
               JOIN account_move move ON move.payment_id = payment.id
-             WHERE payment.is_matched IS NOT TRUE
+             WHERE (NOT payment.is_matched OR payment.is_matched IS NULL)
                AND move.state = 'posted'
-               AND move.journal_id = ANY(%s)
-               AND move.company_id = ANY(%s)
-          GROUP BY move.company_id, move.journal_id, move.currency_id
+               AND payment.journal_id = ANY(%s)
+               AND payment.company_id = ANY(%s)
+          GROUP BY payment.company_id, payment.journal_id, payment.currency_id
         """, [self.ids, self.env.companies.ids])
         query_result = group_by_journal(self.env.cr.dictfetchall())
         result = {}
