@@ -197,6 +197,12 @@
                             <setting help="Let your customers pay their invoices online"
                                 documentation="/applications/finance/accounting/receivables/customer_payments/online_payment.html">
                                 <field name="module_account_payment"/>
+                                <div class="mt-3 d-flex" invisible="not module_account_payment">
+                                    <field name="link_qr_code" string="Add QR-code link on PDF"/>
+                                    <div>
+                                        <label for="link_qr_code"/><br/>
+                                    </div>
+                                </div>
                             </setting>
                             <setting id="account_batch_payment" string="Batch Payments" help="Group payments into a single batch to ease the reconciliation process"
                                 documentation="/applications/finance/accounting/receivables/customer_payments/batch.html">
