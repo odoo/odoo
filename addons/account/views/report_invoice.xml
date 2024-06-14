@@ -298,6 +298,42 @@
                                         <p>Scan this QR Code with<br/>your banking application</p>
                                     </div>
                                 </div>
+                                <t t-set="portal_qr_code" t-value="o._generate_portal_qr()"/>
+                                <t t-set="show_payment_qr" t-value="o.display_payment_qr_code and o.amount_residual > 0"/>
+                                <t t-set="show_link_qr" t-value="o.display_link_qr_code and o.amount_residual > 0"/>
+                                <div t-if="show_payment_qr">
+                                    <div id="payment_qrcode" class="mb-3 avoid-page-break-inside d-inline-flex align-items-start">
+                                        <div class="me-5 d-inline lh-sm" id="payment_qrcode_info" t-if="portal_qr_code">
+                                            <strong>PAY IN A FLASH!</strong>
+                                            <p class="text-muted fst-italic">
+                                                <t t-if="not show_link_qr">Scan the QR code</t>
+                                                <t t-else="">Scan the QR code<br/>or click to pay</t>
+                                            </p>
+                                        </div>
+                                        <div class="qrcode" id="payment_qrcode_image">
+                                            <t t-if="not show_link_qr">
+                                                <p class="position-relative mb-0">
+                                                    <img t-att-src="portal_qr_code"/>
+                                                    <img src="/account/static/src/img/Odoo_logo_O.svg"
+                                                         id="qrcode_odoo_logo"
+                                                         class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                                    />
+                                                </p>
+                                            </t>
+                                            <t t-else="">
+                                                <a t-att-href="o._generate_portal_url()" target="_blank">
+                                                    <p class="position-relative mb-0">
+                                                        <img t-att-src="portal_qr_code"/>
+                                                        <img src="/account/static/src/img/Odoo_logo_O.svg"
+                                                             id="qrcode_odoo_logo"
+                                                             class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                                        />
+                                                    </p>
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!--terms and conditions-->
                                 <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
                                     <span t-field="o.narration"/>
