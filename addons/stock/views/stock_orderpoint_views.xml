@@ -40,6 +40,7 @@
         <field name="arch" type="xml">
             <tree string="Reordering Rules" editable="bottom" js_class="stock_orderpoint_list" sample="1" multi_edit="1" export_xlsx="0">
                 <field name="active" column_invisible="True"/>
+                <field name="allowed_location_ids" invisible="1"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="product_category_id" column_invisible="True"/>
                 <field name="product_tmpl_id" column_invisible="True"/>
@@ -56,10 +57,10 @@
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id"/>
                 <field name="trigger" optional="hide"/>
                 <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
-                <field name="product_min_qty" string="Min" optional="show"/>
-                <field name="product_max_qty" string="Max" optional="show"/>
+                <field name="product_min_qty" optional="show" decoration-muted="not product_min_qty"/>
+                <field name="product_max_qty" optional="show" decoration-muted="not product_max_qty"/>
                 <field name="qty_multiple" optional="hide"/>
-                <field name="qty_to_order"/>
+                <field name="qty_to_order" decoration-muted="not qty_to_order"/>
                 <field name="qty_to_order_manual" column_invisible="True"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="Remove manually entered value and replace by the quantity to order based on the forecasted quantities" invisible="not qty_to_order_manual"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="fa-undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>
@@ -165,7 +166,7 @@
                         <group>
                             <field name="allowed_location_ids" invisible="1"/>
                             <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
+                            <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                             <label for="group_id" groups="base.group_no_one"/>
                             <div groups="base.group_no_one">
                                 <field name="group_id" groups="stock.group_adv_location"/>
