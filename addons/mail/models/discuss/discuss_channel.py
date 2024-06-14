@@ -921,9 +921,12 @@ class Channel(models.Model):
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info["message_needaction_counter_bus_id"] = bus_last_id
                 if member:
-                    info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format(
-                        extra_fields={"last_interest_dt": True, "new_message_separator": True}
-                    ).values()))]
+                    member_data = list(
+                        member._discuss_channel_member_format(
+                            extra_fields={"last_interest_dt": True, "new_message_separator": True}
+                        ).values()
+                    )
+                    store.add({"ChannelMember": member_data})
                     info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
                     info["message_unread_counter_bus_id"] = bus_last_id
@@ -938,16 +941,29 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
+                member_data = list(
+                    member._discuss_channel_member_format(
+                        extra_fields={"new_message_separator": True}
+                    ).values()
+                )
+                store.add({"ChannelMember": member_data})
                 other_members = members_by_channel[channel] - member
-                info['channelMembers'] = [('ADD', list({
-                    **member._discuss_channel_member_format(extra_fields={"new_message_separator": True}),
-                    **other_members._discuss_channel_member_format(),
-                }.values()))]
+                other_members_data = list(other_members._discuss_channel_member_format().values())
+                store.add({"ChannelMember": other_members_data})
             # add RTC sessions info
-            info.update({
-                'invitedMembers': [('ADD', list(invited_members_by_channel[channel]._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))],
-                'rtcSessions': [('ADD', rtc_sessions_by_channel.get(channel, []))],
-            })
+            invited_members = invited_members_by_channel[channel]
+            m_fields = {
+                "id": True,
+                "channel": {},
+                "persona": {
+                    "partner": {"id": True, "name": True, "im_status": True},
+                    "guest": {"id": True, "name": True, "im_status": True},
+                },
+            }
+            members_data = list(invited_members._discuss_channel_member_format(m_fields).values())
+            store.add({"ChannelMember": members_data})
+            info["invitedMembers"] = [("ADD", [{"id": member.id} for member in invited_members])]
+            info["rtcSessions"] = [("ADD", rtc_sessions_by_channel.get(channel, []))]
             store.add({"Thread": info})
 
     def _channel_fetch_message(self, last_id=False, limit=20):

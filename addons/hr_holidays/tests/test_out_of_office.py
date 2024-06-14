@@ -10,7 +10,7 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.addons.mail.tools.discuss import StoreData
 
 
-@tagged('out_of_office')
+@tagged("post_install", "-at_install", "out_of_office")
 class TestOutOfOffice(TestHrHolidaysCommon):
 
     @classmethod
@@ -50,8 +50,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         })
         store = StoreData()
         channel._to_store(store)
-        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        all_members_data = store.get_result()["Thread"][0]["channelMember"][0][1]
+        all_members_data = store.get_result()["ChannelMember"]
         members_data = [member for member in all_members_data if member["thread"]["id"] == channel.id]
         self.assertEqual(len(members_data), 2, "Channel info should get info for the 2 members")
         partner_info = next(member for member in members_data if member['persona']['email'] == partner.email)
