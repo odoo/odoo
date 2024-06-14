@@ -329,7 +329,7 @@
                                         </t>
                                     </p>
                                 </div>
-                                <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual > 0"/>
+                                <t t-set="show_qr" t-value="o.display_qr_code and o.amount_residual"/>
                                 <div t-if="not show_qr" name="qr_code_placeholder" class="oe_structure"></div>
                                 <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-else="">
                                     <div class="qrcode me-3" id="qrcode_image">
@@ -338,12 +338,30 @@
                                             <img t-att-src="qr_code_url"/>
                                             <img src="/account/static/src/img/Odoo_logo_O.svg"
                                                  id="qrcode_odoo_logo"
-                                                 class="top-50 start-50 position-absolute bg-white border border-white border-3 rounded-circle"
+                                                 class="top-50 start-50 position-absolute bg-white border border-3 rounded-circle"
                                             />
                                         </p>
                                     </div>
                                     <div class="d-inline text-muted lh-sm fst-italic" id="qrcode_info" t-if="qr_code_url">
                                         <p>Scan this QR Code with<br/>your banking application</p>
+                                    </div>
+                                </div>
+                                <t t-set="show_link_qr" t-value="o.display_link_qr_code and o.amount_residual"/>
+                                <div t-if="show_link_qr" id="payment_link_qrcode" class="d-flex mb-3 avoid-page-break-inside">
+                                    <t t-set="portal_qr_code" t-value="o._generate_portal_payment_qr()"/>
+                                    <div class="qrcode me-3 position-relative" id="qrcode_image">
+                                        <a t-att-href="o._get_portal_payment_link()" target="_blank" class="top-0 start-0 position-absolute w-100 h-100 z-1" />
+                                        <p class="position-relative mb-0">
+                                            <img t-att-src="portal_qr_code"/>
+                                            <img src="/account/static/src/img/Odoo_logo_O.svg"
+                                                 id="qrcode_odoo_logo"
+                                                 class="top-50 start-50 position-absolute bg-white border border-3 rounded-circle"
+                                            />
+                                        </p>
+                                    </div>
+                                    <div class="d-inline lh-sm" id="qrcode_info" t-if="portal_qr_code">
+                                        <p class="fw-bold mb-0">PAY IN A FLASH!</p>
+                                        <p class="text-muted fst-italic">Scan the QR code<br/>or click to pay online</p>
                                     </div>
                                 </div>
                                 <!--terms and conditions-->
