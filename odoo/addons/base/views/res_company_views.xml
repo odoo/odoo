@@ -85,7 +85,7 @@
                                 <div t-attf-class="#{!selection_mode ? 'text-center' : ''}">
                                     <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <strong><field name="name"/></strong>
                                 </div>
-                                <hr class="mt4 mb4"/>
+                                <hr t-if="record.email.value or record.phone.value" class="mt4 mb4"/>
                                 <div class="row" t-if="!selection_mode">
                                     <div t-if="record.email.value" class="col-6 text-center">
                                         <strong>Email:</strong>
