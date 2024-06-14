@@ -165,11 +165,17 @@ class MrpProduction(models.Model):
         compute='_compute_move_raw_ids', store=True, readonly=False,
         copy=False,
         domain=[('scrapped', '=', False)])
+    move_finished_id = fields.Many2one(
+        'stock.move', 'Finished Product',
+        compute='_compute_move_finished_id', store=True,
+    )
     move_finished_ids = fields.One2many(
-        'stock.move', 'production_id', 'Finished Products', readonly=False,
-        compute='_compute_move_finished_ids', store=True, copy=False,
-        domain=[('scrapped', '=', False)])
-    move_byproduct_ids = fields.One2many('stock.move', 'production_id', compute='_compute_move_byproduct_ids', inverse='_set_move_byproduct_ids', store=True)
+        'stock.move', 'Finished Products', readonly=True,
+        compute='_compute_move_finished_ids', copy=False)
+    move_byproduct_ids = fields.One2many(
+        'stock.move', 'production_id', 'byproduct moves', readonly=False,
+        copy=False,
+        domain="[('product_id', '!=', parent.product_id.id)]")
     finished_move_line_ids = fields.One2many(
         'stock.move.line', compute='_compute_lines', inverse='_inverse_lines', string="Finished Product"
         )
@@ -739,8 +745,10 @@ class MrpProduction(models.Model):
                 production.move_raw_ids = [Command.delete(move.id) for move in production.move_raw_ids.filtered(lambda m: m.bom_line_id)]
 
     @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids')
-    def _compute_move_finished_ids(self):
+    def _compute_move_finished_id(self):
         for production in self:
+            if production.state == 'done':
+                continue
             if production.product_id:
                 updated_values = {}
                 if production.date_finished:
@@ -748,16 +756,14 @@ class MrpProduction(models.Model):
                 if production.date_deadline:
                     updated_values['date_deadline'] = production.date_deadline
                 if 'date' in updated_values or 'date_deadline' in updated_values:
-                    production.move_finished_ids = [
-                        Command.update(m.id, updated_values) for m in production.move_finished_ids
-                    ]
-                if production.state == 'done':
-                    continue
+                    production.move_finished_id.update(updated_values)
             else:
-                production.move_finished_ids = [
-                    Command.delete(move.id) for move in production.move_finished_ids if move.bom_line_id
-                ]
+                production.move_finished_id.unlink()
             production._create_update_move_finished()
+
+    def _compute_move_finished_ids(self):
+        for production in self:
+            production.move_finished_ids = production.move_finished_id | production.move_bom_finished_id
 
     @api.depends('state', 'product_qty', 'qty_producing')
     def _compute_show_produce(self):
@@ -1107,7 +1113,7 @@ class MrpProduction(models.Model):
             'cost_share': cost_share,
         }
 
-    def _get_moves_finished_values(self):
+    def _get_move_finished_values(self):
         moves = []
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
@@ -1131,7 +1137,7 @@ class MrpProduction(models.Model):
         is used within onchanges.
         """
         list_move_finished = []
-        moves_finished_values = self._get_moves_finished_values()
+        moves_finished_values = self._get_move_finished_values()
         moves_byproduct_dict = {move.byproduct_id.id: move for move in self.move_finished_ids.filtered(lambda m: m.byproduct_id)}
         move_finished = self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id)
         for move_finished_values in moves_finished_values:
