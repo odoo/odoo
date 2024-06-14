@@ -9,7 +9,6 @@
                 <search string="Tasks">
                     <field name="name" string="Tasks" filter_domain="['|', ('name', 'ilike', self), ('id', 'ilike', self)]"/>
                     <field name="tag_ids"/>
-                    <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
                     <field name="partner_id" operator="child_of"/>
@@ -34,7 +33,6 @@
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
                         <filter string="Tags" name="tags" context="{'group_by': 'tag_ids'}"/>
@@ -56,15 +54,21 @@
             <field name="mode">primary</field>
             <field name="priority">999</field>
             <field name="arch" type="xml">
+                 <field name="stage_id" position="before">
+                    <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                </field>
                 <field name="stage_id" position="after">
-                    <field name="project_id" string="Project"/>
+                    <field name="project_id" string="Project" invisible="context.get('default_project_id')"/>
                 </field>
                 <field name="partner_id" position="after">
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                 </field>
+                <filter name="stage" position="before">
+                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
+                </filter>
                 <filter name="stage" position="after">
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" invisible="context.get('default_project_id')"/>
                 </filter>
             </field>
         </record>
