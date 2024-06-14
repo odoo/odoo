@@ -1150,7 +1150,6 @@ class TestUi(TestPointOfSaleHttpCommon):
                 "type": "service",
                 "list_price": 0,
                 "available_in_pos": True,
-                "categ_id": self.product_category.id,
                 "taxes_id": False,
             }
         )
@@ -1161,7 +1160,6 @@ class TestUi(TestPointOfSaleHttpCommon):
                 "is_storable": True,
                 "list_price": 100,
                 "available_in_pos": True,
-                "categ_id": self.product_category.id,
                 "taxes_id": False,
             }
         )
