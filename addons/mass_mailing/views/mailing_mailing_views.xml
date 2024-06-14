@@ -92,7 +92,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div class="o_mails_sent" attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
+                        <div class="o_mails_sent" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('sent', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_sent"
                                     type="object">
