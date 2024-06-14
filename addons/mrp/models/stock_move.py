@@ -457,6 +457,7 @@ class StockMove(models.Model):
         # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
         # won't be assigned to a picking and it would be weird to explode a move into several if they aren't
         # all grouped in the same picking.
+        kit_boms = self.env['mrp.bom'].sudo()._bom_find(self.product_id, company_ids=self.company_id.ids, bom_type='phantom')
         moves_ids_to_return = OrderedSet()
         moves_ids_to_unlink = OrderedSet()
         phantom_moves_vals_list = []
@@ -464,7 +465,7 @@ class StockMove(models.Model):
             if (not move.picking_type_id and not self.env.context.get('is_scrap')) or (move.production_id and move.production_id.product_id == move.product_id):
                 moves_ids_to_return.add(move.id)
                 continue
-            bom = self.env['mrp.bom'].sudo()._bom_find(move.product_id, company_id=move.company_id.id, bom_type='phantom')[move.product_id]
+            bom = kit_boms[(move.product_id, move.company_id.id)]
             if not bom:
                 moves_ids_to_return.add(move.id)
                 continue

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+import itertools
+
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, OR
 from odoo.tools import float_round
 from odoo.tools.misc import clean_context
-
-from collections import defaultdict
 
 
 class MrpBom(models.Model):
@@ -135,7 +136,7 @@ class MrpBom(models.Model):
             bom_find_result = self._bom_find(products_to_find)
             for component in components:
                 if component not in subcomponents_dict:
-                    bom = bom_find_result[component]
+                    bom = bom_find_result[(component, False)]
                     subcomponents = bom.bom_line_ids.filtered(lambda l: not l._skip_bom_line(component)).product_id
                     subcomponents_dict[component] = subcomponents
                 subcomponents = subcomponents_dict[component]
@@ -312,10 +313,12 @@ class MrpBom(models.Model):
             raise UserError(_('You can not delete a Bill of Material with running manufacturing orders.\nPlease close or cancel it first.'))
 
     @api.model
-    def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
+    def _bom_find_domain(self, products, picking_type=None, company_ids=False, bom_type=False):
         domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
-        if company_id or self.env.context.get('company_id'):
-            domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
+        if company_ids:
+            domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]])
+        elif self.env.context.get('company_id'):
+            domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', self.env.context.get('company_id'))]])
         if picking_type:
             domain = AND([domain, ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]])
         if bom_type:
@@ -323,34 +326,40 @@ class MrpBom(models.Model):
         return domain
 
     @api.model
-    def _bom_find(self, products, picking_type=None, company_id=False, bom_type=False):
+    def _bom_find(self, products, picking_type=None, company_ids=False, bom_type=False):
         """ Find the first BoM for each products
 
         :param products: `product.product` recordset
         :return: One bom (or empty recordset `mrp.bom` if none find) by product (`product.product` record)
         :rtype: defaultdict(`lambda: self.env['mrp.bom']`)
         """
+        if company_ids == [False]:
+            company_ids = False
         bom_by_product = defaultdict(lambda: self.env['mrp.bom'])
         products = products.filtered(lambda p: p.type != 'service')
         if not products:
             return bom_by_product
-        domain = self._bom_find_domain(products, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
+        domain = self._bom_find_domain(products, picking_type=picking_type, company_ids=company_ids, bom_type=bom_type)
 
         # Performance optimization, allow usage of limit and avoid the for loop `bom.product_tmpl_id.product_variant_ids`
-        if len(products) == 1:
+        if len(products) == 1 and (not company_ids or len(company_ids) == 1):
             bom = self.search(domain, order='sequence, product_id, id', limit=1)
             if bom:
-                bom_by_product[products] = bom
+                bom_by_product[(products, company_ids and company_ids[0] or False)] = bom
             return bom_by_product
 
         boms = self.search(domain, order='sequence, product_id, id')
 
         products_ids = set(products.ids)
+        companies = [False]
         for bom in boms:
-            products_implies = bom.product_id or bom.product_tmpl_id.product_variant_ids
-            for product in products_implies:
-                if product.id in products_ids and product not in bom_by_product:
-                    bom_by_product[product] = bom
+            products = bom.product_id or self.env['product.product'].browse(set(bom.product_tmpl_id.product_variant_ids.ids).intersection(products_ids))
+            if company_ids:
+                companies = bom.company_id and bom.company_id.ids or company_ids
+            for (product, company) in itertools.product(products, companies):
+                if (product, company) in bom_by_product:
+                    continue
+                bom_by_product[(product, company)] = bom
 
         return bom_by_product
 
@@ -361,14 +370,12 @@ class MrpBom(models.Model):
             and converted into its UoM
         """
         product_ids = set()
-        product_boms = {}
+        product_boms = defaultdict(lambda: self.env['mrp.bom'])
         def update_product_boms():
             products = self.env['product.product'].browse(product_ids)
-            product_boms.update(self._bom_find(products, picking_type=picking_type or self.picking_type_id,
-                company_id=self.company_id.id, bom_type='phantom'))
-            # Set missing keys to default value
-            for product in products:
-                product_boms.setdefault(product, self.env['mrp.bom'])
+            boms = self._bom_find(products, picking_type=picking_type or self.picking_type_id,
+                company_ids=self.company_id.ids, bom_type='phantom')
+            product_boms.update(boms)
 
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
@@ -388,15 +395,15 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            if not current_line.product_id in product_boms:
+            if (current_line.product_id, current_line.company_id.id) not in product_boms:
                 update_product_boms()
                 product_ids.clear()
-            bom = product_boms.get(current_line.product_id)
+            bom = product_boms.get((current_line.product_id, current_line.company_id.id), False)
             if bom:
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines += [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids]
                 for bom_line in bom.bom_line_ids:
-                    if not bom_line.product_id in product_boms:
+                    if (bom_line.product_id, bom_line.company_id.id) not in product_boms:
                         product_ids.add(bom_line.product_id.id)
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
@@ -567,13 +574,12 @@ class MrpBomLine(models.Model):
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
-        products = self.product_id
-        bom_by_product = self.env['mrp.bom']._bom_find(products)
+        bom_by_product = self.env['mrp.bom']._bom_find(self.product_id)
         for line in self:
             if not line.product_id:
                 line.child_bom_id = False
             else:
-                line.child_bom_id = bom_by_product.get(line.product_id, False)
+                line.child_bom_id = bom_by_product.get((line.product_id, False))
 
     @api.depends('product_id')
     def _compute_attachments_count(self):

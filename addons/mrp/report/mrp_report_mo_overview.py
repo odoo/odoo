@@ -835,7 +835,7 @@ class ReportMoOverview(models.AbstractModel):
             wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=production.warehouse_id.route_ids)
             wh_manufacture_rules -= rules
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
-            related_bom = self.env['mrp.bom']._bom_find(product)[product]
+            related_bom = self.env['mrp.bom']._bom_find(product)[(product, False)]
             if not related_bom:
                 return False
             return {

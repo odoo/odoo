@@ -40,9 +40,8 @@ class StockMove(models.Model):
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)
-        boms = self.env['mrp.bom']._bom_find(related_aml.product_id, company_id=related_aml.company_id.id, bom_type='phantom')
-        if related_aml.product_id in boms:
-            kit_bom = boms[related_aml.product_id]
+        kit_bom = self.env['mrp.bom']._bom_find(related_aml.product_id, company_ids=related_aml.company_id.ids, bom_type='phantom')[(related_aml.product_id, related_aml.company_id.id)]
+        if kit_bom:
             order_qty = related_aml.product_id.uom_id._compute_quantity(related_aml.quantity, kit_bom.product_uom_id)
             filters = {
                 'incoming_moves': lambda m: m.location_id.usage == 'supplier' and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
