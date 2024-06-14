@@ -155,6 +155,28 @@ test("ImageField with alt attribute", async () => {
     });
 });
 
+test("ImageField on a many2one", async () => {
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+    Partner._records[1].parent_id = 1;
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: /* xml */ `
+            <form>
+                <field name="parent_id" widget="image" options="{'preview_image': 'document'}"/>
+            </form>`,
+    });
+
+    expect(".o_field_widget[name=parent_id] img").toHaveCount(1);
+    expect('div[name="parent_id"] img').toHaveAttribute(
+        "data-src",
+        `${getOrigin()}/web/image/partner/1/document`
+    );
+    expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("data-alt", "first record");
+});
+
 test("ImageField is correctly replaced when given an incorrect value", async () => {
     Partner._records[0].document = "incorrect_base64_value";
 
