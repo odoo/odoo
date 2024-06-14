@@ -195,6 +195,7 @@ class PosConfig(models.Model):
     is_closing_entry_by_product = fields.Boolean(
         string='Closing Entry by product',
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
+    order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
 
     @api.model
     def _load_pos_data_domain(self, data):

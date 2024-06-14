@@ -53,6 +53,8 @@
                     <field name="date_order"/>
                     <field name="session_id"  readonly="state != 'draft'"/>
                     <field string="User" name="user_id" readonly="state in ['done', 'invoiced']"/>
+                    <field name="order_edit_tracking" invisible="1"/>
+                    <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
                     <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="state == 'invoiced'"/>
                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
                 </group>
@@ -104,6 +106,7 @@
                                 <field name="name" column_invisible="True"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
                                 <field name="product_id" widget="product_label_section_and_note_field" />
+                                <field name="is_edited" readonly="1" column_invisible="not parent.order_edit_tracking"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
@@ -204,6 +207,7 @@
                     </page>
                 </notebook>
             </sheet>
+            <chatter groups="point_of_sale.group_pos_manager"/>
             </form>
         </field>
     </record>

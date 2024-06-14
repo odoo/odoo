@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from markupsafe import Markup
 
 
 class PosOrder(models.Model):
@@ -14,4 +15,8 @@ class PosOrder(models.Model):
             if order.employee_id:
                 order.cashier = order.employee_id.name
             else:
-                order.cashier = order.employee_id.name
+                order.cashier = order.user_id.name
+
+    def _post_chatter_message(self, body):
+        body += Markup("<br/>%s") % _('Cashier: %s', self.cashier)
+        self.message_post(body=body)
