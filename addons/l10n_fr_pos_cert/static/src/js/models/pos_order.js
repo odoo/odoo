@@ -17,9 +17,4 @@ patch(PosOrder.prototype, {
         }
         return result;
     },
-    wait_for_push_order() {
-        var result = super.wait_for_push_order(...arguments);
-        result = Boolean(result || this.is_french_country());
-        return result;
-    },
 });
