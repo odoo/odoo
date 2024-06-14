@@ -73,6 +73,7 @@
             'project/static/src/scss/project_form.scss',
             'project/static/src/scss/project_widgets.scss',
             'project/static/src/xml/**/*',
+            'project/static/src/core/common/**/*',
         ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',

@@ -124,6 +124,15 @@
 </div>
         </template>
 
+        <template id="mail_notification_followers">
+            <ul style="margin-left: 12px; padding-bottom: 5px; margin-bottom: 20px;">
+                <li style="font-size: 13px;">Project: <t t-out="record.project_id.name"/> &#8594; Task Created</li>
+            </ul>
+            <hr width="100%"
+                style="background-color: rgb(204,204,204); border: medium
+                none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 10px 0px;"/>
+        </template>
+
         <!-- You have been invited to follow the task -->
         <template id="task_invitation_follower">
 <div>

@@ -1435,6 +1435,12 @@ class Task(models.Model):
         )
         if self.stage_id:
             render_context['subtitles'].append(_('Stage: %s', self.stage_id.name))
+        if render_context['subtype'].id == self.env.ref('project.mt_task_new').id:
+            render_context['message'].body = self.env['ir.qweb']._render('project.mail_notification_followers', {
+                'message': render_context['message'],
+                'record': self,
+                'company': self.company_id,
+                }, minimal_qcontext=True)
         return render_context
 
     def _send_email_notify_to_cc(self, partners_to_notify):

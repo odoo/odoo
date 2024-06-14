@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="project.Message" t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[contains(@class, 'o-mail-Message-body')]" position="attributes">
+            <t t-if="message.model == 'project.task'">
+                <attribute name="class" add="invisible" separator=" "/>
+            </t>
+        </xpath>
+    </t>
+</template>
