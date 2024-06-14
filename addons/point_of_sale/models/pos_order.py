@@ -1301,10 +1301,10 @@ class PosOrderLine(models.Model):
                 if pl[2].get('server_id'):
                     pl[2]['id'] = pl[2]['server_id']
                     del pl[2]['server_id']
-        if values.get('qty') and values.get('qty') < self.qty:
+        if self.order_id.config_id.order_edit_tracking and values.get('qty') and values.get('qty') < self.qty:
             self.is_edited = True
-            body = self.full_product_name + _(": Ordered quantity: %s &rarr; ", str(self.qty)) + values.get('qty')
-            body = Markup(body)
+            body = _("%(product_name)s: Ordered quantity: %(old_qty)s", product_name=self.full_product_name, old_qty=self.qty)
+            body += Markup("&rarr;") + str(values.get('qty'))
             self.order_id._post_chatter_message(body)
         return super().write(values)
 
@@ -1534,9 +1534,10 @@ class PosOrderLine(models.Model):
 
     def unlink(self):
         for line in self:
-            line.order_id.has_deleted_line = True
-            body = Markup(_("%s: Deleted line", line.full_product_name))
-            line.order_id._post_chatter_message(body)
+            if line.order_id.config_id.order_edit_tracking:
+                line.order_id.has_deleted_line = True
+                body = _("%s: Deleted line", line.full_product_name)
+                line.order_id._post_chatter_message(body)
         res = super().unlink()
         return res
 
