@@ -1051,6 +1051,10 @@ class Channel(models.Model):
         })
         member_basic_info = {
             "id": member.id,
+            "persona": {
+                "id": member.partner_id.id if member.partner_id else member.guest_id.id,
+                "type": "partner" if member.partner_id else "guest",
+            },
             "lastSeenMessage": {"id": last_message.id} if last_message else False,
         }
         member_self_info = {
