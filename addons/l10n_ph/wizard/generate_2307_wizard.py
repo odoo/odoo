@@ -62,7 +62,7 @@ class Generate2307Wizard(models.TransientModel):
                     values['atc'] = tax.l10n_ph_atc
                     values['price_subtotal'] = invoice_line.price_subtotal
                     values['amount'] = tax.amount
-                    values['tax_amount'] = tax._compute_amount(invoice_line.price_subtotal, invoice_line.price_unit)
+                    values['tax_amount'] = tax.compute_all(invoice_line.price_unit, currency=invoice_line.currency_id, quantity=invoice_line.quantity, product=invoice_line.product_id, partner=move.partner_id)['taxes'][0]['amount']
                     self._write_single_row(worksheet, worksheet_row, values)
                     worksheet_row += 1
 
