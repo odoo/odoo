@@ -566,6 +566,10 @@ class AccountMove(models.Model):
     invoice_cash_rounding_id = fields.Many2one(
         comodel_name='account.cash.rounding',
         string='Cash Rounding Method',
+        compute="_compute_invoice_cash_rounding_id",
+        store=True,
+        readonly=False,
+        precompute=True,
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
     send_and_print_values = fields.Json(copy=False)
@@ -703,6 +707,13 @@ class AccountMove(models.Model):
                 self.env.add_to_compute(move.line_ids._fields['date'], move.line_ids)
                 # might be protected because `_get_accounting_date` requires the `name`
                 self.env.add_to_compute(self._fields['name'], move)
+
+    @api.depends('move_type', 'journal_id')
+    def _compute_invoice_cash_rounding_id(self):
+        for record in self:
+            if record.invoice_cash_rounding_id:
+                continue
+            record.invoice_cash_rounding_id = record.move_type != 'entry' and record.journal_id.account_cash_rounding_id
 
     @api.depends('auto_post')
     def _compute_auto_post_until(self):
