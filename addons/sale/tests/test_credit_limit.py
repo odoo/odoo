@@ -134,8 +134,8 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
         credit_note = sale_order.invoice_ids[1]
         credit_note.action_post()
 
-        # Check that the credit note is accounted for correctly for the amount_to_invoice
-        self.assertEqual(sale_order.amount_to_invoice, sale_order.amount_total)
+        # Check that the credit note is accounted for correctly for the uninvoiced_balance
+        self.assertEqual(sale_order.uninvoiced_balance, sale_order.amount_total)
 
     def test_credit_limit_multicurrency(self):
         self.partner_a.credit_limit = 50
@@ -306,7 +306,7 @@ class TestSaleOrderCreditLimit(TestSaleCommon):
 
         # Invoice 1 of the SOs.
         sale_order = sale_orders[0]
-        self.assertEqual(sale_order.amount_to_invoice, 1000.0)
+        self.assertEqual(sale_order.uninvoiced_balance, 1000.0)
         invoice = sale_order._create_invoices(final=True)
         self.partner_a.invalidate_recordset(['credit', 'credit_to_invoice'])
         self.assertEqual(invoice.amount_total, 1000.0)

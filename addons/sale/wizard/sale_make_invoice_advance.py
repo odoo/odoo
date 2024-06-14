@@ -109,7 +109,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_invoice_amounts(self):
         for wizard in self:
             wizard.amount_invoiced = sum(wizard.sale_order_ids._origin.mapped('amount_invoiced'))
-            wizard.amount_to_invoice = sum(wizard.sale_order_ids._origin.mapped('amount_to_invoice'))
+            wizard.amount_to_invoice = sum(wizard.sale_order_ids._origin.mapped('uninvoiced_balance'))
 
     #=== ONCHANGE METHODS ===#
 

@@ -164,7 +164,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                 else:
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_delivered()
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
-                    o.order_line.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
+                    o.order_line.with_context(accrual_entry_date=self.date)._compute_invoiced_amounts()
                     o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_to_invoice()
                 lines = o.order_line.filtered(
                     lambda l: l.display_type not in ['line_section', 'line_note'] and

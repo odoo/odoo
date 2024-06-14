@@ -238,6 +238,11 @@ class SaleOrderLine(models.Model):
         compute='_compute_qty_invoiced',
         digits='Product Unit of Measure',
         store=True)
+    qty_invoiced_posted = fields.Float(
+        string="Invoiced Quantity (posted)",
+        compute='_compute_qty_invoiced_posted',
+        digits='Product Unit of Measure',
+        store=True)
     qty_to_invoice = fields.Float(
         string="Quantity To Invoice",
         compute='_compute_qty_to_invoice',
@@ -266,12 +271,21 @@ class SaleOrderLine(models.Model):
 
     untaxed_amount_invoiced = fields.Monetary(
         string="Untaxed Invoiced Amount",
-        compute='_compute_untaxed_amount_invoiced',
+        compute='_compute_invoiced_amounts',
+        store=True)
+    amount_invoiced = fields.Monetary(
+        string="Invoiced Amount",
+        compute='_compute_invoiced_amounts',
         store=True)
     untaxed_amount_to_invoice = fields.Monetary(
         string="Untaxed Amount To Invoice",
         compute='_compute_untaxed_amount_to_invoice',
         store=True)
+    amount_to_invoice = fields.Monetary(
+        string="Amount to invoice",
+        compute='_compute_amount_to_invoice',
+        store=True,
+    )
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.type', depends=['product_id'])
@@ -820,6 +834,23 @@ class SaleOrderLine(models.Model):
                         qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
+    def _compute_qty_invoiced_posted(self):
+        """
+        This method is almost identical to '_compute_qty_invoiced()'. The only difference lies in the fact that
+        for accounting purposes, we only want the quantities of the posted invoices.
+        We need a dedicated computation because the triggers are different and could lead to incorrect values for
+        'qty_invoiced' when computed together.
+        """
+        for line in self:
+            qty_invoiced_posted = 0.0
+            for invoice_line in line._get_invoice_lines():
+                if invoice_line.move_id.state == 'posted':
+                    qty_unsigned = invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                    qty_signed = qty_unsigned * -invoice_line.move_id.direction_sign
+                    qty_invoiced_posted += qty_signed
+            line.qty_invoiced_posted = qty_invoiced_posted
+
     def _get_invoice_lines(self):
         self.ensure_one()
         if self._context.get('accrual_entry_date'):
@@ -887,7 +918,7 @@ class SaleOrderLine(models.Model):
         return self.product_id.id != self.company_id.sale_discount_product_id.id
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
-    def _compute_untaxed_amount_invoiced(self):
+    def _compute_invoiced_amounts(self):
         """ Compute the untaxed amount already invoiced from the sale order line, taking the refund attached
             the so line into account. This amount is computed as
                 SUM(inv_line.price_subtotal) - SUM(ref_line.price_subtotal)
@@ -896,15 +927,19 @@ class SaleOrderLine(models.Model):
                 `ref_line` is a customer credit note (refund) line linked to the SO line
         """
         for line in self:
+            untaxed_amount_invoiced = 0.0
             amount_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
                 if invoice_line.move_id.state == 'posted':
                     invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
                     if invoice_line.move_id.move_type == 'out_invoice':
-                        amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+                        untaxed_amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+                        amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_total, line.currency_id, line.company_id, invoice_date)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
-            line.untaxed_amount_invoiced = amount_invoiced
+                        untaxed_amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+                        amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_total, line.currency_id, line.company_id, invoice_date)
+            line.untaxed_amount_invoiced = untaxed_amount_invoiced
+            line.amount_invoiced = amount_invoiced
 
     @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered', 'product_uom_qty', 'price_unit')
     def _compute_untaxed_amount_to_invoice(self):
@@ -953,6 +988,14 @@ class SaleOrderLine(models.Model):
                     amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
 
             line.untaxed_amount_to_invoice = amount_to_invoice
+
+    @api.depends('discount', 'price_unit', 'product_uom_qty', 'qty_delivered', 'qty_invoiced_posted')
+    def _compute_amount_to_invoice(self):
+        for line in self:
+            uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
+            qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
+            price_reduce = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            line.amount_to_invoice = price_reduce * qty_to_invoice
 
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):

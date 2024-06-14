@@ -77,14 +77,14 @@ class ResPartner(models.Model):
         domain = [
             ('company_id', '=', company.id),
             ('partner_id', 'in', self.ids),
-            ('amount_to_invoice', '>', 0),
+            ('uninvoiced_balance', '>', 0),
             ('state', '=', 'sale')
         ]
 
-        group = self.env['sale.order']._read_group(domain, ['partner_id', 'currency_id'], ['amount_to_invoice:sum'])
-        for partner, currency, amount_to_invoice_sum in group:
+        group = self.env['sale.order']._read_group(domain, ['partner_id', 'currency_id'], ['uninvoiced_balance:sum'])
+        for partner, currency, uninvoiced_balance_sum in group:
             credit_company_currency = currency._convert(
-                amount_to_invoice_sum,
+                uninvoiced_balance_sum,
                 company.currency_id,
                 company,
                 fields.Date.context_today(self)
