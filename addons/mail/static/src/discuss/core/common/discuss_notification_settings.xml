@@ -30,7 +30,7 @@
                 <h5>Channel notification settings</h5>
                 <span class="mb-1">This setting will be applied to all channels using the default category.</span>
                 <t t-foreach="store.settings.NOTIFICATIONS" t-as="item" t-key="item.id">
-                    <button class="btn d-flex align-baselin my-1" t-att-class="{'bg-300' : item.id === store.settings.channel_notifications}" t-on-click="()=> this.onChangeCustomNotifications(item.id)">
+                    <button class="btn d-flex my-1" t-att-class="{'bg-300' : item.id === store.settings.channel_notifications}" t-on-click="()=> this.onChangeCustomNotifications(item.id)">
                         <input class="form-check-input" type="radio" t-att-checked="item.id === store.settings.channel_notifications"/>
                         <div class="d-flex flex-column text-start flex-grow-1 mx-3">
                             <span t-esc="item.name"/>
