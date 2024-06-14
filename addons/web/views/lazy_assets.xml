@@ -3,6 +3,20 @@
 
   <template id="assets_backend_legacy_lazy" name="Lazy assets for legacy Views" groups="base.group_user">
     <t t-call-assets="web.assets_backend_legacy_lazy" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        // Add some user-friendly features to the page
+        $('.navbar-brand').html('My App');
+        $('.navbar-nav').find('li').each(function() {
+          $(this).click(function() {
+            $('.container').load($(this).data('href'));
+          });
+        });
+      });
+    </script>
   </template>
 
 </odoo>
