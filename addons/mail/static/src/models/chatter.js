@@ -114,10 +114,16 @@ registerModel({
          *
          * @param {MouseEvent} ev
          */
-        onClickLogNote() {
+        async onClickLogNote() {
             if (this.composerView && this.composerView.composer.isLog) {
                 this.update({ composerView: clear() });
             } else {
+                if (this.isTemporary) {
+                    const saved = await this.doSaveRecord();
+                    if (!saved) {
+                        return;
+                    }
+                }
                 this.showLogNote();
             }
         },
