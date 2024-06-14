@@ -40,6 +40,7 @@ Key Features
         'views/event_tag_views.xml',
         'views/event_question_views.xml',
         'views/event_registration_answer_views.xml',
+        'views/timezone_converter_page.xml',
     ],
     'demo': [
         'data/res_users_demo.xml',
@@ -59,6 +60,8 @@ Key Features
         ],
         'web.assets_frontend': [
             'event/static/src/js/tours/**/*',
+            'event/static/src/js/event_tz_converter.js',
+            'event/static/src/scss/event_timezone_converter.scss',
         ],
         'web.report_assets_common': [
             '/event/static/src/scss/event_badge_report.scss',

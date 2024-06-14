@@ -177,6 +177,7 @@ class ExhibitorController(WebsiteEventController):
             # environment
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_registration_desk'),
+            'website_visitor_timezone': request.env['website.visitor']._get_visitor_from_request().timezone,
         }
 
     # ------------------------------------------------------------

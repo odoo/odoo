@@ -55,7 +55,7 @@
                 <span class="my-0" t-else="meeting_room.event_id.start_today">
                     starts on
                     <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
-                        t-options="{'format': 'medium'}"/> (<t t-out="meeting_room.event_id.date_tz"/>).
+                        t-options="{'format': 'medium'}"/> <t t-if="website_visitor_timezone != sponsor.event_id.date_tz" t-out="'('+sponsor.event_id.date_tz+').'"/>
                 </span>
                 <br/>
                 <span>Join us there to chat about <b t-out="meeting_room.name"/>!</span>

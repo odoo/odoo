@@ -4,6 +4,7 @@
 import logging
 import pytz
 import textwrap
+import re
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
@@ -23,6 +24,8 @@ try:
 except ImportError:
     _logger.warning("`vobject` Python module not found, iCal file generation disabled. Consider installing this module if you want to generate iCal files")
     vobject = None
+
+MAIN_TZ = ('America/New_York', 'Europe/London', 'Asia/Tokyo')
 
 
 class EventType(models.Model):
@@ -214,6 +217,7 @@ class EventEvent(models.Model):
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
     date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    main_tz_time = fields.Json(string='Main Timezone Time', compute='_compute_main_tz_time')  # Find good name here ?
     is_ongoing = fields.Boolean('Is Ongoing', compute='_compute_is_ongoing', search='_search_is_ongoing')
     is_one_day = fields.Boolean(compute='_compute_field_is_one_day')
     is_finished = fields.Boolean(compute='_compute_is_finished', search='_search_is_finished')
@@ -232,6 +236,7 @@ class EventEvent(models.Model):
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
     lang = fields.Selection(_lang_get, string='Language',
         help="All the communication emails sent to attendees will be translated in this language.")
+    event_url = fields.Char(string='Event URL')
     # ticket reports
     badge_format = fields.Selection(
         string='Badge Dimension',
@@ -395,7 +400,7 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_begin:
                 event.date_begin_located = format_datetime(
-                    self.env, event.date_begin, tz=event.date_tz, dt_format='medium')
+                    self.env, event.date_begin, tz=event.date_tz, dt_format='MMM d, yyyy, h:mm a')
             else:
                 event.date_begin_located = False
 
@@ -404,9 +409,21 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_end:
                 event.date_end_located = format_datetime(
-                    self.env, event.date_end, tz=event.date_tz, dt_format='medium')
+                    self.env, event.date_end, tz=event.date_tz, dt_format='MMM d, yyyy, h:mm a')
             else:
                 event.date_end_located = False
+
+    @api.depends('date_tz', 'date_end')
+    def _compute_main_tz_time(self):
+        for event in self:
+            json = {}
+            for tz in MAIN_TZ:
+                json[tz] = [
+                    format_datetime(self.env, event.date_begin, tz=tz, dt_format='h:mm a'),
+                    format_datetime(self.env, event.date_end, tz=tz, dt_format='h:mm a')
+                ]
+            event.main_tz_time = json
+
 
     @api.depends('date_begin', 'date_end')
     def _compute_is_ongoing(self):
@@ -630,6 +647,12 @@ class EventEvent(models.Model):
         for event in self:
             if event.date_end < event.date_begin:
                 raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+
+    @api.constrains('event_url')
+    def _check_conference_url(self):
+        for line in self:
+            if line.event_url and not re.match(tools.TEXT_URL_REGEX, line.event_url):
+                raise ValidationError(_('The Event URL is not valid.'))
 
     @api.model_create_multi
     def create(self, vals_list):

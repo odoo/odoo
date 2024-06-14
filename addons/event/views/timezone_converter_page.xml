@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="timezone_converter" name="Timezone Converter">
+        <t t-set="no_breadcrumbs" t-value="True"/>
+        <t t-call="portal.frontend_layout">
+            <div id="wrap" class="container py-3 mb-5 o_event_tz_converter min-vh-60" t-att-data-event-id="event_id">
+                <div class="d-flex justify-content-center m-4">
+                    <h3>Timezone Converter</h3>
+                </div>
+                <div class="d-flex flex-column flex-lg-row gap-5">
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-center">
+                            <h4>Event Timezone</h4>
+                        </div>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <div style="min-width:2.5rem"/>
+                            <input type="text" class="form-control" t-att-value="event_tz" readonly=""/>
+                        </div>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span class="d-flex justify-content-end" style="min-width:2.5rem">From:</span>
+                            <input type="text" class="form-control" t-att-value="datetime_begin.time()" readonly=""/>
+                            <input type="text" class="form-control" t-att-value="datetime_begin.date()" readonly=""/>
+                        </div>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span class="d-flex justify-content-end" style="min-width:2.5rem">To:</span>
+                            <input type="text" class="form-control" t-att-value="datetime_end.time()" readonly=""/>
+                            <input type="text" class="form-control" t-att-value="datetime_end.date()" readonly=""/>
+                        </div>
+                    </div>
+                    <div class="d-none d-lg-flex align-items-center justify-content-center pt-5">
+                        <div class="vr"/>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-center">
+                            <h4>Your Timezone</h4>
+                        </div>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <div style="min-width:2.5rem"/>
+                            <select class="form-select" id="timezone" name="timezone">
+                                <t t-foreach="tz_list" t-as="tz">
+                                    <option t-att-value="tz[0]" t-out="tz[1]" t-att-selected="(tz[0] == visitor_tz) or None"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span class="d-flex justify-content-end" style="min-width:2.5rem">From:</span>
+                            <input id="converted_time_begin" type="text" class="form-control" t-att-value="converted_datetime_begin.time()" readonly=""/>
+                            <input id="converted_date_begin" type="text" class="form-control" t-att-value="converted_datetime_begin.date()" readonly=""/>
+                        </div>
+                        <div class="d-flex align-items-baseline gap-2">
+                            <span class="d-flex justify-content-end" style="min-width:2.5rem">To:</span>
+                            <input id="converted_time_end" type="text" class="form-control" t-att-value="converted_datetime_end.time()" readonly=""/>
+                            <input id="converted_date_end" type="text" class="form-control" t-att-value="converted_datetime_end.date()" readonly=""/>
+                        </div>
+                    </div>
+
+                        <!--
+                            TODO: Slide -> Add tag select dropdown
+                            -> SelectMenu & DropDownItem
+                            -> Timezone selector in Appointment
+                            -> Select2 but last option
+                        -->
+
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
