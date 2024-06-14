@@ -201,7 +201,10 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
     getPivotIdFromPosition(position) {
         const cell = this.getters.getCorrespondingFormulaCell(position);
         if (cell && cell.isFormula) {
-            const pivotFunction = this.getters.getFirstPivotFunction(position.sheetId, cell.compiledFormula.tokens);
+            const pivotFunction = this.getters.getFirstPivotFunction(
+                position.sheetId,
+                cell.compiledFormula.tokens
+            );
             if (pivotFunction && pivotFunction.args[0]) {
                 return pivotFunction.args[0].toString();
             }
@@ -415,9 +418,16 @@ export class PivotUIPlugin extends spreadsheet.UIPlugin {
                 switch (filter.type) {
                     case "date":
                         if (filter.rangeType === "fixedPeriod" && time) {
-                            transformedValue = pivotPeriodToFilterValue(time, value);
-                            if (JSON.stringify(transformedValue) === JSON.stringify(currentValue)) {
+                            if (value === "false") {
                                 transformedValue = undefined;
+                            } else {
+                                transformedValue = pivotPeriodToFilterValue(time, value);
+                                if (
+                                    JSON.stringify(transformedValue) ===
+                                    JSON.stringify(currentValue)
+                                ) {
+                                    transformedValue = undefined;
+                                }
                             }
                         } else {
                             continue;

@@ -2060,6 +2060,36 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         }
     );
 
+    QUnit.test("getFiltersMatchingPivot works with date=false", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="probability" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+        });
+
+        await addGlobalFilter(
+            model,
+            {
+                id: "43",
+                type: "date",
+                label: "date filter 1",
+                rangeType: "fixedPeriod",
+                defaultValue: "this_month",
+            },
+            {
+                pivot: { 1: { chain: "date", type: "date" } },
+            }
+        );
+        const dateFilters1 = getFiltersMatchingPivot(
+            model,
+            '=ODOO.PIVOT.HEADER(1,"expected_revenue","date:month","false")'
+        );
+        assert.deepEqual(dateFilters1, [{ filterId: "43", value: undefined }]);
+    });
+
     QUnit.test(
         "getFiltersMatchingPivot return an empty array if there is no pivot formula",
         async function (assert) {
