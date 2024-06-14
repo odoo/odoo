@@ -52,7 +52,7 @@
                     <button name="action_moderate_allow" string="Whitelist"
                         title="Add this email address to white list of people and accept all pending messages from the same author."
                         type="object" class="btn btn-secondary"
-                        attrs="{'invisible': [('is_group_moderated', '=', False)]}"/>
+                        attrs="{'invisible': ['|', ('author_moderation', '=', 'allow'), ('is_group_moderated', '=', False)]}"/>
                     <button name="%(mail_group_message_reject_action)d"
                         string="Ban" title="Ban this email address and reject all pending messages from the same author and send an email to the author"
                         type="action" class="btn btn-secondary"
