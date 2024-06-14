@@ -43,6 +43,7 @@ export class FloorScreen extends Component {
         return this.pos.orderToTransfer ? [this.pos.orderToTransfer.tableId] : [];
     }
     async onWillStart() {
+        this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
         if (table) {
             const orders = this.pos.get_order_list();
