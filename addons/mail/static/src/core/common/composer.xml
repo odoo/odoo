@@ -70,7 +70,7 @@
                             'mx-3 border-top p-1': extended,
                         }"
                     >
-                        <div class="d-flex flex-grow-1 align-items-center" t-ref="main-actions">
+                        <div class="d-flex flex-grow-1 align-items-baseline mt-1" t-ref="main-actions">
                             <button class="btn border-0 p-1 rounded-pill" t-att-class="{'bg-300': this.picker.state.picker === this.picker.PICKERS.EMOJI}" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-button"><i class="fa fa-fw fa-smile-o"/></button>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
