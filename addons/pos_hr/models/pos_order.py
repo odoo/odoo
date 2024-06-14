@@ -18,5 +18,5 @@ class PosOrder(models.Model):
                 order.cashier = order.user_id.name
 
     def _post_chatter_message(self, body):
-        body += Markup("<br/>%s") % _('Cashier: %s', self.cashier)
+        body += Markup(_("<br/>Cashier%s")) % self.cashier
         self.message_post(body=body)
