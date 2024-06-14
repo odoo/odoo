@@ -28,6 +28,7 @@
                     <button type="object" name="action_activate" string="Activate"
                         class="oe_highlight"
                         invisible="state == 'activated'" groups="base.group_system"/>
+                    <button type="object" name="action_launch_test_wizard" string="Test" class="btn-secondary"/>
                     <field name="state" widget="statusbar" statusbar_visible="0"/>
                 </header>
                 <sheet>
@@ -53,7 +54,7 @@
                                     <field name="kpi_res_users_connected"/>
                                     <field name="kpi_mail_message_total"/>
                                 </group>
-                                <group name="kpi_sales"/>
+                                <group name="kpi_sales" invisible="True"/>
                                 <group name="custom" string="Custom" groups="base.group_system">
                                     <div colspan="2">
                                         <p>Want to add your own KPIs?<br />

@@ -17,6 +17,15 @@ from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
+ODOO_ICONS_CDN_URL = 'https://download.odoocdn.com/icons'
+
+
+def get_module_icon(module_name):
+    """ Get an absolute address of the icon of the module. The goal is to use it in emails. """
+    if module_name == 'base':
+        return f'{ODOO_ICONS_CDN_URL}/base/static/description/settings.png'
+    return f'{ODOO_ICONS_CDN_URL}/{module_name}/static/description/icon.png'
+
 
 class Digest(models.Model):
     _name = 'digest.digest'
@@ -68,7 +77,16 @@ class Digest(models.Model):
             companies,
         )
 
+    def _ensure_user_has_one_of_the_group(self, *group_names):
+        """ Raise an exception if the current user has not one of the group specified.
+
+        The goal is to use this method in the compute method of each kpi to check rights.
+        """
+        if not any(self.env.user.has_group(group_name) for group_name in group_names):
+            raise AccessError(_("Do not have access, skip this data for user's digest email"))
+
     def _compute_kpi_res_users_connected_value(self):
+        self._ensure_user_has_one_of_the_group('base.group_system')
         self._calculate_company_based_kpi(
             'res.users',
             'kpi_res_users_connected_value',
@@ -76,6 +94,7 @@ class Digest(models.Model):
         )
 
     def _compute_kpi_mail_message_total_value(self):
+        self._ensure_user_has_one_of_the_group('base.group_system')
         start, end, __ = self._get_kpi_compute_parameters()
         self.kpi_mail_message_total_value = self.env['mail.message'].search_count([
             ('create_date', '>=', start),
@@ -157,7 +176,7 @@ class Digest(models.Model):
         for digest in to_slowdown:
             digest.periodicity = digest._get_next_periodicity()[0]
 
-    def _action_send_to_user(self, user, tips_count=1, consume_tips=True):
+    def _action_send_to_user(self, user, tips_count=1, consume_tips=True, force_send=False):
         unsubscribe_token = self._get_unsubscribe_token(user.id)
 
         rendered_body = self.env['mail.render.mixin']._render_template(
@@ -176,6 +195,7 @@ class Digest(models.Model):
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
                 'kpi_data': self._compute_kpis(user.company_id, user),
+                'get_module_icon': get_module_icon,
                 'tips': self._compute_tips(user.company_id, user, tips_count=tips_count, consumed=consume_tips),
                 'preferences': self._compute_preferences(user.company_id, user),
             },
@@ -214,8 +234,22 @@ class Digest(models.Model):
             'state': 'outgoing',
             'subject': '%s: %s' % (user.company_id.name, self.name),
         }
-        self.env['mail.mail'].sudo().create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(mail_values)
+        if force_send:
+            mail.send()
         return True
+
+    def action_launch_test_wizard(self):
+        self.ensure_one()
+        ctx = dict(self.env.context, default_digest_id=self.id)
+        return {
+            'name': _('Test Digest'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'digest.test',
+            'target': 'new',
+            'context': ctx,
+        }
 
     @api.model
     def _cron_send_digest_email(self):
@@ -259,20 +293,21 @@ class Digest(models.Model):
         invalid_fields = []
         kpis = [
             dict(kpi_name=field_name,
+                 kpi_module_name=module_name,
                  kpi_fullname=self.env['ir.model.fields']._get(self._name, field_name).field_description,
                  kpi_action=False,
                  kpi_col1=dict(),
                  kpi_col2=dict(),
                  kpi_col3=dict(),
                  )
-            for field_name in digest_fields
+            for field_name, module_name in digest_fields
         ]
         kpis_actions = self._compute_kpis_actions(company, user)
 
         for col_index, (tf_name, tf) in enumerate(self._compute_timeframes(company)):
             digest = self.with_context(start_datetime=tf[0][0], end_datetime=tf[0][1]).with_user(user).with_company(company)
             previous_digest = self.with_context(start_datetime=tf[1][0], end_datetime=tf[1][1]).with_user(user).with_company(company)
-            for index, field_name in enumerate(digest_fields):
+            for index, (field_name, __) in enumerate(digest_fields):
                 kpi_values = kpis[index]
                 kpi_values['kpi_action'] = kpis_actions.get(field_name)
                 try:
@@ -328,7 +363,22 @@ class Digest(models.Model):
         :return dict: key: kpi name (field name), value: an action that will be
           concatenated with /web#action={action}
         """
-        return {}
+        return {
+            'kpi_res_users_connected': 'base.action_res_users&menu_id=%s' % self.env.ref('base.menu_administration').id,
+            'kpi_mail_message_total': 'mail.action_discuss&menu_id=%s' % self.env.ref('mail.menu_root_discuss').id,
+        }
+
+    def _compute_kpis_app_name(self):
+        """Override this method if you define kpis on a technical module (non-app).
+
+        :return dict: kpi name (field name), value: the technical app module name related to the kpi.
+        When overridden, update the dictionary with the KPIs added. You can use None as value if the kpi is not
+        related to any app.
+        """
+        return {
+            'kpi_mail_message_total': 'mail',
+            'kpi_res_users_connected': 'base',
+        }
 
     def _compute_preferences(self, company, user):
         """ Give an optional text for preferences, like a shortcut for configuration.
@@ -425,10 +475,41 @@ class Digest(models.Model):
             company = digest.company_id or self.env.company
             digest[digest_kpi_field] = values_per_company.get(company.id, 0)
 
+    def _calculate_cross_company_kpi(self, model, digest_kpi_field, date_field='create_date',
+                                     additional_domain=None, sum_field=None):
+        """ Similar to _calculate_company_based_kpi but independent of the company. """
+        start, end, _ = self._get_kpi_compute_parameters()
+
+        base_domain = [
+            (date_field, '>=', start),
+            (date_field, '<', end),
+        ]
+
+        if additional_domain:
+            base_domain = expression.AND([base_domain, additional_domain])
+
+        value = self.env[model]._read_group(
+            domain=base_domain,
+            aggregates=[f'{sum_field}:sum'] if sum_field else ['__count'],
+        )[0][0] or 0
+
+        for digest in self:
+            digest[digest_kpi_field] = value
+
     def _get_kpi_fields(self):
-        return [field_name for field_name, field in self._fields.items()
-                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]
-               ]
+        field_names = [
+            field_name for field_name, field in self._fields.items()
+            if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]
+        ]
+        field_names_set = set(field_names)
+        digest_field_module = {
+            field_name: base_classes._module
+            for base_classes in self._BaseModel__base_classes
+            for field_name in dir(base_classes) if field_name in field_names_set
+        }
+        digest_field_module.update(self._compute_kpis_app_name())
+        kpi_fields = [(field_name, digest_field_module.get(field_name)) for field_name in field_names]
+        return sorted(kpi_fields, key=lambda field: (field[1], field[0]))
 
     def _get_margin_value(self, value, previous_value=0.0):
         margin = 0.0

@@ -4,6 +4,7 @@
 from . import account_chart_template
 from . import account_move
 from . import analytic_account
+from . import digest
 from . import product
 from . import stock_move
 from . import stock_location
