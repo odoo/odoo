@@ -7,6 +7,6 @@ PortalHomeCounters.include({
      * @override
      */
     _getCountersAlwaysDisplayed() {
-        return this._super(...arguments).concat(['quotation_count', 'order_count']);
+        return this._super(...arguments).concat(['order_count']);
     },
 });
