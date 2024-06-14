@@ -183,14 +183,17 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: "div[role='article']",
     run: "click",
 }, {
+    isActive: ["auto"],
     trigger: 'a[name="sub_tasks_page"]',
     content: _t('Open sub-tasks notebook section'),
     run: 'click',
 }, {
+    isActive: ["auto"],
     trigger: '.o_field_subtasks_one2many .o_list_renderer a[role="button"]',
     content: _t('Add a sub-task'),
     run: 'click',
 }, {
+    isActive: ["auto"],
     trigger: '.o_field_subtasks_one2many div[name="name"] input',
     content: markup(_t('Give the sub-task a <b>name</b>')),
     run: "edit New Sub-task",
@@ -200,6 +203,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_form_project_tasks .o_form_dirty",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_form_button_save",
     content: markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
     position: "bottom",
@@ -215,6 +219,7 @@ registry.category("web_tour.tours").add('project_tour', {
     position: "right",
     run: 'click',
 }, {
+    isActive: ["auto"],
     trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button",
     content: _t("You can open sub-tasks from the kanban card!"),
     run: "click",
@@ -224,6 +229,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o_widget_subtask_kanban_list .subtask_list",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create",
     content: _t("Create a new sub-task"),
     run: "click",
@@ -233,10 +239,12 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".subtask_create_input",
 },
 {
+    isActive: ["auto"],
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
     content: markup(_t("Give the sub-task a <b>name</b>")),
     run: "edit Newer Sub-task && click body",
 }, {
+    isActive: ["auto"],
     trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:first-child .o_field_project_task_state_selection button",
     content: _t("You can change the sub-task state here!"),
     run: "click",
@@ -246,10 +254,12 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".dropdown-menu",
 },
 {
+    isActive: ["auto"],
     trigger: ".dropdown-menu span.text-danger",
     content: markup(_t("Mark the task as <b>Cancelled</b>")),
     run: "click",
 }, {
+    isActive: ["auto"],
     trigger: ".o_kanban_record .oe_kanban_content .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
     content: _t("Close the sub-tasks list"),
     run: "click",
