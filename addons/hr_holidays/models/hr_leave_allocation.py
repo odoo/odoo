@@ -142,7 +142,7 @@ class HolidaysAllocation(models.Model):
          "(holiday_type='department' AND department_id IS NOT NULL) or "
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
-        ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
+        ('duration_check', "CHECK( ( number_of_days >= 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
 
     @api.constrains('date_from', 'date_to')
