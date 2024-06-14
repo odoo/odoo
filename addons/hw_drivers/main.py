@@ -31,6 +31,7 @@ except ImportError:
 drivers = []
 interfaces = {}
 iot_devices = {}
+ssh_service = True
 
 
 class Manager(Thread):
@@ -76,8 +77,18 @@ class Manager(Thread):
                         'Accept': 'text/plain',
                     },
                 )
+                result = json.loads(resp.data).get('result', {})
+                global ssh_service
+                if isinstance(result, str): #if 17.0 <= version < 17.2
+                    iot_channel = result
+                    ssh_service = True
+                else:
+                    iot_channel = result.get('iot_channel', '')
+                    ssh_service = result.get('ssh_service', True)
+
+                helpers.start_ssh() if ssh_service else helpers.stop_ssh()
                 if iot_client:
-                    iot_client.iot_channel = json.loads(resp.data).get('result', '')
+                    iot_client.iot_channel = iot_channel
             except Exception as e:
                 _logger.error('Could not reach configured server')
                 _logger.error('A error encountered : %s ' % e)
