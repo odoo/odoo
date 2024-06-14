@@ -1,5 +1,6 @@
+import { Store } from "@mail/core/common/store_service";
 import { Record } from "@mail/core/common/record";
-import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
+
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
@@ -56,11 +57,15 @@ export class ChannelMember extends Record {
     localNewMessageSeparator = null;
     new_message_separator = null;
     threadAsTyping = Record.one("Thread", {
+        compute() {
+            return this.isTyping ? this.thread : undefined;
+        },
+        eager: true,
         onAdd() {
             browser.clearTimeout(this.typingTimeoutId);
             this.typingTimeoutId = browser.setTimeout(
-                () => (this.threadAsTyping = undefined),
-                OTHER_LONG_TYPING
+                () => (this.isTyping = false),
+                Store.OTHER_LONG_TYPING
             );
         },
         onDelete() {

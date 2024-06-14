@@ -16,7 +16,6 @@ import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { Store } from "@mail/core/common/store_service";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
-import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -105,7 +104,7 @@ test('assume other member typing status becomes "no longer is typing" after long
         })
     );
     await contains(".o-discuss-Typing", { text: "Demo is typing..." });
-    await advanceTime(OTHER_LONG_TYPING);
+    await advanceTime(Store.OTHER_LONG_TYPING);
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
 });
 
@@ -143,7 +142,7 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
     );
     await advanceTime(LONG_TYPING);
     await contains(".o-discuss-Typing", { text: "Demo is typing..." });
-    await advanceTime(OTHER_LONG_TYPING - LONG_TYPING);
+    await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
     await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
 });
 

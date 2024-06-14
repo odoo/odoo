@@ -30,8 +30,7 @@ patch(MockServer.prototype, {
             Object.assign(data, {
                 isTyping: is_typing,
             });
-            notifications.push([channel, "discuss.channel.member/typing_status", data]);
-            notifications.push([channel.uuid, "discuss.channel.member/typing_status", data]);
+            notifications.push([channel, "mail.record/insert", { ChannelMember: [data] }]);
         }
         this.pyEnv["bus.bus"]._sendmany(notifications);
     },
