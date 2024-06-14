@@ -174,7 +174,7 @@ class AccountEdiProxyClientUser(models.Model):
         )
         if edi_mode == 'demo':
             # simulate registration
-            response = {'id_client': f'demo{company.id}', 'refresh_token': 'demo'}
+            response = {'id_client': f'demo{company.id}{proxy_type}', 'refresh_token': 'demo'}
         else:
             try:
                 # b64encode returns a bytestring, we need it as a string
