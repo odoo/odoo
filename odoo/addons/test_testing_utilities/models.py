@@ -354,3 +354,5 @@ class ResConfigTest(models.Model):
     param2 = fields.Many2one(
         'res.config',
         config_parameter="resConfigTest.parameter2")
+    default_name = fields.Char(company_dependent=True, default_model='res.partner', default="NAME")
+    default_country_id = fields.Many2one('res.country', default_model='res.partner')
