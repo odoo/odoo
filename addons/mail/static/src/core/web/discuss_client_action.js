@@ -56,7 +56,8 @@ export class DiscussClientAction extends Component {
             this.store.Thread.localIdToActiveId(this.store.discuss.thread?.localId) ??
             "mail.box_inbox";
         const [model, id] = this.parseActiveId(rawActiveId);
-        const activeThread = await this.store.Thread.getOrFetch({ model, id });
+        const isLivechatSession = props.action.context?.isLivechatSession;
+        const activeThread = await this.store.Thread.getOrFetch({ model, id, isLivechatSession });
         if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
             activeThread.setAsDiscussThread(false);
         }
