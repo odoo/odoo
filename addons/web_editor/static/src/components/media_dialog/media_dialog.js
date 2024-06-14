@@ -9,6 +9,7 @@ import { ImageSelector } from './image_selector';
 import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
+import { WordartSelector } from './wordart_selector';
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 
@@ -32,6 +33,11 @@ export const TABS = {
         id: 'VIDEOS',
         title: "Videos",
         Component: VideoSelector,
+    },
+    WORDART: {
+        id: 'WORDART',
+        title: "Wordart",
+        Component: WordartSelector,
     },
 };
 
@@ -121,6 +127,7 @@ export class MediaDialog extends Component {
         const noDocuments = onlyImages || this.props.noDocuments;
         const noIcons = onlyImages || this.props.noIcons;
         const noVideos = onlyImages || this.props.noVideos;
+        const noWordart = onlyImages;
 
         if (!this.props.noImages) {
             this.addTab(TABS.IMAGES, {
@@ -153,6 +160,11 @@ export class MediaDialog extends Component {
             this.addTab(TABS.VIDEOS, {
                 vimeoPreviewIds: this.props.vimeoPreviewIds,
                 isForBgVideo: this.props.isForBgVideo,
+            });
+        }
+        if (!noWordart) {
+            this.addTab(TABS.WORDART, {
+                // TODO Obtain fonts ?
             });
         }
     }
