@@ -44,6 +44,7 @@ export class GreetingMessage extends Component {
             activeBarcode = false;
         }
 
+        this.show_total_overtime = action.show_total_overtime;
         this.attendance = action.attendance;
         // We receive the check in/out times in UTC
         // This widget only deals with display, which should be in browser's TimeZone
