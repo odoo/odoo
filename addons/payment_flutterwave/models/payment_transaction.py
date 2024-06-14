@@ -12,7 +12,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_flutterwave import const
 from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -125,6 +124,14 @@ class PaymentTransaction(models.Model):
                 "Flutterwave: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        verification_response_content = self.provider_id._flutterwave_make_request(
+            'transactions/verify_by_reference', payload={'tx_ref': self.reference}, method='GET'
+        )
+        amount = verification_response_content['data'].get('amount')
+        currency_code = verification_response_content['data'].get('currency')
+        self._validate_amount_and_currency_code(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Flutterwave data.

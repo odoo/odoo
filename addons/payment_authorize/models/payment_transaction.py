@@ -7,9 +7,8 @@ from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 from odoo.addons.payment_authorize.const import PAYMENT_METHODS_MAPPING, TRANSACTION_STATUS_MAPPING
-
+from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
 _logger = logging.getLogger(__name__)
 
@@ -196,6 +195,10 @@ class PaymentTransaction(models.Model):
                 "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        # TODO(loti): check this.
+        return
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Authorize data.

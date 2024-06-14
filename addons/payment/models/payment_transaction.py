@@ -4,9 +4,11 @@ import logging
 import pprint
 import re
 import unicodedata
+
 from datetime import datetime
 
 import psycopg2
+
 from dateutil import relativedelta
 from markupsafe import Markup
 
@@ -628,6 +630,7 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         tx = self._get_tx_from_notification_data(provider_code, notification_data)
+        tx._compare_notification_data(notification_data)
         tx._process_notification_data(notification_data)
         return tx
 
@@ -644,6 +647,13 @@ class PaymentTransaction(models.Model):
         """
         return self
 
+    def _compare_notification_data(self, notification_data):
+        # TODO(loti): add doc comment.
+        raise NotImplementedError(_(
+            "No override of _compare_notification_data found for provider %s",
+            self.provider_id.name,
+        ))
+
     def _process_notification_data(self, notification_data):
         """ Update the transaction state and the provider reference based on the notification data.
 
@@ -659,6 +669,16 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
+
+    def _validate_amount_and_currency_code(self, amount, currency_code):
+        # TODO(loti): add doc comment.
+        self.ensure_one()
+        if not amount or not currency_code:
+            raise ValueError(_("%s: missing amount or currency", self.provider_id.name))
+        if self.currency_id.compare_amounts(float(amount), self.amount) != 0:
+            raise ValueError(_("%s: mismatching amounts", self.provider_id.name))
+        if currency_code != self.currency_id.name:
+            raise ValueError(_("%s: mismatching currency codes", self.provider_id.name))
 
     def _set_pending(self, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `pending`.

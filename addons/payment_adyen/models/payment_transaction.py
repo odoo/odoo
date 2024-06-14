@@ -8,8 +8,8 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_adyen import utils as adyen_utils
 from odoo.addons.payment_adyen import const
+from odoo.addons.payment_adyen import utils as adyen_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -357,6 +357,13 @@ class PaymentTransaction(models.Model):
         return source_tx._create_child_transaction(
             converted_amount, is_refund=is_refund, provider_reference=provider_reference
         )
+
+    def _compare_notification_data(self, notification_data):
+        amount = payment_utils.to_major_currency_units(
+            notification_data.get('amount', {}).get('value'), self.currency_id
+        )
+        currency_code = notification_data.get('amount', {}).get('currency')
+        self._validate_amount_and_currency_code(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Adyen data.

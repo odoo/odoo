@@ -54,6 +54,8 @@ SUPPORTED_CURRENCIES = {
     'BRL': '986',
 }
 
+SUPPORTED_CURRENCIES_INV = {v: k for k, v in SUPPORTED_CURRENCIES.items()}
+
 # Mapping of transaction states to Sips response codes.
 # See https://documentation.sips.worldline.com/en/WLSIPS.001-GD-Data-dictionary.html#Sips.001_DD_en-Value-currencyCode
 RESPONSE_CODES_MAPPING = {

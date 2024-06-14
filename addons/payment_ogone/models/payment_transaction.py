@@ -14,7 +14,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_ogone import const
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -181,6 +180,11 @@ class PaymentTransaction(models.Model):
                 "Ogone: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        amount = notification_data.get('amount')
+        currency_code = notification_data.get('currency')
+        self._validate_amount_and_currency_code(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Ogone data.

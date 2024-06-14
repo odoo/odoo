@@ -12,7 +12,6 @@ from odoo.addons.payment_aps import utils as aps_utils
 from odoo.addons.payment_aps.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_aps.controllers.main import APSController
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -104,6 +103,13 @@ class PaymentTransaction(models.Model):
             )
 
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        amount = payment_utils.to_major_currency_units(
+            notification_data.get('amount'), self.currency_id
+        )
+        currency_code = notification_data.get('currency')
+        self._validate_amount_and_currency_code(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of `payment' to process the transaction based on APS data.

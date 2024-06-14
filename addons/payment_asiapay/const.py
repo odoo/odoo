@@ -41,6 +41,8 @@ CURRENCY_MAPPING = {
     'VND': '704',
 }
 
+CURRENCY_MAPPING_INV = {v: k for k, v in CURRENCY_MAPPING.items()}
+
 # Mapping of both country codes (e.g., 'es') and IETF language tags (e.g.: 'fr-BE') to AsiaPay
 # language codes. If a language tag is not listed, the country code prefix can serve as fallback.
 LANGUAGE_CODES_MAPPING = {
