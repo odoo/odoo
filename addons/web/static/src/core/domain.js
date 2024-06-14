@@ -188,6 +188,9 @@ function matchCondition(record, condition) {
     }
     const [field, operator, value] = condition;
     const fieldValue = typeof field === "number" ? field : record[field];
+    if (fieldValue === undefined) {
+        return false;
+    }
     switch (operator) {
         case "=?":
             if ([false, null].includes(value)) {
