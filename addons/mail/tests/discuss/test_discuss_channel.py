@@ -217,6 +217,10 @@ class TestChannelInternals(MailCommon):
                     "payload": {
                         "ChannelMember": {
                             "id": member.id,
+                            "persona": {
+                                "id": self.user_admin.partner_id.id,
+                                "type": "partner",
+                            },
                             "lastSeenMessage": {"id": msg_1.id},
                         },
                     },
@@ -226,6 +230,10 @@ class TestChannelInternals(MailCommon):
                     "payload": {
                         "ChannelMember": {
                             "id": member.id,
+                            "persona": {
+                                "id": self.user_admin.partner_id.id,
+                                "type": "partner",
+                            },
                             "lastSeenMessage": {"id": msg_1.id},
                             "thread": {
                                 "id": chat.id,
