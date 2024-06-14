@@ -117,6 +117,7 @@ class MrpRoutingWorkcenter(models.Model):
             for op in self:
                 op.bom_id.bom_line_ids.filtered(lambda line: line.operation_id == op).operation_id = False
                 op.bom_id.byproduct_ids.filtered(lambda byproduct: byproduct.operation_id == op).operation_id = False
+                op.bom_id.operation_ids.filtered(lambda operation: operation.blocked_by_operation_ids == op).blocked_by_operation_ids = False
         return super().write(vals)
 
     def action_archive(self):
