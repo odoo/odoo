@@ -43,16 +43,62 @@ options.registry.TableOfContent = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the TOC id and the heading id from a header element.
+     *
+     * @param {HTMLElement} headingEl - A header element of the TOC.
+     * @returns {Object}
+     */
+    _getTocAndHeadingId(headingEl) {
+        const match = /^table_of_content_heading_(\d+)_(\d+)$/.exec(headingEl.getAttribute("id"));
+        if (match) {
+            return { tocId: parseInt(match[1]), headingId: parseInt(match[2]) };
+        }
+        return { tocId: 0, headingId: 0 };
+    },
+    /**
      * @private
      */
     _generateNav: function (ev) {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        const firstHeadingEl = this.$target[0].querySelector(this.targetedElements);
+        let tocId = firstHeadingEl ? this._getTocAndHeadingId(firstHeadingEl).tocId : 0;
+        const tocEls = this.$target[0].ownerDocument.body.querySelectorAll("[data-snippet='s_table_of_content']");
+        const otherTocEls = [...tocEls].filter(tocEl =>
+            tocEl !== this.$target[0]
+            // TODO In next version do not exclude droppable snippet.
+            && !tocEl.closest("#oe_snippets")
+        );
+        const otherTocIds = otherTocEls.map(tocEl => {
+            const firstHeadingEl = tocEl.querySelector(this.targetedElements);
+            return this._getTocAndHeadingId(firstHeadingEl).tocId;
+        });
+        if (!tocId || otherTocIds.includes(tocId)) {
+            tocId = 1 + Math.max(0, ...otherTocIds);
+        }
         const $nav = this.$target.find('.s_table_of_content_navbar');
         const $headings = this.$target.find(this.targetedElements);
+        const headingIds = [...$headings].map(headingEl => this._getTocAndHeadingId(headingEl).headingId);
+        let maxHeadingIds = Math.max(0, ...headingIds);
         $nav.empty();
+        const uniqueHeadingIds = new Set();
         _.each($headings, el => {
             const $el = $(el);
-            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
+            let headingId = this._getTocAndHeadingId(el).headingId;
+            if (headingId) {
+                // Reset headingId on duplicate.
+                if (uniqueHeadingIds.has(headingId)) {
+                    headingId = 0;
+                } else {
+                    uniqueHeadingIds.add(headingId);
+                }
+            }
+            if (!headingId) {
+                maxHeadingIds += 1;
+                headingId = maxHeadingIds;
+            }
+            // Generate stable ids so that external links to heading anchors do
+            // not get broken next time the navigation links are re-generated.
+            const id = `table_of_content_heading_${tocId}_${headingId}`;
             const visibilityId = $el.closest('[data-visibility-id]').data('visibility-id');
             $('<a>').attr({ 'href': "#" + id, 'data-visibility-id': visibilityId })
                     .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
