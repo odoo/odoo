@@ -422,6 +422,23 @@ class PurchaseOrder(models.Model):
             self.filtered(lambda o: o.state == 'draft').write({'state': 'sent'})
         return super(PurchaseOrder, self.with_context(mail_post_autofollow=self.env.context.get('mail_post_autofollow', True))).message_post(**kwargs)
 
+    def _notify_get_groups(self, msg_vals=None):
+        groups = super()._notify_get_groups(msg_vals=msg_vals)
+        self.ensure_one()
+
+        if self.state not in ('draft', 'cancel'):
+            recipient_group = (
+                'additional_intended_recipient',
+                lambda pdata: pdata['id'] in msg_vals.get('partner_ids', []) and pdata['id'] != self.partner_id.id,
+                {
+                    'has_button_access': True,
+                    'notification_is_customer': True,
+                }
+            )
+
+            groups.insert(0, recipient_group)
+        return groups
+
     def print_quotation(self):
         self.write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)

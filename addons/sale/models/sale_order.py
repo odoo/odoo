@@ -1050,6 +1050,16 @@ class SaleOrder(models.Model):
                 if group_name not in ('customer', 'portal'):
                     group_data['has_button_access'] = True
 
+            recipient_group = (
+                'additional_intended_recipient',
+                lambda pdata: pdata['id'] in msg_vals.get('partner_ids', []) and pdata['id'] != self.partner_id.id,
+                {
+                    'has_button_access': True,
+                    'notification_is_customer': True,
+                }
+            )
+            groups.insert(0, recipient_group)
+
         return groups
 
     def preview_sale_order(self):
