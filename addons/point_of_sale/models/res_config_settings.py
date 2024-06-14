@@ -115,6 +115,7 @@ class ResConfigSettings(models.TransientModel):
     pos_note_ids = fields.Many2many(related='pos_config_id.note_ids', readonly=False)
     pos_module_pos_sms = fields.Boolean(related="pos_config_id.module_pos_sms", readonly=False)
     pos_is_closing_entry_by_product = fields.Boolean(related='pos_config_id.is_closing_entry_by_product', readonly=False)
+    pos_order_edit_tracking = fields.Boolean(related="pos_config_id.order_edit_tracking", readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):
