@@ -380,6 +380,7 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
             this.$('.carousel:first li[data-bs-target]:eq(' + index + ')')
                 .css('background-image', 'url(' + $img.attr('src') + ')');
         });
+<<<<<<< HEAD
 
         // When the snippet is empty, an edition button is the default content
         // TODO find a nicer way to do that to have editor style
@@ -395,6 +396,174 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
                     setTimeout(() => {
                         this.trigger_up('cover_update');
                     });
+||||||| parent of b412b107bb04 (temp)
+        return imgs;
+    },
+    /**
+     * Returns the images, or the images holder if this holder is an anchor,
+     * sorted by index.
+     *
+     * @private
+     * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
+     */
+    _getImgHolderEls: function () {
+        const imgEls = this._getImages();
+        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
+    },
+    /**
+     * Returns the index associated to a given image.
+     *
+     * @private
+     * @param {DOMElement} img
+     * @returns {integer}
+     */
+    _getIndex: function (img) {
+        return img.dataset.index || 0;
+    },
+    /**
+     * Returns the currently selected column option.
+     *
+     * @private
+     * @returns {integer}
+     */
+    _getColumns: function () {
+        return parseInt(this.$target.attr('data-columns')) || 3;
+    },
+    /**
+     * Empties the container, adds the given content and returns the container.
+     *
+     * @private
+     * @param {jQuery} $content
+     * @returns {jQuery} the main container of the snippet
+     */
+    _replaceContent: function ($content) {
+        var $container = this.$('> .container, > .container-fluid, > .o_container_small');
+        $container.empty().append($content);
+        return $container;
+    },
+    /**
+     * Sets up listeners on slideshow to activate selected image.
+     */
+    _slideshowStart() {
+        const $carousel = this.$target.find(".carousel:first");
+        let _previousEditor;
+        let _miniatureClicked;
+        this.$target[0].querySelector(".carousel-indicators").addEventListener("click", () => {
+            _miniatureClicked = true;
+        });
+        let lastSlideTimeStamp;
+        $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
+            lastSlideTimeStamp = ev.timeStamp;
+            const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+            for (const editor of this.options.wysiwyg.snippetsMenu.snippetEditors) {
+                if (editor.isShown() && editor.$target[0] === activeImageEl) {
+                    _previousEditor = editor;
+                    editor.toggleOverlay(false);
+                }
+            }
+        });
+        $carousel.on("slid.bs.carousel.image_gallery", (ev) => {
+            if (!_previousEditor && !_miniatureClicked) {
+                return;
+            }
+            _previousEditor = undefined;
+            _miniatureClicked = false;
+            // slid.bs.carousel is most of the time fired too soon by bootstrap
+            // since it emulates the transitionEnd with a setTimeout. We wait
+            // here an extra 20% of the time before retargeting edition, which
+            // should be enough...
+            const _slideDuration = new Date().getTime() - lastSlideTimeStamp;
+            setTimeout(() => {
+                const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+                this.trigger_up("activate_snippet", {
+                    $snippet: $(activeImageEl),
+                    ifInactiveOptions: true,
+=======
+        return imgs;
+    },
+    /**
+     * Returns the images, or the images holder if this holder is an anchor,
+     * sorted by index.
+     *
+     * @private
+     * @returns {Array.<HTMLImageElement|HTMLAnchorElement>}
+     */
+    _getImgHolderEls: function () {
+        const imgEls = this._getImages();
+        return imgEls.map(imgEl => imgEl.closest("a") || imgEl);
+    },
+    /**
+     * Returns the index associated to a given image.
+     *
+     * @private
+     * @param {DOMElement} img
+     * @returns {integer}
+     */
+    _getIndex: function (img) {
+        return img.dataset.index || 0;
+    },
+    /**
+     * Returns the currently selected column option.
+     *
+     * @private
+     * @returns {integer}
+     */
+    _getColumns: function () {
+        return parseInt(this.$target.attr('data-columns')) || 3;
+    },
+    /**
+     * Empties the container, adds the given content and returns the container.
+     *
+     * @private
+     * @param {jQuery} $content
+     * @returns {jQuery} the main container of the snippet
+     */
+    _replaceContent: function ($content) {
+        var $container = this.$('> .container, > .container-fluid, > .o_container_small');
+        $container.empty().append($content);
+        return $container;
+    },
+    /**
+     * Sets up listeners on slideshow to activate selected image.
+     */
+    _slideshowStart() {
+        const $carousel = this.$target.find(".carousel:first");
+        let _previousEditor;
+        let _miniatureClicked;
+        const carouselIndicatorsEl = this.$target[0].querySelector(".carousel-indicators");
+        if (carouselIndicatorsEl) {
+            carouselIndicatorsEl.addEventListener("click", () => {
+                _miniatureClicked = true;
+            });
+        }
+        let lastSlideTimeStamp;
+        $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
+            lastSlideTimeStamp = ev.timeStamp;
+            const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+            for (const editor of this.options.wysiwyg.snippetsMenu.snippetEditors) {
+                if (editor.isShown() && editor.$target[0] === activeImageEl) {
+                    _previousEditor = editor;
+                    editor.toggleOverlay(false);
+                }
+            }
+        });
+        $carousel.on("slid.bs.carousel.image_gallery", (ev) => {
+            if (!_previousEditor && !_miniatureClicked) {
+                return;
+            }
+            _previousEditor = undefined;
+            _miniatureClicked = false;
+            // slid.bs.carousel is most of the time fired too soon by bootstrap
+            // since it emulates the transitionEnd with a setTimeout. We wait
+            // here an extra 20% of the time before retargeting edition, which
+            // should be enough...
+            const _slideDuration = new Date().getTime() - lastSlideTimeStamp;
+            setTimeout(() => {
+                const activeImageEl = this.$target[0].querySelector(".carousel-item.active img");
+                this.trigger_up("activate_snippet", {
+                    $snippet: $(activeImageEl),
+                    ifInactiveOptions: true,
+>>>>>>> b412b107bb04 (temp)
                 });
             }
         });
