@@ -8,15 +8,16 @@ from pathlib import Path
 from unittest import case
 
 from .. import tools
-from .tag_selector import TagsSelector
-from .suite import OdooSuite
+from . import case
 from .result import OdooTestResult
+from .suite import OdooSuite
+from .tag_selector import TagsSelector
 
 
 _logger = logging.getLogger(__name__)
 
 
-def get_module_test_cases(module):
+def get_module_test_cases(module, all_modules):
     """Return a suite of all test cases contained in the given module"""
     for obj in module.__dict__.values():
         if not isinstance(obj, type):
@@ -42,6 +43,14 @@ def get_module_test_cases(module):
                 continue
             if not method_name.startswith('test'):
                 continue
+            if hasattr(method, 'cross_module'):
+                if not 'post_install' in test_case_class.test_tags:
+                    _logger.warning('Cross module only works on post_install tests')
+                for module in all_modules:
+                    test = test_case_class(method_name)
+                    test.test_module = module
+                    yield test
+                return
             yield test_case_class(method_name)
 
 
@@ -102,9 +111,10 @@ def make_suite(module_names, position='at_install'):
         t
         for module_name in module_names
         for m in get_test_modules(module_name)
-        for t in get_module_test_cases(m)
+        for t in get_module_test_cases(m, all_modules=module_names)
         if position_tag.check(t) and config_tags.check(t)
     )
+
     return OdooSuite(sorted(tests, key=lambda t: t.test_sequence))
 
 
