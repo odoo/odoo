@@ -62,6 +62,7 @@ class HrEmployeeBase(models.AbstractModel):
     hr_presence_state = fields.Selection([
         ('present', 'Present'),
         ('absent', 'Absent'),
+        ('not_working', 'Not Working'),
         ('to_define', 'To Define')], compute='_compute_presence_state', default='to_define')
     last_activity = fields.Date(compute="_compute_last_activity")
     last_activity_time = fields.Char(compute="_compute_last_activity")
@@ -69,6 +70,7 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_present', 'Present'),
         ('presence_absent_active', 'Present but not active'),
         ('presence_absent', 'Absent'),
+        ('presence_not_working', 'Not working'),
         ('presence_to_define', 'To define'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
@@ -164,7 +166,9 @@ class HrEmployeeBase(models.AbstractModel):
                 if 'online' in str(employee.user_id.im_status):
                     state = 'present'
                 elif 'offline' in str(employee.user_id.im_status) and employee.id not in working_now_list:
-                    state = 'absent'
+                    state = 'not_working' if employee.resource_calendar_id else 'absent'
+            elif employee.resource_calendar_id and employee.id not in working_now_list:
+                state = 'not_working'
             employee.hr_presence_state = state
 
     @api.depends('user_id')
@@ -271,6 +275,9 @@ class HrEmployeeBase(models.AbstractModel):
             elif employee.hr_presence_state == 'absent':
                 # employee is not in the working_now_list and he has a user_id
                 icon = 'presence_absent'
+            elif employee.hr_presence_state == 'not_working':
+                # employee is not working as per working schedule
+                icon = 'presence_not_working'
             else:
                 # without attendance, default employee state is 'to_define' without confirmed presence/absence
                 # we need to check why they are not there
