@@ -16,6 +16,12 @@
                 <field name="l10n_es_edi_facturae_ac_physical_gln" attrs="{'invisible': [('type', '!=', 'facturae_ac')]}"/>
                 <field name="l10n_es_edi_facturae_ac_logical_operational_point" attrs="{'invisible': [('type', '!=', 'facturae_ac')]}"/>
             </xpath>
+            <xpath expr="//label[@for='street']" position="attributes">
+              <attribute name="invisible">type in ('contact', 'facturae_ac')</attribute>
+            </xpath>
+            <xpath expr="//div[@name='div_address']/parent::div" position="attributes">
+              <attribute name="invisible">type in ('contact', 'facturae_ac')</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
