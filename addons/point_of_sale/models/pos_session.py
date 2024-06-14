@@ -453,13 +453,13 @@ class PosSession(models.Model):
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
 
-        edited_orders = self.order_ids.filtered(lambda o: o.is_edited)
-        if len(edited_orders) > 0:
-            body = Markup(_('Edited order(s) during the session: ')) + Markup('<br/><ul>')
-            for order in edited_orders:
-                body += Markup('<li>%s</li>') % order._get_html_link()
-            body += Markup('</ul>')
-            self.message_post(body=body)
+        if self.config_id.order_edit_tracking:
+            edited_orders = self.order_ids.filtered(lambda o: o.is_edited)
+            if len(edited_orders) > 0:
+                body = _("Edited order(s) during the session:%s",
+                    Markup("<br/><ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % order._get_html_link() for order in edited_orders)
+                )
+                self.message_post(body=body)
         self.write({'state': 'closed'})
         return True
 
