@@ -1080,10 +1080,7 @@ class Channel(models.Model):
                 "id": member.partner_id.id if member.partner_id else member.guest_id.id,
                 "type": "partner" if member.partner_id else "guest",
             },
-            "thread": {
-                "id": self.id,
-                "model": "discuss.channel",
-            },
+            "thread": {"id": self.id, "model": "discuss.channel"},
             "seen_message_id": {"id": last_message.id} if last_message else False,
         }
         member_self_info = {
