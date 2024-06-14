@@ -64,7 +64,7 @@ paymentForm.include({
         const paypal_sdk_url = "https://www.paypal.com/sdk/js";
         //https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
 
-        const { client_id, currency, intent, amount, payee } = this.inlineFormValues
+        const { client_id, currency, intent } = this.inlineFormValues
         url_to_head(
             paypal_sdk_url + "?client-id=" + client_id +
             "&components=buttons" +
@@ -85,19 +85,14 @@ paymentForm.include({
                 createOrder: this._paypalOnSubmit.bind(this),
                 onApprove: function (data, actions) {
                     let order_id = data.orderID;
-                    console.log("onApprove", data)
                     return rpc("/payment/paypal/complete_order", {
                         "intent": intent,
                         "order_id": order_id
+                    }).then(() => {
+                        //Close out the PayPal buttons that were rendered
+                        paypal_buttons.close();
+                        window.location = '/payment/status';
                     })
-                        .then(() => {
-                            //Close out the PayPal buttons that were rendered
-                            paypal_buttons.close();
-                            window.location = '/payment/status';
-                        })
-                        .catch((error) => {
-                            console.log("error on approve", error);
-                        });
                 },
                 onCancel: this._paypalOnError.bind(this),
                 onError: this._paypalOnError.bind(this),
@@ -132,11 +127,10 @@ paymentForm.include({
                 payee: payee,
                 reference: component.reference
             }).then((order_id) => {
-                console.log("Created order id", order_id)
                 return order_id;
             }).catch(error => {
                 if (error instanceof RPCError) {
-                    this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                    this._paypalOnError(error.data)
                 } else {
                     return Promise.reject(error);
                 }

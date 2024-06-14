@@ -74,7 +74,15 @@ class PaypalController(http.Controller):
                 endpoint='/v2/checkout/orders/' + kwargs['order_id'] + '/' + kwargs['intent'],
                 payload={},
             )
-            print("PAID",response)
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'paypal', response
+            )
+            # try:
+            #     notification_data = self._verify_pdt_notification_origin(response, tx_sudo)
+            # except Forbidden:
+            #     _logger.exception("Could not verify the origin of the PDT; discarding it.")
+            # else:
+            tx_sudo._handle_notification_data('paypal', response)
         except Forbidden:
             _logger.exception("Could not create transaction")
 

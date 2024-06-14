@@ -37,10 +37,26 @@ DEFAULT_PAYMENT_METHOD_CODES = {
     'paypal',
 }
 
-# Mapping of transaction states to PayPal payment statuses
-# See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
+# Mapping of new rest api statusses for capture and authorize
+# https://developer.paypal.com/docs/api/orders/v2/#definition-capture_status
+# https://developer.paypal.com/docs/api/orders/v2/#definition-authorization_status
+# TODO Do i do 2 separate mappings for each method?
 PAYMENT_STATUS_MAPPING = {
-    'pending': ('Pending',),
-    'done': ('Processed', 'Completed', 'Cleared'),  # cleared status is required fo echeck
-    'cancel': ('Voided', 'Expired'),
+    'pending': (
+        'PENDING',
+        'CREATED',
+    ),
+    'done': (
+        'COMPLETED',
+        'PARTIALLY_REFUNDED',
+        'REFUNDED',
+        'CAPTURED',
+        'PARTIALLY_CAPTURED',
+    ),
+    'cancel': (
+        'DECLINED',
+        'DENIED',
+        'VOIDED',
+    ),
+    'error': ('FAILED',),
 }

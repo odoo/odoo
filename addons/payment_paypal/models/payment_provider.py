@@ -6,10 +6,11 @@ import re
 import requests
 
 from odoo import _, fields, models
-
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_paypal import const
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from odoo.exceptions import ValidationError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ class PaymentProvider(models.Model):
         super()._compute_feature_support_fields()
         self.filtered(lambda p: p.code == 'paypal').update({
             'support_manual_capture': 'full_only',
+            # tokenization option here
         })
 
     #=== BUSINESS METHODS ===#
@@ -94,7 +96,7 @@ class PaymentProvider(models.Model):
             return default_codes
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    def _paypal_get_inline_form_values(self, amount=None, currency=None):
+    def _paypal_get_inline_form_values(self, amount=None, currency=None, reference=None):
         """ Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
@@ -105,23 +107,30 @@ class PaymentProvider(models.Model):
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
+        base_url = self.get_base_url()
+        # cancel_url = urls.url_join(base_url, PaypalController._cancel_url)
+        # cancel_url_params = {
+        #     'tx_ref': reference,
+        #     'return_access_tkn': payment_utils.generate_access_token(self.reference),
+        # }
+
         phone_prefix = self.company_id.country_id.phone_code
-        formatted_phone = self.company_id.phone.replace(str(phone_prefix), '')
-        formatted_phone = re.sub('[^0-9]','', formatted_phone)
+        formatted_phone = re.sub('[^0-9]','', self.company_id.phone)
         inline_form_values = {
             'client_id': self.paypal_client_id,
             'amount': amount,
             'currency': currency and currency.name,
             'intent': "authorize" if self.capture_manually else 'capture',
+            # 'cancel_url':f'{cancel_url}?{urls.url_encode(cancel_url_params)}',
             'payee': {
                 'email_address': self.paypal_email_account,
-                "display_data": {
-                    "business_email":  self.company_id.email,
-                    "business_phone": {
-                        "country_code": phone_prefix,
-                        "national_number": formatted_phone,
+                'display_data': {
+                    'business_email':  self.company_id.email,
+                    'business_phone': {
+                        'country_code': phone_prefix,
+                        'national_number': formatted_phone,
                     },
-                    "brand_name": self.company_id.name,
+                    'brand_name': self.company_id.name,
                 }
             },
         }
