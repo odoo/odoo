@@ -3,6 +3,7 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
+from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
@@ -452,6 +453,13 @@ class PosSession(models.Model):
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
 
+        edited_orders = self.order_ids.filtered(lambda o: o.is_edited)
+        if len(edited_orders) > 0:
+            body = Markup(_('Edited order(s) during the session: ')) + Markup('<br/><ul>')
+            for order in edited_orders:
+                body += Markup('<li>%s</li>') % order._get_html_link()
+            body += Markup('</ul>')
+            self.message_post(body=body)
         self.write({'state': 'closed'})
         return True
 
