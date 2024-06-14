@@ -2231,18 +2231,27 @@ class TestBoM(TestMrpCommon):
                     'product_id': byproduct.id, 'product_uom_id': byproduct.uom_id.id, 'product_qty': 1.0,
                 })]
         })
-        operation = self.env['mrp.routing.workcenter'].create({
-            'name': 'Operation',
-            'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
-            'bom_id': bom.id,
-        })
-        bom.bom_line_ids.operation_id = operation
-        bom.byproduct_ids.operation_id = operation
-        self.assertEqual(operation.bom_id, bom)
-        operation.bom_id = self.bom_1
-        self.assertEqual(operation.bom_id, self.bom_1)
+        operation_1, operation_2 = self.env['mrp.routing.workcenter'].create([
+            {
+                'name': 'Operation 1',
+                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'bom_id': bom.id,
+            },
+            {
+                'name': 'Operation 2',
+                'workcenter_id': self.env.ref('mrp.mrp_workcenter_1').id,
+                'bom_id': bom.id,
+            }
+        ])
+        bom.bom_line_ids.operation_id = operation_1
+        bom.byproduct_ids.operation_id = operation_1
+        operation_2.blocked_by_operation_ids = operation_1
+        self.assertEqual(operation_1.bom_id, bom)
+        operation_1.bom_id = self.bom_1
+        self.assertEqual(operation_1.bom_id, self.bom_1)
         self.assertFalse(bom.bom_line_ids.operation_id)
         self.assertFalse(bom.byproduct_ids.operation_id)
+        self.assertFalse(operation_2.blocked_by_operation_ids)
 
 
 @tagged('-at_install', 'post_install')
