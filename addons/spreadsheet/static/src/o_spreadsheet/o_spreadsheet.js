@@ -5490,7 +5490,7 @@
                 if (!anchor)
                     return;
                 const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
-                const elDims = {
+                let elDims = {
                     width: el.getBoundingClientRect().width,
                     height: el.getBoundingClientRect().height,
                 };
@@ -5498,7 +5498,14 @@
                 const popoverPositionHelper = this.props.positioning === "BottomLeft"
                     ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
                     : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
-                const style = popoverPositionHelper.getCss(elDims, this.props.verticalOffset);
+                el.style["max-height"] = popoverPositionHelper.getMaxHeight(elDims.height) + "px";
+                el.style["max-width"] = popoverPositionHelper.getMaxWidth(elDims.width) + "px";
+                // Re-compute the dimensions after setting the max-width and max-height
+                elDims = {
+                    width: el.getBoundingClientRect().width,
+                    height: el.getBoundingClientRect().height,
+                };
+                let style = popoverPositionHelper.getCss(elDims, this.props.verticalOffset);
                 for (const property of Object.keys(style)) {
                     el.style[property] = style[property];
                 }
@@ -5574,8 +5581,6 @@
             const shouldRenderAtRight = this.shouldRenderAtRight(elDims.width);
             verticalOffset = shouldRenderAtBottom ? verticalOffset : -verticalOffset;
             const cssProperties = {
-                "max-height": maxHeight + "px",
-                "max-width": maxWidth + "px",
                 top: this.getTopCoordinate(actualHeight, shouldRenderAtBottom) -
                     this.spreadsheetOffset.y -
                     verticalOffset +
@@ -22280,7 +22285,7 @@
             });
         }
         getContainerRect(container) {
-            const { width: viewWidth, height: viewHeight } = this.env.model.getters.getMainViewportRect();
+            const { width: viewWidth, height: viewHeight } = this.env.model.getters.getSheetViewDimension();
             const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
             const x = ["bottomRight", "topRight"].includes(container) ? viewportX : 0;
             const width = viewWidth - x;
@@ -48098,6 +48103,7 @@
         isDefined: isDefined$1,
         lazy,
         genericRepeat,
+        deepEquals,
     };
     const links = {
         isMarkdownLink,
@@ -48160,9 +48166,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.38';
-    __info__.date = '2024-06-10T09:43:39.799Z';
-    __info__.hash = '2fcf01c';
+    __info__.version = '16.3.39';
+    __info__.date = '2024-06-14T10:07:54.659Z';
+    __info__.hash = '9701da6';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
