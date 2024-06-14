@@ -169,6 +169,7 @@ class HrEmployee(models.Model):
         else:
             modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]
+        action_message['show_total_overtime'] = employee.company_id.hr_attendance_overtime
         action_message['total_overtime'] = employee.total_overtime
         # Overtime have an unique constraint on the day, no need for limit=1
         action_message['overtime_today'] = self.env['hr.attendance.overtime'].sudo().search([
