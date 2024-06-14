@@ -4,11 +4,14 @@ import json
 import logging
 import pprint
 import requests
+import uuid
+from datetime import datetime, timezone
 from urllib.parse import parse_qs
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, AccessDenied
 from odoo.tools import hmac
+from odoo.addons.point_of_sale.models.pos_payment import PosPayment
 
 _logger = logging.getLogger(__name__)
 
@@ -26,6 +29,7 @@ class PosPaymentMethod(models.Model):
     adyen_test_mode = fields.Boolean(help='Run transactions in the test environment.', groups='base.group_erp_manager')
 
     adyen_latest_response = fields.Char(copy=False, groups='base.group_erp_manager') # used to buffer the latest asynchronous notification from Adyen.
+    
 
     @api.model
     def _load_pos_data_fields(self, config_id):
@@ -51,6 +55,66 @@ class PosPaymentMethod(models.Model):
                                              terminal=payment_method.adyen_terminal_identifier,
                                              company=existing_payment_method.company_id.name,
                                              payment_method=existing_payment_method.display_name))
+
+    def _adyen_get_sale_id(self):
+        config = self.pos_order_id.config_id
+        return sprintf("%s (ID: %s)", config.display_name, config.id)
+
+    def _adyen_common_message_header(self, pos_payment_id: PosPayment):
+        # FIXME: take just first 10 characters of the UUID
+        pos_payment_id.adyen_last_secret_key = uuid.uuid4().hex
+        return {
+            'ProtocolVersion': '3.0',
+            'MessageClass': 'Service',
+            'MessageType': 'Request',
+            'MessageCategory': "Payment",
+            'SaleID': self._adyen_get_sale_id(),
+            # TODO: check that this has a value at this point
+            'ServiceID': pos_payment_id.adyen_last_secret_key,
+            'POIID': self.adyen_terminal_identifier,
+        }
+
+    def send_payment_request(self, pos_payment_id: PosPayment):
+        if(pos_payment_id.amount < 0):
+            return UserError(_('Cannot process transactions with negative amount.'))
+        config = pos_payment_id.pos_order_id.config_id
+        order = pos_payment_id.pos_order_id
+        response = self.proxy_adyen_request({
+            'SaleToPOIRequest': {
+                'MessageHeader': {
+                    **self._adyen_common_message_header(pos_payment_id),
+                    'MessageCategory': "Payment",
+                },
+                'PaymentRequest': {
+                    'SaleData': {
+                        'SaleTransactionID': {
+                            'TransactionID': f"{order.uuid}--{order.session_id.id}",
+                            'TimeStamp': datetime.now(tz=timezone.utc).isoformat(timespec='seconds'), # date and time of the request in UTC format.
+                        },
+                        **({'SaleToAcquirerData': 'tenderOption=AskGratuity'} if config.adyen_ask_customer_for_tip else {}),
+                    },
+                    'PaymentTransaction': {
+                        'AmountsReq': {
+                            'Currency': config.currency_id.name,
+                            'RequestedAmount': pos_payment_id.amount,
+                        },
+                    },
+                },
+            },
+        })
+        if response.get('error') and response['error'].get('status_code') == 401:
+            raise UserError(_('Authentication failed. Please check your Adyen credentials.'))
+        if response.get('SaleToPOIRequest', {}).get('EventNotification', {}).get('EventToNotify') == 'Reject':
+            msg = ''
+            if response['SaleToPOIRequest'].get('EventNotification'):
+                params = parse_qs(response['SaleToPOIRequest']['EventNotification']['EventDetails'])
+                msg = params.get('message')
+            raise UserError(_('An unexpected error occurred. Message from Adyen: %s', msg))
+        return {
+            "payment_status": "waitingCard",
+        }
+
+    def send_payment_cancel()
 
     def _get_adyen_endpoints(self):
         return {

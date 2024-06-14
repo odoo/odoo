@@ -68,10 +68,9 @@ export class PosPayment extends Base {
 
     async pay() {
         this.set_payment_status("waiting");
-
-        return this.handle_payment_response(
-            await this.payment_method_id.payment_terminal.send_payment_request(this.uuid)
-        );
+        const paymenentResponse =
+            await this.payment_method_id.payment_terminal.send_payment_request(this.uuid);
+        return this.handle_payment_response(paymenentResponse);
     }
 
     handle_payment_response(isPaymentSuccessful) {
