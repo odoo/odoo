@@ -9,7 +9,7 @@
         </record>
         <record id="event_stage_booked" model="event.stage">
             <field name="name">Booked</field>
-            <field name="description">The place has been reserved</field>
+            <field name="description"></field> <!-- Necessary to set a void value to clear the previous value when module `event` is upgraded to 17.4 -->
             <field name="sequence">2</field>
         </record>
         <record id="event_stage_announced" model="event.stage">
@@ -19,7 +19,7 @@
         </record>
         <record id="event_stage_done" model="event.stage">
             <field name="name">Ended</field>
-            <field name="description">Fully ended</field>
+            <field name="description">Finished events. Odoo will automatically move them to this stage once their end date has passed.</field>
             <field name="sequence">5</field>
             <field name="pipe_end" eval="True"/>
             <field name="fold" eval="True"/>
