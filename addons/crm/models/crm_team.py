@@ -505,6 +505,11 @@ class Team(models.Model):
             # assign + deduplicate and concatenate results in teams_data to keep some history
             candidate_lead = teams_data[team]["leads"][0]
             assign_res = team._allocate_leads_deduplicate(candidate_lead, duplicates_cache=duplicates_lead_cache)
+            # Mark as done if leads belongs to different company
+            if 'different_company' in assign_res:
+                leads_done_ids.update(assign_res['different_company'])
+                if 'assigned' not in assign_res:
+                    continue
             for key in ('assigned', 'merged', 'duplicates'):
                 teams_data[team][key].update(assign_res[key])
                 leads_done_ids.update(assign_res[key])
@@ -551,6 +556,7 @@ class Team(models.Model):
 
         # classify leads
         leads_assigned = self.env['crm.lead']  # direct team assign
+        leads_different_company = self.env['crm.lead']
         leads_done_ids, leads_merged_ids, leads_dup_ids = set(), set(), set()  # classification
         leads_dups_dict = dict()  # lead -> its duplicate
         for lead in leads:
@@ -561,13 +567,39 @@ class Team(models.Model):
                     duplicates_cache[lead] = lead._get_lead_duplicates(email=lead.email_from)
                 lead_duplicates = duplicates_cache[lead].exists()
 
+                # If the sales team has a company and the lead belongs to another, a multi-company
+                # issue may arise; therefore, ensure that the lead has the same company as the sales team.
+                if self.company_id and self.company_id != lead_duplicates.company_id:
+                    leads_with_different_company = lead_duplicates.filtered(lambda lead: lead.company_id != self.company_id)
+                    leads_compatible_with_crm_team = lead_duplicates - leads_with_different_company
+                    if len(leads_compatible_with_crm_team) < 2:
+                        leads_with_different_company = lead_duplicates
+                    else:
+                        lead_duplicates = leads_compatible_with_crm_team
+
+                    body = _('This lead could not be merged and has been skipped because it belongs to a different company.')
+                    leads_with_different_company._message_merging_leads_failed(body)
+                    if len(leads_compatible_with_crm_team) < 2:
+                        return {
+                            'different_company': set(leads_with_different_company.ids),
+                        }
+
                 if len(lead_duplicates) > 1:
                     leads_dups_dict[lead] = lead_duplicates
                     leads_done_ids.update((lead + lead_duplicates).ids)
                 else:
                     leads_assigned += lead
                     leads_done_ids.add(lead.id)
+        values = {
+            'leads_assigned': leads_assigned,
+            'leads_dups_dict': leads_dups_dict,
+            'different_company': leads_different_company,
+        }
+        return self._merge_leads(leads, values)
 
+    def _merge_leads(self, leads, values):
+        leads_assigned, leads_dups_dict, leads_with_different_company = values['leads_assigned'], values['leads_dups_dict'], values['different_company']
+        leads_merged_ids, leads_dup_ids = set(), set()
         # assign team to direct assign (leads_assigned) + dups keys (to ensure their team
         # if they are elected master of merge process)
         dups_to_assign = [lead for lead in leads_dups_dict]
@@ -583,7 +615,8 @@ class Team(models.Model):
             'assigned': set(leads_assigned.ids),
             'merged': leads_merged_ids,
             'duplicates': leads_dup_ids,
-        }
+            'different_company': set(leads_with_different_company.ids),
+            }
 
     # ------------------------------------------------------------
     # ACTIONS
