@@ -184,9 +184,14 @@ export class PivotUIGlobalFilterPlugin extends OdooUIPlugin {
                 switch (filter.type) {
                     case "date":
                         if (filter.rangeType === "fixedPeriod" && time) {
-                            transformedValue = pivotPeriodToFilterValue(time, value);
-                            if (JSON.stringify(transformedValue) === JSON.stringify(currentValue)) {
+                            if (value === "false") {
                                 transformedValue = undefined;
+                            }
+                            else {
+                                transformedValue = pivotPeriodToFilterValue(time, value);
+                                if (JSON.stringify(transformedValue) === JSON.stringify(currentValue)) {
+                                    transformedValue = undefined;
+                                }
                             }
                         } else {
                             continue;
