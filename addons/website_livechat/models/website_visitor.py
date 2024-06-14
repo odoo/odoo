@@ -5,7 +5,6 @@ import json
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError
-from odoo.http import request
 from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
@@ -121,11 +120,15 @@ class WebsiteVisitor(models.Model):
         visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
         if upsert == 'inserted':
             visitor_sudo = self.sudo().browse(visitor_id)
-            discuss_channel_uuid = json.loads(request.httprequest.cookies.get('im_livechat_session', '{}')).get('uuid')
-            if discuss_channel_uuid:
-                discuss_channel = request.env["discuss.channel"].sudo().search([("uuid", "=", discuss_channel_uuid)])
-                discuss_channel.write({
-                    'livechat_visitor_id': visitor_sudo.id,
-                    'anonymous_name': "Visitor #%d (%s)" % (visitor_sudo.id, visitor_sudo.country_id.name) if visitor_sudo.country_id else f"Visitor #{visitor_sudo.id}"
-                })
+            if not (guest := self.env["mail.guest"]._get_guest_from_context()):
+                return visitor_id, upsert
+            # sudo: discuss.channel - updating the channel to provide visitor information is allowed
+            if channel_sudo := self.env["discuss.channel"].search([
+                ("channel_member_ids.guest_id", "=", guest.id), ("channel_type", "=", "livechat")
+            ], order="create_date desc", limit=1).sudo():
+                channel_sudo.livechat_visitor_id = visitor_sudo.id
+                name_parts = ["Visitor", f"#{visitor_sudo.id}"]
+                if visitor_sudo.country_id:
+                    name_parts.append(f"({visitor_sudo.country_id.name})")
+                channel_sudo.anonymous_name = " ".join(name_parts)
         return visitor_id, upsert

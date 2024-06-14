@@ -1,12 +1,12 @@
 /* @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { cookie as cookieManager } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { registry } from "@web/core/registry";
 
 export class HistoryService {
-    static HISTORY_COOKIE = "im_livechat_history";
+    static HISTORY_STORAGE_KEY = "im_livechat_history";
     static HISTORY_LIMIT = 15;
 
     constructor(env, services) {
@@ -22,8 +22,8 @@ export class HistoryService {
             if (payload.id !== this.livechatService.thread?.id) {
                 return;
             }
-            const cookie = cookieManager.get(HistoryService.HISTORY_COOKIE);
-            const history = cookie ? JSON.parse(cookie) : [];
+            const data = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
+            const history = data ? JSON.parse(data) : [];
             rpc("/im_livechat/history", {
                 pid: this.livechatService.thread.operator.id,
                 channel_uuid: this.livechatService.thread.uuid,
@@ -34,19 +34,18 @@ export class HistoryService {
 
     updateHistory() {
         const page = browser.location.href.replace(/^.*\/\/[^/]+/, "");
-        const pageHistory = cookieManager.get(HistoryService.HISTORY_COOKIE);
+        const pageHistory = expirableStorage.getItem(HistoryService.HISTORY_STORAGE_KEY);
         const urlHistory = pageHistory ? JSON.parse(pageHistory) : [];
         if (!urlHistory.includes(page)) {
             urlHistory.push(page);
             if (urlHistory.length > HistoryService.HISTORY_LIMIT) {
                 urlHistory.shift();
             }
-            cookieManager.set(
-                HistoryService.HISTORY_COOKIE,
+            expirableStorage.setItem(
+                HistoryService.HISTORY_STORAGE_KEY,
                 JSON.stringify(urlHistory),
-                60 * 60 * 24,
-                "optional"
-            ); // 1 day cookie
+                60 * 60 * 24 // kept for 1 day
+            );
         }
     }
 }

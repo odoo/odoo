@@ -1,8 +1,9 @@
 /* @odoo-module */
 
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
+
 import { reactive } from "@odoo/owl";
 
-import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -33,12 +34,12 @@ export const ODOO_VERSION_KEY = `${location.origin.replace(
     "_"
 )}_im_livechat.odoo_version`;
 
-const OPERATOR_COOKIE = "im_livechat_previous_operator";
+const OPERATOR_STORAGE_KEY = "im_livechat_previous_operator";
 const GUEST_TOKEN_STORAGE_KEY = "im_livechat_guest_token";
-const SAVED_STATE_COOKIE = "im_livechat.saved_state";
+const SAVED_STATE_STORAGE_KEY = "im_livechat.saved_state";
 
 export function getGuestToken() {
-    return localStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
+    return expirableStorage.getItem(GUEST_TOKEN_STORAGE_KEY);
 }
 
 export class LivechatService {
@@ -154,7 +155,7 @@ export class LivechatService {
                 });
             }
         } finally {
-            cookie.delete(SAVED_STATE_COOKIE);
+            expirableStorage.removeItem(SAVED_STATE_STORAGE_KEY);
             this.state = SESSION_STATE.NONE;
             await Promise.all(this._onStateChangeCallbacks[SESSION_STATE.NONE].map((fn) => fn()));
         }
@@ -181,20 +182,24 @@ export class LivechatService {
     _saveLivechatState(threadData, { persisted = false } = {}) {
         const { guest_token } = threadData;
         if (guest_token) {
-            localStorage.setItem(GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
+            expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, threadData.guest_token);
             delete threadData.guest_token;
         }
-        cookie.set(
-            SAVED_STATE_COOKIE,
+        expirableStorage.setItem(
+            SAVED_STATE_STORAGE_KEY,
             JSON.stringify({
                 threadData: persisted ? { id: threadData.id, model: threadData.model } : threadData,
                 persisted,
                 livechatUserId: this.savedState?.livechatUserId ?? session.user_id,
             }),
-            60 * 60 * 24
+            60 * 60 * 24 // kept for 1 day.
         );
         if (threadData.operator) {
-            cookie.set(OPERATOR_COOKIE, threadData.operator.id, 7 * 24 * 60 * 60);
+            expirableStorage.setItem(
+                OPERATOR_STORAGE_KEY,
+                threadData.operator.id,
+                7 * 24 * 60 * 60 // kept for 7 days.
+            );
         }
     }
 
@@ -212,7 +217,7 @@ export class LivechatService {
                 chatbot_script_id: this.savedState
                     ? this.savedState.threadData.chatbot_script_id
                     : this.rule.chatbot?.scriptId,
-                previous_operator_id: cookie.get(OPERATOR_COOKIE),
+                previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 temporary_id: this.thread?.id,
                 persisted: persist,
             },
@@ -234,7 +239,7 @@ export class LivechatService {
     }
 
     get savedState() {
-        return JSON.parse(cookie.get(SAVED_STATE_COOKIE) ?? "false");
+        return JSON.parse(expirableStorage.getItem(SAVED_STATE_STORAGE_KEY) ?? false);
     }
 
     /**
