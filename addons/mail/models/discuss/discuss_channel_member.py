@@ -6,6 +6,7 @@ import uuid
 
 import odoo
 from odoo import api, fields, models, _
+from odoo.addons.mail.tools.discuss import StoreData
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from ...tools import jwt, discuss
@@ -190,9 +191,10 @@ class ChannelMember(models.Model):
         """
         notifications = []
         for member in self:
-            formatted_member = member._discuss_channel_member_format().get(member)
-            formatted_member['isTyping'] = is_typing
-            notifications.append([member.channel_id, 'discuss.channel.member/typing_status', formatted_member])
+            store = StoreData()
+            store.add({"ChannelMember": member._discuss_channel_member_format().get(member)})
+            store.add({"ChannelMember": {"id": member.id, "isTyping": is_typing}})
+            notifications.append([member.channel_id, "mail.record/insert", store.get_result()])
         self.env['bus.bus']._sendmany(notifications)
 
     @api.model

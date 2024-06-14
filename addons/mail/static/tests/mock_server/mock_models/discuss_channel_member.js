@@ -31,8 +31,7 @@ export class DiscussChannelMember extends models.ServerModel {
             const [channel] = DiscussChannel._filter([["id", "=", member.channel_id]]);
             const [data] = this._discuss_channel_member_format([member.id]);
             Object.assign(data, { isTyping: is_typing });
-            notifications.push([channel, "discuss.channel.member/typing_status", data]);
-            notifications.push([channel.uuid, "discuss.channel.member/typing_status", data]);
+            notifications.push([channel, "mail.record/insert", { ChannelMember: [data] }]);
         }
         BusBus._sendmany(notifications);
     }
