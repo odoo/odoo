@@ -25,7 +25,7 @@ from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape
 from odoo.addons.base.models.ir_qweb import QWebException
-from odoo.addons.http_routing.models.ir_http import _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
@@ -635,7 +635,7 @@ class Website(Home):
     def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
-        ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
+        ext_special_case = ext != '.html' and ext in EXTENSION_TO_WEB_MIMETYPES
 
         if not template and ext_special_case:
             default_templ = 'website.default_%s' % ext.lstrip('.')

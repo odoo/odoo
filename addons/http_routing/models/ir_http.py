@@ -30,17 +30,17 @@ from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
-def _guess_mimetype(ext=False, default='text/html'):
-    exts = {
-        '.css': 'text/css',
-        '.less': 'text/less',
-        '.scss': 'text/scss',
-        '.js': 'text/javascript',
-        '.xml': 'text/xml',
-        '.csv': 'text/csv',
-        '.html': 'text/html',
-    }
-    return ext is not False and exts.get(ext, default) or exts
+
+# see also mimetypes module: https://docs.python.org/3/library/mimetypes.html and odoo.tools.mimetypes
+EXTENSION_TO_WEB_MIMETYPES = {
+    '.css': 'text/css',
+    '.less': 'text/less',
+    '.scss': 'text/scss',
+    '.js': 'text/javascript',
+    '.xml': 'text/xml',
+    '.csv': 'text/csv',
+    '.html': 'text/html',
+}
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
 _UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
@@ -105,7 +105,7 @@ class IrHttp(models.AbstractModel):
                     res.append(cls._slugify_one(u, max_length=max_length))
             # check if supported extension
             path_no_ext, ext = os.path.splitext(value)
-            if ext and ext in _guess_mimetype():
+            if ext in EXTENSION_TO_WEB_MIMETYPES:
                 res[-1] = cls._slugify_one(path_no_ext) + ext
             return '/'.join(res)
 
