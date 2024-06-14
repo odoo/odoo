@@ -35,7 +35,7 @@ test("ErrorDialog with traceback", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Odoo Error");
     expect("main button").toHaveText("See details");
-    expect(queryAllTexts("footer button")).toEqual(["Close", "Copy error to clipboard"]);
+    expect(queryAllTexts("footer button")).toEqual(["Close", "Copy Error Message"]);
     expect(queryAllTexts("main p > p")).toEqual([
         "An error occurred",
         "Please use the copy button to report the error to your support service.",
@@ -64,7 +64,7 @@ test("Client ErrorDialog with traceback", async () => {
     expect(".o_dialog").toHaveCount(1);
     expect("header .modal-title").toHaveText("Odoo Client Error");
     expect("main button").toHaveText("See details");
-    expect(queryAllTexts("footer button")).toEqual(["Close", "Copy error to clipboard"]);
+    expect(queryAllTexts("footer button")).toEqual(["Close", "Copy Error Message"]);
     expect(queryAllTexts("main p > p")).toEqual([
         "An error occurred",
         "Please use the copy button to report the error to your support service.",
@@ -103,11 +103,11 @@ test("button clipboard copy error traceback", async () => {
     await tick();
 });
 
-test("Display a tooltip on clicking Copy error to clipboard button", async () => {
+test("Display a tooltip on clicking Copy Error Message button", async () => {
     expect.assertions(2);
     mockService("popover", () => ({
         add(el, comp, params) {
-            expect(el).toHaveText("Copy error to clipboard");
+            expect(el).toHaveText("Copy Error Message");
             expect(params).toEqual({ tooltip: "Copied" });
             return () => {};
         },
