@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -6,6 +5,8 @@ import random
 
 from markupsafe import Markup
 from odoo import models, _
+from odoo.tools import html_escape
+
 
 class MailBot(models.AbstractModel):
     _name = 'mail.bot'
@@ -32,6 +33,21 @@ class MailBot(models.AbstractModel):
                 subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
                 record.with_context(mail_create_nosubscribe=True).sudo().message_post(body=answer, author_id=odoobot_id, message_type=message_type, subtype_id=subtype_id)
 
+    @staticmethod
+    def _get_style_dict():
+        return {
+            "new_line": Markup("<br>"),
+            "bold_start": Markup("<b>"),
+            "bold_end": Markup("</b>"),
+            "command_start": Markup("<span class='o_odoobot_command'>"),
+            "command_end": Markup("</span>"),
+            "document_link_start": Markup("<a href='https://www.odoo.com/documentation' target='_blank'>"),
+            "document_link_end": Markup("</a>"),
+            "slides_link_start": Markup("<a href='https://www.odoo.com/slides' target='_blank'>"),
+            "slides_link_end": Markup("</a>"),
+            "paperclip_icon": Markup("<i class='fa fa-paperclip' aria-hidden='true'/>"),
+        }
+
     def _get_answer(self, record, body, values, command=False):
         # onboarding
         odoobot_state = self.env.user.odoobot_state
@@ -42,15 +58,23 @@ class MailBot(models.AbstractModel):
             if odoobot_state == 'onboarding_emoji' and self._body_contains_emoji(body):
                 self.env.user.odoobot_state = "onboarding_command"
                 self.env.user.odoobot_failed = False
-                return Markup(_("Great! 👍<br/>To access special commands, <b>start your sentence with</b> <span class=\"o_odoobot_command\">/</span>. Try getting help."))
+                return html_escape(
+                    _("Great! 👍%(new_line)sTo access special commands, %(bold_start)sstart your sentence "
+                      "with%(bold_end)s %(command_start)s/%(command_end)s. Try getting help."
+                      )) % self._get_style_dict()
             elif odoobot_state == 'onboarding_command' and command == 'help':
                 self.env.user.odoobot_state = "onboarding_ping"
                 self.env.user.odoobot_failed = False
-                return Markup(_("Wow you are a natural!<br/>Ping someone with @username to grab their attention. <b>Try to ping me using</b> <span class=\"o_odoobot_command\">@OdooBot</span> in a sentence."))
+                return html_escape(
+                    _("Wow you are a natural!%(new_line)sPing someone with @username to grab their attention. "
+                      "%(bold_start)sTry to ping me using%(bold_end)s %(command_start)s@OdooBot%(command_end)s"
+                      " in a sentence.")) % self._get_style_dict()
             elif odoobot_state == 'onboarding_ping' and self._is_bot_pinged(values):
                 self.env.user.odoobot_state = "onboarding_attachement"
                 self.env.user.odoobot_failed = False
-                return Markup(_("Yep, I am here! 🎉 <br/>Now, try <b>sending an attachment</b>, like a picture of your cute dog..."))
+                return html_escape(
+                    _("Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%(bold_end)s,"
+                      " like a picture of your cute dog...")) % self._get_style_dict()
             elif odoobot_state == "onboarding_attachement" and values.get("attachment_ids"):
                 self.env["mail.canned.response"].create({
                     "source": source,
@@ -59,9 +83,9 @@ class MailBot(models.AbstractModel):
                 })
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "onboarding_canned"
-                return Markup(
-                    _("Wonderful! 😇<br/>Try typing %s to use canned responses. I've created a temporary one for you.",
-                      "<span class=\"o_odoobot_command\">:</span>"))
+                return html_escape(
+                    _("Wonderful! 😇%(new_line)sTry typing %(command_start)s:%(command_end)s to use canned responses."
+                      " I've created a temporary one for you.")) % self._get_style_dict()
             elif odoobot_state == "onboarding_canned" and self.env.context.get("canned_response_ids"):
                 self.env["mail.canned.response"].search([
                     ("create_uid", "=", self.env.user.id),
@@ -70,14 +94,18 @@ class MailBot(models.AbstractModel):
                 ]).unlink()
                 self.env.user.odoobot_failed = False
                 self.env.user.odoobot_state = "idle"
-                return Markup(
-                    _("Good, you can customize canned responses in the Discuss application.<br/><br/><b>It's the end of this overview</b>, you can now <b>close this conversation</b> or start the tour again with typing <span class=\"o_odoobot_command\">start the tour</span>. Enjoy discovering Odoo!"))
+                return html_escape(
+                    _("Good, you can customize canned responses in the Discuss application."
+                      "%(new_line)s%(new_line)s%(bold_start)sIt's the end of this overview%(bold_end)s,"
+                      " you can now %(bold_start)sclose this conversation%(bold_end)s or start the tour again with"
+                      " typing %(command_start)sstart the tour%(command_end)s."
+                      " Enjoy discovering Odoo!")) % self._get_style_dict()
             # repeat question if needed
             elif odoobot_state == 'onboarding_canned' and not self._is_help_requested(body):
                 self.env.user.odoobot_failed = True
-                return _(
-                    "Not sure what you are doing. Please, type %s and wait for the propositions. Select one of them and press enter.",
-                    Markup("<span class=\"o_odoobot_command\">:</span>"))
+                return html_escape(
+                    _("Not sure what you are doing. Please, type %(command_start)s:%(command_end)s and wait for the"
+                      " propositions. Select one of them and press enter.")) % self._get_style_dict()
             elif odoobot_state in (False, "idle", "not_initialized") and (_('start the tour') in body.lower()):
                 self.env.user.odoobot_state = "onboarding_emoji"
                 return _("To start, try to send me an emoji :)")
@@ -88,28 +116,43 @@ class MailBot(models.AbstractModel):
                 return _("That's not nice! I'm a bot but I have feelings... 💔")
             # help message
             elif self._is_help_requested(body) or odoobot_state == 'idle':
-                return Markup(_("Unfortunately, I'm just a bot 😞 I don't understand! If you need help discovering our product, please check "
-                         "<a href=\"https://www.odoo.com/documentation\" target=\"_blank\">our documentation</a> or "
-                         "<a href=\"https://www.odoo.com/slides\" target=\"_blank\">our videos</a>."))
+                return html_escape(
+                    _("Unfortunately, I'm just a bot 😞 I don't understand! If you need help discovering our product, "
+                      "please check %(document_link_start)sour documentation%(document_link_end)s or"
+                      " %(slides_link_start)sour videos%(slides_link_end)s.")) % self._get_style_dict()
             else:
                 # repeat question
                 if odoobot_state == 'onboarding_emoji':
                     self.env.user.odoobot_failed = True
-                    return Markup(_("Not exactly. To continue the tour, send an emoji: <b>type</b> <span class=\"o_odoobot_command\">:)</span> and press enter."))
+                    return (html_escape(
+                        _("Not exactly. To continue the tour, send an emoji:"
+                          " %(bold_start)stype%(bold_end)s%(command_start)s :)%(command_end)s and press enter."))
+                            % self._get_style_dict())
                 elif odoobot_state == 'onboarding_attachement':
                     self.env.user.odoobot_failed = True
-                    return Markup(_("To <b>send an attachment</b>, click on the <i class=\"fa fa-paperclip\" aria-hidden=\"true\"></i> icon and select a file."))
+                    return html_escape(
+                        _("To %(bold_start)ssend an attachment%(bold_end)s, click on the %(paperclip_icon)s icon and"
+                          " select a file.")) % self._get_style_dict()
                 elif odoobot_state == 'onboarding_command':
                     self.env.user.odoobot_failed = True
-                    return Markup(_("Not sure what you are doing. Please, type <span class=\"o_odoobot_command\">/</span> and wait for the propositions. Select <span class=\"o_odoobot_command\">help</span> and press enter"))
+                    return html_escape(
+                        _("Not sure what you are doing. Please, type %(command_start)s/%(command_end)s and wait for the propositions."
+                          " Select %(command_start)shelp%(command_end)s and press enter.")) % self._get_style_dict()
                 elif odoobot_state == 'onboarding_ping':
                     self.env.user.odoobot_failed = True
-                    return Markup(_("Sorry, I am not listening. To get someone's attention, <b>ping him</b>. Write <span class=\"o_odoobot_command\">@OdooBot</span> and select me."))
+                    return html_escape(
+                        _("Sorry, I am not listening. To get someone's attention, %(bold_start)sping him%(bold_end)s."
+                          " Write %(command_start)s@OdooBot%(command_end)s and select me.")) % self._get_style_dict()
                 return random.choice([
-                    Markup(_("I'm not smart enough to answer your question.<br/>To follow my guide, ask: <span class=\"o_odoobot_command\">start the tour</span>.")),
+                    html_escape(
+                        _("I'm not smart enough to answer your question.%(new_line)sTo follow my guide,"
+                          " ask: %(command_start)sstart the tour%(command_end)s.") % self._get_style_dict()),
                     _("Hmmm..."),
                     _("I'm afraid I don't understand. Sorry!"),
-                    Markup(_("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language...<br/>I can show you features if you write: <span class=\"o_odoobot_command\">start the tour</span>."))
+                    html_escape(
+                        _("Sorry I'm sleepy. Or not! Maybe I'm just trying to hide my unawareness of human language..."
+                          "%(new_line)sI can show you features if you write: %(command_start)sstart the"
+                          " tour%(command_end)s.")) % self._get_style_dict()
                 ])
         return False
 
