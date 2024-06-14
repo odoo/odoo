@@ -87,7 +87,7 @@ class AccountMove(models.Model):
         def xpath_ns(expr):
             return root.xpath(expr, namespaces=edi_format._l10n_sa_get_namespaces())[0].text.strip()
 
-        qr_code_str = ''
+        qr_code_str = b''
         root = etree.fromstring(unsigned_xml)
         edi_format = self.env['account.edi.xml.ubl_21.zatca']
 
@@ -98,7 +98,7 @@ class AccountMove(models.Model):
         invoice_time = xpath_ns('//cbc:IssueTime')
         invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
 
-        if invoice_datetime and journal_id.company_id.vat and x509_cert:
+        if invoice_datetime and journal_id.company_id.vat and x509_cert and signature:
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
