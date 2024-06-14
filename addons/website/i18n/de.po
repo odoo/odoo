@@ -51,6 +51,27 @@ msgstr "„URL von“ darf nicht leer sein."
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr ""
+"„URL zu“ kann nicht auf „/“ gesetzt werden. Um den Inhalt der Homepage zu "
+"ändern, verwenden Sie das Feld „URL der Homepage“ in den Website-"
+"Einstellungen oder die Seiteneigenschaften einer beliebigen "
+"benutzerdefinierten Seite."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr "„URL zu“ kann nicht auf eine bestehende Seite eingestellt sein."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "„URL zu“ darf nicht leer sein."
 
@@ -6084,6 +6105,13 @@ msgid "Hide For"
 msgstr "Ausblenden für"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "Die Cookies-Leiste ausblenden"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
 msgstr "Diese Seite in Suchergebnissen ausblenden"
@@ -10532,6 +10560,13 @@ msgid "Show site map"
 msgstr "Sitemap anzeigen"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "Die Cookies-Leiste einblenden"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Desktop"
 msgstr "Auf Desktop anzeigen/verbergen"
@@ -10728,7 +10763,7 @@ msgstr "Smartphones"
 #: model_terms:ir.ui.view,arch_db:website.s_social_media
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Social Media"
-msgstr "Soziale Medien"
+msgstr "Social Media"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_social_media_options

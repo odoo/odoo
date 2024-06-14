@@ -6,6 +6,8 @@
 # SBO-Sebastien <sbo@irokoo.fr>, 2023
 # Jolien De Paepe, 2024
 # Yassine KHATTABI, 2024
+# Rémi CAZENAVE, 2024
+# Manon Rondou, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -77,7 +79,7 @@ msgstr "# Factures rapprochées "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
 msgid "# Reconciled Statement Lines"
-msgstr "# Lignes de relevé réconciliées"
+msgstr "# Lignes de relevé rapprochées"
 
 #. module: account
 #. odoo-python
@@ -531,9 +533,7 @@ msgstr "<b>Escompte appliqué.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
 
 #. module: account
@@ -1749,7 +1749,7 @@ msgstr "Compte client (PdV)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr "Compte réconciliable "
+msgstr "Compte lettrable "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -2453,6 +2453,8 @@ msgstr "Toutes nos relations contractuelles seront exclusivement régies par "
 #, python-format
 msgid "All selected moves for reversal must belong to the same company."
 msgstr ""
+"Toutes les pièces comptables sélectionnées pour extourne doivent appartenir "
+"à la même société."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2658,7 +2660,7 @@ msgstr "Montants à régler"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "An Off-Balance account can not be reconcilable"
-msgstr "Un compte hors bilan ne peut être réconcilié"
+msgstr "Un compte hors bilan ne peut être lettrable"
 
 #. module: account
 #. odoo-python
@@ -2776,12 +2778,12 @@ msgstr "Lignes analytiques"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Applicabilités du plan analytique"
+msgstr "Applicabilités de la dimension analytique"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Plans analytiques"
+msgstr "Dimensions analytiques"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -6155,17 +6157,6 @@ msgid "Duplicated Ref"
 msgstr "Réf dupliquée"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Doublon de référence fournisseur détecté. Vous avez probablement saisi deux "
-"fois la même facture/avoir fournisseur."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Rapports dynamiques"
@@ -6282,7 +6273,7 @@ msgstr "Email par défaut"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Domaine de l'email e.g. 'example.com' dans 'odoo@example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6438,7 +6429,7 @@ msgstr "Fonds propres"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "Erreur d'import de la pièce jointe '%s' comme facture (décodeur=%s)"
 
 #. module: account
 #. odoo-python
@@ -7710,7 +7701,7 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
-"Si vous annulez la réconciliation des écritures, gardez à l'esprit que ces "
+"Si vous annulez le lettrage des écritures, gardez à l'esprit que ces "
 "écritures ne seront pas effacées pour autant. Les ajustements ou écarts de "
 "change resteront enregistrés."
 
@@ -7870,7 +7861,7 @@ msgstr "Inclus dans le prix"
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Income"
-msgstr "Produits"
+msgstr "Revenus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_income_categ_id
@@ -7891,7 +7882,7 @@ msgid ""
 "Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
 msgstr ""
 "Les paiements sortants sont comptabilisés sur un compte des paiements entrants en suspens. Dans le widget du rapprochement bancaire, ils apparaissent sous forme de lignes bleues. \n"
-"Les transactions bancaires sont ensuite réconciliées sur le compte d'attente des reçus, plutôt que sur le compte débiteur."
+"Les transactions bancaires sont ensuite rapprochées sur le compte d'attente des reçus, plutôt que sur le compte débiteur."
 
 #. module: account
 #. odoo-python
@@ -9123,7 +9114,7 @@ msgid ""
 msgstr ""
 "La dernière fois que le lettrage des factures et paiements a été fait pour "
 "ce partenaire. C'est configuré s'il n'y a pas au moins un débit et un crédit"
-" non réconcilié ou si vous cliquez sur le bouton \"Fait\"."
+" non rapproché ou si vous cliquez sur le bouton \"Fait\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9538,9 +9529,8 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
-"Référence de lettrage de cette ligne, 'P' si c'est seulement une "
-"réconciliation partielle, or la référence complète de réconciliation si elle"
-" existe."
+"Référence de lettrage de cette ligne, 'P' si c'est seulement un lettrage "
+"partiel, or la référence complète de lettrage si elle existe."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
@@ -10469,13 +10459,6 @@ msgid "Open"
 msgstr "Ouvert"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Ouvrir la liste"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "Solde initial"
@@ -11220,7 +11203,7 @@ msgstr "Conditions de paiement : 21 jours"
 #: model_terms:account.payment.term,note:account.account_payment_term_30days
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
-msgstr "Condition de paiement : 30 jours "
+msgstr "Conditions de paiement : 30 jours "
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
@@ -11237,7 +11220,7 @@ msgstr "Conditions de paiement : 30 % d'acompte, fin du mois suivant"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Condition de paiement : 30% maintenant, solde à 60 jours"
+msgstr "Conditions de paiement : 30% maintenant, solde à 60 jours"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
@@ -11865,27 +11848,27 @@ msgstr "Date de comptabilisation"
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr "Réconcilié"
+msgstr "Rapproché"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr "Factures fournisseurs réconciliées"
+msgstr "Factures fournisseurs lettrées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "Factures réconciliées"
+msgstr "Factures lettrées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
 msgid "Reconciled Invoices Type"
-msgstr "Type de factures réconciliées"
+msgstr "Type de factures lettrées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
 msgid "Reconciled Statement Lines"
-msgstr "Lignes de relevé réconciliées"
+msgstr "Lignes de relevé lettrées"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -11901,7 +11884,7 @@ msgstr "Modèles de rapprochement"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr "Espaces de réconciliation"
+msgstr "Espaces de lettrage"
 
 #. module: account
 #. odoo-python
@@ -14010,6 +13993,13 @@ msgid "Text Value"
 msgstr "Valeur texte"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Texte copié"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "C'est la date de l'écriture d'ouverture."
@@ -14109,6 +14099,9 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"Ne sélectionnez pas directement le modèle de plan comptable Syscohada. À la "
+"place, il est conseillé de sélectionner directement le modèle de plan "
+"comptable correspondant à votre pays."
 
 #. module: account
 #. odoo-python
@@ -14250,7 +14243,7 @@ msgid ""
 "reconciling its lines."
 msgstr ""
 "Les écritures de comptabilité de trésorerie créées à partir des taxes sur "
-"cette écriture, lors de la réconciliation de ses lignes."
+"cette écriture, lors du rapprochement de ses lignes."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -15262,7 +15255,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Ceci vous permet de grouper des paiements dans un seul groupe et de faciliter le processus de réconciliation. \n"
+"Ceci vous permet de grouper des paiements dans un seul groupe et de faciliter le processus de lettrage. \n"
 "- Ceci installe le module account_batch_payment"
 
 #. module: account
@@ -15996,19 +15989,19 @@ msgstr "Annuler le lettrage des transactions"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "Non réconcilié"
+msgstr "Non lettré"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unreconciled
 msgid "Unreconciled Entries"
-msgstr "Écritures non réconciliées"
+msgstr "Écritures non lettrées"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unreconciled Transactions"
-msgstr "Transactions non réconciliées"
+msgstr "Transactions non lettrées"
 
 #. module: account
 #. odoo-python
@@ -16631,7 +16624,7 @@ msgstr "Écrivez ici <b> votre adresse email </b> pour tester le flux"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "Annulation compte de change"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16648,7 +16641,7 @@ msgstr "Annuel"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr "Vous essayez de réconcilier des écritures qui le sont déjà."
+msgstr "Vous essayez de rapprocher des écritures qui le sont déjà."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -16733,7 +16726,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr "Vous ne pouvez réconcilier que des pièces comptabilisées."
+msgstr "Vous ne pouvez rapprocher que des pièces comptabilisées."
 
 #. module: account
 #. odoo-python
@@ -16903,7 +16896,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16964,6 +16957,8 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
+"Vous ne pouvez pas enregistrer des paiements pour des pièces comptables "
+"entrantes et sortantes en même temps."
 
 #. module: account
 #. odoo-python
@@ -17088,6 +17083,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Vous ne pouvez pas supprimer cette étiquette de compte (%s), elle est "
+"utilisée dans la définition du plan comptable."
 
 #. module: account
 #. odoo-python
@@ -17109,6 +17106,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Vous ne pouvez pas supprimer ce rapport (%s), il est utilisé par le moteur "
+"de genération des PDF de factures."
 
 #. module: account
 #. odoo-python
@@ -17208,6 +17207,10 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Vous ne pouvez pas importer \"openning_balance\" si la pièce comptable "
+"d'ouverture (%s) est déjà comptabilisée.                 Si vous êtes sûr de"
+" vouloir modifier la balance d'ouverture de vos comptes, remettez la pièce "
+"comptable d'ouverture en brouillon."
 
 #. module: account
 #. odoo-python
@@ -17359,8 +17362,8 @@ msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
 msgstr ""
-"Vous ne pouvez changer de compte pour empêcher la réconciliation dans le cas"
-" où des rapprochements partiels sont toujours en suspens. "
+"Vous ne pouvez changer de compte pour empêcher le rapprochement dans le cas "
+"où des rapprochements partiels sont toujours en suspens. "
 
 #. module: account
 #. odoo-python

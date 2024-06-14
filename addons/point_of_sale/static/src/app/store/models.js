@@ -148,11 +148,26 @@ export class Product extends PosModel {
         const attributes = this.attribute_line_ids
             .map((id) => this.pos.attributes_by_ptal_id[id])
             .filter((attr) => attr !== undefined);
-        return await this.env.services.popup.add(ProductConfiguratorPopup, {
-            product: this,
-            attributes: attributes,
-            quantity: initQuantity,
-        });
+        if (
+            attributes.some(
+                (attribute) => attribute.values.length > 1 || attribute.values[0].is_custom
+            )
+        ) {
+            return await this.env.services.popup.add(ProductConfiguratorPopup, {
+                product: this,
+                attributes: attributes,
+                quantity: initQuantity,
+            });
+        }
+        return {
+            confirmed: true,
+            payload: {
+                attribute_value_ids: attributes.map((attr) => attr.values[0].id),
+                attribute_custom_values: [],
+                price_extra: attributes.reduce((acc, attr) => acc + attr.values[0].price_extra, 0),
+                quantity: 1,
+            },
+        };
     }
 
     isConfigurable() {
@@ -424,14 +439,16 @@ export class Orderline extends PosModel {
         this.set_full_product_name();
         this.id = json.server_id || json.id || orderline_id++;
         orderline_id = Math.max(this.id + 1, orderline_id);
-        var pack_lot_lines = json.pack_lot_ids;
-        for (var i = 0; i < pack_lot_lines.length; i++) {
-            var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new Packlotline(
-                { env: this.env },
-                { json: { ...packlotline, order_line: this } }
-            );
-            this.pack_lot_lines.add(pack_lot_line);
+        if (this.has_product_lot) {
+            var pack_lot_lines = json.pack_lot_ids;
+            for (var i = 0; i < pack_lot_lines.length; i++) {
+                var packlotline = pack_lot_lines[i][2];
+                var pack_lot_line = new Packlotline(
+                    { env: this.env },
+                    { json: { ...packlotline, order_line: this } }
+                );
+                this.pack_lot_lines.add(pack_lot_line);
+            }
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
         this.set_customer_note(json.customer_note);
@@ -575,7 +592,7 @@ export class Orderline extends PosModel {
         this.price_extra = parseFloat(price_extra) || 0.0;
     }
     set_full_product_name() {
-        this.full_product_name = this.product.display_name;
+        this.full_product_name = this.get_full_product_name_with_variant();
     }
     get_price_extra() {
         return this.price_extra;
@@ -596,25 +613,29 @@ export class Orderline extends PosModel {
             const maxQtyToRefund =
                 toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
             if (quant > 0) {
-                this.env.services.popup.add(ErrorPopup, {
-                    title: _t("Positive quantity not allowed"),
-                    body: _t(
-                        "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
-                    ),
-                });
+                if (!this.comboParent) {
+                    this.env.services.popup.add(ErrorPopup, {
+                        title: _t("Positive quantity not allowed"),
+                        body: _t(
+                            "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
+                        ),
+                    });
+                }
                 return false;
             } else if (quant == 0) {
                 toRefundDetail.qty = 0;
             } else if (-quant <= maxQtyToRefund) {
                 toRefundDetail.qty = -quant;
             } else {
-                this.env.services.popup.add(ErrorPopup, {
-                    title: _t("Greater than allowed"),
-                    body: _t(
-                        "The requested quantity to be refunded is higher than the refundable quantity of %s.",
-                        this.env.utils.formatProductQty(maxQtyToRefund)
-                    ),
-                });
+                if (!this.comboParent) {
+                    this.env.services.popup.add(ErrorPopup, {
+                        title: _t("Greater than allowed"),
+                        body: _t(
+                            "The requested quantity to be refunded is higher than the refundable quantity of %s.",
+                            this.env.utils.formatProductQty(maxQtyToRefund)
+                        ),
+                    });
+                }
                 return false;
             }
         }
@@ -713,11 +734,11 @@ export class Orderline extends PosModel {
     }
     /**
      * Return the full product name with variant details.
-     * 
+     *
      * e.g. Desk Organiser product with variant:
      * - Size: S
      * - Fabric: Plastic
-     * 
+     *
      * -> "Desk Organiser (S, Plastic)"
      * @returns {string}
      */
@@ -752,9 +773,17 @@ export class Orderline extends PosModel {
             orderline.compute_fixed_price(order_line_price),
             this.pos.currency.decimal_places
         );
-        let hasSameAttributes = Object.keys(Object(orderline.attribute_value_ids)).length === Object.keys(Object(this.attribute_value_ids)).length;
-        if(hasSameAttributes && Object(orderline.attribute_value_ids)?.length && Object(this.attribute_value_ids)?.length) {
-            hasSameAttributes = orderline.attribute_value_ids.every((value, index) => value === this.attribute_value_ids[index]);
+        let hasSameAttributes =
+            Object.keys(Object(orderline.attribute_value_ids)).length ===
+            Object.keys(Object(this.attribute_value_ids)).length;
+        if (
+            hasSameAttributes &&
+            Object(orderline.attribute_value_ids)?.length &&
+            Object(this.attribute_value_ids)?.length
+        ) {
+            hasSameAttributes = orderline.attribute_value_ids.every(
+                (value, index) => value === this.attribute_value_ids[index]
+            );
         }
         return (
             !this.skipChange &&
@@ -1097,19 +1126,24 @@ export class Orderline extends PosModel {
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
         const addedPtal_id = [];
-        for (const value of values){
-            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]){
-                if (addedPtal_id.includes(ptal_id)){
+        for (const value of values) {
+            for (const ptal_id of this.pos.ptal_ids_by_ptav_id[value]) {
+                if (addedPtal_id.includes(ptal_id)) {
                     continue;
                 }
-                const attribute = this.pos.attributes_by_ptal_id[ptal_id]
-                const attFound = attribute.values.filter((target) => {
-                    return Object.values(values).includes(target.id);
-                }).map(att => ({...att})); // make a copy
+                const attribute = this.pos.attributes_by_ptal_id[ptal_id];
+                const attFound = attribute.values
+                    .filter((target) => {
+                        return Object.values(values).includes(target.id);
+                    })
+                    .map((att) => ({ ...att })); // make a copy
                 attFound.forEach((att) => {
                     if (att.is_custom) {
                         customAttributes.forEach((customAttribute) => {
-                            if (att.id === customAttribute.custom_product_template_attribute_value_id) {
+                            if (
+                                att.id ===
+                                customAttribute.custom_product_template_attribute_value_id
+                            ) {
                                 att.name = customAttribute.value;
                             }
                         });
@@ -1595,7 +1629,8 @@ export class Order extends PosModel {
                 qrCodeSrc(
                     `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
                 ),
-            ticket_code: this.pos.company.point_of_sale_ticket_unique_code &&
+            ticket_code:
+                this.pos.company.point_of_sale_ticket_unique_code &&
                 this.finalized &&
                 this.ticketCode,
             base_url: this.pos.base_url,
@@ -1689,6 +1724,7 @@ export class Order extends PosModel {
                     };
                 }
                 line.setHasChange(false);
+                line.saved_quantity = line.get_quantity();
             }
         });
 
@@ -1844,7 +1880,7 @@ export class Order extends PosModel {
         return this.orderlines.length === 0;
     }
     get isBooked() {
-        return this.booked || !this.is_empty() || this.server_id;
+        return Boolean(this.booked || !this.is_empty() || this.server_id);
     }
     generate_unique_id() {
         // Generates a public identification number for the order.
@@ -2103,7 +2139,7 @@ export class Order extends PosModel {
         if (this._printed) {
             // when adding product with a barcode while being in receipt screen
             this.pos.removeOrder(this);
-            return this.pos.add_new_order().add_product(product, options);
+            return await this.pos.add_new_order().add_product(product, options);
         }
         this.assert_editable();
         options = options || {};
@@ -2142,6 +2178,12 @@ export class Order extends PosModel {
             // Make sure the combo parent is selected.
             this.select_orderline(line);
         }
+        this.hasJustAddedProduct = true;
+        clearTimeout(this.productReminderTimeout);
+        this.productReminderTimeout = setTimeout(() => {
+            this.hasJustAddedProduct = false;
+        }, 3000);
+        return line;
     }
 
     compute_child_lines(comboParentProduct, comboLines, pricelist) {

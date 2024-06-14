@@ -444,7 +444,8 @@ class SurveyUserInput(models.Model):
 
             question_section = question.page_id.title or _('Uncategorized')
             for user_input in self:
-                user_input_lines = user_input.user_input_line_ids.filtered(lambda line: line.question_id == question)
+                user_input_lines = user_input.user_input_line_ids.filtered(lambda line:
+                    line.question_id == question and (line.answer_type != 'char_box' or question.comment_count_as_answer))
                 if question.question_type == 'simple_choice':
                     answer_result_key = self._simple_choice_question_answer_result(user_input_lines, question_correct_suggested_answers, question_incorrect_scored_answers)
                 elif question.question_type == 'multiple_choice':

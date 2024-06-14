@@ -20,15 +20,20 @@ export default class OnboardingStepFormController extends FormController {
     async save({ closable, ...otherParams }) {
         const saved = await super.save(otherParams);
         if (saved) {
-            const { reloadOnFirstValidation, reloadAlways } = this.stepConfig;
-            const validationResponse = await this.orm.call(
-                'onboarding.onboarding.step',
-                'action_validate_step',
-                [this.stepName],
-            );
-            if (reloadAlways || (reloadOnFirstValidation && validationResponse === "JUST_DONE")) {
-                this.action.restore(this.action.currentController.jsId);
-            } else if (closable) {
+            let shouldClose = closable;
+            if (await this.isStepCompleted()) {
+                const { reloadOnFirstValidation, reloadAlways } = this.stepConfig;
+                const validationResponse = await this.orm.call(
+                    'onboarding.onboarding.step',
+                    'action_validate_step',
+                    [this.stepName],
+                );
+                if (reloadAlways || (reloadOnFirstValidation && validationResponse === "JUST_DONE")) {
+                    shouldClose = false;
+                    this.action.restore(this.action.currentController.jsId);
+                } 
+            }
+            if (shouldClose) {
                 this.action.doAction({ type: "ir.actions.act_window_close" });
             }
         }
@@ -51,5 +56,14 @@ export default class OnboardingStepFormController extends FormController {
      */
     get stepConfig() {
         return { reloadAlways: false, reloadOnFirstValidation: false };
+    }
+    /**
+     * Returns whether the step condition is met or not after
+     * record is saved
+     *
+     * @return {boolean}
+     */
+    async isStepCompleted() {
+        return true;
     }
 }

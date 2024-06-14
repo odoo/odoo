@@ -73,6 +73,10 @@ class TestLinkPreview(MailCommon):
         """
         return self._patched_get_html('image/png', content)
 
+    def _patch_with_no_content_type(self, *args, **kwargs):
+        content = b""""""
+        return self._patched_get_html(None, content)
+
     def test_get_link_preview_from_url(self):
         test_cases = [
             (self._patch_with_og_properties, self.source_url),
@@ -144,3 +148,9 @@ class TestLinkPreview(MailCommon):
                     }
                 }]
             )
+
+    def test_link_preview_no_content_type(self):
+        with patch.object(requests.Session, 'request', self._patch_with_no_content_type):
+            url = self.source_url
+            session = requests.Session()
+            link_preview.get_link_preview_from_url(url, session)

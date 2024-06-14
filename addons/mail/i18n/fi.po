@@ -3700,11 +3700,9 @@ msgstr "Kenttä"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"Mallin %(model)r kentän \"(field)r on oltava tyyppiä Many2one ja sen on "
-"oltava tracking=True keston laskemista varten."
 
 #. module: mail
 #. odoo-python
@@ -10612,8 +10610,12 @@ msgstr "Et voi määritellä mallia abstraktille mallille: %s"
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
-msgid "You may not unlink attachments from other people's messages"
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
 msgstr ""
+"Et saa poistaa linkkejä tai muuttaa toisten viestien liitetiedostojen "
+"sisältöä"
 
 #. module: mail
 #. odoo-javascript

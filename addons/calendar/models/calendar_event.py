@@ -288,7 +288,12 @@ class Meeting(models.Model):
     @api.depends_context('uid')
     def _compute_user_can_edit(self):
         for event in self:
-            event.user_can_edit = self.env.user in event.partner_ids.user_ids + event.user_id
+            # By default, only current attendees and the organizer can edit the event.
+            editor_candidates = event.partner_ids.user_ids + event.user_id
+            # Right before saving the event, old partners must be able to save changes.
+            if event._origin:
+                editor_candidates += event._origin.partner_ids.user_ids
+            event.user_can_edit = self.env.user in editor_candidates
 
     @api.depends('attendee_ids')
     def _compute_invalid_email_partner_ids(self):
@@ -711,6 +716,14 @@ class Meeting(models.Model):
                 )._send_mail_to_attendees(
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False)
                 )
+
+        # Change base event when the main base event is archived. If it isn't done when trying to modify
+        # all events of the recurrence an error can be thrown or all the recurrence can be deleted.
+        if values.get("active") is False:
+            recurrences = self.env["calendar.recurrence"].search([
+                ('base_event_id', 'in', self.ids)
+            ])
+            recurrences._select_new_base_event()
 
         return True
 

@@ -134,7 +134,7 @@
                 <div class="o_event_full_page_ticket_details d-flex">
                     <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
                         <span itemprop="startDate" t-field="event.date_begin"
-                            t-options='{"widget": "datetime", "date_only": True}'
+                            t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
                             class="fw-bold"/>
                         <span itemprop="startDateTime" t-field="event.date_begin"
                             class="fw-bold"

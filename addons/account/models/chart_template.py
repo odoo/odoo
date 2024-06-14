@@ -141,7 +141,7 @@ class AccountChartTemplate(models.AbstractModel):
         :type install_demo: bool
         """
         if not company:
-            company = self.env.company
+            return
         if isinstance(company, int):
             company = self.env['res.company'].browse([company])
 
@@ -210,22 +210,28 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Manual sync because disable above (delay_account_group_sync)
         AccountGroup = self.env['account.group'].with_context(delay_account_group_sync=False)
-        AccountGroup._adapt_accounts_for_account_groups(self.env['account.account'].search([]))
-        AccountGroup.search([])._adapt_parent_account_group()
+        AccountGroup._adapt_accounts_for_account_groups(company=company)
+        AccountGroup._adapt_parent_account_group(company=company)
 
         # Install the demo data when the first localization is instanciated on the company
         if install_demo and self.ref('base.module_account').demo and not reload_template:
             try:
                 with self.env.cr.savepoint():
                     self = self.with_context(lang=original_context_lang)
-                    company = company.with_env(self.env)
-                    self.sudo()._load_data(self._get_demo_data(company))
-                    self._post_load_demo_data(company)
+                    self._install_demo(company.with_env(self.env))
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
         for subsidiary in company.child_ids:
             self._load(template_code, subsidiary, install_demo)
+
+    @api.model
+    def _install_demo(self, companies):
+        if not isinstance(companies, models.BaseModel):
+            companies = self.env['res.company'].browse(companies)
+        for company in companies:
+            self.sudo()._load_data(self._get_demo_data(company))
+            self._post_load_demo_data(company)
 
     def _pre_reload_data(self, company, template_data, data):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -605,9 +611,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Set newly created journals as defaults for the company
         if not company.tax_cash_basis_journal_id:
-            company.tax_cash_basis_journal_id = self.ref('caba')
+            company.tax_cash_basis_journal_id = self.ref('caba', raise_if_not_found=False)
         if not company.currency_exchange_journal_id:
-            company.currency_exchange_journal_id = self.ref('exch')
+            company.currency_exchange_journal_id = self.ref('exch', raise_if_not_found=False)
 
         # Setup default Income/Expense Accounts on Sale/Purchase journals
         sale_journal = self.ref("sale", raise_if_not_found=False)
@@ -1240,7 +1246,7 @@ class AccountChartTemplate(models.AbstractModel):
                 or code_translations.get_python_translations(translation_module, generic_lang).get(record[fname])
             )
 
-    def _load_translations(self, langs=None, companies=None):
+    def _load_translations(self, langs=None, companies=None, template_data=None):
         """Load the translations of the chart template.
 
         :param langs: the lang code to load the translations for. If one of the codes is not present,
@@ -1257,7 +1263,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Gather translations for records that are created from the chart_template data
         for chart_template, chart_companies in groupby(companies, lambda c: c.chart_template):
-            template_data = self.env['account.chart.template']._get_chart_template_data(chart_template)
+            template_data = template_data or self.env['account.chart.template']._get_chart_template_data(chart_template)
             template_data.pop('template_data', None)
             for mname, data in template_data.items():
                 for _xml_id, record in data.items():
@@ -1270,7 +1276,7 @@ class AccountChartTemplate(models.AbstractModel):
                             field_translation = self._get_field_translation(record, fname, lang)
                             if field_translation:
                                 for company in chart_companies:
-                                    xml_id = f"account.{company.id}_{_xml_id}"
+                                    xml_id = _xml_id if '.' in _xml_id else f"account.{company.id}_{_xml_id}"
                                     translation_importer.model_translations[mname][fname][xml_id][lang] = field_translation
 
         # Gather translations for the TEMPLATE_MODELS records that are not created from the chart_template data

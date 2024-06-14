@@ -3692,11 +3692,11 @@ msgstr "Feld"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
-"Das Feld (field)r im Modell %(model)r muss vom Typ Many2one sein und für die"
-" Berechnung der Dauer den Wert tracking=True haben."
+"Das Feld „%(field)s“ im Modell „%(model)s“ muss vom Typ Many2one sein und "
+"für die Berechnung der Dauer den Wert tracking=True haben."
 
 #. module: mail
 #. odoo-python
@@ -10663,9 +10663,12 @@ msgstr "Sie dürfen keine Vorlage für ein abstraktes Modell definieren: %s"
 #. odoo-python
 #: code:addons/mail/models/ir_attachment.py:0
 #, python-format
-msgid "You may not unlink attachments from other people's messages"
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
 msgstr ""
-"Sie dürfen keine Anhänge aus den Nachrichten anderer Personen entkoppeln"
+"Sie dürfen den Inhalt von Anhängen aus den Nachrichten anderer Personen "
+"nicht entkoppeln oder ändern"
 
 #. module: mail
 #. odoo-javascript

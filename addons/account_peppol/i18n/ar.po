@@ -190,6 +190,11 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Cannot cancel an entry that has already been sent to PEPPOL"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "Cannot receive this format"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
@@ -708,6 +713,13 @@ msgstr "رقم تعريف نقطة انتهاء Peppol غير صحيح. "
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "The Peppol service that is used is likely to be %s."
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "The document has been sent to the Peppol Access Point for processing"
@@ -801,6 +813,13 @@ msgstr "يجب أن يحتوي رمز التحقق على ست أرقام. "
 #, python-format
 msgid "This verification code has expired. Please request a new one."
 msgstr "انتهت صلاحية رمز التحقق. يرجى طلب واحد جديد. "
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate electronic invoices, also set a country and a bank account for "
+"this partner."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python

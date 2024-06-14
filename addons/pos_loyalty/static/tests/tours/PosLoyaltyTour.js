@@ -396,14 +396,14 @@ registry.category("web_tour.tours").add('PosLoyaltyTour12', {
             PosLoyalty.hasRewardLine('Free Product', '-1.00'),
             ProductScreen.addOrderline('Free Product B', '2'),
             ProductScreen.clickDisplayedProduct('Free Product B'),
-            ProductScreen.totalAmountIs('4.00'),
-            PosLoyalty.hasRewardLine('Free Product', '-2.00'),
+            ProductScreen.totalAmountIs('12.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-5.00'),
             ProductScreen.clickDisplayedProduct('Free Product B'),
             ProductScreen.clickDisplayedProduct('Free Product B'),
             ProductScreen.clickDisplayedProduct('Free Product B'),
             ProductScreen.selectedOrderlineHas("Free Product B", "6.00"),
-            ProductScreen.totalAmountIs('6.00'),
-            PosLoyalty.hasRewardLine('Free Product', '-3.00'),
+            ProductScreen.totalAmountIs('22.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-10.00'),
         ].flat(),
 });
 

@@ -21,6 +21,7 @@
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Wil Odoo, 2024
 # Collex100, 2024
+# nadia martynova, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Collex100, 2024\n"
+"Last-Translator: nadia martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,8 +113,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
-" Если значение отлично от 0, дата инвентаризации для продуктов, хранящихся в"
-" этом месте, будет автоматически устанавливаться с заданной периодичностью."
+"При значении, отличном от 0, дата инвентаризации продукции, хранящейся в "
+"данном месте, будет автоматически устанавливаться с заданной периодичностью."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
@@ -844,7 +845,7 @@ msgstr "<strong>Куда вы хотите отправить продукцию
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr "? Это может привести к несоответствиям в вашем запасе."
+msgstr "? Это может привести к несоответствиям на складе."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -1211,6 +1212,11 @@ msgstr "Апрель"
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Архивировано"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1863,7 +1869,7 @@ msgstr "Подтверждено"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
 msgid "Conflict in Inventory"
-msgstr "Конфликт в инвентаре"
+msgstr "Несоответствие в инвентаризации товаров"
 
 #. module: stock
 #. odoo-python
@@ -2377,7 +2383,8 @@ msgstr "Дата резервирования"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Day and month that annual inventory counts should occur."
-msgstr "День и месяц, когда должны проводиться ежегодные инвентаризации."
+msgstr ""
+"День и месяц, когда должна проводиться ежегодная инвентаризацая товаров."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -2743,7 +2750,7 @@ msgstr "Описание для Внутренних Перемещений"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr "Описание к квитанциям"
+msgstr "Описание к Поступлению товаров"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
@@ -3042,8 +3049,8 @@ msgid ""
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
 "Из-за поступлений, запланированных на будущее, у вас может оказаться "
-"избыточный запас. Проверьте отчет о прогнозах, прежде чем делать повторный "
-"заказ"
+"избыточный запас товаров. Проверьте Отчет о Прогнозах, прежде чем делать "
+"повторный заказ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -4227,7 +4234,7 @@ msgstr "Инвентаризированное количество"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Инвентарь"
+msgstr "Склад"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
@@ -5465,7 +5472,7 @@ msgstr "Правило для откладывания не найдено. Да
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "No receipt found. Let's create one!"
-msgstr "Квитанция не найдена. Давайте создадим его!"
+msgstr "Поступление товаров пока не запланировано. Давайте запланируем!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -7125,7 +7132,7 @@ msgstr "ВОЗВРАЩЕНИЕ"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
-msgstr "Готово"
+msgstr "Подтверждение"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -7148,12 +7155,12 @@ msgstr "Причина переезда"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #, python-format
 msgid "Receipt"
-msgstr "Квитанция"
+msgstr "Поступления"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
 msgid "Receipt Route"
-msgstr "Маршрут получения"
+msgstr "Маршрут поступления"
 
 #. module: stock
 #. odoo-python
@@ -7165,12 +7172,12 @@ msgstr "Маршрут получения"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Receipts"
-msgstr "Квитанции"
+msgstr "Поступления"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr "Расписки позволяют получать товары от партнера."
+msgstr "Поставки (Поступления товаров) - это получение товаров от партнеров. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -8809,7 +8816,7 @@ msgid ""
 msgstr ""
 "Серийный номер (%s) уже используется в этих местах: %s.\n"
 "\n"
-"Ожидается ли это? Например, это может произойти, если операция доставки проверяется до проверки соответствующей операции получения. В этом случае проблема будет решена автоматически после завершения всех этапов. В противном случае необходимо исправить серийный номер, чтобы избежать несогласованности данных."
+"Так и было запланировано? Так может произойти, если операция доставки была подтверждена раньше соответствующей операции приемки товаров. В этом случае проблема будет решена автоматически после завершения всех этапов. В противном случае необходимо исправить серийный номер, чтобы избежать несогласованности данных."
 
 #. module: stock
 #. odoo-python
@@ -9257,8 +9264,7 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
 msgstr ""
-"Это примечание добавляется в приходные ордера (например, где хранить товар "
-"на складе)."
+"Примечание для поступления товаров (например, где хранить товар на складе)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -9960,14 +9966,14 @@ msgstr "Пользователь, которому поручено вести �
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Validate"
-msgstr "Проверка"
+msgstr "Подтверждение"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 #, python-format
 msgid "Validate Inventory"
-msgstr "Удостоверение инвентаризации"
+msgstr "Подтвердите информацию по складу"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count

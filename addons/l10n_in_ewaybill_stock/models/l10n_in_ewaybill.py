@@ -521,8 +521,7 @@ class Ewaybill(models.Model):
                 for key, fun in key_paired_function
                 for place, partner in partner_detail
             }
-
-        return {
+        ewaybill_json = {
                 # document details
                 "supplyType": self.supply_type,
                 "subSupplyType": self.type_id.sub_type_code,
@@ -558,6 +557,9 @@ class Ewaybill(models.Model):
                 "actToStateCode": self._get_partner_state_code(self.partner_ship_to_id),
                 "actFromStateCode": self._get_partner_state_code(self.partner_ship_from_id),
         }
+        if self.type_id.sub_type_code == '8':
+            ewaybill_json["subSupplyDesc"] = self.type_description
+        return ewaybill_json
 
     def _prepare_ewaybill_transportation_json_payload(self):
         # only pass transporter details when value is exist

@@ -213,12 +213,10 @@
             <search string="All vehicles">
                 <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
                 <field string="Drivers" name="log_drivers" filter_domain="[
-                    '|', '|','|','|',
+                    '|', '|',
                     ('log_drivers.driver_id', 'ilike', self),
                     ('driver_id', 'ilike', self),
                     ('future_driver_id', 'ilike', self),
-                    ('driver_employee_id', 'ilike', self),
-                    ('future_driver_employee_id', 'ilike', self),
                 ]"/>
                 <field string="Model" name="model_id"/>
                 <field string="License Plate" name="license_plate"/>

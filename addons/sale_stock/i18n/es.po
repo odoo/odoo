@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2024
 # Larissa Manderfeld, 2024
 # 
 msgid ""
@@ -148,7 +149,8 @@ msgstr "Unidades disponibles"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr "Elija para aplicar líneas con rutas específicas en la orden de venta."
+msgstr ""
+"Elija para aplicar líneas con rutas específicas en el pedido de venta."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -281,7 +283,7 @@ msgstr "Stock pronosticado"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
-msgstr "Cant. Libre Hoy"
+msgstr "Ctd. Libre Hoy"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
@@ -482,12 +484,12 @@ msgstr "Producto"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr "Cant. disponible hoy"
+msgstr "Ctd. disponible hoy"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "Cant. a entregar"
+msgstr "Ctd. a entregar"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -540,17 +542,17 @@ msgstr "Línea de venta"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr "Orden de venta"
+msgstr "Pedido de venta"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
-msgstr "Órdenes de venta"
+msgstr "Pedidos de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
 msgid "Sale order count"
-msgstr "Cantidad de órdenes de venta"
+msgstr "Nº de pedidos de venta"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -561,27 +563,27 @@ msgstr "Informe de análisis de ventas"
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Orden de venta"
+msgstr "Pedido de venta"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Cancelación de orden de venta"
+msgstr "Cancelar pedido de venta"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Línea de orden de venta"
+msgstr "Línea de pedido de venta"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "Líneas de orden de venta"
+msgstr "Líneas de pedido de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_ids
 msgid "Sales Orders"
-msgstr "Órdenes de venta"
+msgstr "Pedidos de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
@@ -611,7 +613,7 @@ msgstr "Plazo de seguridad para ventas"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Se puede seleccionar en la línea de orden de venta"
+msgstr "Seleccionable en las líneas de pedidos de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
@@ -677,9 +679,9 @@ msgid ""
 "                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
 "                        You should probably update the partner on this document."
 msgstr ""
-"La dirección de entrega en la orden de venta cambió<br/>\n"
+"La dirección de entrega ha sido cambiada en el pedido de venta<br/>\n"
 "                        De <strong>\"%s\"</strong> a <strong>\"%s\"</strong>,\n"
-"                        Informe al contacto que se encuentra en el documento."
+"                        Probablemente debe actualizar el contacto en este documento."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -700,7 +702,7 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
-"La cantidad pedida de una línea de orden de venta no puede disminuirse por "
+"La cantidad pedida de una línea de pedido de venta no puede disminuirse por "
 "debajo de la cantidad ya entregada. En su lugar, cree una devolución en su "
 "inventario."
 

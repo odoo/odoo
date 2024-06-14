@@ -18,7 +18,7 @@ export class DateFromToValue extends Component {
 
     onDateFromChanged(dateFrom) {
         this.props.onFromToChanged({
-            from: dateFrom && serializeDate(dateFrom.startOf("day")),
+            from: dateFrom ? serializeDate(dateFrom.startOf("day")) : undefined,
             to: this.props.to,
         });
     }
@@ -26,7 +26,7 @@ export class DateFromToValue extends Component {
     onDateToChanged(dateTo) {
         this.props.onFromToChanged({
             from: this.props.from,
-            to: dateTo && serializeDate(dateTo.endOf("day")),
+            to: dateTo ? serializeDate(dateTo.endOf("day")) : undefined,
         });
     }
 

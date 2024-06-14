@@ -534,7 +534,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         def create_payment(payment_method, amount):
             return (0, 0, {
                 'amount': amount,
-                'name': fields.Datetime.now(),
+                'name': fields.Datetime.to_string(fields.Datetime.now()),
                 'payment_method_id': payment_method.id,
             })
 

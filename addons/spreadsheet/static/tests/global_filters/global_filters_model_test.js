@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { nextTick, patchDate } from "@web/../tests/helpers/utils";
+import { nextTick, patchDate, patchTimeZone } from "@web/../tests/helpers/utils";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { Model, DispatchResult, helpers, tokenize } from "@odoo/o-spreadsheet";
 import {
@@ -71,8 +71,9 @@ const DEFAULT_FIELD_MATCHINGS = {
 };
 
 function getFiltersMatchingPivot(model, formula) {
+    const sheetId = model.getters.getActiveSheetId();
     const pivotUIPlugin = model["handlers"].find((handler) => handler instanceof PivotUIPlugin);
-    return pivotUIPlugin._getFiltersMatchingPivot(tokenize(formula));
+    return pivotUIPlugin._getFiltersMatchingPivot(sheetId, tokenize(formula));
 }
 
 QUnit.module("spreadsheet > Global filters model", {}, () => {
@@ -1142,6 +1143,24 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(model.getters.getGlobalFilters()[0].label, "Arthouuuuuur");
     });
 
+    QUnit.test("Can undo-redo a MOVE_GLOBAL_FILTER", async function (assert) {
+        const model = await createModelWithDataSource();
+        addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {});
+        addGlobalFilter(model, NEXT_YEAR_GLOBAL_FILTER, {});
+
+        const lastYearFilterId = LAST_YEAR_GLOBAL_FILTER.id;
+
+        moveGlobalFilter(model, lastYearFilterId, 1);
+        assert.deepEqual(model.getters.getGlobalFilters()[1].id, lastYearFilterId);
+
+        model.dispatch("REQUEST_UNDO");
+        assert.deepEqual(model.getters.getGlobalFilters()[0].id, lastYearFilterId);
+
+        model.dispatch("REQUEST_REDO");
+        assert.deepEqual(model.getters.getGlobalFilters()[1].id, lastYearFilterId);
+    });
+
     QUnit.test("pivot headers won't change when adding a filter ", async function (assert) {
         assert.expect(6);
         const { model } = await createSpreadsheetWithPivot({
@@ -1723,7 +1742,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         });
     });
 
-    QUnit.test("from_to date filter domain value", async function (assert) {
+    QUnit.test("from_to date filter domain value on a date field", async function (assert) {
         const { model } = await createSpreadsheetWithPivot();
         /**@type GlobalFilter */
         const filter = {
@@ -1741,6 +1760,68 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const computedDomain = model.getters.getPivotComputedDomain("1");
         assertDateDomainEqual(assert, "date", "2022-01-01", "2022-05-16", computedDomain);
     });
+
+    QUnit.test(
+        "from_to date filter domain value on a datetime field UTC+2",
+        async function (assert) {
+            patchTimeZone(120); // UTC+2
+            const { model } = await createSpreadsheetWithPivot();
+            /**@type GlobalFilter */
+            const filter = {
+                id: "42",
+                type: "date",
+                label: "From To",
+                rangeType: "from_to",
+            };
+            const value = {
+                from: "2022-01-01",
+                to: "2022-05-16",
+            };
+            await addGlobalFilter(model, filter, {
+                pivot: { 1: { chain: "date", type: "datetime" } },
+            });
+            await setGlobalFilterValue(model, { id: "42", value });
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assertDateDomainEqual(
+                assert,
+                "date",
+                "2021-12-31 22:00:00",
+                "2022-05-16 21:59:59",
+                computedDomain
+            );
+        }
+    );
+
+    QUnit.test(
+        "from_to date filter domain value on a datetime field UTC-2",
+        async function (assert) {
+            patchTimeZone(-120); // UTC-2
+            const { model } = await createSpreadsheetWithPivot();
+            /**@type GlobalFilter */
+            const filter = {
+                id: "42",
+                type: "date",
+                label: "From To",
+                rangeType: "from_to",
+            };
+            const value = {
+                from: "2022-01-01",
+                to: "2022-05-16",
+            };
+            await addGlobalFilter(model, filter, {
+                pivot: { 1: { chain: "date", type: "datetime" } },
+            });
+            await setGlobalFilterValue(model, { id: "42", value });
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assertDateDomainEqual(
+                assert,
+                "date",
+                "2022-01-01 02:00:00",
+                "2022-05-17 01:59:59",
+                computedDomain
+            );
+        }
+    );
 
     QUnit.test(
         "set 'from_to' date filter domain value from specific date --> to specific date",
@@ -1978,6 +2059,36 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             assert.deepEqual(dateFilters2, [{ filterId: "43", value: { yearOffset: -6 } }]);
         }
     );
+
+    QUnit.test("getFiltersMatchingPivot works with date=false", async function (assert) {
+        const { model } = await createSpreadsheetWithPivot({
+            arch: /*xml*/ `
+                <pivot>
+                    <field name="product_id" type="row"/>
+                    <field name="probability" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+        });
+
+        await addGlobalFilter(
+            model,
+            {
+                id: "43",
+                type: "date",
+                label: "date filter 1",
+                rangeType: "fixedPeriod",
+                defaultValue: "this_month",
+            },
+            {
+                pivot: { 1: { chain: "date", type: "date" } },
+            }
+        );
+        const dateFilters1 = getFiltersMatchingPivot(
+            model,
+            '=ODOO.PIVOT.HEADER(1,"expected_revenue","date:month","false")'
+        );
+        assert.deepEqual(dateFilters1, [{ filterId: "43", value: undefined }]);
+    });
 
     QUnit.test(
         "getFiltersMatchingPivot return an empty array if there is no pivot formula",

@@ -794,6 +794,8 @@ class Channel(models.Model):
         """
         if not self:
             return []
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         channel_infos = []
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
         rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
@@ -840,6 +842,7 @@ class Channel(models.Model):
                     info['channelMembers'] = [('ADD', list(member._discuss_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'
                     info['message_unread_counter'] = member.message_unread_counter
+                    info["message_unread_counter_bus_id"] = bus_last_id
                     info['is_minimized'] = member.is_minimized
                     info['custom_notifications'] = member.custom_notifications
                     info['mute_until_dt'] = member.mute_until_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT) if member.mute_until_dt else False
@@ -1046,16 +1049,31 @@ class Channel(models.Model):
             'seen_message_id': last_message.id,
             'last_seen_dt': fields.Datetime.now(),
         })
-        data = {
-            'channel_id': self.id,
-            'id': member.id,
-            'last_message_id': last_message.id,
+        member_basic_info = {
+            "id": member.id,
+            "persona": {
+                "id": member.partner_id.id if member.partner_id else member.guest_id.id,
+                "type": "partner" if member.partner_id else "guest",
+            },
+            "lastSeenMessage": {"id": last_message.id} if last_message else False,
         }
-        data['partner_id' if current_partner else 'guest_id'] = current_partner.id if current_partner else current_guest.id
-        target = current_partner or current_guest
+        member_self_info = {
+            **member_basic_info,
+            "thread": {
+                "id": self.id,
+                "message_unread_counter": member.message_unread_counter,
+                # sudo: bus.bus: reading non-sensitive last id
+                "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
+                "model": "discuss.channel",
+                "seen_message_id": last_message.id
+            },
+        }
+        notifications = [
+            [current_partner or current_guest, "mail.record/insert", {"ChannelMember": member_self_info}],
+        ]
         if self.channel_type in self._types_allowing_seen_infos():
-            target = self
-        self.env['bus.bus']._sendone(target, 'discuss.channel.member/seen', data)
+            notifications.append([self, "mail.record/insert", {"ChannelMember": member_basic_info}])
+        self.env["bus.bus"]._sendmany(notifications)
 
     def _types_allowing_seen_infos(self):
         """ Return the channel types which allow sending seen infos notification
@@ -1200,13 +1218,25 @@ class Channel(models.Model):
         if not self:
             return []
         self.env['mail.message'].flush_model()
-        self.env.cr.execute("""
-            SELECT res_id AS id, MAX(id) AS message_id
-            FROM mail_message
-            WHERE model = 'discuss.channel' AND res_id IN %s
-            GROUP BY res_id
-            """, (tuple(self.ids),))
-        return self.env.cr.dictfetchall()
+        self.env.cr.execute(
+            """
+                   SELECT ARRAY_AGG(discuss_channel.id),
+                          ARRAY_AGG(last_message_id)
+                     FROM discuss_channel
+        LEFT JOIN LATERAL (
+                              SELECT id
+                                FROM mail_message
+                               WHERE mail_message.model = 'discuss.channel'
+                                 AND mail_message.res_id = discuss_channel.id
+                            ORDER BY id DESC
+                               LIMIT 1
+                          ) AS t(last_message_id) ON TRUE
+                    WHERE discuss_channel.id IN %(ids)s
+            """,
+            {"ids": tuple(self.ids)},
+        )
+        channel_ids, message_ids = self.env.cr.fetchone()
+        return [{"id": cid, "message_id": mid} for cid, mid in zip(channel_ids, message_ids) if mid]
 
     def load_more_members(self, known_member_ids):
         self.ensure_one()

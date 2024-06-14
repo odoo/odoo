@@ -216,6 +216,11 @@ export class PosStore extends Reactive {
             searchTerm: "",
         };
     }
+
+    async setDiscountFromUI(line, val) {
+        line.set_discount(val);
+    }
+
     getDefaultPricelist() {
         const current_order = this.get_order();
         if (current_order) {
@@ -1242,7 +1247,11 @@ export class PosStore extends Reactive {
      * while processing orders in the backend
      */
     _getCreateOrderContext(orders, options) {
-        return this.context || {};
+        const orderContext = this.context || {};
+        if (options.printedOrders !== undefined) {
+            orderContext.is_receipt_printed = options.printedOrders;
+        }
+        return orderContext;
     }
     // send an array of orders to the server
     // available options:
@@ -1750,6 +1759,10 @@ export class PosStore extends Reactive {
     }
 
     disallowLineQuantityChange() {
+        return false;
+    }
+
+    disallowLineDiscountChange() {
         return false;
     }
 

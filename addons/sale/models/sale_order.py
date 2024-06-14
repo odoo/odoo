@@ -604,9 +604,13 @@ class SaleOrder(models.Model):
                 lambda line: not line.display_type and not line._is_delivery()
             ).mapped(lambda line: line and line._expected_date())
             if dates_list:
-                order.expected_date = min(dates_list)
+                order.expected_date = order._select_expected_date(dates_list)
             else:
                 order.expected_date = False
+
+    def _select_expected_date(self, expected_dates):
+        self.ensure_one()
+        return min(expected_dates)
 
     def _compute_is_expired(self):
         today = fields.Date.today()
@@ -631,7 +635,7 @@ class SaleOrder(models.Model):
             # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
             if order.invoice_status == 'invoiced':
                 order.amount_to_invoice = 0.0
-                return
+                continue
 
             invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted')
             # Note: A negative amount can happen, since we can invoice more than the sales order amount.
@@ -1096,7 +1100,6 @@ class SaleOrder(models.Model):
     def action_update_taxes(self):
         self.ensure_one()
 
-        self._recompute_prices()
         self._recompute_taxes()
 
         if self.partner_id:

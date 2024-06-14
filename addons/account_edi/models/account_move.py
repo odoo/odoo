@@ -264,7 +264,8 @@ class AccountMove(models.Model):
 
         self.env['account.edi.document'].create(edi_document_vals_list)
         posted.edi_document_ids._process_documents_no_web_services()
-        self.env.ref('account_edi.ir_cron_edi_network')._trigger()
+        if not self.env.context.get('skip_account_edi_cron_trigger'):
+            self.env.ref('account_edi.ir_cron_edi_network')._trigger()
         return posted
 
     def button_cancel(self):

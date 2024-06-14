@@ -28,6 +28,7 @@
 # Martin Trigaux, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Collex100, 2024
+# nadia martynova, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -57,9 +58,9 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Ход (%s) не сбалансирован.\n"
+"Движение средств (%s) не сбалансировано.\n"
 "Сумма дебетов равна %s, а сумма кредитов равна %s.\n"
-"Возможно, вы захотите указать счет по умолчанию в журнале \"%s\", чтобы автоматически балансировать каждый ход."
+"Возможно, вы захотите указать счет по умолчанию в журнале \"%s\", чтобы автоматически сбалансировать каждое движение средств."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -556,9 +557,7 @@ msgstr "<b>Применяется скидка за раннюю оплату.</
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
+msgid "<br/> on this account:"
 msgstr ""
 
 #. module: account
@@ -2983,7 +2982,7 @@ msgstr "Август"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto validate"
-msgstr "Автоматическая проверка"
+msgstr "Автоматическое подтверждение"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3020,7 +3019,7 @@ msgstr "Автопостинг до"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Auto-validate"
-msgstr "Автоматическая проверка"
+msgstr "Автоматическое подтверждение"
 
 #. module: account
 #. odoo-python
@@ -3479,7 +3478,7 @@ msgstr "Счета к оплате"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr "Счета для проверки"
+msgstr "Счета для проверки и подтверждения"
 
 #. module: account
 #. odoo-python
@@ -5625,7 +5624,7 @@ msgstr "Демонстрационный счет продажи земли"
 #. module: account
 #: model:account.account.tag,name:account.demo_stock_account
 msgid "Demo Stock Account"
-msgstr "Демо-счет акций"
+msgstr "Демо-счет (Стоимость заказов на складе)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -6144,17 +6143,6 @@ msgstr "Дублирование банковских счетов партне�
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicated_ref_ids
 msgid "Duplicated Ref"
 msgstr "Дублированная ссылка"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Обнаружена дублированная ссылка поставщика. Вероятно, вы дважды закодировали"
-" один и тот же счет-фактуру / кредитную ноту."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -8315,7 +8303,7 @@ msgstr "Счет оплачен"
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Счет-фактура подтвержден"
+msgstr "Счет-фактура подтверждена"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_date
@@ -8412,7 +8400,7 @@ msgstr "Счета-фактуры успешно отправлены."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Счета-фактуры для проверки"
+msgstr "Счета-фактуры для проверки и подтверждения"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -10306,7 +10294,7 @@ msgstr "После этого нажмите кнопку \"Продолжить
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once everything is as you want it, validate."
-msgstr "Когда все будет так, как вы хотите, проверьте."
+msgstr "Если все верно, подтвердите. "
 
 #. module: account
 #. odoo-javascript
@@ -10433,13 +10421,6 @@ msgstr "Упс"
 #, python-format
 msgid "Open"
 msgstr "Открыть"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Открыть список"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -11767,7 +11748,7 @@ msgstr "Валюта расписки"
 #: model:ir.ui.menu,name:account.menu_action_move_in_receipt_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_receipt_type
 msgid "Receipts"
-msgstr "Квитанции"
+msgstr "Приемка"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_receivable
@@ -13390,17 +13371,18 @@ msgstr "Шаг выполнен!"
 #. module: account
 #: model:account.account,name:account.1_stock_out
 msgid "Stock Interim (Delivered)"
-msgstr "Промежуточный запас (с поставкой)"
+msgstr "Зарезервированный запас на складе (для доставки клиенту) "
 
 #. module: account
 #: model:account.account,name:account.1_stock_in
 msgid "Stock Interim (Received)"
-msgstr "Промежуточные (полученные) акции"
+msgstr ""
+"Зарезервированные запасы на складе (для получения товаров от поставщика) "
 
 #. module: account
 #: model:account.account,name:account.1_stock_valuation
 msgid "Stock Valuation"
-msgstr "Оценка стоимости акций"
+msgstr "Стоимость запасов на складе"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13960,6 +13942,13 @@ msgstr "Условия и положения"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__text_value
 msgid "Text Value"
 msgstr "Значение текста"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+#, python-format
+msgid "Text copied"
+msgstr "Текст скопирован"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -15499,7 +15488,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
 msgid "To validate"
-msgstr "Чтобы подтвердить"
+msgstr "Требуется подтверждение"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__today
@@ -16845,7 +16834,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -17365,7 +17354,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot validate a document with an inactive currency: %s"
-msgstr "Вы не можете проверить документ с неактивной валютой: %s"
+msgstr "Вы не можете подтвердить документ с неактивной валютой: %s"
 
 #. module: account
 #. odoo-python

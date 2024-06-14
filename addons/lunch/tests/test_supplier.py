@@ -186,3 +186,39 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
 
         self.supplier_kothai.automatic_email_time -= 1
         self.assertEqual(cron_ny.nextcall, old_nextcall + timedelta(days=1, hours=1))
+
+    def test_remove_toppings(self):
+        partner = self.env['res.partner'].create({
+                'name': 'Partner',
+            })
+
+        supplier = self.env['lunch.supplier'].create({
+            'partner_id': partner.id,
+            'send_by': 'phone',
+            'topping_ids_2': [
+                (0, 0, {
+                    'name': 'salt',
+                    'price': 7,
+                    'company_id': self.env.company.id
+                }),
+            ],
+            'topping_ids_3': [
+                (0, 0, {
+                    'name': 'sugar',
+                    'price': 10,
+                    'company_id': self.env.company.id
+                }),
+            ],
+        })
+
+        # simulating the delete as it's done on frontend
+        supplier.write({
+            'topping_ids_2': [(2, supplier.topping_ids_2.id)],
+        })
+        self.assertFalse(supplier.topping_ids_2)
+
+        # simulating the delete as it's done on frontend
+        supplier.write({
+            'topping_ids_3': [(2, supplier.topping_ids_3.id)],
+        })
+        self.assertFalse(supplier.topping_ids_3)

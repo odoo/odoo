@@ -254,18 +254,20 @@ class AccountMove(models.Model):
             totals['total_taxes_withheld'] += sum((abs(tax["tax_amount"]) for tax in taxes_withheld_computed))
 
             invoice_line_values.update({
+                'FileReference': self._l10n_es_edi_facturae_get_filename().split('.')[0][:20],
+                'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
                 'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
                 'UnitPriceWithoutTax': line.currency_id.round(price_before_discount / line.quantity if line.quantity else 0.),
                 'TotalCost': price_before_discount,
                 'DiscountsAndRebates': [{
-                    'DiscountReason': '',
+                    'DiscountReason': '/',
                     'DiscountRate': f'{line.discount:.2f}',
                     'DiscountAmount': discount
                 }, ] if discount != 0. else [],
                 'Charges': [{
-                    'ChargeReason': '',
+                    'ChargeReason': '/',
                     'ChargeRate': f'{max(0, -line.discount):.2f}',
                     'ChargeAmount': surcharge,
                 }, ] if surcharge != 0. else [],

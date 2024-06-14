@@ -53,6 +53,27 @@ msgstr "\"URL de\" no puede estar vacía."
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr ""
+"\"URL a\" no puede estar configurada como \"/\". Para cambiar el contenido "
+"de la página de inicio use el campo \"URL de la página de inicio\" en los "
+"ajustes del sitio web o las propiedades de la página en cualquier página "
+"personalizada."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr "\"URL a\" no puede estar configurada con una página existente."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL a\" no puede estar vacía."
 
@@ -4241,12 +4262,12 @@ msgstr "Descubra todas las características"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover more"
-msgstr "Descubrir más"
+msgstr "Más información"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Discover more <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
-msgstr "Descubrir más <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
+msgstr "Más información <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_image_text
@@ -6056,6 +6077,13 @@ msgid "Hide For"
 msgstr "Ocultar para"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "Ocultar la barra de cookies"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
 msgstr "Ocultar esta página de los resultados de búsqueda"
@@ -7288,7 +7316,7 @@ msgstr "Claro"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Light &amp; Dark"
-msgstr "Claro &amp; oscuro"
+msgstr "Claro y oscuro"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
@@ -7564,7 +7592,7 @@ msgstr "Márgenes"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Mark Text"
-msgstr "Marcar texto"
+msgstr "Indicador de texto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8517,7 +8545,7 @@ msgstr "Cuando se desliza"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "On Success"
-msgstr "Éxito"
+msgstr "Al enviar"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2b
@@ -8602,9 +8630,9 @@ msgstr ""
 "la vista primaria más cercana (via inherit_id), y luego se aplica a todas las vistas\n"
 "que hereden de ella\n"
 "* Si es primaria, la vista primaria más cercana se resuelve completamente (incluso si utiliza un\n"
-"modelo diferente a este), y más tarde se aplican las especificaciones de herencia\n"
+"modelo diferente a este), las especificaciones de herencia se aplican después \n"
 "(<xpath/>) y el resultado se utiliza como si fuera la arquitectura real\n"
-"de la vista.\n"
+"de esta vista.\n"
 
 #. module: website
 #. odoo-javascript
@@ -10503,6 +10531,13 @@ msgid "Show site map"
 msgstr "Mostrar mapa del sitio"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "Mostrar la barra de cookies"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Desktop"
 msgstr "Mostrar/ocultar en el escritorio"
@@ -11491,7 +11526,7 @@ msgstr "Vista de interfaz del tema"
 #. module: website
 #: model:ir.model,name:website.model_theme_utils
 msgid "Theme Utils"
-msgstr "Utilidades del tema"
+msgstr "Herramientas del tema"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
@@ -13110,7 +13145,7 @@ msgstr "Menú del sitio web"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
-msgstr "Descripción meta del sitio web"
+msgstr "Meta descripción del sitio web"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
@@ -13126,7 +13161,7 @@ msgstr "Palabras clave meta del sitio web"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
-msgstr "Título  meta del sitio web"
+msgstr "Meta título del sitio web"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_og_img
