@@ -17,7 +17,6 @@ from os.path import join as opj, normpath
 import odoo
 import odoo.tools as tools
 import odoo.release as release
-from odoo.tools import pycompat
 from odoo.tools.misc import file_path
 
 
@@ -103,7 +102,7 @@ def initialize_sys_path():
 
     # hook odoo.addons on addons paths
     for ad in tools.config['addons_path'].split(','):
-        ad = os.path.normcase(os.path.abspath(tools.ustr(ad.strip())))
+        ad = os.path.normcase(os.path.abspath(ad.strip()))
         if ad not in odoo.addons.__path__:
             odoo.addons.__path__.append(ad)
 
@@ -116,7 +115,7 @@ def initialize_sys_path():
     from odoo import upgrade
     legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
     for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
-        up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
+        up = os.path.normcase(os.path.abspath(up.strip()))
         if os.path.isdir(up) and up not in upgrade.__path__:
             upgrade.__path__.append(up)
 

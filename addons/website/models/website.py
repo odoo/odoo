@@ -709,7 +709,7 @@ class Website(models.Model):
                         shape_el = el.xpath("//*[hasclass('o_we_shape')]")
                         if shape_el:
                             shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
-                    rendered_snippet = pycompat.to_text(etree.tostring(el))
+                    rendered_snippet = etree.tostring(el, encoding='unicode')
                     rendered_snippets.append(rendered_snippet)
                 except ValueError as e:
                     logger.warning(e)

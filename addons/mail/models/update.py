@@ -68,7 +68,7 @@ class PublisherWarrantyContract(AbstractModel):
         Utility method to send a publisher warranty get logs messages.
         """
         msg = self._get_message()
-        arguments = {'arg0': ustr(msg), "action": "update"}
+        arguments = {'arg0': str(msg), "action": "update"}
 
         url = config.get("publisher_warranty_url")
 

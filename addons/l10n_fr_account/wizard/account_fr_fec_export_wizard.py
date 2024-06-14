@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
-
+import csv
 import io
-from odoo.tools import float_is_zero, pycompat, SQL
+from odoo.tools import float_is_zero, SQL
 from odoo import fields, models, api
 from odoo.tools.misc import get_lang
 from stdnum.fr import siren
@@ -311,14 +311,12 @@ class FecExportWizard(models.TransientModel):
             aj_name=aj_name,
             aa_name=aa_name,
         )
-        with io.BytesIO() as fecfile:
-            csv_writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
+        with io.StringIO() as fecfile:
+            csv_writer = csv.writer(fecfile, delimiter='|', lineterminator='\r\n')
 
             # Write header and initial balances
             for initial_row in rows_to_write:
                 initial_row = list(initial_row)
-                # We don't skip \n at then end of the file if there are only initial balances, for simplicity. An empty period export shouldn't happen IRL.
-                initial_row[-1] += u'\r\n'
                 csv_writer.writerow(initial_row)
 
             # Write current period's data
@@ -330,11 +328,13 @@ class FecExportWizard(models.TransientModel):
                 query_results = self._cr.fetchall()
                 for i, row in enumerate(query_results[:query_limit]):
                     if i < len(query_results) - 1:
-                        # The file is not allowed to end with an empty line, so we can't use lineterminator on the writer
                         row = list(row)
-                        row[-1] += u'\r\n'
                     csv_writer.writerow(row)
-            content = fecfile.getvalue()
+            # The file is not allowed to end with an empty line, so rewind last
+            # terminator
+            if fecfile.tell():
+                fecfile.truncate(fecfile.tell() - 2)
+            content = fecfile.getvalue().encode()
 
 
         end_date = fields.Date.to_string(self.date_to).replace('-', '')

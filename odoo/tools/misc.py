@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from __future__ import annotations
-
 """
 Miscellaneous tools used by OpenERP.
 """
+
+from __future__ import annotations
+
 import base64
 import cProfile
 import collections
 import contextlib
+import csv
 import datetime
 import hmac as hmac_lib
 import hashlib
@@ -39,9 +41,7 @@ from typing import TYPE_CHECKING
 import babel
 import babel.dates
 import markupsafe
-import passlib.utils
 import pytz
-import werkzeug.utils
 from lxml import etree
 
 import odoo
@@ -50,10 +50,8 @@ import odoo.addons
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
 from odoo.tools.float_utils import float_round
-from . import pycompat
 from .cache import *
 from .config import config
-from .parse_version import parse_version
 from .which import which
 
 if TYPE_CHECKING:
@@ -400,8 +398,8 @@ def scan_languages():
     """
     try:
         # read (code, name) from languages in base/data/res.lang.csv
-        with file_open('base/data/res.lang.csv', 'rb') as csvfile:
-            reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
+        with file_open('base/data/res.lang.csv') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
             code_index = fields.index("code")
             name_index = fields.index("name")
@@ -430,15 +428,31 @@ def mod10r(number):
             report = codec[ (int(digit) + report) % 10 ]
     return result + str((10 - report) % 10)
 
-def str2bool(s, default=None):
-    s = ustr(s).lower()
-    y = 'y yes 1 true t on'.split()
-    n = 'n no 0 false f off'.split()
-    if s not in (y + n):
+
+def str2bool(s: str, default: bool | None = None) -> bool:
+    # allow this (for now?) because it's used for get_param
+    if type(s) is bool:
+        return s
+
+    if not isinstance(s, str):
+        warnings.warn(
+            f"Passed a non-str to `str2bool`: {s}",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         if default is None:
             raise ValueError('Use 0/1/yes/no/true/false/on/off')
         return bool(default)
-    return s in y
+
+    s = s.lower()
+    if s in ('y', 'yes', '1', 'true', 't', 'on'):
+        return True
+    if s in ('n', 'no', '0', 'false', 'f', 'off'):
+        return False
+    if default is None:
+        raise ValueError('Use 0/1/yes/no/true/false/on/off')
+    return bool(default)
 
 def human_size(sz):
     """
@@ -611,9 +625,8 @@ def remove_accents(input_str):
     meaning of input_str and work only for some cases"""
     if not input_str:
         return input_str
-    input_str = ustr(input_str)
     nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
+    return ''.join(c for c in nkfd_form if not unicodedata.combining(c))
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks

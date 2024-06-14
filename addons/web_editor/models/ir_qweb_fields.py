@@ -84,10 +84,10 @@ class IrQWeb(models.AbstractModel):
         # - "form": forbid if forms are sanitized
         forbid_sanitize = el.attrib.pop('t-forbid-sanitize', None)
         div = '<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s" %s>' % (
-            escape(pycompat.to_text(name)),
-            escape(pycompat.to_text(thumbnail)),
-            escape(pycompat.to_text(view.id)),
-            escape(pycompat.to_text(el.findtext('keywords'))),
+            escape(name),
+            escape(thumbnail),
+            escape(view.id),
+            escape(el.findtext('keywords') or ''),
             f'data-oe-forbid-sanitize="{forbid_sanitize}"' if forbid_sanitize else '',
         )
         self._append_text(div, compile_context)
@@ -110,9 +110,9 @@ class IrQWeb(models.AbstractModel):
                 return []
             name = el.attrib.get('string') or 'Snippet'
             div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (
-                escape(pycompat.to_text(name)),
+                escape(name),
                 module.id,
-                escape(pycompat.to_text(thumbnail))
+                escape(thumbnail)
             )
             self._append_text(div, compile_context)
         return []
@@ -283,7 +283,7 @@ class Date(models.AbstractModel):
 
             if record[field_name]:
                 date = fields.Date.from_string(record[field_name])
-                value_format = pycompat.to_text(babel.dates.format_date(date, format=babel_format, locale=locale))
+                value_format = babel.dates.format_date(date, format=babel_format, locale=locale)
 
             attrs['data-oe-original-with-format'] = value_format
         return attrs
@@ -322,7 +322,7 @@ class DateTime(models.AbstractModel):
             if value:
                 # convert from UTC (server timezone) to user timezone
                 value = fields.Datetime.context_timestamp(self.with_context(tz=tz), timestamp=value)
-                value_format = pycompat.to_text(babel.dates.format_datetime(value, format=babel_format, locale=locale))
+                value_format = babel.dates.format_datetime(value, format=babel_format, locale=locale)
                 value = fields.Datetime.to_string(value)
 
             attrs['data-oe-original'] = value
@@ -383,8 +383,6 @@ class Selection(models.AbstractModel):
         value = element.text_content().strip()
         selection = field.get_description(self.env)['selection']
         for k, v in selection:
-            if isinstance(v, str):
-                v = ustr(v)
             if value == v:
                 return k
 

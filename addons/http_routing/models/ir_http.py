@@ -54,11 +54,11 @@ def slugify_one(s, max_length=0):
         Otherwise it will process string by stripping leading and ending spaces,
         converting unicode chars to ascii, lowering all chars and replacing spaces
         and underscore with hyphen "-".
-        :param s: str
-        :param max_length: int
+
+        :type s: str
+        :type max_length: int
         :rtype: str
     """
-    s = ustr(s)
     if slugify_lib:
         # There are 2 different libraries only python-slugify is supported
         try:

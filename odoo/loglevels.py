@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import sys
+import contextlib
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG = 'debug'
@@ -38,9 +37,6 @@ def get_encodings(hint_encoding='utf-8'):
         if prefenc:
             yield prefenc
 
-# not using pycompat to avoid circular import: pycompat is in tools much of
-# which comes back to import loglevels
-text_type = type(u'')
 def ustr(value, hint_encoding='utf-8', errors='strict'):
     """This method is similar to the builtin `unicode`, except
     that it may try multiple encodings to find one that works
@@ -64,7 +60,7 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     # cases faster (isinstance/issubclass are significantly slower)
     ttype = type(value)
 
-    if ttype is text_type:
+    if ttype is str:
         return value
 
     # special short-circuit for str, as we still needs to support
@@ -73,32 +69,28 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
 
         # try hint_encoding first, avoids call to get_encoding()
         # for the most common case
-        try:
+        with contextlib.suppress(Exception):
             return value.decode(hint_encoding, errors=errors)
-        except Exception:
-            pass
 
         # rare: no luck with hint_encoding, attempt other ones
         for ln in get_encodings(hint_encoding):
-            try:
+            with contextlib.suppress(Exception):
                 return value.decode(ln, errors=errors)
-            except Exception:
-                pass
 
     if isinstance(value, Exception):
         return exception_to_unicode(value)
 
     # fallback for non-string values
     try:
-        return text_type(value)
+        return str(value)
     except Exception:
-        raise UnicodeError('unable to convert %r' % (value,))
+        raise UnicodeError(f'unable to convert {value!r}') from None
 
 
 def exception_to_unicode(e):
     if getattr(e, 'args', ()):
-        return "\n".join((ustr(a) for a in e.args))
+        return "\n".join(map(str, e.args))
     try:
-        return text_type(e)
+        return str(e)
     except Exception:
-        return u"Unknown message"
+        return "Unknown message"

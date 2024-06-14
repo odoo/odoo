@@ -34,7 +34,7 @@ from psycopg2.extras import Json
 
 import odoo
 from odoo.exceptions import UserError
-from . import config, pycompat
+from . import config
 from .misc import file_open, file_path, get_iso_codes, OrderedSet, SKIPPED_ELEMENT_TYPES
 
 _logger = logging.getLogger(__name__)
@@ -138,12 +138,6 @@ class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
 
 csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
-
-
-# FIXME: holy shit this whole thing needs to be cleaned up hard it's a mess
-def encode(s):
-    assert isinstance(s, str)
-    return s
 
 
 # which elements are translated inline
@@ -772,9 +766,10 @@ def TranslationFileWriter(target, fileformat='po', lang=None):
                       '.csv, .po, or .tgz (received .%s).') % fileformat)
 
 
+_writer = codecs.getwriter('utf-8')
 class CSVFileWriter:
     def __init__(self, target):
-        self.writer = pycompat.csv_writer(target, dialect='UNIX')
+        self.writer = csv.writer(_writer(target), dialect='UNIX')
         # write header first
         self.writer.writerow(("module","type","name","res_id","src","value","comments"))
 
@@ -1047,7 +1042,7 @@ class TranslationReader:
 
     def __iter__(self):
         for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
-            yield (module, ttype, name, res_id, source, encode(odoo.tools.ustr(value)), comments)
+            yield (module, ttype, name, res_id, source, value, comments)
 
     def _push_translation(self, module, ttype, name, res_id, source, comments=None, record_id=None, value=None):
         """ Insert a translation that will be used in the file generation
@@ -1298,7 +1293,7 @@ class TranslationModuleReader(TranslationReader):
                 lineno, message, comments = extracted[:3]
                 value = translations.get(message, '')
                 self._push_translation(module, trans_type, display_path, lineno,
-                                 encode(message), comments + extra_comments, value=value)
+                                       message, comments + extra_comments, value=value)
         except Exception:
             _logger.exception("Failed to extract terms from %s", fabsolutepath)
         finally:

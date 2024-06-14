@@ -197,7 +197,7 @@ from .modules.module import get_manifest
 from .modules.registry import Registry
 from .service import security, model as service_model
 from .tools import (config, consteq, date_utils, file_path, get_lang,
-                    parse_version, profiler, submap, unique, ustr)
+                    parse_version, profiler, submap, unique, exception_to_unicode)
 from .tools.func import filter_kwargs, lazy_property
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
@@ -439,7 +439,7 @@ def serialize_exception(exception):
     return {
         'name': f'{module}.{name}' if module else name,
         'debug': traceback.format_exc(),
-        'message': ustr(exception),
+        'message': exception_to_unicode(exception),
         'arguments': exception.args,
         'context': getattr(exception, 'context', {}),
     }

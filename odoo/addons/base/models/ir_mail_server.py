@@ -22,7 +22,7 @@ from urllib3.contrib.pyopenssl import PyOpenSSLContext
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import ustr, pycompat, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
+from odoo.tools import ustr, formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
 
 
 _logger = logging.getLogger(__name__)
@@ -560,7 +560,7 @@ class IrMailServer(models.Model):
             msg['Bcc'] = email_bcc
         msg['Date'] = datetime.datetime.utcnow()
         for key, value in headers.items():
-            msg[pycompat.to_text(ustr(key))] = value
+            msg[key] = value
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:

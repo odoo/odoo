@@ -365,7 +365,6 @@ class IrFieldsConverter(models.AbstractModel):
         selection = field.get_description(env)['selection']
 
         for item, label in selection:
-            label = ustr(label)
             if callable(field.selection):
                 labels = [label]
                 for item2, label2 in field._description_selection(self.env):

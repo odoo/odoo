@@ -159,7 +159,7 @@ class IntegerConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if options.get('format_decimalized_number'):
             return tools.format_decimalized_number(value, options.get('precision_digits', 1))
-        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}'))
+        return self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')
 
 
 class FloatConverter(models.AbstractModel):
@@ -197,7 +197,7 @@ class FloatConverter(models.AbstractModel):
         if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
 
-        return pycompat.to_text(formatted)
+        return formatted
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -249,7 +249,6 @@ class DateTimeConverter(models.AbstractModel):
 
         lang = self.user_lang()
         locale = babel_locale_parse(lang.code)
-        format_func = babel.dates.format_datetime
         if isinstance(value, str):
             value = fields.Datetime.from_string(value)
 
@@ -265,11 +264,11 @@ class DateTimeConverter(models.AbstractModel):
             pattern = options['format']
         else:
             if options.get('time_only'):
-                strftime_pattern = ("%s" % (lang.time_format))
+                strftime_pattern = lang.time_format
             elif options.get('date_only'):
-                strftime_pattern = ("%s" % (lang.date_format))
+                strftime_pattern = lang.date_format
             else:
-                strftime_pattern = ("%s %s" % (lang.date_format, lang.time_format))
+                strftime_pattern = "%s %s" % (lang.date_format, lang.time_format)
 
             pattern = posix_to_ldml(strftime_pattern, locale=locale)
 
@@ -277,13 +276,11 @@ class DateTimeConverter(models.AbstractModel):
             pattern = pattern.replace(":ss", "").replace(":s", "")
 
         if options.get('time_only'):
-            format_func = babel.dates.format_time
-            return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
-        if options.get('date_only'):
-            format_func = babel.dates.format_date
-            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
-
-        return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
+            return babel.dates.format_time(value, format=pattern, tzinfo=tzinfo, locale=locale)
+        elif options.get('date_only'):
+            return babel.dates.format_date(value, format=pattern, locale=locale)
+        else:
+            return babel.dates.format_datetime(value, format=pattern, tzinfo=tzinfo, locale=locale)
 
 
 class TextConverter(models.AbstractModel):
@@ -319,7 +316,7 @@ class SelectionConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
-        return escape(pycompat.to_text(options['selection'][value]) or '')
+        return escape(options['selection'][value] or '')
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -699,7 +696,7 @@ class RelativeDatetimeConverter(models.AbstractModel):
         # value should be a naive datetime in UTC. So is fields.Datetime.now()
         reference = fields.Datetime.from_string(options['now'])
 
-        return pycompat.to_text(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
+        return babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale)
 
     @api.model
     def record_to_html(self, record, field_name, options):

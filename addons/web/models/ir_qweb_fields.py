@@ -106,9 +106,9 @@ class Image(models.AbstractModel):
         for name, value in atts.items():
             if value:
                 img.append(' ')
-                img.append(escape(pycompat.to_text(name)))
+                img.append(escape(name))
                 img.append('="')
-                img.append(escape(pycompat.to_text(value)))
+                img.append(escape(value))
                 img.append('"')
         img.append('/>')
 

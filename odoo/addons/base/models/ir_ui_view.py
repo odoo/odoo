@@ -247,7 +247,7 @@ actual arch.
                         lambda term: translation_dictionary[term][lang],
                         arch_fs
                     )
-            view.arch = pycompat.to_text(arch_fs or view.arch_db)
+            view.arch = arch_fs or view.arch_db
 
     def _inverse_arch(self):
         for view in self:
@@ -367,7 +367,7 @@ actual arch.
             except (etree.ParseError, ValueError) as e:
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
-                    error=tools.ustr(e),
+                    error=e,
                     view=self.key or self.id,
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
@@ -405,16 +405,18 @@ actual arch.
                     fivelines = "".join(lines[max(0, e.context["line"]-3):e.context["line"]+2])
                     err = ValidationError(_(
                         "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
-                        fivelines=fivelines, error=tools.ustr(e),
+                        fivelines=fivelines, error=e,
                     ))
                     err.context = e.context
                     raise err.with_traceback(e.__traceback__) from None
-                else:
+                elif err.__context__:
                     err = ValidationError(_(
-                        "Error while validating view (%(view)s):\n\n%(error)s", view=self.key or self.id, error=tools.ustr(e.__context__),
+                        "Error while validating view (%(view)s):\n\n%(error)s", view=self.key or self.id, error=e.__context__,
                     ))
                     err.context = {'name': 'invalid view'}
                     raise err.with_traceback(e.__context__.__traceback__) from None
+                else:
+                    raise
 
         return True
 

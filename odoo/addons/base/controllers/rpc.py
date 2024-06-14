@@ -78,9 +78,8 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
     # By default, in xmlrpc, bytes are converted to xmlrpc.client.Binary object.
     # Historically, odoo is sending binary as base64 string.
     # In python 3, base64.b64{de,en}code() methods now works on bytes.
-    # Convert them to str to have a consistent behavior between python 2 and python 3.
     def dump_bytes(self, value, write):
-        self.dump_unicode(ustr(value), write)
+        self.dump_unicode(value.decode(), write)
 
     def dump_datetime(self, value, write):
         # override to marshall as a string for backwards compatibility
