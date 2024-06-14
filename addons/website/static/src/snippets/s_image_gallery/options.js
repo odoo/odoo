@@ -291,9 +291,12 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         const $carousel = this.$bsTarget.is(".carousel") ? this.$bsTarget : this.$bsTarget.find(".carousel");
         let _previousEditor;
         let _miniatureClicked;
-        this.$target[0].querySelector(".carousel-indicators").addEventListener("click", () => {
-            _miniatureClicked = true;
-        });
+        const carouselIndicatorsEl = this.$target[0].querySelector(".carousel-indicators");
+        if (carouselIndicatorsEl) {
+            carouselIndicatorsEl.addEventListener("click", () => {
+                _miniatureClicked = true;
+            });
+        }
         let lastSlideTimeStamp;
         $carousel.on("slide.bs.carousel.image_gallery", (ev) => {
             lastSlideTimeStamp = ev.timeStamp;
