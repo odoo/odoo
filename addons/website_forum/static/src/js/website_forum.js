@@ -191,6 +191,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         let $textarea = $form.find('textarea[name=content]');
         // It's not really in the textarea that the user write at first
         const fillableTextAreaEl = $form[0].querySelector(".o_wysiwyg_textarea_wrapper");
+        const buttonWithSpan = fillableTextAreaEl.querySelector('button span');
+        if (buttonWithSpan && buttonWithSpan.textContent) {
+            fillableTextAreaEl.querySelector('button span').textContent = '';
+        }
         const isTextAreaFilled = fillableTextAreaEl &&
             (fillableTextAreaEl.innerText.trim() || fillableTextAreaEl.querySelector("img"));
 
