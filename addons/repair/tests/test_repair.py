@@ -490,3 +490,80 @@ class TestRepair(AccountTestInvoicingCommon):
         repair_order.action_repair_start()
         repair_order.action_repair_end()
         self.assertEqual(repair_order.state, 'done')
+
+    def test_repair_check_location(self):
+        # Test that the location of repair order has been updated correctly after the change lot.
+        self.product_a.tracking = 'lot'
+        self.product_a.type = 'product'
+
+        # Create two serial numbers
+        lot_A = self.env['stock.lot'].create({'name': 'lot_A', 'product_id': self.product_a.id})
+        lot_B = self.env['stock.lot'].create({'name': 'lot_B', 'product_id': self.product_a.id})
+        lot_C = self.env['stock.lot'].create({'name': 'lot_C', 'product_id': self.product_a.id})
+
+        stock_location_shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+        })
+        stock_location_shelf_2 = self.env['stock.location'].create({
+            'name': 'Shelf 2',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_1, 10, lot_id=lot_A)
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_1, 5, lot_id=lot_B)
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_2, 5, lot_id=lot_B)
+
+        # create a return picking
+        repair_form = Form(self.env['repair.order'])
+        repair_form.product_id = self.product_a
+        repair_form.lot_id = lot_A
+        self.assertEqual(repair_form.location_id, stock_location_shelf_1)
+
+        # Check location of repair order has been updated correctly when selected lot have multiple location.
+        repair_form.lot_id = lot_B
+        self.assertEqual(repair_form.location_id, self.stock_warehouse.lot_stock_id)
+
+        # Check when selected lot's location is not in ['internal', 'customer', 'transit'], or lot doesn't have any quant
+        repair_form.lot_id = lot_C
+        self.assertEqual(repair_form.location_id.id, self.stock_warehouse.lot_stock_id.id)
+
+    def test_repair_check_picking(self):
+        # Test that when return is assign to repair order then the location will take from return's destination location
+        self.product_a.type = 'product'
+        stock_location_shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_a, stock_location_shelf_1, 10)
+
+        # Create new picking: 5 product_a
+        picking_form = Form(self.env['stock.picking'])
+        ptout = self.env['stock.picking.type'].search([('code', '=', 'outgoing'), ('company_id', '=', self.env.company.id)], limit=1)
+        picking_form.picking_type_id = ptout
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_a
+            move.product_uom_qty = 5
+            move.quantity_done = 5
+        picking = picking_form.save()
+        picking.location_id = stock_location_shelf_1
+        picking.action_confirm()
+        picking.button_validate()
+
+        # create a return picking
+        return_wizard = self.env['stock.return.picking'].with_context(active_id=picking.id, active_ids=picking.ids).create({
+            'location_id': picking.location_id.id,
+            'picking_id': picking.id,
+        })
+        return_wizard._onchange_picking_id()
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res["res_id"])
+        return_picking.action_confirm()
+        return_picking.button_validate()
+
+        # create repair from return
+        res_dict = return_picking.action_repair_return()
+        repair_form = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context']))
+
+        # Check that the location in repair is set location of picking
+        self.assertEqual(repair_form.location_id, stock_location_shelf_1)
