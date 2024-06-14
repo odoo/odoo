@@ -249,9 +249,8 @@ function colorElement(element, color, mode) {
         .replace(/\btext-gradient\b/g, '') // cannot be combined with setting a background
         .replace(/\s+/, ' ');
     element.className !== newClassName && (element.className = newClassName);
-    element.style['background-image'] = '';
     if (mode === 'backgroundColor') {
-        element.style['background'] = '';
+        element.style['background-image'] = '';
     }
     if (color.startsWith('text') || color.startsWith('bg-')) {
         element.style[mode] = '';
