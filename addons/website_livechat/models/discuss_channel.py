@@ -31,6 +31,7 @@ class DiscussChannel(models.Model):
         channel_infos = super()._channel_info()
         channel_infos_dict = dict((c['id'], c) for c in channel_infos)
         for channel in self.filtered('livechat_visitor_id'):
+            channel_infos_dict[channel.id]["requested_by_operator"] = channel.create_uid in channel.livechat_operator_id.user_ids
             visitor = channel.livechat_visitor_id
             try:
                 country_id = visitor.partner_id.country_id or visitor.country_id
