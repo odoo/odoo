@@ -15,17 +15,17 @@
         grid-template-columns: 50px 1fr;
         padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 4) map-get($spacers, 1);
 
+        &.o-is-in-thread-view {
+            padding-top: map-get($spacers, 1);
+            padding-bottom: map-get($spacers, 1);
+        }
+
         &:not(.o-has-footer) {
             padding-bottom: map-get($spacers, 4);
         }
 
         &:not(.o-has-header) {
             padding-top: map-get($spacers, 4);
-
-            &.o-is-in-thread-view {
-                padding-top: map-get($spacers, 1);
-                padding-bottom: map-get($spacers, 1);
-            }
         }
     }
 }
