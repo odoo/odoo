@@ -164,11 +164,12 @@
                                         </group>
                                     </group>
                                     <group name="questions" string="Questions">
-                                        <field name="question_ids" nolabel="1" colspan="2">
+                                        <field name="question_ids" nolabel="1" colspan="2" widget="slide_question_one2many">
                                             <tree>
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="question" string="Question"/>
                                                 <field name="answer_ids" string="Answers" widget="many2many_tags"/>
+                                                <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
                                             </tree>
                                         </field>
                                     </group>
