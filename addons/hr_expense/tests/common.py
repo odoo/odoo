@@ -69,7 +69,6 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'supplier_taxes_id': [Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
             'can_be_expensed': True,
             'default_code': 'product_c',
-            'categ_id': cls.product_category.id,
         })
 
         # Ensure Invoicing tests products can be expensed and their code is properly set.
