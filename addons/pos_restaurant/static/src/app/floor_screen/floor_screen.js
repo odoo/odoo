@@ -107,6 +107,7 @@ export class FloorScreen extends Component {
         return oToTrans ? [oToTrans.table_id.id] : [];
     }
     async onWillStart() {
+        this.pos.searchProductWord = "";
         const table = this.pos.selectedTable;
         const tableByIds = this.pos.models["restaurant.table"].getAllBy("id");
         if (table) {
