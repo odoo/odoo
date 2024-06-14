@@ -17,12 +17,38 @@ class PaymentLinkWizard(models.TransientModel):
             record = self.env[res['res_model']].browse(res['res_id'])
             res.update({
                 'description': record.name,
-                'amount': record.amount_total - sum(record.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
+                'amount': self._compute_amount(record),
                 'currency_id': record.currency_id.id,
                 'partner_id': record.partner_invoice_id.id,
                 'amount_max': record.amount_total
             })
         return res
+
+    def _compute_amount(self, record):
+        initial_amount = record.amount_total
+        sol_ids_used = []
+
+        # first we deduce the invoices related to the SO and keep track of sol readed
+        for inv in record.invoice_ids.filtered(lambda x: x.state != 'cancel'):
+            initial_amount -= inv.amount_total
+
+            sol_ids_used.extend(
+                inv.line_ids.sale_line_ids.filtered(
+                    lambda x: x.order_id.id == record.id
+                ).mapped('id')
+            )
+
+        # now pass through each sol of the record and if some downpayment was ignored because it
+        # came from POS then deduce it too
+        for sol in record.order_line:
+            if (sol.is_downpayment
+                and sol.id not in sol_ids_used
+                and sol.price_unit > 0
+                and sol.qty_invoiced > 0
+                ):
+                initial_amount -= sol.price_unit
+
+        return initial_amount
 
     def _get_payment_acquirer_available(self, company_id=None, partner_id=None, currency_id=None, sale_order_id=None):
         """ Select and return the acquirers matching the criteria.
