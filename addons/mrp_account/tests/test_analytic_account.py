@@ -33,13 +33,11 @@ class TestMrpAnalyticAccount(TransactionCase):
             'name': 'Product',
             'is_storable': True,
             'standard_price': 233.0,
-            'categ_id': cls.env.ref('product.product_category_expenses').id,
         })
         cls.component = cls.env['product.product'].create({
             'name': 'Component',
             'is_storable': True,
             'standard_price': 10.0,
-            'categ_id': cls.env.ref('product.product_category_expenses').id,
         })
         cls.bom = cls.env['mrp.bom'].create({
             'product_id': cls.product.id,
@@ -259,12 +257,10 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
             'name': 'Component',
             'is_storable': True,
             'standard_price': 100,
-            'categ_id': self.env.ref('product.product_category_expenses').id,
         })
         product = self.env['product.product'].create({
             'name': 'Product',
             'is_storable': True,
-            'categ_id': self.env.ref('product.product_category_expenses').id,
         })
         bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': product.product_tmpl_id.id,

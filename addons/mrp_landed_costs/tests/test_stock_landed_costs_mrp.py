@@ -24,13 +24,11 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'name': 'Component1',
             'is_storable': True,
             'standard_price': 1.0,
-            'categ_id': cls.categ_all.id
         })
         cls.product_component2 = cls.env['product.product'].create({
             'name': 'Component2',
             'is_storable': True,
             'standard_price': 2.0,
-            'categ_id': cls.categ_all.id
         })
         cls.product_refrigerator = cls.env['product.product'].create({
             'name': 'Refrigerator',
