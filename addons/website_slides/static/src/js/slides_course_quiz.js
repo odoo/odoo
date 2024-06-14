@@ -38,6 +38,7 @@
             'click .o_wslides_js_quiz_add': '_onCreateQuizClick',
             'click .o_wslides_js_quiz_edit_question': '_onEditQuestionClick',
             'click .o_wslides_js_quiz_delete_question': '_onDeleteQuestionClick',
+            'click .o_wslides_js_quiz_copy': '_onCopyQuestionClick',
         },
 
         custom_events: {
@@ -571,6 +572,22 @@
                 },
                 confirmLabel: _t('Yes'),
             });
+        },
+
+        /**
+         * When clicking on the dulpicate button of a question it sends
+         * an RPC request to copy the Question. When a question is copied,
+         * it increase the questions count and reload the window.
+         *
+         * @param ev
+         * @private
+         */
+        _onCopyQuestionClick: async function(ev) {
+            const question = ev.currentTarget.closest('.o_wslides_js_lesson_quiz_question');
+            const questionId = parseInt(question.dataset.questionId);
+            await this.orm.call('slide.question', 'copy', [questionId]);
+            this.quiz.questionsCount++;
+            window.location.reload();
         },
 
         /**

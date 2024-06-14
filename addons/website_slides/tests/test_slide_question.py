@@ -36,3 +36,18 @@ class TestSlideQuestionManagement(slides_common.SlidesCase):
             question.answer_ids[0].is_correct = val
             question.answer_ids[1].is_correct = val
             self.assertTrue(question.answers_validation_error)
+
+    def test_copy_quiz_question(self):
+        """Verify that the copy question method correctly copies a question record and its associated answers."""
+        question = self.question_1
+        # Copy the question record
+        copied_question = question.copy()
+
+        # Check that the new question has the same attributes as the original
+        self.assertEqual(copied_question.question, question.question)
+        self.assertEqual(copied_question.slide_id.id, question.slide_id.id)
+
+        # Check that the answers have been copied correctly
+        self.assertEqual(len(copied_question.answer_ids), 2)
+        self.assertTrue(any(answer.text_value == "25' at 180°C" and answer.is_correct for answer in copied_question.answer_ids))
+        self.assertTrue(any(answer.text_value == "Raw" and not answer.is_correct for answer in copied_question.answer_ids))

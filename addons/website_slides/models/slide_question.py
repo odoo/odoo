@@ -58,6 +58,12 @@ class SlideQuestion(models.Model):
                 'This question must have at least one correct answer and one incorrect answer.'
             ) if not correct or correct == question.answer_ids else ''
 
+    def copy(self, default=None):
+        new_question = super().copy(default)
+        new_answers = [answer.copy({'question_id': new_question.id}).id for answer in self.answer_ids]
+        new_question.write({'answer_ids': [(6, 0, new_answers)]})
+        return new_question
+
 class SlideAnswer(models.Model):
     _name = "slide.answer"
     _rec_name = "text_value"

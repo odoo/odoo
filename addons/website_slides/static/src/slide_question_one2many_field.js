@@ -1,26 +1,23 @@
-/** @odoo-module */
+/** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { SlideCategoryListRenderer } from "./slide_category_list_renderer";
-import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { SlideQuestionListRenderer } from "./slide_question_list_renderer";
 import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 import { useSubEnv } from "@odoo/owl";
 
-class SlideCategoryOneToManyField extends X2ManyField {
+
+class SlideContentOneToManyField extends X2ManyField {
     static components = {
         ...X2ManyField.components,
-        ListRenderer: SlideCategoryListRenderer,
-    };
-    static defaultProps = {
-        ...X2ManyField.defaultProps,
-        editable: "bottom",
+        ListRenderer: SlideQuestionListRenderer,
     };
     setup() {
         super.setup();
         useSubEnv({ openRecord: this.openRecord.bind(this) });
 
-        // Systematically and automatically save SlideChannelForm at each content edit/creation
+        // Systematically and automatically save Slide Content at each Question edit/creation/deletion
         const { saveRecord, updateRecord } = useX2ManyCrud(() => this.list, this.isMany2Many);
 
         const openRecord = useOpenX2ManyRecord({
@@ -37,7 +34,7 @@ class SlideCategoryOneToManyField extends X2ManyField {
         this._openRecord = async ({ record: paramRecord, ...params }) => {
             const { record } = this.props;
             if (!await record.save())
-                // don't open slide form as it can't be saved
+                // don't open question form as it can't be saved
                 return;
             await openRecord({ record: paramRecord, ...params });
         };
@@ -45,8 +42,8 @@ class SlideCategoryOneToManyField extends X2ManyField {
     }
 }
 
-registry.category("fields").add("slide_category_one2many", {
+registry.category("fields").add("slide_question_one2many", {
     ...x2ManyField,
-    component: SlideCategoryOneToManyField,
+    component: SlideContentOneToManyField,
     additionalClasses: [...x2ManyField.additionalClasses || [], "o_field_one2many"],
 });
