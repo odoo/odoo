@@ -702,7 +702,7 @@ export function makeDraggableHook(hookParams) {
                             // On Firefox mobile, long-touch events trigger an unpreventable
                             // context menu to appear. To prevent this, all linkes are removed
                             // from the dragged elements during the drag sequence.
-                            const links = [...currentTarget.querySelectorAll("[href")];
+                            const links = [...currentTarget.querySelectorAll("[href]")];
                             if (currentTarget.hasAttribute("href")) {
                                 links.unshift(currentTarget);
                             }
