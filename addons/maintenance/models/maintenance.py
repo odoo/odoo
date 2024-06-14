@@ -42,8 +42,8 @@ class MaintenanceEquipmentCategory(models.Model):
     technician_user_id = fields.Many2one('res.users', 'Responsible', tracking=True, default=lambda self: self.env.uid)
     color = fields.Integer('Color Index')
     note = fields.Html('Comments', translate=True)
-    equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipments', copy=False)
-    equipment_count = fields.Integer(string="Equipment", compute='_compute_equipment_count')
+    equipment_ids = fields.One2many('maintenance.equipment', 'category_id', string='Equipment', copy=False)
+    equipment_count = fields.Integer(string="Equipment Count", compute='_compute_equipment_count')
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
     maintenance_count = fields.Integer(string="Maintenance Count", compute='_compute_maintenance_count')
     alias_id = fields.Many2one(
@@ -68,7 +68,7 @@ class MaintenanceEquipmentCategory(models.Model):
     def _unlink_except_contains_maintenance_requests(self):
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
-                raise UserError(_("You cannot delete an equipment category containing equipments or maintenance requests."))
+                raise UserError(_("You cannot delete an equipment category containing equipment or maintenance requests."))
 
     def _alias_get_creation_values(self):
         values = super(MaintenanceEquipmentCategory, self)._alias_get_creation_values()
