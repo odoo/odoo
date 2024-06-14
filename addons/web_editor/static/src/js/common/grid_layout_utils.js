@@ -162,25 +162,47 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
     let maxRowEnd = 0;
     const columnSpans = [];
     let zIndex = 1;
-    const imageColumns = []; // array of boolean telling if it is a column with only an image.
+    const mediaColumns = []; // array of boolean telling if it is a column with only an image/video.
 
     for (const columnEl of columnEls) {
-        // Finding out if the images are alone in their column.
-        let isImageColumn = _checkIfImageColumn(columnEl);
-        const imageEl = columnEl.querySelector('img');
+        // Finding out if the images/videos are alone in their column.
+        let isMediaColumn = _checkIfImageColumn(columnEl);
+        const mediaEl = columnEl.querySelector("img, .media_iframe_video");
         // Checking if the column has a background color to take that into
         // account when computing its size and padding (to make it look good).
         const hasBackgroundColor = columnEl.classList.contains("o_cc");
-        const isImageWithoutPadding = isImageColumn && !hasBackgroundColor;
+        const isMediaWithoutPadding = isMediaColumn && !hasBackgroundColor;
 
         // Placing the column.
         const style = window.getComputedStyle(columnEl);
         // Horizontal placement.
+<<<<<<< HEAD
         const columnLeft = isImageWithoutPadding ? imageEl.offsetLeft : columnEl.offsetLeft;
+||||||| parent of bd7b21789f3a (temp)
+        const borderLeft = parseFloat(style.borderLeft);
+        const columnLeft = isImageWithoutPadding && !borderLeft ? imageEl.offsetLeft : columnEl.offsetLeft;
+=======
+        const borderLeft = parseFloat(style.borderLeft);
+        const columnLeft = isMediaWithoutPadding && !borderLeft ? mediaEl.offsetLeft : columnEl.offsetLeft;
+>>>>>>> bd7b21789f3a (temp)
         // Getting the width of the column.
         const paddingLeft = parseFloat(style.paddingLeft);
+<<<<<<< HEAD
         const width = isImageWithoutPadding ? parseFloat(imageEl.scrollWidth)
+||||||| parent of bd7b21789f3a (temp)
+        let width = isImageWithoutPadding ? parseFloat(imageEl.scrollWidth)
+=======
+        let width = isMediaWithoutPadding ? parseFloat(mediaEl.scrollWidth)
+>>>>>>> bd7b21789f3a (temp)
             : parseFloat(columnEl.scrollWidth) - (hasBackgroundColor ? 0 : 2 * paddingLeft);
+<<<<<<< HEAD
+||||||| parent of bd7b21789f3a (temp)
+        const borderX = borderLeft + parseFloat(style.borderRight);
+        width += borderX + (hasBackgroundColor || isImageColumn ? 0 : 2 * defaultGridPadding);
+=======
+        const borderX = borderLeft + parseFloat(style.borderRight);
+        width += borderX + (hasBackgroundColor || isMediaColumn ? 0 : 2 * defaultGridPadding);
+>>>>>>> bd7b21789f3a (temp)
         let columnSpan = Math.round((width + columnGap) / (columnSize + columnGap));
         if (columnSpan < 1) {
             columnSpan = 1;
@@ -189,16 +211,38 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         const columnEnd = columnStart + columnSpan;
 
         // Vertical placement.
+<<<<<<< HEAD
         const columnTop = isImageWithoutPadding ? imageEl.offsetTop : columnEl.offsetTop;
+||||||| parent of bd7b21789f3a (temp)
+        const borderTop = parseFloat(style.borderTop);
+        const columnTop = isImageWithoutPadding && !borderTop ? imageEl.offsetTop : columnEl.offsetTop;
+=======
+        const borderTop = parseFloat(style.borderTop);
+        const columnTop = isMediaWithoutPadding && !borderTop ? mediaEl.offsetTop : columnEl.offsetTop;
+>>>>>>> bd7b21789f3a (temp)
         // Getting the top and bottom paddings and computing the row offset.
         const paddingTop = parseFloat(style.paddingTop);
         const paddingBottom = parseFloat(style.paddingBottom);
         const rowOffsetTop = Math.floor((paddingTop + rowGap) / (rowSize + rowGap));
         // Getting the height of the column.
+<<<<<<< HEAD
         const height = isImageWithoutPadding ? parseFloat(imageEl.scrollHeight)
+||||||| parent of bd7b21789f3a (temp)
+        let height = isImageWithoutPadding ? parseFloat(imageEl.scrollHeight)
+=======
+        let height = isMediaWithoutPadding ? parseFloat(mediaEl.scrollHeight)
+>>>>>>> bd7b21789f3a (temp)
             : parseFloat(columnEl.scrollHeight) - (hasBackgroundColor ? 0 : paddingTop + paddingBottom);
+<<<<<<< HEAD
+||||||| parent of bd7b21789f3a (temp)
+        const borderY = borderTop + parseFloat(style.borderBottom);
+        height += borderY + (hasBackgroundColor || isImageColumn ? 0 : 2 * defaultGridPadding);
+=======
+        const borderY = borderTop + parseFloat(style.borderBottom);
+        height += borderY + (hasBackgroundColor || isMediaColumn ? 0 : 2 * defaultGridPadding);
+>>>>>>> bd7b21789f3a (temp)
         const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
-        const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + (hasBackgroundColor || isImageWithoutPadding ? 0 : rowOffsetTop);
+        const rowStart = Math.round(columnTop / (rowSize + rowGap)) + 1 + (hasBackgroundColor || isMediaWithoutPadding ? 0 : rowOffsetTop);
         const rowEnd = rowStart + rowSpan;
 
         columnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
@@ -218,7 +262,7 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
 
         maxRowEnd = Math.max(rowEnd, maxRowEnd);
         columnSpans.push(columnSpan);
-        imageColumns.push(isImageColumn);
+        mediaColumns.push(isMediaColumn);
     }
 
     for (const [i, columnEl] of [...columnEls].entries()) {
@@ -230,8 +274,8 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         columnEl.classList.remove(...toRemove);
         columnEl.classList.add('col-lg-' + columnSpans[i]);
 
-        // If the column only has an image, convert it.
-        if (imageColumns[i]) {
+        // If the column only has an image/video, convert it.
+        if (mediaColumns[i]) {
             _convertImageColumn(columnEl);
         }
     }
@@ -265,7 +309,7 @@ export function _reloadLazyImages(columnEl) {
  * @returns {Object}
  */
 export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight) {
-    // First, checking if the column only contains an image and if it is the
+    // First, checking if the column only contains an image/video and if it is the
     // case, converting it.
     if (_checkIfImageColumn(columnEl)) {
         _convertImageColumn(columnEl);
@@ -302,40 +346,42 @@ export function _convertToNormalColumn(columnEl) {
     columnEl.style.removeProperty("grid-area");
 }
 /**
- * Checks whether the column only contains an image or not. An image is
+ * Checks whether the column only contains an image/video or not. It is
  * considered alone if the column only contains empty textnodes and line breaks
- * in addition to the image. Note that "image" also refers to an image link
+ * in addition to the image/video. Note that "image" also refers to an image link
  * (i.e. `a > img`).
+ * TODO master: rename to _checkIfMediaColumn
  *
  * @private
  * @param {Element} columnEl
  * @returns {Boolean}
  */
 export function _checkIfImageColumn(columnEl) {
-    let isImageColumn = false;
-    const imageEls = columnEl.querySelectorAll(":scope > img, :scope > a > img");
+    let isMediaColumn = false;
+    const mediaEls = columnEl.querySelectorAll(":scope > img, :scope > a > img, :scope > .media_iframe_video");
     const columnChildrenEls = [...columnEl.children].filter(el => el.nodeName !== 'BR');
-    if (imageEls.length === 1 && columnChildrenEls.length === 1) {
-        // If there is only one image and if this image is the only "real"
+    if (mediaEls.length === 1 && columnChildrenEls.length === 1) {
+        // If there is only one image/video and if it is the only "real"
         // child of the column, we need to check if there is text in it.
         const textNodeEls = [...columnEl.childNodes].filter(el => el.nodeType === Node.TEXT_NODE);
         const areTextNodesEmpty = [...textNodeEls].every(textNodeEl => textNodeEl.nodeValue.trim() === '');
-        isImageColumn = areTextNodesEmpty;
+        isMediaColumn = areTextNodesEmpty;
     }
-    return isImageColumn;
+    return isMediaColumn;
 }
 /**
  * Removes the line breaks and textnodes of the column, adds the grid class and
- * sets the image width to default so it can be displayed as expected.
+ * sets the image/video width to default so it can be displayed as expected.
+ * TODO master: rename to _convertMediaColumn
  *
  * @private
- * @param {Element} columnEl a column containing only an image.
+ * @param {Element} columnEl a column containing only an image/video.
  */
 function _convertImageColumn(columnEl) {
     columnEl.querySelectorAll('br').forEach(el => el.remove());
     const textNodeEls = [...columnEl.childNodes].filter(el => el.nodeType === Node.TEXT_NODE);
     textNodeEls.forEach(el => el.remove());
-    const imageEl = columnEl.querySelector('img');
+    const mediaEl = columnEl.querySelector("img, .media_iframe_video");
     columnEl.classList.add('o_grid_item_image');
-    imageEl.style.removeProperty('width');
+    mediaEl.style.removeProperty("width");
 }
