@@ -413,18 +413,21 @@ class ChannelMember(models.Model):
                 target = member.partner_id
             else:
                 target = member.guest_id
-            invitation_notifications.append((target, 'mail.record/insert', {
-                'Thread': {
-                    'id': self.channel_id.id,
-                    'model': 'discuss.channel',
-                    'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
-                }
-            }))
+            store = StoreData()
+            channel_data = {
+                "id": self.channel_id.id,
+                "model": "discuss.channel",
+                "rtcInvitingSession": self.rtc_session_ids._mail_rtc_session_format(),
+            }
+            store.add({"Thread": channel_data})
+            invitation_notifications.append((target, "mail.record/insert", store.get_result()))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
+            store = StoreData()
             channel_data = {'id': self.channel_id.id, 'model': 'discuss.channel'}
             channel_data['invitedMembers'] = [('ADD', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id': True, 'name': True, 'im_status': True}, 'guest': {'id': True, 'name': True, 'im_status': True}}}).values()))]
-            self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
+            store.add({"Thread": channel_data})
+            self.env["bus.bus"]._sendone(self.channel_id, "mail.record/insert", store.get_result())
         return members
 
     def _mark_as_read(self, last_message_id, sync=False):
