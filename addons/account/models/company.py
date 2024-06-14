@@ -139,6 +139,8 @@ class ResCompany(models.Model):
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     qr_code = fields.Boolean(string='Display QR-code on invoices')
+    payment_qr_code = fields.Boolean(string='Display Payment QR-code')
+    link_qr_code = fields.Boolean(string='Display Link QR-code')
 
     display_invoice_amount_total_words = fields.Boolean(string='Total amount of invoice in letters')
     display_invoice_tax_company_currency = fields.Boolean(
