@@ -264,16 +264,16 @@ class ResPartner(models.Model):
 
         # Catch use case where the record label is about the public user (name: False)
         if 'False' not in record_label:
-            return '\n' + _(
-                'The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+            return _(
+                '\nThe %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,
                 record_label=record_label,
                 expected_format=expected_format,
             )
         else:
-            return '\n' + _(
-                'The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+            return _(
+                '\nThe %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \nNote: the expected format is %(expected_format)s',
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,
                 expected_format=expected_format,

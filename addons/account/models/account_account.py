@@ -151,10 +151,8 @@ class AccountAccount(models.Model):
                     ('id', 'not in', records.ids),
                 ])
             if duplicates:
-                raise ValidationError(
-                    _("The code of the account must be unique per company!")
-                    + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
-                )
+                duplicate_list = "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
+                raise ValidationError(_("The code of the account must be unique per company!\n%s", duplicate_list))
 
     @api.constrains('reconcile', 'account_type', 'tax_ids')
     def _constrains_reconcile(self):

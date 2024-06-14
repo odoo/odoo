@@ -57,7 +57,7 @@ class BarcodeRule(models.Model):
             try:
                 re.compile(rule.pattern)
             except re.error as error:
-                raise ValidationError(_("The rule pattern \"%s\" is not a valid Regex: ", rule.name) + str(error))
+                raise ValidationError(_("The rule pattern “%(rule_name)s” is not a valid Regex: %(error)s", rule_name=rule.name, error=str(error)))
             groups = re.findall(r'\([^)]*\)', rule.pattern)
             if len(groups) != 2:
                 raise ValidationError(_(

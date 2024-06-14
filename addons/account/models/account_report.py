@@ -261,9 +261,9 @@ class AccountReport(models.Model):
         :return: an unique name for the copied account.report
         '''
         self.ensure_one()
-        name = self.name + ' ' + _('(copy)')
+        name = _('%(name)s (copy)', name=self.name)
         while self.search_count([('name', '=', name)]) > 0:
-            name += ' ' + _('(copy)')
+            name += _(' (copy)')
         return name
 
     @api.depends('name', 'country_id')
