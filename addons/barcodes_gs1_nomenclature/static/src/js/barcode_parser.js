@@ -169,6 +169,10 @@ BarcodeParser.include({
      */
     _convertGS1Separators: function (barcode) {
         barcode = barcode.replace(this.gs1SeparatorRegex, FNC1_CHAR);
+        if (barcode.charAt(0) === FNC1_CHAR) {
+            /** Code128 will have a start character, but is otherwise compatible */
+            barcode = barcode.substring(1);
+        }
         return barcode;
     },
 });

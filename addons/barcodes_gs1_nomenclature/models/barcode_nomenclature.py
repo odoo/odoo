@@ -16,7 +16,7 @@ class BarcodeNomenclature(models.Model):
         string="Is GS1 Nomenclature",
         help="This Nomenclature use the GS1 specification, only GS1-128 encoding rules is accepted is this kind of nomenclature.")
     gs1_separator_fnc1 = fields.Char(
-        string="FNC1 Separator", trim=False, default=r'(Alt029|#|\x1D)',
+        string="FNC1 Separator", trim=False,
         help="Alternative regex delimiter for the FNC1. The separator must not match the begin/end of any related rules pattern.")
 
     @api.constrains('gs1_separator_fnc1')
@@ -88,15 +88,26 @@ class BarcodeNomenclature(models.Model):
             result['value'] = match.group(2)
         return result
 
+    def _convert_gs1_separators(self, barcode):
+        """Convert the barcode to use the standard FNC1 separator"""
+        if self.gs1_separator_fnc1:
+            barcode = re.sub(self.gs1_separator_fnc1, FNC1_CHAR, barcode)
+        if barcode[0] == FNC1_CHAR:
+            # Code128 will have a start character but is otherwise compatible
+            # However parser doesn't support a leading separator so remove
+            # here.
+            barcode = barcode[1:]
+        return barcode
+
     def gs1_decompose_extanded(self, barcode):
-        """Try to decompose the gs1 extanded barcode into several unit of information using gs1 rules.
+        """Try to decompose the gs1 extended barcode into several unit of information using gs1 rules.
 
         Return a ordered list of dict
         """
+        # FIXME: Master, there is no 'a' in extended
         self.ensure_one()
         separator_group = FNC1_CHAR + "?"
-        if self.gs1_separator_fnc1:
-            separator_group = "(?:%s)?" % self.gs1_separator_fnc1
+        barcode = self._convert_gs1_separators(barcode)
         results = []
         gs1_rules = self.rule_ids.filtered(lambda r: r.encoding == 'gs1-128')
 
