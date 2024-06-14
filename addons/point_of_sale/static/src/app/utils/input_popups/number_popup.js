@@ -35,7 +35,9 @@ export class NumberPopup extends Component {
         });
     }
     confirm() {
-        this.props.getPayload(this.state.buffer || "0");
+        const bufferValue = this.state.buffer || "0";
+        const numberValue = this.env.utils.parseValidFloat(bufferValue);
+        this.props.getPayload(numberValue);
         this.props.close();
     }
 }

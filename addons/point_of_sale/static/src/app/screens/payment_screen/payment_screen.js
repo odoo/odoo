@@ -172,7 +172,7 @@ export class PaymentScreen extends Component {
             startingValue: this.env.utils.formatCurrency(value, false),
             formatDisplayedValue: (x) => `${this.pos.currency.symbol} ${x}`,
             getPayload: async (num) => {
-                await this.pos.set_tip(parseFloat(num ?? ""));
+                await this.pos.set_tip(num);
             },
         });
     }

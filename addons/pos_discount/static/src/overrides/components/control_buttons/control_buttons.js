@@ -10,10 +10,7 @@ patch(ControlButtons.prototype, {
             title: _t("Discount Percentage"),
             startingValue: this.pos.config.discount_pc,
             getPayload: (num) => {
-                const val = Math.max(
-                    0,
-                    Math.min(100, this.env.utils.parseValidFloat(num.toString()))
-                );
+                const val = Math.max(0, Math.min(100, num));
                 this.apply_discount(val);
             },
         });
