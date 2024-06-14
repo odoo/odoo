@@ -50,7 +50,7 @@ test("can invite users in channel from chat window", async () => {
     });
     await start();
     await click("[title='Open Actions Menu']");
-    await click("[title='Add Users']");
+    await click("[aria-label='Add Users']");
     await contains(".o-discuss-ChannelInvitation");
     await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
     await click("[title='Invite to Channel']:enabled");

@@ -4,7 +4,7 @@
 <t t-name="mail.Discuss">
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
         <div t-if="store.inPublicPage or !(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
-            <div class="o-mail-Discuss-header px-3 bg-view d-flex flex-shrink-0 align-items-center border-bottom z-1" t-att-class="{ 'flex-grow-1': !ui.isSmall and !store.inPublicPage }" t-ref="header">
+            <div class="o-mail-Discuss-header px-3 bg-view d-flex flex-shrink-0 align-items-center border-bottom shadow-sm z-1" t-att-class="{ 'flex-grow-1': !ui.isSmall and !store.inPublicPage }" t-ref="header">
                 <t t-if="thread">
                     <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
                         <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
@@ -22,7 +22,7 @@
                     <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent.persona" thread="thread" />
                     <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                         <AutoresizeInput
-                            className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
+                            className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 py-0 rounded'"
                             enabled="thread.is_editable or thread.channel_type === 'chat'"
                             onValidate.bind="renameThread"
                             value="thread.displayName"
@@ -31,7 +31,7 @@
                             <div class="flex-shrink-0 mx-2 py-2 border-start"/>
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
-                                className="'o-mail-Discuss-threadDescription flex-shrink-1 py-1'"
+                                className="'o-mail-Discuss-threadDescription flex-shrink-1 py-0 text-muted rounded'"
                                 enabled="thread.is_editable"
                                 onValidate.bind="updateThreadDescription"
                                 placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
@@ -47,11 +47,11 @@
                         </t>
                         <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
                             <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
-                            <div class="lead fw-bold flex-shrink-1 text-dark">
+                            <div class="lead fw-bold flex-shrink-1">
                                 <t t-if="store.self.type === 'partner'" t-esc="store.self.name"/>
                                 <t t-else="">
                                     <AutoresizeInput
-                                        className="'py-1'"
+                                        className="'py-1 rounded'"
                                         onValidate.bind="renameGuest"
                                         value="store.self.name"
                                     />
@@ -61,7 +61,7 @@
                     </div>
                 </t>
             </div>
-            <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
+            <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1 position-relative" t-ref="main">
                 <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
                 <DiscussSidebar t-elif="props.hasSidebar"/>
                 <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1" t-ref="core">
@@ -84,11 +84,9 @@
 </t>
 
 <t t-name="mail.MobileMailbox">
-    <button class="btn btn-secondary flex-grow-1 p-2"
-        t-att-class="{
-            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
-        }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.name"
-    />
+    <button class="btn btn-secondary flex-grow-1 p-2 d-flex align-items-center justify-content-center gap-1" t-att-class="{ 'active o-active shadow-none': mailbox.eq(store.discuss.thread) }" t-on-click="mailbox.setAsDiscussThread">
+        <ThreadIcon thread="mailbox"/><span t-esc="mailbox.name"/>
+    </button>
 </t>
 
 <t t-name="mail.Discuss.loading">

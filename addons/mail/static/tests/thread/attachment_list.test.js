@@ -298,12 +298,12 @@ test("should not view attachment from click on non-viewable attachment in list c
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-AttachmentImage[title='test.png'] img.o-viewable");
+    await contains(".o-mail-AttachmentImage.o-viewable[aria-label='test.png']");
     await contains(".o-mail-AttachmentCard:not(.o-viewable)", { text: "test.odt" });
     await click(".o-mail-AttachmentCard", { text: "test.odt" });
     // weak test, no guarantee that we waited long enough for the potential file viewer to show
     await contains(".o-FileViewer", { count: 0 });
-    await click(".o-mail-AttachmentImage[title='test.png']");
+    await click(".o-mail-AttachmentImage[aria-label='test.png']");
     await contains(".o-FileViewer");
 });
 
@@ -329,6 +329,6 @@ test("img file has proper src in discuss.channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(
-        `.o-mail-AttachmentImage[title='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=300']`
+        `.o-mail-AttachmentImage[aria-label='test.png'] img[data-src='${getOrigin()}/discuss/channel/${channelId}/image/${attachmentId}?filename=test.png&width=1920&height=600']`
     );
 });

@@ -1,5 +1,5 @@
 import { Thread } from "@mail/core/common/thread_model";
-import { discussSidebarChannelIndicatorsRegistry } from "@mail/discuss/core/public_web/discuss_sidebar_categories";
+import { discussSidebarChannelIndicatorsRegistry } from "@mail/discuss/core/public_web/discuss_sidebar_channel_indicators_registry";
 
 import { Component, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

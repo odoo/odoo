@@ -1,0 +1,17 @@
+.o-mail-MessageReaction {
+    &.o-selfReacted {
+        border-color: rgba(lighten($primary, 10%), 0.65) !important;
+
+        &:hover {
+            border-color: rgba(lighten($primary, 20%), 0.7) !important;
+        }
+    }
+
+    &:not(.o-selfReacted) {
+        border-color: $gray-300 !important;
+
+        &:hover {
+            border-color: mix($gray-500, $gray-600) !important;
+        }
+    }
+}

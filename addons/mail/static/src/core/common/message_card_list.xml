@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
     <t t-name="mail.MessageCardList">
         <div class="o-mail-MessageCardList d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': props.messages.length === 0 }" t-ref="message-list">
-            <div class="card mb-2" t-foreach="props.messages" t-as="message" t-key="message.id">
-                <div class="card-body py-2">
-                    <div class="position-absolute top-0 end-0 z-1 m-2">
-                        <a role="button" class="o-mail-MessageCard-jump rounded bg-400 badge opacity-0" t-att-class="{ 'opacity-100 py-1 px-2': ui.isSmall }" t-on-click="() => this.onClickJump(message)">Jump</a>
-                        <button t-if="props.mode === 'pin'" class="btn btn-link text-reset ms-2 p-0" t-att-class="{ 'fs-5': ui.isSmall }" title="Unpin" t-on-click="message.unpin">
-                            <i class="fa fa-times"/>
+            <div class="card mb-2 mx-3" t-foreach="props.messages" t-as="message" t-key="message.id">
+                <div class="card-body p-0">
+                    <div class="position-absolute top-0 end-0 z-1 me-1">
+                        <a role="button" class="o-mail-MessageCard-jump rounded bg-400 badge opacity-0 fw-bold" t-att-class="{ 'opacity-100 py-1 px-2': ui.isSmall }" t-on-click="() => this.onClickJump(message)">Jump</a>
+                        <button t-if="props.mode === 'pin'" class="o-mail-MessageCardList-close btn btn-link text-reset ms-2 p-0 rounded-circle smaller" t-att-class="{ 'fs-5': ui.isSmall }" title="Unpin" t-on-click="message.unpin">
+                            <i class="oi oi-close fa-fw"/>
                         </button>
                     </div>
-                    <Message hasActions="false" message="message" thread="props.thread" messageSearch="props.messageSearch"/>
+                    <Message hasActions="false" message="message" thread="props.thread" messageSearch="props.messageSearch" className="'px-0 py-2'"/>
                 </div>
             </div>
             <span t-if="props.loadMore" t-ref="load-more"/>

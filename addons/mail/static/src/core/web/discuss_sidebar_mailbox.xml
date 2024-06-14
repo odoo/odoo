@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebarMailbox">
+        <button
+            class="o-mail-DiscussSidebarMailbox o-mail-DiscussSidebar-item btn d-flex align-items-center p-0 pe-2 rounded-0 text-reset"
+            t-att-class="{
+                'bg-inherit': props.mailbox.notEq(store.discuss.thread),
+                'o-active': props.mailbox.eq(store.discuss.thread),
+            }"
+            t-on-click="(ev) => this.openThread(ev)"
+            t-ref="root"
+        >
+            <ThreadIcon className="'ms-3 me-2 bg-inherit'" thread="props.mailbox"/>
+            <div class="o-mail-DiscussSidebar-itemName me-2 text-truncate py-1" t-att-class="{ 'o-discuss-itemName-discrete': props.mailbox.notEq(store.discuss.thread) }" t-esc="props.mailbox.name"/>
+            <div t-attf-class="flex-grow-1 {{ props.mailbox.counter === 0 ? 'me-3': '' }}"/>
+            <span
+                t-if="props.mailbox.counter > 0"
+                class="o-mail-DiscussSidebar-badge o-discuss-badge badge rounded-pill ms-1 me-2"
+                t-att-class="{ 'o-muted': props.mailbox.id === 'starred' }"
+                t-esc="props.mailbox.counter"
+            />
+        </button>
+    </t>
+
+</templates>

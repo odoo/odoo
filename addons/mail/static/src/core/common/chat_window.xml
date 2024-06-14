@@ -2,39 +2,36 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatWindow">
-    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column"
+    <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow"
         t-att-style="style"
-        t-att-class="{
-            'w-100 h-100 o-mobile': ui.isSmall,
-            'o-folded': props.chatWindow.folded,
-            'rounded-top-3': !ui.isSmall,
-        }"
+        t-att-class="attClass"
         t-on-keydown="onKeydown"
         tabindex="1"
     >
-        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 border-bottom z-1" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'o-folded': props.chatWindow.folded }">
+        <div class="o-mail-ChatWindow-area position-fixed bg-300 rounded-3"/>
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100 z-1 rounded-top-3" t-on-click="onClickHeader" t-att-class="{ 'cursor-pointer': !ui.isSmall }">
             <t t-if="threadActions.actions.length > 3">
-                <div class="d-flex text-truncate">
-                    <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-0'">
+                <div class="d-flex text-truncate rounded-3 rounded-end-0 rounded-bottom-0">
+                    <Dropdown position="'left-start'" onStateChanged="isOpen => this.onActionsMenuStateChanged(isOpen)" menuClass="'d-flex flex-column py-1 rounded-3' + (ui.isSmall ? ' my-0' : '')">
                         <button
-                            class="o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-1 py-2 m-0 opacity-75 opacity-100-hover w-100"
-                            t-att-class="{ 'ps-2 pe-1 rounded-top-3': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
+                            class="o-mail-ChatWindow-moreActions o-mail-ChatWindow-command btn d-flex align-items-center p-1 pt-2 m-0 w-100"
+                            t-att-class="{ 'pe-1 rounded-3 rounded-end-0 rounded-bottom-0': !ui.isSmall, 'o-active': state.actionsMenuOpened }"
                             t-att-disabled="state.editingName"
                             t-att-title="actionsMenuTitleText"
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
-                            <i class="fa fa-fw fa-caret-down opacity-50 ms-1"/>
+                            <i class="fa fa-fw fa-caret-down" t-att-class="{ 'opacity-100': state.actionsMenuOpened, 'opacity-50': !state.actionsMenuOpened, 'fs-3': ui.isSmall }"/>
                         </button>
                         <t t-set-slot="content">
                             <t t-if="ui.isSmall" t-set="actions" t-value="threadActions.actions.slice(1, -1)"/>
                             <t t-else="" t-set="actions" t-value="threadActions.actions.slice(1, -2)"/>
                             <DropdownItem t-foreach="actions" t-as="action" t-key="action.id"
-                                class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'"
-                                attrs="{ title: action.name }"
+                                class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center m-0' + (ui.isSmall ? ' fs-4 px-3 py-2' : ' px-2 py-1')"
+                                attrs="{ 'aria-label': action.name }"
                                 onSelected="() => action.onSelect()"
                             >
-                                <i t-att-class="action.icon"/>
-                                <span class="mx-2" t-out="action.name"/>
+                                <i t-att-class="action.icon" t-attf-class="{ ui.isSmall ? 'fa-lg' : '' }"/>
+                                <span class="mx-2" t-att-class="{ 'small': !ui.isSmall }" t-out="action.name"/>
                             </DropdownItem>
                         </t>
                     </Dropdown>
@@ -52,23 +49,25 @@
                 <t t-call="mail.ChatWindow.headerContent"/>
             </t>
             <div class="flex-grow-1"/>
-            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
+            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill o-discuss-badge" t-ref="needactionCounter">
                 <t t-out="thread.needactionCounter"/>
             </div>
-            <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.dropdownAction">
-                <t t-set="action" t-value="threadActions.actions[0]"/>
-            </t>
-            <t t-if="!ui.isSmall and threadActions.actions.length > 2">
-                <t t-call="mail.ChatWindow.dropdownAction">
-                    <t t-set="action" t-value="threadActions.actions.at(-2)"/>
+            <div t-if="threadActions.actions.length > 0" class="o-mail-ChatWindow-quickActions d-flex">
+                <t t-if="threadActions.actions.length > 1" t-call="mail.ChatWindow.quickAction">
+                    <t t-set="action" t-value="threadActions.actions[0]"/>
                 </t>
-            </t>
-            <t t-call="mail.ChatWindow.dropdownAction">
-                <t t-set="action" t-value="threadActions.actions.at(-1)"/>
-                <t t-set="itemClass" t-value="'me-1'"/>
-            </t>
+                <t t-if="!ui.isSmall and threadActions.actions.length > 2">
+                    <t t-call="mail.ChatWindow.quickAction">
+                        <t t-set="action" t-value="threadActions.actions.at(-2)"/>
+                    </t>
+                </t>
+                <t t-call="mail.ChatWindow.quickAction">
+                    <t t-set="action" t-value="threadActions.actions.at(-1)"/>
+                    <t t-set="itemClass" t-value="'me-2'"/>
+                </t>
+            </div>
         </div>
-        <div t-if="!props.chatWindow.folded or ui.isSmall" class="bg-100 d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+        <div class="o-mail-ChatWindow-content bg-100 d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
             <t t-if="thread" name="thread content">
                 <div t-if="threadActions.activeAction?.componentCondition" class="h-100" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}">
                     <t t-component="threadActions.activeAction.component" t-props="{ ...threadActions.activeAction.componentProps, thread }"/>
@@ -87,8 +86,8 @@
     </div>
 </t>
 
-<t t-name="mail.ChatWindow.dropdownAction">
-    <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-class="itemClass" t-att-title="action.name" t-on-click.stop="() => action.onSelect()"><i t-att-class="action.icon"/></button>
+<t t-name="mail.ChatWindow.quickAction">
+    <button class="o-mail-ChatWindow-command btn d-flex p-1" t-att-class="itemClass" t-attf-class="{{ ui.isSmall ? 'mx-1 fs-4' : '' }}" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="() => action.onSelect()"><i t-att-class="action.icon" t-attf-class="{{ ui.isSmall ? 'fa-lg' : '' }}"/></button>
 </t>
 
 <t t-name="mail.ChatWindow.headerContent">
@@ -96,6 +95,7 @@
         <img class="rounded" t-att-src="thread.avatarUrl" alt="Thread Image"/>
     </div>
     <ThreadIcon t-if="thread and thread.channel_type === 'chat' and thread.correspondent" thread="thread"/>
-    <div t-if="!state.editingName" class="text-truncate fw-bold border border-transparent me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="thread ? 'ms-1' : 'ms-3'"/>
+    <i t-if="!thread" class="ms-2 fa fa-fw fa-pencil fs-5"/>
+    <div t-if="!state.editingName" class="text-truncate fw-bolder border border-transparent ms-1 me-1 my-0" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{ 'fs-3': ui.isSmall }"/>
 </t>
 </templates>

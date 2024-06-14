@@ -24,8 +24,8 @@
         </xpath>
         <xpath expr="//*[@t-ref='header']" position="replace">
             <div t-if="!ui.isSmall" class="d-flex w-100">
-                <span class="o-mail-Discuss-headerStartMeeting d-flex justify-content-center flex-shrink-0 p-2 border-end o-mail-discussSidebarBgColor">
-                    <button class="btn btn-primary rounded" t-on-click="store.startMeeting" data-hotkey="m">Start a meeting</button>
+                <span class="o-mail-Discuss-headerStartMeeting d-flex justify-content-center flex-shrink-0 px-2 py-1 border-end o-mail-inspectorBg">
+                    <button class="btn btn-primary rounded border-0 d-flex align-items-center justify-content-center gap-1" t-on-click="store.startMeeting" data-hotkey="m"><i class="fa fa-fw fa-users"/><span>Start a meeting</span></button>
                 </span>
                 <t>$0</t>
             </div>

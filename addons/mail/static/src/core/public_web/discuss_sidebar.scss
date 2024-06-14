@@ -1,18 +1,150 @@
 .o-mail-DiscussSidebar {
     width: $o-mail-Discuss-inspector;
-    box-shadow: 1px 0px 6px -3px rgba(50, 50, 50, 0.15);
+}
+
+.o-mail-DiscussSidebar-active {
+    background-color:$o-action;
+    width: 2px;
+}
+
+.o-mail-DiscussSidebar-activeDirection {
+    left: $o-mail-Discuss-inspector / 2;
+    border-color: rgba($o-action, 0.35) !important;
+
+    &:hover {
+        border-color: rgba(darken($o-action, 10%), 0.65) !important;
+        background-color: mix($o-view-background-color, $o-action, 95%) !important;
+
+        i {
+            color: darken($o-action, 15%);
+        }
+    }
+
+    i {
+        color: rgba($o-action, 0.75);
+    }
 }
 
 .o-mail-DiscussSidebar-badge {
-    padding: 3px 6px;
+    padding: 3px 4px;
+}
+
+.o-mail-DiscussSidebarChannel-commands, .o-mail-DiscussSidebarCategory {
+    button {
+        opacity: 75%;
+
+        &:hover {
+            opacity: 100%;
+        }
+    }
+}
+
+.o-mail-DiscussSidebarChannel-commands button {
+    --btn-border-color: transparent;
+    --btn-hover-bg: #{$o-mail-inspectorBg};
+    --btn-hover-border-color: transparent;
+    --btn-hover-color: $black;
+
+    &:active, &:hover {
+        border-color: mix($o-mail-inspectorBg, black, 50%) !important;
+    }
+
+    &.o-red {
+
+        &:active, &:hover {
+            border-color: mix($o-mail-inspectorBg, darken($danger, 10%), 25%) !important;
+
+            i {
+                color: $danger;
+            }
+        }
+    }
+
+}
+
+.o-mail-DiscussSidebarCategory [name='commands'] button {
+    --btn-border-color: transparent;
+    --btn-hover-bg: #{$o-mail-inspectorBg};
+    --btn-hover-border-color: transparent;
+    --btn-hover-color: $black;
+
+    &:active, &:hover {
+        border-color: mix($o-mail-inspectorBg, black, 50%) !important;
+    }
+
+    &.o-green {
+        &:active, &:hover {
+            border-color: mix($o-mail-inspectorBg, darken($success, 10%), 50%) !important;
+            background-color: mix($o-mail-inspectorBg, darken($success, 10%), 92.5%) !important;
+
+            i {
+                color: darken($success, 5%);
+            }
+        }
+    }
+
+    &.o-red {
+        &:active, &:hover {
+            border-color: mix($o-mail-inspectorBg, darken($danger, 10%), 50%) !important;
+            background-color: mix($o-mail-inspectorBg, darken($danger, 10%), 92.5%) !important;
+
+            i {
+                color: $danger;
+            }
+        }
+    }
 }
 
 .o-mail-DiscussSidebar-item {
-    margin: 1px 0;
+    border: solid transparent;
+    border-width: 1px;
+
+    &::before {
+        content: "\200b"; /* unicode zero width space character */
+        height: 100%;
+        min-width: 4px + map-get($spacers, 1);
+        max-width: 4px + map-get($spacers, 1);
+        width: 4px + map-get($spacers, 1);
+        border: 4px solid transparent;
+    }
+
+    &:active {
+        border-color: transparent !important;
+    }
+
     &:hover {
-        background-color: mix($o-gray-100, $o-gray-200);
+        background-color: mix($o-mail-inspectorBg, $o-action, 95%);
+        border-color: mix($o-mail-inspectorBg, $o-action, 82.5%);
+
+        .o-mail-DiscussSidebar-itemMain {
+            background-color: inherit !important;
+        }
+
+        .o-mail-DiscussSidebar-itemName {
+            opacity: 100% !important;
+        }
+        .o-mail-DiscussSidebar-itemAvatar {
+            box-shadow: $box-shadow-sm;
+        }
     }
     &.o-active {
-        background-color: mix($o-gray-100, $o-gray-200);
+        background-color: mix($o-mail-inspectorBg, $o-action, 87.5%);
+        border-top-color: mix($o-mail-inspectorBg, $o-action, 80%);
+        border-bottom-color: mix($o-mail-inspectorBg, $o-action, 80%);
+        border-left-color: $o-action;
+        &::before {
+            border-left-color: $o-action;
+        }
+
+        .o-mail-DiscussSidebarChannel-commands button {
+            --btn-hover-border-color: #{mix($o-mail-inspectorBg, $o-action, 92.5%)};
+        }
+    }
+    &:not(.o-active) {
+        &:hover, &.o-unread {
+            .o-mail-DiscussSidebar-itemName {
+                font-weight: $font-weight-bold;
+            }
+        }
     }
 }

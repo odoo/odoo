@@ -374,7 +374,7 @@ test("reply to message from inbox (message linked to document) [REQUIRE FOCUS]",
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Refactoring" });
     await click("[title='Expand']");
-    await click("[title='Reply']");
+    await click("[aria-label='Reply']");
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
     await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
@@ -694,7 +694,7 @@ test("rendering of inbox message", async () => {
     await click("[title='Expand']");
     await contains(".o-mail-Message-actions i", { count: 4 });
     await contains(".o-mail-Message-moreMenu i", { count: 1 });
-    await contains("[title='Reply']");
+    await contains("[aria-label='Reply']");
     await contains("[title='Mark as Todo']");
     await contains("[title='Mark as Read']");
     await contains("[title='Expand']");
@@ -733,34 +733,34 @@ test("Unfollow message", async function () {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 1 });
+    await contains("span[aria-label='Unfollow']", { count: 1 });
     await click(":nth-child(2 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(2 of .o-mail-Message)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 1 });
+    await contains("span[aria-label='Unfollow']", { count: 1 });
     await click(":nth-child(3 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(3 of .o-mail-Message)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 0 });
+    await contains("span[aria-label='Unfollow']", { count: 0 });
     await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
-    await click("span[title='Unfollow']");
+    await click("span[aria-label='Unfollow']");
     await contains(".o-mail-Message", { count: 2 }); // Unfollowing message 0 marks it as read -> Message removed
     await click(":nth-child(1 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(1 of .o-mail-Message)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 0 });
+    await contains("span[aria-label='Unfollow']", { count: 0 });
     await click(":nth-child(2 of .o-mail-Message) button[title='Expand']");
     await contains(":nth-child(2 of .o-mail-Message)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
     await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("span[title='Unfollow']", { count: 0 });
+    await contains("span[aria-label='Unfollow']", { count: 0 });
 });
 
 test('messages marked as read move to "History" mailbox', async () => {
@@ -1864,7 +1864,7 @@ test("Correct breadcrumb when open discuss from chat window then see settings", 
     await click(".o_main_navbar i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "General" });
     await click("[title='Open Actions Menu']");
-    await click("[title='Open in Discuss']");
+    await click("[aria-label='Open in Discuss']");
     await click("[title='Channel settings']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "General" }],
     });

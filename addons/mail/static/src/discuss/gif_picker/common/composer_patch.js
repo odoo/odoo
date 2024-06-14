@@ -33,6 +33,14 @@ const composerPatch = {
     get hasGifPickerButton() {
         return this.hasGifPicker && !this.ui.isSmall && !this.env.inChatWindow;
     },
+    get emojiButtonAttClass() {
+        return {
+            ...super.emojiButtonAttClass,
+            "bg-300":
+                this.picker.state.picker === this.picker.PICKERS.EMOJI ||
+                (this.picker.state.picker === this.picker.PICKERS.GIF && this.ui.isSmall),
+        };
+    },
     onClickAddGif(ev) {
         markEventHandled(ev, "Composer.onClickAddGif");
     },

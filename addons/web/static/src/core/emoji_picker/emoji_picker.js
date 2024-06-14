@@ -167,8 +167,8 @@ export class EmojiPicker extends Component {
             );
             this.state.categoryId = this.categories[0]?.sortId;
             this.recentCategory = {
-                name: "Frequently used",
-                displayName: _t("Frequently used"),
+                name: "Frequently Used",
+                displayName: _t("Frequently Used"),
                 title: "🕓",
                 sortId: 0,
             };

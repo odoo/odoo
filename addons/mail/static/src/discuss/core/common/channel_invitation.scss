@@ -1,5 +1,10 @@
 .o-discuss-ChannelInvitation {
     min-height: 0;
+
+    .o-mail-ImStatus {
+        width: 1rem;
+        height: 1rem;
+    }
 }
 
 .o-discuss-ChannelInvitation-has-size-constraints {
@@ -7,17 +12,32 @@
     max-height: Min(calc(100vh - 140px), 530px);
 }
 
+.o-discuss-ChannelInvitation-search:focus {
+    border-color: rgba($o-action, 0.5) !important;
+}
+
 .o-discuss-ChannelInvitation-selectedList {
     max-height: 100px;
+
+    button {
+        background-color: $o-action;
+
+        &:hover  {
+            background-color: $o-gray-600;
+            i {
+                background-color: $o-gray-300;
+                color: $danger;
+            }
+        }
+    }
+}
+
+.o-discuss-ChannelInvitation-selectable.o-selected {
+    background-color: mix($o-mail-inspectorBg, $o-action, 95%);
+    --list-group-border-color: #{mix($o-view-background-color, $o-action, 75%)};
 }
 
 .o-discuss-ChannelInvitation-avatar {
-    width: $o-mail-Avatar-size;
-    height: $o-mail-Avatar-size;
-}
-
-.o-discuss-ChannelInvitation-invitationBox {
-    position: sticky;
-    background-color: $o-view-background-color;
-    bottom: - map-get($spacers, 3); // Ignore p-3 class of ActionPanel
+    width: 32px;
+    height: 32px;
 }

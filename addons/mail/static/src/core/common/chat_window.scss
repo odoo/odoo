@@ -2,22 +2,43 @@
     height: 480px;
     width: $o-mail-ChatWindow-width;
     z-index: 999; // messaging menu is dropdown (1000)
+
     &.o-mobile {
         z-index: 1001; // above messaging menu (chat window takes whole screen)
     }
-    box-shadow: -5px -5px 10px rgba(#000000, 0.09);
+
     outline: none;
+}
 
-    &.o-folded {
-        height: $o-mail-Discuss-headerHeight;
-    }
-
+.o-mail-ChatWindow-area {
+    height: 480px;
+    width: calc(#{$o-mail-ChatWindow-width} - 2px);
 }
 
 .o-mail-ChatWindow-command {
     color: inherit !important;
-    &:hover, &.o-active {
-        background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid transparent;
+
+    &:not(:hover):not(.o-active) {
+        opacity: 85%;
+    }
+
+    &:hover {
+        border-color: $gray-500;
+    }
+
+    &[name='call'] {
+        color: darken($success, 5%) !important;
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgba($success, 0.1) !important;
+                border-color: rgba(darken($success, 10%), 0.65);
+                color: darken($success, 10%) !important;
+            }
+        }
+        @media (hover: none) {
+            color: darken($success, 5%) !important;
+        }
     }
 }
 
@@ -30,16 +51,12 @@
 }
 
 .o-mail-ChatWindow-header {
-    height: $o-mail-Discuss-headerHeight;
+    height: 42px;
+}
 
-    &:not(.o-folded) {
-        box-shadow: 0px 3px 12px -3px rgba(50, 50, 50, 0.15);
-    }
-
-    .o-mail-ChatWindow-threadAvatar img {
-        height: 28px;
-        width: 28px;
-    }
+.o-mail-ChatWindow-threadAvatar img {
+    height: 28px;
+    width: 28px;
 }
 
 .o-mail-ChatWindow-typing {

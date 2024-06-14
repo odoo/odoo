@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Add one file in composer",
-            trigger: ".o-mail-Composer button[aria-label='Attach files']",
+            trigger: ".o-mail-Composer button[aria-label='Attach Files']",
             async run() {
                 await inputFiles(".o-mail-Composer-coreMain .o_input_file", [
                     await createFile({
@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Click on edit",
-            trigger: ".o-mail-Message-moreMenu [title='Edit'], .o-mail-Message [title='Edit']",
+            trigger: ".o-mail-Message-moreMenu [aria-label='Edit'], .o-mail-Message [title='Edit']",
             run: "click",
         },
         {
@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             content: "Add one more file in composer",
-            trigger: ".o-mail-Message .o-mail-Composer button[aria-label='Attach files']",
+            trigger: ".o-mail-Message .o-mail-Composer button[aria-label='Attach Files']",
             async run() {
                 inputFiles(".o-mail-Message .o-mail-Composer-coreMain .o_input_file", [
                     await createFile({

@@ -50,7 +50,7 @@ test("Delete starred message updates counter", async () => {
     await contains(".o-mail-Message", { target: env2, text: "Hello World!" });
     await contains("button", { target: env2, text: "Starred1" });
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']", { target: env2 });
-    await click(".o-mail-Message-moreMenu [title='Delete']", { target: env2 });
+    await click(".o-mail-Message-moreMenu [aria-label='Delete']", { target: env2 });
     await click("button", { text: "Confirm" }, { target: env2 });
     await contains("button", { count: 0, target: env2, text: "Starred1" });
 });
@@ -188,7 +188,6 @@ test("Message delete notification", async () => {
     });
     await start();
     await openDiscuss();
-    await click("[title='Expand']");
     await click("[title='Mark as Todo']");
     await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
     await contains("button", { text: "Starred", contains: [".badge", { text: "1" }] });

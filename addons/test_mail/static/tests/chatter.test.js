@@ -115,7 +115,7 @@ test("basic chatter rendering with a model without activities", async () => {
     await openFormView("mail.test.simple", recordId);
     await contains(".o-mail-Chatter");
     await contains(".o-mail-Chatter-topbar");
-    await contains("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach Files']");
     await contains("button", { count: 0, text: "Activities" });
     await contains(".o-mail-Followers");
     await contains(".o-mail-Thread");

@@ -1,8 +1,18 @@
 .o-mail-NotificationItem {
-    &.o-important {
-        background-color: mix($o-gray-200, $o-gray-300) !important;
+    &:hover {
+        &:not(&.o-important) .o-mail-NotificationItem-name {
+            opacity: 75% !important;
+        }
     }
-    &:hover, &.o-active {
+    &:not(:hover):not(.o-important) .o-mail-NotificationItem-name {
+        color: $text-muted;
+    }
+
+    &.o-active {
         background-color: $o-gray-300 !important;
     }
+}
+
+.o-mail-NotificationItem-text.o-muted {
+    opacity: 50%;
 }

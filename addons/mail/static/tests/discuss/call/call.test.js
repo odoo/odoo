@@ -315,7 +315,7 @@ test("'Start a meeting' in mobile", async () => {
     await click("button:not([disabled])", { text: "Invite to Group Chat" });
     await contains(".o-discuss-Call");
     await click("[title='Open Actions Menu']");
-    await click("[title='Show Member List']");
+    await click("[aria-label='Show Member List']");
     await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
 });
 

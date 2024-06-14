@@ -1,13 +1,23 @@
-.o-mail-discussSidebarBgColor {
+$o-mail-inspectorBg: mix($o-gray-100, $o-gray-200) !default;
+
+.o-mail-inspectorBg {
     background-color: mix($o-gray-100, $o-gray-200);
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%), rgba($primary, .3), rgba($primary, .3), lighten($link-color, 10%));
+    &:not(.o-selfMention) {
+        // @include o-mention-variant(rgba($o-gray-300, .5), rgba($o-gray-300, 1), lighten($link-color, 7%), rgba($o-gray-300, .75), rgba($o-gray-300, 1), lighten($link-color, 12%));
+        @include o-mention-variant(rgba($link-color, .075), rgba($link-color, .05), $link-color, rgba($link-color, .1), rgba($link-color, .075), lighten($link-color, 5%));
+    }
+
+    &.o-selfMention {
+        // @include o-mention-variant(rgba(lighten($warning, 5%), .075), rgba(darken($warning, 2.5%), .05), darken($warning, 2.5%), rgba(lighten($warning, 5%), .1), rgba($warning, .05), $warning);
+        @include o-mention-variant(rgba($link-color, .075), rgba(darken($warning, 2.5%), .1), darken($warning, 2.5%), rgba($link-color, .1), rgba(darken($warning, 2.5%), .15), lighten($warning, 2.5%));
+    }
 }
 
 a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%), rgba($primary, .2), rgba($primary, .2), lighten($link-color, 5%));
+    @include o-mention-variant(rgba($o-gray-300, .5), rgba($o-gray-300, 1), lighten($link-color, 7%), rgba($o-gray-300, .5), rgba($o-gray-300, 1), lighten($link-color, 7%));
 }
 
 .o-mail-DiscussSystray-class {

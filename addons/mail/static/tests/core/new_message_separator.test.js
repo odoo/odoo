@@ -49,12 +49,12 @@ test("keep new message separator when message is deleted", async () => {
     await click("[title='Expand']", {
         parent: [".o-mail-Message", { text: "message 0" }],
     });
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-mail-Message-moreMenu [aria-label='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 0" });
     await click("[title='Expand']", {
         parent: [".o-mail-Message", { text: "message 0" }],
     });
-    await click(".o-mail-Message-moreMenu [title='Delete']");
+    await click(".o-mail-Message-moreMenu [aria-label='Delete']");
     await click("button", { text: "Confirm" });
     await contains(".o-mail-Message", { text: "message 0", count: 0 });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 1" });
@@ -156,7 +156,7 @@ test("keep new message separator until current user sends a message", async () =
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "hello" });
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-mail-Message-moreMenu [aria-label='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage hr + span", { count: 1, text: "New messages" });
     await insertText(".o-mail-Composer-input", "hey!");
     await click(".o-mail-Composer-send:enabled");
@@ -173,10 +173,10 @@ test("keep new message separator when switching between chat window and discuss 
     await insertText(".o-mail-Composer-input", "Very important message!");
     await triggerHotkey("Enter");
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-mail-Message-moreMenu [aria-label='Mark as Unread']");
     await contains(".o-mail-Thread-newMessage");
     await click("[title='Open Actions Menu']");
-    await click("[title='Open in Discuss']");
+    await click("[aria-label='Open in Discuss']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await contains(".o-mail-Thread-newMessage");
     await openFormView("res.partner", serverState.partnerId);

@@ -31,22 +31,20 @@ test("Toggle display of original/translated version of chatter message", async (
     await start();
     await openFormView("res.partner", partnerId);
     await click("button[title='Expand']");
-    await contains("span[title='Translate']");
-    await contains("span[title='Revert']", { count: 0 });
+    await contains("[aria-label='Translate']");
+    await contains("[title='Revert']", { count: 0 });
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
-    await click("span[title='Translate']");
-    await click("button[title='Expand']");
+    await click("[aria-label='Translate']");
     await contains(".o-mail-Message-body", {
         text: "To bad weather, good face.(Translated from: Spanish)",
     });
-    await contains("span[title='Translate']", { count: 0 });
-    await contains("span[title='Revert']");
-    await click("span[title='Revert']");
     await click("button[title='Expand']");
-    await contains(".o-mail-Message", {
-        text: "Al mal tiempo, buena cara.",
-    });
-    await click("span[title='Translate']");
+    await contains("[aria-label='Revert']");
+    await contains("[title='Translate']", { count: 0 });
+    await click("[aria-label='Revert']");
+    await contains(".o-mail-Message", { text: "Al mal tiempo, buena cara." });
+    await click("button[title='Expand']");
+    await click("[aria-label='Translate']");
     // The translation button should not trigger more than one external request for a single message.
     await assertSteps(["Request"]);
 });
@@ -71,7 +69,7 @@ test("translation of email message", async () => {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
     await click("button[title='Expand']");
-    await click("span[title='Translate']");
+    await click("[aria-label='Translate']");
     await contains("span", {
         text: "To bad weather, good face.",
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
@@ -80,7 +78,7 @@ test("translation of email message", async () => {
         text: "(Translated from: Spanish)",
     });
     await click("button[title='Expand']");
-    await click("span[title='Revert']");
+    await click("[aria-label='Revert']");
     await contains("span", {
         text: "Al mal tiempo, buena cara.",
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],

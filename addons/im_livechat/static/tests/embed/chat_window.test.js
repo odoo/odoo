@@ -67,7 +67,7 @@ test("internal users can upload file to temporary thread", async () => {
         name: "text.txt",
     });
     await contains(".o-mail-Composer");
-    await contains("button[title='Attach files']");
+    await contains("button[title='Attach Files']");
     await inputFiles(".o-mail-Composer-coreMain .o_input_file", [file]);
     await contains(".o-mail-AttachmentCard", { text: "text.txt", contains: [".fa-check"] });
     await triggerHotkey("Enter");

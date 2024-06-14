@@ -1,5 +1,11 @@
-.o-mail-discussSidebarBgColor {
-    background-color: mix($white, $o-gray-100);
+$o-mail-inspectorBg: mix($white, $o-gray-100) !default;
+
+.o-discuss-itemName-discrete {
+    opacity: 75%;
+}
+
+.o-mail-inspectorBg {
+    background-color: $o-mail-inspectorBg;
 }
 
 .o-mail-brighter {
@@ -16,7 +22,7 @@
     background-color: var(--o-discuss-badge-bg) !important;
 
     &.o-muted {
-        --o-discuss-badge-bg: #{$gray-400};
+        --o-discuss-badge-bg: #{$gray-500};
     }
 }
 
@@ -28,18 +34,12 @@
     display: flex;
     transform: translate(0, 0) !important; // cancel systray style on badge
     font-size: .78572 * $font-size-base !important; // roughly 11px, small but readable
+    align-items: center;
+    justify-content: center;
 }
 
 .o-min-height-0 {
     min-height: 0;
-}
-
-.o-min-width-0 {
-    min-width: 0;
-}
-
-.o-smaller {
-    font-size: smaller;
 }
 
 .o-hover-text-underline:hover {
@@ -47,7 +47,7 @@
 }
 
 .o-text-white {
-    color: #FFF;
+    color: #FFF !important;
 }
 
 .o-yellow {
@@ -96,14 +96,29 @@ a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     @include rfs($btn-font-size-sm, $btn-font-size-sm);
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1875rem;
+    font-weight: $font-weight-bold;
+    border: 1px solid;
 }
 
 a.o_mail_redirect, a.o_channel_redirect {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .3), rgba($primary, .3), darken($link-color, 10%));
+    border-radius: $border-radius-sm;
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &:not(.o-selfMention) {
+        @include o-mention-variant(rgba($link-color, .075), rgba(darken($link-color, 10%), .05), darken($link-color, 10%), rgba($link-color, .1), rgba(darken($link-color, 10%), .05), darken($link-color, 17.5%));
+    }
+
+    &.o-selfMention {
+        // font-weight: bold;
+        font-style: italic;
+        @include o-mention-variant(rgba(darken($warning, 5%), .075), rgba(darken($warning, 17.5%), .05), darken($warning, 10%), rgba(darken($warning, 5%), .1), rgba(darken($warning, 17.5%), .05), darken($warning, 17.5%));
+    }
 }
 
-a.o-discuss-mention {
-    @include o-mention-variant(rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%), rgba($primary, .2), rgba($primary, .2), darken($link-color, 5%));
+a.o-discuss-mention {    
+    @include o-mention-variant(rgba($link-color, .075), rgba(darken($link-color, 5%), 0.1), darken($link-color, 10%), rgba($link-color, .075), rgba(darken($link-color, 5%), 0.1), darken($link-color, 10%));
     cursor: default !important;
 }
 

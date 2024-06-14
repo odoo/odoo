@@ -1,0 +1,24 @@
+.o-mail-Message.o-important {
+    background-color: rgba(lighten($warning, 10%), .1);
+}
+
+.o-mail-Message-bubble {
+
+    &.o-blue {
+        background-color: mix($o-view-background-color, $o-info, 87.5%);
+        border-color: mix($o-view-background-color, $o-info, 80%) !important;
+    }
+
+    &.o-green {
+        background-color: mix($o-view-background-color, $o-success, 87.5%);
+        border-color: mix($o-view-background-color, $o-success, 80%) !important;
+
+        .o-mail-Message.o-important & {
+            border-color: mix($o-view-background-color, $o-success, 75%) !important;
+        }
+    }
+    &.o-orange {
+        background-color: mix($o-view-background-color, darken($o-warning, 25%), 77.5%);
+        border-color: mix($o-view-background-color, $o-warning, 65%) !important;
+    }
+}

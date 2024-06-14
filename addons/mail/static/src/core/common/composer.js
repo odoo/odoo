@@ -29,6 +29,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { escape, sprintf } from "@web/core/utils/strings";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -54,6 +55,7 @@ const EDIT_CLICK_TYPE = {
 export class Composer extends Component {
     static components = {
         AttachmentList,
+        Dropdown,
         Picker,
         FileUploader,
         NavigableList,
@@ -159,6 +161,9 @@ export class Composer extends Component {
         );
         useEffect(
             () => {
+                if (!this.ref.el) {
+                    return;
+                }
                 this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
                 this.saveContentDebounced();
             },
@@ -180,6 +185,12 @@ export class Composer extends Component {
                 this.restoreContent();
             }
         });
+    }
+
+    get emojiButtonAttClass() {
+        return {
+            "bg-300": this.picker.state.picker === this.picker.PICKERS.EMOJI,
+        };
     }
 
     get pickerSettings() {

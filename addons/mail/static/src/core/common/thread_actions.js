@@ -9,7 +9,11 @@ export const threadActionsRegistry = registry.category("mail.thread/actions");
 threadActionsRegistry
     .add("fold-chat-window", {
         condition(component) {
-            return !component.ui.isSmall && component.props.chatWindow;
+            return (
+                !component.ui.isSmall &&
+                component.props.chatWindow &&
+                component.props.chatWindow.thread
+            );
         },
         icon: "fa fa-fw fa-minus",
         name(component) {

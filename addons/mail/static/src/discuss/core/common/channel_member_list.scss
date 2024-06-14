@@ -1,8 +1,18 @@
 .o-discuss-ChannelMember.cursor-pointer:hover {
-    background-color: $gray-200;
+    background-color: mix($gray-100, $gray-200);
+
+    img {
+        box-shadow: $box-shadow-sm;
+    }
 }
 
 .o-discuss-ChannelMember-avatar {
-    width: $o-mail-Avatar-size;
-    height: $o-mail-Avatar-size;
+    width: 32px;
+    height: 32px;
+
+    .o-mail-ImStatus {
+        font-size: 0.75rem;
+        height: 1rem;
+        width: 1rem;
+    }
 }

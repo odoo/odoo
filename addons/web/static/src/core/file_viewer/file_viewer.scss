@@ -3,14 +3,20 @@
     outline: none;
 }
 
+@mixin o-FileViewer-bgColor {
+    background-color: var(--FileViewer-bgColor, #{$o-gray-800});
+}
+
 .o-FileViewer-navigation {
+    @include o-FileViewer-bgColor();
+    color: #fff;
     width: 40px;
     height: 40px;
 }
 
 .o-FileViewer-header {
+    @include o-FileViewer-bgColor();
     color: #fff;
-    background-color: var(--FileViewer-toolbarBgColor, #{$o-gray-800});
     height: $o-navbar-height;
 }
 
@@ -29,7 +35,7 @@
 }
 
 .o-FileViewer-toolbarButton {
-    background-color: var(--FileViewer-toolbarBgColor, #{$o-gray-800});
+    @include o-FileViewer-bgColor();
     color: #fff;
 
     &:hover {

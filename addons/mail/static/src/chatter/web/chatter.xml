@@ -115,14 +115,16 @@
                             unlinkAttachment.bind="unlinkAttachment"
                             imagesHeight="100"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
-                            <t t-set-slot="toggler">
-                                <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
-                                    <i class="fa fa-plus-square"/>
-                                    Attach files
-                                </button>
-                            </t>
-                        </FileUploader>
+                        <div class="d-flex justify-content-center">
+                            <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                                <t t-set-slot="toggler">
+                                    <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
+                                        <i class="fa fa-plus-square"/>
+                                        Attach Files
+                                    </button>
+                                </t>
+                            </FileUploader>
+                        </div>
                     </div>
                 </div>
                 <Thread t-if="!state.isSearchOpen" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
@@ -151,7 +153,7 @@
 </t>
 
 <t t-name="mail.Chatter.attachFiles">
-    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
+    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach Files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
         <i class="fa fa-paperclip fa-lg me-1"/>
         <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>

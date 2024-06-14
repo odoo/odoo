@@ -62,6 +62,13 @@ export class ChatWindow extends Component {
         });
     }
 
+    get attClass() {
+        return {
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "rounded-top-3": !this.ui.isSmall,
+        };
+    }
+
     get composerType() {
         if (this.thread && this.thread.model !== "discuss.channel") {
             return "note";

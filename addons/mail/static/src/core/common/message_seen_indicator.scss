@@ -1,8 +1,22 @@
-.o-mail-MessageSeenIndicator i {
-    // fa icons have a line height of 1 by default which breaks alignment
-    line-height: 1.5;
+.o-mail-MessageSeenIndicator {
+    border-color: transparent !important;
 
-    &.o-second {
-        top: -3px;
+    &:not(.o-all-seen) i {
+        color: $o-gray-400;
+    }
+
+    &.cursor-pointer:hover {
+        background-color: $o-gray-200;
+        border-color: rgba($primary, 0.25) !important;
+    }
+
+    i {
+        // fa icons have a line height of 1 by default which breaks alignment
+        line-height: 1.5;
+    
+        &.o-second {
+            top: -3px;
+        }
     }
 }
+

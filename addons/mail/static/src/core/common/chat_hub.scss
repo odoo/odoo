@@ -18,7 +18,7 @@
 
 .o-mail-ChatHub-hiddenBtn {
     color: #FFFFFF!important;
-    background-color: #875A7B !important;
+    background-color: $primary !important;
     width: $o-mail-ChatBubble-sizeBig !important;
     height: $o-mail-ChatBubble-sizeBig !important;
 
@@ -49,7 +49,7 @@
     align-items: center;
     max-width: 225px;
 
-    &:hover:not(:has(.o-mail-ChatHub-hiddenClose:hover)), &.o-active {
+    &:hover, &.o-active {
         background-color: $o-gray-300;
     }
 
@@ -57,16 +57,26 @@
         cursor: pointer;
 
         .o-mail-ChatHub-hiddenClose {
-            opacity: 100%;
+            opacity: 50%;
+
+            &:hover {
+                opacity: 100%;
+            }
         }
     }
 }
 
 .o-mail-ChatHub-option {
     &:hover, &.o-active {
-        background-color: $o-gray-300;
+        background-color: $o-gray-200;
         cursor: pointer;
+
+        &[name='close'] {
+            color: darken($danger, 10%);
+            background-color: rgba($danger, 0.1) !important;
+        }
     }
+
 }
 
 .o-mail-ChatHub-optionsBtn {

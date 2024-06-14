@@ -1,0 +1,29 @@
+.o-mail-ChatWindow.o-focused {
+    box-shadow: $box-shadow, 0 0 1px 1px rgba(lighten($o-action, 5%), 0.5) !important;
+}
+
+.o-mail-ChatWindow-command {
+    &:hover {
+        i {
+            filter: contrast(2);
+        }
+
+        &.o-mail-ChatWindow-moreActions {
+            filter: contrast(2);
+
+            img {
+                filter: contrast(0.5);
+            }
+        }
+    }
+    
+    &:hover {
+        background-color: mix($gray-100, $gray-200);
+    }
+    &.o-active {
+        i {
+            filter: contrast(2);
+        }
+        background-color: mix($gray-100, $gray-200);
+    }
+}

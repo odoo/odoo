@@ -90,6 +90,7 @@ export class Picker extends Component {
             closeOnClickAway: false,
             animation: false,
             arrow: false,
+            popoverClass: "rounded-3",
         };
     }
 

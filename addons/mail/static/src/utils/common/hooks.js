@@ -184,33 +184,54 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
 }
 
 /**
- * @param {string} refName
+ * @param {string|ReturnType<import("@odoo/owl").useRef>} refNameOrRef
  * @param {function} cb
  */
-export function useVisible(refName, cb, { ready = true } = {}) {
-    const ref = useRef(refName);
+export function useVisible(refNameOrRef, cb, { ready = true } = {}) {
+    let ref = typeof refNameOrRef === "string" ? useRef(refNameOrRef) : refNameOrRef;
+    const observer = new IntersectionObserver((entries) => {
+        setValue(entries.at(-1).isIntersecting);
+    });
     const state = useState({
         isVisible: undefined,
         ready,
+        setNewRef: (newRef) => {
+            clear();
+            ref = newRef;
+            state.isVisible = true;
+            onChange();
+        },
     });
+
+    function clear() {
+        setValue(false);
+        if (ref?.el) {
+            observer.unobserve(ref.el);
+        }
+    }
+
     function setValue(value) {
         state.isVisible = value;
         cb(state.isVisible);
     }
-    const observer = new IntersectionObserver((entries) => {
-        setValue(entries.at(-1).isIntersecting);
-    });
+
+    function onChange() {
+        if (ref?.el && state.ready) {
+            observer.observe(ref.el);
+        }
+    }
+
     useEffect(
         (el, ready) => {
+            onChange();
             if (el && ready) {
-                observer.observe(el);
                 return () => {
                     setValue(false);
                     observer.unobserve(el);
                 };
             }
         },
-        () => [ref.el, state.ready]
+        () => [ref?.el, state.ready]
     );
     return state;
 }

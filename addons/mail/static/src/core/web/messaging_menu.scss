@@ -4,18 +4,34 @@
     max-height: Min(calc(#{ $o-dropdown-max-height } - 5px), 630px); // -5px for borders
 }
 
-.o-mail-MessagingMenu-header {
-    box-shadow: 0px 7px 7px -7px rgba(50, 50, 50, 0.15);
-}
-
 .o-mail-MessagingMenu-navbar, .o-mail-MessagingMenu-header {
     button {
         &.o-active {
-            background-color: mix($o-gray-100, $o-gray-200);
+            background-color: mix($o-gray-100, $o-gray-200, 75%);
         }
     }
 }
 
 .o-mail-MessagingMenu-navbar button:hover {
     background-color: mix($o-gray-100, $o-gray-200);
+}
+
+.o-mail-MessagingMenu-search:not(:hover) {
+    color: $text-muted;
+}
+
+.o-mail-MessagingMenu-tab {
+    border: 0px solid;
+    border-width: 0px;
+    border-bottom-width: 2px;
+    border-color: transparent;
+
+    &.o-active {
+        background-color: mix($o-mail-inspectorBg, $o-action, 95%) !important;
+        border-color: mix($o-mail-inspectorBg, $o-action, 20%);
+    }
+
+    &:hover {
+        background-color: mix($o-mail-inspectorBg, $o-action, 97.5%) !important;
+    }
 }

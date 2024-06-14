@@ -40,7 +40,7 @@ test("base non-empty rendering", async () => {
             </form>`,
     });
     await contains(".o-mail-AttachmentBox");
-    await contains("button", { text: "Attach files" });
+    await contains("button", { text: "Attach Files" });
     await contains(".o-mail-Chatter input[type='file']");
     await contains(".o-mail-AttachmentList");
 });
@@ -63,8 +63,8 @@ test("remove attachment should ask for confirmation", async () => {
             </form>`,
     });
     await contains(".o-mail-AttachmentCard");
-    await contains("button[title='Remove']");
-    await click("button[title='Remove']");
+    await contains("[title='Remove']");
+    await click("[title='Remove']");
     await contains(".modal-body", { text: 'Do you really want to delete "Blah.txt"?' });
     // Confirm the deletion
     await click(".modal-footer .btn-primary");
@@ -128,7 +128,7 @@ test("scroll to attachment box when toggling on", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 30 });
     await scroll(".o-mail-Chatter", "bottom");
-    await click("button[aria-label='Attach files']");
+    await click("button[aria-label='Attach Files']");
     await contains(".o-mail-AttachmentBox");
     await contains(".o-mail-Chatter", { scroll: 0 });
     await contains(".o-mail-AttachmentBox", { visible: true });
@@ -173,8 +173,8 @@ test("attachment box should order attachments from newest to oldest", async () =
     ]);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Chatter [aria-label='Attach files']", { text: "3" });
-    await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
+    await contains(".o-mail-Chatter [aria-label='Attach Files']", { text: "3" });
+    await click(".o-mail-Chatter [aria-label='Attach Files']"); // open attachment box
     await contains(":nth-child(1 of .o-mail-AttachmentCard)", { text: "C.txt" });
     await contains(":nth-child(2 of .o-mail-AttachmentCard)", { text: "B.txt" });
     await contains(":nth-child(3 of .o-mail-AttachmentCard)", { text: "A.txt" });

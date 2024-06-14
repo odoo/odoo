@@ -1,13 +1,47 @@
 .o-mail-NotificationItem {
+
+    &.o-mobile {
+        --list-group-item-padding-x: #{map-get($spacers, 2)};
+    }
     &.o-important {
-        background-color: mix($o-gray-100, $o-gray-200) !important;
+        --list-group-border-color: #{mix($o-view-background-color, $o-action, 75%)};
+        background-color: mix($o-view-background-color, $o-action, 95%) !important;
     }
     &.o-active {
         box-shadow: inset 0px 0px 0px 1px rgba($o-action, 0.5);
     }
-    &:hover, &.o-active {
-        background-color: $o-gray-200 !important;
+    &:hover {
+        background-color: mix($o-gray-100, $o-gray-200, 100%) !important;
+
+        &.o-important {
+            background-color: mix($o-view-background-color, $o-action, 87.5%) !important;
+
+            .o-mail-NotificationItem-text {
+                opacity: 100% !important;
+            }
+        }
+
+        .o-mail-NotificationItem-name, .o-mail-NotificationItem-content {
+            opacity: 100% !important;
+        }
+        .o-mail-NotificationItem-avatar {
+            box-shadow: $box-shadow-sm;
+        }
     }
+
+    &:not(:hover) .o-mail-NotificationItem-text {
+        color: $text-muted;
+    }
+}
+
+.o-mail-NotificationItem-content {
+    &.o-muted {
+        opacity: 75%;
+    }
+}
+
+.o-mail-NotificationItem-name {
+    font-weight: 600 !important;
 }
 
 
@@ -17,16 +51,23 @@
 
 .o-mail-NotificationItem-markAsRead {
     background-color: transparent !important;
-    font-size: 0.85rem !important;
-    color: $success !important;
+    font-size: 0.75rem !important;
+    color: darken($success, 10%) !important;
+    border: 1px solid;
+    border-color: transparent;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.075) !important;
+        background-color: mix($o-view-background-color, $o-action, 95%) !important;
+        border-color: mix($o-view-background-color, $o-action, 50%);
+        color: darken($success, 5%) !important;
     }
 }
 
-.o-mail-NotificationItem-text:before {
-    // invisible character so that typing status bar has constant height, regardless of text content.
-    content: "\200b"; /* unicode zero width space character */
-}
+.o-mail-NotificationItem-text {
+    opacity: 75%;
 
+    &::before {
+        // invisible character so that typing status bar has constant height, regardless of text content.
+        content: "\200b"; /* unicode zero width space character */
+    }
+}

@@ -1,8 +1,36 @@
 .o-mail-Message {
-    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+    border: solid transparent;
+    border-width: 0px 2px 0px 2px;
+    padding-left: 2px;
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out, border-left-color .5s ease-out;
 
     &.o-highlighted {
-        transform: translateY(-#{map-get($spacers, 3)});
+        border-left-color: $o-info;
+    }
+
+    &.o-important {
+        border-left-color: lighten($warning, 10%);
+        background-color: rgba(lighten($warning, 10%), .15);
+    }
+}
+
+.o-mail-Message-bubble {
+
+    &.o-blue {
+        background-color: mix($o-view-background-color, $o-info, 87.5%);
+        border-color: mix($o-view-background-color, $o-info, 75%) !important;
+    }
+    &.o-green {
+        background-color: mix($o-view-background-color, $o-success, 87.5%);
+        border-color: mix($o-view-background-color, $o-success, 75%) !important;
+
+        .o-mail-Message.o-important & {
+            border-color: mix($o-view-background-color, $o-success, 70%) !important;
+        }
+    }
+    &.o-orange {
+        background-color: mix($o-view-background-color, $o-warning, 80%);
+        border-color: mix($o-view-background-color, $o-warning, 65%) !important;
     }
 }
 
@@ -15,14 +43,24 @@
     flex-basis: $o-mail-Message-sidebarWidth;
     max-width: $o-mail-Message-sidebarWidth;
 
+    &.o-small {
+        flex-basis: $o-mail-Message-sidebarWidthSmall;
+        max-width: $o-mail-Message-sidebarWidthSmall;
+    }
+
     .o-mail-Message-date {
         font-size: 0.75rem;
     }
 }
 
 .o-mail-Message-avatarContainer {
-    width: $o-mail-Avatar-size;
-    height: $o-mail-Avatar-size;
+    width: 34px;
+    height: 34px;
+
+    &.o-small {
+        width: 28px;
+        height: 28px;
+    }
 }
 
 @font-face {
@@ -57,6 +95,10 @@
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;
 
+    .o-mail-Message-contentContainer {
+        flex-direction: row-reverse;
+    }
+
     .o-mail-Message-core, .o-mail-Message-textContent {
         flex-direction: row-reverse;
     }
@@ -69,14 +111,28 @@
 }
 
 .o-mail-Message-actions {
+    button {
+        opacity: 50%;
+    }
     z-index: $o-mail-NavigableList-zIndex - 3;
 
     &.o-expanded {
         z-index: $o-mail-NavigableList-zIndex - 2;
     }
 
-    button:hover, .focus {
-        background-color: mix($o-gray-100, $o-gray-200) !important;
+    button:hover, button.show, .focus {
+        border: $border-width solid;
+        border-color: $o-gray-300;
+        opacity: 100%;
+        i {
+            filter: contrast(2);
+        }
+    }
+}
+
+.o-mail-Message-action[name='delete'] {
+    &:hover, &.focus, &.show {
+        background-color: rgba($danger, 0.2) !important;
     }
 }
 

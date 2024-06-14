@@ -79,7 +79,7 @@ threadActionsRegistry
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
-        panelOuterClass: "o-discuss-ChannelInvitation",
+        panelOuterClass: "o-discuss-ChannelInvitation rounded-3",
         icon: "fa fa-fw fa-user-plus",
         iconLarge: "fa fa-fw fa-lg fa-user-plus",
         name: _t("Add Users"),
