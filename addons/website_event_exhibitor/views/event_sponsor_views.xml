@@ -173,6 +173,9 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click overflow-hidden">
+                            <div class="ribbon ribbon-top-right" invisible="not is_published or not active">
+                                <span class="text-bg-success">Published</span>
+                            </div>
                             <div class="d-flex align-items-center">
                                 <div class="w-25 d-flex justify-content-center">
                                     <img t-att-src="kanban_image('event.sponsor', 'image_128', record.id.raw_value)" class="img-fluid" alt="Sponsor image"/>
