@@ -17,8 +17,8 @@ class ProductTemplate(models.Model):
     def _compute_quotation_description(self):
         for record in self:
             if record.quotation_only_description:
-                record.quotation_description = record.quotation_only_description
+                record.quotation_description = record.with_context(lang=self.env.lang).quotation_only_description
             elif hasattr(record, 'website_description') and record.website_description:
-                record.quotation_description = record.website_description
+                record.quotation_description = record.with_context(lang=self.env.lang).website_description
             else:
                 record.quotation_description = ''
