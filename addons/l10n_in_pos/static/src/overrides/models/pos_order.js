@@ -8,6 +8,13 @@ import {
 import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 
 patch(PosOrder.prototype, {
+    setup(vals) {
+        if (this.company.country_id?.code === "IN") {
+            this.l10n_in_state_id = this.config.company_id.state_id;
+        }
+        return super.setup(...arguments);
+    },
+
     export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
         if (this.get_partner()) {
@@ -69,5 +76,9 @@ patch(PosOrder.prototype, {
             }
         }
         return hsnSummary;
+    },
+
+    setPlaceOfSupply(state) {
+        this.l10n_in_state_id = state;
     },
 });
