@@ -193,7 +193,6 @@ class ChannelMember(models.Model):
             formatted_member = member._discuss_channel_member_format().get(member)
             formatted_member['isTyping'] = is_typing
             notifications.append([member.channel_id, 'discuss.channel.member/typing_status', formatted_member])
-            notifications.append([member.channel_id.uuid, 'discuss.channel.member/typing_status', formatted_member])  # notify livechat users
         self.env['bus.bus']._sendmany(notifications)
 
     @api.model
