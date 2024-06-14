@@ -411,12 +411,13 @@ export class Thread extends Component {
     }
 
     get PRESENT_THRESHOLD() {
-        const viewportHeight = this.scrollableRef.el?.clientHeight * PRESENT_VIEWPORT_THRESHOLD;
+        const viewportHeight =
+            (this.scrollableRef.el?.clientHeight ?? 0) * PRESENT_VIEWPORT_THRESHOLD;
         const messagesHeight = [...this.props.thread.nonEmptyMessages]
             .reverse()
             .slice(0, PRESENT_MESSAGE_THRESHOLD)
             .map((message) => this.refByMessageId.get(message.id))
-            .reduce((totalHeight, message) => totalHeight + message?.el?.clientHeight, 0);
+            .reduce((totalHeight, message) => totalHeight + (message?.el?.clientHeight ?? 0), 0);
         const threshold = Math.max(viewportHeight, messagesHeight);
         return this.state.showJumpPresent ? threshold - 200 : threshold;
     }
