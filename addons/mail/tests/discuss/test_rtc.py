@@ -129,7 +129,7 @@ class TestChannelRTC(MailCommon):
                 {
                     'type': 'mail.record/insert',
                     'payload': {
-                        'Thread': {
+                        'Thread': [{
                             'id': channel.id,
                             'model': 'discuss.channel',
                             'invitedMembers': [('ADD', [{
@@ -142,7 +142,7 @@ class TestChannelRTC(MailCommon):
                                     'type': "partner",
                                 },
                             }])],
-                        }
+                        }],
                     },
                 },
             ]
@@ -230,7 +230,7 @@ class TestChannelRTC(MailCommon):
                 {
                     'type': 'mail.record/insert',
                     'payload': {
-                        'Thread': {
+                        'Thread': [{
                             'id': channel.id,
                             'model': 'discuss.channel',
                             'invitedMembers': [('ADD', [
@@ -255,7 +255,7 @@ class TestChannelRTC(MailCommon):
                                     },
                                 },
                             ])],
-                        }
+                        }],
                     },
                 },
             ]
@@ -643,7 +643,7 @@ class TestChannelRTC(MailCommon):
                 {
                     'type': 'mail.record/insert',
                     'payload': {
-                        'Thread': {
+                        'Thread': [{
                             'id': channel.id,
                             'model': 'discuss.channel',
                             'rtcInvitingSession': {
@@ -659,13 +659,13 @@ class TestChannelRTC(MailCommon):
                                     },
                                 },
                             },
-                        }
+                        }],
                     },
                 },
                 {
                     'type': 'mail.record/insert',
                     'payload': {
-                        'Thread': {
+                        'Thread': [{
                             'id': channel.id,
                             'model': 'discuss.channel',
                             'rtcInvitingSession': {
@@ -681,13 +681,13 @@ class TestChannelRTC(MailCommon):
                                     },
                                 },
                             },
-                        }
+                        }],
                     },
                 },
                 {
                     'type': 'mail.record/insert',
                     'payload': {
-                        'Thread': {
+                        'Thread': [{
                             'id': channel.id,
                             'model': 'discuss.channel',
                             'invitedMembers': [('ADD', [
@@ -712,7 +712,7 @@ class TestChannelRTC(MailCommon):
                                     },
                                 },
                             ])],
-                        }
+                        }],
                     },
                 },
             ],
