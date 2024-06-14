@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup
+import logging
 
-from odoo import fields, models, _
+from odoo import fields, models
 from odoo.tools import html2plaintext
+
+_logger = logging.getLogger(__name__)
 
 
 class SlideChannelPartner(models.Model):
@@ -48,14 +50,10 @@ class SlideChannelPartner(models.Model):
 
     def _send_completed_mail(self):
         super()._send_completed_mail()
-        for scp in self:
-            if self.env.user.employee_ids:
-                msg = _('The employee has completed the course %s',
-                    Markup('<a href="%(link)s">%(course)s</a>') % {
-                        'link': scp.channel_id.website_url,
-                        'course': scp.channel_id.name,
-                })
-                self.env.user.employee_id.message_post(body=msg)
+        for channel in self.channel_id:
+            partners = self.filtered(lambda scp: scp.channel_id == channel).partner_id
+            channel._message_employee_chatter('completed', partners)
+
 
 class Channel(models.Model):
     _inherit = 'slide.channel'
@@ -63,37 +61,36 @@ class Channel(models.Model):
     def _action_add_members(self, target_partners, member_status='joined', raise_on_access=False):
         res = super()._action_add_members(target_partners, member_status=member_status, raise_on_access=raise_on_access)
         if member_status == 'joined':
-            for channel in self:
-                channel._message_employee_chatter(
-                    _('The employee subscribed to the course %s',
-                        Markup('<a href="%(link)s">%(course)s</a>') % {
-                            'link': channel.website_url,
-                            'course': channel.name
-                    }),
-                    target_partners
-                )
+            self._message_employee_chatter(member_status, target_partners)
         return res
 
     def _remove_membership(self, partner_ids):
         res = super()._remove_membership(partner_ids)
-
         partners = self.env['res.partner'].browse(partner_ids)
-
-        for channel in self:
-            channel._message_employee_chatter(
-                _('The employee left the course %s',
-                    Markup('<a href="%(link)s">%(course)s</a>') % {
-                        'link': channel.website_url,
-                        'course': channel.name,
-                }),
-                partners)
+        self._message_employee_chatter('left', partners)
         return res
 
-    def _message_employee_chatter(self, msg, partners):
-        for partner in partners:
-            employee = partner.user_ids.sudo().filtered(
-                lambda u: u.employee_id and (not partner.company_id or u.employee_id.company_id == partner.company_id)
-            ).employee_id
+    def _message_employee_chatter(self, kind, partners):
+        """Post a notification about the changes in member_status of employees in the course(s).
 
-            if employee:
-                employee.sudo().message_post(body=msg)
+        :param str kind: "joined", "left", "completed"
+        :param partners: res.partner recordset
+        """
+        if not partners or not self.ids or kind not in {"joined", "left", "completed"}:
+            return
+
+        if not self.env.ref('hr_skills_slides.message_employee_course_status_changed', raise_if_not_found=False):
+            _logger.warning('Missing template `hr_skills_slides.message_employee_course_status_changed`')
+            return
+
+        employees_sudo = partners.sudo().mapped(
+            lambda p: p.user_ids.employee_id.filtered(lambda e: not e.company_id or e.company_id == p.company_id))
+
+        if not employees_sudo:
+            return
+
+        for channel in self:
+            employees_sudo.message_post_with_source(
+                'hr_skills_slides.message_employee_course_status_changed',
+                render_values={'channel_name': channel.name, 'channel_website_url': channel.website_url, 'kind': kind},
+            )

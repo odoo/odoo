@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="message_employee_course_status_changed">
+            <t t-set="message" t-if="kind=='joined'">The employee subscribed to the course</t>
+            <t t-set="message" t-if="kind=='left'">The employee left the course</t>
+            <t t-set="message" t-if="kind=='completed'">The employee completed the course</t>
+            <span><t t-out="message"/>"<a t-att-href="channel_website_url" t-out="channel_name"/>".</span>
+        </template>
+    </data>
+</odoo>
