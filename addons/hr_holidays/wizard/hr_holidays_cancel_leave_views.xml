@@ -6,10 +6,14 @@
             <form string="Cancel Time Off">
                 <group>
                     <field name="leave_id" invisible="1" />
-                    <field name="reason" placeholder="Provide a reason to delete an approved time off" />
+                    <field name="reason" placeholder="Provide a reason to cancel an approved time off" />
                 </group>
                 <footer>
-                    <button name="action_cancel_leave" type="object" class="btn-primary" string="Delete Time Off" accesskey="c" />
+                    <button name="action_cancel_leave"
+                            type="object"
+                            class="btn-primary"
+                            string="Cancel Time Off"
+                            accesskey="c" />
                     <button special="cancel" string="Discard" close="1" accesskey="j" />
                 </footer>
             </form>

@@ -248,7 +248,6 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate,cancel"/>
             </header>
             <sheet>
-                <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                 <div class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch">
                     <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>
                     (<field name="tz"/>).
@@ -257,6 +256,7 @@
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
+                        <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
                         <div name="title" class="o_hr_leave_title" invisible="1">
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
@@ -367,7 +367,7 @@
             <xpath expr="//div[hasclass('o_hr_leave_column')]" position="attributes">
                 <attribute name="class" remove="col_left col-md-6" separator=" "/>
             </xpath>
-            <xpath expr="//sheet/widget[@name='web_ribbon']" position="after">
+            <xpath expr="//div[hasclass('o_hr_leave_content')]" position="before">
                 <widget name="web_ribbon" title="Refused" bg_color="bg-danger" invisible="state != 'refuse' or not id"/>
                 <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate' or not id"/>
             </xpath>
