@@ -13,6 +13,15 @@ class Invite(models.TransientModel):
     _name = 'mail.wizard.invite'
     _description = 'Invite wizard'
 
+    def name_get(self):
+        title = []
+        model = self.env.context.get('default_res_model')
+        res_id = self.env.context.get('default_res_id')
+        if model and res_id:
+            for r in self:
+                title.append((r.id, r.env[model].browse(res_id).display_name))
+        return title
+
     @api.model
     def default_get(self, fields):
         result = super(Invite, self).default_get(fields)
