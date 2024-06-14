@@ -18,11 +18,11 @@ class CalendarEvent(models.Model):
         # Event without start and stop are skipped, except all day event: their interval is computed
         # based on company calendar's interval.
         for event, event_interval in event_intervals.items():
-            start = event_interval._items[0][0]
-            stop = event_interval._items[0][1]
-            if not event.partner_ids:
+            if not event_interval or not event.partner_ids:
                 event.unavailable_partner_ids = []
                 continue
+            start = event_interval._items[0][0]
+            stop = event_interval._items[0][1]
             schedule_by_partner = event.partner_ids._get_schedule(start, stop, merge=False)
             event.unavailable_partner_ids = event._check_employees_availability_for_event(
                 schedule_by_partner, event_interval)
