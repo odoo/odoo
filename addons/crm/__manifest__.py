@@ -79,7 +79,13 @@
         'web.qunit_suite_tests': [
             'crm/static/tests/**/*',
             ('remove', 'crm/static/tests/tours/**/*'),
+            ('remove', 'crm/static/tests/mock_server/**/*'),
+            ('remove', 'crm/static/tests/crm_test_helpers.js'),
         ],
+        'web.assets_unit_tests': [
+            'crm/static/tests/mock_server/**/*',
+            'crm/static/tests/crm_test_helpers.js'
+        ]
     },
     'license': 'LGPL-3',
 }
