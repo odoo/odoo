@@ -84,15 +84,15 @@ class ChangeProductionQty(models.TransientModel):
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 wo.duration_expected = wo._get_duration_expected(ratio=new_production_qty / old_production_qty)
-                quantity = wo.qty_production - wo.qty_produced
+                quantity = wo.qty_production - wo.qty_producing
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
                     quantity = quantity if (quantity > 0 and not float_is_zero(quantity, precision_digits=precision)) else 0
                 wo._update_qty_producing(quantity)
-                if wo.qty_produced < wo.qty_production and wo.state == 'done':
+                if wo.qty_producing < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
-                if wo.qty_produced == wo.qty_production and wo.state == 'progress':
+                if wo.qty_producing == wo.qty_production and wo.state == 'progress':
                     wo.state = 'done'
                 # assign moves; last operation receive all unassigned moves
                 # TODO: following could be put in a function as it is similar as code in _workorders_create

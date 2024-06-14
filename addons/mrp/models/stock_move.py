@@ -260,14 +260,12 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
-    @api.depends('product_uom_qty',
-        'raw_material_production_id', 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_produced',
-        'production_id', 'production_id.product_qty', 'production_id.qty_produced')
+    @api.depends('product_uom_qty', 'raw_material_production_id', 'raw_material_production_id.product_qty', 'production_id', 'production_id.product_qty')
     def _compute_unit_factor(self):
         for move in self:
             mo = move.raw_material_production_id or move.production_id
             if mo:
-                move.unit_factor = move.product_uom_qty / ((mo.product_qty - mo.qty_produced) or 1)
+                move.unit_factor = move.product_uom_qty / mo.product_qty
             else:
                 move.unit_factor = 1.0
 
@@ -290,7 +288,7 @@ class StockMove(models.Model):
             if not mo or not move.product_uom:
                 move.should_consume_qty = 0
                 continue
-            move.should_consume_qty = float_round((mo.qty_producing - mo.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            move.should_consume_qty = float_round(mo.qty_producing * move.unit_factor, precision_rounding=move.product_uom.rounding)
 
     @api.depends('byproduct_id')
     def _compute_show_info(self):
@@ -313,7 +311,7 @@ class StockMove(models.Model):
     def _onchange_product_uom_qty(self):
         if self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
-            new_qty = float_round((mo.qty_producing - mo.qty_produced) * self.unit_factor, precision_rounding=self.product_uom.rounding)
+            new_qty = float_round(mo.qty_producing * self.unit_factor, precision_rounding=self.product_uom.rounding)
             self.quantity = new_qty
 
     @api.onchange('quantity', 'product_uom', 'picked')

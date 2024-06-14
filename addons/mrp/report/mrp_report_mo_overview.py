@@ -173,7 +173,7 @@ class ReportMoOverview(models.AbstractModel):
             'product_id': production.product_id.id,
             'state': production.state,
             'formatted_state': self._format_state(production, components),
-            'quantity': production.product_qty if production.state != 'done' else production.qty_produced,
+            'quantity': production.product_qty if production.state != 'done' else production.qty_producing,
             'uom_name': production.product_uom_id.display_name,
             'uom_precision': self._get_uom_precision(production.product_uom_id.rounding or 0.01),
             'quantity_free': product.uom_id._compute_quantity(max(product.free_qty, 0), production.product_uom_id) if product.is_storable else False,

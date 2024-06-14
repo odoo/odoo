@@ -192,7 +192,6 @@ class MrpProduction(models.Model):
         'res.company', 'Company', default=lambda self: self.env.company,
         index=True, required=True)
 
-    qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
         copy=False)
@@ -615,14 +614,6 @@ class MrpProduction(models.Model):
 
             order.unreserve_visible = not any_quantity_done and already_reserved
             order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
-
-    @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity')
-    def _get_produced_qty(self):
-        for production in self:
-            done_moves = production.move_finished_ids.filtered(lambda x: x.state != 'cancel' and x.product_id.id == production.product_id.id)
-            qty_produced = sum(done_moves.filtered(lambda m: m.picked).mapped('quantity'))
-            production.qty_produced = qty_produced
-        return True
 
     def _compute_scrap_move_count(self):
         data = self.env['stock.scrap']._read_group([('production_id', 'in', self.ids)], ['production_id'], ['__count'])
@@ -1222,7 +1213,7 @@ class MrpProduction(models.Model):
             if move.sudo()._should_bypass_set_qty_producing():
                 continue
 
-            new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            new_qty = float_round(self.qty_producing * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
             if not move.manual_consumption or pick_manual_consumption_moves:
                 move.picked = True
@@ -1696,7 +1687,7 @@ class MrpProduction(models.Model):
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
             for move in finish_moves:
-                move.quantity = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                move.quantity = float_round(order.qty_producing, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
                 extra_vals = order._prepare_finished_extra_vals()
                 if extra_vals:
                     move.move_line_ids.write(extra_vals)
@@ -1706,7 +1697,7 @@ class MrpProduction(models.Model):
                     workorder.duration_expected = workorder._get_duration_expected()
                 if workorder.duration == 0.0:
                     workorder.duration = workorder.duration_expected * order.qty_producing / order.product_qty
-                    workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
+                    workorder.duration_unit = round(workorder.duration / max(workorder.qty_producing, 1), 2)
             order._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish.picked = True
@@ -1969,14 +1960,13 @@ class MrpProduction(models.Model):
 
             # Adapt quantities produced
             for workorder in production.workorder_ids:
-                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_produced, 0))
-                workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
+                initial_workorder_remaining_qty.append(max(initial_qty - workorder.qty_reported_from_previous_wo - workorder.qty_producing, 0))
             workorders_len = len(production.workorder_ids)
             for index, workorder in enumerate(bo.workorder_ids):
                 remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
                 workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
                 if remaining_qty:
-                    initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
+                    initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_producing, 0)
                 else:
                     workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
@@ -2680,7 +2670,7 @@ class MrpProduction(models.Model):
         if self.product_tracking == 'serial' and float_compare(self.qty_producing, 1, precision_rounding=self.product_uom_id.rounding) == 1:
             self.qty_producing = 1
         else:
-            self.qty_producing = self.product_qty - self.qty_produced
+            self.qty_producing = self.product_qty
         self._set_qty_producing()
 
         for move in self.move_raw_ids:

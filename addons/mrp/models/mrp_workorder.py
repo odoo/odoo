@@ -47,12 +47,6 @@ class MrpWorkorder(models.Model):
         compute='_compute_qty_producing', inverse='_set_qty_producing',
         string='Currently Produced Quantity', digits='Product Unit of Measure')
     qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits='Product Unit of Measure')
-    qty_produced = fields.Float(
-        'Quantity', default=0.0,
-        readonly=True,
-        digits='Product Unit of Measure',
-        copy=False,
-        help="The number of products already handled by this work order")
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
     state = fields.Selection([
@@ -289,12 +283,12 @@ class MrpWorkorder(models.Model):
         mo_dirty.workorder_ids._action_confirm()
         return res
 
-    @api.depends('production_id.product_qty', 'qty_produced', 'production_id.product_uom_id')
+    @api.depends('production_id.product_qty', 'production_id.product_uom_id')
     def _compute_is_produced(self):
         self.is_produced = False
         for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
             rounding = order.production_id.product_uom_id.rounding
-            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
+            order.is_produced = float_compare(order.qty_producing, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
     @api.depends('operation_id', 'workcenter_id', 'qty_production')
     def _compute_duration_expected(self):
@@ -302,11 +296,11 @@ class MrpWorkorder(models.Model):
             if workorder.state not in ['done', 'cancel']:
                 workorder.duration_expected = workorder._get_duration_expected()
 
-    @api.depends('time_ids.duration', 'qty_produced')
+    @api.depends('time_ids.duration')
     def _compute_duration(self):
         for order in self:
             order.duration = sum(order.time_ids.mapped('duration'))
-            order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
+            order.duration_unit = round(order.duration / max(order.qty_producing, 1), 2)  # rounding 2 because it is a time
             if order.duration_expected:
                 order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
             else:
@@ -644,7 +638,6 @@ class MrpWorkorder(models.Model):
                 continue
             workorder.end_all()
             vals = {
-                'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',
                 'date_finished': date_finished,
                 'costs_hour': workorder.workcenter_id.costs_hour
@@ -731,11 +724,11 @@ class MrpWorkorder(models.Model):
         action['res_id'] = self.id
         return action
 
-    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.product_uom_id')
+    @api.depends('qty_production', 'qty_reported_from_previous_wo', 'production_id.product_uom_id')
     def _compute_qty_remaining(self):
         for wo in self:
             if wo.production_id.product_uom_id:
-                wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
+                wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_producing, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
             else:
                 wo.qty_remaining = 0
 

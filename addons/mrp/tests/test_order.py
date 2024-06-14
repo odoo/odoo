@@ -1564,7 +1564,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.qty_producing = 1
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
-        self.assertEqual(mo.qty_produced, 1)
+        self.assertEqual(mo.qty_producing, 1)
         self.assertEqual(mo.move_raw_ids.state, 'cancel')
 
     def test_product_produce_14(self):
@@ -2181,7 +2181,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # Check quantities of the original MO
         self.assertEqual(mo.product_uom_qty, 10.0)
-        self.assertEqual(mo.qty_produced, 10.0)
+        self.assertEqual(mo.qty_producing, 10.0)
         move_prod_1 = self.env['stock.move'].search([
             ('product_id', '=', mo.bom_id.bom_line_ids[0].product_id.id),
             ('raw_material_production_id', '=', mo.id)])
@@ -2222,7 +2222,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # Check quantities of the original MO
         self.assertEqual(mo.product_uom_qty, 10.0)
-        self.assertEqual(mo.qty_produced, 10.0)
+        self.assertEqual(mo.qty_producing, 10.0)
         move_prod_1_done = mo.move_raw_ids.filtered(lambda m: m.product_id == p1)
         self.assertEqual(sum(move_prod_1_done.mapped('quantity')), 5)
         self.assertEqual(sum(move_prod_1_done.mapped('product_uom_qty')), 10)
