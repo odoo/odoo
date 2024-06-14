@@ -5,6 +5,7 @@ import { usePosition } from "../position/position_hook";
 import { useDropdownNavigation } from "./dropdown_navigation_hook";
 import { ParentClosingMode } from "./dropdown_item";
 import { localization } from "../l10n/localization";
+import { hasNoHoveringCapability } from "@web/core/browser/feature_detection";
 
 const { Component, core, hooks, useState, QWeb } = owl;
 const { EventBus } = core;
@@ -257,6 +258,9 @@ export class Dropdown extends Component {
      * NB: only if its siblings dropdown group is opened and if not a sub dropdown.
      */
     onTogglerMouseEnter() {
+        if (hasNoHoveringCapability()) {
+            return;
+        }
         if (this.state.groupIsOpen && !this.state.open) {
             this.togglerRef.el.focus();
             this.open();
