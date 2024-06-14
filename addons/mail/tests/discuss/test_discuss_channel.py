@@ -221,13 +221,18 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "payload": {
                         "ChannelMember": {
                             "id": member.id,
-                            "new_message_separator": msg_1.id + 1,
                             "thread": {
                                 "id": chat.id,
+                                "model": "discuss.channel",
                                 "message_unread_counter": 0,
                                 "message_unread_counter_bus_id": last_bus_id + 1,
-                                "model": "discuss.channel",
                             },
+                            "persona": {
+                                "id": self.user_admin.partner_id.id,
+                                "name": self.user_admin.partner_id.name,
+                                "type": "partner",
+                            },
+                            "new_message_separator": msg_1.id + 1,
                             "syncUnread": False,
                         },
                     },
@@ -237,6 +242,15 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "payload": {
                         "ChannelMember": {
                             "id": member.id,
+                            "thread": {
+                                "id": chat.id,
+                                "model": "discuss.channel",
+                            },
+                            "persona": {
+                                "id": self.user_admin.partner_id.id,
+                                "name": self.user_admin.partner_id.name,
+                                "type": "partner",
+                            },
                             "seen_message_id": {"id": msg_1.id},
                         },
                     },

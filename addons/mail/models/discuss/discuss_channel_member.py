@@ -223,6 +223,11 @@ class ChannelMember(models.Model):
             }
         if extra_fields:
             fields.update(extra_fields)
+        if "message_unread_counter" in fields and "channel" not in fields:
+            raise ValueError("'message_unread_counter' cannot be used without 'channel' in 'fields'")
+        if "message_unread_counter" in fields:
+            # sudo: bus.bus: reading non-sensitive last id
+            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         members_formatted_data = {}
         for member in self:
             data = {}
@@ -250,6 +255,8 @@ class ChannelMember(models.Model):
                 data['seen_message_id'] = {'id': member.seen_message_id.id} if member.seen_message_id else False
             if 'new_message_separator' in fields:
                 data['new_message_separator'] = member.new_message_separator
+            if data.get("thread") and "message_unread_counter" in fields:
+                data["thread"].update(message_unread_counter=member.message_unread_counter, message_unread_counter_bus_id=bus_last_id)
             if fields.get("last_interest_dt"):
                 data['last_interest_dt'] = odoo.fields.Datetime.to_string(member.last_interest_dt)
             members_formatted_data[member] = data
@@ -459,11 +466,11 @@ class ChannelMember(models.Model):
         target = self.partner_id or self.guest_id
         if self.channel_id.channel_type in self.channel_id._types_allowing_seen_infos():
             target = self.channel_id
+        persona_fields = {"partner": {"id": True, "name": True}, "guest": {"id": True, "name": True}}
         self.env["bus.bus"]._sendone(target, "mail.record/insert", {
-            "ChannelMember": {
-                "id": self.id,
-                "seen_message_id": {"id": message.id},
-            }
+            "ChannelMember": self._discuss_channel_member_format(fields={
+                "id": True, "channel": {}, "persona": persona_fields, "seen_message_id": True
+            })[self]
         })
 
     def _set_new_message_separator(self, message_id, sync=False):
@@ -478,17 +485,10 @@ class ChannelMember(models.Model):
         if message_id == self.new_message_separator:
             return
         self.new_message_separator = message_id
+        persona_fields = {"partner": {"id": True, "name": True}, "guest": {"id": True, "name": True}}
+        member_data = self._discuss_channel_member_format(
+            fields={"id": True, "channel": {}, "message_unread_counter": True, "new_message_separator": True, "persona": persona_fields},
+        )[self]
+        member_data.update(syncUnread=sync)
         target = self.partner_id or self.guest_id
-        channel_member = {
-            "id": self.id,
-            "new_message_separator": self.new_message_separator,
-            "thread": {
-                "id": self.channel_id.id,
-                "message_unread_counter": self.message_unread_counter,
-                # sudo: bus.bus: reading non-sensitive last id
-                "message_unread_counter_bus_id": self.env["bus.bus"].sudo()._bus_last_id(),
-                "model": "discuss.channel",
-            },
-        }
-        channel_member["syncUnread"] = sync
-        self.env["bus.bus"]._sendone(target, "mail.record/insert", {"ChannelMember": channel_member})
+        self.env["bus.bus"]._sendone(target, "mail.record/insert", {"ChannelMember": member_data})
