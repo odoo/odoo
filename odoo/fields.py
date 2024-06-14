@@ -447,7 +447,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
-            attrs['readonly'] = attrs.get('readonly', True)
+            attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('precompute'):
             if not attrs.get('compute') and not attrs.get('related'):
                 warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}")
