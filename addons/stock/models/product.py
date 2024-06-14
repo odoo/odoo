@@ -173,10 +173,11 @@ class Product(models.Model):
         quants_res = dict((item['product_id'][0], (item['quantity'], item['reserved_quantity'])) for item in Quant._read_group(domain_quant, ['product_id', 'quantity', 'reserved_quantity'], ['product_id'], orderby='id'))
         if dates_in_the_past:
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
-            domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
-            domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
-            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+            MoveLine = self.env['stock.move.line'].with_context(active_test=False)
+            domain_move_line_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
+            domain_move_line_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
+            move_lines_in_res_past = dict((item['product_id'][0], item['done_product_qty']) for item in MoveLine._read_group(domain_move_line_in_done, ['product_id', 'done_product_qty'], ['product_id'], orderby='id'))
+            move_lines_out_res_past = dict((item['product_id'][0], item['done_product_qty']) for item in MoveLine._read_group(domain_move_line_out_done, ['product_id', 'done_product_qty'], ['product_id'], orderby='id'))
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
@@ -191,7 +192,7 @@ class Product(models.Model):
             rounding = product.uom_id.rounding
             res[product_id] = {}
             if dates_in_the_past:
-                qty_available = quants_res.get(origin_product_id, [0.0])[0] - moves_in_res_past.get(origin_product_id, 0.0) + moves_out_res_past.get(origin_product_id, 0.0)
+                qty_available = quants_res.get(origin_product_id, [0.0])[0] - move_lines_in_res_past.get(origin_product_id, 0.0) + move_lines_out_res_past.get(origin_product_id, 0.0)
             else:
                 qty_available = quants_res.get(origin_product_id, [0.0])[0]
             reserved_quantity = quants_res.get(origin_product_id, [False, 0.0])[1]
