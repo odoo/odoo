@@ -265,7 +265,19 @@ class Http(models.AbstractModel):
 
         def _search_page(comparator='='):
             page_domain = [('url', comparator, req_page)] + request.website.website_domain()
-            return request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+            search_page = request.env['website.page'].sudo().search(page_domain, order='website_id asc', limit=1)
+            if search_page:
+                return search_page
+            else:
+                # Search if the page domain can be found thanks to a translation
+                # of language installed on the website.
+                installed_languages = request.website.language_ids
+                for language in installed_languages:
+                    search_page = request.env['website.page'].sudo().with_context(lang=language[0].code).search(page_domain, order='website_id asc', limit=1)
+                    if search_page:
+                        redirect = request.redirect_query(search_page.with_context(lang=request.env.lang).url, request.httprequest.args)
+                        redirect.set_cookie('frontend_lang', request.env.lang)
+                        werkzeug.exceptions.abort(redirect)
 
         # specific page first
         page = _search_page()

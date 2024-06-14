@@ -6,6 +6,7 @@ import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
 import {registry} from '@web/core/registry';
+import {TranslationButton} from "@web/views/fields/translation_button";
 import { _t } from '@web/core/l10n/translation';
 import { Component, useState } from "@odoo/owl";
 
@@ -14,7 +15,7 @@ import { Component, useState } from "@odoo/owl";
  * is updated.
  */
 class PageUrlField extends Component {
-    static components = { Switch, PageDependencies };
+    static components = { Switch, PageDependencies, TranslationButton };
     static template = "website.PageUrlField";
     static props = {
         ...standardFieldProps,
@@ -47,6 +48,10 @@ class PageUrlField extends Component {
     get fieldURL() {
         const value = this.props.record.data[this.props.name];
         return (value.url !== undefined ? value.url : value).replace(/^\//g, '');
+    }
+
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
     }
 
     updateValues() {
