@@ -81,3 +81,18 @@ test("test name_and_signature widget with noInputName and without name", async f
     expect(".card-header .active").toHaveCount(1);
     expect(".card-header .active").toHaveText("Draw");
 });
+
+test("test name_and_signature widget default signature", async function () {
+    const props = {
+        signature: {
+            name: "Brandon Freeman",
+            signatureImage: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+BCQAHBQICJmhD1AAAAABJRU5ErkJggg==",
+        },
+        mode: "draw",
+        signatureType: "signature",
+        noInputName: true,
+    };
+    const res = await mountWithCleanup(NameAndSignature, { props });
+    expect(res.isSignatureEmpty).toBe(false);
+
+});
