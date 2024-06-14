@@ -4158,7 +4158,7 @@ class ViewModifiers(ViewCase):
             <form string="View">
                 <field name="name"/>
                 <field name="model"/>
-                <field name="inherit_id" attrs="{'readonly': [('model', '=', 'ir.ui.view')]"/>
+                <field name="inherit_id" attrs="{'readonly': [('model', '=', 'ir.ui.view')]}"/>
             </form>
         """
         self.assertInvalid(arch, """no longer used""")
