@@ -44,8 +44,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         self.assertEqual(channel_info['anonymous_country'], {'code': 'BE', 'id': belgium.id, 'name': 'Belgium'})
 
         # ensure member info are hidden (in particular email and real name when livechat username is present)
-        # shape of channelMembers is [('ADD', data...)], [0][1] accesses the data
-        self.assertEqual(sorted((m['persona'] for m in channel_info['channelMembers'][0][1]), key=lambda m: m['id']), sorted([{
+        self.assertEqual(sorted((m["persona"] for m in data["ChannelMember"]), key=lambda m: m["id"]), sorted([{
             'id': self.env['discuss.channel'].browse(channel_info['id']).channel_member_ids.filtered(lambda m: m.guest_id)[0].guest_id.id,
             'name': 'Visitor',
             'im_status': 'offline',
@@ -82,11 +81,12 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ('partner_id', '=', test_user.partner_id.id),
         ]
         visitor_member = self.env['discuss.channel.member'].search(visitor_member_domain)
-        self.assertEqual(channel_info['channelMembers'], [['ADD', [
+        self.assertEqual(data["ChannelMember"], [
             {
                 'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'create_date': fields.Datetime.to_string(visitor_member.create_date),
                 'id': visitor_member.id,
+                "last_interest_dt": fields.Datetime.to_string(visitor_member.last_interest_dt),
                 'new_message_separator': 0,
                 'persona': {
                     'active': True,
@@ -120,7 +120,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 'fetched_message_id': False,
                 'seen_message_id': False,
             },
-        ]]])
+        ])
 
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
@@ -145,11 +145,12 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         })
         self.assertFalse(channel_info['anonymous_name'])
         self.assertEqual(channel_info['anonymous_country'], False)
-        self.assertEqual(channel_info['channelMembers'], [['ADD', [
+        self.assertEqual(data["ChannelMember"], [
             {
                 'thread': {'id': channel_info['id'], 'model': "discuss.channel"},
                 'create_date': fields.Datetime.to_string(operator_member.create_date),
                 'id': operator_member.id,
+                "last_interest_dt": fields.Datetime.to_string(operator_member.last_interest_dt),
                 'new_message_separator': 0,
                 'persona': {
                     'active': True,
@@ -163,7 +164,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 'fetched_message_id': False,
                 'seen_message_id': False,
             },
-        ]]])
+        ])
 
     def _open_livechat_discuss_channel(self):
         discuss_channels = []
