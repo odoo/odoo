@@ -3,11 +3,12 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from pytz import timezone, UTC, utc
 from datetime import timedelta
 
 from odoo.tools import format_time
+from odoo.exceptions import ValidationError
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -134,7 +135,8 @@ class HrEmployeeBase(models.AbstractModel):
     @api.depends('department_id')
     def _compute_parent_id(self):
         for employee in self.filtered('department_id.manager_id'):
-            employee.parent_id = employee.department_id.manager_id
+            if employee.parent_id != employee.department_id.manager_id:
+                employee.parent_id = employee.department_id.manager_id
 
     @api.depends('resource_calendar_id', 'hr_presence_state')
     def _compute_presence_icon(self):
@@ -167,6 +169,11 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_work_location_id(self):
         to_reset = self.filtered(lambda e: e.address_id != e.work_location_id.address_id)
         to_reset.work_location_id = False
+
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('You cannot create recursive employees.'))
 
     @api.model
     def _get_employee_working_now(self):
