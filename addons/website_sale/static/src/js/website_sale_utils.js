@@ -45,47 +45,77 @@ export const cartHandlerMixin = {
         return data;
     },
 };
-// TODO-visp: remove animate
-function animateClone($cart, $elem, offsetTop, offsetLeft) {
-    if (!$cart.length) {
+
+function animateClone(cartEl, elem, offsetTop, offsetLeft) {
+    if (!cartEl) {
         return Promise.resolve();
     }
-    $cart.removeClass('d-none').find('.o_animate_blink').addClass('o_red_highlight o_shadow_animation').delay(500).queue(function () {
-        $(this).removeClass("o_shadow_animation").dequeue();
-    }).delay(2000).queue(function () {
-        $(this).removeClass("o_red_highlight").dequeue();
-    });
-    return new Promise(function (resolve, reject) {
-        if(!$elem) resolve();
-        var $imgtodrag = $elem.find('img').eq(0);
-        if ($imgtodrag.length) {
-            var $imgclone = $imgtodrag.clone()
-                .offset({
-                    top: $imgtodrag.offset().top,
-                    left: $imgtodrag.offset().left
-                })
-                .removeClass()
-                .addClass('o_website_sale_animate')
-                .appendTo(document.body)
-                .css({
-                    // Keep the same size on cloned img.
-                    width: $imgtodrag.width(),
-                    height: $imgtodrag.height(),
-                })
-                .animate({
-                    top: $cart.offset().top + offsetTop,
-                    left: $cart.offset().left + offsetLeft,
-                    width: 75,
-                    height: 75,
-                }, 500);
 
-            $imgclone.animate({
-                width: 0,
-                height: 0,
-            }, function () {
+    cartEl.classList.remove("d-none");
+    const blinkEl = cartEl.querySelector(".o_animate_blink");
+    blinkEl.classList.add("o_red_highlight", "o_shadow_animation");
+
+    setTimeout(function () {
+        blinkEl.classList.remove("o_shadow_animation");
+    }, 500);
+
+    setTimeout(function () {
+        blinkEl.classList.remove("o_red_highlight");
+    }, 2000);
+
+    return new Promise(function (resolve, reject) {
+        if (!elem) {
+            resolve();
+        }
+        const imgtodragEl = elem.querySelector("img");
+        if (imgtodragEl) {
+            const imgcloneEl = imgtodragEl.cloneNode(true);
+
+            const imgOffset = imgtodragEl.getBoundingClientRect();
+
+            imgcloneEl.style.top = imgOffset.top + "px";
+            imgcloneEl.style.left = imgOffset.left + "px";
+
+            imgcloneEl.className = "o_website_sale_animate";
+
+            document.body.appendChild(imgcloneEl);
+
+            imgcloneEl.style.width = imgtodragEl.offsetWidth + "px";
+            imgcloneEl.style.height = imgtodragEl.offsetHeight + "px";
+
+            var cartOffset = cartEl.getBoundingClientRect();
+
+            var targetTop = cartOffset.top + offsetTop;
+            var targetLeft = cartOffset.left + offsetLeft;
+            var targetWidth = 75;
+            var targetHeight = 75;
+
+            // Animate the cloned element to the target position and size
+            const animation = imgcloneEl.animate(
+                [
+                    {
+                        top: imgOffset.top + "px",
+                        left: imgOffset.left + "px",
+                        width: imgtodragEl.offsetWidth + "px",
+                        height: imgtodragEl.offsetHeight + "px",
+                    },
+                    {
+                        top: targetTop + "px",
+                        left: targetLeft + "px",
+                        width: targetWidth + "px",
+                        height: targetHeight + "px",
+                    },
+                ],
+                {
+                    duration: 500,
+                    fill: "forwards",
+                }
+            );
+
+            animation.onfinish = function () {
                 resolve();
-                $(this).detach();
-            });
+                imgcloneEl.remove(); // Use remove() instead of detach() in vanilla JS
+            };
         } else {
             resolve();
         }

@@ -150,10 +150,9 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
                     return;
                 }
                 self._addNewProducts(productId).then(function () {
-                    // TODO-VISP: remove when animateClone is converted
                     website_sale_utils.animateClone(
-                        $('#comparelist .o_product_panel_header'),
-                        $(elem).closest('form'),
+                        document.querySelector("#comparelist .o_product_panel_header"),
+                        elem.closest("form"),
                         -50,
                         10
                     );
