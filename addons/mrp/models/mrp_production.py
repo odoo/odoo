@@ -776,7 +776,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
-        self._set_qty_producing(False)
+        self._set_qty_producing()
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
@@ -1190,7 +1190,7 @@ class MrpProduction(models.Model):
             origin = '%s,%s' % (origin, self.name)
         return origin
 
-    def _set_qty_producing(self, pick_manual_consumption_moves=True):
+    def _set_qty_producing(self):
         if self.product_id.tracking == 'serial':
             qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
             # changing a non-zero value to a 0 for allow user to mass produce if MO is in progress
@@ -1205,9 +1205,13 @@ class MrpProduction(models.Model):
             if move.sudo()._should_bypass_set_qty_producing():
                 continue
 
-            new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
-            move._set_quantity_done(new_qty)
-            if not move.manual_consumption or pick_manual_consumption_moves:
+            if not move.picked:
+                new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+                move._set_quantity_done(new_qty)
+
+    def _pick_automoves(self):
+        for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+            if not move.manual_consumption:
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):
@@ -2097,6 +2101,8 @@ class MrpProduction(models.Model):
 
         for production in self.env['mrp.production'].browse(productions_auto):
             production._set_quantities()
+        for production in self:
+            production._pick_automoves()
 
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
