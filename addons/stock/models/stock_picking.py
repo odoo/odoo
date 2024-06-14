@@ -685,6 +685,7 @@ class Picking(models.Model):
         'Properties',
         definition='picking_type_id.picking_properties_definition',
         copy=True)
+    destination_country_id = fields.Many2one(related='partner_id.country_id', store=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -1264,7 +1265,7 @@ class Picking(models.Model):
         if not self._should_show_transfers():
             if pickings_without_moves:
                 raise UserError(_("You can’t validate an empty transfer. Please add some products to move before proceeding."))
-            if pickings_without_quantities:
+            if pickings_without_quantities and not self.env.context.get('skip_no_quantities', False):
                 raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
                 raise UserError(_('You need to supply a Lot/Serial number for products %s.', ', '.join(products_without_lots.mapped('display_name'))))

@@ -1830,16 +1830,22 @@ Please change the quantity done or the rounding precision of your unit of measur
         )
 
         moves_todo._check_company()
+        moves_copy = {move: move.product_uom_qty for move in moves_todo}
         if not cancel_backorder:
             moves_todo._create_backorder()
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
+        packages_to_remove = set()
         for result_package in moves_todo\
                 .move_line_ids.filtered(lambda ml: ml.picked).mapped('result_package_id')\
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
-                raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+                if any(move.quantity < move.move_orig_ids.sorted('id')[0].quantity for move in moves_todo if move.move_orig_ids) or \
+                   any(move.quantity < moves_copy.get(move, move.product_uom_qty) for move in moves_todo):
+                    packages_to_remove.add(result_package.id)
+                else:
+                    raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
             self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
@@ -1853,6 +1859,9 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_push = moves_todo.filtered(lambda m: not m._skip_push())
         if moves_to_push:
             moves_to_push._push_apply()
+        if packages_to_remove:
+            moves_todo.move_line_ids.filtered(lambda line: line.result_package_id.id in packages_to_remove).write({'result_package_id': False})
+            self.env['stock.quant'].search([('package_id', 'in', list(packages_to_remove)), ('location_id', 'in', moves_todo.move_dest_ids.mapped('location_id').ids)]).write({'package_id': False})
         for move_dest in moves_todo.move_dest_ids:
             move_dests_per_company[move_dest.company_id.id] |= move_dest
         for company_id, move_dests in move_dests_per_company.items():
