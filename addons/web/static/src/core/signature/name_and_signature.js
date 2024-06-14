@@ -84,6 +84,10 @@ export class NameAndSignature extends Component {
                     if (this.state.signMode === "auto") {
                         this.drawCurrentName();
                     }
+                    if (this.props.signature.signatureImage) {
+                        this.clear();
+                        this.signaturePad.fromDataURL(this.props.signature.signatureImage);
+                    }
                 }
             },
             () => [this.signatureRef.el]
