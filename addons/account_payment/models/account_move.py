@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
 from odoo import api, fields, models
 from odoo.tools import format_date, str2bool
 from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.tools.image import image_data_uri
 
 
 class AccountMove(models.Model):
@@ -163,3 +166,18 @@ class AccountMove(models.Model):
             'amount_max': amount_max,
             **additional_info
         }
+
+    def _generate_portal_payment_qr(self):
+        self.ensure_one()
+        portal_url = self._get_portal_payment_link()
+        barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=portal_url, width=128, height=128)
+        return image_data_uri(base64.b64encode(barcode))
+
+    def _get_portal_payment_link(self):
+        self.ensure_one()
+        payment_link_wizard = self.env['payment.link.wizard'].create({
+            'amount': self.amount_residual,
+            'res_model': self._name,
+            'res_id': self.id,
+        })
+        return payment_link_wizard.link
