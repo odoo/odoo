@@ -1,0 +1,22 @@
+name: "[INTG]odoo"
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing ssh command and deploying the odoo
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.PRIVATE_KEYS }}
+        port: ${{ secrets.PORT }}
+        script: sh script.sh
+
+#test
+
