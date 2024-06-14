@@ -84,7 +84,7 @@ class SaleOrderDiscount(models.TransientModel):
                 self._prepare_discount_line_values(
                     product=discount_product,
                     amount=self.discount_amount,
-                    taxes=self.env['account.tax'],
+                    taxes=discount_product.taxes_id,
                 )
             ]
         else: # so_discount
