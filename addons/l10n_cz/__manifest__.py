@@ -24,6 +24,7 @@ Tento modul definuje:
         'base_vat',
     ],
     'data': [
+        'data/tax_report.xml',
         'views/report_invoice.xml',
         'views/res_partner_views.xml',
         'views/res_company_views.xml',
@@ -32,6 +33,7 @@ Tento modul definuje:
     ],
     'demo': [
         'data/demo_company.xml',
+        'data/menuitem_data.xml',
     ],
     'license': 'LGPL-3',
 }

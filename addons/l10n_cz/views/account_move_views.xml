@@ -6,7 +6,14 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='due_date']" position="after">
-                <field name="taxable_supply_date" invisible="country_code != 'CZ'"/>
+                <field name="taxable_supply_date" invisible="country_code != 'CZ'" readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="l10n_cz_scheme_code" column_invisible="country_code != 'CZ'"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']//tree/field[@name='tax_ids']" position="after">
+                <field name="is_reverse_charge" column_invisible="1"/>
+                <field name="l10n_cz_supplies_code" column_invisible="parent.country_code != 'CZ'" required="is_reverse_charge"/>
             </xpath>
         </field>
     </record>
