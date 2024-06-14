@@ -14,44 +14,55 @@ class Efaktur(models.Model):
     company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
     max = fields.Char(compute='_compute_default', store=True, readonly=False)
     min = fields.Char(compute='_compute_default', store=True, readonly=False)
-    available = fields.Integer(compute='_compute_available', store=True)
+    available = fields.Integer(readonly=True)
+    next_num = fields.Integer(compute="_compute_next_num", store=True)
+
+    @api.depends('max', 'available')
+    def _compute_next_num(self):
+        for record in self:
+            record.next_num = int(record.max) - record.available + 1
 
     @api.model
     def pop_number(self, company_id):
-        range = self.search([('company_id', '=', company_id)], order="min ASC", limit=1)
-        if not range:
+        erange = self.search([('company_id', '=', company_id)], order="next_num ASC", limit=1)
+
+        if not erange:
             return None
 
-        popped = int(range.min)
-        if int(range.min) >= int(range.max):
-            range.unlink()
-        else:
-            range.min = '%013d' % (popped + 1)
+        popped = erange.next_num
+        erange.available -= 1
+
         return popped
 
     @api.model
     def push_number(self, company_id, number):
-        return self.push_numbers(company_id, number, number)
+        # if released number is the last released number from a range, extend the availability
+        erange = self.search([('company_id', '=', company_id), ('next_num', '=', int(number) + 1)])
+        if erange:
+            erange.available += 1
+            return
 
-    @api.model
-    def push_numbers(self, company_id, min, max):
-        range_sup = self.search([('min', '=', '%013d' % (int(max) + 1))])
-        if range_sup:
-            range_sup.min = '%013d' % int(min)
-            max = range_sup.max
+        # if the released number is not the last used number from any range, find the range it belongs and split it
+        # i.e range: 1 - 10, available=5, next_number=6, release 3
+        # split 1-10 to 1-3 available=1 AND 4-10 available=5
+        erange = self.search([('company_id', '=', company_id), ('min', '<=', number), ('max', '>=', number)])
+        if erange:
+            if erange.min == erange.max:
+                erange.available += 1
+            else:
+                maximum = erange.max
+                available = erange.available
+                erange.write({
+                    'available': 1,
+                    'max': number
+                })
 
-        range_low = self.search([('max', '=', '%013d' % (int(max) - 1))])
-        if range_low:
-            range_sup.unlink()
-            range_low.max = '%013d' % int(max)
-
-        if not range_sup and not range_low:
-            self.create({
-                'company_id': company_id,
-                'max': '%013d' % int(max),
-                'min': '%013d' % int(min),
-            })
-
+                self.create({
+                    'company_id': company_id,
+                    'min': '%013d' % (int(number) + 1),
+                    'max': maximum,
+                    'available': available  # keep original available to not change next_num of that range
+                })
 
     @api.constrains('min', 'max')
     def _constrains_min_max(self):
@@ -77,10 +88,29 @@ class Efaktur(models.Model):
             ], limit=1):
                 raise ValidationError(_('Efaktur interleaving range detected'))
 
-    @api.depends('min', 'max')
-    def _compute_available(self):
-        for record in self:
-            record.available = 1 + int(record.max) - int(record.min)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('available'):
+                vals['available'] = 1 + int(vals['max']) - int(vals['min'])
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if 'max' in vals and 'available' not in vals:
+            # if it's lower than used numbers, error
+            if int(vals['max']) < self.next_num and 'available' not in vals:
+                raise ValidationError(_("You are not allowed to change the max to a number lower than already used"))
+            diff = int(vals['max']) - int(self.max)
+            vals['available'] = self.available + diff
+        if 'min' in vals and 'available' not in vals:
+            # if range has been been used, raise error when changing min
+            if self.next_num > int(self.min):
+                raise ValidationError(_("You are not allowed to change the min of a range that is already in use"))
+            # if range was unused, adapt it according to how min is changed
+            if int(self.min) == self.next_num:
+                diff = int(self.min) - int(vals['min'])
+                vals['available'] = self.available + diff
+        return super().write(vals)
 
     @api.depends('company_id')
     def _compute_default(self):

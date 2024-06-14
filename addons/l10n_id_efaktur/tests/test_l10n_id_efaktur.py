@@ -277,3 +277,139 @@ class TestIndonesianEfaktur(AccountTestInvoicingCommon):
         self.assertEqual(self.efaktur.available, available_code - 1)
         # No error is raised when downloading.
         out_invoice_no_taxes.download_efaktur()
+
+    def test_efaktur_release_last_number(self):
+        """ Ensure when the number returned is last released number of a range
+        add the availability instead of splitting ranges including if it's max of that range"""
+        out_invoice = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        })
+        out_invoice.action_post()
+        self.assertEqual(self.efaktur.available, 7)
+
+        out_invoice.button_draft()
+        out_invoice.button_cancel()
+        out_invoice.reset_efaktur()
+
+        self.assertEqual(self.efaktur.available, 8)
+
+        invoices = self.env["account.move"].create([{
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        } for i in range(8)])
+        invoices.action_post()
+        self.assertEqual(invoices[-1].l10n_id_tax_number, '0100000000000010')
+        self.assertEqual(self.efaktur.available, 0)
+
+        last_inv = invoices[-1]
+        last_inv.button_draft()
+        last_inv.button_cancel()
+        last_inv.reset_efaktur()
+
+        self.assertEqual(self.efaktur.min, '0000000000001')
+        self.assertEqual(self.efaktur.max, '0000000000010')
+        self.assertEqual(self.efaktur.available, 1)
+
+    def test_efaktur_release_number_not_last(self):
+        """ Ensure when the number returned is not last released number, split the efaktur range into 2 parts"""
+        out_invoice_1 = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        })
+        out_invoice_2 = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        })
+        out_invoice_1.action_post()
+        out_invoice_2.action_post()
+
+        out_invoice_1.button_draft()
+        out_invoice_1.button_cancel()
+        out_invoice_1.reset_efaktur()
+
+        self.assertEqual(self.efaktur.min, '0000000000001')
+        self.assertEqual(self.efaktur.max, '0000000000003')
+        self.assertEqual(self.efaktur.available, 1)
+
+        other_range = self.env['l10n_id_efaktur.efaktur.range'].search([('id', '!=', self.efaktur.id)], limit=1)
+
+        self.assertEqual(other_range.min, '0000000000004')
+        self.assertEqual(other_range.max, '0000000000010')
+        self.assertEqual(other_range.available, 6)
+
+    def test_efaktur_change_max(self):
+        """ Test that range's availability will adapt with changing max"""
+        # increase max = increase availability
+        self.efaktur.max = '0000000000011'
+        self.assertEqual(self.efaktur.available, 9)
+
+        # reduce max = reduce availability
+        self.efaktur.max = '0000000000009'
+        self.assertEqual(self.efaktur.available, 7)
+
+        # if next_num=4, change max to 3, raise error
+        out_invoice = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        })
+        out_invoice.action_post()
+        with self.assertRaises(ValidationError):
+            self.efaktur.max = '0000000000003'
+
+    def test_efaktur_change_min(self):
+        """ Test range's availability will adapt with changing min """
+        # raise error when trying to change min on ranges that have been used
+        invoices = self.env["account.move"].create([{
+            "move_type": "out_invoice",
+            "partner_id": self.partner_id.id,
+            "invoice_date": "2019-05-01",
+            "date": "2019-05-01",
+            "invoice_line_ids": [
+                Command.create({"name": "line1", "price_unit": 110.0, "tax_ids": self.tax_id.ids}),
+            ],
+            "l10n_id_kode_transaksi": "01",
+        } for i in range(3)])
+        invoices.action_post()
+
+        with self.assertRaises(ValidationError):
+            self.efaktur.min = '0000000000004'
+            self.assertEqual(self.efaktur.available, 4)
+
+        # if unused availability can change accordingly
+        efaktur_new = self.env['l10n_id_efaktur.efaktur.range'].create(
+            {'min': '0000000000011', 'max': '0000000000015'}
+        )
+
+        efaktur_new.min = '0000000000013'
+        self.assertEqual(efaktur_new.available, 3)
