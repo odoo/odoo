@@ -3,7 +3,6 @@
 # 	* mail
 # 
 # Translators:
-# Maitê Dietze, 2023
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
 # NumerSpiral HBG, 2024
@@ -14,6 +13,7 @@
 # Samuel Afonso, 2024
 # Vasco Rodrigues, 2024
 # Rita Bastos, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rita Bastos, 2024\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2634,7 +2634,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
 msgid "Delay Type"
-msgstr ""
+msgstr "Tipo de atraso"
 
 #. module: mail
 #. odoo-javascript
@@ -3269,7 +3269,7 @@ msgstr "Assistente de composição de e-mail"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_optional__alias_domain
 #: model:ir.model.fields,help:mail.field_res_company__alias_domain_name
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Domínio de e-mail, por exemplo, 'exemplo.com' em 'odoo@exemplo.com'"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -3544,7 +3544,7 @@ msgstr "Campo"
 #: code:addons/mail/models/mail_tracking_duration_mixin.py:0
 #, python-format
 msgid ""
-"Field \"(field)r on model %(model)r must be of type Many2one and have "
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
 
@@ -5573,7 +5573,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr ""
+msgstr "Mesclar assistente de parceiro"
 
 #. module: mail
 #. odoo-python
@@ -10259,6 +10259,15 @@ msgid "You may not define a template on an abstract model: %s"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You may not unlink or modify the content of attachments from other people's "
+"messages"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_pin_service.js:0
 #, python-format
@@ -10961,7 +10970,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "view"
-msgstr ""
+msgstr "ver"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_websocket

@@ -3496,7 +3496,7 @@ msgstr "gif를 불러오지 못했습니다."
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 #, python-format
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr ""
+msgstr "SFU 서버를 불러오지 못하여 P2P 모드로 전환되었습니다."
 
 #. module: mail
 #. odoo-python
@@ -3589,6 +3589,8 @@ msgid ""
 "Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
 "tracking=True for the computation of duration."
 msgstr ""
+"“%(field)s” 필드에 포함되어 있는 “%(model)s” 모델은 반드시 Many2one 유형이여야 하며, 기간을 계산하기 위해 "
+"tracking=True으로 설정되어 있어야 합니다."
 
 #. module: mail
 #. odoo-python
@@ -4603,7 +4605,7 @@ msgstr "잘못된 표현, 그것은 문자 그대로의 파이썬 사전 정의�
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "Invalid field “%(field_name)s” when creating a channel with members."
-msgstr ""
+msgstr "구성원이 있는 채널을 생성할 때 “%(field_name)s” 필드가 유효하지 않았습니다."
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_from_invalid
@@ -5203,7 +5205,7 @@ msgstr "로컬 부품 기반 입고 감지"
 msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
-msgstr ""
+msgstr "답장 수신에 사용되는 이메일의 로컬 부분 (예: 'catchall@example.com'의 'catchall')"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -5211,6 +5213,7 @@ msgid ""
 "Local-part of email used for Return-Path used when emails bounce e.g. "
 "'bounce' in 'bounce@example.com'"
 msgstr ""
+"반송된 이메일을 처리할 때 반환 경로에 사용되는 이메일의 로컬 부분 (예: 'bounce@example.com'의 'bounce')."
 
 #. module: mail
 #. odoo-javascript
@@ -5271,7 +5274,7 @@ msgstr "로드 단계:"
 #: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #, python-format
 msgid "Logged in as %s"
-msgstr ""
+msgstr "%s으로 로그인됨"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -7227,7 +7230,7 @@ msgstr "RTC 세션"
 #: code:addons/mail/static/src/discuss/call/common/call_context_menu.xml:0
 #, python-format
 msgid "RTC Session ID:"
-msgstr ""
+msgstr "RTC 세션 ID:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__rtc_session_ids
@@ -10166,7 +10169,7 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "비공개 대화에 혼자 참여 중입니다."
 
 #. module: mail
 #. odoo-python
@@ -10180,14 +10183,14 @@ msgstr "채널에 아무도 없습니다."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in a private conversation with %(member_names)s."
-msgstr ""
+msgstr "%(member_names)s님과 비공개 대화 중입니다."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #, python-format
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "채널 %(bold_start)s#%(channel_name)s%(bold_end)s에 참여 중입니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10333,7 +10336,7 @@ msgstr "추상 모델에서 템플릿을 정의할 수 없습니다: %s"
 msgid ""
 "You may not unlink or modify the content of attachments from other people's "
 "messages"
-msgstr ""
+msgstr "다른 사람의 메시지에 있는 첨부파일의 링크를 해제하거나 첨부파일의 내용을 수정할 수 없습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -10445,7 +10448,7 @@ msgstr "귀하의 성명"
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
 #, python-format
 msgid "[%(name)s] (no email address)"
-msgstr ""
+msgstr "[%(name)s] (이메일 주소 없음)"
 
 #. module: mail
 #. odoo-python

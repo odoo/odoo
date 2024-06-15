@@ -526,8 +526,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Desconto de pagamento antecipado aplicado.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8054,8 +8055,10 @@ msgstr "Inválido"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "“Faixa de CEP” inválida, corrija o valor inserido."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9469,7 +9472,7 @@ msgstr "Correspondência"
 #: model:ir.model.fields,field_description:account.field_account_move_line__matching_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Matching #"
-msgstr "Correspondência #"
+msgstr "Nº de correspondência"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
@@ -10715,7 +10718,7 @@ msgstr "Fatura PEPPOL"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__is_account_peppol_eligible
 msgid "PEPPOL eligible"
-msgstr "PEPPOL eligible"
+msgstr "Elegível para PEPPOL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -12135,40 +12138,40 @@ msgstr "Conta de receita/despesa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
 msgid "Reversal Date"
-msgstr "Data da reversão"
+msgstr "Data do estorno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_id
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversal_move_id
 msgid "Reversal Move"
-msgstr "Movimentação de reversão"
+msgstr "Movimentação de estorno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
-msgstr "Data da reversão"
+msgstr "Data do estorno"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal date must be posterior to date."
-msgstr "A data de reversão deve ser posterior à data."
+msgstr "A data de estorno deve ser posterior à data."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversed_entry_id
 msgid "Reversal of"
-msgstr "Reversão de"
+msgstr "Estorno de"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr "Reversão de: %(move_name)s, %(reason)s"
+msgstr "Estorno de: %(move_name)s, %(reason)s"
 
 #. module: account
 #. odoo-python
@@ -12178,35 +12181,35 @@ msgstr "Reversão de: %(move_name)s, %(reason)s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Reversal of: %s"
-msgstr "Reversão de: %s"
+msgstr "Estorno de: %s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "Reverter"
+msgstr "Estornar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Lançamento reverso"
+msgstr "Lançamento de estorno"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Reverter lançamento de diário"
+msgstr "Estornar lançamento de diário"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reverse Moves"
-msgstr "Movimentações reversas"
+msgstr "Movimentações de estorno"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "Reverter e criar fatura"
+msgstr "Estornar e criar fatura"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -12215,7 +12218,7 @@ msgstr "Reverter e criar fatura"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Revertido"
+msgstr "Estornado"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -526,13 +526,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>ใช้ส่วนลดการชำระเงินก่อนกำหนดแล้ว</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/> ในบัญชีนี้:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -7953,8 +7954,10 @@ msgstr "ไม่ถูกต้อง"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "\"ช่วงของรหัสไปรษณีย์\" ไม่ถูกต้อง โปรดกำหนดค่าให้ถูกต้อง"
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python

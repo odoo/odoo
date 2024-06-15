@@ -551,7 +551,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Este módulo le permite ver el margen de las órdenes del punto de venta en el informe de margen de ventas.\n"
+"Este módulo le permite ver el margen de los pedidos del punto de venta en el informe de margen de ventas.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -568,7 +568,7 @@ msgstr ""
 "\n"
 "Este módulo agrega diversas funcionalidades al Punto de Venta que son específicas para la administración de un restaurante:\n"
 "- Impresión de cuenta: Permite imprimir la cuenta antes de pagar la orden.\n"
-"- División de factura: Permite dividir la factura en diferentes órdenes.\n"
+"- División de factura: Permite dividir la factura en diferentes pedidos.\n"
 "- Impresión de comanda en la cocina: Permite imprimir las comandas y actualizaciones en las impresoras de la cocina o el bar.\n"
 "\n"
 
@@ -2134,7 +2134,7 @@ msgstr ""
 "Permita pagos en el TPV con Paytm\n"
 "==============================\n"
 "\n"
-"Este módulo permite que los clientes paguen sus órdenes con tarjetas de crédito/débito\n"
+"Este módulo permite que los clientes paguen sus pedidos con tarjetas de crédito/débito\n"
 "y UPI. El TPV de Paytm procesa las transacciones. Es necesario tener una cuenta de comerciante Paytm, con la que podrá hacer lo siguiente:\n"
 "\n"
 "* Pagar rápido, solo tendrá que escanear o deslizar la tarjeta de débito o crédito. También podrá escanear un código QR mientras está en la pantalla de pago\n"
@@ -2183,7 +2183,7 @@ msgstr ""
 "Permita pagos en el TPV con tarjeta de crédito\n"
 "==============================\n"
 "\n"
-"Este módulo permite que los clientes paguen sus órdenes con tarjeta de\n"
+"Este módulo permite que los clientes paguen sus pedidos con tarjeta de\n"
 "crédito. Vantiv procesa las transacciones (desarrollado por Wells\n"
 "Fargo Bank). Se necesita una cuenta de comerciante de Vantiv. Permite\n"
 "lo siguiente:\n"
@@ -2273,7 +2273,7 @@ msgid ""
 "Allows customers to pay for their orders at a shop, instead of paying online.\n"
 msgstr ""
 "\n"
-"Permite que los clientes paguen sus órdenes en la tienda, en lugar de pagarlas en línea.\n"
+"Permite que los clientes paguen sus pedidos en la tienda, en lugar de pagarlas en línea.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account
@@ -3301,7 +3301,7 @@ msgid ""
 "Bridge module to add a new payment term - Days end of month on the\n"
 msgstr ""
 "\n"
-"Módulo de enlace para agregar un nuevo término de pago - días al final del mes el\n"
+"Módulo de enlace para agregar un nuevo término de pago - días al final del mes en el\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended_30
@@ -7663,7 +7663,7 @@ msgstr ""
 "* Publique los productos en eBay.\n"
 "* Revise, vuelva a publicar y elimine los elementos de eBay.\n"
 "* Integración con los movimientos del stock.\n"
-"* Creación automática de órdenes y facturas.\n"
+"* Creación automática de pedidos y facturas.\n"
 "\n"
 
 #. module: base
@@ -14212,7 +14212,7 @@ msgstr "Permita que los compradores coloquen productos en una lista"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_stock
 msgid "Allow to create recurring order on storable product"
-msgstr "Permita crear órdenes recurrentes en productos almacenables"
+msgstr "Permita crear pedidos recurrentes en productos almacenables"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -18860,7 +18860,7 @@ msgstr "Nombre mostrado"
 #: model:ir.module.module,summary:base.module_pos_preparation_display
 #: model:ir.module.module,summary:base.module_pos_restaurant_preparation_display
 msgid "Display Orders for Preparation stage."
-msgstr "Muestra órdenes para la etapa de preparación."
+msgstr "Muestra pedidos para la etapa de preparación."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
@@ -20895,7 +20895,7 @@ msgstr "Texto mostrado en el pie de página de todos los informes."
 #: model:ir.module.module,summary:base.module_l10n_be_codabox_bridge
 #: model:ir.module.module,summary:base.module_l10n_be_codabox_bridge_wizard
 msgid "For Accounting Firms"
-msgstr "Para despachos de contabilidad"
+msgstr "Para asesorías contables"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__value
@@ -23141,7 +23141,8 @@ msgstr "Interacción entre reglas"
 #: model:ir.module.module,summary:base.module_account_inter_company_rules
 #: model:ir.module.module,summary:base.module_sale_purchase_inter_company_rules
 msgid "Intercompany SO/PO/INV rules"
-msgstr "Reglas para los pedidos de venta/compra y facturas entre empresas"
+msgstr ""
+"Reglas para los pedidos de venta/compra y facturas dentro de la compañía"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
@@ -24312,7 +24313,7 @@ msgstr "Módulo de enlace entre PdV y Alquiler de inventario "
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order_preparation_display
 msgid "Link between self orders paid online and the preparation display"
 msgstr ""
-"Módulo de enlace entre las órdenes pagadas en línea y la pantalla de "
+"Módulo de enlace entre las pedidos pagados en línea y la pantalla de "
 "preparación"
 
 #. module: base
@@ -27761,7 +27762,7 @@ msgstr ""
 "\n"
 "### Diseñado para la productividad\n"
 "\n"
-"Ya sea para un restaurante o una tienda, puede activar varias órdenes\n"
+"Ya sea para un restaurante o una tienda, puede activar varios pedidos\n"
 "en paralelo para que no haga esperar a sus clientes.\n"
 "\n"
 "### Una búsqueda increíblemente rápida\n"
@@ -28449,7 +28450,7 @@ msgstr ""
 "Un proceso de pago sencillo\n"
 "------------------------\n"
 "\n"
-"Convierta los intereses de la mayoría de los visitantes en órdenes reales con procesos de pago fáciles\n"
+"Convierta los intereses de la mayoría de los visitantes en pedidos reales con procesos de pago fáciles\n"
 "y una cantidad de pagos mínimo y una maravillosa usabilidad en cada página.\n"
 "\n"
 "Personalice su proceso de pago para que vaya con sus necesidades empresariales: modos de pago,\n"
@@ -28469,13 +28470,13 @@ msgstr ""
 "\n"
 "### Servicio al cliente\n"
 "\n"
-"-   Portal del cliente para rastrear órdenes\n"
+"-   Portal del cliente para rastrear pedidos\n"
 "-   Compra asistida con chats en vivo desde el sitio web\n"
 "-   Gestión de devoluciones\n"
 "-   Reglas de envío avanzadas\n"
 "-   Cupones o certificados de regalo\n"
 "\n"
-"### Gestión de órdenes\n"
+"### Gestión de pedidos\n"
 "\n"
 "-   Funciones avanzadas de gestión de almacén\n"
 "-   Integración con facturación y contabilidad\n"
@@ -29914,7 +29915,7 @@ msgstr "Proveedores de pagos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_term
 msgid "Payment Term - Days end of month on the"
-msgstr "Condición de pago - días al final del mes el "
+msgstr "Condición de pago - días al final del mes en el "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_payment
@@ -35491,7 +35492,7 @@ msgid ""
 "downloaded by the user."
 msgstr ""
 "El tipo de informe que se renderizará, cada uno con su propio método de "
-"renderización. HTML indica que el informe se abrirá directamente en el "
+"visualización. HTML indica que el informe se abrirá directamente en el "
 "navegador, PDF indica que el informe se renderizará usando Wkhtmltopdf y "
 "luego será descargado por el usuario."
 
@@ -35808,9 +35809,9 @@ msgid ""
 "and automatically import CODA and SODA statements for their clients in Odoo.\n"
 "The connection must be done by the Accounting Firm.\n"
 msgstr ""
-"Este módulo permite que las firmas contables se conecten a CodaBox\n"
-"e importen estados de cuenta CODA y SODA para sus clientes en Odoo de forma automática.\n"
-"La firma contable debe realizar la conexión.\n"
+"Este módulo permite que las asesorías contables se conecten a CodaBox\n"
+"e importen automáticamente extractos bancarios CODA y SODA para sus clientes en Odoo.\n"
+"La asesoría contable debe realizar la conexión.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_fedex
@@ -39109,7 +39110,7 @@ msgstr "p. ej. Sr."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "e.g. My Company"
-msgstr "p. ej. Mi EmpresaCompany"
+msgstr "p. ej. Mi Compañía"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form

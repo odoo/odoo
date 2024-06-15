@@ -532,8 +532,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Se aplicó un descuento por pago anticipado.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1988,7 +1989,7 @@ msgstr "Asientos contables"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr "Modo de empresas de contabilidad"
+msgstr "Modo de asesoría contable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -2036,8 +2037,7 @@ msgstr "Documentos contables"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
-msgstr ""
-"El modo de empresas de contabilidad cambiará la codificación de la factura:"
+msgstr "El modo de asesoría contable cambiará la codificación de la factura:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2321,7 +2321,7 @@ msgstr "Agregar contactos a notificar..."
 msgid ""
 "Add your terms & conditions at the bottom of invoices/orders/quotations"
 msgstr ""
-"Agregue sus términos y condiciones al final de sus facturas, órdenes o "
+"Agregue sus términos y condiciones al final de sus facturas, pedidos o "
 "presupuestos"
 
 #. module: account
@@ -7390,7 +7390,7 @@ msgstr "Nombre más alto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr "Cómo se calcula el importe total de impuestos en órdenes y facturas"
+msgstr "Cómo se calcula el importe total de impuestos en pedidos y facturas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -8075,8 +8075,10 @@ msgstr "No válido"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "\"Zona postal\" no válida, por favor, configúrala apropiadamente."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13248,7 +13250,7 @@ msgid ""
 " for the entire order, regardless of the products on the different lines."
 msgstr ""
 "Especifique un valor arbitrario que se acumulará en una         cuenta por "
-"defecto para toda la orden, independientemente de los productos en las "
+"defecto para toda el pedido, independientemente de los productos en las "
 "diferentes líneas."
 
 #. module: account
@@ -15413,7 +15415,7 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Se utilizará este plazo de pago en lugar del predeterminado para las órdenes"
+"Se utilizará este plazo de pago en lugar del predeterminado para los pedidos"
 " de compra y las facturas de proveedor."
 
 #. module: account
@@ -16096,7 +16098,7 @@ msgstr "Utilizar la contabilidad Storno"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
 msgid "Use Tax Units"
-msgstr "Utilizar unidades fiscales"
+msgstr "Utilizar unidades tributarias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
@@ -17580,7 +17582,7 @@ msgid ""
 "become involved in costs related to a country's legislation. The amount of "
 "the invoice will therefore be due to"
 msgstr ""
-"se involucran en los costes relacionados con la legislación de un país. Por "
+"se involucra en los costes relacionados con la legislación de un país. Por "
 "lo tanto, el importe de la factura se deberá a"
 
 #. module: account

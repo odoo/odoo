@@ -9,6 +9,8 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Hongu Cosmin <cosmin513@gmail.com>, 2024
 # Martin Trigaux, 2024
+# Larisa_nexterp, 2024
+# Corina Calin, 2024
 # Dorin Hongu <dhongu@gmail.com>, 2024
 # 
 msgid ""
@@ -323,6 +325,9 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" invisible=\"rating_avg &lt; 3.66\" title=\"Satisfăcut\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"Ok\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" invisible=\"rating_avg &gt;= 2.33\" title=\"Nesatisfăcut\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -372,7 +377,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Customer</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Client</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -598,7 +603,7 @@ msgstr "Activitate Excepție Decorare"
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
 #: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_project
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activitate"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
@@ -702,12 +707,12 @@ msgstr "Alias Domain"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Alias ​​Nume de domeniu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Alias Email"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
@@ -717,12 +722,12 @@ msgstr "Nume alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Stare Alias"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Starea aliasului evaluată pe ultimul mesaj primit."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
@@ -859,7 +864,7 @@ msgstr "Sunteți sigur că doriți să continuați?"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr ""
+msgstr "Sunteți sigur că doriți să ștergeți aceste etape?"
 
 #. module: project
 #. odoo-javascript
@@ -2418,12 +2423,12 @@ msgstr "Invitați persoane"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users (private)"
-msgstr ""
+msgstr "Utilizatori interni invitați (privat)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Invited portal users and all internal users (public)"
-msgstr ""
+msgstr "Utilizatori portal invitați și toți utilizatorii interni (public)"
 
 #. module: project
 #. odoo-javascript
@@ -2472,6 +2477,7 @@ msgstr "Versiune Problema"
 #: model:ir.model.fields,help:project.field_project_task__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
+"JSON care mapează id-urile dintr-un câmp many2one la secunde petrecute"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2657,7 +2663,7 @@ msgstr "Live"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Detectare bazată pe partea locală a destinatarului"
 
 #. module: project
 #. odoo-javascript
@@ -3924,7 +3930,7 @@ msgstr "Repetă în fiecare"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "Unitate de repetare"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -4377,7 +4383,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Stare timp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
@@ -5609,7 +5615,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "ex. domeniu.com"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified

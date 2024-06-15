@@ -558,13 +558,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "S'ha aplicat el descompte de pagament anticipat <b>.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/> en aquest compte:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -4017,7 +4018,7 @@ msgstr "Pla comptable configurat"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Comproveu el(s) contacte(s)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
@@ -6280,7 +6281,7 @@ msgstr "Correu electrònic per defecte"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Domini de correu electrònic p.ex. 'example.com' a 'odoo@example.com'"
 
 #. module: account
 #: model:account.account,name:account.1_employee_payroll_taxes
@@ -6434,7 +6435,7 @@ msgstr "Patrimoni"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Error importing attachment '%s' as invoice (decoder=%s)"
-msgstr ""
+msgstr "Error important l'adjunt '%s' com factura (decoder=%s)"
 
 #. module: account
 #. odoo-python
@@ -7380,7 +7381,7 @@ msgstr "Amaga Utilitza l'opció de Base en Efectiu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__hide_writeoff_section
 msgid "Hide Writeoff Section"
-msgstr "Amaga la secció d'escriptura"
+msgstr "Amaga la secció de diferència"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__hide_if_zero
@@ -8088,8 +8089,10 @@ msgstr "Invàlid"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "\"Rang de codi postal\" invalid, si us plau, configuri-ho apropiadament."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -10929,7 +10932,7 @@ msgstr "Mapatge de companys per als models de reconciliació"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partner(s) should have an email address."
-msgstr ""
+msgstr "Contacte(s) hauria de tenir una adreça de correu."
 
 #. module: account
 #. odoo-python
@@ -13978,7 +13981,7 @@ msgstr "Valor del texte"
 #: code:addons/account/static/src/components/document_state/document_state_field.js:0
 #, python-format
 msgid "Text copied"
-msgstr ""
+msgstr "Text copiat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
@@ -14079,6 +14082,9 @@ msgid ""
 "The Syscohada chart template shouldn't be selected directly. Instead, you "
 "should directly select the chart template related to your country."
 msgstr ""
+"El tipus de diagrama Syscohada no hauria de ser seleccionat directament. Al "
+"seu lloc, mireu de seleccionar el tipus de diagrama adequat a la vostra "
+"ubicació."
 
 #. module: account
 #. odoo-python
@@ -16265,9 +16271,9 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
-"Valor de l'import de la línia de cancel·lació\n"
+"Valor de l'import de la línia de diferència\n"
 "    * Percentatge: Percentatge del saldo, entre 0 i 100.\n"
-"    * Fixat: el valor fix de la cancel·lació. L'import comptarà com a dèbit si és negatiu, com a crèdit si és positiu.\n"
+"    * Fixat: el valor fix de la diferència. L'import comptarà com a dèbit si és negatiu, com a crèdit si és positiu.\n"
 "    * De l'etiqueta: no hi ha cap necessitat de delimitador d'expressió regular, només cal l'expressió regular. Per exemple, si voleu extreure la quantitat de\n"
 "R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
 "Podries entrar\n"
@@ -16402,7 +16408,7 @@ msgstr "Vista"
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Veure contacte(s)"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
@@ -16597,7 +16603,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_is_exchange_account
 msgid "Writeoff Is Exchange Account"
-msgstr ""
+msgstr "La diferència és un compte de canvi"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -16927,6 +16933,7 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
+"No podeu enregistrar pagaments per ambdós ingressos i pagaments alhora."
 
 #. module: account
 #. odoo-python

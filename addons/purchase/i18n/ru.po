@@ -95,7 +95,7 @@ msgstr "&amp;nbsp;"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr "'Запрос котировок - %s' % (object.name)"
+msgstr "'Запрос на коммерческое предложение - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_qty_received_template
@@ -363,7 +363,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Запрос котировок #</span>\n"
+"<span class=\"d-none d-md-inline\">Запрос на коммерческое предложение #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: purchase
@@ -372,7 +372,7 @@ msgid ""
 "<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Request for Quotation </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Запрос котировки </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">Запрос на коммерческое предложение </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in ('draft', 'sent')\">Заказ на поставку </span>"
 
 #. module: purchase
@@ -888,8 +888,9 @@ msgid ""
 "Calls for tenders are when you want to generate requests for quotations with"
 " several vendors for a given set of products to compare offers."
 msgstr ""
-"Тендеры - это когда вы хотите провести запрос котировок у нескольких "
-"поставщиков по определенному набору товаров, чтобы сравнить предложения."
+"Тендеры - это когда вы хотите запросить коммерческое предложение у "
+"нескольких поставщиков по определенному набору товаров, чтобы сравнить "
+"предложения."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1624,7 +1625,7 @@ msgstr "Сообщение для заказа на покупку"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr "Сообщение для строки заказа на поставку"
+msgstr "Сообщение для позиции заказа на поставку"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
@@ -1645,7 +1646,7 @@ msgstr "Минимальная сумма, для которой требует�
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr "Отсутствие обязательных полей в строке заказ-наряда."
+msgstr "Обязательные поля в позиции заказа не заполнены."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1881,7 +1882,7 @@ msgstr "Крайний срок заказа"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
 msgid "Order Lines"
-msgstr "Линии заказов"
+msgstr "Позиции заказов"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__name
@@ -2132,7 +2133,7 @@ msgstr "Заказа на покупку"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr "Ордер #"
+msgstr "Заказ на покупку #"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
@@ -2162,13 +2163,13 @@ msgstr "Позиция заказа на покупку"
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr "Предупреждение о строке заказа на поставку"
+msgstr "Предупреждение о позиции заказа на поставку"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr "Строки заказа на поставку"
+msgstr "Позиции заказа на поставку"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
@@ -2232,7 +2233,7 @@ msgstr "Заказы на поставку, на которые выставле
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Purchase orders that include lines not invoiced."
 msgstr ""
-"Заказы на поставку, включающие строки, по которым не были выставлены счета."
+"Заказы на поставку, включающие позиции, по которым не были выставлены счета."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2509,12 +2510,12 @@ msgstr "Отчет"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 #, python-format
 msgid "Request for Quotation"
-msgstr "Запрос предложения"
+msgstr "Запрос на коммерческое предложение"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "Запрос предложения №"
+msgstr "Запрос коммерческого предложения №"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2524,7 +2525,7 @@ msgstr "Просите менеджеров утверждать заказы, �
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Requests For Quotation"
-msgstr "Запросы на котировки"
+msgstr "Запросы на коммерческое предложение"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
@@ -2534,7 +2535,7 @@ msgstr "Запросы на котировки"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Requests for Quotation"
-msgstr "Запросы предложений"
+msgstr "Запросы на коммерческое предложение"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -2886,9 +2887,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"Запрос предложения поставщика является первым этапом процесса закупок.\n"
-"                    Сделав его заказом на закупку, вы сможете контролировать приход\n"
-"                    ТМЦ и счет поставщика."
+"Запрос цен поставщика является первым этапом процесса закупок.\n"
+"Сделав его заказом на поставку, вы сможете контролировать приход\n"
+"продукта и счёт-фактуру поставщика."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -2898,7 +2899,9 @@ msgstr "В настоящее время для вашей учетной зап
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "There are currently no requests for quotation for your account."
-msgstr "В настоящее время для вашей учетной записи нет запросов на котировки."
+msgstr ""
+"В настоящее время для вашей учетной записи нет запросов на коммерческое "
+"предложение."
 
 #. module: purchase
 #. odoo-python
@@ -3352,8 +3355,8 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
-"Вы не можете изменить тип строки заказа на поставку. Вместо этого следует "
-"удалить текущую строку и создать новую строку соответствующего типа."
+"Вы не можете изменить тип позиции заказа на поставку. Рекомендуем удалить "
+"текущую позицию и создать новую позицию соответствующего типа."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -3381,8 +3384,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"В вашем предложении содержатся товары из компании %(product_company)s, в то время как ваше предложение принадлежит компании %(quote_company)s.\n"
-" Пожалуйста, измените компанию вашего предложения или удалите продукты других компаний (%(bad_products)s)."
+"Коммерческое предложение содержит продукты компании %(product_company)s, хотя само предложение относится к компании %(quote_company)s.\n"
+"Пожалуйста, измените компанию для предложения или уберите продукты, которые относятся к другим компаниям (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order

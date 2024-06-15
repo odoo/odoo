@@ -260,7 +260,7 @@ msgstr ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- Usamos el logotipo de la compañía que realizó la encuesta (para gestionar casos de multiempresas) -->\n"
-"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logotipo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"                <a href=\"/\"><img t-if=\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certificación: <t t-out=\"object.survey_id.display_name or ''\">Formulario de retroalimentación</t>\n"
 "            </td></tr>\n"
@@ -2337,7 +2337,7 @@ msgstr "¿Cuántos días tiene nuestra garantía de devolución de dinero?"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "How many orders did you pass during the last 6 months?"
-msgstr "¿Cuántas órdenes aprobó en los últimos 6 meses?"
+msgstr "¿Cuántas pedidos aprobó en los últimos 6 meses?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q4
@@ -3976,7 +3976,7 @@ msgstr "Registrado"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__render_model
 msgid "Rendering Model"
-msgstr "Modelo de renderización"
+msgstr "Modelo de visualización"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

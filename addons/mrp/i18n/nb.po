@@ -2380,7 +2380,7 @@ msgstr "Prognose problem"
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #, python-format
 msgid "Free to Use"
-msgstr ""
+msgstr "Tilgjengelig"
 
 #. module: mrp
 #. odoo-javascript
@@ -2388,7 +2388,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Free to Use / On Hand"
-msgstr ""
+msgstr "Tilgjengelig"
 
 #. module: mrp
 #. odoo-javascript
@@ -2396,7 +2396,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #, python-format
 msgid "Free to use / On Hand"
-msgstr ""
+msgstr "Tilgjengelig"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4216,7 +4216,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__procurement_group_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Procurement Group"
-msgstr "Gruppering anskaffelser"
+msgstr "Anskaffelsesgruppe"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4226,7 +4226,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce All"
-msgstr ""
+msgstr "Ferdigstill ordre"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -4990,7 +4990,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "Forbruk planlagt & valider"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -5790,7 +5790,7 @@ msgstr "Til lukking"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "To Consume"
-msgstr ""
+msgstr "Planlagt forbruk"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -6264,12 +6264,12 @@ msgstr "Venter Tilgjengelighet"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending
 msgid "Waiting for another WO"
-msgstr ""
+msgstr "Venter på annen WO"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__waiting
 msgid "Waiting for components"
-msgstr ""
+msgstr "Venter på komponenter"
 
 #. module: mrp
 #. odoo-python
@@ -6792,6 +6792,15 @@ msgid ""
 "                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"Du forbrukte et annet kvantum enn satt på arbeidsoperasjonen.\n"
+"                        <b invisible=\"consumption == 'strict'\">\n"
+"                            Vennligst trykk bekreft om dette stemmer.\n"
+"                        </b>\n"
+"                        <b invisible=\"consumption != 'strict'\">\n"
+"                            Vennligst se igjennom forbruket eller spør en leder om å validere\n"
+"                           <span invisible=\"mrp_production_count != 1\"> denne produksjons ordre</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">disse produksjons ordrene</span>.\n"
+"                        </b>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production

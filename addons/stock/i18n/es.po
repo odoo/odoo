@@ -278,7 +278,7 @@ msgstr ""
 "* Ubicación del cliente: ubicación virtual que representa la ubicación de destino de los productos enviados a sus clientes\n"
 "* Pérdida de inventario: ubicación virtual que sirve como contraparte para las operaciones de inventario utilizadas para corregir los niveles de existencias (inventarios físicos)\n"
 "* Producción: ubicación de contraparte virtual para operaciones de producción: esta ubicación consume los componentes y produce productos terminados\n"
-"* Ubicación de tránsito: ubicación de contraparte que debe usarse en operaciones entre empresas o entre almacenes"
+"* Ubicación de tránsito: ubicación de contraparte que debe usarse en operaciones dentro de la compañía o dentro de los almacenes"
 
 #. module: stock
 #. odoo-python
@@ -3038,8 +3038,8 @@ msgid ""
 "Due to receipts scheduled in the future, you might end up with "
 "excessive stock . Check the Forecasted Report  before reordering"
 msgstr ""
-"Debido a los recibos programados en el futuro, es posible que termine con "
-"stock excesivo. Verifique el informe de pronóstico  antes de reabastecer"
+"Debido a las recepciones programadas en el futuro, es posible que termine "
+"con stock excesivo. Verifique el informe de pronóstico  antes de reabastecer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
@@ -3379,7 +3379,7 @@ msgstr "Cantidad pronosticada"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
 msgid "Forecasted Receipts"
-msgstr "Recibos pronosticados"
+msgstr "Recepciones pronosticadas"
 
 #. module: stock
 #. odoo-javascript
@@ -4648,7 +4648,7 @@ msgstr "Actividades retrasadas"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Traslados atrasados"
+msgstr "Traslados retrasados"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
@@ -5458,7 +5458,7 @@ msgstr "No se encontraron reglas de almacenamiento. ¡Creemos una!"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "No receipt found. Let's create one!"
-msgstr "No se encontraron recibos. ¡Creemos uno!"
+msgstr "No se encontraron recepciones. ¡Creemos una!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
@@ -7141,7 +7141,7 @@ msgstr "Motivo del traslado"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__incoming
 #, python-format
 msgid "Receipt"
-msgstr "Recibo"
+msgstr "Recepción"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__reception_route_id
@@ -7163,7 +7163,7 @@ msgstr "Recepciones"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr "Los recibos le permiten obtener productos de un contacto."
+msgstr "Las recepciones le permiten obtener productos de un contacto."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7955,8 +7955,8 @@ msgstr "Conector de Sendcloud"
 msgid ""
 "Sent to the customers when orders are delivered, if the setting is enabled"
 msgstr ""
-"Si se habilita el ajuste, se envía a los clientes cuando se entregan las "
-"órdenes"
+"Si se habilita el ajuste, se envía a los clientes cuando se entregan los "
+"pedidos"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -9265,8 +9265,8 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
 msgstr ""
-"Esta nota se agrega a los pedidos de recibo (por ejemplo, dónde almacenar el"
-" producto en el almacén)."
+"Esta nota se agrega a los pedidos de recepción (por ejemplo, dónde almacenar"
+" el producto en el almacén)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -9743,7 +9743,7 @@ msgstr "Conector de USPS"
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 #, python-format
 msgid "Unassign"
-msgstr "Desasignar"
+msgstr "Eliminar la asignación"
 
 #. module: stock
 #. odoo-javascript

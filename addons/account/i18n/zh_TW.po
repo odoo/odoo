@@ -3,8 +3,9 @@
 # 	* account
 # 
 # Translators:
-# Tony Ng, 2024
 # Wil Odoo, 2024
+# Pak Wai Ho, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +192,7 @@ msgstr "%s 結單 %s"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "%s installment #%s"
-msgstr "%s 分期付款期數 #%s"
+msgstr "%s 分期付款第 %s 期"
 
 #. module: account
 #. odoo-python
@@ -518,13 +519,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>已套用預早付款折扣。</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/>在此帳戶："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -7601,9 +7603,7 @@ msgstr ""
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
 "%s"
-msgstr ""
-"‎未翻譯的字元\n"
-"‎會計年度日期‎‎不正確: 日超出了月的範圍。月：%s；天：%s"
+msgstr "財政年度日期不正確：日子超出月份範圍。月：%s，日：%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7780,8 +7780,10 @@ msgstr "無效的"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "無效的\"郵編範圍\"，請正確的設定."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python

@@ -5,10 +5,10 @@
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2024
 # Yazi Tian, 2024
-# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 湘子 南 <1360857908@qq.com>, 2024
 # Chloe Wang, 2024
 # Wil Odoo, 2024
+# Jeffery CHEN <jeffery9@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -521,8 +521,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>已使用提前付款折扣。</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3101,7 +3102,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
-msgstr "向其支付发票的银行账号。如果是客户发票或供应商贷项凭单，则为公司银行账户，否则应为合作伙伴的银行账号。"
+msgstr "向其支付发票的银行账号。如果是客户发票或供应商退款通知，则为公司银行账户，否则应为合作伙伴的银行账号。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_supplier_accounts
@@ -3536,7 +3537,7 @@ msgstr "已取消"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Credit Note"
-msgstr "已取消的贷项凭单"
+msgstr "已取消的退款通知"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3893,7 +3894,7 @@ msgstr "如果该科目允许日记账项目的发票和付款匹配，则勾选
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "如果不想分享从该日记账生成发票和贷项凭单所用的序列，则勾选此框"
+msgstr "如果不想分享从该日记账生成发票和退款通知所用的序列，则勾选此框"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
@@ -4456,7 +4457,7 @@ msgstr "创建银行账户"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "创建贷项凭单"
+msgstr "创建退款通知"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4543,7 +4544,7 @@ msgstr "创建供应商账单"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "创建供应商贷项凭单"
+msgstr "创建供应商退款通知"
 
 #. module: account
 #. odoo-python
@@ -4735,24 +4736,24 @@ msgstr "贷项录入"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Credit Note"
-msgstr "贷项凭单"
+msgstr "退款通知"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "已创建的贷项凭单"
+msgstr "已创建的退款通知"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr "贷项凭单币种"
+msgstr "退款通知币种"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr "贷项凭单：发送中"
+msgstr "退款通知：发送中"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4760,7 +4761,7 @@ msgstr "贷项凭单：发送中"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "贷项凭单"
+msgstr "退款通知"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit_to_invoice
@@ -4938,7 +4939,7 @@ msgstr "客户银行账户"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "客户贷项凭单"
+msgstr "客户退款通知"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
@@ -5248,7 +5249,7 @@ msgstr "小数分隔符"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "专用贷项凭单序列"
+msgstr "专用退款通知序列"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
@@ -5858,7 +5859,7 @@ msgstr "草稿账单"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Credit Note"
-msgstr "贷项凭单草稿"
+msgstr "退款通知草稿"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
@@ -5912,7 +5913,7 @@ msgstr "销售收据草稿"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "供应商贷项凭单草稿"
+msgstr "供应商退款通知草稿"
 
 #. module: account
 #. odoo-python
@@ -7796,8 +7797,10 @@ msgstr "无效"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "无效“邮编范围”，请正确配置。"
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -7982,7 +7985,7 @@ msgstr "发票总计"
 msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
-msgstr "发票和贷项凭单分配应分别包含一行基数。"
+msgstr "发票和退款通知分配应分别包含一行基数。"
 
 #. module: account
 #. odoo-python
@@ -7990,7 +7993,7 @@ msgstr "发票和贷项凭单分配应分别包含一行基数。"
 #, python-format
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "发票和贷项凭单分配应具有相同行数。"
+msgstr "发票和退款通知分配应具有相同行数。"
 
 #. module: account
 #. odoo-python
@@ -7999,7 +8002,7 @@ msgstr "发票和贷项凭单分配应具有相同行数。"
 msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
-msgstr "发票和贷项凭单分配应匹配（相同百分比、相同顺序）。"
+msgstr "发票和退款通知分配应匹配（相同百分比、相同顺序）。"
 
 #. module: account
 #. odoo-python
@@ -8008,7 +8011,7 @@ msgstr "发票和贷项凭单分配应匹配（相同百分比、相同顺序）
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr "发票和贷项凭单分配需具有至少一个税项再分配行。"
+msgstr "发票和退款通知分配需具有至少一个税项再分配行。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -9731,7 +9734,7 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"请注意，创建贷项凭单的最简单方法是直接\n"
+"请注意，创建退款通知的最简单方法是直接\n"
 "                从客户发票创建。"
 
 #. module: account
@@ -9739,7 +9742,7 @@ msgstr ""
 msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
-msgstr "请注意，创建供应商贷项凭单的最简单方法是直接从供应商账单创建。"
+msgstr "请注意，创建供应商退款通知的最简单方法是直接从供应商账单创建。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -12476,7 +12479,7 @@ msgstr "在付款操作中点击“通过电邮发送收据”时，手动发送
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr "将贷项凭单通过附件发送给客户"
+msgstr "将退款通知通过附件发送给客户"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -13047,7 +13050,7 @@ msgstr "暂记科目"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
 msgid "Switch into invoice/credit note"
-msgstr "切换至发票/贷项凭单"
+msgstr "切换至发票/退款通知"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -14078,7 +14081,7 @@ msgid ""
 "The order in which distribution lines are displayed and matched. For refunds"
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
-msgstr "显示、匹配分配行的顺序。为了顺利退款，发票分配行应按其对应的贷项凭单分配行的相同顺序排列。"
+msgstr "显示、匹配分配行的顺序。为了顺利退款，发票分配行应按其对应的退款通知分配行的相同顺序排列。"
 
 #. module: account
 #. odoo-python
@@ -15677,7 +15680,7 @@ msgstr "供应商账单折扣账户"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "供应商贷项凭单"
+msgstr "供应商退款通知"
 
 #. module: account
 #. odoo-python
@@ -16606,7 +16609,7 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
-msgstr "不能验证总金额为负的发票。应创建贷项凭单。使用操作菜单将其转换为贷项凭单或退款。"
+msgstr "不能验证总金额为负的发票。应创建退款通知。使用操作菜单将其转换为退款通知或退款。"
 
 #. module: account
 #. odoo-python
@@ -16866,7 +16869,7 @@ msgstr "例如：domain.com"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this customer. You can allocate them to mark this credit note as paid."
-msgstr "为该客户。可以分配他们，以将该贷项凭单标记为已付。"
+msgstr "为该客户。可以分配他们，以将该退款通知标记为已付。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16882,7 +16885,7 @@ msgstr "为该供应商。可以分配他们，以将该账单标记为已付。
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "for this vendor. You can allocate them to mark this credit note as paid."
-msgstr "为该供应商。可以分配他们，以将该贷项凭单标记为已付。"
+msgstr "为该供应商。可以分配他们，以将该退款通知标记为已付。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -17156,7 +17159,7 @@ msgstr "{percent}%于{new_date}确认"
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr "{{ object.company_id.name }}贷项凭单(Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }}退款通知(Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice

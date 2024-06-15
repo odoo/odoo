@@ -7,8 +7,8 @@
 # Jolien De Paepe, 2024
 # Yassine KHATTABI, 2024
 # Rémi CAZENAVE, 2024
-# Manon Rondou, 2024
 # Wil Odoo, 2024
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -528,13 +528,16 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Escompte appliqué.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
+"<b>Un escompte pour paiement anticipé de %(payment_reference) a été "
+"appliqué.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/> sur ce compte :"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -8090,9 +8093,13 @@ msgstr "Invalide"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
-"Intervalle de codes postaux incorrecte, veuillez le configurer correctement"
+"« Intervalle de codes postaux “ incorrects, veuillez configurer les valeurs "
+"” De “ et ” Vers “ pour l'intervalle de codes postaux et ” Vers “ doit être "
+"plus grand que ” De »."
 
 #. module: account
 #. odoo-python

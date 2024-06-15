@@ -73,7 +73,7 @@ msgstr "% Devolución"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "% Opt-out"
-msgstr "% Suscripciones canceladas"
+msgstr "% de exclusiones voluntarias"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -233,7 +233,7 @@ msgid ""
 "                                    <span class=\"text-muted\">Opt-Out</span>"
 msgstr ""
 "<br/>\n"
-"                                    <span class=\"text-muted\">Cancelar suscripción</span>"
+"                                    <span class=\"text-muted\">Exclusión voluntaria</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -462,7 +462,7 @@ msgstr "<span class=\"text-muted\">Envíos</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "<span class=\"text-muted\">Opt-out</span>"
-msgstr "<span class=\"text-muted\">Suscripción cancelada</span>"
+msgstr "<span class=\"text-muted\">Exclusión voluntaria</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -1186,7 +1186,7 @@ msgstr "Lista negra (%s)"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr "Opción de lista negra al darse de baja"
+msgstr "Opción de lista negra al cancelar la suscripción"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -1208,7 +1208,7 @@ msgstr "Direcciones de correo electrónico en la lista negra"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist removal request from portal"
-msgstr "Solicitud de quitar de la lista de bloqueo desde el portal "
+msgstr "Solicitud de eliminación de la lista de bloqueo desde el portal "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1280,7 +1280,7 @@ msgstr "Ancho del cuerpo"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_html
 msgid "Body converted to be sent by mail"
-msgstr "Se convirtió el cuerpo del correo para mandarlo"
+msgstr "Cuerpo convertido para enviar por correo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -1343,7 +1343,7 @@ msgstr "Devuelto (%)"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced_ratio
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__bounced_ratio
 msgid "Bounced Ratio"
-msgstr "Ratio Rebotado"
+msgstr "Proporción de correos devueltos"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1422,7 +1422,7 @@ msgstr "Cancelar"
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__cancel
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Canceled"
-msgstr "Cancelada"
+msgstr "Cancelado"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing_test__email_to
@@ -1486,7 +1486,7 @@ msgstr "Revise todos nuestros muebles"
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Check the email address and click send."
-msgstr "Revise la dirección de correo y dé clic en enviar."
+msgstr "Revise la dirección de correo electrónico y haga clic en enviar."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
@@ -1543,12 +1543,12 @@ msgstr "Cliqueado"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_tree
 msgid "Clicked (%)"
-msgstr "Clics (%)"
+msgstr "Clickeado (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
 msgid "Clicked On"
-msgstr "Clickeado en"
+msgstr "Clickeado el"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -2138,7 +2138,7 @@ msgstr "Evento"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid "Event heading"
-msgstr "Acontecimientos"
+msgstr "Título del evento"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__error
@@ -2158,12 +2158,12 @@ msgstr "Excluirme"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Opt Out"
-msgstr "Excluir los que han rehusado envíos"
+msgstr "Excluir a los que se han excluido voluntariamente"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__expected
 msgid "Expected"
-msgstr "Previsto"
+msgstr "Esperado"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
@@ -2179,17 +2179,17 @@ msgstr "Facebook"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__failed
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Failed"
-msgstr "Fallido"
+msgstr "Con error"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__failure_reason
 msgid "Failure reason"
-msgstr "Razón del fallo"
+msgstr "Motivo del error"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr "Tipo de fallo"
+msgstr "Tipo de error"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite
@@ -2713,7 +2713,7 @@ msgstr "Mantener Archivos"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
 msgid "LOGIN"
-msgstr "Nombre de usuario"
+msgstr "ACCESO"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__lang
@@ -2911,7 +2911,7 @@ msgstr "Estadísticas de correo"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_tree_mail
 msgid "Mail Traces"
-msgstr "Rastros del correo"
+msgstr "Rastros de correo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__mass_mailing_id
@@ -3210,7 +3210,7 @@ msgstr "Lista de medios"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid "Media heading"
-msgstr "Encabezamiento de los medios de comunicación"
+msgstr "Encabezado de los medios"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__medium_id
@@ -3429,7 +3429,7 @@ msgstr "La próxima salida es en el pasado"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "No %s address bounced yet!"
-msgstr "Todavía no se han devuelto direcciones %s"
+msgstr "La dirección %s todavía no se ha devuelto."
 
 #. module: mass_mailing
 #. odoo-python
@@ -3592,7 +3592,7 @@ msgstr "Número de correos masivos"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count_opt_out
 msgid "Number of Opted-out"
-msgstr "Número de exenciones"
+msgstr "Número de exclusiones"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
@@ -3704,7 +3704,7 @@ msgstr "Proporción de apertura"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__opt_out
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription__opt_out
 msgid "Opt Out"
-msgstr "Envío no deseado"
+msgstr "Exclusión voluntaria"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__opt_out
@@ -3718,17 +3718,17 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Opt-out (%)"
-msgstr "Suscripciones canceladas (%)"
+msgstr "Exclusión voluntaria (%)"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_optout
 msgid "Opted Out"
-msgstr "Canceló"
+msgstr "Exclusión voluntaria"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Opted-out"
-msgstr "Exenciones"
+msgstr "Exclusión voluntaria"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__lang
@@ -3748,18 +3748,18 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing.mailing_menu_report_subscribe_reason
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Optout"
-msgstr "Excluirse"
+msgstr "Exlcusión"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_subscription_view_search
 msgid "Optout Reason"
-msgstr "Motivo de la exlcusión"
+msgstr "Motivo de la exclusión"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_subscription_optout_action
 #: model:ir.ui.menu,name:mass_mailing.mailing_subscription_optout_menu
 msgid "Optout Reasons"
-msgstr "Motivos de la exlcusión"
+msgstr "Motivos de la exclusión"
 
 #. module: mass_mailing
 #: model:mailing.subscription.optout,name:mass_mailing.mailing_subscription_optout_data_4
@@ -3810,7 +3810,7 @@ msgstr "Porcentaje de correos devueltos"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_opt_out
 msgid "Percentage of Opted-out"
-msgstr "Porcentajes de exención"
+msgstr "Porcentajes de exclusión"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_pc
@@ -4067,7 +4067,7 @@ msgstr "Eliminar de plantillas"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__render_model
 msgid "Rendering Model"
-msgstr "Modelo de renderización"
+msgstr "Modelo de visualización"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__replied
@@ -4209,7 +4209,7 @@ msgstr "Periodo programado"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__next_departure
 msgid "Scheduled date"
-msgstr "Hora prevista"
+msgstr "Fecha programada"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
@@ -4497,9 +4497,9 @@ msgid ""
 "talks on various topics. Stay on top of the latest business management "
 "trends &amp; technologies"
 msgstr ""
-"Oradores de todo el mundo se unirán a nuestros expertos para dar charlas "
+"Ponentes de todo el mundo se unirán a nuestros expertos para dar pláticas "
 "inspiradoras sobre varios temas. Manténgase al tanto de las últimas "
-"tecnologías  de tendencias de gestión empresarial &amp; "
+"tecnologías y tendencias en la gestión empresarial. "
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__reply_to_mode__new
@@ -4626,7 +4626,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
 msgid "Tell what's the value for the customer for this feature."
-msgstr "Explíquele al cliente el valor que obtendrá gracias a esta función. "
+msgstr "Diga cuál es el valor para el cliente de esta función."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4686,7 +4686,7 @@ msgstr "Texto - Imagen"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_highlight
 msgid "Text Highlight"
-msgstr "Reflejo del texto"
+msgstr "Texto resaltado"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4943,7 +4943,7 @@ msgstr "Total de correos devueltos"
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_trace_check_res_id_is_set
 msgid "Traces have to be linked to records with a not null res_id."
 msgstr ""
-"Los rastreos deben estar vinculados a registros con un res_id que no sea "
+"Los rastros deben estar vinculados a registros con un res_id que no sea "
 "nulo."
 
 #. module: mass_mailing
@@ -5230,8 +5230,9 @@ msgid ""
 "<span style=\"font-weight: bolder;\">top notch usability that scales across "
 "all apps</span>."
 msgstr ""
-"Con una sólida base técnica, el framework de Odoo es único.\n"
-"                                Permite una<span style=\"font-weight: bolder;\"> magnífica usabilidad escalable a todas las aplicaciones.</span>"
+"Con una sólida base técnica, el framework de Odoo es único. Permite una<span"
+" style=\"font-weight: bolder;\"> usabilidad escalable a todas las "
+"aplicaciones.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_cover
@@ -5468,7 +5469,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "on"
-msgstr "de"
+msgstr "el"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_mailing_schedule_date

@@ -3447,12 +3447,12 @@ msgstr "Свободные запасы в пути"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Бесплатно использовать количество "
+msgstr "Незабронированное количество"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Free to Use"
-msgstr "Бесплатное использование"
+msgstr "В наличии"
 
 #. module: stock
 #. odoo-javascript
@@ -5226,7 +5226,7 @@ msgstr "Операции"
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_pivot
 msgid "Moves History"
-msgstr "История переездов"
+msgstr "История перемещений"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -9110,11 +9110,12 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Это добавляет маршрут прямой поставки, применяемый к ТМЦ для доставки "
-"поставщиками вашим клиентам. ТМЦ на прямую поставку будет генерировать "
-"запрос на закупку для предложения после подтверждения заказа на продажу. Это"
-" поток по требованию. Запрашиваемый адрес доставки будет адресом доставки "
-"клиента, а не вашим складом."
+"Это добавляет маршрут прямой поставки (dropshipping), применяемый к товарам "
+"для доставки поставщиками напрямую к вашим клиентам. Заказ на прямую "
+"поставку (поставщик - клиент) создаст запрос на закупку у поставщиков после "
+"подтверждения заказа на продажу. Работа начинается после запроса клиента. "
+"Запрашиваемый адрес доставки будет адресом доставки клиента, а не вашим "
+"складом."
 
 #. module: stock
 #. odoo-python
@@ -9495,7 +9496,7 @@ msgstr "Итого Прогноз"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Total Free to Use"
-msgstr "Всего бесплатно"
+msgstr "Всего в наличии"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree

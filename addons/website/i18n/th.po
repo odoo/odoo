@@ -57,6 +57,9 @@ msgid ""
 "\"Homepage URL\" field in the website settings or the page properties on any"
 " custom page."
 msgstr ""
+"\"URL ไปยัง\" ไม่สามารถตั้งค่าเป็น \"/\" หากต้องการเปลี่ยนเนื้อหาหน้าแรก "
+"ให้ใช้ฟิลด์ \"URL หน้าแรก\" "
+"ในการตั้งค่าเว็บไซต์หรือคุณสมบัติของเพจบนเพจที่กำหนดเอง"
 
 #. module: website
 #. odoo-python
@@ -6025,6 +6028,13 @@ msgid "Hide For"
 msgstr "ซ่อนเพื่อ"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
 msgstr "ซ่อนหน้านี้จากผลการค้นหา"
@@ -10445,6 +10455,13 @@ msgstr "แสดงนโยบาย reCaptcha"
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
 msgstr "แสดงแผนที่เว็บไซต์"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
