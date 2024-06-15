@@ -227,7 +227,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         valid_actions = []
         if (
-            self.country_code == 'HU'
+            self.tax_country_code == 'HU'
             and self.is_sale_document()
             and self.state == 'posted'
         ):
@@ -319,29 +319,9 @@ class AccountMove(models.Model):
         hu_vat_regex = re.compile(r'\d{8}-[1-5]-\d{2}')
 
         checks = {
-            'company_vat_missing': {
-                'records': self.company_id.filtered(lambda c: not c.vat),
-                'message': _('Please set company VAT number!'),
-                'action_text': _('View Company/ies'),
-            },
-            'company_vat_invalid': {
-                'records': self.company_id.filtered(
-                    lambda c: (
-                        (c.vat and not hu_vat_regex.fullmatch(c.vat))
-                        or (c.l10n_hu_group_vat and not hu_vat_regex.fullmatch(c.l10n_hu_group_vat))
-                    )
-                ),
-                'message': _('Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 format!'),
-                'action_text': _('View Company/ies'),
-            },
             'company_address_missing': {
                 'records': self.company_id.filtered(lambda c: not c.country_id or not c.zip or not c.city or not c.street),
                 'message': _('Please set company Country, Zip, City and Street!'),
-                'action_text': _('View Company/ies'),
-            },
-            'company_not_huf': {
-                'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
-                'message': _('Please use HUF as company currency!'),
                 'action_text': _('View Company/ies'),
             },
             'partner_vat_missing': {
@@ -415,6 +395,33 @@ class AccountMove(models.Model):
                 'action_text': _('View tax(es)'),
             },
         }
+        if self.fiscal_position_id and all('HU' in fp.foreign_vat for fp in self.fiscal_position_id):
+            # Add VAT check here for foreign_vat
+            pass
+        else:
+            checks.update({
+                'company_vat_missing': {
+                    'records': self.company_id.filtered(lambda c: not c.vat),
+                    'message': _('Please set proper VAT number!'),
+                    'action_text': _('View Company/ies'),
+                },
+                'company_vat_invalid': {
+                    'records': self.company_id.filtered(
+                        lambda c: (
+                            (c.vat and not hu_vat_regex.fullmatch(c.vat))
+                            or (c.l10n_hu_group_vat and not hu_vat_regex.fullmatch(c.l10n_hu_group_vat))
+                        )
+                    ),
+                    'message': _(
+                        'Please enter the Hungarian VAT (and/or Group VAT) number in 12345678-1-12 format!'),
+                    'action_text': _('View Company/ies'),
+                },
+                'company_not_huf': {
+                    'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
+                    'message': _('Please use HUF as company currency!'),
+                    'action_text': _('View Company/ies'),
+                },
+            })
 
         errors = {
             check: {
@@ -781,6 +788,9 @@ class AccountMove(models.Model):
         """ For feature extensibility. """
         return 'l10n_hu_edi.nav_online_invoice_xml_3_0'
 
+    def _get_hungarian_vat(self):
+        return self.fiscal_position_id.foreign_vat or self.company_id.vat
+
     def _l10n_hu_edi_get_invoice_values(self):
         eu_country_codes = set(self.env.ref('base.europe').country_ids.mapped('code'))
 
@@ -803,6 +813,11 @@ class AccountMove(models.Model):
                 return bank_account.acc_number
 
         supplier = self.company_id.partner_id
+        supplier_vat = self._get_hungarian_vat()
+        supplier_vat_data = {
+            'tax_number': supplier.l10n_hu_group_vat or supplier_vat,
+            'group_member_tax_number': supplier.l10n_hu_group_vat and supplier_vat,
+        }
         customer = self.partner_id.commercial_partner_id
 
         currency_huf = self.env.ref('base.HUF')
@@ -817,12 +832,12 @@ class AccountMove(models.Model):
             'modifyWithoutMaster': False,
             'base_invoice': base_invoice if base_invoice != self else None,
             'supplier': supplier,
-            'supplier_vat_data': get_vat_data(supplier, self.fiscal_position_id.foreign_vat),
+            'supplier_vat_data': supplier_vat_data,
             'supplierBankAccountNumber': format_bank_account_number(self.partner_bank_id or supplier.bank_ids[:1]),
             'individualExemption': self.company_id.l10n_hu_tax_regime == 'ie',
             'customer': customer,
             'customerVatStatus': (not customer.is_company and 'PRIVATE_PERSON') or (customer.country_code == 'HU' and 'DOMESTIC') or 'OTHER',
-            'customer_vat_data': get_vat_data(customer) if customer.is_company else None,
+            'customer_vat_data': get_vat_data(customer) if customer.is_company and customer.vat else {},
             'customerBankAccountNumber': format_bank_account_number(customer.bank_ids[:1]),
             'smallBusinessIndicator': self.company_id.l10n_hu_tax_regime == 'sb',
             'exchangeRate': currency_rate,
@@ -926,7 +941,7 @@ class AccountMove(models.Model):
                 'vatRateVatAmount': -line.amount_currency,
                 'vatRateVatAmountHUF': -line.balance if is_company_huf else currency_huf.round(-line.amount_currency * currency_rate),
             }
-            for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
+            for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type and not l.tax_ids)
         }
 
         invoice_values['tax_summary'] = [
@@ -1023,7 +1038,7 @@ class AccountInvoiceLine(models.Model):
     def _compute_currency_rate(self):
         super()._compute_currency_rate()
         # In Hungary, the currency rate should be based on the delivery date.
-        for line in self.filtered(lambda l: l.move_id.country_code == 'HU' and l.currency_id):
+        for line in self.filtered(lambda l: l.move_id.tax_country_code == 'HU' and l.currency_id):
             line.currency_rate = self.env['res.currency']._get_conversion_rate(
                 from_currency=line.company_currency_id,
                 to_currency=line.currency_id,

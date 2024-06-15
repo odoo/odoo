@@ -37,7 +37,9 @@
             </xpath>
 
             <xpath expr="//label[@for='journal_id']" position="before">
-                <field name="l10n_hu_payment_mode" invisible="country_code != 'HU'" readonly="state != 'draft'"/>
+                <field name="tax_country_id" />
+                <field name="tax_country_code" invisible="1" />
+                <field name="l10n_hu_payment_mode" invisible="tax_country_code != 'HU'" readonly="state != 'draft'"/>
             </xpath>
 
             <!-- Documents tab -->

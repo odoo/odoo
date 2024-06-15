@@ -47,7 +47,7 @@ class L10nHuEdiTaxAuditExport(models.TransientModel):
         domain = [
             ('move_type', 'in', ('out_invoice', 'out_refund')),
             ('state', '=', 'posted'),
-            ('country_code', '=', 'HU'),
+            ('tax_country_code', '=', 'HU'),
         ]
         if self.selection_mode == 'date':
             date_from = self.date_from
@@ -73,7 +73,6 @@ class L10nHuEdiTaxAuditExport(models.TransientModel):
         domain = [
             ('move_type', 'in', ('out_invoice', 'out_refund')),
             ('state', '=', 'posted'),
-            ('country_code', '=', 'HU'),
         ]
         if self.selection_mode == 'date':
             if self.date_from:
@@ -86,7 +85,7 @@ class L10nHuEdiTaxAuditExport(models.TransientModel):
             if self.name_to:
                 domain.append(('name', '<=', self.name_to))
 
-        invoices = self.env['account.move'].search(domain)
+        invoices = self.env['account.move'].search(domain).filtered(lambda m: m.tax_country_code == 'HU')
         if not invoices:
             raise UserError(_('No invoice to export!'))
 

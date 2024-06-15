@@ -84,8 +84,12 @@ class ResCompany(models.Model):
 
     def _l10n_hu_edi_get_credentials_dict(self):
         self.ensure_one()
+        hu_fp = self.env['account.fiscal.position'].search([('country_id.code', '=', 'HU')], limit=1)
+        vat = hu_fp.foreign_vat or self.vat
+        if 'HU' in vat:
+            vat = vat[2:]
         credentials_dict = {
-            'vat': self.vat,
+            'vat': vat,
             'mode': self.l10n_hu_edi_server_mode,
             'username': self.l10n_hu_edi_username,
             'password': self.l10n_hu_edi_password,

@@ -31,12 +31,12 @@
                                     <t t-set="partner" t-value="supplier"/>
                                 </t>
                             </supplierAddress>
-                            <supplierBankAccountNumber t-out="supplierBankAccountNumber"/>
+                            <supplierBankAccountNumber t-out="supplierBankAccountNumber" />
                             <individualExemption t-out="format_bool(individualExemption)"/>
                         </supplierInfo>
                         <customerInfo>
                             <customerVatStatus t-out="customerVatStatus"/>
-                            <customerVatData t-if="customer.is_company">
+                            <customerVatData t-if="customer.is_company and customer.vat">
                                 <customerTaxNumber t-if="customer_vat_data.get('tax_number')">
                                     <t t-call="l10n_hu_edi.nav_online_invoice_xml_3_0_tax_number">
                                         <t t-set="vat" t-value="customer_vat_data.get('tax_number')"/>
@@ -151,7 +151,7 @@
         </vatAmountMismatch>
         <noVatCharge t-if="tax.l10n_hu_tax_type == 'NO_VAT'" t-translation="off">true</noVatCharge>
     </template>
-    
+
     <template id="nav_online_invoice_xml_3_0_line">
         <t t-set="line" t-value="line_values['line']"/>
         <lineNumber t-out="line_values['lineNumber']"/>

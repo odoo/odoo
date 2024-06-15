@@ -7,7 +7,6 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@id='invoicing_settings']" position="after">
                 <block title="Hungarian Electronic Invoicing"
-                       invisible="country_code != 'HU'"
                        groups="account.group_account_manager"
                        name="l10n_hu_edi_settings">
                     <setting company_dependent="1" string="NAV Credentials"
