@@ -1825,7 +1825,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
 msgid "Correct inconsistencies for reservation"
-msgstr ""
+msgstr "Inconsistenties corrigeren voor reservering"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2999,7 +2999,7 @@ msgstr "Eerste SN"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Fix discrepancies"
-msgstr ""
+msgstr "Discrepanties oplossen"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -4082,6 +4082,11 @@ msgid ""
 "The correction will remove the reservation of the impacted operations on all companies.\n"
 "If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
+"Je kan niet meer producten van %s reserveren dan er op voorraad zijn.\n"
+"\n"
+"Je kunt de fouten corrigeren door op de knop hieronder te klikken.\n"
+"De wijziging zal de reservering van de getroffen bewerkingen op alle bedrijven verwijderen.\n"
+"Gelieve een supportticket in te dienen op https://www.odoo.com/help als de fout zich blijft voordoen of als dit bericht vaak optreedt."
 
 #. module: stock
 #. odoo-python
@@ -4091,6 +4096,8 @@ msgid ""
 "It is not possible to unreserve more products of %s than you have in stock.\n"
 "Please contact your system administrator to rectify this issue."
 msgstr ""
+"Je kunt de reservatie van de producten %s niet ongedaan maken voor meer producten dan je op voorraad hebt.\n"
+"Gelieve contact op te nemen met de systeembeheerder om dit probleem op te lossen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -10112,6 +10119,8 @@ msgid ""
 "You cannot pack products into the same package when they are from both "
 "immediate and planned transfers."
 msgstr ""
+"Je kunt producten niet in hetzelfde pakket verpakken als ze afkomstig zijn "
+"van zowel onmiddellijke als geplande transfers."
 
 #. module: stock
 #. odoo-python
