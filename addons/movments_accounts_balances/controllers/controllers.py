@@ -209,10 +209,10 @@ class AccountBalance(models.Model):
         }
 
     @api.model
-    def general_ledger_report_by_vendor(self, partner_id, start_date, end_date):
+    def general_ledger_report_by_vendor(self, vendor_id, start_date, end_date):
         # Define the domain to filter move lines based on the partner and date range
         domain = [
-            ('partner_id', '=', partner_id),
+            ('partner_id', '=', vendor_id),
             ('date', '>=', start_date),
             ('date', '<=', end_date)
         ]
@@ -250,10 +250,10 @@ class AccountBalance(models.Model):
         }
 
     @api.model
-    def general_ledger_report_by_customer(self, partner_id, start_date, end_date):
+    def general_ledger_report_by_customer(self, customer_id, start_date, end_date):
         # Define the domain to filter move lines based on the partner and date range
         domain = [
-            ('partner_id', '=', partner_id),
+            ('partner_id', '=', customer_id),
             ('date', '>=', start_date),
             ('date', '<=', end_date)
         ]
