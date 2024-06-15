@@ -337,39 +337,15 @@ class AccountMove(models.Model):
         """If the invoice document type indicates that vat should not be detailed in the printed report (result of _l10n_ar_include_vat()) then we overwrite tax_totals field so that includes taxes in the total amount, otherwise it would be showing amount_untaxed in the amount_total"""
         self.ensure_one()
         include_vat = self._l10n_ar_include_vat()
-        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        tax_lines = self.line_ids.filtered(lambda x: x.display_type == 'tax')
-
-        # Base lines.
-        base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
         if include_vat:
-            for vals in base_line_vals_list:
-                vals['taxes'] = vals['taxes']\
-                    .flatten_taxes_hierarchy()\
-                    .filtered(lambda tax: not tax.tax_group_id.l10n_ar_vat_afip_code)
+            ids_to_exclude = self.line_ids\
+                .filtered(lambda x: x.display_type == 'product')\
+                .tax_ids.flatten_taxes_hierarchy()\
+                .tax_group_id.filtered('l10n_ar_vat_afip_code').ids
+            if ids_to_exclude:
+                return self._get_tax_totals_summary(tax_group_ids_to_exclude=ids_to_exclude)
 
-        # Tax lines.
-        tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
-        if include_vat:
-            tax_line_vals_list = [
-                x
-                for x in tax_line_vals_list
-                if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
-            ]
-
-        tax_totals = self.env['account.tax']._prepare_tax_totals(
-            base_line_vals_list,
-            self.currency_id,
-            self.company_id,
-            tax_lines=tax_line_vals_list,
-        )
-
-        if include_vat:
-            temp = self.tax_totals
-            tax_totals['amount_total'] = temp['amount_total']
-            tax_totals['formatted_amount_total'] = temp['formatted_amount_total']
-
-        return tax_totals
+        return self.tax_totals
 
     def _l10n_ar_include_vat(self):
         self.ensure_one()

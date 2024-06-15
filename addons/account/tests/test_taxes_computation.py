@@ -3,7 +3,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestTax(TestTaxCommon):
+class TestTaxesComputation(TestTaxCommon):
 
     def test_taxes_ordering(self):
         tests = []

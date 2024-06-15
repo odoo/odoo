@@ -1277,6 +1277,62 @@ class AccountMove(models.Model):
             else:
                 move.invoice_payments_widget = False
 
+    def _get_tax_totals_summary(self, tax_amount_per_group=None, tax_group_ids_to_exclude=None):
+        self.ensure_one()
+        AccountTax = self.env['account.tax']
+        base_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+
+        document_values = AccountTax._create_document_from_invoice(self)
+
+        # Early payment discount.
+        if self.id:
+            # The invoice is stored so we can add the early payment discount lines directly.
+            epd_lines = self.invoice_line_ids.filtered(lambda line: line.display_type == 'epd')
+            for epd_line in epd_lines:
+                document_values['lines'].append(self._prepare_document_line_from_invoice_line(epd_line))
+        else:
+            # In case the invoice isn't yet stored, the early payment discount lines are not there. Then,
+            # we need to simulate them.
+            factor_percent = self.invoice_payment_term_id.discount_percentage / 100.0
+            epd_lines = []
+            for base_line, line in zip(base_lines, document_values['lines']):
+                if not base_line.epd_needed or not line['taxes_data']:
+                    continue
+
+                epd_line = AccountTax._prepare_document_global_discount_percentage_line(
+                    document_values,
+                    line,
+                    factor_percent,
+                )
+                counterpart_epd_line = self._prepare_document_line(
+                    price_unit=-epd_line['price_unit'],
+                    quantity=epd_line['quantity'],
+                    discount=epd_line['discount'],
+                )
+                epd_lines.extend([epd_line, counterpart_epd_line])
+            epd_document_values = {
+                **document_values,
+                'lines': epd_lines,
+            }
+            AccountTax._add_line_tax_amounts_to_document(epd_document_values)
+            document_values['lines'].extend(epd_lines)
+
+        tax_totals_summary = AccountTax._get_tax_totals_summary(document_values)
+
+        # Exclude tax groups.
+        if tax_group_ids_to_exclude:
+            AccountTax._exclude_tax_group_from_tax_totals_summary(tax_totals_summary, ids_to_exclude=tax_group_ids_to_exclude)
+
+        # Amounts in company currency.
+        tax_totals_summary['display_in_company_currency'] = (
+            self.id
+            and self.company_id.display_invoice_tax_company_currency
+            and self.currency_id != self.company_currency_id
+            and self.is_sale_document(include_receipts=True)
+        )
+
+        return tax_totals_summary
+
     @api.depends_context('lang')
     @api.depends(
         'invoice_line_ids.currency_rate',
@@ -1294,82 +1350,7 @@ class AccountMove(models.Model):
         """
         for move in self:
             if move.is_invoice(include_receipts=True):
-                base_lines = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
-                base_line_values_list = [line._convert_to_tax_base_line_dict() for line in base_lines]
-                sign = move.direction_sign
-                if move.id:
-                    # The invoice is stored so we can add the early payment discount lines directly to reduce the
-                    # tax amount without touching the untaxed amount.
-                    base_line_values_list += [
-                        {
-                            **line._convert_to_tax_base_line_dict(),
-                            'handle_price_include': False,
-                            'quantity': 1.0,
-                            'price_unit': sign * line.amount_currency,
-                        }
-                        for line in move.line_ids.filtered(lambda line: line.display_type == 'epd')
-                    ]
-
-                kwargs = {
-                    'base_lines': base_line_values_list,
-                    'company': move.company_id,
-                    'currency': move.currency_id or move.journal_id.currency_id or move.company_id.currency_id,
-                }
-
-                if move.id:
-                    kwargs['tax_lines'] = [
-                        line._convert_to_tax_line_dict()
-                        for line in move.line_ids.filtered(lambda line: line.display_type == 'tax')
-                    ]
-                else:
-                    # In case the invoice isn't yet stored, the early payment discount lines are not there. Then,
-                    # we need to simulate them.
-                    epd_aggregated_values = {}
-                    for base_line in base_lines:
-                        if not base_line.epd_needed:
-                            continue
-                        for grouping_dict, values in base_line.epd_needed.items():
-                            epd_values = epd_aggregated_values.setdefault(grouping_dict, {'price_subtotal': 0.0})
-                            epd_values['price_subtotal'] += values['price_subtotal']
-
-                    for grouping_dict, values in epd_aggregated_values.items():
-                        taxes = None
-                        if grouping_dict.get('tax_ids'):
-                            taxes = self.env['account.tax'].browse(grouping_dict['tax_ids'][0][2])
-
-                        kwargs['base_lines'].append(self.env['account.tax']._convert_to_tax_base_line_dict(
-                            grouping_dict,
-                            partner=move.partner_id,
-                            currency=move.currency_id,
-                            taxes=taxes,
-                            price_unit=values['price_subtotal'],
-                            quantity=1.0,
-                            account=self.env['account.account'].browse(grouping_dict['account_id']),
-                            analytic_distribution=values.get('analytic_distribution'),
-                            price_subtotal=values['price_subtotal'],
-                            is_refund=move.move_type in ('out_refund', 'in_refund'),
-                            handle_price_include=False,
-                        ))
-                move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
-                if move.invoice_cash_rounding_id:
-                    rounding_amount = move.invoice_cash_rounding_id.compute_difference(move.currency_id, move.tax_totals['amount_total'])
-                    totals = move.tax_totals
-                    totals['display_rounding'] = True
-                    if rounding_amount:
-                        if move.invoice_cash_rounding_id.strategy == 'add_invoice_line':
-                            totals['rounding_amount'] = rounding_amount
-                            totals['formatted_rounding_amount'] = formatLang(self.env, totals['rounding_amount'], currency_obj=move.currency_id)
-                        elif move.invoice_cash_rounding_id.strategy == 'biggest_tax':
-                            if totals['subtotals_order']:
-                                max_tax_group = max((
-                                    tax_group
-                                    for tax_groups in totals['groups_by_subtotal'].values()
-                                    for tax_group in tax_groups
-                                ), key=lambda tax_group: tax_group['tax_group_amount'])
-                                max_tax_group['tax_group_amount'] += rounding_amount
-                                max_tax_group['formatted_tax_group_amount'] = formatLang(self.env, max_tax_group['tax_group_amount'], currency_obj=move.currency_id)
-                        totals['amount_total'] += rounding_amount
-                        totals['formatted_amount_total'] = formatLang(self.env, totals['amount_total'], currency_obj=move.currency_id)
+                move.tax_totals = move._get_tax_totals_summary()
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
@@ -1832,17 +1813,16 @@ class AccountMove(models.Model):
             for move in self:
                 if not move.is_invoice(include_receipts=True):
                     continue
-                invoice_totals = move.tax_totals
 
-                for amount_by_group_list in invoice_totals['groups_by_subtotal'].values():
-                    for amount_by_group in amount_by_group_list:
-                        tax_lines = move.line_ids.filtered(lambda line: line.tax_group_id.id == amount_by_group['tax_group_id'])
+                for subtotal in move.tax_totals['subtotals']:
+                    for tax_group in subtotal['tax_groups']:
+                        tax_lines = move.line_ids.filtered(lambda line: line.tax_group_id.id == tax_group['id'])
 
                         if tax_lines:
                             first_tax_line = tax_lines[0]
                             tax_group_old_amount = sum(tax_lines.mapped('amount_currency'))
                             sign = -1 if move.is_inbound() else 1
-                            delta_amount = tax_group_old_amount * sign - amount_by_group['tax_group_amount']
+                            delta_amount = tax_group_old_amount * sign - tax_group['tax_amount']
 
                             if not move.currency_id.is_zero(delta_amount):
                                 first_tax_line.amount_currency -= delta_amount * sign
@@ -2047,6 +2027,31 @@ class AccountMove(models.Model):
                     'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
                     'message': _("You must specify the Profit Account (company dependent)")
                 }}
+
+    @api.onchange('tax_totals')
+    def _onchange_tax_totals(self):
+        if (
+            not self.is_invoice(include_receipts=True)
+            or not self.tax_totals
+            or not self.tax_totals.get('changed_tax_group_id')
+        ):
+            return
+
+        changed_tax_group_id = self.tax_totals['changed_tax_group_id']
+        tax_amount_per_group = {
+            changed_tax_group_id: {
+                'tax_amount': 0.0,
+                'tax_amount_comp': 0.0,
+            },
+        }
+        tax_amounts = tax_amount_per_group[changed_tax_group_id]
+        for subtotal in self.tax_totals['subtotals']:
+            for tax_group in subtotal['tax_groups']:
+                if tax_group['id'] == changed_tax_group_id:
+                    tax_amounts['tax_amount'] = tax_group['tax_amount']
+                    break
+
+        self.tax_totals = self._get_tax_totals_summary(tax_amount_per_group=tax_amount_per_group)
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
