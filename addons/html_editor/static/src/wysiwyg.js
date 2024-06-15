@@ -48,7 +48,7 @@ export class Wysiwyg extends Component {
         this.editor = this.props.editor;
         const config = {
             ...this.props.config,
-            inlineComponentInfo: { app: this.__owl__.app, env: this.env },
+            embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
             getLocalOverlayContainer: () => overlayRef?.el,
             disableFloatingToolbar: this.props.toolbar,
         };

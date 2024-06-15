@@ -5,8 +5,8 @@ import { App } from "@odoo/owl";
  * This plugin is responsible with providing the API to manipulate/insert
  * sub components in an editor.
  */
-export class InlineComponentPlugin extends Plugin {
-    static name = "inline_components";
+export class EmbeddedComponentPlugin extends Plugin {
+    static name = "embedded_components";
     static dependencies = ["history"];
     static resources = (p) => ({
         handle_before_remove: p.handleBeforeRemove.bind(p),
@@ -16,8 +16,8 @@ export class InlineComponentPlugin extends Plugin {
         this.components = new Set();
         // map from node to component info
         this.nodeMap = new WeakMap();
-        this.app = this.config.inlineComponentInfo.app;
-        this.env = this.config.inlineComponentInfo.env;
+        this.app = this.config.embeddedComponentInfo.app;
+        this.env = this.config.embeddedComponentInfo.env;
         this.mountComponents(this.editable);
     }
 
@@ -38,7 +38,7 @@ export class InlineComponentPlugin extends Plugin {
     }
 
     mountComponents(node) {
-        for (const embedding of this.resources.inlineComponents || []) {
+        for (const embedding of this.resources.embeddedComponents || []) {
             const selector = `[data-embedded="${embedding.name}"]`;
             const targets = node.querySelectorAll(selector);
             if (node.matches(selector)) {
