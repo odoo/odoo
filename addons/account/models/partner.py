@@ -93,19 +93,6 @@ class AccountFiscalPosition(models.Model):
                         else:
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
 
-                similar_fpos_domain = [
-                    *self.env['account.fiscal.position']._check_company_domain(record.company_id),
-                    ('foreign_vat', '!=', False),
-                    ('country_id', '=', record.country_id.id),
-                    ('id', '!=', record.id),
-                ]
-                if record.state_ids:
-                    similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
-
-                similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
-                if similar_fpos_count:
-                    raise ValidationError(_("A fiscal position with a foreign VAT already exists in this region."))
-
     def map_tax(self, taxes):
         if not self:
             return taxes
@@ -267,12 +254,13 @@ class AccountFiscalPosition(models.Model):
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
-        template_code = self.env['account.chart.template']._guess_chart_template(self.country_id)
+        country = self._get_fiscal_country_id()
+        template_code = self.env['account.chart.template']._guess_chart_template(country)
         template = self.env['account.chart.template']._get_chart_template_mapping()[template_code]
         if not template['installed']:
             localization_module = self.env['ir.module.module'].search([('name', '=', template['module'])])
             localization_module.sudo().button_immediate_install()
-        self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
+        self.env["account.chart.template"]._instantiate_foreign_taxes(country, self.company_id)
 
 class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'

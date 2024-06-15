@@ -1422,7 +1422,7 @@ class AccountMove(models.Model):
     def _compute_tax_country_id(self):
         foreign_vat_records = self.filtered(lambda r: r.fiscal_position_id.foreign_vat)
         for fiscal_position_id, record_group in groupby(foreign_vat_records, key=lambda r: r.fiscal_position_id):
-            self.env['account.move'].concat(*record_group).tax_country_id = fiscal_position_id.country_id
+            self.env['account.move'].concat(*record_group).tax_country_id = fiscal_position_id._get_fiscal_country_id()
         for company_id, record_group in groupby((self-foreign_vat_records), key=lambda r: r.company_id):
             self.env['account.move'].concat(*record_group).tax_country_id = company_id.account_fiscal_country_id
 
@@ -1969,7 +1969,7 @@ class AccountMove(models.Model):
             amls = record.line_ids
             impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id
             if impacted_countries and impacted_countries != record.tax_country_id:
-                if record.fiscal_position_id and impacted_countries != record.fiscal_position_id.country_id:
+                if record.fiscal_position_id and impacted_countries != record.fiscal_position_id._get_fiscal_country_id():
                     raise ValidationError(_("This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."))
                 raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
 

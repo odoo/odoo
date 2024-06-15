@@ -7,15 +7,18 @@ from odoo.exceptions import ValidationError
 class AccountFiscalPosition(models.Model):
     _inherit = 'account.fiscal.position'
 
+    def _get_fiscal_country_id(self):
+        return self.country_id
+
     @api.constrains('country_id', 'foreign_vat')
     def _validate_foreign_vat(self):
         for record in self:
             if not record.foreign_vat:
                 continue
 
-            checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, record.country_id)
+            checked_country_code = self.env['res.partner']._run_vat_test(record.foreign_vat, record._get_fiscal_country_id())
 
-            if checked_country_code and checked_country_code != record.country_id.code.lower():
+            if checked_country_code and checked_country_code != record._get_fiscal_country_id().code.lower():
                 raise ValidationError(_("The country detected for this foreign VAT number does not match the one set on this fiscal position."))
 
             if not checked_country_code:

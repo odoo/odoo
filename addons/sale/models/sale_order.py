@@ -625,7 +625,7 @@ class SaleOrder(models.Model):
     def _compute_tax_country_id(self):
         for record in self:
             if record.fiscal_position_id.foreign_vat:
-                record.tax_country_id = record.fiscal_position_id.country_id
+                record.tax_country_id = record.fiscal_position_id._get_fiscal_country_id()
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
