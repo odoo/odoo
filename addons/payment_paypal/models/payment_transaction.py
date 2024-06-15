@@ -34,6 +34,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'paypal':
             return res
 
+        self.provider_id._get_access_token()
         base_url = self.provider_id.get_base_url()
         cancel_url = urls.url_join(base_url, PaypalController._cancel_url)
         cancel_url_params = {
@@ -75,7 +76,7 @@ class PaymentTransaction(models.Model):
         if provider_code != 'paypal' or len(tx) == 1:
             return tx
 
-        reference = notification_data.get('item_number')
+        reference = notification_data.get('purchase_units')[0].get('reference_id')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'paypal')])
         if not tx:
             raise ValidationError(
@@ -99,17 +100,32 @@ class PaymentTransaction(models.Model):
         if not notification_data:
             self._set_canceled(state_message=_("The customer left the payment page."))
             return
+        
+        def extract_notification_data(txn):
+            if txn and txn[0]:
+                amount = txn[0].get('amount').get('value')
+                currency_code = txn[0].get('amount').get('currency_code')
+                # Update the provider reference.
+                # TODO deal with order status or full status for transaction 
+                txn_id = txn[0].get('id')
+                # Update the payment state.
+                payment_status = txn[0].get('status')
+                return amount, currency_code, txn_id, payment_status
 
-        amount = notification_data.get('amt') or notification_data.get('mc_gross')
-        currency_code = notification_data.get('cc') or notification_data.get('mc_currency')
+        paypal_notification = notification_data.get('purchase_units')[0]
+        captured = paypal_notification.get('payments').get('captures')
+        authorized = paypal_notification.get('payments').get('authorizes')
+        
+        assert captured or authorized, 'PayPal: transaction not found'
+
+        txn_type = 'capture' if captured else 'authorize'
+        amount, currency_code, txn_id, payment_status = extract_notification_data(captured or authorized)
+
         assert amount and currency_code, 'PayPal: missing amount or currency'
         assert self.currency_id.compare_amounts(float(amount), self.amount) == 0, \
             'PayPal: mismatching amounts'
         assert currency_code == self.currency_id.name, 'PayPal: mismatching currency codes'
 
-        # Update the provider reference.
-        txn_id = notification_data.get('txn_id')
-        txn_type = notification_data.get('txn_type')
         if not all((txn_id, txn_type)):
             raise ValidationError(
                 "PayPal: " + _(
@@ -124,9 +140,7 @@ class PaymentTransaction(models.Model):
         self.payment_method_id = self.env['payment.method'].search(
             [('code', '=', 'paypal')], limit=1
         ) or self.payment_method_id
-
-        # Update the payment state.
-        payment_status = notification_data.get('payment_status')
+        assert self.payment_method_id.code in notification_data.get('payment_source'), 'PayPal: mismatching payment methods'
 
         if payment_status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending(state_message=notification_data.get('pending_reason'))

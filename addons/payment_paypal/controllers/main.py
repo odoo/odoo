@@ -13,6 +13,7 @@ from odoo.http import request
 from odoo.tools import html_escape
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_paypal import const
 
 
 _logger = logging.getLogger(__name__)
@@ -22,6 +23,70 @@ class PaypalController(http.Controller):
     _return_url = '/payment/paypal/return/'
     _cancel_url = '/payment/paypal/cancel/'
     _webhook_url = '/payment/paypal/webhook/'
+    _create_url = '/payment/paypal/create_order'
+    _complete_url = '/payment/paypal/complete_order'
+
+    @http.route(
+        _create_url, type='json', auth='public', methods=['POST'], csrf=False,
+        save_session=False
+    )
+    def paypal_create_from_checkout(self, **kwargs):
+        """ 
+         Creates an order and returns it as a JSON response.
+        """
+        data = {
+            'intent': kwargs['intent'].upper(),
+            'purchase_units': [
+                {
+                    'reference_id': kwargs['reference'],
+                    'amount': {
+                        'currency_code': kwargs['currency'],
+                        'value': kwargs['amount'],
+                    },
+                    "payee": kwargs['payee'],
+                },
+            ],
+        }
+        # Make the payment request to Paypal
+        try:
+            paypal = request.env['payment.provider'].search([('code','=','paypal')], limit=1)
+            response_content = paypal._paypal_make_request(
+                endpoint='/v2/checkout/orders',
+                payload=data,                
+            )
+        except Forbidden:
+            _logger.exception("Could not create transaction")
+
+        return response_content['id']
+
+    @http.route(
+        _complete_url, type='json', auth='public', methods=['POST'], csrf=False,
+        save_session=False
+    )
+    def paypal_complete_order(self, **kwargs):
+        """ 
+         Creates an order and returns it as a JSON response.
+        """
+        # Make the payment request to Paypal
+        try:
+            paypal = request.env['payment.provider'].search([('code','=','paypal')],limit=1)
+            response = paypal._paypal_make_request(
+                endpoint='/v2/checkout/orders/' + kwargs['order_id'] + '/' + kwargs['intent'],
+                payload={},
+            )
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'paypal', response
+            )
+            # try:
+            #     notification_data = self._verify_pdt_notification_origin(response, tx_sudo)
+            # except Forbidden:
+            #     _logger.exception("Could not verify the origin of the PDT; discarding it.")
+            # else:
+            tx_sudo._handle_notification_data('paypal', response)
+        except Forbidden:
+            _logger.exception("Could not create transaction")
+
+        return response
 
     @http.route(
         _return_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False,
