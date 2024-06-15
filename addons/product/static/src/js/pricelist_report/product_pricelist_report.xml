@@ -13,10 +13,10 @@
                         <div class="d-flex align-items-center gap-3 w-100">
                             <label class="visually-hidden" for="pricelists">Username</label>
                             <div class="input-group w-auto">
-                                <div class="input-group-text fw-bold">Pricelist</div>
+                                <div class="input-group-text fw-bold" style="width:90px;">Pricelist</div>
                                 <select name="pricelists"
                                             id="pricelists"
-                                            class="o_select form-select border-0"
+                                            class="o_select form-select price_list_select"
                                             t-on-change="onSelectPricelist">
                                         <option t-out="selectedPricelist.name" t-att-value="selectedPricelist.id"/>
                                         <t t-foreach="pricelists" t-as="pricelist" t-key="pricelist.id">
@@ -36,20 +36,21 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-3 w-100">
-                            <div class="input-group d-flex flex-nowrap w-50" style="min-width:210px;">
-                                <span class="input-group-text fw-bold"> 
+                            <div class="input-group d-flex flex-nowrap w-auto">
+                                <span class="input-group-text fw-bold" style="width:90px;">
                                     Quantities
                                 </span>
                                 <input type="number"
                                     class="form-control add-quantity-input"
                                     value="1"
-                                    min="1"/>
+                                    min="1"
+                                    style="width:100px;"/>
                                 <button class="o_add_qty btn btn-primary fa fa-plus"
                                         type="submit"
                                         t-on-click="onClickAddQty"
                                         title="Add a quantity"/>
                             </div>
-                            <div class="d-flex align-items-center w-50">
+                            <div class="d-flex align-items-center">
                                 <span class="o_badges_list">
                                     <t t-foreach="quantities" t-as="qty" t-key="qty">
                                         <span class="o_field_badge o_remove_qty badge rounded-pill me-2 py-1 border " t-att-value="qty">

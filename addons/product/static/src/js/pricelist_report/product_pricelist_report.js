@@ -6,7 +6,7 @@ import { Layout } from "@web/search/layout";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
-
+import { ProductPriceListControlPanel } from "./control_panel";
 
 function sendCustomNotification(type, message) {
     return {
@@ -19,12 +19,19 @@ function sendCustomNotification(type, message) {
     }
 }
 
+class ProductPriceListLayout extends Layout {
+    setup() {
+        super.setup();
+        this.components = { ...this.components, ControlPanel: ProductPriceListControlPanel };
+    }
+}
+
 export class ProductPricelistReport extends Component {
     static props = {
         action: { type: Object },
         "*": true,
     };
-    static components = { Layout };
+    static components = { Layout: ProductPriceListLayout };
     static template = "product.ProductPricelistReport";
 
     setup() {

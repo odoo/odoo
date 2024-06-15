@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- custom web.Breadcrumbs -->
+    <t t-name="product.ProductPriceListBreadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary">
+        <xpath expr="//div[contains(@class, 'o_breadcrumb')]" position="attributes">
+            <attribute name="class" remove="justify-content-between" add="justify-content-center" separator=" "/>
+        </xpath>
+    </t>
+    <!-- Add custom web.breadcrumbs to our custom control panel -->
+    <t t-name="product.ProductPriceListReportControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.Breadcrumbs']" position="replace">
+            <t t-call="product.ProductPriceListBreadcrumbs"/>
+        </xpath>
+    </t>
+</templates>
