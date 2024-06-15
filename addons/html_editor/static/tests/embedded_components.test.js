@@ -14,7 +14,7 @@ import {
     useState,
     xml,
 } from "@odoo/owl";
-import { InlineComponentPlugin } from "../src/others/inline_component_plugin";
+import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin";
 import { setupEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -46,14 +46,14 @@ function getConfig(name, Comp, getProps) {
     }
 
     return {
-        Plugins: [...MAIN_PLUGINS, InlineComponentPlugin],
+        Plugins: [...MAIN_PLUGINS, EmbeddedComponentPlugin],
         resources: {
-            inlineComponents: [embedding],
+            embeddedComponents: [embedding],
         },
     };
 }
 
-test("can mount a inline component", async () => {
+test("can mount a embedded component", async () => {
     const { el } = await setupEditor(`<div><span data-embedded="counter"></span></div>`, {
         config: getConfig("counter", Counter),
     });
@@ -67,7 +67,7 @@ test("can mount a inline component", async () => {
     );
 });
 
-test("can mount a inline component from a step", async () => {
+test("can mount a embedded component from a step", async () => {
     const { el, editor } = await setupEditor(`<div>a[]b</div>`, {
         config: getConfig("counter", Counter),
     });
@@ -88,7 +88,7 @@ test("can mount a inline component from a step", async () => {
     );
 });
 
-test("inline component are mounted and destroyed", async () => {
+test("embedded component are mounted and destroyed", async () => {
     const steps = [];
     class Test extends Counter {
         setup() {
@@ -115,7 +115,7 @@ test("inline component are mounted and destroyed", async () => {
     );
 });
 
-test("inline component get proper env", async () => {
+test("embedded component get proper env", async () => {
     /** @type { any } */
     let env;
     class Test extends Counter {
@@ -132,7 +132,7 @@ test("inline component get proper env", async () => {
     expect(env.somevalue).toBe(1);
 });
 
-test("inline component are destroyed when deleted", async () => {
+test("embedded component are destroyed when deleted", async () => {
     const steps = [];
     class Test extends Counter {
         setup() {
@@ -163,8 +163,8 @@ test("inline component are destroyed when deleted", async () => {
     expect(getContent(el)).toBe(`<div>a[]</div>`);
 });
 
-test("inline component plugin does not try to destroy the same app twice", async () => {
-    patchWithCleanup(InlineComponentPlugin.prototype, {
+test("embedded component plugin does not try to destroy the same app twice", async () => {
+    patchWithCleanup(EmbeddedComponentPlugin.prototype, {
         destroyComponent() {
             expect.step("destroy from plugin");
             super.destroyComponent(...arguments);
@@ -266,7 +266,7 @@ test("element with data-embedded content is removed when component is mounting",
     );
 });
 
-test("inline component get proper props", async () => {
+test("embedded component get proper props", async () => {
     class Test extends Counter {
         static props = ["initialCount"];
         setup() {
@@ -283,7 +283,7 @@ test("inline component get proper props", async () => {
     );
 });
 
-test("inline component can compute props from element", async () => {
+test("embedded component can compute props from element", async () => {
     class Test extends Counter {
         static props = ["initialCount"];
         setup() {
@@ -305,7 +305,7 @@ test("inline component can compute props from element", async () => {
     );
 });
 
-test("inline component can set attributes on element", async () => {
+test("embedded component can set attributes on element", async () => {
     class Test extends Counter {
         static props = ["host"];
         setup() {
@@ -335,7 +335,7 @@ test("inline component can set attributes on element", async () => {
     );
 });
 
-describe("Inline component Owl lifecycle editor integration", () => {
+describe("embedded component Owl lifecycle editor integration", () => {
     test("Host child nodes are removed synchronously with the insertion of owl rendered nodes during mount", async () => {
         const asyncControl = new Deferred();
         asyncControl.then(() => {
