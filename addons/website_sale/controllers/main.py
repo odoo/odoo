@@ -816,7 +816,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'suggested_products': [],
         })
         if order:
-            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
+            order.order_line.filtered(lambda l: l.product_id and not l.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
@@ -1258,10 +1258,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 else:
                     address_mode = kw.get('mode')
                     if not address_mode:
+                        address_mode = 'shipping'
                         if partner_id == order.partner_invoice_id.id:
                             address_mode = 'billing'
-                        elif partner_id == order.partner_shipping_id.id:
-                            address_mode = 'shipping'
 
                     # Make sure the address exists and belongs to the customer of the SO
                     partner_sudo = Partner.browse(partner_id).exists()
@@ -1273,7 +1272,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                         billing_partners = partners_sudo.filtered(lambda p: p.type != 'delivery')
                         if partner_sudo not in billing_partners:
                             raise Forbidden()
-                    elif address_mode == 'shipping':
+                    else:
                         shipping_partners = partners_sudo.filtered(lambda p: p.type != 'invoice')
                         if partner_sudo not in shipping_partners:
                             raise Forbidden()
@@ -1350,7 +1349,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
                 # TDE FIXME: don't ever do this
                 # -> TDE: you are the guy that did what we should never do in commit e6f038a
-                order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
+                order.message_partner_ids = [(4, order.partner_id.id), (3, request.website.partner_id.id)]
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/confirm_order')
 

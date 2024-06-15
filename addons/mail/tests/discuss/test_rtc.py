@@ -98,7 +98,8 @@ class TestChannelRTC(MailCommon):
         with self.assertBus(
             [
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen after posting join message
+                (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen basic infos after posting join message
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # channel seen member infos (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
@@ -177,7 +178,8 @@ class TestChannelRTC(MailCommon):
         with self.assertBus(
             [
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update new session
-                (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen after posting join message
+                (self.cr.dbname, 'discuss.channel', channel.id),  # channel_seen basic infos after posting join message
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # channel seen member info (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post "started a live conference" (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # update of last interest (not asserted below)
@@ -620,9 +622,11 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, 'discuss.channel', channel.id),  # channel joined -- seen (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # channel joined  -- last_interrest (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- new_message (not asserted below)
-                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- seen (not asserted below)
+                (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- seen basic infos (not asserted below)
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # message post -- seen member infos (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id, "members"),  # update of pin state (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # message_post -- last_interrest (not asserted below)
+                (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # message post -- seen member infos (not asserted below)
                 (self.cr.dbname, 'discuss.channel', channel.id),  # new members (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # incoming invitation
                 (self.cr.dbname, 'mail.guest', test_guest.id),  # incoming invitation

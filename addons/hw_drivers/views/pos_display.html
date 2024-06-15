@@ -11,6 +11,51 @@
             var display_identifier = '{{ display_identifier }}';
             {{ cust_js|safe }}
         </script>
+        <script>
+            $(document).ready(function() {
+                setInterval(() => {
+                    fetch('/point_of_sale/iot_devices', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({}),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // group devices by type
+                        const grouped_devices = JSON.parse(data.result).iot_device_status.reduce((acc, device) => {
+                            acc[device.type] = acc[device.type] || [];
+                            acc[device.type].push(device);
+
+                            return acc;
+                        }, {})
+
+                        // create the html object
+                        let iot_devices_html = '';
+                        for (const type of Object.keys(grouped_devices)) {
+                            iot_devices_html += '<tr><td>' + type + 's</td><td><ul>';
+                            // display the first 10 devices
+                            for (const device of grouped_devices[type].slice(0, 10)) {
+                                iot_devices_html += '<li>' + device.name + '</li>';
+                            }
+                            // add ... at the end if there are more than 10 devices
+                            if (grouped_devices[type].length > 10) {
+                                iot_devices_html += '<li>...</li>';
+                            }
+                            iot_devices_html += '</ul></td></tr>';
+                        }
+                        $('#iot-devices').html(iot_devices_html);
+                    })
+                    .catch((error) => {
+                        $('.error-message').text('Error: ' + error);
+                        $('.error-message').removeClass('d-none');
+                    });
+                }, 10);
+            });
+
+        </script>
         <style class="origin">
             html, body {
                 height: 100%;
@@ -79,12 +124,16 @@
                             {%- endfor %}
                         </tbody>
                     </table>
-                    <p class="mb-2 info-text">
-                        <i class="fa fa-info-circle me-1"></i>The customer cart will be displayed here once a Point of Sale session is started.
-                    </p>
-                    <p class="mb-2 info-text">
-                        <i class="fa fa-info-circle me-1"></i>Odoo version 11 or above is required.
-                    </p>
+                    <h5 class="text-center mb-1">IoT Devices</h5>
+                    <table class="table table-hover table-sm table-pos-info">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Devices</th>
+                            </tr>
+                        </thead>
+                        <tbody id="iot-devices">
+                    </table>
                     <div class="error-message alert alert-danger mb-2 d-none" role="alert" />
                 </div>
             </div>

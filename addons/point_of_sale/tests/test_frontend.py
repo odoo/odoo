@@ -579,8 +579,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         fabrics_line = configurable_product.attribute_line_ids[2]
         fabrics_line.product_template_value_ids[1].ptav_active = False
 
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_user")
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_admin")
+
+        paid_order = self.env['pos.order'].search([('state', '=', 'paid')])
+        self.assertEqual(len(paid_order), 1)
+        self.assertTrue('(Red, Metal, Other: Custom Fabric)' in paid_order.lines[0].full_product_name)
 
     def test_05_ticket_screen(self):
         if not loaded_demo_data(self.env):
