@@ -512,17 +512,16 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Sconto Pagamento Anticipato applicato.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
+"<b>Lo sconto per pagamento anticipato del %(payment_reference) è stato "
+"applicato.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            su questo conto:"
+msgid "<br/> on this account:"
+msgstr "<br/> su questo conto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5342,7 +5341,7 @@ msgstr "Limite del credito predefinito"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Expense Account"
-msgstr "Conto di costo predefinito"
+msgstr "Conto di ammortamento predefinito"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6427,7 +6426,7 @@ msgstr "Costi"
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 msgid "Expense Account"
-msgstr "Conto di costo"
+msgstr "Conto di ammortamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -7989,8 +7988,13 @@ msgstr "Non valido"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Intervallo CAP non valido, configurarlo correttamente."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
+"\"Intervallo CAP\" non valido. È necessario configurare sia il valore \"Da\""
+" che il valore \"A\" per l'intervallo CAP e \"A\" deve essere maggiore di "
+"\"Da\"."
 
 #. module: account
 #. odoo-python
@@ -8845,7 +8849,7 @@ msgid ""
 msgstr ""
 "Lasciare il campo vuoto per usare il valore predefinito della categoria del "
 "prodotto. Se è stata configurata la contabilità anglosassone con metodo di "
-"valutazione automatico, viene utilizzato il conto di costo."
+"valutazione automatico, viene utilizzato il conto di ammortamento."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -13831,6 +13835,12 @@ msgid "Text Value"
 msgstr "Valore testo"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "Testo copiato"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Data della registrazione di apertura."
@@ -16657,7 +16667,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

@@ -929,6 +929,9 @@ msgstr "計画日後"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__warning
 msgid "Alert"
 msgstr "警告"
@@ -3362,6 +3365,9 @@ msgstr "全画面入力"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__error
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__danger
 msgid "Error"
 msgstr "エラー"
@@ -3544,16 +3550,6 @@ msgstr "フィールド"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-msgid ""
-"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
-"tracking=True for the computation of duration."
-msgstr ""
-"フィールド \"%(field)s\"モデル "
-"\"%(model)s\"上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
 msgstr "フィールド\"メールアクティビティ\"を\"False\"に変更することはできません。"
@@ -3583,6 +3579,16 @@ msgid ""
 "getattr(related_document.relation_field)."
 msgstr ""
 "関連文書を自動購読する場合、関連モデルをサブタイプのモデルにリンクするためのフィールド。このフィールドはgetattr(related_document.relation_field)の計算に使われます。"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
+msgid ""
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
+"tracking=True for the computation of duration."
+msgstr ""
+"フィールド \"%(field)s\"モデル "
+"\"%(model)s\"上は多対1タイプおよび期間の計算用にtracking=Trueを有する必要があります。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -5800,7 +5806,6 @@ msgstr "ミュート"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
-#: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Mute Channel"
 msgstr "チャネルをミュートする"
 
@@ -6016,7 +6021,7 @@ msgstr "メッセージが見つかりません"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
+#: code:addons/mail/static/src/chatter/web_portal/chatter.xml:0
 msgid "No recipient"
 msgstr "受信者が見つかりません"
 
@@ -6561,6 +6566,9 @@ msgstr "送信メールサーバ"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
 msgid "Overdue"
 msgstr "滞納"
@@ -6785,6 +6793,9 @@ msgstr "計画概要"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
 msgid "Planned"
 msgstr "予定済"
@@ -8965,6 +8976,9 @@ msgstr "To:"
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__today
 msgid "Today"
 msgstr "今日"

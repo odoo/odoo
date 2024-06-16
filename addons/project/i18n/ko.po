@@ -400,6 +400,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    안녕하세요, <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>님.<br><br>\n"
+"    먼저 저희 제품/서비스에 관심 가져주셔서 감사합니다.<br>\n"
+"    현재 문의하신 내용을 검토 중이며, 최대한 빠른 시일 내에 답변드리겠습니다.<br>\n"
+"    추가 질문이나 우려사항이 있으실 경우 언제든지 알려주시면 도움드릴 수 있도록 최선을 다하겠습니다.<br><br>\n"
+"    기다려 주셔서 감사합니다.<br>\n"
+"    좋은 하루 되시길 바라겠습니다.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -5952,6 +5965,7 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: 만족도 조사"
 
 #. module: project
 #. odoo-javascript

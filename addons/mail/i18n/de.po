@@ -969,6 +969,9 @@ msgstr "Nach dem Plandatum"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__warning
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__warning
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__warning
 msgid "Alert"
 msgstr "Warnung"
@@ -3484,6 +3487,9 @@ msgstr "Vollbildmodus aktivieren"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__error
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__decoration_type__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_exception_decoration__danger
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_exception_decoration__danger
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_exception_decoration__danger
 msgid "Error"
 msgstr "Fehler"
@@ -3676,16 +3682,6 @@ msgstr "Feld"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
-msgid ""
-"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
-"tracking=True for the computation of duration."
-msgstr ""
-"Das Feld „%(field)s“ im Modell „%(model)s“ muss vom Typ Many2one sein und "
-"für die Berechnung der Dauer den Wert tracking=True haben."
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/ir_model.py:0
 msgid "Field \"Mail Activity\" cannot be changed to \"False\"."
 msgstr "Das Feld „E-Mail-Aktivität“ kann nicht auf „Falsch“ geändert werden."
@@ -3719,6 +3715,16 @@ msgstr ""
 "Dieses Feld wird verwendet, um die zu verbindenden Modelle bei automatischen"
 " Abonnements eines verbundenen Dokuments zu verknüpfen. Es dient zu "
 "Berechnung von getattr(related_document.relation_field)."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_duration_mixin.py:0
+msgid ""
+"Field “%(field)s” on model “%(model)s” must be of type Many2one and have "
+"tracking=True for the computation of duration."
+msgstr ""
+"Das Feld „%(field)s“ im Modell „%(model)s“ muss vom Typ Many2one sein und "
+"für die Berechnung der Dauer den Wert tracking=True haben."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model_fields
@@ -6023,7 +6029,6 @@ msgstr "Stumm"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
-#: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Mute Channel"
 msgstr "Kanal stummschalten"
 
@@ -6239,7 +6244,7 @@ msgstr "Keine Nachrichten gefunden"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
+#: code:addons/mail/static/src/chatter/web_portal/chatter.xml:0
 msgid "No recipient"
 msgstr "Kein Empfänger"
 
@@ -6812,6 +6817,9 @@ msgstr "Postausgangsserver"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__overdue
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__overdue
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__overdue
 msgid "Overdue"
 msgstr "Überfällig"
@@ -7040,6 +7048,9 @@ msgstr "Planzusammenfassung"
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__planned
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__planned
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__planned
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__planned
 msgid "Planned"
 msgstr "Geplant"
@@ -9293,6 +9304,9 @@ msgstr "An:"
 #: code:addons/mail/static/src/core/web/activity_menu.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity__state__today
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_mixin__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_project__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_task__activity_state__today
+#: model:ir.model.fields.selection,name:mail.selection__project_update__activity_state__today
 #: model:ir.model.fields.selection,name:mail.selection__res_partner__activity_state__today
 msgid "Today"
 msgstr "Heute"

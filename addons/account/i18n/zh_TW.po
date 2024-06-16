@@ -180,7 +180,7 @@ msgstr "%s 結單 %s"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%s installment #%s"
-msgstr "%s 分期付款期數 #%s"
+msgstr "%s 分期付款第 %s 期"
 
 #. module: account
 #. odoo-python
@@ -504,17 +504,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>已套用預早付款折扣。</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            在此賬戶上："
+msgid "<br/> on this account:"
+msgstr "<br/>在此賬戶："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -7414,7 +7411,7 @@ msgstr "用QIF格式匯入銀行對帳單"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Import your first bill"
-msgstr "匯入您的第一筆帳單"
+msgstr "匯入你的第一張賬單"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -7431,12 +7428,12 @@ msgstr "為了讓它被受理,"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In order to validate this bill, you must"
-msgstr "為了驗證此帳單，您必須"
+msgstr "要驗證此賬單，你必須"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In order to validate this invoice, you must"
-msgstr "為了驗證此應收憑單，您必須"
+msgstr "要驗證此發票，你必須"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -7518,9 +7515,7 @@ msgstr ""
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
 "%s"
-msgstr ""
-"‎未翻譯的字元\n"
-"‎會計年度日期‎‎不正確: 日超出了月的範圍。月：%s；天：%s"
+msgstr "財政年度日期不正確：日子超出月份範圍。月：%s，日：%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7699,8 +7694,10 @@ msgstr "無效的"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "無效的\"郵編範圍\"，請正確的設定."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13362,6 +13359,12 @@ msgid "Text Value"
 msgstr "文字值"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "文字已複製"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "這是期初分錄的日期."
@@ -15925,7 +15928,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

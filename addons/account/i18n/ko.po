@@ -507,17 +507,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>선납 할인이 적용됩니다.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            이 계정:"
+msgid "<br/> on this account:"
+msgstr "이 계정의 <br/>:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -7755,8 +7752,10 @@ msgstr "유효하지 않음"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "'우편번호 범위'가 잘못되었습니다. 알맞게 설정하세요."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13446,6 +13445,12 @@ msgid "Text Value"
 msgstr "문자값"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "텍스트 복사됨"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "개시 입력 일자입니다."
@@ -16046,7 +16051,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."

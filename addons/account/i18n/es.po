@@ -512,17 +512,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Descuento de Pago Temprano aplicado.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid ""
-"<br/>\n"
-"                            on this account:"
-msgstr ""
-"<br/>\n"
-"                            en esta cuenta:"
+msgid "<br/> on this account:"
+msgstr "<br/> en esta cuenta:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -5244,7 +5241,7 @@ msgstr "Días después de fin de mes"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after_end_of_next_month
 msgid "Days after end of next month"
-msgstr "Días después de fin del próximo mes"
+msgstr "Días después de fin del siguiente mes"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__delay_type__days_after
@@ -5259,7 +5256,7 @@ msgstr "Días al final del mes el"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__days_next_month
 msgid "Days on the next month"
-msgstr "Días en el próximo mes"
+msgstr "Días en el siguiente mes"
 
 #. module: account
 #. odoo-python
@@ -5717,7 +5714,7 @@ msgstr "Mostrar importe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
-msgstr "Mostrar días en el próximo mes"
+msgstr "Mostrar días en el siguiente mes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -7153,7 +7150,7 @@ msgstr "Comparación de crecimiento"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "MITAD-ARRIBA"
+msgstr "A LA MITAD MÁS CERCANA"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -7163,7 +7160,7 @@ msgstr "Enrutamiento HTTP "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__integer_rounding__half-up
 msgid "Half-up (away from 0)"
-msgstr "Mitad arriba (alejado de 0)"
+msgstr "A la mitad más cercana (alejado de 0)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7984,9 +7981,10 @@ msgstr "Inválido"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
-"\"Rango de código postal\" inválido, por favor, configúralo apropiadamente."
 
 #. module: account
 #. odoo-python
@@ -13828,6 +13826,12 @@ msgid "Text Value"
 msgstr "Valor del texto"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/document_state/document_state_field.js:0
+msgid "Text copied"
+msgstr "Texto copiado"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid "That is the date of the opening entry."
 msgstr "Esa es la fecha del asiento de apertura."
@@ -14051,7 +14055,7 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
-"La frecuencia de facturación para %(partner_name)s es atípica. Según sus datos históricos, la fecha esperada para la próxima factura es después del %(expected_date)s (cada %(mean)s (±) días).\n"
+"La frecuencia de facturación para %(partner_name)s es atípica. Según sus datos históricos, la fecha esperada para la próxima factura es después del %(expected_date)s (cada %(mean)s (± %(wiggle)s) días).\n"
 "Verifique si esta fecha es correcta."
 
 #. module: account
@@ -16656,7 +16660,7 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
