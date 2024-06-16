@@ -505,8 +505,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Frühzahlerrabatt angewendet.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7954,8 +7955,10 @@ msgstr "Ungültig"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Ungültiger „PLZ-Bereich“, bitte richtig konfigurieren."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -13964,7 +13967,7 @@ msgid ""
 "The billing frequency for %(partner_name)s appears unusual. Based on your historical data, the expected next invoice date is not before %(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
-"Die Abrechnungshäufigkeit für %(partner_name)s scheint ungewöhnlich zu sein. Basierend auf Ihren Verlaufsdaten ist das erwartete nächste Rechnungsdatum %(mean)s (± %(wiggle)s Tage).\n"
+"Die Abrechnungshäufigkeit für %(partner_name)s scheint ungewöhnlich zu sein. Basierend auf Ihren Verlaufsdaten ist das erwartete nächste Rechnungsdatum nicht vor dem %(expected_date)s (alle %(mean)s (± %(wiggle)s Tage)).\n"
 "Bitte prüfen Sie die Richtigkeit des Betrags."
 
 #. module: account
