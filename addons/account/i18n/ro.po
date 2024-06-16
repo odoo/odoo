@@ -13,6 +13,7 @@
 # Dorin Hongu <dhongu@gmail.com>, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Foldi Robert <foldirobert@nexterp.ro>, 2024
+# Larisa_nexterp, 2024
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2024\n"
+"Last-Translator: Larisa_nexterp, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4247,7 +4248,7 @@ msgstr "Intrări contrapartidă"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr ""
+msgstr "Țări pentru care societatea are un număr de TVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -5747,7 +5748,7 @@ msgstr "Rapoarte dinamice"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr ""
+msgstr "Domeniu dinamic utilizat pentru etichetă care poate fi setat pe taxe"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6139,7 +6140,7 @@ msgstr "Țară Fiscală"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
-msgstr ""
+msgstr "Codul fiscal al țării"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -6345,7 +6346,7 @@ msgstr "ID-ul fiscal străin"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "Țări străine cu TVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7326,8 +7327,10 @@ msgstr "Intrastat"
 #. module: account
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "\"Zip Range\" Nevalidă, vă rugăm să o configurați corect."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -10072,6 +10075,7 @@ msgstr "Partenerul trebuie să fie setat"
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
+"Partenerii care sunt utilizați în intrările hashing nu pot fi îmbinați."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10453,6 +10457,8 @@ msgstr ""
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
 msgstr ""
+"Vă rugăm să contactați contabilul dumneavoastră pentru a imprima rezultatul "
+"integrității Hash."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12644,7 +12650,7 @@ msgstr "Cont Suspensie"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into invoice/credit note"
-msgstr ""
+msgstr "Treceți în factură/notă de credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -14232,7 +14238,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The move could not be posted for the following reason: %(error_message)s"
-msgstr ""
+msgstr "Mutarea nu a putut fi postată din următorul motiv: %(error_message)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__move_id
@@ -14305,7 +14311,7 @@ msgstr "Raportul fiscal părinte al acestei linii"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "The partner cannot be deleted because it is used in Accounting"
-msgstr ""
+msgstr "Partenerul nu poate fi șters deoarece este folosit în Contabilitate"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -14520,6 +14526,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select"
 " the payment method again."
 msgstr ""
+"Metoda de plată selectată nu este disponibilă pentru această plată, vă rugăm"
+" să selectați din nou metoda de plată."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -14784,6 +14792,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"A apărut o eroare la încercarea de a adăuga bannerul la PDF-ul original.\n"
+"Vă rugăm să vă asigurați că fișierul sursă este valid."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15459,7 +15469,7 @@ msgstr "Nepostat"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "Intrări nepostate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15898,7 +15908,7 @@ msgstr "Avertizare pentru %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for Cash Rounding Method: %s"
-msgstr ""
+msgstr "Avertisment pentru metoda de rotunjire a numerarului: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16319,6 +16329,8 @@ msgid ""
 "You can't register payments for both inbound and outbound moves at the same "
 "time."
 msgstr ""
+"Nu puteți înregistra plăți pentru mișcările de intrare și de ieșire în "
+"același timp."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -16422,7 +16434,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot create recursive groups."
-msgstr ""
+msgstr "Nu puteți crea grupuri recursive."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16437,6 +16449,8 @@ msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
 msgstr ""
+"Nu puteți șterge această etichetă de cont (%s), este folosită în definiția "
+"planului de cont."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16456,6 +16470,8 @@ msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
 msgstr ""
+"Nu puteți șterge acest raport (%s), acesta este utilizat de motorul de "
+"generare a PDF-urilor contabile."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -16496,6 +16512,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Nu puteți edita următoarele câmpuri: %s.\n"
+"Următoarele intrări au deja hashing:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16540,7 +16559,7 @@ msgstr ""
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Nu puteți îmbina conturile."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16665,7 +16684,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot switch the type of a posted document."
-msgstr ""
+msgstr "Nu puteți schimba tipul unui document postat."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -16757,7 +16776,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Trebuie să specificați contul de profit (dependent de companie)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -17099,7 +17118,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "tag domain"
-msgstr ""
+msgstr "domeniul etichetei"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
