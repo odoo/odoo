@@ -42,7 +42,7 @@ msgstr ""
 "\n"
 "Il movimento (%s) non è bilanciato.\n"
 "Il totale dei debiti è uguale a %s e il totale dei crediti è uguale a %s.\n"
-"Potresti vole specificare un conto di default sul registro \"%s\" per saldare automaticamente ogni movimento."
+"Potresti voler specificare un conto di default sul registro \"%s\" per saldare automaticamente ogni movimento."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -391,8 +391,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Sconto Pagamento Anticipato applicato.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
+"<b>Lo sconto per pagamento anticipato del %(payment_reference) è stato "
+"applicato.</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3751,7 +3754,7 @@ msgstr "Conto di transizione per cassa"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense Account"
-msgstr "Conto di costo differenza di cassa"
+msgstr "Conto di ammortamento differenza di cassa"
 
 #. module: account
 #. odoo-python
@@ -3874,7 +3877,7 @@ msgstr "Categoria"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_categ_id
 msgid "Category of Expense Account"
-msgstr "Categoria conto di costo"
+msgstr "Categoria conto di ammortamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_income_categ_id
@@ -5408,7 +5411,7 @@ msgstr "Limite di credito predefinito"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Expense Account"
-msgstr "Conto di costo predefinito"
+msgstr "Conto di ammortamento predefinito"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6112,17 +6115,6 @@ msgid "Duplicated Ref"
 msgstr "Rif. duplicato"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Rilevato un duplicato del riferimento fornitore. È probabile sia stata "
-"inserita due volte la stessa fattura/nota di credito."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Rendiconti dinamici"
@@ -6454,12 +6446,12 @@ msgstr "Costi"
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_expense_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 msgid "Expense Account"
-msgstr "Conto di costo"
+msgstr "Conto di ammortamento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_id
 msgid "Expense Account on Product Template"
-msgstr "Conto di costo nel modello prodotto"
+msgstr "Conto di ammortamento nel modello prodotto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -7950,8 +7942,13 @@ msgstr "Non valido"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Intervallo CAP non valido, configurarlo correttamente."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
+"\"Intervallo CAP\" non valido. È necessario configurare sia il valore \"Da\""
+" che il valore \"A\" per l'intervallo CAP e \"A\" deve essere maggiore di "
+"\"Da\"."
 
 #. module: account
 #. odoo-python
@@ -8781,7 +8778,7 @@ msgid ""
 msgstr ""
 "Lasciare il campo vuoto per usare il valore predefinito della categoria del "
 "prodotto. Se è stata configurata la contabilità anglosassone con metodo di "
-"valutazione automatico, viene utilizzato il conto di costo."
+"valutazione automatico, viene utilizzato il conto di ammortamento."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -10341,13 +10338,6 @@ msgstr "Oh!"
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
 msgid "Open"
 msgstr "Apri"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Apri elenco"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -12141,7 +12131,7 @@ msgstr "Conto ratei attivi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
-msgstr "Conto di costo/ricavo"
+msgstr "Conto di ammortamento/ricavo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__reversal_date
