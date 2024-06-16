@@ -497,6 +497,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    안녕하세요, <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>님.<br><br>\n"
+"    먼저 저희 제품/서비스에 관심 가져주셔서 감사합니다.<br>\n"
+"    현재 문의하신 내용을 검토 중이며, 최대한 빠른 시일 내에 답변드리겠습니다.<br>\n"
+"    추가 질문이나 우려사항이 있으실 경우 언제든지 알려주시면 도움드릴 수 있도록 최선을 다하겠습니다.<br><br>\n"
+"    기다려 주셔서 감사합니다.<br>\n"
+"    좋은 하루 되시길 바라겠습니다.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3871,6 +3884,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"읽기 전용: 공동 작업자는 편집 권한은 없으며, 작업을 볼 수 있습니다.\n"
+"편집 액세스 제한: 공동 작업자는 칸반 보기 내에서 자신이 팔로우하는 작업을 보고 편집할 수 있습니다.\n"
+"편집:  공동 작업자는 칸반 보기 내에서 모든 작업을 보고 편집할 수 있습니다. 또한 팔로우할 작업을 선택할 수도 있습니다."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -5754,6 +5770,7 @@ msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
 msgstr ""
+"{{ object.project_id.company_id.name or user.env.company.name }}: 만족도 조사"
 
 #. module: project
 #. odoo-javascript

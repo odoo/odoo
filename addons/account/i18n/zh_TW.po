@@ -31,6 +31,11 @@ msgid ""
 "The total of debits equals %(debit_total)s and the total of credits equals %(credit_total)s.\n"
 "You might want to specify a default account on journal \"%(journal)s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"賬項操作（%(move)s）導致賬目未能平衡。\n"
+"借記總額為 %(debit_total)s；貸記總額為 %(credit_total)s。\n"
+"請考慮為日記賬「%(journal)s」設定預設記賬賬戶，使賬項操作能自動完成賬目平衡。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -100,7 +105,7 @@ msgstr "%(journal_code)s 報表 %(date)s"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "%(name)s installment #%(number)s"
-msgstr ""
+msgstr "%(name)s 分期付款第 %(number)s 期"
 
 #. module: account
 #. odoo-python
@@ -109,6 +114,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, "
 "%(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s；%(quantity_billed)s 已計入賬單，%(quantity_received)s "
+"已收到，每件單價為 %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -117,6 +124,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, "
 "%(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s；%(quantity_invoiced)s "
+"已開立發票，%(quantity_delivered)s 已送貨，每件單價為 %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -499,13 +508,14 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>已套用預早付款折扣。</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<br/> on this account:"
-msgstr ""
+msgstr "<br/>在此賬戶："
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -823,7 +833,7 @@ msgstr "<span class=\"fa fa-lg fa-building-o\" title=\"此處設定的值是特�
 msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
-msgstr ""
+msgstr "<span class=\"figure-caption\">利用自動報表及警報，永遠不會錯過最後期限。</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1032,11 +1042,6 @@ msgid "<span title=\"Latest Statement\">Last Statement</span>"
 msgstr "<span title=\"最新結單\">上期結單</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr "<span title=\"未付/未收款項\">應付應收款項</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
 msgstr "<span> (貸)</span>"
@@ -1049,7 +1054,7 @@ msgstr "<span> (借)</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span> = </span>"
-msgstr ""
+msgstr "<span> = </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1079,7 +1084,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>1 </span>"
-msgstr ""
+msgstr "<span>1 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1133,16 +1138,6 @@ msgstr "<span>發票日期</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
 msgstr "<span>發票號碼</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>New Entry</span>"
-msgstr "<span>新記項</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>New Invoice</span>"
-msgstr "<span>新增發票</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2171,7 +2166,7 @@ msgstr "在發票/訂單/報價單底部加入你的條款及細則"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -2867,7 +2862,7 @@ msgstr "平均價"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "BE71096123456769"
-msgstr ""
+msgstr "BE71096123456769"
 
 #. module: account
 #. odoo-python
@@ -3244,11 +3239,6 @@ msgstr "帳單分析"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Bills to Pay"
-msgstr "待付帳單"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
 msgstr "待確認帳單"
 
@@ -3563,16 +3553,16 @@ msgstr "現金差額虧損"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
-msgid "Cash Discount Gain"
-msgstr "現金折扣收益"
+msgid "Early Discount Gain"
+msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
-msgid "Cash Discount Loss"
-msgstr "現金折扣虧損"
+msgid "Early Discount Loss"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
@@ -4066,7 +4056,7 @@ msgstr "設定"
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Configure document layout."
-msgstr ""
+msgstr "配置文件版面佈局。"
 
 #. module: account
 #. odoo-python
@@ -4277,11 +4267,6 @@ msgid "Create Journal Entries"
 msgstr "建立日記賬記項"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Create Manually"
-msgstr "手動建立"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Create Payment"
 msgstr "建立付款"
@@ -4295,7 +4280,7 @@ msgstr "建立付款"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Create a bill manually"
-msgstr ""
+msgstr "手動建立一張賬單"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -4393,7 +4378,7 @@ msgstr "建立供應商貸記單"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Create bill manually"
-msgstr ""
+msgstr "手動建立賬單"
 
 #. module: account
 #. odoo-python
@@ -4418,7 +4403,7 @@ msgstr "建立發票，登記付款，並追蹤與客戶的溝通歷程。"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "Create manually"
-msgstr ""
+msgstr "手動建立"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -7019,12 +7004,12 @@ msgstr "在訂單和應收憑單中如何計算總稅額"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN 號碼"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 msgid "IBAN: BE76 4294 6878 9995"
-msgstr ""
+msgstr "IBAN 號碼：BE76 4294 6878 9995"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -7490,7 +7475,7 @@ msgstr ""
 msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s;"
 " Day: %(day)s"
-msgstr ""
+msgstr "財政年度日期不正確：日子超出月份範圍。月：%(month)s，日：%(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -7675,8 +7660,10 @@ msgstr "無效的"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "無效的\"郵編範圍\"，請正確的設定."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8668,20 +8655,15 @@ msgid ""
 msgstr "上次這個合作夥伴的應收憑單和付款是匹配的. 設定為核銷的借方或者未核銷的貸方或者您點選 \"完成\" 按鈕."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Late"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Late Activities"
 msgstr "逾期活動"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Late Bills"
-msgstr "逾期帳單"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Late Invoices"
-msgstr "逾期應收憑單"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
@@ -8710,11 +8692,6 @@ msgid "Legal Notes"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_tax_form
-msgid "Legal Notes ..."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
 msgstr "法律聲明..."
@@ -8733,7 +8710,7 @@ msgstr "未付清"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Let artifical intelligence scan your bill. Pay easily."
+msgid "Let artificial intelligence scan your bill. Pay easily."
 msgstr ""
 
 #. module: account
@@ -8780,7 +8757,7 @@ msgstr "明細"
 msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
-msgstr ""
+msgstr "資料行「%(line)s」將另一行「%(parent_line)s」設為其母項，但它在報表上出現的位置較前。母項必須先行。"
 
 #. module: account
 #. odoo-python
@@ -9404,6 +9381,7 @@ msgstr "從不"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New"
 msgstr "新增"
 
@@ -9416,11 +9394,6 @@ msgstr "新日記帳名稱"
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
 msgstr "新傳票"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "New Transaction"
-msgstr "新交易"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -10902,8 +10875,8 @@ msgstr "過帳差異於"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post Exchange difference entries in:"
-msgstr "匯兌差額記賬賬戶："
+msgid "Exchange difference entries:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10912,13 +10885,13 @@ msgstr "過帳付款"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post bank transactions and payments in:"
-msgstr "銀行交易及付款的記賬賬戶："
+msgid "Bank transactions and payments:"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post discounts in:"
-msgstr "折扣記賬賬戶："
+msgid "Early payment discounts:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -11943,8 +11916,8 @@ msgstr "銷售員"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Same Account"
-msgstr "同一帳戶"
+msgid "Same Account as product"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -12353,8 +12326,8 @@ msgstr "收入折扣獨立賬戶"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Separate discount accounts on invoices"
-msgstr "發票上單獨的折扣賬戶"
+msgid "Invoice line discounts:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -12494,13 +12467,13 @@ msgstr "設定"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Setup Bank"
-msgstr ""
+msgstr "設定銀行"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Bank Account"
-msgstr ""
+msgstr "設定銀行賬戶"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -12728,7 +12701,7 @@ msgstr "期初餘額"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr ""
+msgstr "州/省"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -12864,12 +12837,12 @@ msgstr "Storno 會計"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Street 2..."
-msgstr ""
+msgstr "街道第二行⋯"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "Street..."
-msgstr ""
+msgstr "街道⋯"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__strict_range
@@ -13416,6 +13389,8 @@ msgid ""
 "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
 "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode."
 msgstr ""
+"輸入的 %(date_field)s（%(date)s）與現有序列號碼（%(sequence)s）不一致。請清除序列號碼以繼續。\n"
+"若要維護基於日期的序列，請選取所需記項，然後使用操作選單中的重新排序選項（該選項在開發人員模式可用）。"
 
 #. module: account
 #. odoo-python
@@ -13492,7 +13467,7 @@ msgid ""
 "The Tax Identification Number. Values here will be validated based on the "
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
-msgstr ""
+msgstr "稅務識別號碼。此處的值將根據國家/地區格式進行驗證。可使用「/」表示合作夥伴不須納稅。"
 
 #. module: account
 #. odoo-python
@@ -13500,7 +13475,7 @@ msgstr ""
 msgid ""
 "The Unit of Measure (UoM) '%(uom)s' you have selected for product "
 "'%(product)s', is incompatible with its category : %(category)s."
-msgstr ""
+msgstr "你選擇了「%(uom)s」作為產品「%(product)s」的計量單位，但相關產品類別「%(category)s」並不兼容使用此單位。"
 
 #. module: account
 #. odoo-python
@@ -13700,6 +13675,8 @@ msgid ""
 "%(expected_total)s. In order to post the invoice/bill, you can adjust its "
 "lines or the expected Total (tax inc.)."
 msgstr ""
+"當前總數為 %(current_total)s，但預期總數為 "
+"%(expected_total)s。為了過賬發票/賬單，你可調整其資料行或預期的總計(含稅)."
 
 #. module: account
 #. odoo-python
@@ -14735,6 +14712,7 @@ msgstr "至"
 #: model:ir.model.fields,field_description:account.field_account_move__to_check
 #: model:ir.model.fields,field_description:account.field_account_payment__to_check
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__to_check
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -14745,6 +14723,16 @@ msgstr "設為待檢查"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
 msgstr "待開立應收憑單"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "To Pay"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "To Validate"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14952,6 +14940,11 @@ msgid "Transaction Type Parameter"
 msgstr "交易類型參數"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Transactions"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer"
@@ -15136,14 +15129,10 @@ msgid "Unnamed"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Unpaid"
 msgstr "未付"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Unpaid Invoices"
-msgstr "未付款應收憑單"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15920,6 +15909,7 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"若未有在公司或 %(journal)s 日記賬中的 %(payment_method)s 付款方式上，設定未結清付款/收款賬戶，便無法建立新付款。"
 
 #. module: account
 #. odoo-python
@@ -15968,7 +15958,7 @@ msgstr ""
 msgid ""
 "You can't have two payment method lines of the same payment type "
 "(%(payment_type)s) and with the same name (%(name)s) on a single journal."
-msgstr ""
+msgstr "同一個日記賬內，不可有兩個付款方式資料行的付款類型（%(payment_type)s）及名稱（%(name)s）相同。"
 
 #. module: account
 #. odoo-python
@@ -16143,6 +16133,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%(entries)s"
 msgstr ""
+"下列欄位不允許編輯： %(fields)s。\n"
+"下列記項已進行雜湊演算處理（已產生數碼指紋）：\n"
+"%(entries)s"
 
 #. module: account
 #. odoo-python
@@ -16426,7 +16419,7 @@ msgstr "發票"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "ZIP"
-msgstr ""
+msgstr "郵遞區號"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -16590,7 +16583,7 @@ msgstr "例如 庫存"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. My Company"
-msgstr ""
+msgstr "例：我的公司"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -16600,7 +16593,7 @@ msgstr "例：付款期限：發票日期後 30 天"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "e.g. https://www.odoo.com"
-msgstr ""
+msgstr "例：https://www.odoo.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -16710,7 +16703,7 @@ msgstr "於"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "or"
-msgstr ""
+msgstr "或"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -16785,11 +16778,6 @@ msgid "to"
 msgstr "到"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "to check"
-msgstr "待檢查"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "to create the taxes for this country."
 msgstr "為這個國家建立稅金設定."
@@ -16804,7 +16792,7 @@ msgstr "信任"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bills_upload/bills_upload.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "試試用我們的範例"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

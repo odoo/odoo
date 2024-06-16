@@ -1011,7 +1011,7 @@ msgstr "قم بتحليل تقدم مشاريعك وأداء موظفيك. "
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
-msgstr ""
+msgstr "يمكن لأي شخص يملك هذا الرابط الوصول إلى المشروع للقراء فقط. "
 
 #. module: project
 #. odoo-javascript
@@ -1371,7 +1371,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "اختر أحد أوضاع الوصول التالية للمتعاونين لديك: "
 
 #. module: project
 #. odoo-javascript
@@ -2050,7 +2050,7 @@ msgstr "تحرير"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_collaborator_wizard__access_mode__edit_limited
 msgid "Edit with limited access"
-msgstr ""
+msgstr "التحرير مع الوصول المحدود "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2058,6 +2058,8 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow "
 "in the Kanban view."
 msgstr ""
+"التحرير مع الوصول المحدود: بإمكان المتعاونين عرض المهام التي يتابعونها "
+"وتحريرها في نافذة عرض كانبان. "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -2065,6 +2067,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"التحرير: بإمكان المتعاونين عرض كافة المهام وتحريرها في نافذة عرض كانبان. "
+"إضافة إلى ذلك، يمكنهم اختيار المهام التي يرغبون في متابعتها. "
 
 #. module: project
 #. odoo-javascript
@@ -3661,7 +3665,7 @@ msgstr "مشاركة المشروع "
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "معالج مشاركة المشروع "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -3742,7 +3746,7 @@ msgstr "وصف المشروع..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "تمت مشاركة المشروع مع المتعاونين. "
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -3941,7 +3945,7 @@ msgstr "للقراءة فقط "
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Read-only: collaborators can view tasks but cannot edit them."
-msgstr ""
+msgstr "للقراءة فقط: بإمكان المتعاونين عرض المهام ولكن ليس تحريرها. "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_collaborator_wizard__access_mode
@@ -3950,6 +3954,9 @@ msgid ""
 "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
 "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"للقراءة فقط: بإمكان المتعاونين عرض المهام ولكن ليس تحريرها.\n"
+"التحرير مع الوصول المحدود: بإمكان المتعاونين عرض المهام التي يتابعونها وتحريرها في نافذة عرض كانبان.\n"
+"التحرير: بإمكان المتعاونين عرض كافة المهام وتحريرها في نافذة عرض كانبان. إضافة إلى ذلك، يمكنهم اختيار المهام التي يرغبون في متابعتها. "
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -4335,6 +4342,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"بعض الحسابات التحليلية التي قمت بتحديدها مرتبطة بمشروع:\n"
+"%(accountList)s\n"
+"\n"
+"ستؤدي أرشفة هذه الحسابات إلى إزالة خيار تسجيل الجداول الزمنية للمشاريع الخاصة بها.\n"
+"\n"
+"هل أنت متأكد من أنك ترغب في الاستمرار؟ "
 
 #. module: project
 #. odoo-javascript
@@ -4345,6 +4358,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"قم بفرز مهامك عن طريق سبرينت (sprint) باستخدام مؤشرات التقدم أو العلامات أو "
+"خاصية مخصصة. في نهاية كل سبرينت، ما عليك سوى اختيار المهام المتبقية في "
+"قائمتك ونقلها كلها مرة واحدة إلى السبرينت التالي عن طريق تحرير مؤشر التقدم "
+"أو العلامة أو الخاصية. "
 
 #. module: project
 #. odoo-javascript
@@ -4862,7 +4879,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_form/project_task_form_controller.js:0
 msgid "The task description was empty at the time."
-msgstr ""
+msgstr "كان وصف المهمة فارغاً في ذلك الوقت. "
 
 #. module: project
 #. odoo-python
@@ -4942,6 +4959,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"هذا الحساب التحليلي التي قمت بتحديده مرتبطة بالمشاريع التالية:\n"
+"%(accountList)s\n"
+"\n"
+"ستؤدي أرشفة هذا الحساب إلى إزالة خيار تسجيل الجداول الزمنية لتلك المشاريع\n"
+"\n"
+"هل أنت متأكد من أنك ترغب في الاستمرار؟ "
 
 #. module: project
 #. odoo-javascript
@@ -4950,6 +4973,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"هذا المتابع هو متعاون في المشروع حاليا. ستؤدي إزالته إلى إبطال وصوله إلى "
+"البوابة الإلكترونية للمشروع. هل انت متأكد من أنك ترغب في المتابعة؟ "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form

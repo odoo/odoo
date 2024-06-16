@@ -43,6 +43,8 @@ msgstr "% de desc."
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
 msgstr ""
+"Pago con %(payment_method)s en el punto de venta de %(partner)s en "
+"%(session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -193,11 +195,13 @@ msgstr ""
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_template
 msgid "5-pocket jeans in cotton denim with a slight stretch for good comfort."
 msgstr ""
+"Pantalones de mezclilla 100% algodón con un ligero estiramiento para mayor "
+"comodidad, tienen 5 bolsas."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_slim_template
 msgid "5-pocket jeans in cotton denim.."
-msgstr ""
+msgstr "Pantalones de mezclilla 100% algodón, tienen 5 bolsas."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -481,12 +485,12 @@ msgstr "Acepte propinas de los clientes o convierta el cambio en propina"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Mercado Pago on a terminal"
-msgstr ""
+msgstr "Acepte pagos con Mercado Pago en una terminal"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with Viva Wallet on a terminal or tap on phone"
-msgstr ""
+msgstr "Acepte pagos con Viva Wallet en una terminal o al tocar el teléfono"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -496,7 +500,7 @@ msgstr "Aceptar pagos con una terminal de pago Paytm"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr ""
+msgstr "Acepte pagos con una terminal de pago Razorpay"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -912,7 +916,7 @@ msgstr "¿Quiere proceder al pago?"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
 msgid "Artisan sourdough bread with a crisp crust and soft interior."
-msgstr ""
+msgstr "Pan de masa madre artesanal. Corteza crujiente e interior suave."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
@@ -947,7 +951,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
 msgid "Athletic sport shoes, designed for comfort and performance."
-msgstr ""
+msgstr "Calzado deportivo diseñado para la comodidad y el rendimiento."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
@@ -1060,7 +1064,7 @@ msgstr "Imagen de fondo"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_customer_display_bg_img_name
 msgid "Background Image Name"
-msgstr ""
+msgstr "Nombre de la imagen de fondo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
@@ -1082,7 +1086,7 @@ msgstr "Panadería"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Bakery Shop"
-msgstr ""
+msgstr "Panadería"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1110,7 +1114,7 @@ msgstr "Línea de un estado de cuenta bancario"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Bar"
-msgstr ""
+msgstr "Bar"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1174,12 +1178,12 @@ msgstr "Negro"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_black_embroidered_product_template
 msgid "Black embroidered t-shirt"
-msgstr ""
+msgstr "Playera negra bordada"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.blue_denim_jeans_template
 msgid "Blue Denim Jeans"
-msgstr "Pantalones de mezclilla"
+msgstr "Pantalones de mezclilla azul"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_blueberry_muffin_product_template
@@ -1214,7 +1218,7 @@ msgstr "Regulador:"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
 msgid "Bus Mixin"
-msgstr ""
+msgstr "Mixin del bus"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_butter_croissant_product_template
@@ -1265,7 +1269,7 @@ msgstr "Cancelar"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 msgid "Cancel Payment"
-msgstr ""
+msgstr "Cancelar pago"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1395,12 +1399,14 @@ msgstr "Control de efectivo - apertura"
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Loss) - closing"
 msgstr ""
+"Diferencia de efectivo observada durante el recuento (pérdida) - cierre"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash difference observed during the counting (Profit) - closing"
 msgstr ""
+"Diferencia de efectivo observada durante el recuento (ganancia) - cierre"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1450,12 +1456,12 @@ msgstr "Short casual de mezclilla"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.casual_t_shirt_product_template
 msgid "Casual T-shirt"
-msgstr ""
+msgstr "Playera casual"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_denim_short_product_template
 msgid "Casual denim shorts, comfortable and stylish for everyday wear."
-msgstr ""
+msgstr "Shorts de mezclilla casuales, cómodos y modernos para tu día a día."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_black_embroidered_product_template
@@ -1463,16 +1469,18 @@ msgid ""
 "Casual slim t-shirt 100% cotton with white embroidery. Various sizes "
 "available"
 msgstr ""
+"Playera slim fit casual 100% algodón con un bordado en color blanco. Varias "
+"tallas disponibles."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.t_shirt_slim_product_template
 msgid "Casual slim t-shirt 100% cotton. Various sizes available"
-msgstr ""
+msgstr "Playera slim fit casual 100% algodón. Varias tallas disponibles."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
 msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
-msgstr ""
+msgstr "Playera casual 100% algodón. Varias tallas y colores disponibles."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1582,6 +1590,8 @@ msgstr "Tarta de cereza"
 #: model:product.template,description_sale:point_of_sale.product_bagel_product_template
 msgid "Chewy and dense bagel, perfect for sandwiches or with cream cheese."
 msgstr ""
+"Un bagel con la consistencia ideal. Perfecto para preparar sándwiches o "
+"acompañarlo con queso crema."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_ids
@@ -1616,12 +1626,12 @@ msgstr "Chamarra café clásica"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.classic_leather_belt_product_template
 msgid "Classic Leather Belt"
-msgstr ""
+msgstr "Cinturón clásico de piel"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.classic_leather_belt_product_template
 msgid "Classic leather belt, a must-have accessory for any wardrobe."
-msgstr ""
+msgstr "Un cinturón clásico de piel. Un accesorio indispensable en tu closet."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1667,7 +1677,7 @@ msgstr "Asistente para cerrar sesión"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Close the scenario choices"
-msgstr ""
+msgstr "Cerrar las opciones de escenario"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1677,7 +1687,7 @@ msgstr "Cerrado y registrado"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Closing"
-msgstr ""
+msgstr "Cerrando"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closing_control
@@ -1730,7 +1740,7 @@ msgstr "Ropa"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Clothes Shop"
-msgstr ""
+msgstr "Tienda de ropa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
@@ -1763,6 +1773,7 @@ msgstr "Combinaciones"
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Combine %(payment_method)s POS payments from %(session)s"
 msgstr ""
+"Combine los pagos con %(payment_method)s del punto de venta de %(session)s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo_line__combo_id
@@ -1774,7 +1785,7 @@ msgstr "Set"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "Opción de combo"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_combo
@@ -1786,7 +1797,7 @@ msgstr "Opciones para el set"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_id
 msgid "Combo Line"
-msgstr ""
+msgstr "Líneas de combo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
@@ -1801,7 +1812,7 @@ msgstr "Set principal"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "Precio del combo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
@@ -2872,7 +2883,7 @@ msgstr "Impuestos flexibles"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Floor plan, tips, self order, etc."
-msgstr ""
+msgstr "Mapas, propinas, autopedido, etc."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_follower_ids
@@ -2893,7 +2904,7 @@ msgstr "Icono de Font Awesome, por ejemplo, fa-tasks"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Food, but over the counter"
-msgstr ""
+msgstr "Para llevar"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3092,12 +3103,12 @@ msgstr "Encabezado"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_multigrain_bread_product_template
 msgid "Hearty multigrain loaf with seeds and grains for extra nutrition."
-msgstr ""
+msgstr "Pan multigrano con granos y semillas para complementar tu nutrición."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_qr_code_method
 msgid "Hide Qr Code Method"
-msgstr ""
+msgstr "Ocultar método de código QR"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
@@ -3114,11 +3125,13 @@ msgstr "Ocultar imágenes en el PdV"
 msgid ""
 "High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
 msgstr ""
+"Pan horneado con harina integral de trigo fina para proporcionarle una "
+"textura suave."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "How to manage tax-included prices"
-msgstr ""
+msgstr "Cómo gestionar precios con impuestos incluidos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
@@ -3179,6 +3192,8 @@ msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 #: model:ir.model.fields,help:point_of_sale.field_pos_bill__for_all_config
 msgid "If checked, this coin/bill will be available in all PoS."
 msgstr ""
+"Si está seleccionado, estas monedas y billetes estarán disponible en todos "
+"los PdV."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refunded_orderline_id
@@ -3668,7 +3683,7 @@ msgstr "Bandeja de cartas"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.blue_denim_jeans_slim_template
 msgid "Light Blue Jeans Slim"
-msgstr "Pantalones de mezclilla"
+msgstr "Pantalones de mezclilla azul claro slim fit"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_classic_brown_jacket_product_template
@@ -3676,6 +3691,7 @@ msgid ""
 "Lightweight bomber jacket in linen with a ribbed stand-up collar and zip "
 "down the front."
 msgstr ""
+"Chamarra bomber ligera de lino con cuello alto acanalado y cierre al frente."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
@@ -3737,7 +3753,7 @@ msgstr "Número de lote/de serie"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_lower
 msgid "Lower body"
-msgstr ""
+msgstr "Parte inferior"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.magnetic_board_product_template
@@ -3876,7 +3892,7 @@ msgstr "Módulo PdV RR. HH."
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_blueberry_muffin_product_template
 msgid "Moist and fluffy muffins bursting with blueberries."
-msgstr ""
+msgstr "Panqués suaves y esponjosos con arándanos."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.monitor_stand_product_template
@@ -4583,7 +4599,7 @@ msgstr "Precio original"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Original Tax"
-msgstr ""
+msgstr "Impuesto original"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__other_devices
@@ -4695,12 +4711,12 @@ msgstr "Categoría principal"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Park Order"
-msgstr ""
+msgstr "Poner orden en espera"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_pastries
 msgid "Pastries"
-msgstr ""
+msgstr "Pasteles"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4884,7 +4900,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
-msgstr ""
+msgstr "Seleccione las categorías de producto que están disponibles en el PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -5054,7 +5070,7 @@ msgstr "Seleccione un contacto para la venta."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Please register the voucher number"
-msgstr ""
+msgstr "Registre el número de comprobante"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5066,7 +5082,7 @@ msgstr "Escaneé el código QR con"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/qr_code_popup/qr_code_popup.js:0
 msgid "Please scan the QR code with %s"
-msgstr ""
+msgstr "Escaneé el código QR con %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5124,7 +5140,7 @@ msgstr "Categoría de producto de PdV "
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_load_mixin
 msgid "PoS data loading mixin"
-msgstr ""
+msgstr "Mixin para cargar datos del PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5289,6 +5305,7 @@ msgstr "Punto de venta"
 msgid ""
 "Poncho in a soft, crochet-look knit with a round, gently draped neckline."
 msgstr ""
+"Poncho a crochet con tejido suave. Cuello redondo y ligeramente drapeado."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
@@ -5512,7 +5529,7 @@ msgstr "Pricer"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_pricer
 msgid "Pricer electronic price tags"
-msgstr ""
+msgstr "Etiquetas electrónicas de Pricer"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5620,7 +5637,7 @@ msgstr "Algunos navegadores no son compatibles con las impresiones"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Proceed Anyway"
-msgstr ""
+msgstr "Continuar"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_procurement_group
@@ -5704,12 +5721,12 @@ msgstr "Plantilla del producto"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Linea de atributo de la plantilla de producto"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Valor del atributo del modelo de producto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__type
@@ -6147,6 +6164,8 @@ msgid ""
 "Reversal of POS closing entry %(entry)s for order %(order)s from session "
 "%(session)s"
 msgstr ""
+"Reversión del asiento de cierre %(entry)s del PdV para la orden %(order)s de"
+" la sesión %(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6177,7 +6196,7 @@ msgstr "Revertir pago"
 #: model:ir.model.fields,field_description:point_of_sale.field_account_move__reversed_pos_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__reversed_pos_order_id
 msgid "Reversed POS Order"
-msgstr ""
+msgstr "Orden del PdV revertida"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6194,7 +6213,7 @@ msgstr "Revisar órdenes"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
 msgid "Rich buttery pastry with a dark chocolate center."
-msgstr ""
+msgstr "Delicioso pan elaborado con mantequilla, relleno de chocolate oscuro."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6323,7 +6342,7 @@ msgstr "Escáner EAN-13"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 msgid "Scan me to get an invoice from the Odoo portal."
-msgstr ""
+msgstr "Escanee para obtener una factura desde el portal de Odoo."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -6405,7 +6424,7 @@ msgstr "Atributos seleccionados"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Self-ordering interfaces are not impacted."
-msgstr ""
+msgstr "Las interfaces de autopedido no se verán afectadas."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6427,13 +6446,13 @@ msgstr "Enviar solicitud de pago"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Send Text receipt Using sms"
-msgstr ""
+msgstr "Enviar recibo de texto mediante SMS"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Sending"
-msgstr ""
+msgstr "Enviando"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
@@ -6615,12 +6634,12 @@ msgstr "Carrito de compras"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_apple_pie_product_template
 msgid "Shortcrust pastry with a Bramley apple filling."
-msgstr ""
+msgstr "Pan relleno con manzana Bramley."
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_cherry_pie_product_template
 msgid "Shortcrust pastry with a Morello cherry filling."
-msgstr ""
+msgstr "Pan relleno con cereza Morello."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
@@ -6735,6 +6754,8 @@ msgstr "Estante pequeño"
 msgid ""
 "Soft dough with a buttery cinnamon filling, topped with cream cheese icing."
 msgstr ""
+"Masa suave elaborada con canela y mantequilla. Cubierto con un glaseado de "
+"queso crema."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6798,7 +6819,7 @@ msgstr "Especifique la ruta para entregar los productos más tarde."
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.sport_shoes_product_template
 msgid "Sport Shoes"
-msgstr "Zapatos deportivos"
+msgstr "Tenis deportivos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__start_category
@@ -6911,7 +6932,7 @@ msgstr "Terminal de pago de Stripe"
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.leather_jacket_product_template
 msgid "Stylish leather jacket, durable and fashionable for all occasions."
-msgstr ""
+msgstr "Chamarra de piel durable y a la moda para cualquier ocasión."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_sub_total
@@ -6951,7 +6972,7 @@ msgstr ""
 #: model:product.template,description_sale:point_of_sale.product_pecan_pie_product_template
 msgid ""
 "Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt."
-msgstr ""
+msgstr "Pastel dulce relleno de nuez pecana, mantequilla y sal Maldon."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6986,7 +7007,7 @@ msgstr "Sincronizar"
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_slim_product_template
 msgid "T shirt slim"
-msgstr ""
+msgstr "Playera slim fit"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_t_shirt_pants_product_template
@@ -7027,7 +7048,7 @@ msgstr "Mostrar impuestos"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
 msgid "Tax Excl."
-msgstr ""
+msgstr "Impuestos excl."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
@@ -7037,7 +7058,7 @@ msgstr "Impuestos incl."
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr ""
+msgstr "Mapeo de impuestos de la posición fiscal"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -7234,6 +7255,8 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"No fue posible obtener los números de serie y de lote existentes. \n"
+"¿Desea continuar sin verificar la validez de los números de serie o de lote?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7282,6 +7305,8 @@ msgid ""
 "The money counted doesn't match what we expected. Want to log the difference"
 " for the books?"
 msgstr ""
+"El dinero contado no coincide con el esperado. ¿Desea registrar esta "
+"diferencia en los libros?"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7362,12 +7387,14 @@ msgid ""
 "The pos order that was reverted after closing the session to create an "
 "invoice for it."
 msgstr ""
+"La orden del PdV que se revirtió después de cerrar la sesión para crear una "
+"factura para ella."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__note_ids
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_note_ids
 msgid "The predefined notes of this point of sale."
-msgstr ""
+msgstr "Las notas predefinidas de este punto de venta."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
@@ -7420,6 +7447,7 @@ msgid ""
 "The requested quantity to be refunded is higher than the refundable "
 "quantity."
 msgstr ""
+"La cantidad a reembolsar solicitada es mayor que la cantidad reembolsable."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_combo_line__lst_price
@@ -7488,7 +7516,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "The transactions are processed by Mercado Pago on terminal"
-msgstr ""
+msgstr "Mercado Pago procesa las transacciones en la terminal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercado_pago
@@ -7769,7 +7797,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "This payment method is not configured to generate QR codes."
-msgstr ""
+msgstr "Este método de pago no está configurado para generar códigos QR."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -7829,6 +7857,8 @@ msgid ""
 "Tiger bloomer. Baked for a soft inside, with its distinctive savoury "
 "crackled crust."
 msgstr ""
+"Pan tigre horneado con un interior suave y una distintiva corteza crujiente "
+"salada."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_tiger_white_loaf_product_template
@@ -8019,6 +8049,8 @@ msgid ""
 "Trainers in cotton canvas with a padded top edge, tongue and lacing at the "
 "front."
 msgstr ""
+"Tenis en lona de algodón con borde superior acolchado, lengüeta y agujetas "
+"en la parte delantera."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
@@ -8056,7 +8088,7 @@ msgstr "Tipo"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__qr_code_method
 msgid "Type of QR-code to be generated for this payment method."
-msgstr ""
+msgstr "Tipo de código QR a generar para este método de pago."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_type
@@ -8179,6 +8211,8 @@ msgid ""
 "Until the connection is reestablished, Odoo Point of Sale will operate with "
 "limited functionality."
 msgstr ""
+"La funcionalidad del punto de venta de Odoo estará limitada hasta que se "
+"restablezca la conexión. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -8195,7 +8229,7 @@ msgstr "Actualizar cantidades en existencias."
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
 msgid "Upper body"
-msgstr "Parte superior del cuerpo"
+msgstr "Parte superior"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_use_ticket_qr_code
@@ -8284,6 +8318,8 @@ msgstr "Vista"
 #: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
 msgid "Vintage jean jacket, a timeless piece for any casual outfit."
 msgstr ""
+"Chamarra de mezclilla vintage. Una prenda atemporal para una vestimenta "
+"casual."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8425,6 +8461,8 @@ msgid ""
 "You are currently offline. Reloading the page may cause you to lose unsaved "
 "data."
 msgstr ""
+"Está desconectado. Actualizar la página podría ocasionar que pierda los "
+"datos que no están guardados."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8576,6 +8614,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
 msgstr ""
+"Habilitó la opción \"Identificar cliente\" para el método de pago "
+"%(payment_method)s, pero la orden %(order)s no contiene un cliente."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8732,7 +8772,7 @@ msgstr "Por ejemplo, john.doe@mail.com"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "failed. Please try again"
-msgstr ""
+msgstr "tuvo errores. Vuelva a intentarlo."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -8766,7 +8806,7 @@ msgstr "en"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "in progress"
-msgstr ""
+msgstr "en progreso"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8778,13 +8818,13 @@ msgstr "en esta categoría."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "install a chart of accounts"
-msgstr ""
+msgstr "instale un plan de cuentas"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "is sent successfully"
-msgstr ""
+msgstr "se envió con éxito"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8861,3 +8901,5 @@ msgid ""
 "{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product "
 "lot'}}"
 msgstr ""
+"{{ line.has_valid_product_lot() ? 'Lote de producto válido' : 'Lote de "
+"producto no válido'}}"

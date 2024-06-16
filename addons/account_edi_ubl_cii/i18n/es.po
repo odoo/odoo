@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-08 06:51+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -479,6 +481,8 @@ msgid ""
 "At least one of the following fields %(field_list)s is required on "
 "%(record)s."
 msgstr ""
+"Al menos uno de los siguientes campos %(field_list)s es requerido en "
+"%(record)s."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__ubl_cii_xml_id
@@ -511,7 +515,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 msgid "Check Partner(s)"
-msgstr ""
+msgstr "Verificar contacto(s)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__checkbox_ubl_cii_label
@@ -549,7 +553,7 @@ msgstr "Compañías"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
 msgid "Company warning"
-msgstr ""
+msgstr "Advertencia de la compañía"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -574,6 +578,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s'. A new partner was "
 "created."
 msgstr ""
+"No se pudo recuperar ningún contacto que correspondiera a '%s'. Se creó uno "
+"nuevo."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -590,12 +596,15 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %(amount)s %% for line '%(line)s'."
 msgstr ""
+"No se pudo recuperar el impuesto: %(amount)s %% para la línea \"%(line)s\"."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Could not retrieve the tax: %(tax_percentage)s %% for line '%(line)s'."
 msgstr ""
+"No se pudo recuperar el impuesto: %(tax_percentage)s %% para la línea "
+"\"%(line)s\"."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -603,6 +612,8 @@ msgstr ""
 msgid ""
 "Could not retrieve the tax: %s for the document level allowance/charge."
 msgstr ""
+"No se pudo recuperar el impuesto: %s para el nivel de cargo o subsidio del "
+"documento"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_efff
@@ -743,7 +754,7 @@ msgstr "Odoo"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
 msgid "Partner warning"
-msgstr ""
+msgstr "Advertencia de contacto"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -768,6 +779,8 @@ msgid ""
 "Please fill in Peppol EAS and Peppol Endpoint in your company form to "
 "generate a complete file."
 msgstr ""
+"Llene los datos de Peppol EAS y Peppol Endpoint en el formulario de su "
+"empresa para generar un archivo completo."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -783,7 +796,7 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Tax '%(tax_name)s' is invalid: %(error_message)s"
-msgstr ""
+msgstr "El impuesto \"%(tax_name)s\" no es válido: %(error_message)s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -835,13 +848,13 @@ msgstr "La moneda '%s' no está activa."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "The element %(record)s is required on %(field_list)s."
-msgstr ""
+msgstr "El elemento %(record)s es necesario en %(field_list)s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "The field %(field)s is required on %(record)s."
-msgstr ""
+msgstr "El campo %(field)s es necesario en %(record)s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -869,6 +882,9 @@ msgid ""
 " those in their Accounting tab. Otherwise, the generated files will be "
 "incomplete."
 msgstr ""
+"Estos contactos no tienen información en el campo Peppol EAS o Punto de "
+"conexión de Peppol. Verifique los datos en la pestaña Contabilidad o los "
+"archivos generados estarán incompletos."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -906,7 +922,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send.py:0
 msgid "View Partner(s)"
-msgstr ""
+msgstr "Ver contacto(s)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python

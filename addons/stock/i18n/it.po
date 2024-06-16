@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,6 +126,8 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> UDM prodotto %(product_uom)s (%(product_uom_category)s)"
+" - UDM movimento %(move_uom)s (%(move_uom_category)s)"
 
 #. module: stock
 #. odoo-python
@@ -163,7 +166,7 @@ msgstr "%s [annullato]"
 #. odoo-python
 #: code:addons/stock/wizard/stock_replenishment_info.py:0
 msgid "%s days"
-msgstr ""
+msgstr "%s giorni"
 
 #. module: stock
 #. odoo-python
@@ -343,7 +346,7 @@ msgstr "1 settimana"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "12.0"
-msgstr ""
+msgstr "12.0"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
@@ -439,6 +442,8 @@ msgid ""
 "<br/>\n"
 "                Want to speed up operations?"
 msgstr ""
+"<br/>\n"
+"                Vuoi velocizzare le operazioni?"
 
 #. module: stock
 #. odoo-python
@@ -558,7 +563,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Back Orders</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Ordini residui</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -568,12 +573,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Operazioni</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">In attesa</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -623,7 +628,7 @@ msgstr "<span class=\"o_stat_text\">Min:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Movimenti</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -689,7 +694,7 @@ msgstr "<span><strong>Indirizzo fornitore:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Fornitore:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -700,12 +705,12 @@ msgstr "<span><strong>Indirizzo magazzino:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Magazzino:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "<span>OBTRETU</span>"
-msgstr ""
+msgstr "<span>OBTRETU</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
@@ -2571,7 +2576,7 @@ msgstr "Nome predefinito"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
 msgid "Default OBTRETU Barcode"
-msgstr ""
+msgstr "Codice a barre OBTRETU predefinito"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -3321,12 +3326,12 @@ msgstr "Preferito"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
+msgstr "Utente preferito"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Favorites"
-msgstr ""
+msgstr "Preferiti"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__2
@@ -4238,12 +4243,12 @@ msgstr "Ubicazione di ingresso"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "Install"
-msgstr ""
+msgstr "Installa"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_install_barcode
 msgid "Install Barcode"
-msgstr ""
+msgstr "Installa codice a barre"
 
 #. module: stock
 #. odoo-python
@@ -4432,7 +4437,7 @@ msgstr "Perdita di inventario"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_view_inherit_stock
 msgid "Inventory Management"
-msgstr ""
+msgstr "Gestione inventario"
 
 #. module: stock
 #. odoo-javascript
@@ -4600,7 +4605,7 @@ msgstr "Giugno"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "Grafico dashboard kanban"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -4638,7 +4643,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_print_labels
 msgid "Labels"
-msgstr ""
+msgstr "Etichette"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4784,7 +4789,7 @@ msgstr "Ultimo aggiornamento il"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "Ultimo utilizzo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
@@ -5350,7 +5355,7 @@ msgstr "Movimenti"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Analisi movimenti"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -5571,7 +5576,7 @@ msgstr "Nessun bisogno di assegnazione trovato."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "No delivery to do!"
-msgstr ""
+msgstr "Nessuna consegna da effettuare!"
 
 #. module: stock
 #. odoo-python
@@ -5627,6 +5632,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Nessuna regola trovata per rifornire \"%(product)s\" in \"%(location)s\".\n"
+"Verifica la configurazione dei percorsi nel prodotto."
 
 #. module: stock
 #. odoo-python
@@ -5763,6 +5770,10 @@ msgid ""
 "                                        barcode operator and configure the routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
+"Odoo apre automaticamente un'anteprima PDF. Se (solo per utenti Enterprise) vuoi stampare immediatamente,\n"
+"                                       installa l'app IoT su un computer che ha la stessa rete locale\n"
+"                                        dell'operatore di codice a barre e configura il percorso dei resoconti.\n"
+"                                        <br/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5817,7 +5828,7 @@ msgstr "Una per unità"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Open"
-msgstr ""
+msgstr "Apri"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__move
@@ -6147,7 +6158,7 @@ msgstr "Collo A"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package B"
-msgstr ""
+msgstr "Collo B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -6162,7 +6173,7 @@ msgstr "Codice a barre del pacchetto (ZPL)"
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
 msgid "Package Barcode with Contents"
-msgstr ""
+msgstr "Codice a barre del collo con contenuto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__package_capacity_ids
@@ -6759,7 +6770,7 @@ msgstr "Rifornimento prodotto"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Mixin rifornimento prodotto"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -6805,7 +6816,7 @@ msgstr "Varianti prodotto"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Product barcode"
-msgstr ""
+msgstr "Codice a barre prodotto"
 
 #. module: stock
 #. odoo-python
@@ -7011,7 +7022,7 @@ msgstr "Ubicazione controllo qualità"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__qc_type_id
 msgid "Quality Control Type"
-msgstr ""
+msgstr "Tipo controllo qualità"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_quality_control_worksheet
@@ -7259,7 +7270,7 @@ msgstr "RESO DI"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Valutazioni"
 
 #. module: stock
 #. odoo-python
@@ -7274,7 +7285,7 @@ msgstr "Pronto"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_ready_moves
 msgid "Ready Moves"
-msgstr ""
+msgstr "Movimenti pronti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -7556,7 +7567,7 @@ msgstr "Informazioni rifornimento"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr ""
+msgstr "Informazioni rifornimento per %(product)s in %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -7739,7 +7750,7 @@ msgstr "Reso di"
 #. odoo-python
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
-msgstr ""
+msgstr "Reso di %(picking_name)s"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.return_label_report
@@ -7857,6 +7868,8 @@ msgid ""
 "Rule %(rule)s belongs to %(rule_company)s while the route belongs to "
 "%(route_company)s."
 msgstr ""
+"La regola %(rule)s appartiene a %(rule_company)s mentre il percorso "
+"appartiene a %(route_company)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -7948,7 +7961,7 @@ msgstr "Cronologia vendite"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sample data"
-msgstr ""
+msgstr "Dati di esempio"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8139,7 +8152,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__barcode_separator
 msgid "Separator"
-msgstr ""
+msgstr "Separatore"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
@@ -8170,7 +8183,7 @@ msgstr "Prefisso sequenza"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence cross dock"
-msgstr ""
+msgstr "Cross-docking sequenza"
 
 #. module: stock
 #. odoo-python
@@ -8206,13 +8219,13 @@ msgstr "Sequenza di prelievo"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence quality control"
-msgstr ""
+msgstr "Sequenza controllo qualità"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Sequence storage"
-msgstr ""
+msgstr "Archiviazione sequenza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__lot_ids
@@ -8226,6 +8239,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): "
 "%(location_list)s. Please correct the serial number encoded."
 msgstr ""
+"Il numero di serie (%(serial_number)s) esiste già nella posizione: "
+"%(location_list)s. Correggi il numero di serie codificato."
 
 #. module: stock
 #. odoo-python
@@ -8235,6 +8250,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"Il numero seriale (%(serial_number)s) non è localizzato in %(source_location)s ma in: %(other_locations)s.\n"
+"\n"
+"Correggi il problema per evitare dati non coerenti."
 
 #. module: stock
 #. odoo-python
@@ -8244,6 +8262,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"Il numero di serie (%(serial_number)s) non è situato in %(source_location)s ma in: %(other_locations)s.\n"
+"\n"
+"L'ubicazione di origine per questo movimento verrà modificata in %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -8422,7 +8443,7 @@ msgstr "Pulsante mostra stato qtà disponibili"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__is_favorite
 msgid "Show Operation in Overview"
-msgstr ""
+msgstr "Mostra operazione nella panoramica"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type
@@ -8643,7 +8664,7 @@ msgstr "Giacenza"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Stock Barcode Database"
-msgstr ""
+msgstr "Database codice a barre magazzino"
 
 #. module: stock
 #. odoo-javascript
@@ -9027,7 +9048,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The day after tomorrow"
-msgstr ""
+msgstr "Dopodomani"
 
 #. module: stock
 #. odoo-python
@@ -9225,6 +9246,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Il numero di serie è già stato assegnato: \n"
+" Prodotto: %(product)s, numero di serie: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -9617,7 +9640,7 @@ msgstr "Da contare"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Deliver"
-msgstr ""
+msgstr "Da consegnare"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -9666,7 +9689,7 @@ msgstr "da elaborare"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Da ricevere"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9690,7 +9713,7 @@ msgstr "Attività odierne"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Tomorrow"
-msgstr ""
+msgstr "Domani"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -10527,6 +10550,9 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"Quando i prodotti sono necessari in <b>%(destination)s</b>, <br/> "
+"<b>%(operation)s</b> sono create da <b>%(source_location)s</b> per "
+"soddisfarre l'esigenza."
 
 #. module: stock
 #. odoo-python
@@ -10535,6 +10561,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br/> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"Quando arrivano prodotti in <b>%(source_location)s</b>, <br/> "
+"<b>%(operation)s</b> sono create per inviarli a <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -10652,7 +10680,7 @@ msgstr "Scrivi un nome lotto/seriale per riga, seguito dalla quantità."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Yesterday"
-msgstr ""
+msgstr "Ieri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10842,6 +10870,8 @@ msgid ""
 "You cannot archive location %(location)s because it is used by warehouse "
 "%(warehouse)s"
 msgstr ""
+"Non è possibile archiviare l'ubicazione %(location)s perché utilizzata dal "
+"magazzino %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -10949,6 +10979,8 @@ msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
 msgstr ""
+"Impossibile eseguire i movimenti. L'unità di misura possiede una categoria "
+"diversa da quella dell'unità di misura del prodotto."
 
 #. module: stock
 #. odoo-python
@@ -10957,6 +10989,8 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Non puoi selezionare un'ubicazione come luogo di smaltimento se assegnata a "
+"un luogo di destinazione per un'operazione di produzione."
 
 #. module: stock
 #. odoo-python
@@ -11132,6 +11166,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
+"Ci sono ancora operazioni in corso per operazioni di tipo %(operations)s nel"
+" magazzino %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11170,6 +11206,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Il pranzo è stato consegnato.\n"
+"Buon appetito!"
 
 #. module: stock
 #. odoo-python
@@ -11213,7 +11251,7 @@ msgstr "]<br/>min:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: stock
 #. odoo-javascript
@@ -11272,7 +11310,7 @@ msgstr "es. LOT/0001/20121"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. Lumber Inc"
-msgstr ""
+msgstr "ad es. Lumber Inc"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -11312,7 +11350,7 @@ msgstr "ad es. ricezione a due fasi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
-msgstr ""
+msgstr "ad es. d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11398,17 +11436,17 @@ msgstr "dovrebbe essere rifornito"
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_incoming
 msgid "stock.method_action_picking_tree_incoming"
-msgstr ""
+msgstr "stock.method_action_picking_tree_incoming"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_internal
 msgid "stock.method_action_picking_tree_internal"
-msgstr ""
+msgstr "stock.method_action_picking_tree_internal"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_outgoing
 msgid "stock.method_action_picking_tree_outgoing"
-msgstr ""
+msgstr "stock.method_action_picking_tree_outgoing"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
@@ -11418,7 +11456,7 @@ msgstr "stock.putaway.rule"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "l'app codice a barre"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

@@ -507,8 +507,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>早期支払割引が適用されます。</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1045,11 +1046,6 @@ msgid "<span title=\"Latest Statement\">Last Statement</span>"
 msgstr "<span title=\"Latest Statement\">直近の取引明細書</span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr "<span title=\"Outstanding Payments/Receipts\">支払</span>"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
 msgstr "<span> (CR)</span>"
@@ -1146,16 +1142,6 @@ msgstr "<span>請求日</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
 msgstr "<span>請求書番号</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>New Entry</span>"
-msgstr "<span>新規仕訳</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>New Invoice</span>"
-msgstr "<span>新規請求書</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3263,11 +3249,6 @@ msgstr "仕入先請求書分析"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Bills to Pay"
-msgstr "未払仕入先請求書"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
 msgstr "未検証仕入先請求"
 
@@ -3582,16 +3563,16 @@ msgstr "現金差損"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
-msgid "Cash Discount Gain"
-msgstr "現金値引益"
+msgid "Early Discount Gain"
+msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
-msgid "Cash Discount Loss"
-msgstr "現金値引損"
+msgid "Early Discount Loss"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
@@ -4297,11 +4278,6 @@ msgstr "メールに請求書を作成"
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
 msgstr "仕訳を作成します。"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Create Manually"
-msgstr "手動で作成"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -5358,7 +5334,7 @@ msgstr "相手先仕訳帳"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__auto_apply
 msgid "Detect Automatically"
-msgstr "自動検知"
+msgstr "自動検出"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__type_tax_use
@@ -6417,12 +6393,12 @@ msgstr "最初の定期的な仕訳"
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Country"
-msgstr "税法上の居住地国"
+msgstr "会計上の国"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
 msgid "Fiscal Country Code"
-msgstr "税法上の居住地国コード"
+msgstr "会計上の国コード"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
@@ -6433,7 +6409,7 @@ msgstr "税法上の居住地国コード"
 #: model:ir.model.fields,field_description:account.field_res_users__fiscal_country_codes
 #: model:ir.model.fields,field_description:account.field_uom_uom__fiscal_country_codes
 msgid "Fiscal Country Codes"
-msgstr "税法上の居住地国コード"
+msgstr "会計上の国コード"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -7357,7 +7333,7 @@ msgstr "異常な請求書日付を無視"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Ignore future alerts"
-msgstr "将来の警告を無視"
+msgstr "今後のアラートを無視"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
@@ -7703,8 +7679,10 @@ msgstr "無効"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Zip範囲'が無効です。正しく設定してください。"
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8698,20 +8676,15 @@ msgstr ""
 "この取引先に対して、前回請求書と支払いの照合が実行された時。少なくとも未消込の借方と未消込の貸方がない場合、または\"Done\"ボタンをクリックした場合に設定されます。"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Late"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Late Activities"
 msgstr "遅れた活動"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Late Bills"
-msgstr "遅延仕入先請求書"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Late Invoices"
-msgstr "遅延請求書"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
@@ -8740,11 +8713,6 @@ msgid "Legal Notes"
 msgstr "法的注記..."
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_tax_form
-msgid "Legal Notes ..."
-msgstr "法的注記..."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
 msgstr "法的メモ..."
@@ -8763,8 +8731,8 @@ msgstr "減算 支払"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Let artifical intelligence scan your bill. Pay easily."
-msgstr "人工知能に仕入先請求書をスキャンさせましょう。簡単に支払。"
+msgid "Let artificial intelligence scan your bill. Pay easily."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9435,6 +9403,7 @@ msgstr "しない"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New"
 msgstr "新規"
 
@@ -9447,11 +9416,6 @@ msgstr "新しい仕訳名"
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
 msgstr "新しい移動"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "New Transaction"
-msgstr "新規取引"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -10935,8 +10899,8 @@ msgstr "差額を記帳する勘定"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post Exchange difference entries in:"
-msgstr "為替差異仕訳を記入:"
+msgid "Exchange difference entries:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -10945,13 +10909,13 @@ msgstr "支払を記帳"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post bank transactions and payments in:"
-msgstr "以下で銀行取引や支払を計上する："
+msgid "Bank transactions and payments:"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post discounts in:"
-msgstr "以下で値引を計上する："
+msgid "Early payment discounts:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -11976,8 +11940,8 @@ msgstr "販売担当者"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Same Account"
-msgstr "同勘定"
+msgid "Same Account as product"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -12390,8 +12354,8 @@ msgstr "収入値引用に勘定を分ける"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Separate discount accounts on invoices"
-msgstr "請求書で割引勘定を分ける"
+msgid "Invoice line discounts:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -14777,6 +14741,7 @@ msgstr "終了日"
 #: model:ir.model.fields,field_description:account.field_account_move__to_check
 #: model:ir.model.fields,field_description:account.field_account_payment__to_check
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__to_check
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -14787,6 +14752,16 @@ msgstr "未確認"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
 msgstr "未請求"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "To Pay"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "To Validate"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14995,6 +14970,11 @@ msgid "Transaction Type Parameter"
 msgstr "トランザクションタイプパラメータ"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Transactions"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer"
@@ -15179,14 +15159,10 @@ msgid "Unnamed"
 msgstr "無名"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Unpaid"
 msgstr "未払い"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Unpaid Invoices"
-msgstr "未払請求書"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -16840,11 +16816,6 @@ msgstr "親会社"
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
 msgstr "to"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "to check"
-msgstr "チェックするため"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

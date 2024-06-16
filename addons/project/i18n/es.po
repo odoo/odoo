@@ -707,13 +707,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created and is not part of any project."
-msgstr ""
+msgstr "Se ha creado una nueva tarea que no forma parte de ningún proyecto."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "A new task has been created in the \"%(project_name)s\" project."
-msgstr ""
+msgstr "Se ha creado una nueva tarea en el proyecto \"%(project_name)s\"."
 
 #. module: project
 #. odoo-python
@@ -1017,6 +1017,8 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read-only mode."
 msgstr ""
+"Todas las personas con este enlace puede acceder al proyecto en modo de solo"
+" lectura."
 
 #. module: project
 #. odoo-javascript
@@ -2213,7 +2215,7 @@ msgstr "Documento final"
 #. module: project
 #: model:project.tags,name:project.project_tags_11
 msgid "Finance"
-msgstr ""
+msgstr "Finanzas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
@@ -2312,7 +2314,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Give the sub-task a <b>name</b>"
-msgstr ""
+msgstr "Dé un <b>nombre</b> a la subtarea"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2639,7 +2641,7 @@ msgstr "Facturado"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Is Closed (Burn-up Chart)"
-msgstr ""
+msgstr "Está cerrado (gráfico de trabajo completado)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_is_follower
@@ -2897,7 +2899,7 @@ msgstr "Marcar como hecho"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.xml:0
 msgid "Mark as incomplete"
-msgstr ""
+msgstr "Marcar como incompleto"
 
 #. module: project
 #. odoo-javascript
@@ -2909,7 +2911,7 @@ msgstr "Marcar como alcanzado"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Mark the task as <b>Cancelled</b>"
-msgstr ""
+msgstr "Marque la tarea como <b>cancelada</b>"
 
 #. module: project
 #. odoo-javascript
@@ -3396,7 +3398,7 @@ msgstr "Otros"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr ""
+msgstr "Vencida"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3701,7 +3703,7 @@ msgstr "Compartir el proyecto"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr ""
+msgstr "Asistente de colaborador para compartir proyectos"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -3782,7 +3784,7 @@ msgstr "Descripción del proyecto..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr ""
+msgstr "Proyecto compartido con sus colaboradores"
 
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
@@ -4448,7 +4450,7 @@ msgstr "Etapa"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Stage (Burndown Chart)"
-msgstr ""
+msgstr "Etapa (diagrama de quemado)"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -4808,7 +4810,7 @@ msgstr "Pruebas"
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 msgid "The Burndown Chart must be grouped by Date"
-msgstr ""
+msgstr "El Diagrama de quemado debe agruparse por fecha"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__personal_stage_id
@@ -4897,6 +4899,10 @@ msgid ""
 "Chart or by \"Is Closed\" to represent a Burn-up chart. Without one of these"
 " groupings applied, the report will not provide relevant information."
 msgstr ""
+"El informe debería agruparse por \"Etapa\" para representar un diagrama de "
+"quemado hacia abajo o por \"Está cerrado\" para representar un diagrama de "
+"quemado hacia arriba. Si no se aplica ninguno de estos agrupamientos, el "
+"informe no mostrará la información relevante."
 
 #. module: project
 #. odoo-python
@@ -4940,6 +4946,8 @@ msgid ""
 "The view must be grouped by date and by Stage - Burndown chart or Is Closed "
 "- Burnup chart"
 msgstr ""
+"La vista debe agruparse por fecha y por Etapa - Diagrama de quemado hacia "
+"abajo o Está cerrado - Diagrama de quemado hacia arriba"
 
 #. module: project
 #. odoo-javascript
@@ -5009,6 +5017,12 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
+"Esta cuenta analítica está asociada a los siguientes proyectos:\n"
+"%(projectList)s\n"
+"\n"
+"Si la archiva ya no podrá registrar las hojas de asistencia en sus respectivos proyectos.\n"
+"\n"
+"¿Está seguro de que desea continuar?"
 
 #. module: project
 #. odoo-javascript
@@ -5017,6 +5031,8 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
+"Este seguidor es colaborador del proyecto. Al eliminarlo dejará de tener "
+"acceso del portal al proyecto. ¿Está seguro de que desea continuar?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5051,6 +5067,9 @@ msgid ""
 "project's visibility will be changed to \"invited portal users and all "
 "internal users (public)\" in order to make it accessible to the recipients."
 msgstr ""
+"Este proyecto está restringido a \"Usuarios internos invitados\". Para que "
+"todos los destinatarios puedan acceder la visibilidad del proyecto cambiará "
+"a \"Usuarios del portal invitados y todos los usuarios internos (público)\"."
 
 #. module: project
 #. odoo-python
@@ -5702,6 +5721,9 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
+"Tiene cambios sin guardar - ¡no se preocupe! Odoo los guardará "
+"automáticamente mientras avanza.<br/> Puede descartar estos cambios desde "
+"aquí o guardar manualmente su tarea.<br/>Guardémoslo manualmente."
 
 #. module: project
 #. odoo-javascript

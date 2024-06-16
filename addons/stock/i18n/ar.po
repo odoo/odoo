@@ -137,6 +137,9 @@ msgid ""
 "(%(product_uom_category)s) - Move UoM is %(move_uom)s "
 "(%(move_uom_category)s)"
 msgstr ""
+"%(product_name)s --> وحدة قياس المنتج هي %(product_uom)s "
+"(%(product_uom_category)s) - وحدة قياس الحركة هي %(move_uom)s "
+"(%(move_uom_category)s) "
 
 #. module: stock
 #. odoo-python
@@ -1745,6 +1748,8 @@ msgid ""
 "Character(s) used to separate data contained within an aggregate barcode "
 "(i.e. a barcode containing multiple barcode encodings)"
 msgstr ""
+"الحرف (الأحرف) المستخدمة لفصل البيانات الموجودة داخل باركود مجمع (أي باركود "
+"يحتوي على ترميزات باركود متعددة) "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6717,7 +6722,7 @@ msgstr "تجديد مخزون المنتج "
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Mixin لتجديد مخزون المنتج "
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -8183,6 +8188,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"الرقم التسلسلي (%(serial_number)s) غير موجود في %(source_location)s، ولكنه موجود في الموقع (المواقع): %(other_locations)s.\n"
+"\n"
+"يرجى تصحيح ذلك لتجنب عدم اتساق البيانات. "
 
 #. module: stock
 #. odoo-python
@@ -8192,6 +8200,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"الرقم التسلسلي (%(serial_number)s) غير موجود في %(source_location)s، ولكنه موجود في المواقع التالية: %(other_locations)s.\n"
+"\n"
+"سيتم تغيير موقع المصدر لهذه الحركة إلى %(recommended_location)s "
 
 #. module: stock
 #. odoo-javascript
@@ -8368,7 +8379,7 @@ msgstr "إظهار زر حالة الكميات في اليد "
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__is_favorite
 msgid "Show Operation in Overview"
-msgstr ""
+msgstr "إظهار العملية في النظرة العامة "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_picking_type

@@ -494,8 +494,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Zastosowano rabat wczesnej płatności.</b>"
+msgid ""
+"<b>Early Payment Discount of %(payment_reference) has been applied.</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -964,11 +965,6 @@ msgid "<span title=\"Latest Statement\">Last Statement</span>"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 msgid "<span> (CR)</span>"
 msgstr "<span> (CR)</span>"
@@ -1065,16 +1061,6 @@ msgstr "<span>Data faktury</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
 msgstr "<span>Numer faktury</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>New Entry</span>"
-msgstr "<span>Nowy zapis</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span>New Invoice</span>"
-msgstr "<span>Nowa faktura</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3241,11 +3227,6 @@ msgstr "Analiza faktur zakupu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Bills to Pay"
-msgstr "Faktury do zapłaty"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
 msgstr "Rachunki do zweryfikowania"
 
@@ -3564,16 +3545,16 @@ msgstr "Różnica w środkach pieniężnych Strata"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_discount_gain
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
-msgid "Cash Discount Gain"
-msgstr "Zysk z tytułu dyskonta gotówkowego"
+msgid "Early Discount Gain"
+msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_cash_discount_loss
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
-msgid "Cash Discount Loss"
-msgstr "Strata z tytułu dyskonta gotówkowego"
+msgid "Early Discount Loss"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__early_pay_discount_computation
@@ -4306,11 +4287,6 @@ msgstr "Utwórz Faktury na podstawie Emaili"
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
 msgstr "Utwórz zapisy dziennika"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Create Manually"
-msgstr "Utwórz ręcznie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -7793,8 +7769,10 @@ msgstr "Błędny"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Niepoprawny zakres do kompresji, skonfiguruj go poprawnie."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -8816,20 +8794,15 @@ msgstr ""
 "zapisu Wn i Ma, albo kliknąłeś przycisk \"Wykonane\"."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Late"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Late Activities"
 msgstr "Czynności zaległe"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Late Bills"
-msgstr "Spóźnione rachunki"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Late Invoices"
-msgstr "Spóźnione faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
@@ -8858,11 +8831,6 @@ msgid "Legal Notes"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_tax_form
-msgid "Legal Notes ..."
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
 msgstr "Notka prawna..."
@@ -8881,7 +8849,7 @@ msgstr "Minus płatności"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Let artifical intelligence scan your bill. Pay easily."
+msgid "Let artificial intelligence scan your bill. Pay easily."
 msgstr ""
 
 #. module: account
@@ -9554,6 +9522,7 @@ msgstr "Nigdy"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "New"
 msgstr "Nowe"
 
@@ -9566,11 +9535,6 @@ msgstr "Nowa nazwa dziennika"
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__new_move_ids
 msgid "New Move"
 msgstr "Nowe przesunięcie"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "New Transaction"
-msgstr "Nowa transakcja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__new_values
@@ -11101,8 +11065,8 @@ msgstr "Zaksięguj różnicę w"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post Exchange difference entries in:"
-msgstr "Zaksięguj wpisy różnic kursowych w:"
+msgid "Exchange difference entries:"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
@@ -11111,13 +11075,13 @@ msgstr "Zaksięguj płatności"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post bank transactions and payments in:"
-msgstr "Zaksięguj transakcje bankowe i płatności w:"
+msgid "Bank transactions and payments:"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Post discounts in:"
-msgstr "Zaksięgowanie zniżek w:"
+msgid "Early payment discounts:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -12150,7 +12114,7 @@ msgstr "Sprzedawca"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Same Account"
+msgid "Same Account as product"
 msgstr ""
 
 #. module: account
@@ -12581,7 +12545,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "Separate discount accounts on invoices"
+msgid "Invoice line discounts:"
 msgstr ""
 
 #. module: account
@@ -15124,6 +15088,7 @@ msgstr "Do"
 #: model:ir.model.fields,field_description:account.field_account_move__to_check
 #: model:ir.model.fields,field_description:account.field_account_payment__to_check
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__to_check
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -15134,6 +15099,16 @@ msgstr "Do sprawdzenia"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
 msgstr "Do zafakturowania"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "To Pay"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "To Validate"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15344,6 +15319,11 @@ msgid "Transaction Type Parameter"
 msgstr "Parametr typu transakcji"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Transactions"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer"
@@ -15535,14 +15515,10 @@ msgid "Unnamed"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Unpaid"
 msgstr "Niezapłacone"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "Unpaid Invoices"
-msgstr "Niezapłacone faktury"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -17320,11 +17296,6 @@ msgstr "nadrzędna firma"
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
 msgstr "do"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "to check"
-msgstr "do sprawdzenia"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

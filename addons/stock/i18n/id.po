@@ -8649,7 +8649,7 @@ msgstr "Stok"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Stock Barcode Database"
-msgstr ""
+msgstr "Database Barcode Stock"
 
 #. module: stock
 #. odoo-javascript
@@ -8819,7 +8819,7 @@ msgstr "Opsi replenishment stok gudang"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Storage"
-msgstr ""
+msgstr "Storage"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -8862,7 +8862,7 @@ msgstr "Lokasi Penyimpanan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__store_type_id
 msgid "Storage Type"
-msgstr ""
+msgstr "Tipe Storage"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
@@ -8882,7 +8882,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Store to"
-msgstr ""
+msgstr "Simpan ke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
@@ -8892,7 +8892,7 @@ msgstr "Simpan ke sub-lokasi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sublocation
 msgid "Sublocation"
-msgstr ""
+msgstr "Sublokasi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -8989,6 +8989,9 @@ msgid ""
 "\n"
 "Is this expected? For example, this can occur if a delivery operation is validated before its corresponding receipt operation is validated. In this case the issue will be solved automatically once all steps are completed. Otherwise, the serial number should be corrected to prevent inconsistent data."
 msgstr ""
+"Nomor Seri (%(serial_number)s) sudah digunakan di lokasi: %(location_list)s.\n"
+"\n"
+"Apakah ini sesuai harapan? Contohnya ini bisa terjadi bila operasi pengiriman divalidasi sebelum tanda terima operasi yang cocok divalidasi. Dalam kasus ini masalah akan diselesaikan secara otomatis setelah semua langkah diselesaikan. Bila tidak, nomor seri harus dibetulkan untuk mencegah data yang tidak konsisten."
 
 #. module: stock
 #. odoo-python
@@ -9021,6 +9024,8 @@ msgid ""
 "The combination of lot/serial number and product must be unique within a company including when no company is defined.\n"
 "The following combinations contain duplicates:\n"
 msgstr ""
+"Kombinasi nomor seri/lot dan produk harus unik di seluruh perusahaan termasuk saat tidak ada perusahaan yang didefinisikan.\n"
+"Kombinasi-kombinasi berikut memiliki duplikat:\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -9031,7 +9036,7 @@ msgstr "Perusahaan akan ditetapkan otomatis dari preferensi pengguna."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The day after tomorrow"
-msgstr ""
+msgstr "Lusa"
 
 #. module: stock
 #. odoo-python
@@ -9182,6 +9187,9 @@ msgid ""
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"Kuantitas selesai untuk produk \"%(product)s\" tidak mengikuti ketepatan "
+"pembulatan yang didefinisikan pada satuan ukuran \"%(unit)s\". Mohon ubah "
+"kuantitas selesai atau ketepatan pembulatan dari satuan ukuran Anda."
 
 #. module: stock
 #. odoo-python
@@ -9223,6 +9231,8 @@ msgid ""
 "The serial number has already been assigned: \n"
 " Product: %(product)s, Serial Number: %(serial_number)s"
 msgstr ""
+"Nomor seri telah ditetapkan:\n"
+"Produk: %(product)s, Nomor Seri: %(serial_number)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -9616,7 +9626,7 @@ msgstr "Untuk Dihitung"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Deliver"
-msgstr ""
+msgstr "Untuk Dikirim"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -9641,12 +9651,12 @@ msgstr "Untuk Dipesan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_computed
 msgid "To Order Computed"
-msgstr ""
+msgstr "Untuk Dipesan Dihitung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_manual
 msgid "To Order Manual"
-msgstr ""
+msgstr "Untuk Dipesan Manual"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -9665,7 +9675,7 @@ msgstr "Untuk Diproses"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Untuk Diterima"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9689,7 +9699,7 @@ msgstr "Aktivitas Hari ini"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Tomorrow"
-msgstr ""
+msgstr "Besok"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -9758,7 +9768,7 @@ msgstr "Laporan Penelusuran"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Lacak Inventari"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10523,6 +10533,8 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need."
 msgstr ""
+"Saat produk dibutuhkan di <b>%(destination)s</b>, <br/> <b>%(operation)s</b>"
+" akan dibuat dari <b>%(source_location)s</b> untuk memenuhi kebutuhan."
 
 #. module: stock
 #. odoo-python
@@ -10531,6 +10543,8 @@ msgid ""
 "When products arrive in <b>%(source_location)s</b>, <br/> "
 "<b>%(operation)s</b> are created to send them to <b>%(destination)s</b>."
 msgstr ""
+"Saat produk datang di <b>%(source_location)s</b>, <br/> <b>%(operation)s</b>"
+" akan dibuat untuk mengirimkan mereka ke <b>%(destination)s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__location_dest_from_rule
@@ -10645,7 +10659,7 @@ msgstr "Tulis satu nama seri/lot per baris, diikuti oleh kuantitas."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Yesterday"
-msgstr ""
+msgstr "Kemarin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10746,6 +10760,10 @@ msgid ""
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
 msgstr ""
+"Anda tidak dapat mengganti pelacakan inventaris produk yang sedang "
+"direservasi pada pergerakan stok. Jika Anda perlu mengganti pelacak "
+"inventarisnya, Anda sebaiknya membatalkan reservasi terlebih dahulu pada "
+"pergerakan stok."
 
 #. module: stock
 #. odoo-python
@@ -10754,6 +10772,7 @@ msgid ""
 "You can not change the inventory tracking of a product that was already "
 "used."
 msgstr ""
+"Anda tidak dapat mengubah pelacakan inventaris produk yang sudah digunakan."
 
 #. module: stock
 #. odoo-python
@@ -10833,6 +10852,8 @@ msgid ""
 "You cannot archive location %(location)s because it is used by warehouse "
 "%(warehouse)s"
 msgstr ""
+"Anda tidak dapat mengarsip %(location)s karena digunakan oleh gudang "
+"%(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -10941,6 +10962,8 @@ msgid ""
 "You cannot perform moves because their unit of measure has a different "
 "category from their product unit of measure."
 msgstr ""
+"Anda tidak dapat melakukan pergerakan karena satuan ukuran mereka memiliki "
+"kategori yang berbeda dari satuan ukuran produk. "
 
 #. module: stock
 #. odoo-python
@@ -10949,6 +10972,8 @@ msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
 msgstr ""
+"Anda tidak dapat menetapkan lokasi sebagai lokasi pembuangan saat ditetapkan"
+" sebagai lokasi t ujuan untuk operasi tipe manufaktur."
 
 #. module: stock
 #. odoo-python
@@ -11126,6 +11151,8 @@ msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
 msgstr ""
+"Anda masih memiliki operasi yang berlangsung untuk tipe operasi "
+"%(operations)s di gudang %(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11164,6 +11191,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Makan siang Anda telah dikirim.\n"
+"Enjoy your meal!"
 
 #. module: stock
 #. odoo-python
@@ -11207,7 +11236,7 @@ msgstr "]<br/>min:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "barcodelookup.com"
-msgstr ""
+msgstr "barcodelookup.com"
 
 #. module: stock
 #. odoo-javascript
@@ -11266,7 +11295,7 @@ msgstr "mis. LOT/0001/20121"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. Lumber Inc"
-msgstr ""
+msgstr "contoh Lumber Inc"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -11306,7 +11335,7 @@ msgstr "contoh Resepsi dua-langkah"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
-msgstr ""
+msgstr "contoh. d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11326,7 +11355,7 @@ msgstr "di dalam"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "in barcode."
-msgstr ""
+msgstr "di barcode."
 
 #. module: stock
 #. odoo-javascript
@@ -11392,17 +11421,17 @@ msgstr "harusnya di-replenish"
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_incoming
 msgid "stock.method_action_picking_tree_incoming"
-msgstr ""
+msgstr "stock.method_action_picking_tree_incoming"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_internal
 msgid "stock.method_action_picking_tree_internal"
-msgstr ""
+msgstr "stock.method_action_picking_tree_internal"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_outgoing
 msgid "stock.method_action_picking_tree_outgoing"
-msgstr ""
+msgstr "stock.method_action_picking_tree_outgoing"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule
@@ -11412,7 +11441,7 @@ msgstr "stock.putaway.rule"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
 msgid "the barcode app"
-msgstr ""
+msgstr "app barcode"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__warehouse_id

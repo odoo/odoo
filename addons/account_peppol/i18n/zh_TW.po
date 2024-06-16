@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Tony Ng, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:44+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2024\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,10 @@ msgid ""
 "                        The invoice will be sent automatically via Peppol\n"
 "                    </span>"
 msgstr ""
+"<span class=\"mx-1\" invisible=\"peppol_message_uuid and not 'demo_' in peppol_message_uuid\"> (演示)</span>\n"
+"                    <span class=\"text-muted mx-3\" invisible=\"peppol_move_state != 'to_send'\">\n"
+"                        發票將透過 Peppol 自動發送\n"
+"                    </span>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -49,7 +54,7 @@ msgid ""
 " If you have previously registered to an alternative Peppol service, please "
 "deregister from that service, or request a migration key before trying "
 "again. "
-msgstr ""
+msgstr "擁有相同詳情的參加者已透過網絡註冊。如果你之前已註冊其他 Peppol 服務，請從該服務取消註冊，或在再次嘗試之前要求遷移密鑰。"
 
 #. module: account_peppol
 #. odoo-python
@@ -832,6 +837,8 @@ msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.\n"
 "                                By clicking the button below I accept that Odoo may process my e-invoices."
 msgstr ""
+"在測試模式下，你可透過 Peppol 測試網路發送電子發票。\n"
+"                                按一下下方按鈕，即表示我同意 Odoo 可處理我的電子發票。"
 
 #. module: account_peppol
 #. odoo-python
@@ -866,7 +873,7 @@ msgid ""
 "The following partners are not correctly configured to receive Peppol "
 "documents. Please check their Peppol endpoint and the Electronic Invoicing "
 "format"
-msgstr ""
+msgstr "以下合作夥伴的設定不正確，未能接收 Peppol 文件。請檢查其 Peppol 終端點以及電子發票格式"
 
 #. module: account_peppol
 #. odoo-python
@@ -875,7 +882,7 @@ msgid ""
 "The following services are listed on your participant but cannot be "
 "configured here. If you wish to configure them differently, please contact "
 "support."
-msgstr ""
+msgstr "以下服務已為你的參與者列出，但無法在此處進行設定。若想設定不同的配置，請聯絡支援人員。"
 
 #. module: account_peppol
 #. odoo-python
@@ -933,6 +940,13 @@ msgstr "驗證碼應包含六位數字。"
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "This verification code has expired. Please request a new one."
 msgstr "此驗證碼已過期。請索取全新一個。"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
+msgid ""
+"To generate complete electronic invoices, also set a country for this "
+"partner."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol

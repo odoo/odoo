@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-02-15 14:12+0000\n"
 "PO-Revision-Date: 2024-06-03 14:46+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5290,6 +5292,8 @@ msgid ""
 "\n"
 "Generate tasks in Project app from a form published on your website. This module requires the use of the *Form Builder* module in order to build the form.\n"
 msgstr ""
+"\n"
+"Genere tareas en la aplicación Proyecto a partir de un formulario publicado en su sitio web. Este módulo requiere el uso del módulo *Creador de formularios* para crear el formulario.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_intrastat
@@ -7772,6 +7776,8 @@ msgid ""
 "\n"
 "Search project tasks according to the assignees' skills\n"
 msgstr ""
+"\n"
+"Busque tareas de proyectos según las habilidades de las personas asignadas.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -8094,6 +8100,20 @@ msgid ""
 "The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail.\n"
 "\n"
 msgstr ""
+"\n"
+"Localización para Suiza\n"
+"==================\n"
+"Este módulo define un plan contable para Suiza (Swiss PME/KMU 2015) y los impuestos, además genera una factura QR cuando imprime una factura o la envía por correo.\n"
+"Esta factura QR facilita realizar el pago.\n"
+"\n"
+"Se generará una factura QR si:\n"
+"    - El contacto establecido en su factura tiene una dirección completa (calle, ciudad, código postal y país) en Suiza\n"
+"    - Selecciona la opción para generar el código QR en la factura (esto aplica por defecto)\n"
+"    - Establece en su diario bancario un número de cuenta correcto o el QR IBAN\n"
+"    - Si utiliza QR IBAN, la referencia de pago de la factura es una referencia QR\n"
+"\n"
+"La factura QR se genera en automático si se cumplen los criterios anteriores y se adjuntará después de la factura al imprimir o enviar por correo. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -8783,6 +8803,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Republic of Ireland in Odoo.\n"
 msgstr ""
+"\n"
+"Este es el módulo base para gestioner el plan contable de Irlanda en Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9023,6 +9045,29 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Este módulo sirve para gestionar el plan contable de Francia en Odoo\n"
+"========================================================================\n"
+"\n"
+"Este módulo se aplica a las empresas con sede en Francia metropolitana. No se aplica a las\n"
+"empresas con sede en los departamentos y territorios de ultramar (Guadalupe, Martinica, Guayana, Reunión, Mayotte).\n"
+"\n"
+"Este módulo de localización crea los impuestos del IVA de tipo \"impuestos incluidos\" para\n"
+"las compras (se necesita sobre todo cuando se utiliza el módulo de \"hr_expense\"). Tenga en\n"
+"cuenta que este IVA de \"impuestos incluidos\" no está gestionado por las situaciones fiscales\n"
+"proporcionadas en este módulo (porque es difícil gestionar tanto las situaciones de\n"
+"\"impuestos excluidos\" como de \"impuestos incluidos\" en las situaciones fiscales).\n"
+"\n"
+"Este módulo de localización no dispone adecuadamente de la situación cuando una\n"
+"empresa de Francia continental vende sus servicios a una empresa con sede en los\n"
+"departamentos de ultramar. Podríamos disponer de ella en cuanto a las situaciones fiscales,\n"
+"pero se necesitaría hacer una diferenciación entre los impuestos del IVA del \"producto\"\n"
+"y los impuestos del IVA de \"servicios\". Consideramos que es demasiada \"carga\" contar con\n"
+"esto por defecto en l10n_fr_account; las empresas que venden servicios a empresas con sede en los\n"
+"departamentos de ultramar deberían actualizar la configuración de sus impuestos y\n"
+"situaciones fiscales de forma manual.\n"
+"\n"
+"**Créditos:** Sistheo, Zeekom, CrysaLEAD, Akretion y Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -11937,6 +11982,10 @@ msgid ""
 "                the company.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Describa algo que le haya hecho sentir orgulloso, algún trabajo positivo para\n"
+"                la empresa.\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -11946,6 +11995,10 @@ msgid ""
 "                obstacles?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                ¿Enfrentó nuevas dificultades? ¿Combatió nuevos\n"
+"                obstáculos?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -11955,6 +12008,10 @@ msgid ""
 "                you enjoy the most/the least?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Cada trabajo tiene puntos fuertes. ¿Cuáles considera que son las tareas que\n"
+"                disfruta más y cuáles las que disfruta menos?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -11964,6 +12021,10 @@ msgid ""
 "                overcome their weaknesses?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Desde el punto de vista de un gerente, ¿cómo podría ayudar al empleado a\n"
+"                enfrentar sus debilidades?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -11973,6 +12034,10 @@ msgid ""
 "                for you to reach your goals and look for the best collaboration.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                ¿De qué forma la empresa puede ayudarle con sus necesidades y objetivos con la\n"
+"                finalidad de que alcance sus metas y puedan colaborar de la manera más óptima?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -11982,6 +12047,10 @@ msgid ""
 "                employee's desire?\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                ¿Cuál es su visión sobre el empleado en el futuro, acaso esta es compatible con\n"
+"                sus deseos?\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -11991,11 +12060,15 @@ msgid ""
 "                issues.\n"
 "            </em>"
 msgstr ""
+"<em>\n"
+"                Algunos logros que le ayudarán a superar las \n"
+"                dificultades en el trabajo.\n"
+"            </em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Autonomy</em>"
-msgstr ""
+msgstr "<em>Autonomía</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12005,21 +12078,25 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Cultura/Comportamiento:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-1\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Do you need rapid answer to the current situation?</em>"
-msgstr ""
+msgstr "<em>¿Necesita una respuesta rápida a la situación actual?</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "<em>Give an example of long-term objective (&gt; 6 months)</em>"
-msgstr ""
+msgstr "<em>Dé un ejemplo de objetivo a largo plazo (&gt; 6 meses)</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "<em>Give an example of short-term objective (&lt; 6 months)</em>"
-msgstr ""
+msgstr "<em>Dé un ejemplo de objetivo a corto plazo (&gt; 6 meses)</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12029,6 +12106,10 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Comunicación interna:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-2\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12038,11 +12119,15 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Contenido del trabajo:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-3\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Pro-activity</em>"
-msgstr ""
+msgstr "<em>Proactividad</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12052,21 +12137,25 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Remuneración:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-5\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Stress Resistance</em>"
-msgstr ""
+msgstr "<em>Tolerancia al estrés</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Teamwork</em>"
-msgstr ""
+msgstr "<em>Trabajo en equipo</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "<em>Time Management</em>"
-msgstr ""
+msgstr "<em>Gestión del tiempo</em>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12076,6 +12165,10 @@ msgid ""
 "                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
 "                </span>"
 msgstr ""
+"<em>Organización laboral:</em>\n"
+"                <span class=\"o_stars o_five_stars\" id=\"checkId-4\">\n"
+"                    <i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i><i class=\"fa fa-star-o\"></i>\n"
+"                </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -12272,6 +12365,9 @@ msgid ""
 "                Evaluation\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Evaluación\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12280,6 +12376,9 @@ msgid ""
 "                Feedback\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Retroalimentación\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
@@ -12288,6 +12387,9 @@ msgid ""
 "                Improvements\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mejoras\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12296,6 +12398,9 @@ msgid ""
 "                My feelings\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mis sentimientos\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12304,6 +12409,9 @@ msgid ""
 "                My future\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mi futuro\n"
+"            </span>"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -12312,6 +12420,9 @@ msgid ""
 "                My work\n"
 "            </span>"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                Mi trabajo\n"
+"            </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -12938,6 +13049,9 @@ msgid ""
 "create his own holidays and manage the requests of the users he's manager "
 "of."
 msgstr ""
+"Un usuario sin derechos en Tiempo personal podrá ver la aplicación, crear "
+"sus propios días libres y gestionar las solicitudes de los usuarios de los "
+"que es el gerente."
 
 #. module: base
 #. odoo-python
@@ -14085,6 +14199,7 @@ msgstr ""
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "All our contractual relations will be governed exclusively by  law."
 msgstr ""
+"Todas las relaciones contractuales se regirán exclusivamente por las leyes."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -16151,7 +16266,7 @@ msgstr "Cancelar actualización"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot aggregate on %s parameter"
-msgstr ""
+msgstr "No se puede agregar al parámetro %s"
 
 #. module: base
 #. odoo-python
@@ -16185,7 +16300,7 @@ msgstr "¡No se puede duplicar la configuración!"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Cannot groupby on %s parameter"
-msgstr ""
+msgstr "No se puede agrupar el parámetro %s"
 
 #. module: base
 #. odoo-python
@@ -16263,6 +16378,13 @@ msgid ""
 "and does not include any costs relating to the legislation of the country in"
 " which the client is located."
 msgstr ""
+"Algunos países aplican retenciones en origen sobre el importe de las "
+"facturas, de acuerdo con su legislación interna. Cualquier retención en "
+"origen será pagada por el cliente a las autoridades fiscales. Mi Compañía no"
+" puede, en ningún caso, implicarse en los costes relacionados con la "
+"legislación de un país. Por lo tanto, el importe total de la factura será "
+"una deuda a Mi Compañía y no incluye ningún coste relacionado con la "
+"legislación del país en el que se encuentra el cliente."
 
 #. module: base
 #: model:res.country,name:base.td
@@ -16580,7 +16702,7 @@ msgstr "CodaBox"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid "CodaBox integration to retrieve your CODA and SODA files."
-msgstr ""
+msgstr "Integración con CodaBox para recuperar sus archivos CODA y SODA."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -17414,7 +17536,7 @@ msgstr "Cree informes para trabajadores que estén realizando servicio externo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
 msgid "Create Uid"
-msgstr ""
+msgstr "Crear Uid"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
@@ -18745,7 +18867,7 @@ msgstr "Mostrar imagen del país"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "Display currency"
-msgstr "Mostrar moneda"
+msgstr "Mostrar divisa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_order_tracking_display
@@ -19353,7 +19475,7 @@ msgstr "Empleados en citas"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_employment_hero
 msgid "Employment Hero Payroll"
-msgstr ""
+msgstr "Nómina con Employment Hero"
 
 #. module: base
 #. odoo-python
@@ -19420,6 +19542,8 @@ msgstr ""
 msgid ""
 "Enable the user to see and manage the contracts from Employee application."
 msgstr ""
+"Permita que el usuario vea y gestione los contratos desde la aplicación "
+"Empleados."
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_onsip
@@ -20767,7 +20891,7 @@ msgstr "Francia - Integración de Factur-X con Chorus Pro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Localizations"
-msgstr ""
+msgstr "Francia - Localizaciones "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll_account
@@ -21165,6 +21289,8 @@ msgid ""
 "Give one positive achievement that convinced you of the employee's\n"
 "            value."
 msgstr ""
+"Mencione un logro positivo que le haya convencido del valor del\n"
+"            empleado."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__global
@@ -21721,6 +21847,8 @@ msgid ""
 "Helps you manage your mass mailing to design\n"
 "    professional emails and reuse templates."
 msgstr ""
+"Le ayuda a gestionar su envío masivo de correos para diseñar\n"
+"correos profesionales y poder reusar plantillas."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_inventory_purchase
@@ -21842,17 +21970,17 @@ msgstr "Hogares"
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "How could the employee improve?"
-msgstr ""
+msgstr "¿Cómo podría mejorar el empleado?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "How do I feel about my own..."
-msgstr ""
+msgstr "Cómo me siento respecto a mi..."
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "How do I feel about the company..."
-msgstr ""
+msgstr "Cómo me siento respecto a la empresa..."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__numbercall
@@ -22149,6 +22277,10 @@ msgid ""
 "payment date, My Company reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Si un pago sigue pendiente más de sesenta (60) días después de la fecha de "
+"vencimiento, Mi Compañía se reserva el derecho de recurrir a los servicios "
+"de una empresa de cobro de deudas. Todos los gastos legales correrán a cargo"
+" del cliente."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__group_expand
@@ -22553,6 +22685,10 @@ msgid ""
 "by means of a letter sent by recorded delivery to its registered office "
 "within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
+"Para que sea admisible, cualquier reclamación se debe notificar a Mi "
+"Compañía. Esto se hará mediante una carta que se enviará a la oficina "
+"registrada y necesitará de acuse de recibo en un plazo de 8 días después de "
+"la entrega de los productos o la prestación de los servicios."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -22880,6 +23016,8 @@ msgid ""
 "Integrate features developped in Mail in use case involving resources "
 "instead of users"
 msgstr ""
+"Se integran funciones que se desarrollaron en correo electrónico para un "
+"caso de uso en el que se usan recursos en lugar de usuarios"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_delivery
@@ -23019,6 +23157,10 @@ msgid ""
 "the employee is defined. It will allow to refuse, plan meetings. Chatter "
 "content will not be available."
 msgstr ""
+"Los permisos de acceso de entrevistador le dará acceso a todos los puestos "
+"de trabajo y solicitudes donde el empleado está configurado. Podrá "
+"planificar y rechazar juntas, pero el contenido del Chatter no estará "
+"disponible."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_intrastat
@@ -23135,7 +23277,7 @@ msgstr "Clave no válida: la vista QWeb debe tener una clave"
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/models.py:0
 msgid "Invalid language code: %s"
-msgstr ""
+msgstr "Código de idioma no válido: %s"
 
 #. module: base
 #. odoo-python
@@ -24254,7 +24396,7 @@ msgstr "Localización"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "Localization features are available for this country:"
-msgstr ""
+msgstr "Este país tiene funciones de localización disponibles:"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -24314,6 +24456,8 @@ msgid ""
 "Long term (&gt; 6 months) career discussion, where does the employee\n"
 "            wants to go, how to help them reach this path?"
 msgstr ""
+"Conversación sobre su trayectoria profesional a largo plazo (más de 6 meses), ¿hacia dónde se quiere dirigir el empleado\n"
+"            y cómo podría ayudarle a llegar allí?"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_lunch
@@ -25338,6 +25482,73 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Número mínimo de cuentas para empezar a trabajar en Perú.\n"
+"=================================================\n"
+"\n"
+"El uso de este plan contable debe seguir la documentación oficial del MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Aquí podrá encontrar todas las referencias legales.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Consideraciones.\n"
+"===============\n"
+"\n"
+"Plan contable:\n"
+"-----------------\n"
+"\n"
+"El árbol de cuentas consiste en grupos de cuentas, todas las cuentas con movimiento \n"
+"se consideran grupos pero solo las más comunes se consideran\n"
+"cuentas reales. Si quiere crear una nueva use el grupo de cuenta como\n"
+"referencia.\n"
+"\n"
+"# Por hacer: Mostrar imagen que ilustre la información proporcionada.\n"
+"\n"
+"Impuestos:\n"
+"------\n"
+"\n"
+"'IGV': {'name': 'VAT', 'code': 'S'},\n"
+"'IVAP': {'name': 'VAT', 'code': ''},\n"
+"'ISC': {'name': 'EXC', 'code': 'S'},\n"
+"'ICBPER': {'name': 'OTH', 'code': ''},\n"
+"'EXP': {'name': 'FRE', 'code': 'G'},\n"
+"'GRA': {'name': 'FRE', 'code': 'Z'},\n"
+"'EXO': {'name': 'VAT', 'code': 'E'},\n"
+"'INA': {'name': 'FRE', 'code': 'O'},\n"
+"'OTHERS': {'name': 'OTH', 'code': 'S'},\n"
+"\n"
+"Agregamos 3 conceptos sobre impuestos (necesarios para la firma EDI).\n"
+"\n"
+"# Por hacer: Describir los nuevos campos.\n"
+"\n"
+"Productos:\n"
+"---------\n"
+"\n"
+"En esta página podrá encontrar los códigos de los productos que se van a utilizar en el EDI, para decidir\n"
+"qué impuesto se debe utilizar según esta referencia y el código Python:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Nota:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen y que permiten acciones de verificación control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25814,6 +26025,12 @@ msgid ""
 "as a third party in the context of any claim for damages filed against the "
 "client by an end consumer."
 msgstr ""
+"Mi Compañía se compromete a hacer todo lo posible para prestar los servicios"
+" en el momento oportuno y de acuerdo con los plazos acordados. Sin embargo, "
+"ninguna de sus obligaciones puede considerarse como una obligación de "
+"resultados. En ningún caso el cliente podrá requerir a Mi Compañía "
+"comparecer como un tercero en cualquier reclamo por daños que presente un "
+"consumidor final contra el cliente."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -28963,6 +29180,13 @@ msgid ""
 " will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Nuestras facturas se pueden pagar en un plazo de 21 días laborables, a menos"
+" que se indique otro plazo de pago en la factura o en la orden. En caso de "
+"falta de pago en la fecha de vencimiento, Mi Compañía se reserva el derecho "
+"de solicitar un pago de intereses fijo por un valor total del 10 % de la "
+"suma restante adeudada. Mi Compañía tendrá la autorización de suspender "
+"cualquier prestación de servicios sin previo aviso en caso de retraso en el "
+"pago."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -30210,7 +30434,7 @@ msgstr "Proyecto - Ventas - Gastos"
 #: model:ir.module.module,shortdesc:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,shortdesc:base.module_project_hr_skills
 msgid "Project - Skills"
-msgstr ""
+msgstr "Proyecto - Habilidades"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_account_asset
@@ -30469,7 +30693,7 @@ msgstr "Suscripciones de las ventas del proyecto"
 #: model:ir.module.module,summary:base.module_project_enterprise_hr_skills
 #: model:ir.module.module,summary:base.module_project_hr_skills
 msgid "Project skills"
-msgstr ""
+msgstr "Habilidades del proyecto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm_sale
@@ -31414,7 +31638,7 @@ msgstr "ID del recurso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_resource_mail
 msgid "Resource Mail"
-msgstr ""
+msgstr "Correo de recursos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__res_model
@@ -32779,7 +33003,7 @@ msgstr "Corto"
 #. module: base
 #: model_terms:res.company,appraisal_manager_feedback_template:base.main_company
 msgid "Short term (6-months) actions / decisions / objectives"
-msgstr ""
+msgstr "Acciones, decisiones y objetivos a corto plazo (6 meses) "
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_show
@@ -34088,7 +34312,7 @@ msgstr "Nombre de plantilla"
 #. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 msgid "Template name is missing."
-msgstr ""
+msgstr "Falta el nombre de la plantilla."
 
 #. module: base
 #: model_terms:res.company,sign_terms:base.main_company
@@ -36452,7 +36676,7 @@ msgstr "Desinstalable"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__uninstalled_l10n_module_ids
 msgid "Uninstalled L10N Module"
-msgstr ""
+msgstr "Módulo L10N deinstalado"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -36497,7 +36721,7 @@ msgstr "Estados Unidos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Localizations"
-msgstr ""
+msgstr "Estados Unidos - Localizaciones"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_hr_payroll
@@ -37665,7 +37889,7 @@ msgstr "Sáhara occidental"
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "What are my best achievement(s) since my last appraisal?"
-msgstr ""
+msgstr "¿Cuáles han sido mis mejores logros desde la última evaluación?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -37673,6 +37897,8 @@ msgid ""
 "What are my short and long-term goals with the company, and for my\n"
 "            career?"
 msgstr ""
+"¿Cuáles son mis metas a corto y largo plazo en la empresa y para mi\n"
+"            trayectoria profesional?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
@@ -37680,11 +37906,13 @@ msgid ""
 "What has been the most challenging aspect of my work this past year and\n"
 "            why?"
 msgstr ""
+"¿Cuál ha sido el aspecto más desafiante de mi trabajo este último año y\n"
+"            por qué?"
 
 #. module: base
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "What would I need to improve my work?"
-msgstr ""
+msgstr "¿Qué necesitaría para mejorar mi trabajo?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
@@ -37815,6 +38043,8 @@ msgstr ""
 #: model_terms:res.company,appraisal_employee_feedback_template:base.main_company
 msgid "Which parts of my job do I most / least enjoy?"
 msgstr ""
+"¿Cuáles son las partes de mi trabajo que disfruto más y cuáles son aquellas "
+"que disfruto menos?"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__implementation
@@ -38377,6 +38607,8 @@ msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Su comida ha sido entregada.\n"
+"¡Disfrute de su comida!"
 
 #. module: base
 #. odoo-python
@@ -38603,7 +38835,7 @@ msgstr "p. ej. Sr."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "e.g. My Company"
-msgstr "p. ej. Mi EmpresaCompany"
+msgstr "p. ej. Mi Compañía"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -38613,7 +38845,7 @@ msgstr "p. ej., mi servidor de salida"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "e.g. New Address"
-msgstr ""
+msgstr "p. ej. Nueva dirección"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

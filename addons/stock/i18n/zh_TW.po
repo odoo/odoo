@@ -45,6 +45,9 @@ msgid ""
 "The quantity done for the product %(product)s doesn't respect the rounding precision defined on the unit of measure %(unit)s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"產品 %(product)s 的完成數量不符合計量單位 %(unit)s 上定義的捨入精度.\n"
+"請更改已完成的數量，或計量單位的捨入精度。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -3774,7 +3777,7 @@ msgid ""
 "If a separator is defined, a QR code containing all serial numbers contained"
 " in package will be generated, using the defined character(s) to separate "
 "each numbers"
-msgstr ""
+msgstr "如果定義了分隔符，產生的二維碼會包含包裝中所有序號，當中使用所定義的字元去分隔每個號碼"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
@@ -8017,6 +8020,9 @@ msgid ""
 "\n"
 "Please correct this to prevent inconsistent data."
 msgstr ""
+"序號（%(serial_number)s）並不位於 %(source_location)s 中，而是在位置 %(other_locations)s。\n"
+"\n"
+"請更正此錯誤，以防止數據出現不一致。"
 
 #. module: stock
 #. odoo-python
@@ -8026,6 +8032,9 @@ msgid ""
 "\n"
 "Source location for this move will be changed to %(recommended_location)s"
 msgstr ""
+"序號（%(serial_number)s）並不位於 %(source_location)s 中，而是在位置 %(other_locations)s。\n"
+"\n"
+"此移動的來源位置將變更為 %(recommended_location)s"
 
 #. module: stock
 #. odoo-javascript
@@ -8778,6 +8787,8 @@ msgid ""
 "The combination of lot/serial number and product must be unique within a company including when no company is defined.\n"
 "The following combinations contain duplicates:\n"
 msgstr ""
+"批次/序號與產品的組合，在同一公司內必須獨一無二，即使未有定義公司的情況也是。\n"
+"以下組合有重複項目：\n"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__company_id
@@ -8928,7 +8939,7 @@ msgid ""
 "The quantity done for the product \"%(product)s\" doesn't respect the "
 "rounding precision defined on the unit of measure \"%(unit)s\". Please "
 "change the quantity done or the rounding precision of your unit of measure."
-msgstr ""
+msgstr "產品「%(product)s」的完成數量不符合計量單位「%(unit)s」上定義的捨入精度。請更改已完成的數量，或計量單位的捨入精度。"
 
 #. module: stock
 #. odoo-python
@@ -10386,7 +10397,7 @@ msgid ""
 "You can not change the inventory tracking of a product that is currently "
 "reserved on a stock move. If you need to change the inventory tracking, you "
 "should first unreserve the stock move."
-msgstr ""
+msgstr "你不可更改目前在庫存移動中保留的產品的庫存追蹤。若要更改庫存追蹤，應先取消保留庫存移動。"
 
 #. module: stock
 #. odoo-python
@@ -10560,7 +10571,7 @@ msgstr ""
 msgid ""
 "You cannot set a location as a scrap location when it is assigned as a "
 "destination location for a manufacturing type operation."
-msgstr ""
+msgstr "若某個位置已被指定作製造類型操作的目標位置，便不可設為報廢位置。"
 
 #. module: stock
 #. odoo-python

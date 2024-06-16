@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-03 08:43+0000\n"
 "PO-Revision-Date: 2024-06-03 14:47+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +48,12 @@ msgstr "%s reseñas"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Delivery"
-msgstr ""
+msgstr "y entrega"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "&amp;nbsp;(<i>Your delivery address will be requested later)</i>"
-msgstr ""
+msgstr "&amp;nbsp;(<i>Se le solicitará su dirección de entrega después)</i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -113,13 +114,13 @@ msgstr "<b>Comunicación: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "<b>Deliver to pickup point: </b>"
-msgstr ""
+msgstr "<b>Entregar en el punto de recogida:</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<b>Delivery: </b>"
-msgstr ""
+msgstr "<b>Entrega: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -222,7 +223,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Añadir a la cesta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -308,12 +309,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "<span class=\"label\">Price</span>"
-msgstr ""
+msgstr "<span class=\"label\">Precio</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "<span class=\"label\">Product</span>"
-msgstr ""
+msgstr "<span class=\"label\">Producto</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -327,6 +328,9 @@ msgid ""
 "                    Select to compute delivery rate\n"
 "                </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge float-end fw-bold\" name=\"price\">\n"
+"                    Seleccione uno para calcular la tasa de entrega\n"
+"                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -392,11 +396,17 @@ msgid ""
 "                </span>\n"
 "                <span name=\"o_remove_pickup_location\" class=\"fa fa-times ms-2\" title=\"Remove this location\" aria-label=\"Remove this location\"/>"
 msgstr ""
+"<span>\n"
+"                    <b name=\"o_pickup_location_name\"/>\n"
+"                    <br/>\n"
+"                    <i name=\"o_pickup_location_address\"/>\n"
+"                </span>\n"
+"                <span name=\"o_remove_pickup_location\" class=\"fa fa-times ms-2\" title=\"Eliminar esta ubicación\" aria-label=\"Eliminar esta ubicación\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span>Already have an account?</span>"
-msgstr ""
+msgstr "<span>¿Ya tiene una cuenta?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -406,7 +416,7 @@ msgstr "<span>Pedido</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
 msgid "<span>Publish on website</span>"
-msgstr ""
+msgstr "<span>Publicar en el sitio web</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -425,7 +435,7 @@ msgstr "<span>Vista previa en vídeo</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
-msgstr ""
+msgstr "<strong>No se encontró ningún método de entrega adecuado.</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
@@ -729,7 +739,7 @@ msgstr "Botón de Añadir a la cesta"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Add to cart"
-msgstr ""
+msgstr "Añadir a la cesta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
@@ -740,7 +750,7 @@ msgstr "Autocompletar dirección"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -757,7 +767,7 @@ msgstr "Todas las listas de precios"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
 msgid "All users"
-msgstr ""
+msgstr "Todos los usuarios"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -820,7 +830,7 @@ msgstr "Aplicar"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 msgid "Are you sure you want to delete this ribbon?"
-msgstr ""
+msgstr "¿Está seguro de que desea eliminar esta cinta?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -852,7 +862,7 @@ msgstr "Envíe automáticamente correos electrónicos de pagos abandonados"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Opciones disponibles: "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
@@ -869,7 +879,7 @@ msgstr "Regresar a la cesta"
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "Back to delivery"
-msgstr ""
+msgstr "Regresar a la entrega"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -879,7 +889,7 @@ msgstr "Fondo"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Background Color"
-msgstr ""
+msgstr "Color de fondo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
@@ -988,7 +998,7 @@ msgstr "Marca"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
 msgid "Button Url"
-msgstr ""
+msgstr "URL del botón"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1079,6 +1089,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Las categorías se utilizan para buscar productos a través de la\n"
+"                interfaz táctil."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1360,7 +1372,7 @@ msgstr "URL del botón Contáctenos"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Continue Shopping"
-msgstr ""
+msgstr "Continuar comprando"
 
 #. module: website_sale
 #. odoo-python
@@ -1571,17 +1583,17 @@ msgstr "Definir una nueva categoría"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
-msgstr ""
+msgstr "Definir una nueva cinta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Delete Ribbon"
-msgstr ""
+msgstr "Eliminar cinta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Deliver to the same address"
-msgstr ""
+msgstr "Entregar en la misma dirección"
 
 #. module: website_sale
 #. odoo-python
@@ -1598,7 +1610,7 @@ msgstr "Gastos de envío"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Métodos de entrega"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__access_point_address
@@ -1609,7 +1621,7 @@ msgstr "Dirección del punto de entrega"
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
 msgid "Delivery address"
-msgstr ""
+msgstr "Dirección de entrega"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -1740,7 +1752,7 @@ msgstr "¿Desea vaciar su cesta antes de agregarle productos?"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #. module: website_sale
 #. odoo-python
@@ -1821,7 +1833,7 @@ msgstr "Métodos de envío Easypost"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__ecommerce_access
 #: model:ir.model.fields,field_description:website_sale.field_website__ecommerce_access
 msgid "Ecommerce Access"
-msgstr ""
+msgstr "Acceso a Comercio electrónico"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
@@ -1858,7 +1870,7 @@ msgstr "Incrustar código"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Enforce a customer to be logged in to access 'Shop'"
-msgstr ""
+msgstr "Obligue a un cliente a iniciar sesión para acceder a la 'Tienda'"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2116,6 +2128,9 @@ msgid ""
 "field or make it selectable.Otherwise, the pricelist will not apply to any "
 "website."
 msgstr ""
+"Debe completar este campo o hacerlo seleccionable si desea que una lista de "
+"precios esté disponible en un sitio web. De lo contrario, la lista de "
+"precios no se aplicará a ninguno."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -2245,6 +2260,8 @@ msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
 msgstr ""
+"Parece que ya hay una transacción para su pedido, así que ya no se puede "
+"cambiar el método de entrega"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2347,7 +2364,7 @@ msgstr "Deje que el cliente seleccione un punto de envío de Mondial Relay"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__force_dialog
 msgid "Let the user decide (dialog)"
-msgstr ""
+msgstr "Dejar que el usuario decida (diálogo)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2391,7 +2408,7 @@ msgstr "Lista"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
 msgid "Logged in users"
-msgstr ""
+msgstr "Usuarios que iniciaron sesión"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2410,7 +2427,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Main Image"
-msgstr ""
+msgstr "Imagen principal"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2727,7 +2744,7 @@ msgstr "Opción para: %s"
 #: model_terms:ir.ui.view,arch_db:website_sale.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:website_sale.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Opción no disponible"
 
 #. module: website_sale
 #. odoo-python
@@ -2879,7 +2896,7 @@ msgstr "Continúe con su cesta actual."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/checkout.js:0
 msgid "Please select a pick-up point"
-msgstr ""
+msgstr "Seleccione un punto de recogida"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2970,7 +2987,7 @@ msgstr "Imprimir"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_product_configurator.js:0
 msgid "Proceed to Checkout"
-msgstr ""
+msgstr "Proceder a la compra"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -3047,7 +3064,7 @@ msgstr "Nombre del producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Product Names"
-msgstr ""
+msgstr "Nombres de los productos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3097,13 +3114,13 @@ msgstr "Precio de referencia del producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 msgid "Product Ribbon"
-msgstr ""
+msgstr "Cinta del producto"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_ribbon_action
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Product Ribbons"
-msgstr ""
+msgstr "Cintas del producto"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -3229,7 +3246,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
 msgid "Publish on website"
-msgstr ""
+msgstr "Publicar en el sitio web"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -3398,7 +3415,7 @@ msgstr "Reemplazar"
 #: model:ir.model.fields,help:website_sale.field_product_tag__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Restringir a un sitio web específico."
 
 #. module: website_sale
 #. odoo-python
@@ -3424,7 +3441,7 @@ msgstr "Cinta"
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__name
 msgid "Ribbon Name"
-msgstr ""
+msgstr "Nombre de la cinta"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__right
@@ -3523,7 +3540,7 @@ msgstr "Buscar pedidos de venta abandonados"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Search Bar"
-msgstr ""
+msgstr "Barra de búsqueda"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3658,7 +3675,7 @@ msgstr "Clasificación predeterminada de tienda"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop, products, cart and wishlist visibility"
-msgstr ""
+msgstr "Tienda, productos, cesta y visibilidad de la lista de deseos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -3668,7 +3685,7 @@ msgstr "Cesta de compras"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show B2B Fields"
-msgstr ""
+msgstr "Mostrar campos B2B"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3683,7 +3700,7 @@ msgstr "Mostrar en el comercio electrónico"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Show variants"
-msgstr ""
+msgstr "Mostrar variantes"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3754,7 +3771,7 @@ msgstr "Algunos campos requeridos están vacíos."
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr ""
+msgstr "Lo sentimos, no podemos enviar su pedido."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3865,7 +3882,7 @@ msgstr "Texto"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Text Color"
-msgstr ""
+msgstr "Color del texto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
@@ -3910,6 +3927,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s)"
 " is different than the one you want to use (%(company)s)"
 msgstr ""
+"La compañía del sitio web del que intenta vender (%(website_company)s) es "
+"diferente a la que quiere utilizar (%(company)s)."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
@@ -3956,7 +3975,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The order has been cancelled."
-msgstr ""
+msgstr "Se ha cancelado el pedido."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -4310,7 +4329,7 @@ msgstr "Sitio web"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
 msgid "Website Menu"
-msgstr ""
+msgstr "Menú del sitio web"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_message_ids
@@ -4457,6 +4476,8 @@ msgid ""
 "You are editing your <b>billing and delivery</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your delivery address, create a"
 msgstr ""
+"¡Está editando su dirección <b>de facturación y de entrega</b> al mismo tiempo!<br/>\n"
+"                                            Si desea modificar su dirección de entrega, cree una"
 
 #. module: website_sale
 #. odoo-python
@@ -4520,7 +4541,7 @@ msgstr "¡Su cesta está vacía!"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Your cart is empty."
-msgstr ""
+msgstr "¡Su cesta está vacía!"
 
 #. module: website_sale
 #. odoo-python
@@ -4592,7 +4613,7 @@ msgstr "Visibilidad del filtro de comercio electrónico"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Media"
-msgstr ""
+msgstr "Medios del comercio electrónico"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
