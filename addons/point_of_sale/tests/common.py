@@ -596,6 +596,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'categ_id': category.id,
             'lst_price': lst_price,
             'standard_price': standard_price if standard_price else 0.0,
+            'company_id': cls.env.company.id,
         })
         if sale_account:
             product.property_account_income_id = sale_account
