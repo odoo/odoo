@@ -1083,3 +1083,27 @@ test("Export dialog: disable button during export", async () => {
     await animationFrame();
     expect(".o_select_button").toBeEnabled();
 });
+
+test("Export dialog: no column_invisible fields in default export list", async () => {
+    onRpc("/web/export/formats", () => {
+        return Promise.resolve([{ tag: "xls", label: "Excel" }]);
+    });
+    onRpc("/web/export/get_fields", () => {
+        return Promise.resolve(fetchedFields.root);
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="bar" column_invisible="1"/>
+            </list>`,
+        actionMenus: {},
+    });
+
+    await openExportDialog();
+    expect(".modal .o_export_field").toHaveCount(1);
+    expect(".modal .o_export_field").toHaveText("Foo");
+});
