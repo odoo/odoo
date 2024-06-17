@@ -2570,19 +2570,21 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'", async function (assert) {
-        assert.expect(1);
-        serverData.views = {
-            "turtle,false,form": `
+    QUnit.test(
+        "When viewing one2many records in an embedded kanban, the delete button should say 'Delete' and not 'Remove'",
+        async function (assert) {
+            assert.expect(1);
+            serverData.views = {
+                "turtle,false,form": `
                 <form>
                     <h3>Data</h3>
                 </form>`,
-        };
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <field name="turtles">
                         <kanban>
@@ -2597,14 +2599,15 @@ QUnit.module("Fields", (hooks) => {
                         </kanban>
                     </field>
                 </form>`,
-            resId: 1,
-        });
+                resId: 1,
+            });
 
-        // Opening the record to see the footer buttons
-        await click(target.querySelector(".o_kanban_record"));
+            // Opening the record to see the footer buttons
+            await click(target.querySelector(".o_kanban_record"));
 
-        assert.strictEqual(target.querySelector('.o_btn_remove').textContent, 'Delete');
-    });
+            assert.strictEqual(target.querySelector(".o_btn_remove").textContent, "Delete");
+        }
+    );
 
     QUnit.test("open a record in a one2many kanban (mode 'readonly')", async function (assert) {
         serverData.views = {
@@ -13288,7 +13291,7 @@ QUnit.module("Fields", (hooks) => {
                 res_model: "partner",
                 type: "ir.actions.act_window",
                 views: [[false, "list"]],
-            }
+            },
         };
         serverData.views = {
             "partner,false,list": `<tree><field name="int_field"/></tree>`,
@@ -13335,4 +13338,79 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
         assert.verifySteps([]);
     });
+
+    QUnit.test(
+        "add a row to an x2many and ask canBeRemoved twice (new record)",
+        async function (assert) {
+            // This test simulates that the view is asked twice to save its changes because the user
+            // is leaving. Before the corresponding fix, the changes in the x2many field weren't
+            // removed after the save, and as a consequence they were saved twice (i.e. the row was
+            // created twice).
+
+            const def = makeDeferred();
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+                2: {
+                    id: 2,
+                    name: "another action",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "list"]],
+                },
+            };
+            serverData.views = {
+                "partner,false,list": `<tree><field name="int_field"/></tree>`,
+                "partner,false,search": `<search/>`,
+                "partner,false,form": `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            };
+
+            const mockRPC = async (route, args) => {
+                if (args.method === "create") {
+                    assert.step("create");
+                    assert.deepEqual(args.args[0], {
+                        p: [[0, args.args[0].p[0][1], { display_name: "a name" }]],
+                    });
+                }
+                if (args.method === "write") {
+                    assert.step("write"); // should not be called
+                }
+                if (args.method === "web_search_read") {
+                    return def;
+                }
+            };
+
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            assert.containsOnce(target, ".o_form_view");
+
+            // add a row in the x2many
+            await click(target, ".o_field_x2many_list_row_add a");
+            await editInput(target, ".o_field_widget[name=display_name] input", "a name");
+            assert.containsOnce(target, ".o_data_row");
+
+            doAction(webClient, 2);
+            await nextTick();
+            doAction(webClient, 2);
+            await nextTick();
+            assert.verifySteps(["create"]);
+
+            def.resolve();
+            await nextTick();
+            assert.containsOnce(target, ".o_list_view");
+            assert.verifySteps([]);
+        }
+    );
 });
