@@ -1,3 +1,4 @@
+import { Record } from "@mail/core/common/record";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
@@ -101,7 +102,16 @@ function hasTurn(iceServers) {
     });
 }
 
-export class Rtc {
+export class Rtc extends Record {
+    /** @returns {import("models").Rtc} */
+    static get(data) {
+        return super.get(...arguments);
+    }
+    /** @returns {import("models").Rtc} */
+    static insert(data) {
+        return super.insert(...arguments);
+    }
+
     notifications = reactive(new Map());
     /** @type {Map<string, number>} timeoutId by notificationId for call notifications */
     timeouts = new Map();
@@ -110,18 +120,7 @@ export class Rtc {
     /** @type {import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
 
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {Partial<import("services").Services>} services
-     */
-    constructor(env, services) {
-        this.env = env;
-        this.store = services["mail.store"];
-        this.notification = services.notification;
-        this.soundEffectsService = services["mail.sound_effects"];
-        this.pttExtService = services["discuss.ptt_extension"];
-        this._handleSfuClientUpdates = this._handleSfuClientUpdates.bind(this);
-        this._handleSfuClientStateChange = this._handleSfuClientStateChange.bind(this);
+    setup() {
         this.linkVoiceActivationDebounce = debounce(this.linkVoiceActivation, 500);
         this.state = reactive({
             connectionType: undefined,
@@ -162,6 +161,13 @@ export class Rtc {
             sourceScreenStream: null,
         });
         this.blurManager = undefined;
+    }
+
+    start() {
+        const services = this.store.env.services;
+        this.notification = services.notification;
+        this.soundEffectsService = services["mail.sound_effects"];
+        this.pttExtService = services["discuss.ptt_extension"];
         onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
@@ -181,7 +187,7 @@ export class Rtc {
                 await this.resetAudioTrack({ force: true });
             }
         });
-        this.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
+        this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
             for (const session of this.state.channel.rtcSessions) {
                 session.playAudio();
             }
@@ -1813,6 +1819,8 @@ export class Rtc {
     }
 }
 
+Rtc.register();
+
 export const rtcService = {
     dependencies: [
         "bus_service",
@@ -1826,7 +1834,7 @@ export const rtcService = {
      * @param {Partial<import("services").Services>} services
      */
     start(env, services) {
-        const rtc = new Rtc(env, services);
+        const rtc = env.services["mail.store"].rtc;
         services["bus_service"].subscribe(
             "discuss.channel.rtc.session/sfu_hot_swap",
             async ({ serverInfo }) => {
