@@ -74,6 +74,8 @@ class DiscussChannel(models.Model):
         """Override to mark the visitor as still connected.
         If the message sent is not from the operator (so if it's the visitor or
         odoobot sending closing chat notification, the visitor last action date is updated."""
+        if self.env.user._is_portal():  # portal users are allowed to senf msg to the channel
+            self.env.su = True
         message = super().message_post(**kwargs)
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
