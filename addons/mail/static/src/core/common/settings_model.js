@@ -125,20 +125,6 @@ export class Settings extends Record {
         return undefined;
     }
 
-    getVolume(rtcSession) {
-        return (
-            rtcSession.volume ||
-            this.volumes.find(
-                (volume) =>
-                    (volume.type === "partner" && volume.persona.id === rtcSession.partnerId) ||
-                    (volume.type === "guest" && volume.persona.id === rtcSession.guestId)
-            )?.volume ||
-            0.5
-        );
-    }
-
-    // "setters"
-
     /**
      * @param {string} notif
      */
