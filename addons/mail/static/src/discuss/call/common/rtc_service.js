@@ -123,6 +123,7 @@ export class Rtc extends Record {
         },
     });
     selfSession = Record.one("RtcSession");
+    serverInfo;
     /** @type {import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
 
@@ -135,7 +136,6 @@ export class Rtc extends Record {
             logs: new Map(),
             sendCamera: false,
             sendScreen: false,
-            serverInfo: undefined,
             serverState: undefined,
             updateAndBroadcastDebounce: undefined,
             isPendingNotify: false,
@@ -281,7 +281,7 @@ export class Rtc extends Record {
 
     async loadSfuClient() {
         this.state.connectionType = CONNECTION_TYPES.P2P;
-        if (!this.state.serverInfo) {
+        if (!this.serverInfo) {
             return;
         }
         try {
@@ -727,14 +727,10 @@ export class Rtc extends Record {
     async call() {
         if (this.state.connectionType === CONNECTION_TYPES.SERVER) {
             if (this.sfuClient.state === this.SFU_CLIENT_STATE.DISCONNECTED) {
-                await this.sfuClient.connect(
-                    this.state.serverInfo.url,
-                    this.state.serverInfo.jsonWebToken,
-                    {
-                        channelUUID: this.state.serverInfo.channelUUID,
-                        iceServers: this.iceServers,
-                    }
-                );
+                await this.sfuClient.connect(this.serverInfo.url, this.serverInfo.jsonWebToken, {
+                    channelUUID: this.serverInfo.channelUUID,
+                    iceServers: this.iceServers,
+                });
             }
             return;
         }
@@ -926,7 +922,7 @@ export class Rtc extends Record {
         this.clear();
         this.state.logs.clear();
         this.state.channel = channel;
-        this.state.serverInfo = serverInfo;
+        this.serverInfo = serverInfo;
         this.state.channel.rtcSessions = rtcSessions;
         this.selfSession = this.store.RtcSession.get(sessionId);
         this.iceServers = iceServers || DEFAULT_ICE_SERVERS;
@@ -1185,6 +1181,7 @@ export class Rtc extends Record {
         }
         this.update({
             selfSession: undefined,
+            serverInfo: undefined,
         });
         Object.assign(this.state, {
             updateAndBroadcastDebounce: undefined,
@@ -1196,7 +1193,6 @@ export class Rtc extends Record {
             audioTrack: undefined,
             sendCamera: false,
             sendScreen: false,
-            serverInfo: undefined,
             channel: undefined,
         });
     }
@@ -1846,12 +1842,12 @@ export const rtcService = {
                 if (!rtc.selfSession) {
                     return;
                 }
-                if (rtc.state.serverInfo?.url === serverInfo?.url) {
+                if (rtc.serverInfo?.url === serverInfo?.url) {
                     // no reason to swap if the server is the same, if at some point we want to force a swap
                     // there should be an explicit flag in the event payload.
                     return;
                 }
-                rtc.state.serverInfo = serverInfo;
+                rtc.serverInfo = serverInfo;
                 await rtc.loadSfuClient();
                 await rtc.call();
             }
