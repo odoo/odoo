@@ -26,3 +26,12 @@ class WebClient(WebclientController):
                     )
                 }
             )
+        if kwargs.get("chatbots"):
+            store.add({
+                "ChatbotScript": request.env["chatbot.script"].search([]).mapped(
+                    lambda c: {
+                        "id": c.id,
+                        "name": c.title,
+                    }
+                ),
+            })
