@@ -117,6 +117,11 @@ export class Rtc extends Record {
     timeouts = new Map();
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
+    iceServers = Record.attr(DEFAULT_ICE_SERVERS, {
+        compute() {
+            return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
+        },
+    });
     selfSession = Record.one("RtcSession");
     /** @type {import("@mail/static/libs/odoo_sfu/odoo_sfu").SfuClient} */
     sfuClient = undefined;
@@ -127,7 +132,6 @@ export class Rtc extends Record {
             connectionType: undefined,
             hasPendingRequest: false,
             channel: undefined,
-            iceServers: DEFAULT_ICE_SERVERS,
             logs: new Map(),
             sendCamera: false,
             sendScreen: false,
@@ -728,7 +732,7 @@ export class Rtc extends Record {
                     this.state.serverInfo.jsonWebToken,
                     {
                         channelUUID: this.state.serverInfo.channelUUID,
-                        iceServers: this.state.iceServers,
+                        iceServers: this.iceServers,
                     }
                 );
             }
@@ -747,7 +751,7 @@ export class Rtc extends Record {
     }
 
     createConnection(session) {
-        const peerConnection = new window.RTCPeerConnection({ iceServers: this.state.iceServers });
+        const peerConnection = new window.RTCPeerConnection({ iceServers: this.iceServers });
         this.log(session, "RTCPeerConnection created", {
             step: "peer connection created",
         });
@@ -925,10 +929,10 @@ export class Rtc extends Record {
         this.state.serverInfo = serverInfo;
         this.state.channel.rtcSessions = rtcSessions;
         this.selfSession = this.store.RtcSession.get(sessionId);
-        this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
+        this.iceServers = iceServers || DEFAULT_ICE_SERVERS;
         this.state.logs.set("channelId", this.state.channel.id);
         this.state.logs.set("selfSessionId", this.selfSession.id);
-        this.state.logs.set("hasTURN", hasTurn(this.state.iceServers));
+        this.state.logs.set("hasTURN", hasTurn(this.iceServers));
         const channelProxy = reactive(this.state.channel, () => {
             if (channel.notEq(this.state.channel)) {
                 throw new Error("channel has changed");
