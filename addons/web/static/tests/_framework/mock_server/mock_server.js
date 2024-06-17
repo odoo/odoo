@@ -343,10 +343,9 @@ export class MockServer {
     }
 
     /**
-     * @param {string} route
      * @param {OrmParams} params
      */
-    callOrm(route, params) {
+    callOrm(params) {
         const { method, model: modelName } = params;
         const args = params.args || [];
         const kwargs = makeKwArgs(params.kwargs || {});
@@ -424,8 +423,7 @@ export class MockServer {
      * @param {OrmParams} params
      */
     findOrmListeners({ method, model }) {
-        /** @type {OrmCallback[]} */
-        const callbacks = [];
+        const callbacks = [this.callOrm];
         for (const [listenerModel, listenerMethod, callback] of this.ormListeners) {
             if (match(model, listenerModel) && match(method, listenerMethod)) {
                 callbacks.unshift(callback);
@@ -914,13 +912,21 @@ export class MockServer {
 
     /** @type {RouteCallback} */
     async mockCallKw(request) {
-        const { params } = await request.json();
-        const route = new URL(request.url).pathname;
+        const callNextOrmCallback = () => {
+            const nextCallback = ormListeners.shift();
+            return nextCallback.call(this, callbackParams);
+        };
 
-        const parent = () => this.callOrm(route, params);
-        const callbackParams = { parent, request, route, ...params };
-        for (const callback of [...this.findOrmListeners(params), parent]) {
-            const result = await callback.call(this, callbackParams);
+        const { params } = await request.json();
+        const callbackParams = {
+            parent: callNextOrmCallback,
+            request,
+            route: new URL(request.url).pathname,
+            ...params,
+        };
+        const ormListeners = this.findOrmListeners(params);
+        while (ormListeners.length) {
+            const result = await callNextOrmCallback();
             if (!isNil(result)) {
                 return result;
             }
