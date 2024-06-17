@@ -36,6 +36,7 @@ ids_by_model = defaultdict(lambda: ("id",))
 ids_by_model.update(
     {
         "Persona": ("type", "id"),
+        "Rtc": (),
         "Store": (),
         "Thread": ("model", "id"),
     }
