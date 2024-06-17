@@ -58,7 +58,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
 
         if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+            raise ValidationError(_("Contact email and mobile number are required."))
 
         params = {
             'update_data': {
