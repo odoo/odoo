@@ -10234,6 +10234,55 @@ QUnit.module('Legacy fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('add a row to an x2many and ask canBeRemoved twice (new record)', async function (assert) {
+            // This test simulates that the view is asked twice to save its changes because the user
+            // is leaving. Before the corresponding fix, the changes in the x2many field weren't
+            // removed after the save, and as a consequence they were saved twice (i.e. the row was
+            // created twice).
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (args.method === "create") {
+                        assert.step("create");
+                        assert.deepEqual(args.args[0], {
+                            p: [[0, args.args[0].p[0][1], { display_name: "a name" }]],
+                        });
+                    }
+                    if (args.method === "write") {
+                        assert.step("write"); // should not be called
+                    }
+                    return this._super(route, args);
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // click add food
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_input[name="display_name"]'), 'a name');
+            assert.containsOnce(form, ".o_data_row");
+
+            form.canBeRemoved();
+            form.canBeRemoved();
+            await testUtils.nextTick();
+            assert.containsOnce(form, ".o_data_row");
+            assert.verifySteps(["create"]);
+
+            form.destroy();
+        });
     });
 });
 });
