@@ -156,7 +156,7 @@ class ResConfigSettings(models.TransientModel):
                 _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
         if not self.account_peppol_phone_number:
-            raise ValidationError(_("Please enter a phone number to verify your application."))
+            raise ValidationError(_("Please enter a mobile number to verify your application."))
 
         company = self.company_id
         edi_proxy_client = self.env['account_edi_proxy_client.user']
@@ -213,7 +213,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
 
         if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+            raise ValidationError(_("Contact email and mobile number are required."))
 
         params = {
             'update_data': {

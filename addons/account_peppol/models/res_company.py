@@ -48,8 +48,8 @@ class ResCompany(models.Model):
         help='Primary contact email for Peppol-related communication',
     )
     account_peppol_phone_number = fields.Char(
-        string='Phone number (for validation)',
-        help='You will receive a verification code to this phone number',
+        string='Mobile number (for validation)',
+        help='You will receive a verification code to this mobile number',
     )
     account_peppol_proxy_state = fields.Selection(
         selection=[
@@ -82,7 +82,7 @@ class ResCompany(models.Model):
         self.ensure_one()
 
         error_message = _(
-            "Please enter the phone number in the correct international format.\n"
+            "Please enter the mobile number in the correct international format.\n"
             "For example: +32123456789, where +32 is the country code.\n"
             "Currently, only European countries are supported.")
 
