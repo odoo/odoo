@@ -1445,7 +1445,9 @@ export class Wysiwyg extends Component {
                 }
                 // update the shouldFocusUrl prop to focus on url when double click and click edit link
                 this.state.linkToolProps.shouldFocusUrl = shouldFocusUrl;
-                const _onClick = ev => {
+                this.odooEditor.document.removeEventListener('click', this._onClick, true);
+                document.removeEventListener('click', this._onClick, true);
+                this._onClick = ev => {
                     if (
                         !ev.target.closest('#create-link') &&
                         (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
@@ -1455,12 +1457,12 @@ export class Wysiwyg extends Component {
                         // Destroy the link tools on click anywhere outside the
                         // toolbar if the target is the orgiginal target not in the original target.
                         this.destroyLinkTools();
-                        this.odooEditor.document.removeEventListener('click', _onClick, true);
-                        document.removeEventListener('click', _onClick, true);
+                        this.odooEditor.document.removeEventListener('click', this._onClick, true);
+                        document.removeEventListener('click', this._onClick, true);
                     }
                 };
-                this.odooEditor.document.addEventListener('click', _onClick, true);
-                document.addEventListener('click', _onClick, true);
+                this.odooEditor.document.addEventListener('click', this._onClick, true);
+                document.addEventListener('click', this._onClick, true);
             } else {
                 this.destroyLinkTools();
             }
