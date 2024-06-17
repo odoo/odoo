@@ -22,6 +22,16 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         # Verify behavior when self Order is closed
         self.start_tour(self_route, "self_order_is_close")
 
+    def test_self_order_consultation_open(self):
+        """Verify than when the pos is open and self ordering is set to consultation the banner isn't shown"""
+        self.pos_config.write({'self_ordering_mode': 'consultation'})
+
+        self_route = self.pos_config._get_self_order_route()
+
+        # Verify behavior when self Order is opened
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(self_route, "self_order_is_open_consultation")
+
     def test_self_order_pos_closed(self):
         """
         Verify than when the pos is closed and self ordering is set to mobile, consultation or kiosk,

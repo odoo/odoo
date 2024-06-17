@@ -498,7 +498,11 @@ export class SelfOrder extends Reactive {
 
     async initMobileData() {
         if (this.config.self_ordering_mode !== "qr_code") {
-            if (this.session && this.access_token) {
+            if (
+                this.session &&
+                this.access_token &&
+                this.config.self_ordering_mode !== "consultation"
+            ) {
                 this.ordering = true;
             }
 
