@@ -574,7 +574,6 @@ class StockMoveLine(models.Model):
                 else:
                     ml_ids_tracked_without_lot.add(ml.id)
 
-
         if ml_ids_tracked_without_lot:
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
             raise UserError(_('You need to supply a Lot/Serial Number for product: \n - ') +
@@ -591,8 +590,11 @@ class StockMoveLine(models.Model):
 
         # Now, we can actually move the quant.
         ml_ids_to_ignore = OrderedSet()
+        quants_cache = self.env['stock.quant']._get_quants_by_products_locations(
+            mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
+            extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
 
-        for ml in mls_todo:
+        for ml in mls_todo.with_context(quants_cache=quants_cache):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
