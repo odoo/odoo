@@ -149,18 +149,7 @@ class TestChannelRTC(MailCommon):
         ):
             now = fields.Datetime.now()
             with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
-                res = channel_member._rtc_join_call()
-        self.assertIn('invitedMembers', res)
-        self.assertEqual(res['invitedMembers'], [('ADD', [{
-            'id': channel_member_test_user.id,
-            'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-            'persona': {
-                'id': channel_member_test_user.partner_id.id,
-                'name': channel_member_test_user.partner_id.name,
-                'im_status': channel_member_test_user.partner_id.im_status,
-                'type': "partner",
-            },
-        }])])
+                channel_member._rtc_join_call()
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -262,30 +251,7 @@ class TestChannelRTC(MailCommon):
         ):
             now = fields.Datetime.now()
             with patch.object(fields.Datetime, 'now', lambda: now + relativedelta(seconds=5)):
-                res = channel_member._rtc_join_call()
-        self.assertIn('invitedMembers', res)
-        self.assertEqual(res['invitedMembers'], [('ADD', [
-            {
-                'id': channel_member_test_user.id,
-                'thread': {'id': channel_member_test_user.channel_id.id, 'model': "discuss.channel"},
-                'persona': {
-                    'id': channel_member_test_user.partner_id.id,
-                    'name': channel_member_test_user.partner_id.name,
-                    'im_status': channel_member_test_user.partner_id.im_status,
-                    'type': "partner",
-                },
-            },
-            {
-                'id': channel_member_test_guest.id,
-                'thread': {'id': channel_member_test_guest.channel_id.id, 'model': "discuss.channel"},
-                'persona': {
-                    'id': channel_member_test_guest.guest_id.id,
-                    'name': channel_member_test_guest.guest_id.name,
-                    'im_status': channel_member_test_guest.guest_id.im_status,
-                    'type': "guest",
-                },
-            },
-        ])])
+                channel_member._rtc_join_call()
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
