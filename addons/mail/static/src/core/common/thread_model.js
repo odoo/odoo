@@ -74,7 +74,6 @@ export class Thread extends Record {
          */
         sort: (a1, a2) => (a1.id < a2.id ? 1 : -1),
     });
-    activeRtcSession = Record.one("RtcSession");
     get canLeave() {
         return (
             ["channel", "group"].includes(this.channel_type) &&
@@ -108,23 +107,6 @@ export class Thread extends Record {
         /** @this {import("models").Thread} */
         compute() {
             return this.otherTypingMembers.length > 0;
-        },
-    });
-    rtcSessions = Record.many("RtcSession", {
-        /** @this {import("models").Thread} */
-        onDelete(r) {
-            this.store.env.services["discuss.rtc"].deleteSession(r.id);
-        },
-    });
-    rtcInvitingSession = Record.one("RtcSession", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            this.rtcSessions.add(r);
-            this.store.discuss.ringingThreads.add(this);
-        },
-        /** @this {import("models").Thread} */
-        onDelete(r) {
-            this.store.discuss.ringingThreads.delete(this);
         },
     });
     toggleBusSubscription = Record.attr(false, {
@@ -617,34 +599,15 @@ export class Thread extends Record {
         compute() {
             return this.channelMembers.filter((member) => member.persona.im_status === "online");
         },
-        sort: (m1, m2) => {
-            const m1HasRtc = Boolean(m1.rtcSession);
-            const m2HasRtc = Boolean(m2.rtcSession);
-            if (m1HasRtc === m2HasRtc) {
-                /**
-                 * If raisingHand is falsy, it gets an Infinity value so that when
-                 * we sort by [oldest/lowest-value]-first, falsy values end up last.
-                 */
-                const m1RaisingValue = m1.rtcSession?.raisingHand || Infinity;
-                const m2RaisingValue = m2.rtcSession?.raisingHand || Infinity;
-                if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
-                    return m1RaisingValue - m2RaisingValue;
-                } else {
-                    return m1.persona.name?.localeCompare(m2.persona.name) ?? 1;
-                }
-            } else {
-                return m2HasRtc - m1HasRtc;
-            }
-        },
+        sort: (m1, m2) => this.store.Thread.sortOnlineMembers(m1, m2),
     });
+
+    static sortOnlineMembers(m1, m2) {
+        return m1.persona.name?.localeCompare(m2.persona.name) || m1.id - m2.id;
+    }
 
     get unknownMembersCount() {
         return this.memberCount - this.channelMembers.length;
-    }
-
-    get videoCount() {
-        return Object.values(this.store.RtcSession.records).filter((session) => session.hasVideo)
-            .length;
     }
 
     executeCommand(command, body = "") {
