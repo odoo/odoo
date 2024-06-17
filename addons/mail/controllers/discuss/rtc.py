@@ -7,6 +7,7 @@ from odoo import http
 from odoo.http import request
 from odoo.tools import file_open
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
+from odoo.addons.mail.tools.discuss import Store
 
 
 class RtcController(http.Controller):
@@ -127,12 +128,16 @@ class RtcController(http.Controller):
             ]
             channel_member_sudo.channel_id.rtc_session_ids.filtered_domain(domain).write({})  # update write_date
         current_rtc_sessions, outdated_rtc_sessions = channel_member_sudo._rtc_sync_sessions(check_rtc_session_ids)
-        return {
+        store = Store(
+            "RtcSession", [session._mail_rtc_session_format() for session in current_rtc_sessions]
+        )
+        channel_info = {
+            "id": member.channel_id.id,
+            "model": "discuss.channel",
             "rtcSessions": [
-                ("ADD", [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in current_rtc_sessions]),
-                (
-                    "DELETE",
-                    [{"id": missing_rtc_session_sudo.id} for missing_rtc_session_sudo in outdated_rtc_sessions],
-                ),
-            ]
+                ("ADD", [{"id": session.id} for session in current_rtc_sessions]),
+                ("DELETE", [{"id": session.id} for session in outdated_rtc_sessions]),
+            ],
         }
+        store.add("Thread", channel_info)
+        return store.get_result()

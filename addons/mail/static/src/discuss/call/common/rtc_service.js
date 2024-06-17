@@ -1031,7 +1031,7 @@ export class Rtc {
     }
 
     async ping() {
-        const { rtcSessions } = await rpc(
+        const data = await rpc(
             "/discuss/channel/ping",
             {
                 channel_id: this.state.channel.id,
@@ -1040,16 +1040,7 @@ export class Rtc {
             },
             { silent: true }
         );
-        if (this.state.channel && rtcSessions) {
-            const activeSessionsData = rtcSessions[0][1];
-            for (const sessionData of activeSessionsData) {
-                this.state.channel.rtcSessions.add(sessionData);
-            }
-            const outdatedSessionsData = rtcSessions[1][1];
-            for (const sessionData of outdatedSessionsData) {
-                this.deleteSession(sessionData);
-            }
-        }
+        this.store.insert(data);
     }
 
     /**
