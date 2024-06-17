@@ -12,6 +12,7 @@ patch(SlideUploadCategory.prototype, {
         super.setup();
         this.state.choices.certifications = [];
         this.state.choices.certificationId = "";
+        this.state.showCertificationRequiredError = false;
         onWillStart(async () => {
             const results = await rpc("/slides_survey/certification/search_read", {
                 fields: ["title"],
@@ -31,6 +32,15 @@ patch(SlideUploadCategory.prototype, {
             : _t("Select or create a certification");
     },
 
+    _formValidate() {
+        const isFormValid = super._formValidate();
+        if (this.props.slideCategory === "certification" && !this.state.choices.certificationId) {
+            this.state.showCertificationRequiredError = true;
+            return false;
+        }
+        return isFormValid;
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -40,6 +50,7 @@ patch(SlideUploadCategory.prototype, {
         this.state.form.slideName = this.state.choices.certifications.find(
             (c) => c.value === value
         ).label;
+        this.state.showCertificationRequiredError = false;
     },
 
     onClickCreateCertificationBtn(categoryName) {
