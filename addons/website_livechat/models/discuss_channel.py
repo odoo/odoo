@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError
 
 
@@ -22,7 +22,7 @@ class DiscussChannel(models.Model):
         if self.livechat_active and not self.message_ids:
             self.sudo().unlink()
 
-    def _to_store(self, store):
+    def _to_store(self, store: Store):
         """
         Override to add visitor information on the mail channel infos.
         This will be used to display a banner with visitor informations
@@ -51,7 +51,7 @@ class DiscussChannel(models.Model):
                 }
             except AccessError:
                 pass
-            store.add({"Thread": channel_info})
+            store.add("Thread", channel_info)
 
     def _get_visitor_history(self, visitor):
         """

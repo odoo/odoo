@@ -8,7 +8,7 @@ from odoo import fields, http
 from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 
 
 class DiscussChannelWebclientController(WebclientController):
@@ -20,8 +20,8 @@ class DiscussChannelWebclientController(WebclientController):
             channels = request.env["discuss.channel"]._get_channels_as_member()
             # fetch channels data before messages to benefit from prefetching (channel info might
             # prefetch a lot of data that message format could use)
-            channels._to_store(store)
-            store.add({"Message": channels._get_last_messages()._message_format(for_current_user=True)})
+            store.add(channels)
+            store.add("Message", channels._get_last_messages()._message_format(for_current_user=True))
 
 
 class ChannelController(http.Controller):
@@ -46,9 +46,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             return
-        store = StoreData()
-        channel._to_store(store)
-        return store.get_result()
+        return Store(channel).get_result()
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

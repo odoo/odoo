@@ -50,8 +50,4 @@ class Users(models.Model):
 
     def _init_store_data(self, store):
         super()._init_store_data(store)
-        store.add({
-            "Store": {
-                "has_access_livechat": self.env.user.has_access_livechat,
-            },
-        })
+        store.add({"has_access_livechat": self.env.user.has_access_livechat})

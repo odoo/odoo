@@ -3,7 +3,7 @@
 import json
 
 from odoo import api, Command, fields, models, _
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import get_lang
@@ -102,8 +102,7 @@ class WebsiteVisitor(models.Model):
         channel_members.write({
             'fold_state': 'open',
         })
-        store = StoreData()
-        discuss_channels._to_store(store)
+        store = Store(discuss_channels)
         self.env['bus.bus']._sendone(operator.partner_id, "website_livechat.send_chat_request", store.get_result())
 
     def _merge_visitor(self, target):

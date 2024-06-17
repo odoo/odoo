@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
 
 
@@ -150,7 +150,7 @@ class TestDiscussFullPerformance(HttpCase):
         self.maxDiff = None
         self.env.flush_all()
         self.env.invalidate_all()
-        store = StoreData()
+        store = Store()
         with self.assertQueryCount(emp=self._query_count_init_store):
             self.env["res.users"].with_user(self.users[0])._init_store_data(store)
         self.assertEqual(store.get_result(), self._get_init_store_data_result())
