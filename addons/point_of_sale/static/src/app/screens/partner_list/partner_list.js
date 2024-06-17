@@ -92,10 +92,16 @@ export class PartnerList extends Component {
     }
 
     get_partners_searched() {
-        return fuzzyLookup(
-            unaccent(this.state.query.trim(), false),
-            this.pos.models["res.partner"].getAll(),
-            (partner) => unaccent(partner.searchString, false)
+        const searchWord = unaccent(this.state.query.trim(), false);
+        const partners = this.pos.models["res.partner"].getAll();
+        const exactMatches = partners.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0) {
+            return exactMatches;
+        }
+
+        return fuzzyLookup(searchWord, partners, (partner) =>
+            unaccent(partner.searchString, false)
         );
     }
 
