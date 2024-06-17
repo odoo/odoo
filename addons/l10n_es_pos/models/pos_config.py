@@ -19,7 +19,7 @@ class PosConfig(models.Model):
     )
     l10n_es_simplified_invoice_journal_id = fields.Many2one(
         comodel_name='account.journal',
-        domain="[('type', '=', 'sale')]",
+        domain=[('type', '=', 'sale')],
         check_company=True,
         default=_default_sinv_journal_id,
     )
