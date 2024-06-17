@@ -62,11 +62,23 @@ export const ExpenseDocumentUpload = {
         this.http = useService('http');
         this.fileInput = useRef('fileInput');
         this.root = useRef("root");
+        this.isExpense = this.model.rootParams.resModel === "hr.expense";
 
         useBus(this.env.bus, "change_file_input", async (ev) => {
             this.fileInput.el.files = ev.detail.files;
             await this.onChangeFileInput();
         });
+    },
+
+    displayCreateReport() {
+        return this.isExpense;
+    },
+
+    async onCreateReportClick() {
+        const records = this.model.root.selection;
+        const recordIds = records.map((a) => a.resId);
+        const action = await this.orm.call('hr.expense', 'get_expenses_to_submit', [recordIds]);
+        this.actionService.doAction(action);
     },
 
     uploadDocument() {
