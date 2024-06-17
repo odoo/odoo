@@ -15,12 +15,11 @@ class MrpProduction(models.Model):
     @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id')
     def _compute_purchase_order_count(self):
         for production in self:
-            production.purchase_order_count = len(production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id |
-                                                  production.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id)
+            production.purchase_order_count = len(production._get_purchase_orders())
 
     def action_view_purchase_orders(self):
         self.ensure_one()
-        purchase_order_ids = (self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id | self.procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id).ids
+        purchase_order_ids = self._get_purchase_orders().ids
         action = {
             'res_model': 'purchase.order',
             'type': 'ir.actions.act_window',
@@ -37,6 +36,14 @@ class MrpProduction(models.Model):
                 'view_mode': 'tree,form',
             })
         return action
+
+    def _get_purchase_orders(self):
+        group_id = self.procurement_group_id
+        return (
+            group_id.stock_move_ids.created_purchase_line_ids.order_id |
+            group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id |
+            group_id.group_orig_ids.purchase_order_id
+        )
 
     def _get_document_iterate_key(self, move_raw_id):
         iterate_key = super(MrpProduction, self)._get_document_iterate_key(move_raw_id)

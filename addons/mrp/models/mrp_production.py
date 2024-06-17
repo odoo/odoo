@@ -465,7 +465,7 @@ class MrpProduction(models.Model):
             production_record = production or raw_material_production
             production_record.confirm_cancel = True
 
-    @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id')
+    @api.depends('procurement_group_id', 'procurement_group_id.stock_move_ids.group_id', 'procurement_group_id.stock_move_ids.picking_id')
     def _compute_picking_ids(self):
         for order in self:
             order.picking_ids = self.env['stock.picking'].search([
@@ -1241,7 +1241,21 @@ class MrpProduction(models.Model):
                 # procurement and assigning is now run in write
                 move.write({'product_uom_qty': new_qty})
                 update_info.append((move, old_qty, new_qty))
+                if move.created_production_id:
+                    mo = move.created_production_id
+                    self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
+                        'mo_id': mo.id,
+                        'product_qty': mo.product_id.uom_id._compute_quantity(mo.product_qty + new_qty - old_qty, mo.product_uom_id)
+                    }).change_prod_qty()
         return update_info
+
+    def _update_mtso_sam_moves(self, factor):
+        move_ids = self.picking_ids.move_ids.filtered(lambda m: m.picking_type_id.id == self.warehouse_id.sam_type_id.id and m._is_mtso())
+        for m in move_ids:
+            old_qty = m.product_uom_qty
+            new_qty = float_round(old_qty * factor, precision_rounding=m.product_uom.rounding, rounding_method='UP')
+            if new_qty > 0:
+                m.write({'product_uom_qty': new_qty})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):
@@ -1303,13 +1317,14 @@ class MrpProduction(models.Model):
         self.ensure_one()
         procurement_moves = self.procurement_group_id.stock_move_ids
         child_moves = procurement_moves.move_orig_ids
-        return (procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
+        group_orig_ids = self.procurement_group_id.group_orig_ids
+        return ((procurement_moves | child_moves).created_production_id.procurement_group_id | group_orig_ids).mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
     def _get_sources(self):
         self.ensure_one()
         dest_moves = self.procurement_group_id.mrp_production_ids.move_dest_ids
         parent_moves = self.procurement_group_id.stock_move_ids.move_dest_ids
-        return (dest_moves | parent_moves).group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
+        return ((dest_moves | parent_moves).group_id | self.procurement_group_id.group_dest_ids).mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
     def set_qty_producing(self):
         # This method is used to call `_set_lot_producing` when the onchange doesn't apply.

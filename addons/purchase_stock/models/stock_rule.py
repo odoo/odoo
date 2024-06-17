@@ -6,7 +6,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.tools import float_compare
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, SUPERUSER_ID, _
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
 
@@ -98,6 +98,7 @@ class StockRule(models.Model):
             po = self.env['purchase.order'].sudo().search([dom for dom in domain], limit=1)
             company_id = procurements[0].company_id
             if not po:
+                """ TODO EXTRACT : create_po """
                 positive_values = [p.values for p in procurements if float_compare(p.product_qty, 0.0, precision_rounding=p.product_uom.rounding) >= 0]
                 if positive_values:
                     # We need a rule to generate the PO. However the rule generated
@@ -109,7 +110,11 @@ class StockRule(models.Model):
                     # We use SUPERUSER_ID since we don't want the current user to be follower of the PO.
                     # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
+                else:
+                    # Then we have no PO to process
+                    continue
             else:
+                """ TODO EXTRACT : update_po """
                 # If a purchase order is found, adapt its `origin` field.
                 if po.origin:
                     missing_origins = origins - set(po.origin.split(', '))
@@ -120,6 +125,26 @@ class StockRule(models.Model):
 
             procurements_to_merge = self._get_procurements_to_merge(procurements)
             procurements = self._merge_procurements(procurements_to_merge)
+
+            """ TODO EXTRACT : create_or_update_purchase_order_procurement_group"""
+            # Here, in all case there's a purchase order
+            group_dest_ids = self.env['procurement.group']
+            for procurement in procurements:
+                move_dest_ids = procurement.values.get('move_dest_ids')
+                for move in move_dest_ids:
+                    if move.procure_method == 'make_to_stock':
+                        group_dest_ids |= move.group_id
+            if group_dest_ids:
+                if po.group_id:
+                    po.group_id.group_dest_ids |= group_dest_ids
+                else:
+                    # TODO : Extract in purchase_order ???
+                    po.group_id = self.group_id.create({
+                        'name': po.name,
+                        'partner_id': po.partner_id.id,
+                        'group_dest_ids': [Command.link(pg.id) for pg in group_dest_ids],
+                        'purchase_order_id': po.id,
+                    })
 
             po_lines_by_product = {}
             grouped_po_lines = groupby(po.order_line.filtered(lambda l: not l.display_type and l.product_uom == l.product_id.uom_po_id), key=lambda l: l.product_id.id)
@@ -255,17 +280,18 @@ class StockRule(models.Model):
                 price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())
 
         res = {
-            'product_qty': line.product_qty + procurement_uom_po_qty,
+            'product_qty': max(line.product_qty + procurement_uom_po_qty, 0),
             'price_unit': price_unit,
-            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
+        if values.get('move_dest_ids'):
+            res['move_dest_ids'] = [Command.link(x.id) for x in values['move_dest_ids'].filtered(lambda m: m.procure_method != 'make_to_stock')]
         orderpoint_id = values.get('orderpoint_id')
         if orderpoint_id:
             res['orderpoint_id'] = orderpoint_id.id
         return res
 
     def _prepare_purchase_order(self, company_id, origins, values):
-        """ Create a purchase order for procuremets that share the same domain
+        """ Create a purchase order for procurements that share the same domain
         returned by _make_po_get_domain.
         params values: values of procurements
         params origins: procuremets origins to write on the PO
@@ -281,9 +307,7 @@ class StockRule(models.Model):
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
-        gpo = self.group_propagation_option
-        group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False
+        group = self._prepare_purchase_order_group(values)
 
         return {
             'partner_id': partner.id,
@@ -296,13 +320,17 @@ class StockRule(models.Model):
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
             'fiscal_position_id': fpos.id,
-            'group_id': group
+            'group_id': group.id if group else False,
         }
 
-    def _make_po_get_domain(self, company_id, values, partner):
+    def _prepare_purchase_order_group(self, values):
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
+                (gpo == 'propagate' and values.get('group_id')) or False
+        return group
+
+    def _make_po_get_domain(self, company_id, values, partner):
+        group = self._prepare_purchase_order_group(values)
 
         domain = (
             ('partner_id', '=', partner.id),

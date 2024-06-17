@@ -31,8 +31,10 @@ class TestOldRules(TestStockCommon):
             'location_src_id': reception_route_3.rule_ids[1].location_dest_id.id,
         })
         reception_route_3.rule_ids[1].write({'action': 'pull_push'})
-        reception_route_3.rule_ids[2].write({'action': 'pull_push'})
-
+        if len(reception_route_3.rule_ids) >= 3:
+            reception_route_3.rule_ids[2].write({'action': 'pull_push'})
+        else:
+            reception_route_3.rule_ids.location_dest_from_rule = True
 
         # Create a warehouse with 2 steps using old rules setup.
         cls.warehouse_2_steps = cls.env['stock.warehouse'].create({
@@ -168,14 +170,17 @@ class TestOldRules(TestStockCommon):
         self.assertEqual(len(picking_ids), 3)
         for picking in picking_ids:
             # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == self.warehouse_3_steps.lot_stock_id:
+            if picking.location_id == self.warehouse_3_steps.lot_stock_id or picking.location_dest_id == final_location:
                 self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
             else:
                 self.assertEqual(picking.move_ids.procure_method, 'make_to_order')
 
             self.assertEqual(len(picking.move_ids), 1)
-            self.assertEqual(picking.move_ids.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
-        self.assertEqual(qty_available, 4, 'The 4 products should still be available')
+            if picking.location_dest_id == final_location:
+                self.assertEqual(picking.move_ids.product_uom_qty, 5, 'The quantity of the move should be the same as on the SO')
+            else:
+                self.assertEqual(picking.move_ids.product_uom_qty, 1, 'The quantity of the move should be the missing quantity')
+        self.assertEqual(qty_available, 0, 'The 4 products should have been consumed')
 
     def test_mtso_mts(self):
         """ Run a procurement for 4 products when there are 4 in stock then
@@ -297,7 +302,7 @@ class TestOldRules(TestStockCommon):
         self.assertEqual(len(pickings_pg3), 3)
         for picking in pickings_pg3:
             # Only the picking from Stock to Pack should be MTS
-            if picking.location_id == warehouse.lot_stock_id:
+            if picking.location_id == warehouse.lot_stock_id or picking.location_dest_id == final_location:
                 self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
             else:
                 self.assertEqual(picking.move_ids.procure_method, 'make_to_order')

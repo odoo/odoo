@@ -19,5 +19,6 @@ class TestSaleMrpAccount(test_multistep_manufacturing.TestMultistepManufacturing
             'plan_id': analytic_plan.id,
         })
         self.sale_order.action_confirm()
+        self.sale_order.invalidate_recordset(['mrp_production_ids'])
         self.assertTrue(self.sale_order.mrp_production_ids.analytic_distribution)
         self.assertTrue(self.sale_order.mrp_production_ids.analytic_account_ids)

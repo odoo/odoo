@@ -436,7 +436,7 @@ class Warehouse(models.Model):
                 'depends': ['delivery_steps'],
                 'create_values': {
                     'active': True,
-                    'procure_method': 'mts_else_mto',
+                    'procure_method': 'make_to_order',
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
@@ -1001,7 +1001,7 @@ class Warehouse(models.Model):
     def _get_picking_type_create_values(self, max_sequence):
         """ When a warehouse is created this method return the values needed in
         order to create the new picking types for this warehouse. Every picking
-        type are created at the same time than the warehouse howver they are
+        type are created at the same time than the warehouse however they are
         activated or archived depending the delivery_steps or reception_steps.
         """
         input_loc, output_loc = self._get_input_output_locations(self.reception_steps, self.delivery_steps)

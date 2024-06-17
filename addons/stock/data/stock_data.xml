@@ -51,7 +51,7 @@
             <field name="usage">customer</field>
             <field name="company_id"></field>
         </record>
-        
+
         <record id="stock_location_inter_company" model="stock.location">
             <field name="name">Inter-company transit</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
@@ -64,7 +64,7 @@
         <record id="route_warehouse0_mto" model='stock.route'>
             <field name="name">Replenish on Order (MTO)</field>
             <field name="company_id"></field>
-            <field name="active">False</field>
+            <field name="active">True</field>
             <field name="sequence">5</field>
         </record>
 

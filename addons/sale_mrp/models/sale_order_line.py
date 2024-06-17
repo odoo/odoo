@@ -154,4 +154,14 @@ class SaleOrderLine(models.Model):
             order_qty = self.product_uom._compute_quantity(order_qty, bom.product_uom_id)
             qty = moves._compute_kit_quantities(self.product_id, order_qty, bom, filters)
             return bom.product_uom_id._compute_quantity(qty, self.product_uom)
-        return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+        return super()._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
+
+    def _prepare_procurement_values(self, group_id=False):
+        values = super()._prepare_procurement_values(group_id)
+        # When extending the demand on an 'available' MO, force created_production_id to ensure merge of moves in related picking order
+        if group_id.stock_move_ids and group_id.stock_move_ids.created_production_id:
+            production_id = group_id.stock_move_ids.created_production_id.filtered(lambda mo: mo.state not in ('done', 'cancel'))
+            if len(production_id) >= 1:
+                values['created_production_id'] = production_id[0].id
+
+        return values

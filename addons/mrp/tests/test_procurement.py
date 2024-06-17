@@ -17,7 +17,6 @@ class TestProcurement(TestMrpCommon):
         self.bom_1.bom_line_ids.filtered(lambda x: x.product_id == self.product_1).unlink()
         # Update route
         self.warehouse = self.env.ref('stock.warehouse0')
-        self.warehouse.mto_pull_id.route_id.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
@@ -115,7 +114,6 @@ class TestProcurement(TestMrpCommon):
         # set the MTO route to the parent category (all)
         self.warehouse = self.env.ref('stock.warehouse0')
         mto_route = self.warehouse.mto_pull_id.route_id
-        mto_route.active = True
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
@@ -478,8 +476,6 @@ class TestProcurement(TestMrpCommon):
         vendor = self.env['res.partner'].create({
             'name': 'Roger'
         })
-        # This needs to be tried with MTO route activated
-        self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).action_unarchive()
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',
@@ -536,7 +532,6 @@ class TestProcurement(TestMrpCommon):
     def test_rr_with_dependance_between_bom(self):
         self.warehouse = self.env.ref('stock.warehouse0')
         route_mto = self.warehouse.mto_pull_id.route_id
-        route_mto.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
         product_1 = self.env['product.product'].create({
             'name': 'Product A',

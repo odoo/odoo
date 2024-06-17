@@ -2857,7 +2857,7 @@ class TestRoutes(TestStockCommon):
         Stock moves (SM) are created for 4.0 units
         After '_adjust_procure_method':
         - SM for A is 'make_to_stock'
-        - SM for B is 'make_to_order'
+        - SM for B is 'make_to_stock'
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         final_location = self.partner.property_stock_customer
@@ -2898,10 +2898,10 @@ class TestRoutes(TestStockCommon):
         moves = move_A + move_B
 
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
-        self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
+        self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
         moves._adjust_procure_method()
         self.assertEqual(move_A.procure_method, 'make_to_stock', 'Move A should be "make_to_stock"')
-        self.assertEqual(move_B.procure_method, 'make_to_order', 'Move A should be "make_to_order"')
+        self.assertEqual(move_B.procure_method, 'make_to_stock', 'Move B should be "make_to_stock"')
 
     def test_mtso_mto_adjust_02(self):
         """ Run '_adjust_procure_method' for products A & B:
@@ -2910,7 +2910,7 @@ class TestRoutes(TestStockCommon):
         Stock moves (SM) are created for 2.0 + 2.0 units
         After '_adjust_procure_method':
         - SM for A is 'make_to_stock'
-        - SM for B is 'make_to_stock' and 'make_to_order'
+        - SM for B is 'make_to_stock'
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
         final_location = self.partner.property_stock_customer
@@ -2968,7 +2968,7 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_A1.procure_method, 'make_to_stock', 'Move A1 should be "make_to_stock"')
         self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
         self.assertEqual(move_B1.procure_method, 'make_to_stock', 'Move B1 should be "make_to_stock"')
-        self.assertEqual(move_B2.procure_method, 'make_to_order', 'Move B2 should be "make_to_order"')
+        self.assertEqual(move_B2.procure_method, 'make_to_stock', 'Move B2 should be "make_to_stock"')
 
     def test_mtso_mto_adjust_03(self):
         """ Run '_adjust_procure_method' for products A with 4.0 available
@@ -2976,7 +2976,7 @@ class TestRoutes(TestStockCommon):
         - SM1 for 5.0 Units
         - SM2 for 3.0 Units
         SM1 is confirmed, so 'virtual_available' is -1.0.
-        SM1 should become 'make_to_order'
+        SM1 should remain 'make_to_stock'
         SM2 should remain 'make_to_stock'
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
@@ -3016,8 +3016,8 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
         move_A1._action_confirm()
         moves._adjust_procure_method()
-        self.assertEqual(move_A1.procure_method, 'make_to_order', 'Move A should be "make_to_stock"')
-        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
+        self.assertEqual(move_A1.procure_method, 'make_to_stock', 'Move A1 should be "make_to_stock"')
+        self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A2 should be "make_to_stock"')
 
     def test_packaging_route(self):
         """Create a route for product and another route for its packaging. Create

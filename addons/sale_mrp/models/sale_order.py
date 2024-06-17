@@ -19,14 +19,12 @@ class SaleOrder(models.Model):
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_ids(self):
-        data = self.env['procurement.group']._read_group([('sale_id', 'in', self.ids)], ['sale_id'], ['id:recordset'])
-        mrp_productions = {}
-        for sale, procurement_groups in data:
-            mrp_productions[sale.id] = procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
         for sale in self:
-            mrp_production_ids = mrp_productions.get(sale.id, self.env['mrp.production'])
-            sale.mrp_production_count = len(mrp_production_ids)
-            sale.mrp_production_ids = mrp_production_ids
+            sale.mrp_production_ids = (
+                sale.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id |
+                sale.procurement_group_id.group_orig_ids
+            ).mrp_production_ids
+            sale.mrp_production_count = len(sale.mrp_production_ids)
 
     def action_view_mrp_production(self):
         self.ensure_one()

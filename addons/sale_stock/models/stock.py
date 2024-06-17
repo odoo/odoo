@@ -65,6 +65,11 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def _action_done(self, cancel_backorder=False):
+        super()._action_done(cancel_backorder)
+        mtso_moves_to_update = self.group_id.sudo().sale_id.picking_ids.move_ids.filtered(lambda m: m._is_mtso())  # sudo for TestSaleStock.test_inventory_admin_no_backorder_not_own_sale_order
+        mtso_moves_to_update.sudo(False)._action_assign()
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"

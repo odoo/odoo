@@ -1624,7 +1624,7 @@ class Picking(models.Model):
                 if move not in explored_moves:
                     impacted_pickings |= move.picking_id
                     explored_moves |= move
-                    moves_to_explore |= move.move_dest_ids
+                    moves_to_explore |= move._get_next_moves()
             moves_to_explore = moves_to_explore - explored_moves
             if moves_to_explore:
                 return _explore(impacted_pickings, explored_moves, moves_to_explore)

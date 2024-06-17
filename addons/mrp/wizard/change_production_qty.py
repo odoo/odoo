@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_compare, float_is_zero
 
 
 class ChangeProductionQty(models.TransientModel):
@@ -61,8 +61,13 @@ class ChangeProductionQty(models.TransientModel):
             old_production_qty = production.product_qty
             new_production_qty = wizard.product_qty
 
+            if float_compare(new_production_qty, 0, precision_rounding=production.product_uom_id.rounding) <= 0:
+                production.action_cancel()
+                continue
+
             factor = new_production_qty / old_production_qty
             update_info = production._update_raw_moves(factor)
+            production._update_mtso_sam_moves(factor)
             documents = {}
             for move, old_qty, new_qty in update_info:
                 iterate_key = production._get_document_iterate_key(move)
