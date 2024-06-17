@@ -12,3 +12,11 @@ export function isClosed() {
         run: () => {},
     };
 }
+
+export function isOpened() {
+    return {
+        content: `Check if the POS is opened`,
+        trigger: `body:not(:has(.o-self-closed))`,
+        run: () => {},
+    };
+}
