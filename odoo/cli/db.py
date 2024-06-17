@@ -168,7 +168,14 @@ class Db(Command):
     def _check_target(self, target, *, delete_if_exists):
         if exp_db_exist(target):
             if delete_if_exists:
+                self._confirm_drop(target)
                 exp_drop(target)
             else:
                 exit(f"Target database {target} exists, aborting.\n\n"
                      f"\tuse `--force` to delete the existing database anyway.")
+
+    def _confirm_drop(self, target):
+        conf_target_db = input(f"Target database {target} exists, and will be dropped. Please type the target database name to confirm deletion: ")
+        if conf_target_db != target:
+            exit("Target database name to drop not confirmed, aborting.\n\n")
+        return True
