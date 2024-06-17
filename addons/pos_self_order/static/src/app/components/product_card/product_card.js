@@ -39,13 +39,7 @@ export class ProductCard extends Component {
         const toOrderRect = toOrder.getBoundingClientRect();
 
         clonedPic.classList.remove("w-100", "h-100");
-        clonedPic.classList.add(
-            "position-fixed",
-            "border",
-            "border-white",
-            "border-4",
-            "z-index-1"
-        );
+        clonedPic.classList.add("position-fixed", "border", "border-white", "border-4", "z-1");
         clonedPic.style.top = `${picRect.top}px`;
         clonedPic.style.left = `${picRect.left}px`;
         clonedPic.style.width = `${picRect.width}px`;
