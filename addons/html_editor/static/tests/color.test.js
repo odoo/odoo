@@ -131,6 +131,37 @@ test("should not apply background color on an uneditable selected cell in a tabl
     });
 });
 
+test("should not apply font tag to t nodes (protects if else nodes separation)", async () => {
+    await testEditor({
+        contentBefore: unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id">
+                   <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>
+                </t>
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+                </t>
+            </p>
+        ]`),
+        stepFunction: setColor('red', 'color'),
+        contentAfter:
+        unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id">
+                    <t t-out="object.partner_id.parent_id.name or ''" style="color: red;">
+                        <font style="color: red;">AzureInterior</font>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''" style="color: red;">
+                        <font style="color: red;">BrandonFreeman</font>
+                    </t>
+                </t>
+            </p>
+        ]`),
+    });
+});
+
 test("should remove font tag after removing font color", async () => {
     await testEditor({
         contentBefore: '<p><font style="color: rgb(255, 0, 0);">[abcabc]</font></p>',
