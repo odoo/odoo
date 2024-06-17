@@ -1561,7 +1561,7 @@
                                        class="js_add_cart_json btn btn-link d-inline-block border-end-0"
                                        aria-label="Remove one"
                                        title="Remove one">
-                                        <i class="position-relative z-index-1 fa fa-minus"/>
+                                        <i class="position-relative z-1 fa fa-minus"/>
                                     </a>
                                     <input type="text"
                                            class="js_quantity quantity form-control border-start-0 border-end-0"
@@ -1581,7 +1581,7 @@
                                        class="js_add_cart_json d-inline-block float_left btn btn-link border-start-0"
                                        aria-label="Add one"
                                        title="Add one">
-                                        <i class="fa fa-plus position-relative z-index-1"/>
+                                        <i class="fa fa-plus position-relative z-1"/>
                                     </a>
                                 </t>
                                 <t t-else="">
@@ -2590,7 +2590,7 @@
         <div t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
              class="position-relative d-inline-flex overflow-hidden m-auto h-100"
         >
-            <span t-attf-class="o_ribbon #{ribbon._get_position_class()} z-index-1"
+            <span t-attf-class="o_ribbon #{ribbon._get_position_class()} z-1"
                   t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
                   t-out="ribbon['name'] or ''"
             />
@@ -2609,7 +2609,7 @@
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="true" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1 overflow-hidden">
                 <span t-if="len(product_images) > 1"
-                      t-attf-class="o_ribbon #{ribbon._get_position_class()} z-index-1"
+                      t-attf-class="o_ribbon #{ribbon._get_position_class()} z-1"
                       t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
                       t-out="ribbon['name'] or ''"
                 />

@@ -44,7 +44,7 @@
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
                                 t-on-click="() => this.zoomOrSelect(itemInfo)"
                             >
-                                <span t-esc="itemInfo.label" class="z-index-1" />
+                                <span t-esc="itemInfo.label" class="z-1" />
                             </button>
                         </t>
                     </t>
@@ -115,7 +115,7 @@
                     t-att-disabled="!itemInfo.isValid"
                     t-on-click="() => this.zoomOrSelect(itemInfo)"
                 >
-                    <span t-esc="itemInfo.label" class="z-index-1" />
+                    <span t-esc="itemInfo.label" class="z-1" />
                 </button>
             </t>
         </div>
