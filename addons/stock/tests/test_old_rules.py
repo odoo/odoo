@@ -140,7 +140,7 @@ class TestOldRules(TestStockCommon):
 
         # We alter one rule and we set it to 'mts_else_mto'
         values = {'warehouse_id': self.warehouse_3_steps}
-        rule = self.env['procurement.group']._get_rule(self.productA, final_location, values)
+        rule = self.env['stock.rule']._get_rule(self.productA, final_location, values)
         rule.procure_method = 'mts_else_mto'
 
         pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
@@ -188,7 +188,7 @@ class TestOldRules(TestStockCommon):
 
         # We alter one rule and we set it to 'mts_else_mto'
         values = {'warehouse_id': self.warehouse_3_steps}
-        rule = self.env['procurement.group']._get_rule(self.productA, final_location, values)
+        rule = self.env['stock.rule']._get_rule(self.productA, final_location, values)
         rule.procure_method = 'mts_else_mto'
 
         pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts'})
@@ -233,7 +233,7 @@ class TestOldRules(TestStockCommon):
 
         # We alter one rule and we set it to 'mts_else_mto'
         values = {'warehouse_id': warehouse}
-        rule = self.env['procurement.group']._get_rule(product_a, final_location, values)
+        rule = self.env['stock.rule']._get_rule(product_a, final_location, values)
         rule.procure_method = 'mts_else_mto'
 
         pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})

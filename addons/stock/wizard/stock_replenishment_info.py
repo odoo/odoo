@@ -118,7 +118,7 @@ class StockReplenishmentOption(models.TransientModel):
     @api.depends('replenishment_info_id')
     def _compute_lead_time(self):
         for record in self:
-            rule = self.env['procurement.group']._get_rule(record.product_id, record.location_id, {
+            rule = self.env['stock.rule']._get_rule(record.product_id, record.location_id, {
                 'route_ids': record.route_id,
                 'warehouse_id': record.warehouse_id,
             })

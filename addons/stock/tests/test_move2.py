@@ -2871,7 +2871,7 @@ class TestRoutes(TestStockCommon):
         })
 
         # We alter one rule and we set it to 'mts_else_mto'
-        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule = self.env['stock.rule']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
         rule.procure_method = 'mts_else_mto'
 
         self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 5.0)
@@ -2924,7 +2924,7 @@ class TestRoutes(TestStockCommon):
         })
 
         # We alter one rule and we set it to 'mts_else_mto'
-        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule = self.env['stock.rule']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
         rule.procure_method = 'mts_else_mto'
 
         self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 5.0)
@@ -2987,7 +2987,7 @@ class TestRoutes(TestStockCommon):
         })
 
         # We alter one rule and we set it to 'mts_else_mto'
-        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule = self.env['stock.rule']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
         rule.procure_method = 'mts_else_mto'
 
         self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 4.0)
