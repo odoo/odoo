@@ -42,9 +42,9 @@ class ResCompany(models.Model):
     )
     account_peppol_migration_key = fields.Char(string="Migration Key")
     account_peppol_phone_number = fields.Char(
-        string='Phone number (for validation)',
+        string='Mobile number (for validation)',
         compute='_compute_account_peppol_phone_number', store=True, readonly=False,
-        help='You will receive a verification code to this phone number',
+        help='You will receive a verification code to this mobile number',
     )
     account_peppol_proxy_state = fields.Selection(
         selection=[
@@ -77,7 +77,7 @@ class ResCompany(models.Model):
         self.ensure_one()
 
         error_message = _(
-            "Please enter the phone number in the correct international format.\n"
+            "Please enter the mobile number in the correct international format.\n"
             "For example: +32123456789, where +32 is the country code.\n"
             "Currently, only European countries are supported.")
 
