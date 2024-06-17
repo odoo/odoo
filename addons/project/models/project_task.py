@@ -733,6 +733,9 @@ class Task(models.Model):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
         return vals_list
 
+    def _portal_get_parent_hash_token(self, pid):
+        return self.project_id._sign_token(pid)
+
     def copy(self, default=None):
         if 'task_mapping' not in self.env.context:
             self = self.with_context(task_mapping={})
