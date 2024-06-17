@@ -59,7 +59,7 @@ export class CallParticipantCard extends Component {
         if (this.env.debug) {
             return true;
         }
-        return !this.rtcSession?.eq(this.rtc.state.selfSession);
+        return !this.rtcSession?.eq(this.rtc.selfSession);
     }
 
     get rtcSession() {
