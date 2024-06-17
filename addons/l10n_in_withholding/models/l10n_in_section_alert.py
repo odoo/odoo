@@ -22,6 +22,7 @@ class L10nInSectionAlert(models.Model):
             ('monthly', 'Monthly'),
             ('fiscal_yearly', 'Financial Yearly'),
         ], string="Aggregate Period", default='fiscal_yearly')
+    l10n_in_section_tax_ids = fields.One2many("account.tax", "l10n_in_section_id", string="Taxes")
 
     _sql_constraints = [
         ('per_transaction_limit', 'CHECK(per_transaction_limit >= 0)', 'Per transaction limit must be positive'),
