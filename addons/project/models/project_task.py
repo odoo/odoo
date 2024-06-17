@@ -786,6 +786,9 @@ class Task(models.Model):
                 task_dependencies.update(children_dependencies)
         return task_mapping, task_dependencies
 
+    def _portal_get_parent_hash_token(self, pid):
+        return self.project_id._sign_token(pid)
+
     def copy(self, default=None):
         default = default or {}
         default.update({
