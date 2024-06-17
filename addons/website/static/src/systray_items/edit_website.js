@@ -6,6 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from '@web/core/utils/hooks';
 import { Component, useState, useEffect } from "@odoo/owl";
+import { AddPageDialog } from "../components/dialog/add_page_dialog";
 
 class EditWebsiteSystray extends Component {
     static template = "website.EditWebsiteSystray";
@@ -16,6 +17,7 @@ class EditWebsiteSystray extends Component {
     static props = {};
     setup() {
         this.websiteService = useService('website');
+        this.dialogs = useService('dialog');
         this.websiteContext = useState(this.websiteService.context);
 
         this.state = useState({
@@ -73,6 +75,18 @@ class EditWebsiteSystray extends Component {
         } else {
             this.websiteContext.edition = true;
         }
+    }
+
+    is404() {
+        const { metadata: { viewXmlid } } = this.websiteService.currentWebsite;
+        return viewXmlid === "website.page_404";
+    }
+
+    async createPage() {
+        this.dialogs.add(AddPageDialog, {
+            websiteId: this.websiteService.currentWebsite.id,
+            url: this.websiteService.contentWindow.location.pathname,
+        });
     }
 }
 
