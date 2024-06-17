@@ -29,7 +29,7 @@
     </t>
 
     <t t-name="point_of_sale.CustomerFacingDisplayNoOrder">
-        <t t-set="backgroundImageURL" t-value="pos.config.iface_customer_facing_display_background_image_1920 ? 'url(/web/image/pos.config/' + pos.config.id + '/iface_customer_facing_display_background_image_1920)' : 'none'" />
+        <t t-set="backgroundImageURL" t-value="pos.config.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
         <t t-call="point_of_sale.CustomerFacingDisplayHead" />
 
         <div class="pos-customer_facing_display pos-no-order pos-palette_01" t-attf-style="background-image: #{backgroundImageURL};">
@@ -42,7 +42,7 @@
     </t>
 
     <t t-name="point_of_sale.CustomerFacingDisplayOrder">
-        <t t-set="backgroundImageURL" t-value="pos.config.iface_customer_facing_display_background_image_1920 ? 'url(/web/image/pos.config/' + pos.config.id + '/iface_customer_facing_display_background_image_1920)' : 'none'" />
+        <t t-set="backgroundImageURL" t-value="pos.config.customer_display_bg_img ? 'url(/web/image/pos.config/' + pos.config.id + '/customer_display_bg_img)' : 'none'" />
         <!-- Header -->
         <t t-call="point_of_sale.CustomerFacingDisplayHead" />
 
