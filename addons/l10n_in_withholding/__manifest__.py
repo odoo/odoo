@@ -14,6 +14,7 @@
         'views/l10n_in_section_alert_views.xml',
         'views/account_account_views.xml',
         'views/account_move_views.xml',
+        'views/account_move_line_views.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/res_config_settings_views.xml',
