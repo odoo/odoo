@@ -1789,6 +1789,9 @@ class Task(models.Model):
         fields = {name for name, field in self._fields.items() if getattr(field, 'task_dependency_tracking', None)}
         return fields and set(self.fields_get(fields))
 
+    def _portal_get_parent_hash_token(self, pid):
+        return self.project_id._sign_token(pid)
+
     # ----------------------------------------
     # Case management
     # ----------------------------------------
