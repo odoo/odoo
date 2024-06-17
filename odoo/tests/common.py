@@ -963,7 +963,7 @@ class ChromeBrowser:
             user_data_dir=self.user_data_dir,
             window_size=test_case.browser_size,
             touch_enabled=test_case.touch_enabled,
-            headless=headless,
+            headless=False,
             debug=debug,
         )
         self.ws = self._open_websocket()

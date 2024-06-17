@@ -487,3 +487,20 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         })
         task.description = False
         self.assertEqual(task.html_field_history_get_content_at_revision('description', 1), '<p>Hello</p>', "should recover previous text for description")
+
+    def test_mail_on_task_project_change(self):
+        """
+            This test will check that a mail is sent to the subscribers having the
+            "Task created" follow subtype when the project_id of said task changes
+        """
+        subtype_id = self.env['ir.model.data']._xmlid_to_res_id('project.mt_project_task_new')
+        partner = self.env['res.partner'].search([('user_ids', '=', self.user_projectuser.id)])
+        self.env['mail.followers'].create({
+            'res_model': 'project.project',
+            'res_id': self.project_goats.id,
+            'partner_id': partner.id,
+            'subtype_ids': [subtype_id],  # task created subtype
+        })  # set user as follower of project
+        with self.mock_mail_gateway():
+            self.task_1.project_id = self.project_goats.id  # change project
+        self.assertSentEmail(self.env.user.email_formatted, [self.user_projectuser.email_formatted])
