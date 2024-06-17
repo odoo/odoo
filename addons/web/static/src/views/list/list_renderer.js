@@ -418,7 +418,6 @@ export class ListRenderer extends Component {
                 columnWidths[i + columnOffset] = parseInt(value.split("px")[0]);
             }
         });
-        const isRelative = (th) => widths[headers.indexOf(th) - columnOffset]?.type === "relative";
         ///
 
         debugger
@@ -427,9 +426,6 @@ export class ListRenderer extends Component {
         const shrinkColumns = (thsToShrink, shrinkAmount) => {
             let canKeepShrinking = false;
             for (const th of thsToShrink) {
-                // if (!isRelative(th)) {
-                //     continue;
-                // }
                 const index = headers.indexOf(th);
                 let maxWidth = columnWidths[index] - shrinkAmount;
                 // prevent the columns from shrinking under 92px (~ date field) // TODO adapt
@@ -492,53 +488,6 @@ export class ListRenderer extends Component {
                 columnWidths[i + columnOffset] += extraWidth;
             }
         }
-            // const widths = this.state.columns.map((col) => this.calculateColumnWidth(col));
-            // const indicesOfColsToShrink = widths
-            //     .map(({ type }, index) => ({ index, type }))
-            //     .filter(({ type, custom }) => type === "absolute" && !custom)
-            //     .map(({ index }) => index);
-            // for (const i of indicesOfColsToShrink) {
-            //     const column = this.state.columns[i];
-            //     const type = column.widget || this.fields[column.name].type;
-            //     const maxWidth = FIXED_FIELD_COLUMN_MAX_WIDTHS[type];
-            //     columnWidths[i] = Math.min(columnWidths[i], maxWidth);
-            // }
-
-
-
-
-            // // The available space is larger than the necessary space for the current table content,
-            // // so we'll distribute the available space between all "relative" columns, in order to
-            // // prevent "absolute" columns from taking more space then what they should.
-            // const widths = this.state.columns.map((col) => this.calculateColumnWidth(col));
-            // let indicesOfColsToExpand = widths
-            //     .map(({ type }, index) => ({ index, type }))
-            //     .map(({ index }) => index);
-            // const extraWidth = (allowedWidth - totalWidth) / indicesOfColsToExpand.length;
-            // let moreExtraWidth = 0;
-            // for (const i of indicesOfColsToExpand) {
-            //     const maxWidth = FIXED_FIELD_COLUMN_MAX_WIDTHS[this.state.columns[i].type];
-            //     const columnExtraWidth = maxWidth ? maxWidth - columnWidths[i] + extraWidth : 0;
-            //     if (columnExtraWidth > 0) {
-            //         moreExtraWidth += columnExtraWidth;
-            //         columnWidths[i] = maxWidth;
-            //     } else {
-            //         columnWidths[i] += extraWidth;
-            //     }
-            // }
-            // indicesOfColsToExpand = widths
-            //     .map(({ type }, index) => ({ index, type }))
-            //     .filter(({ type }) => type === "relative")
-            //     .map(({ index }) => index);
-            // if (indicesOfColsToExpand.length === 0) {
-            //     // Special case: all columns are "absolute", so distribute the space among them
-            //     indicesOfColsToExpand = widths.map((_, index) => index);
-            // }
-            // const finalExtraWidth = moreExtraWidth / indicesOfColsToExpand.length;
-            // for (const i of indicesOfColsToExpand) {
-            //     columnWidths[i] += finalExtraWidth;
-            // }
-        // }
 
         // We are no longer computing widths, so restore the normal style
         table.classList.remove("o_list_computing_widths");
