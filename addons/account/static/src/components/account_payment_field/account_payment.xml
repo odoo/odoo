@@ -69,8 +69,8 @@
                 <div>
                     <table>
                         <tr>
-                            <td><strong>Amount: </strong></td>
-                            <td>
+                            <td class="fw-bolder">Amount:</td>
+                            <td class="ps-1">
                                 <t t-out="props.amount_company_currency"></t>
                                 <t t-if="props.amount_foreign_currency">
                                     (<span class="fa fa-money"/> <t t-out="props.amount_foreign_currency"/>)
@@ -86,16 +86,21 @@
                             </td>
                         </tr>
                         <tr>
-                            <td><strong>Date: </strong></td>
-                            <td><t t-out="props.date"/></td>
+                            <td class="fw-bolder">Date:</td>
+                            <td class="ps-1"><t t-out="props.date"/></td>
                         </tr>
                         <tr>
-                            <td><strong>Journal: </strong></td>
-                            <td><t t-out="props.journal_name"/><span t-if="props.payment_method_name"> (<t t-out="props.payment_method_name"/>)</span></td>
+                            <td class="fw-bolder">Journal:</td>
+                            <td class="ps-1">
+                                <t t-out="props.journal_name"/>
+                                <span t-if="props.payment_method_name">
+                                    (<t t-out="props.payment_method_name"/>)
+                                </span>
+                            </td>
                         </tr>
                         <tr t-if="props.company_name">
-                            <td><strong>Branch: </strong></td>
-                            <td><t t-out="props.company_name"/></td>
+                            <td class="fw-bolder">Branch:</td>
+                            <td class="ps-1"><t t-out="props.company_name"/></td>
                         </tr>
                     </table>
                 </div>

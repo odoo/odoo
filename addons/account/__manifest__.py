@@ -92,6 +92,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'web.assets_backend': [
             'account/static/src/css/account_bank_and_cash.css',
             'account/static/src/css/account.css',
+            'account/static/src/css/account_payment.scss',
             'account/static/src/scss/account_journal_dashboard.scss',
             'account/static/src/scss/account_searchpanel.scss',
             'account/static/src/scss/account_payment_term.scss',
