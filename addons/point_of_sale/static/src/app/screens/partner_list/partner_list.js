@@ -69,19 +69,23 @@ export class PartnerList extends Component {
         this.pos.closeTempScreen();
     }
     getPartners() {
-        const partners = this.state.query?.trim?.()?.length
-            ? fuzzyLookup(
-                  unaccent(this.state.query.trim(), false),
-                  this.pos.models["res.partner"].getAll(),
-                  (partner) => unaccent(partner.searchString, false)
-              )
-            : this.pos.models["res.partner"]
-                  .getAll()
+        const searchWord = unaccent((this.state.query || "").trim(), false);
+        const partners = this.pos.models["res.partner"].getAll();
+        const exactMatches = partners.filter((product) => product.exactMatch(searchWord));
+
+        if (exactMatches.length > 0) {
+            return exactMatches;
+        }
+
+        const availablePartners = searchWord
+            ? fuzzyLookup(searchWord, partners, (partner) => unaccent(partner.searchString, false))
+            : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
                       this.props.partner?.id === a.id ? -1 : a.name.localeCompare(b.name)
                   );
-        return partners;
+
+        return availablePartners;
     }
     get isBalanceDisplayed() {
         return false;
