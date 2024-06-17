@@ -705,9 +705,9 @@ class EventEvent(models.Model):
 
     def _get_date_range_str(self, lang_code=False):
         self.ensure_one()
-        today = fields.Datetime.now()
-        event_date = self.date_begin
-        diff = (event_date.date() - today.date())
+        today_tz = pytz.utc.localize(fields.Datetime.now()).astimezone(pytz.timezone(self.date_tz))
+        event_date_tz = pytz.utc.localize(self.date_begin).astimezone(pytz.timezone(self.date_tz))
+        diff = (event_date_tz.date() - today_tz.date())
         if diff.days <= 0:
             return _('today')
         if diff.days == 1:
@@ -716,7 +716,7 @@ class EventEvent(models.Model):
             return _('in %d days', diff.days)
         if (diff.days < 14):
             return _('next week')
-        if event_date.month == (today + relativedelta(months=+1)).month:
+        if event_date_tz.month == (today_tz + relativedelta(months=+1)).month:
             return _('next month')
         return _('on %(date)s', date=format_date(self.env, self.date_begin, lang_code=lang_code, date_format='medium'))
 
