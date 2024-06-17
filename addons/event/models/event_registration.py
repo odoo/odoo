@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime, email_normalize, email_normalize_all
@@ -339,9 +340,9 @@ class EventRegistration(models.Model):
 
     def get_date_range_str(self):
         self.ensure_one()
-        today = fields.Datetime.now()
-        event_date = self.event_begin_date
-        diff = (event_date.date() - today.date())
+        today_tz = pytz.utc.localize(fields.Datetime.now()).astimezone(pytz.timezone(self.event_id.date_tz))
+        event_date_tz = pytz.utc.localize(self.event_begin_date).astimezone(pytz.timezone(self.event_id.date_tz))
+        diff = (event_date_tz.date() - today_tz.date())
         if diff.days <= 0:
             return _('today')
         elif diff.days == 1:
@@ -350,7 +351,7 @@ class EventRegistration(models.Model):
             return _('in %d days') % (diff.days, )
         elif (diff.days < 14):
             return _('next week')
-        elif event_date.month == (today + relativedelta(months=+1)).month:
+        elif event_date_tz.month == (today_tz + relativedelta(months=+1)).month:
             return _('next month')
         else:
             return _('on %(date)s', date=format_datetime(self.env, self.event_begin_date, tz=self.event_id.date_tz, dt_format='medium'))
