@@ -529,7 +529,7 @@ class HrExpense(models.Model):
 
     def attach_document(self, **kwargs):
         """When an attachment is uploaded as a receipt, set it as the main attachment."""
-        self.message_main_attachment_id = kwargs['attachment_ids'][-1]
+        self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
 
     @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
@@ -564,7 +564,7 @@ class HrExpense(models.Model):
             expense = self.env['hr.expense'].create(vals)
             attachment.write({'res_model': 'hr.expense', 'res_id': expense.id})
 
-            attachment.register_as_main_attachment()
+            expense._message_set_main_attachment_id(attachment, force=True)
             expenses += expense
         return {
             'name': _('Generate Expenses'),

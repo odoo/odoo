@@ -52,9 +52,8 @@ class IrAttachment(models.Model):
     def _post_add_create(self, **kwargs):
         """ Overrides behaviour when the attachment is created through the controller
         """
-        super(IrAttachment, self)._post_add_create(**kwargs)
-        for record in self:
-            record.register_as_main_attachment(force=False)
+        super()._post_add_create(**kwargs)
+        self.register_as_main_attachment(force=False)
 
     def register_as_main_attachment(self, force=True):
         """ Registers this attachment as the main one of the model it is
@@ -63,18 +62,20 @@ class IrAttachment(models.Model):
         :param bool force: if set, the method always updates the existing main attachment
             otherwise it only sets the main attachment if there is none.
         """
-        self.ensure_one()
-        if not self.res_model or not self.res_id:
-            return
-        related_record = self.env[self.res_model].browse(self.res_id)
-        if not related_record or \
-                not related_record.check_access_rights('write', raise_exception=False) or \
-                not hasattr(related_record, 'message_main_attachment_id'):
+        todo = self.filtered(lambda a: a.res_model and a.res_id)
+        if not todo:
             return
 
-        if force or not related_record.message_main_attachment_id:
-            with contextlib.suppress(AccessError):
-                related_record.message_main_attachment_id = self
+        for model, attachments in todo.grouped("res_model").items():
+            related_records = self.env[model].browse(attachments.mapped("res_id"))
+            if not hasattr(related_records, '_message_set_main_attachment_id'):
+                return
+
+            # this action is generic; if user cannot update record do not crash
+            # just skip update
+            for related_record, attachment in zip(related_records, attachments):
+                with contextlib.suppress(AccessError):
+                    related_record._message_set_main_attachment_id(attachment, force=force)
 
     def _delete_and_notify(self, message=None):
         if message:
