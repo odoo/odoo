@@ -286,7 +286,7 @@ class ChannelMember(models.Model):
     # RTC (voice/video)
     # --------------------------------------------------------------------------
 
-    def _rtc_join_call(self, check_rtc_session_ids=None):
+    def _rtc_join_call(self, store=None, check_rtc_session_ids=None):
         self.ensure_one()
         check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
@@ -295,19 +295,33 @@ class ChannelMember(models.Model):
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         ice_servers = self.env["mail.ice.server"]._get_ice_servers()
         self._join_sfu(ice_servers)
-        res = {
-            'iceServers': ice_servers or False,
-            'rtcSessions': [
-                ('ADD', [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in current_rtc_sessions]),
-                ('DELETE', [{'id': missing_rtc_session_sudo.id} for missing_rtc_session_sudo in outdated_rtc_sessions]),
-            ],
-            'sessionId': rtc_session.id,
-            'serverInfo': self._get_rtc_server_info(rtc_session, ice_servers),
-        }
+        if store:
+            store.add(
+                "Thread",
+                {
+                    "id": self.channel_id.id,
+                    "model": "discuss.channel",
+                    "rtcSessions": [
+                        ("ADD", [{"id": session.id} for session in current_rtc_sessions]),
+                        ("DELETE", [{"id": session.id} for session in outdated_rtc_sessions]),
+                    ],
+                },
+            )
+            store.add(
+                "RtcSession",
+                [session._mail_rtc_session_format() for session in current_rtc_sessions],
+            )
+            store.add(
+                "Rtc",
+                {
+                    "iceServers": ice_servers or False,
+                    "selfSession": {"id": rtc_session.id},
+                    "serverInfo": self._get_rtc_server_info(rtc_session, ice_servers),
+                },
+            )
         if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type in {'chat', 'group'}:
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             self._rtc_invite_members()
-        return res
 
     def _join_sfu(self, ice_servers=None):
         if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD:

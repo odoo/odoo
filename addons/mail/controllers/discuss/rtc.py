@@ -71,8 +71,10 @@ class RtcController(http.Controller):
         member = channel._find_or_create_member_for_self()
         if not member:
             raise NotFound()
+        store = Store()
         # sudo: discuss.channel.rtc.session - member of current user can join call
-        return member.sudo()._rtc_join_call(check_rtc_session_ids=check_rtc_session_ids)
+        member.sudo()._rtc_join_call(store, check_rtc_session_ids=check_rtc_session_ids)
+        return store.get_result()
 
     @http.route("/mail/rtc/channel/leave_call", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
