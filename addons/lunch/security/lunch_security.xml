@@ -23,6 +23,9 @@
             <field name="model_id" ref="model_lunch_cashmove"/>
             <field name="groups" eval="[(4, ref('group_lunch_user'))]"/>
             <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
         </record>
         <record id="lunch_mind_other_food_money" model="ir.rule">
             <field name="name">lunch.cashmove: do see other people's cashmove</field>
