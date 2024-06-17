@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2html
 
 from markupsafe import Markup
@@ -37,7 +36,7 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _to_store(self, store):
+    def _to_store(self, store: Store):
         """Extends the channel header by adding the livechat operator and the 'anonymous' profile"""
         super()._to_store(store)
         chatbot_lang = self.env["chatbot.script"]._get_chatbot_language()
@@ -73,7 +72,7 @@ class DiscussChannel(models.Model):
                 channel_info['operator'] = channel.livechat_operator_id.mail_partner_format(fields={'id': True, 'user_livechat_username': True, 'write_date': True})[channel.livechat_operator_id]
             if channel.channel_type == "livechat" and channel.livechat_channel_id and self.env.user._is_internal():
                 channel_info['livechatChannel'] = {"id": channel.livechat_channel_id.id, "name": channel.livechat_channel_id.name}
-            store.add({"Thread": channel_info})
+            store.add("Thread", channel_info)
 
     @api.autovacuum
     def _gc_empty_livechat_sessions(self):

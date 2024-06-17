@@ -4,7 +4,7 @@
 from datetime import timedelta
 from odoo import http, Command, fields
 from odoo.http import request
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 
 
 class WebsiteLivechatChatbotScriptController(http.Controller):
@@ -55,7 +55,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
 
         discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
         chatbot_script._post_welcome_steps(discuss_channel)
-        store = StoreData()
+        store = Store()
         request.env["res.users"]._init_store_data(store)
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),

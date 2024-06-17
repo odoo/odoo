@@ -47,13 +47,13 @@ class ResUsers(models.Model):
         # sudo: ir.config_parameter - reading hard-coded keys to check their existence, safe to
         # return whether the features are enabled
         get_param = self.env["ir.config_parameter"].sudo().get_param
-        store.add({
-            "Store": {
+        store.add(
+            {
                 "hasGifPickerFeature": get_param("discuss.tenor_api_key"),
                 "hasMessageTranslationFeature": get_param("mail.google_translate_api_key"),
                 "channel_types_with_seen_infos": sorted(self.env["discuss.channel"]._types_allowing_seen_infos()),
-            },
-        })
+            }
+        )
 
     def _init_messaging(self, store):
         self = self.with_user(self)
@@ -64,8 +64,4 @@ class ResUsers(models.Model):
         # fetch channels data before calling super to benefit from prefetching (channel info might
         # prefetch a lot of data that super could use, about the current user in particular)
         super()._init_messaging(store)
-        store.add({
-            "Store": {
-                "initChannelsUnreadCounter": len(members_with_unread),
-            },
-        })
+        store.add({"initChannelsUnreadCounter": len(members_with_unread)})

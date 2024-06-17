@@ -11,7 +11,7 @@ from odoo.http import request
 from odoo.tools import replace_exceptions
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 
 
 class LivechatController(http.Controller):
@@ -95,7 +95,7 @@ class LivechatController(http.Controller):
                (not operator_available and matching_rule.chatbot_only_if_no_operator)) and matching_rule.chatbot_script_id.script_step_ids:
                 chatbot_script = matching_rule.chatbot_script_id
                 rule.update({'chatbotScript': chatbot_script._format_for_frontend()})
-        store = StoreData()
+        store = Store()
         request.env["res.users"]._init_store_data(store)
         return {
             'available_for_me': bool((rule and rule.get('chatbotScript'))
@@ -110,7 +110,7 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/get_session', methods=["POST"], type="json", auth='public')
     @add_guest_to_context
     def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True, **kwargs):
-        store = StoreData()
+        store = Store()
         user_id = None
         country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
@@ -158,7 +158,7 @@ class LivechatController(http.Controller):
                     'steps': chatbot_script._get_welcome_steps().mapped(lambda s: {'scriptStep': {'id': s.id}}),
                 } if chatbot_script else None
             }
-            store.add({"Thread": [channel_info]})
+            store.add("Thread", channel_info)
         else:
             channel = request.env['discuss.channel'].with_context(
                 mail_create_nosubscribe=False,
@@ -178,10 +178,10 @@ class LivechatController(http.Controller):
             channel.channel_member_ids.filtered(lambda m: m.is_self).fold_state = "open"
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
-            channel._to_store(store)
-            store.add({"Thread": {"id": channel.id, "model": "discuss.channel", "isLoaded": not chatbot_script}})
+            store.add(channel)
+            store.add("Thread", {"id": channel.id, "model": "discuss.channel", "isLoaded": not chatbot_script})
             if guest:
-                store.add({"Store": {"guest_token": guest._format_auth_cookie()}})
+                store.add({"guest_token": guest._format_auth_cookie()})
         request.env["res.users"]._init_store_data(store)
         return store.get_result()
 

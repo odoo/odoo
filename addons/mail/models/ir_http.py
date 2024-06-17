@@ -3,7 +3,7 @@
 import odoo
 from odoo import api, models, fields
 from odoo.http import request
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 
 
 class IrHttp(models.AbstractModel):
@@ -12,7 +12,7 @@ class IrHttp(models.AbstractModel):
     def session_info(self):
         """Override to add the current user data (partner or guest) if applicable."""
         result = super().session_info()
-        store = StoreData()
+        store = Store()
         self.env["res.users"]._init_store_data(store)
         result["storeData"] = store.get_result()
         guest = self.env['mail.guest']._get_guest_from_context()

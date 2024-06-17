@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import consteq, replace_exceptions
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 
 
 class PublicPageController(http.Controller):
@@ -48,8 +48,7 @@ class PublicPageController(http.Controller):
         # sudo: discuss.channel - channel access is validated with invitation_token
         if not channel or not channel.sudo().uuid or not consteq(channel.sudo().uuid, invitation_token):
             raise NotFound()
-        store = StoreData()
-        store.add({"Store": {"isChannelTokenSecret": True}})
+        store = Store({"isChannelTokenSecret": True})
         return self._response_discuss_channel_invitation(store, channel)
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
@@ -58,8 +57,7 @@ class PublicPageController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        store = StoreData()
-        return self._response_discuss_public_template(store, channel)
+        return self._response_discuss_public_template(Store(), channel)
 
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         # sudo: ir.config_parameter - reading hard-coded key and using it in a simple condition
@@ -85,8 +83,7 @@ class PublicPageController(http.Controller):
                 # commit the current transaction and get the channel.
                 request.env.cr.commit()
                 channel_sudo = channel_sudo.search([("uuid", "=", create_token)])
-        store = StoreData()
-        store.add({"Store": {"isChannelTokenSecret": False}})
+        store = Store({"isChannelTokenSecret": False})
         return self._response_discuss_channel_invitation(store, channel_sudo.sudo(False))
 
     def _response_discuss_channel_invitation(self, store, channel):
@@ -102,19 +99,19 @@ class PublicPageController(http.Controller):
                 timezone=request.env["mail.guest"]._get_timezone_from_request(request),
             )
         if guest and not guest_already_known:
-            store.add({"Store": {"shouldDisplayWelcomeViewInitially": True}})
+            store.add({"shouldDisplayWelcomeViewInitially": True})
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
 
     def _response_discuss_public_template(self, store, channel):
-        store.add({
-            "Store": {
+        store.add(
+            {
                 "companyName": request.env.company.name,
                 "inPublicPage": True,
                 "discuss_public_thread": {"id": channel.id, "model": "discuss.channel"},
-            },
-        })
-        channel._to_store(store)
+            }
+        )
+        store.add(channel)
         return request.render(
             "mail.discuss_public_channel_template",
             {

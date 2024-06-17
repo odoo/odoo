@@ -260,20 +260,20 @@ class Users(models.Model):
         # sudo: res.partner - exposing OdooBot data
         odoobot = self.env.ref("base.partner_root").sudo()
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
-        store.add({
-            "Store": {
+        store.add(
+            {
                 "action_discuss_id": xmlid_to_res_id("mail.action_discuss"),
                 "hasLinkPreviewFeature": self.env["mail.link.preview"]._is_link_preview_enabled(),
                 "internalUserGroupId": self.env.ref("base.group_user").id,
                 "mt_comment_id": xmlid_to_res_id("mail.mt_comment"),
                 "odoobot": odoobot.mail_partner_format().get(odoobot),
-            },
-        })
+            }
+        )
         guest = self.env["mail.guest"]._get_guest_from_context()
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
-            store.add({
-                "Store": {
+            store.add(
+                {
                     "self": {
                         "id": self.env.user.partner_id.id,
                         "isAdmin": self.env.user._is_admin(),
@@ -285,23 +285,27 @@ class Users(models.Model):
                         "write_date": fields.Datetime.to_string(self.env.user.write_date),
                     },
                     "settings": settings._res_users_settings_format(),
-                },
-            })
+                }
+            )
         elif guest:
-            store.add({"Store": {"self": {
-                "id": guest.id,
-                "name": guest.name,
-                "type": "guest",
-                "write_date": fields.Datetime.to_string(guest.write_date),
-            }}})
+            store.add(
+                {
+                    "self": {
+                        "id": guest.id,
+                        "name": guest.name,
+                        "type": "guest",
+                        "write_date": fields.Datetime.to_string(guest.write_date),
+                    }
+                }
+            )
 
     def _init_messaging(self, store):
         self.ensure_one()
         self = self.with_user(self)
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
-        store.add({
-            "Store": {
+        store.add(
+            {
                 "discuss": {
                     "inbox": {
                         "counter": self.partner_id._get_needaction_count(),
@@ -318,8 +322,8 @@ class Users(models.Model):
                         "model": "mail.box",
                     },
                 },
-            },
-        })
+            }
+        )
 
     @api.model
     def _get_activity_groups(self):
