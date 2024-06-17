@@ -365,27 +365,13 @@ export class PosDB {
     }
     _partner_search_string(partner) {
         var str = partner.name || "";
-        if (partner.barcode) {
-            str += "|" + partner.barcode;
-        }
-        if (partner.address) {
-            str += "|" + partner.address;
-        }
-        if (partner.phone) {
-            str += "|" + partner.phone.split(" ").join("");
-        }
-        if (partner.mobile) {
-            str += "|" + partner.mobile.split(" ").join("");
-        }
-        if (partner.email) {
-            str += "|" + partner.email;
-        }
-        if (partner.vat) {
-            str += "|" + partner.vat;
-        }
-        if (partner.parent_name) {
-            str += "|" + partner.parent_name;
-        }
+        str += "|" + (partner.barcode || "");
+        str += "|" + (partner.address || "");
+        str += "|" + (partner.phone || "").split(" ").join("");
+        str += "|" + (partner.mobile || "").split(" ").join("");
+        str += "|" + (partner.email || "");
+        str += "|" + (partner.vat || "");
+        str += "|" + (partner.parent_name || "");
         str = "" + partner.id + ":" + str.replace(":", "").replace(/\n/g, " ") + "\n";
         return str;
     }
@@ -498,7 +484,17 @@ export class PosDB {
         let searchString = searchStrings.pop();
         while (searchString && results.length < this.limit) {
             var r = re.exec(searchString);
+
             if (r) {
+                const barcode = r[0].split("|")[1];
+                if (query === barcode) {
+                    // In case of barcode exact match return only the partner with the barcode
+                    const partner = this.get_partner_by_barcode(barcode);
+                    if (partner) {
+                        return [partner];
+                    }
+                }
+
                 var id = Number(r[1]);
                 results.push(this.get_partner_by_id(id));
             } else {
