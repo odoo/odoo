@@ -250,6 +250,12 @@ class StockQuant(models.Model):
         """ Override to handle the "inventory mode" and create a quant as
         superuser the conditions are met.
         """
+        def _add_to_cache(quant):
+            if 'quants_cache' in self.env.context:
+                self.env.context['quants_cache'][
+                    quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
+                ] |= quant
+
         quants = self.env['stock.quant']
         is_inventory_mode = self._is_inventory_mode()
         allowed_fields = self._get_inventory_fields_create()
@@ -276,6 +282,7 @@ class StockQuant(models.Model):
                     quant = quant[0].sudo()
                 else:
                     quant = self.sudo().create(vals)
+                    _add_to_cache(quant)
                 if auto_apply:
                     quant.write({'inventory_quantity_auto_apply': inventory_quantity})
                 else:
@@ -286,6 +293,7 @@ class StockQuant(models.Model):
                 quants |= quant
             else:
                 quant = super().create(vals)
+                _add_to_cache(quant)
                 quants |= quant
                 if self._is_inventory_mode():
                     quant._check_company()
@@ -755,15 +763,21 @@ class StockQuant(models.Model):
         """
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
-        if removal_strategy == 'least_packages':
+        if removal_strategy == 'least_packages' and qty:
             domain = self._run_least_packages_removal_strategy_astar(domain, qty)
         order = self._get_removal_strategy_order(removal_strategy)
-        order = 'lot_id, %s' % order
 
-        res = self.search(domain, order=order)
+        quants_cache = self.env.context.get('quants_cache')
+        if quants_cache is not None and strict and removal_strategy != 'least_packages':
+            res = self.env['stock.quant']
+            if lot_id:
+                res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id.id, owner_id.id]
+            res |= quants_cache[product_id.id, location_id.id, False, package_id.id, owner_id.id]
+        else:
+            res = self.search(domain, order=order)
         if removal_strategy == "closest":
-            res = res.sorted(lambda q: (q.lot_id, q.location_id.complete_name, -q.id))
-        return res
+            res = res.sorted(lambda q: (q.location_id.complete_name, -q.id))
+        return res.sorted(lambda q: not q.lot_id)
 
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
@@ -843,7 +857,7 @@ class StockQuant(models.Model):
             quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
-        if self.product_id.tracking == 'serial':
+        if product_id.tracking == 'serial':
             if float_compare(quantity, int(quantity), precision_rounding=rounding) != 0:
                 quantity = 0
 
@@ -889,6 +903,24 @@ class StockQuant(models.Model):
             if float_is_zero(quantity, precision_rounding=rounding) or float_is_zero(available_quantity, precision_rounding=rounding):
                 break
         return reserved_quants
+
+    def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False):
+        res = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            domain = [
+                ('product_id', 'in', product_ids.ids),
+                ('location_id', 'child_of', location_ids.ids)
+            ]
+            if extra_domain:
+                domain = expression.AND([domain, extra_domain])
+            needed_quants = self.env['stock.quant']._read_group(
+                domain,
+                ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'],
+                ['id:recordset'], order="lot_id"
+            )
+            for product, loc, lot, package, owner, quants in needed_quants:
+                res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+        return res
 
     @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
     def _onchange_location_or_product_id(self):
