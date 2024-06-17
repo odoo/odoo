@@ -9,10 +9,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/user_modify_own
         {
             content: "Open user account menu",
             trigger: ".o_user_menu button",
+            run: "click",
         },
         {
             content: "Open preferences / profile screen",
             trigger: "[data-menu=settings]",
+            run: "click",
         },
         {
             content: "Update the email address",
