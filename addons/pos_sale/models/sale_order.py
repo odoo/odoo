@@ -76,15 +76,6 @@ class SaleOrderLine(models.Model):
         for sale_line in self:
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in sale_line.pos_order_line_ids], 0)
 
-    @api.depends('product_id', 'pos_order_line_ids.order_id.refund_orders_count')
-    def _compute_name(self):
-        super()._compute_name()
-        for line in self.filtered(lambda l: l.is_downpayment and not l.display_type):
-            if line.pos_order_line_ids.order_id.filtered(lambda o: o.refund_orders_count or o.account_move.state == 'cancel'):
-                name = line._get_sale_order_line_multiline_description_sale()
-                # Update the name with the Cancelled statement
-                line.name = _("%(line_description)s (Cancelled)", line_description=name)
-
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total"]
 
