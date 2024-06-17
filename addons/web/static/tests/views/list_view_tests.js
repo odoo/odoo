@@ -4802,7 +4802,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("column widths with data, too much available space", async function (assert) {
+    QUnit.debug("column widths with data, too much available space", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
