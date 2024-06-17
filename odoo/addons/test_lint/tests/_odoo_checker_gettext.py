@@ -49,9 +49,14 @@ class OdooBaseChecker(BaseChecker):
             'gettext-repr',
             'Don\'t use %r to automatically insert quotes in translation strings. Quotes can be different depending on the language: they must be part of the translated string.',
         ),
+        'E8507': (
+            'Concatenation of translated text',
+            'gettext-concat',
+            'Do not concatenate translated text',
+        ),
     }
 
-    @only_required_for_messages('gettext-variable', 'gettext-placeholders', 'gettext-repr')
+    @only_required_for_messages('gettext-concat', 'gettext-variable', 'gettext-placeholders', 'gettext-repr')
     def visit_call(self, node):
         if isinstance(node.func, astroid.Name) and node.func.name in ('_', '_lt'):
             first_arg = node.args[0]
@@ -62,7 +67,8 @@ class OdooBaseChecker(BaseChecker):
                     self.add_message('gettext-placeholders', node=node)
                 elif re.search(REPR_REGEXP, first_arg.value):
                     self.add_message('gettext-repr', node=node)
-
+            if isinstance(node.parent, astroid.BinOp) and node.parent.op == '+':
+                self.add_message('gettext-concat', node=node.parent)
 
 def register(linter):
     linter.register_checker(OdooBaseChecker(linter))
