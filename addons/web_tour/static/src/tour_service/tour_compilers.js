@@ -6,6 +6,7 @@ import { _legacyIsVisible, isVisible } from "@web/core/utils/ui";
 import { omit } from "@web/core/utils/objects";
 import { tourState } from "./tour_state";
 import * as hoot from "@odoo/hoot-dom";
+import { session } from "@web/session";
 import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import {
     callWithUnloadCheck,
@@ -13,6 +14,7 @@ import {
     getScrollParent,
     RunningTourActionHelper,
 } from "./tour_utils";
+import { utils } from "@web/core/ui/ui_service";
 
 /**
  * @typedef {import("@web/core/macro").MacroDescriptor} MacroDescriptor
@@ -53,7 +55,7 @@ function findTrigger(selector, inModal) {
 /**
  * @param {Tour} tour
  * @param {TourStep} step
- * @param {"trigger"|"extra_trigger"|"alt_trigger"|"skip_trigger"} elKey
+ * @param {"trigger"|"extra_trigger"|"alt_trigger"} elKey
  * @returns {HTMLElement|null}
  */
 function tryFindTrigger(tour, step, elKey) {
@@ -73,16 +75,14 @@ function findStepTriggers(tour, step) {
     const triggerEl = tryFindTrigger(tour, step, "trigger");
     const altEl = tryFindTrigger(tour, step, "alt_trigger");
     const extraEl = tryFindTrigger(tour, step, "extra_trigger");
-    const skipEl = tryFindTrigger(tour, step, "skip_trigger");
     step.state = step.state || {};
     step.state.triggerFound = !!triggerEl;
     step.state.altTriggerFound = !!altEl;
     step.state.extraTriggerFound = step.extra_trigger ? !!extraEl : true;
-    step.state.skipTriggerFound = !!skipEl;
     // `extraTriggerOkay` should be true when `step.extra_trigger` is undefined.
     // No need for it to be in the modal.
     const extraTriggerOkay = step.state.extraTriggerFound;
-    return { triggerEl, altEl, extraEl, skipEl, extraTriggerOkay };
+    return { triggerEl, altEl, extraEl, extraTriggerOkay };
 }
 
 /**
@@ -101,9 +101,7 @@ function describeFailedStepSimple(tour, step) {
 
 function describeWhyStepFailed(step) {
     const stepState = step.state || {};
-    if (step.skip_trigger && !stepState.skipTriggerFound) {
-        return `The cause is that skip trigger (${step.skip_trigger}) element cannot be found in DOM.`;
-    } else if (step.extra_trigger && !stepState.extraTriggerFound) {
+    if (step.extra_trigger && !stepState.extraTriggerFound) {
         return `The cause is that extra trigger (${step.extra_trigger}) element cannot be found in DOM.`;
     } else if (!stepState.triggerFound) {
         return `The cause is that trigger (${step.trigger}) element cannot be found in DOM.`;
@@ -181,6 +179,45 @@ function getAnchorEl(el, consumeEvent) {
 }
 
 /**
+ * Check if a step is active dependant on step.isActive property
+ * Note that when step.isActive is not defined, the step is active by default.
+ * When a step is not active, it's just skipped and the tour continues to the next step.
+ * @param {TourStep} step
+ * @param {TourMode} mode TourMode manual means onboarding tour
+ */
+function isActive(step, mode) {
+    const standardKeyWords = ["enterprise", "community", "mobile", "desktop", "auto", "manual"];
+    const isActiveArray = Array.isArray(step.isActive) ? step.isActive : [];
+    if (isActiveArray.length === 0) {
+        return true;
+    }
+    const selectors = isActiveArray.filter((key) => !standardKeyWords.includes(key));
+    if (selectors.length) {
+        // if one of selectors is not found, step is skipped
+        for (const selector of selectors) {
+            const el = hoot.queryFirst(selector);
+            if (!el) {
+                return false;
+            }
+        }
+    }
+    const checkMode =
+        isActiveArray.includes(mode) ||
+        (!isActiveArray.includes("manual") && !isActiveArray.includes("auto"));
+    const edition = (session.server_version_info || "").at(-1) === "e" ? "enterprise" : "community";
+    const checkEdition =
+        isActiveArray.includes(edition) ||
+        (!isActiveArray.includes("enterprise") && !isActiveArray.includes("community"));
+    const onlyForMobile = isActiveArray.includes("mobile") && utils.isSmall();
+    const onlyForDesktop = isActiveArray.includes("desktop") && !utils.isSmall();
+    const checkDevice =
+        onlyForMobile ||
+        onlyForDesktop ||
+        (!isActiveArray.includes("mobile") && !isActiveArray.includes("desktop"));
+    return checkEdition && checkDevice && checkMode;
+}
+
+/**
  * IMPROVEMENT: Consider transitioning (moving) elements?
  * @param {Element} el
  * @param {TourStep} step
@@ -210,6 +247,7 @@ function canContinue(el, step) {
 }
 
 function getStepState(step) {
+    step.state = step.state || {};
     const checkRun =
         (["string", "function"].includes(typeof step.run) && step.state.hasRun) || !step.run;
     const check = checkRun && step.state.canContinue;
@@ -293,16 +331,14 @@ export function compileStepManual(stepIndex, step, options) {
         {
             trigger: () => {
                 removeListeners();
-
+                if (!isActive(step, "manual")) {
+                    return hoot.queryFirst("body");
+                }
                 if (proceedWith) {
                     return proceedWith;
                 }
 
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(tour, step);
-
-                if (skipEl) {
-                    return skipEl;
-                }
+                const { triggerEl, altEl, extraTriggerOkay } = findStepTriggers(tour, step);
 
                 const stepEl = extraTriggerOkay && (triggerEl || altEl);
 
@@ -402,16 +438,12 @@ export function compileStepAuto(stepIndex, step, options) {
         },
         {
             trigger: () => {
-                const { triggerEl, altEl, extraTriggerOkay, skipEl } = findStepTriggers(tour, step);
-
-                let stepEl = extraTriggerOkay && (triggerEl || altEl);
-
-                if (skipEl) {
-                    stepEl = skipEl;
+                if (!isActive(step, "auto")) {
                     step.run = () => {};
-                    step.allowDisabled = true;
+                    return hoot.queryFirst("body");
                 }
-
+                const { triggerEl, altEl, extraTriggerOkay } = findStepTriggers(tour, step);
+                const stepEl = extraTriggerOkay && (triggerEl || altEl);
                 if (!stepEl) {
                     return false;
                 }

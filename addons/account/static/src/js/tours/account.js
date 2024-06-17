@@ -41,18 +41,18 @@ registry.category("web_tour.tours").add('account_tour', {
         position: "right",
         run: "click",
     }, {
+        isActive: ["auto"],
         trigger: "div[name=partner_id] input",
         run: "edit Test",
-        auto: true,
     }, 
     {
         trigger: "[name=move_type] [raw-value=out_invoice]",
         auto: true,
     },
     {
+        isActive: ["auto"],
         trigger: ".o_m2o_dropdown_option a:contains('Create')",
         content: _t("Select first partner"),
-        auto: true,
         run: "click",
     }, 
     {
@@ -60,9 +60,9 @@ registry.category("web_tour.tours").add('account_tour', {
         auto: true,
     },
     {
+        isActive: ["auto"],
         trigger: ".modal-content button.btn-primary",
         content: markup(_t("Once everything is set, you are good to continue. You will be able to edit this later in the <b>Customers</b> menu.")),
-        auto: true,
         run: "click",
     }, 
     {
@@ -128,10 +128,10 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Complete the partner data with email"),
         run: "click",
     }, {
+        isActive: ["auto"],
         trigger: ".o_field_widget[name=email] input, input[name=email]",
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: "edit customer@example.com",
-        auto: true,
     },
     ...stepUtils.saveForm(),
     {
