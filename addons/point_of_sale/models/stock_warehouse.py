@@ -10,14 +10,10 @@ class Warehouse(models.Model):
 
     def _get_sequence_values(self):
         sequence_values = super(Warehouse, self)._get_sequence_values()
-        sequence_values.update({
-            'pos_type_id': {
-                'name': self.name + ' ' + _('Picking POS'),
-                'prefix': self.code + '/POS/',
-                'padding': 5,
-                'company_id': self.company_id.id,
-            }
-        })
+        ctx_name = self._context.get('name')
+        ctx_code = self._context.get('code')
+        picking_types = [('pos_type_id', _('Picking POS'), "POS")]
+        sequence_values.update(self._create_sequence_values(picking_types, ctx_name, ctx_code))
         return sequence_values
 
     def _get_picking_type_update_values(self):

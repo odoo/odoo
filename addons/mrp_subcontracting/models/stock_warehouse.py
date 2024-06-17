@@ -131,20 +131,12 @@ class StockWarehouse(models.Model):
 
     def _get_sequence_values(self):
         values = super(StockWarehouse, self)._get_sequence_values()
-        values.update({
-            'subcontracting_type_id': {
-                'name': self.name + ' ' + _('Sequence subcontracting'),
-                'prefix': self.code + '/SBC/',
-                'padding': 5,
-                'company_id': self.company_id.id
-            },
-            'subcontracting_resupply_type_id': {
-                'name': self.name + ' ' + _('Sequence Resupply Subcontractor'),
-                'prefix': self.code + '/RES/',
-                'padding': 5,
-                'company_id': self.company_id.id
-            },
-        })
+        ctx_name = self._context.get('name')
+        ctx_code = self._context.get('code')
+        picking_types = [('subcontracting_type_id', _('Sequence subcontracting'), 'SBC'),
+                         ('subcontracting_resupply_type_id', _('Sequence Resupply Subcontractor'), 'RES')
+                        ]
+        values.update(self._create_sequence_values(picking_types, ctx_name, ctx_code))
         return values
 
     def _get_picking_type_update_values(self):
