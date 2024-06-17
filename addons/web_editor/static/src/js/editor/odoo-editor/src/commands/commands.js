@@ -644,7 +644,7 @@ export const editorCommands = {
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
-        const selectionNodes = getSelectedNodes(editor.editable).filter(node => closestElement(node).isContentEditable);
+        const selectionNodes = getSelectedNodes(editor.editable).filter(node => closestElement(node).isContentEditable && node.nodeName !== "T");
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
