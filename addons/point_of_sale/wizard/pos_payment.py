@@ -70,10 +70,6 @@ class PosMakePayment(models.TransientModel):
             order._process_saved_order(False)
             if order.state in {'paid', 'done', 'invoiced'}:
                 order._send_order()
-
-                active_pos_order = self.env["pos.order"].browse(self.env.context.get("active_id"))
-                active_pos_order.lines.sale_order_line_id._compute_name()
-
             return {'type': 'ir.actions.act_window_close'}
 
         return self.launch_payment()
