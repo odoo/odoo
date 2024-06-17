@@ -16,5 +16,10 @@ export class ResPartner extends Base {
             .filter(Boolean)
             .join(" ");
     }
+
+    exactMatch(searchWord) {
+        const fields = ["barcode"];
+        return fields.some((field) => this[field] && this[field] === searchWord);
+    }
 }
 registry.category("pos_available_models").add(ResPartner.pythonModel, ResPartner);
