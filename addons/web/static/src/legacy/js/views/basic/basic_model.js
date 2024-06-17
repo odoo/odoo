@@ -1221,7 +1221,7 @@ var BasicModel = AbstractModel.extend({
 
                             // Erase changes as they have been applied
                             record._changes = {};
-                            var data = Object.assign({}, record.data, record._changes);
+                            var data = Object.assign({}, record.data, _changes);
                             for (var fieldName in record.fields) {
                                 var type = record.fields[fieldName].type;
                                 if (type === 'many2many' || type === 'one2many') {
