@@ -112,18 +112,6 @@ export class DiscussCoreCommon {
                 thread: { id: channel_id, model: "discuss.channel" },
             });
         });
-        this.busService.subscribe("discuss.channel.member/seen", (payload) => {
-            const { channel_id, guest_id, id, last_message_id, partner_id } = payload;
-            const member = this.store.ChannelMember.insert({
-                id,
-                seen_message_id: { id: last_message_id },
-                persona: { type: partner_id ? "partner" : "guest", id: partner_id ?? guest_id },
-                thread: { id: channel_id, model: "discuss.channel" },
-            });
-            if (member?.persona.eq(this.store.self)) {
-                this.threadService.updateSeen(member.thread, last_message_id);
-            }
-        });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.thread) {
                 if (
