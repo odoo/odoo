@@ -2,7 +2,6 @@
 
 import { SlideUploadCategory } from "@website_slides/js/public/components/slide_upload_dialog/slide_upload_category";
 import { patch } from "@web/core/utils/patch";
-import { uniqueId } from "@web/core/utils/functions";
 import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -29,7 +28,7 @@ patch(SlideUploadCategory.prototype, {
             ? this.state.choices.certifications.find(
                   (c) => c.value === this.state.choices.certificationId
               ).label
-            : _t("Select or create a certification");
+            : _t("Select a certification");
     },
 
     _formValidate() {
@@ -51,12 +50,6 @@ patch(SlideUploadCategory.prototype, {
             (c) => c.value === value
         ).label;
         this.state.showCertificationRequiredError = false;
-    },
-
-    onClickCreateCertificationBtn(categoryName) {
-        const tempId = uniqueId("temp");
-        this.state.choices.certifications.push({ value: tempId, label: categoryName });
-        this.state.choices.certificationId = tempId;
     },
 
     //--------------------------------------------------------------------------
