@@ -144,6 +144,36 @@ describe('applyColor', () => {
             contentAfter: '<p>[abcabc]</p>',
         });
     });
+    it('Shall not apply font tag to t nodes (protects if else nodes separation)', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: unformat(`[
+                <p>
+                    <t t-if="object.partner_id.parent_id">
+                       <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>
+                    </t>
+                    <t t-else="">
+                        <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+                    </t>
+                </p>
+            ]`),
+            stepFunction: setColor('red', 'backgroundColor'),
+            contentAfter: unformat(`
+                <p>
+                    <t t-if="object.partner_id.parent_id">
+                        <t t-out="object.partner_id.parent_id.name or ''">
+                            <font style="background-color: red;">[AzureInterior</font>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-out="object.partner_id.name or ''">
+                            <font style="background-color: red;">BrandonFreeman</font>
+                        </t>
+                        <font style="background-color: red;">,]</font>
+                    </t>
+                </p>
+            `),
+        });
+    });
 });
 describe('rgbToHex', () => {
     it('should convert an rgb color to hexadecimal', async () => {
