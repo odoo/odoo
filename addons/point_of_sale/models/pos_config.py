@@ -380,6 +380,12 @@ class PosConfig(models.Model):
         if not self.env.is_admin() and {'is_header_or_footer', 'receipt_header', 'receipt_footer'} & values.keys():
             raise AccessError(_('Only administrators can edit receipt headers and footers'))
 
+    @api.constrains('customer_display_type', 'proxy_ip', 'is_posbox')
+    def _check_customer_display_type(self):
+        for config in self:
+            if config.customer_display_type == 'proxy' and (not config.is_posbox or not config.proxy_ip):
+                raise UserError(_("You must set the iot box's IP address to use an IoT-connected screen. You'll find the field under the 'IoT Box' option."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
