@@ -159,7 +159,7 @@ export class ColorPlugin extends Plugin {
             selection = this.shared.splitSelection();
             selectionNodes = this.shared
                 .getSelectedNodes()
-                .filter((node) => closestElement(node).isContentEditable);
+                .filter((node) => closestElement(node).isContentEditable && node.nodeName !== "T");
             if (isEmptyBlock(selection.endContainer)) {
                 selectionNodes.push(selection.endContainer, ...descendants(selection.endContainer));
             }
