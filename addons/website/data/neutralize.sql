@@ -13,4 +13,4 @@ UPDATE website
 
 -- Update robots.txt to disallow all crawling
 UPDATE website
-   SET robots_txt = E'User-agent: *\nDisallow: /'
+   SET robots_txt = E'User-agent: *\nDisallow: /';
