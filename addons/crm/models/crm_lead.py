@@ -111,7 +111,7 @@ class Lead(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Salesperson', default=lambda self: self.env.user,
         domain="[('share', '=', False)]",
-        check_company=True, index=True, tracking=True)
+        check_company=True, index='btree_not_null', tracking=True)
     user_company_ids = fields.Many2many(
         'res.company', compute='_compute_user_company_ids',
         help='UX: Limit to lead company or all if no company')
@@ -123,7 +123,7 @@ class Lead(models.Model):
         copy=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
-        compute='_compute_company_id', readonly=False, store=True)
+        compute='_compute_company_id', readonly=False, store='btree_not_null')
     referred = fields.Char('Referred By')
     description = fields.Html('Notes')
     active = fields.Boolean('Active', default=True, tracking=True)
@@ -173,7 +173,7 @@ class Lead(models.Model):
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     # Customer / contact
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', check_company=True, index=True, tracking=10,
+        'res.partner', string='Customer', check_company=True, index='btree_not_null', tracking=10,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
@@ -234,7 +234,7 @@ class Lead(models.Model):
     # Won/Lost
     lost_reason_id = fields.Many2one(
         'crm.lost.reason', string='Lost Reason',
-        index=True, ondelete='restrict', tracking=True)
+        index='btree_not_null', ondelete='restrict', tracking=True)
     # Statistics
     calendar_event_ids = fields.One2many('calendar.event', 'opportunity_id', string='Meetings')
     duplicate_lead_ids = fields.Many2many("crm.lead", compute="_compute_potential_lead_duplicates", string="Potential Duplicate Lead", context={"active_test": False})

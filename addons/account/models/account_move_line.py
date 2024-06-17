@@ -261,7 +261,7 @@ class AccountMoveLine(models.Model):
     matching_number = fields.Char(
         string="Matching #",
         copy=False,
-        index='btree',
+        index='btree_not_null',
         help="Matching number for this line, 'P' if it is only partially reconcile, or the name of "
              "the full reconcile if it exists.",
     )  # can also start with `I` for imports: see `_reconcile_marked`
@@ -328,7 +328,7 @@ class AccountMoveLine(models.Model):
     )
     date_maturity = fields.Date(
         string='Due Date',
-        index=True,
+        index='btree_not_null',
         tracking=True,
         help="This field is used for payable and receivable journal entries. "
              "You can put the limit date for the payment of this line.",

@@ -196,10 +196,10 @@ class Partner(models.Model):
     complete_name = fields.Char(compute='_compute_complete_name', store=True, index=True)
     date = fields.Date(index=True)
     title = fields.Many2one('res.partner.title')
-    parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
+    parent_id = fields.Many2one('res.partner', string='Related Company', index='btree_not_null')
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
     child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])
-    ref = fields.Char(string='Reference', index=True)
+    ref = fields.Char(string='Reference', index='btree_not_null')
     lang = fields.Selection(_lang_get, string='Language',
                             help="All the emails and documents sent to this contact will be translated in this language.")
     active_lang_count = fields.Integer(compute='_compute_active_lang_count')
@@ -215,7 +215,7 @@ class Partner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat = fields.Char(string='Tax ID', index='btree_not_null', help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
     company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False,
