@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
@@ -16,6 +17,7 @@ class TestChannelRTC(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
+        self.maxDiff = None
         channel = self.env['discuss.channel'].channel_create(name='Test Channel', group_id=self.env.ref('base.group_user').id)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
@@ -61,28 +63,47 @@ class TestChannelRTC(MailCommon):
                 },
             ]
         ):
-            res = channel_member._rtc_join_call()
-        self.assertEqual(res, {
-            'iceServers': False,
-            'rtcSessions': [
-                ('ADD', [{
-                    'id': channel_member.rtc_session_ids.id,
-                    'channelMember': {
-                        "id": channel_member.id,
-                        "thread": {"id": channel_member.channel_id.id, "model": "discuss.channel"},
-                        "persona": {
-                            "id": channel_member.partner_id.id,
-                            "name": channel_member.partner_id.name,
-                            "im_status": channel_member.partner_id.im_status,
-                            "type": "partner",
+            store = Store()
+            channel_member._rtc_join_call(store)
+            res = store.get_result()
+        self.assertEqual(
+            res,
+            {
+                "Rtc": {
+                    "iceServers": False,
+                    "selfSession": {"id": channel_member.rtc_session_ids.id},
+                    "serverInfo": None,
+                },
+                "RtcSession": [
+                    {
+                        "id": channel_member.rtc_session_ids.id,
+                        "channelMember": {
+                            "id": channel_member.id,
+                            "thread": {
+                                "id": channel_member.channel_id.id,
+                                "model": "discuss.channel",
+                            },
+                            "persona": {
+                                "id": channel_member.partner_id.id,
+                                "name": channel_member.partner_id.name,
+                                "im_status": channel_member.partner_id.im_status,
+                                "type": "partner",
+                            },
                         },
-                    },
-                }]),
-                ('DELETE', [{'id': channel_member.rtc_session_ids.id - 1}]),
-            ],
-            'sessionId': channel_member.rtc_session_ids.id,
-            'serverInfo': None,
-        })
+                    }
+                ],
+                "Thread": [
+                    {
+                        "id": channel.id,
+                        "model": "discuss.channel",
+                        "rtcSessions": [
+                            ("ADD", [{"id": channel_member.rtc_session_ids.id}]),
+                            ("DELETE", [{"id": channel_member.rtc_session_ids.id - 1}]),
+                        ],
+                    }
+                ],
+            },
+        )
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -720,6 +741,7 @@ class TestChannelRTC(MailCommon):
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_50_garbage_collect_should_remove_old_sessions_and_notify_data(self):
+        self.env["discuss.channel.rtc.session"].sudo().search([]).unlink()  # clean up before test
         channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
@@ -786,7 +808,9 @@ class TestChannelRTC(MailCommon):
     def test_60_rtc_sync_sessions_should_gc_and_return_outdated_and_active_sessions(self):
         channel = self.env['discuss.channel'].create_group(partners_to=self.user_employee.partner_id.ids)
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
-        join_call_values = channel_member._rtc_join_call()
+        store = Store()
+        channel_member._rtc_join_call(store)
+        join_call_values = store.get_result()
         test_guest = self.env['mail.guest'].sudo().create({'name': "Test Guest"})
         test_channel_member = self.env['discuss.channel.member'].create({
             'guest_id': test_guest.id,
@@ -818,7 +842,9 @@ class TestChannelRTC(MailCommon):
                 },
             ],
         ):
-            current_rtc_sessions, outdated_rtc_sessions = channel_member._rtc_sync_sessions(check_rtc_session_ids=[join_call_values['sessionId']] + unused_ids)
+            current_rtc_sessions, outdated_rtc_sessions = channel_member._rtc_sync_sessions(
+                check_rtc_session_ids=[join_call_values["Rtc"]["selfSession"]["id"]] + unused_ids
+            )
         self.assertEqual(channel_member.rtc_session_ids, current_rtc_sessions)
         self.assertEqual(unused_ids, outdated_rtc_sessions.ids)
         self.assertFalse(outdated_rtc_sessions.exists())

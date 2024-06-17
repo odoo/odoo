@@ -910,7 +910,7 @@ export class Rtc extends Record {
         }
         this.pttExtService.subscribe();
         this.state.hasPendingRequest = true;
-        const { rtcSessions, iceServers, sessionId, serverInfo } = await rpc(
+        const data = await rpc(
             "/mail/rtc/channel/join_call",
             {
                 channel_id: channel.id,
@@ -922,10 +922,7 @@ export class Rtc extends Record {
         this.clear();
         this.state.logs.clear();
         this.state.channel = channel;
-        this.serverInfo = serverInfo;
-        this.state.channel.rtcSessions = rtcSessions;
-        this.selfSession = this.store.RtcSession.get(sessionId);
-        this.iceServers = iceServers || DEFAULT_ICE_SERVERS;
+        this.store.insert(data);
         this.state.logs.set("channelId", this.state.channel.id);
         this.state.logs.set("selfSessionId", this.selfSession.id);
         this.state.logs.set("hasTURN", hasTurn(this.iceServers));
