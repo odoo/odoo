@@ -74,6 +74,7 @@ class PosOrder(models.Model):
             'partner_id': p.get('partner_id', False),
             'code': p.get('barcode') or self.env['loyalty.card']._generate_code(),
             'points': 0,
+            'expiration_date': p.get('date_to'),
             'source_pos_order_id': self.id,
         } for p in coupons_to_create.values()]
 
