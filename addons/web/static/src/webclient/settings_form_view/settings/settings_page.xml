@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="web.SettingsPage">
         <div class="o_setting_container">
-            <div class="position-sticky top-0 flex-grow-0 z-index-1">
+            <div class="position-sticky top-0 flex-grow-0 z-1">
                 <div class="settings_tab h-100 border-end" t-if="!env.isSmall or state.search.value.length === 0" t-ref="settings_tab">
                     <t t-foreach="props.modules" t-as="module" t-key="module.key">
                         <div class="tab" t-if="!module.isVisible"

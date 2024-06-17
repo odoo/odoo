@@ -2707,7 +2707,7 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
 
         await _super(...arguments);
-        this.menuEl.classList.add('o_we_has_pager', 'position-fixed', 'top-0', 'end-0', 'z-index-1', 'rounded-0');
+        this.menuEl.classList.add('o_we_has_pager', 'position-fixed', 'top-0', 'end-0', 'z-1', 'rounded-0');
         this.menuTogglerEl.classList.add('o_we_toggler_pager');
 
         this.pagerContainerEl = this.el.querySelector('.o_pager_container');

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ComboPage">
-        <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 px-3 py-2 w-100 bg-view border-bottom overflow-x-auto z-index-1">
+        <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 px-3 py-2 w-100 bg-view border-bottom overflow-x-auto z-1">
             <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => this.router.back()">
                 <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
             </button>
@@ -25,7 +25,7 @@
                             t-attf-style="width: calc(100vw / {{props.product.combo_ids.length}})"/>
                         <div class="pos_self_order_breadcrumb_pill d-flex align-items-center justify-content-center ratio ratio-1x1 mx-md-auto">
                             <span
-                                class="rounded-pill d-flex justify-content-center align-items-center border border-2 z-index-1"
+                                class="rounded-pill d-flex justify-content-center align-items-center border border-2 z-1"
                                 t-att-class="{
                                     'text-bg-primary border-primary' : isComboCurrent,
                                     'bg-view' : !isComboCurrent,

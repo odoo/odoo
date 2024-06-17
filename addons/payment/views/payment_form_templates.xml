@@ -149,7 +149,7 @@
             <!-- === Delete button === -->
             <button t-if="allow_token_deletion"
                     name="o_payment_delete_token"
-                    t-att-class="'btn btn-link px-2 py-0 lh-lg z-index-1'
+                    t-att-class="'btn btn-link px-2 py-0 lh-lg z-1'
                                  + (' d-none' if mode != 'validation' else '')"
                     t-attf-data-linked-radio="o_payment_token_{{token_sudo.id}}"
             >
@@ -371,7 +371,7 @@
             - color_name: The class name of the color (`warning`, `danger`...).
             - title: The title to display on hover.
         -->
-        <i t-attf-class="fa fa-{{icon_name}} text-{{color_name}} position-relative z-index-1"
+        <i t-attf-class="fa fa-{{icon_name}} text-{{color_name}} position-relative z-1"
            t-att-title="title"
            data-bs-toggle="tooltip"
            data-bs-placement="top"
@@ -386,7 +386,7 @@
         -->
         <span t-field="logo_pm_sudo.image_payment_form"
               t-options="{'widget': 'image', 'alt-field': 'name'}"
-              class="position-relative d-block rounded overflow-hidden z-index-1 shadow-sm"
+              class="position-relative d-block rounded overflow-hidden z-1 shadow-sm"
               t-att-title="logo_pm_sudo.name"
               data-bs-toggle="tooltip"
               data-bs-placement="top"

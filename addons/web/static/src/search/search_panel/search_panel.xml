@@ -53,7 +53,7 @@
          t-att-class="env.searchModel.searchPanelInfo.className"
          t-attf-class="#{env.isSmall ? 'px-3' : 'pe-1 ps-3'}"
          t-ref="root">
-        <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-index-1" t-on-click="toggleSidebar">
+        <button t-if="!env.isSmall" class="btn btn-light btn-sm end-0 m-2 position-absolute px-2 py-1 top-0 z-1" t-on-click="toggleSidebar">
             <i class="fa fa-fw fa-angle-double-left"/>
         </button>
         <div t-if="!sections or sections.length === 0" class="o_search_panel_empty_state me-3">

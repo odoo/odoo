@@ -40,7 +40,7 @@
                 t-value="'/forum/' + slug(question_tag.forum_id) + '/tag/' + slug(question_tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', 'create_uid', filters='tag')"/>
 
             <a t-att-href="click_action"
-                t-attf-class="badge position-relative z-index-1 #{ 'text-bg-primary' if tag and tag.name == question_tag.name else 'text-bg-secondary' } fw-normal"
+                t-attf-class="badge position-relative z-1 #{ 'text-bg-primary' if tag and tag.name == question_tag.name else 'text-bg-secondary' } fw-normal"
                 t-field="question_tag.name"/>
         </t>
     </div>
@@ -53,7 +53,7 @@
     <div t-if="is_profile" class="card">
         <div class="card-body">
             <t t-call="website_forum.display_post_question_block"/>
-            <div class="d-inline-flex gap-2 position-relative z-index-1 me-1">
+            <div class="d-inline-flex gap-2 position-relative z-1 me-1">
                 <t t-if="answer" t-call="website_forum.author_box">
                     <t t-set="object" t-value="question"/>
                     <t t-set="_image_classes" t-value="'rounded-circle'"/>
@@ -80,11 +80,11 @@
             </t>
         </td>
         <td class="o_wforum_posters order-1 order-lg-2">
-            <div class="position-relative z-index-1 d-flex flex-row-reverse">
+            <div class="position-relative z-1 d-flex flex-row-reverse">
                 <div class="d-none d-lg-flex flex-row-reverse" t-foreach="question.child_ids.filtered(lambda a: a.create_uid != question.create_uid)[-4:]" t-as="post_answer">
                     <t t-call="website_forum.author_box">
                         <t t-set="object" t-value="post_answer"/>
-                        <t t-if="post_answer.is_correct" t-set="_box_classes" t-valuef="z-index-1 order-1"/>
+                        <t t-if="post_answer.is_correct" t-set="_box_classes" t-valuef="z-1 order-1"/>
                         <t t-set="_image_classes" t-value="'me-n2'"/>
                         <t t-set="show_image" t-value="True"/>
                         <t t-set="allow_biography" t-value="True"/>
@@ -92,7 +92,7 @@
                 </div>
                 <t t-call="website_forum.author_box">
                     <t t-set="object" t-value="question"/>
-                    <t t-set="_box_classes" t-value="'z-index-1'"/>
+                    <t t-set="_box_classes" t-value="'z-1'"/>
                     <t t-set="_image_classes" t-value="'me-lg-n2'"/>
                     <t t-set="show_image" t-value="True"/>
                     <t t-set="allow_biography" t-value="True"/>
@@ -115,7 +115,7 @@
             <span t-out="question.views" t-attf-class="#{ 'opacity-50' if question.views == 0 else '' }" />
         </td>
         <td class="o_wforum_last_activity d-none d-lg-table-cell order-4 text-center" t-att-data-last-activity="question.last_activity_date">
-            <span class="o_wforum_relative_datetime position-relative z-index-1" t-att-title="question.last_activity_date"/>
+            <span class="o_wforum_relative_datetime position-relative z-1" t-att-title="question.last_activity_date"/>
         </td>
     </tr>
 </template>
