@@ -48,6 +48,7 @@
     <record id="action_project_task_burndown_chart_report" model="ir.actions.act_window">
         <field name="name">Burndown Chart</field>
         <field name="res_model">project.task.burndown.chart.report</field>
+        <field name="path">burndown-chart</field>
         <field name="view_mode">graph</field>
         <field name="search_view_id" ref="project_task_burndown_chart_report_view_search"/>
         <field name="context">{'search_default_project_id': active_id, 'search_default_date': 1, 'search_default_stage': 1, 'search_default_filter_date': 1}</field>
