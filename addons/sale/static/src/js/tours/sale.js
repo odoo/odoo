@@ -112,10 +112,10 @@ registry.category("web_tour.tours").add("sale_tour", {
             ".o_statusbar_buttons button[name='action_quotation_send']",
         ),
         {
+            isActive: ["body:not(:has(.modal-footer button[name='action_send_mail']))"],
             trigger: ".modal-footer button[name='document_layout_save']",
             content: _t("let's continue"),
             position: "bottom",
-            skip_trigger: ".modal-footer button[name='action_send_mail']",
             run: "click",
         },
         {

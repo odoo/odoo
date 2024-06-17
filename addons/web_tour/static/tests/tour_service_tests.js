@@ -979,4 +979,65 @@ QUnit.module("Tour service", (hooks) => {
         assert.containsOnce(overlays[0], `.modal`);
         assert.containsOnce(overlays[1], `.o_tour_pointer`);
     });
+
+    QUnit.test("check tour with inactive steps", async function (assert) {
+        patchWithCleanup(browser.console, {
+            log: (s) => console.log,
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: OverlayContainer, props: overlayContainerProps } = registry
+            .category("main_components")
+            .get("OverlayContainer");
+
+        class Root extends Component {
+            static components = { OverlayContainer };
+            static template = xml/*html*/ `
+                <t>
+                    <button class="button0">Button 0</button>
+                    <button class="button1">Button 1</button>
+                    <button class="button2">Button 2</button>
+                    <OverlayContainer t-props="props.overlayContainerProps" />
+                </t>
+            `;
+            static props = ["*"];
+        }
+
+        await mount(Root, target, { env, props: { overlayContainerProps } });
+        registry.category("web_tour.tours").add("pipu_tour", {
+            test: true,
+            steps: () => [
+                {
+                    isActive: ["body:not(:has(.this_selector_is_not_here))"],
+                    trigger: ".button0",
+                    run() {
+                        assert.step("this action 1 has not been skipped");
+                    },
+                },
+                {
+                    isActive: ["body:not(:has(.button0))"],
+                    trigger: ".button1",
+                    run() {
+                        assert.step("this action 2 has been skipped");
+                    },
+                },
+                {
+                    isActive: ["body:not(:has(.this_selector_is_not_here))"],
+                    trigger: ".button2",
+                    run() {
+                        assert.step("this action 3 has not been skipped");
+                    },
+                },
+            ],
+        });
+        env.services.tour_service.startTour("pipu_tour", { mode: "auto" });
+        await mock.advanceTime(750);
+        await mock.advanceTime(750);
+        await mock.advanceTime(750);
+        await mock.advanceTime(750);
+        assert.verifySteps([
+            "this action 1 has not been skipped",
+            "this action 3 has not been skipped",
+        ]);
+    });
 });
