@@ -29,7 +29,7 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code')
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller")
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
-    l10n_in_hsn_code_warning = fields.Json(compute="_compute_hsn_code_warning")
+    l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
 
     @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
     def _compute_l10n_in_gst_treatment(self):
@@ -80,7 +80,7 @@ class AccountMove(models.Model):
         return super()._onchange_name_warning()
 
     @api.depends('invoice_line_ids.l10n_in_hsn_code', 'company_id.l10n_in_hsn_code_digit')
-    def _compute_hsn_code_warning(self):
+    def _compute_l10n_in_warning(self):
 
         def build_warning(record, action_name, message, views, domain=False):
             return {
@@ -106,7 +106,7 @@ class AccountMove(models.Model):
                 msg = _("Ensure that the HSN/SAC Code consists either %s in invoice lines",
                     digit_suffixes.get(move.company_id.l10n_in_hsn_code_digit, _("Invalid HSN/SAC Code digit"))
                 )
-                move.l10n_in_hsn_code_warning = {
+                move.l10n_in_warning = {
                     'invalid_hsn_code_length': build_warning(
                         message=msg,
                         action_name=_("Journal Items(s)"),
@@ -116,8 +116,8 @@ class AccountMove(models.Model):
                     )
                 } if lines else {}
             else:
-                move.l10n_in_hsn_code_warning = {}
-        (self - indian_invoice).l10n_in_hsn_code_warning = {}
+                move.l10n_in_warning = {}
+        (self - indian_invoice).l10n_in_warning = {}
 
     def _get_name_invoice_report(self):
         self.ensure_one()
