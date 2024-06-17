@@ -105,6 +105,17 @@ class MailTestGatewayCompany(models.Model):
     company_id = fields.Many2one('res.company', 'Company')
 
 
+class MailTestGatewayMainAttachment(models.Model):
+    """ A very simple model only inheriting from mail.thread to test pure mass
+    mailing features and base performances, with a company field and main
+    attachment management. """
+    _description = 'Simple Chatter Model for Mail Gateway with company'
+    _name = 'mail.test.gateway.main.attachment'
+    _inherit = ['mail.test.gateway', 'mail.thread.main.attachment']
+
+    company_id = fields.Many2one('res.company', 'Company')
+
+
 class MailTestGatewayGroups(models.Model):
     """ A model looking like discussion channels / groups (flat thread and
     alias). Used notably for advanced gatewxay tests. """
