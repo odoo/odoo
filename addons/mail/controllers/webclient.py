@@ -5,7 +5,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 from odoo.addons.mail.models.discuss.mail_guest import add_guest_to_context
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 from odoo.osv import expression
 
 
@@ -29,7 +29,7 @@ class WebclientController(http.Controller):
         return self._process_request(**kwargs)
 
     def _process_request(self, **kwargs):
-        store = StoreData()
+        store = Store()
         request.update_context(**kwargs.get("context", {}))
         self._process_request_for_all(store, **kwargs)
         if not request.env.user._is_public():
@@ -51,7 +51,7 @@ class WebclientController(http.Controller):
                 ("is_self", "=", True),
                 "|",
                 ("fold_state", "in", ("open", "folded")),
-                ("rtc_inviting_session_id", "!=", False)
+                ("rtc_inviting_session_id", "!=", False),
             ]
             channels_domain = [("channel_member_ids", "any", member_domain)]
             channel_types = kwargs["init_messaging"].get("channel_types")
@@ -59,7 +59,7 @@ class WebclientController(http.Controller):
                 channels_domain = expression.AND(
                     [channels_domain, [("channel_type", "in", channel_types)]]
                 )
-            request.env["discuss.channel"].search(channels_domain)._to_store(store)
+            store.add(request.env["discuss.channel"].search(channels_domain))
 
     def _process_request_for_logged_in_user(self, store, **kwargs):
         if kwargs.get("failures"):
@@ -74,20 +74,20 @@ class WebclientController(http.Controller):
             # sudo: mail.notification - return only failures of current user as author
             notifications = request.env["mail.notification"].sudo().search(domain, limit=100)
             messages_format = notifications.mail_message_id._message_notification_format()
-            store.add({"Message": messages_format})
+            store.add("Message", messages_format)
 
     def _process_request_for_internal_user(self, store, **kwargs):
         if kwargs.get("systray_get_activities"):
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
             groups = request.env["res.users"]._get_activity_groups()
-            store.add({
-                "Store": {
+            store.add(
+                {
                     "activityCounter": sum(group.get("total_count", 0) for group in groups),
                     "activity_counter_bus_id": bus_last_id,
                     "activityGroups": groups,
                 }
-            })
+            )
         if kwargs.get("canned_responses"):
             field_names = ["source", "substitution"]
             domain = [
@@ -96,4 +96,4 @@ class WebclientController(http.Controller):
                 ("group_ids", "in", request.env.user.groups_id.ids),
             ]
             canned_responses = request.env["mail.canned.response"].search_read(domain, field_names)
-            store.add({"CannedResponse": canned_responses})
+            store.add("CannedResponse", canned_responses)

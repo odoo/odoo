@@ -30,7 +30,7 @@ class Users(models.Model):
             odoobot_onboarding = True
             self._init_odoobot()
         super()._init_messaging(store)
-        store.add({"Store": {"odoobotOnboarding": odoobot_onboarding}})
+        store.add({"odoobotOnboarding": odoobot_onboarding})
 
     def _init_odoobot(self):
         self.ensure_one()

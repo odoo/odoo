@@ -9,7 +9,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
-from odoo.addons.mail.tools.discuss import StoreData
+from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import format_list, get_lang, html_escape
@@ -22,12 +22,6 @@ group_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 53
 <circle cx="265.03" cy="265.03" r="265.03" fill="#875a7b"/>
 <path d="m184.356059,265.030004c-23.740561,0.73266 -43.157922,10.11172 -58.252302,28.136961l-29.455881,0c-12.0169,0 -22.128621,-2.96757 -30.335161,-8.90271s-12.309921,-14.618031 -12.309921,-26.048671c0,-51.730902 9.08582,-77.596463 27.257681,-77.596463c0.87928,0 4.06667,1.53874 9.56217,4.61622s12.639651,6.19167 21.432451,9.34235s17.512401,4.72613 26.158581,4.72613c9.8187,0 19.563981,-1.68536 29.236061,-5.05586c-0.73266,5.4223 -1.0991,10.25834 -1.0991,14.508121c0,20.370061 5.93514,39.127962 17.805421,56.273922zm235.42723,140.025346c0,17.585601 -5.34888,31.470971 -16.046861,41.655892s-24.912861,15.277491 -42.645082,15.277491l-192.122688,0c-17.732221,0 -31.947101,-5.09257 -42.645082,-15.277491s-16.046861,-24.070291 -16.046861,-41.655892c0,-7.7669 0.25653,-15.350691 0.76937,-22.751371s1.53874,-15.387401 3.07748,-23.960381s3.48041,-16.523211 5.82523,-23.850471s5.4955,-14.471411 9.45226,-21.432451s8.49978,-12.89618 13.628841,-17.805421c5.12906,-4.90924 11.393931,-8.82951 18.794611,-11.76037s15.570511,-4.3964 24.509931,-4.3964c1.46554,0 4.61622,1.57545 9.45226,4.72613s10.18492,6.6678 16.046861,10.55136c5.86194,3.88356 13.702041,7.40068 23.520741,10.55136s19.710601,4.72613 29.675701,4.72613s19.857001,-1.57545 29.675701,-4.72613s17.658801,-6.6678 23.520741,-10.55136c5.86194,-3.88356 11.21082,-7.40068 16.046861,-10.55136s7.98672,-4.72613 9.45226,-4.72613c8.93942,0 17.109251,1.46554 24.509931,4.3964s13.665551,6.85113 18.794611,11.76037c5.12906,4.90924 9.67208,10.844381 13.628841,17.805421s7.10744,14.105191 9.45226,21.432451s4.28649,15.277491 5.82523,23.850471s2.56464,16.559701 3.07748,23.960381s0.76937,14.984471 0.76937,22.751371zm-225.095689,-280.710152c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422zm154.753287,84.410884c0,23.300921 -8.24325,43.194632 -24.729751,59.681133s-36.380212,24.729751 -59.681133,24.729751s-43.194632,-8.24325 -59.681133,-24.729751s-24.729751,-36.380212 -24.729751,-59.681133s8.24325,-43.194632 24.729751,-59.681133s36.380212,-24.729751 59.681133,-24.729751s43.194632,8.24325 59.681133,24.729751s24.729751,36.380212 24.729751,59.681133zm126.616325,49.459502c0,11.43064 -4.10338,20.113531 -12.309921,26.048671s-18.318261,8.90271 -30.335161,8.90271l-29.455881,0c-15.094381,-18.025241 -34.511741,-27.404301 -58.252302,-28.136961c11.87028,-17.145961 17.805421,-35.903862 17.805421,-56.273922c0,-4.24978 -0.36644,-9.08582 -1.0991,-14.508121c9.67208,3.3705 19.417361,5.05586 29.236061,5.05586c8.64618,0 17.365781,-1.57545 26.158581,-4.72613s15.936951,-6.26487 21.432451,-9.34235s8.68289,-4.61622 9.56217,-4.61622c18.171861,0 27.257681,25.865561 27.257681,77.596463zm-28.136961,-133.870386c0,15.534021 -5.4955,28.796421 -16.486501,39.787422s-24.253401,16.486501 -39.787422,16.486501s-28.796421,-5.4955 -39.787422,-16.486501s-16.486501,-24.253401 -16.486501,-39.787422s5.4955,-28.796421 16.486501,-39.787422s24.253401,-16.486501 39.787422,-16.486501s28.796421,5.4955 39.787422,16.486501s16.486501,24.253401 16.486501,39.787422z" fill="#ffffff"/>
 </svg>'''
-
-
-def channel_to_store_data(channel):
-    store = StoreData()
-    channel._to_store(store)
-    return store.get_result()
 
 
 class Channel(models.Model):
@@ -341,14 +335,13 @@ class Channel(models.Model):
 
     def _action_unfollow(self, partner):
         self.message_unsubscribe(partner.ids)
-        custom_store = StoreData()
         custom_channel_info = {
             "id": self.id,
             "is_pinned": False,
             "isLocallyPinned": False,
             "model": "discuss.channel",
         }
-        custom_store.add({"Thread": custom_channel_info})
+        custom_store = Store("Thread", custom_channel_info)
         member = self.env["discuss.channel.member"].search(
             [("channel_id", "=", self.id), ("partner_id", "=", partner.id)]
         )
@@ -363,14 +356,13 @@ class Channel(models.Model):
         )
         # send custom store after message_post to avoid is_pinned reset to True
         self.env["bus.bus"]._sendone(partner, "discuss.channel/leave", custom_store.get_result())
-        store = StoreData()
         channel_info = {
             "channelMembers": [("DELETE", {"id": member.id})],
             "id": self.id,
             "memberCount": self.member_count,
             "model": "discuss.channel",
         }
-        store.add({"Thread": channel_info})
+        store = Store("Thread", channel_info)
         self.env["bus.bus"]._sendone(self, "mail.record/insert", store.get_result())
 
     def add_members(self, partner_ids=None, guest_ids=None, invite_to_rtc_call=False, open_chat_window=False, post_joined_message=True):
@@ -737,8 +729,7 @@ class Channel(models.Model):
                     # sudo: res.company - context is required by ir.rules
                     allowed_company_ids=user_id.sudo().company_ids.ids
                 )
-                store = StoreData()
-                user_channels._to_store(store)
+                store = Store(user_channels)
                 notifications.append((partner, 'mail.record/insert', store.get_result()))
         return notifications
 
@@ -871,7 +862,7 @@ class Channel(models.Model):
             'last_interest_dt': fields.Datetime.to_string(self.last_interest_dt),
         }
 
-    def _to_store(self, store):
+    def _to_store(self, store: Store):
         """Adds channel data to the given store."""
         if not self:
             return []
@@ -926,7 +917,7 @@ class Channel(models.Model):
                             extra_fields={"last_interest_dt": True, "new_message_separator": True}
                         ).values()
                     )
-                    store.add({"ChannelMember": member_data})
+                    store.add("ChannelMember", member_data)
                     info['state'] = member.fold_state or 'closed'
                     info['message_unread_counter'] = member.message_unread_counter
                     info["message_unread_counter_bus_id"] = bus_last_id
@@ -946,10 +937,10 @@ class Channel(models.Model):
                         extra_fields={"new_message_separator": True}
                     ).values()
                 )
-                store.add({"ChannelMember": member_data})
+                store.add("ChannelMember", member_data)
                 other_members = members_by_channel[channel] - member
                 other_members_data = list(other_members._discuss_channel_member_format().values())
-                store.add({"ChannelMember": other_members_data})
+                store.add("ChannelMember", other_members_data)
             # add RTC sessions info
             invited_members = invited_members_by_channel[channel]
             m_fields = {
@@ -961,10 +952,10 @@ class Channel(models.Model):
                 },
             }
             members_data = list(invited_members._discuss_channel_member_format(m_fields).values())
-            store.add({"ChannelMember": members_data})
+            store.add("ChannelMember", members_data)
             info["invitedMembers"] = [("ADD", [{"id": member.id} for member in invited_members])]
             info["rtcSessions"] = [("ADD", rtc_sessions_by_channel.get(channel, []))]
-            store.add({"Thread": info})
+            store.add("Thread", info)
 
     def _channel_fetch_message(self, last_id=False, limit=20):
         """ Return message values of the current channel.
@@ -994,7 +985,7 @@ class Channel(models.Model):
 
     # User methods
     @api.model
-    @api.returns('self', channel_to_store_data)
+    @api.returns('self', lambda channels: Store(channels).get_result())
     def channel_get(self, partners_to, pin=True, force_open=False):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
@@ -1069,8 +1060,7 @@ class Channel(models.Model):
         if not pinned:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'discuss.channel/unpin', {'id': self.id})
         else:
-            store = StoreData()
-            self._to_store(store)
+            store = Store(self)
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', store.get_result())
 
     def _types_allowing_seen_infos(self):
@@ -1136,7 +1126,7 @@ class Channel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    @api.returns('self', channel_to_store_data)
+    @api.returns('self', lambda channels: Store(channels).get_result())
     def channel_create(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
@@ -1154,13 +1144,12 @@ class Channel(models.Model):
         new_channel.group_public_id = group.id if group else None
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
-        store = StoreData()
-        new_channel._to_store(store)
+        store = Store(new_channel)
         self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.record/insert', store.get_result())
         return new_channel
 
     @api.model
-    @api.returns('self', channel_to_store_data)
+    @api.returns('self', lambda channels: Store(channels).get_result())
     def create_group(self, partners_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
