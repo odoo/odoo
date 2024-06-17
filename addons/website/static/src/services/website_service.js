@@ -186,6 +186,9 @@ export const websiteService = {
             get isDesigner() {
                 return isDesigner === true;
             },
+            get is404() {
+                return currentMetadata.viewXmlid === 'website.page_404';
+            },
             get hasMultiWebsites() {
                 return hasMultiWebsites === true;
             },
