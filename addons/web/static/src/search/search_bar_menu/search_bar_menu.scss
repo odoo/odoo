@@ -6,15 +6,12 @@
     max-width: $-menu-max-width;
     .o_dropdown_container {
         border-color: $dropdown-divider-bg !important;
+        min-width: 200px;
     }
 
     @include media-breakpoint-up(lg) {
-        .o_favorite_menu {
-            max-width: calc(#{$-menu-max-width} / 3);
-        }
-
-        .o_comparison_menu + .o_favorite_menu {
-            max-width: calc(#{$-menu-max-width} / 4);
+        .o_dropdown_container {
+            max-width: calc(#{$-menu-max-width} / 6);
         }
     }
 }
