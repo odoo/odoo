@@ -10,7 +10,7 @@
                 employeeId="props.employeeId"/>
         </t>
         <div class="o_timeoff_card p-0 d-flex justify-content-around">
-            <div class="row justify-content-center align-items-center border-bottom h-50 w-100 p-1" t-if="has_accrual_allocation()">
+            <div class="row justify-content-center align-items-center border-bottom h-50 w-100 p-1" t-if="hasAccrualAllocation">
                 Balance at the
                 <div class="p-1" style="max-width: 100px!important">
                     <DateTimeInput
