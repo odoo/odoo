@@ -52,7 +52,7 @@
                     <field name="is_multiple_currency" column_invisible="True"/>
                     <field name="product_has_cost" column_invisible="True"/>
                     <field name="date" optional="show" readonly="not is_editable"/>
-                    <field name="product_id" optional="hide" readonly="not is_editable"/>
+                    <field name="product_id" optional="hide" readonly="not is_editable" required="1"/>
                     <field name="name" readonly="not is_editable"/>
                     <field name="employee_id" widget="many2one_avatar_user" readonly="not is_editable"/>
                     <field name="sheet_id" optional="show" readonly="True" column_invisible="not context.get('show_report', False)"/>
@@ -900,7 +900,7 @@
                                     <field name="is_multiple_currency" column_invisible="True"/>
                                     <field name="product_has_cost" column_invisible="True"/>
                                     <field name="date" optional="show"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" required="1"/>
                                     <field name="name"/>
                                     <field name="description" optional="hide"/>
                                     <field name="vendor_id" optional="hide" column_invisible="parent.payment_mode != 'company_account'"/>
