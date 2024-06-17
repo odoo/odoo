@@ -27,7 +27,7 @@ tour.register('hr_expense_tour' , {
     position: 'bottom',
 }, {
     trigger: '.o_expense_submit',
-    extra_triggger: ".o_expense_form",
+    extra_trigger: ".o_expense_form",
     content: Markup(_t('<p>Click on <b> Create Report </b> to create the report.</p>')),
     position: 'right',
 }, {
