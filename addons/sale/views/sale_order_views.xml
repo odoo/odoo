@@ -719,13 +719,12 @@
                                     groups="sale.group_discount_per_so_line"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
-                            <group colspan="4">
+                            <group colspan="4" class="order-1 order-lg-0">
                                 <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
-                            <group class="oe_subtotal_footer" colspan="2" name="sale_total">
+                            <group class="oe_subtotal_footer d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2" readonly="1"/>
                             </group>
-                            <div class="clearfix"/>
                         </group>
                     </page>
                     <page string="Other Info" name="other_information">
