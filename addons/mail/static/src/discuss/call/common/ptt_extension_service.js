@@ -32,9 +32,9 @@ export const pttExtensionHookService = {
                 case "push-to-talk-pressed":
                     {
                         voiceActivated = false;
-                        const isFirstPress = !rtc.state.selfSession?.isTalking;
+                        const isFirstPress = !rtc.selfSession?.isTalking;
                         rtc.onPushToTalk();
-                        if (rtc.state.selfSession?.isTalking) {
+                        if (rtc.selfSession?.isTalking) {
                             // Second key press is slow to come thus, the first timeout
                             // must be greater than the following ones.
                             rtc.setPttReleaseTimeout(

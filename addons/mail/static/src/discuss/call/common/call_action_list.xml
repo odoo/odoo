@@ -4,8 +4,8 @@
     <t t-name="discuss.CallActionList">
         <div class="o-discuss-CallActionList d-flex justify-content-center" t-attf-class="{{ className }}" t-ref="root">
             <div class="d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
-                <t t-if="isOfActiveCall and rtc.state.selfSession">
-                    <t t-if="rtc.state?.selfSession.isMute" t-set="micText">Unmute</t>
+                <t t-if="isOfActiveCall and rtc.selfSession">
+                    <t t-if="rtc.selfSession.isMute" t-set="micText">Unmute</t>
                     <t t-else="" t-set="micText">Mute</t>
                     <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
@@ -15,13 +15,13 @@
                         <div class="fa-stack">
                             <i class="fa fa-stack-1x" t-att-class="{
                                 'fa-lg': !isSmall,
-                                'fa-microphone': !rtc.state.selfSession.isMute,
-                                'fa-microphone-slash': rtc.state.selfSession.isMute,
-                                'text-danger': rtc.state.selfSession.isMute,
+                                'fa-microphone': !rtc.selfSession.isMute,
+                                'fa-microphone-slash': rtc.selfSession.isMute,
+                                'text-danger': rtc.selfSession.isMute,
                             }"/>
                         </div>
                     </button>
-                    <t t-if="rtc.state?.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
+                    <t t-if="rtc.selfSession.isDeaf" t-set="headphoneText">Undeafen</t>
                     <t t-else="" t-set="headphoneText">Deafen</t>
                     <button class="btn d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover"
                         t-att-class="{ 'p-2': isSmall, 'p-3': !isSmall }"
@@ -31,9 +31,9 @@
                         <div class="fa-stack">
                             <i class="fa fa-stack-1x" t-att-class="{
                                 'fa-lg': !isSmall,
-                                'fa-headphones': !rtc.state.selfSession.isDeaf,
-                                'fa-deaf': rtc.state.selfSession.isDeaf,
-                                'text-danger': rtc.state.selfSession.isDeaf,
+                                'fa-headphones': !rtc.selfSession.isDeaf,
+                                'fa-deaf': rtc.selfSession.isDeaf,
+                                'text-danger': rtc.selfSession.isDeaf,
                             }"/>
                         </div>
                     </button>
