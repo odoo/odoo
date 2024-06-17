@@ -15,16 +15,8 @@
                     togglerClass="'text-dark pe-1'"
                 >
                     <t t-out="displayCertificationValue"/>
-                    <t t-set-slot="bottomArea" t-slot-scope="select">
-                        <DropdownItem
-                            t-if="select.data.searchValue and !this.choiceExists(select.data.searchValue, select.data.choices)"
-                            class="'btn text-primary'"
-                            onSelected="() => this.onClickCreateCertificationBtn(select.data.searchValue)"
-                        >
-                            Create New Certification "<i t-out="select.data.searchValue"/>"
-                        </DropdownItem>
-                    </t>
                 </SelectMenu>
+                <span t-if="state.showCertificationRequiredError" class="text-danger">Please select a certification.</span>
             </t>
         </xpath>
     </t>
