@@ -1517,6 +1517,16 @@ describe("pushState", () => {
             ],
         });
     });
+    test("can hide keys", async () => {
+        createRouter();
+
+        router.hideKeyFromUrl("k1");
+
+        router.pushState({ k1: 2, k2: 3 });
+        await tick();
+        expect(router.current).toEqual({ k1: 2, k2: 3 });
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=3");
+    });
 });
 
 describe("History", () => {
@@ -1588,6 +1598,30 @@ describe("History", () => {
         expect(router.current).toEqual({
             actionStack: [{ action: "other-path", displayName: "A different display name" }],
         });
+    });
+    test("properly handles history.back with hidden keys", async () => {
+        redirect("/");
+        on(routerBus, "ROUTE_CHANGE", () => expect.step("ROUTE_CHANGE"));
+        createRouter();
+
+        router.hideKeyFromUrl("k1");
+
+        router.pushState({ k1: 1, k2: 2 });
+        await tick();
+        expect(router.current).toEqual({ k1: 1, k2: 2 });
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=2");
+
+        router.pushState({ k3: 3 }, { replace: true }); // Click on a link
+        await tick();
+        expect(router.current).toEqual({ k3: 3 });
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k3=3");
+
+        browser.history.back(); // Click on back button
+        await tick();
+        expect(router.current).toEqual({ k1: 1, k2: 2 });
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=2");
+
+        expect(["ROUTE_CHANGE"]).toVerifySteps();
     });
 });
 
