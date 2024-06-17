@@ -1657,6 +1657,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             moves_to_assign = moves_to_assign.filtered(
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
+        moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
+        quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
         for move in moves_to_assign:
             rounding = roundings[move]
             if not force_qty:
@@ -1748,7 +1750,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
 
-                        taken_quantity = move._update_reserved_quantity(min(quantity, need), location_id, lot_id, package_id, owner_id)
+                        taken_quantity = move.with_context(quants_cache=quants_cache)._update_reserved_quantity(
+                            min(quantity, need), location_id, lot_id, package_id, owner_id)
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
                         moves_to_redirect.add(move.id)
