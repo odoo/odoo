@@ -392,7 +392,7 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await waitNotifications([env, "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
-    await click("div[title='Unpin Conversation']", {
+    await click("[title='Unpin Conversation']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
     });
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
