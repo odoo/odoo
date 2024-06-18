@@ -256,7 +256,7 @@ export function hasVisibleContent(node) {
 }
 
 export function isZwnbsp(node) {
-    return node.nodeType === Node.TEXT_NODE && node.textContent === "\ufeff";
+    return node?.nodeType === Node.TEXT_NODE && node.textContent === "\ufeff";
 }
 
 export function isTangible(node) {
