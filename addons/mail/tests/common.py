@@ -19,7 +19,7 @@ from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import Message
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.tests import common, new_test_user
-from odoo.tools import formataddr, pycompat
+from odoo.tools import email_normalize_all, formataddr, pycompat
 
 mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
@@ -513,7 +513,7 @@ class MockEmail(common.BaseCase):
     def assertNoMail(self, recipients, mail_message=None, author=None):
         """ Check no mail.mail and email was generated during gateway mock. """
         try:
-            self._find_mail_mail_wpartners(recipients, False, mail_message=mail_message, author=author)
+            self._find_mail_mail_wpartners(recipients, None, mail_message=mail_message, author=author)
         except AssertionError:
             pass
         else:
@@ -532,11 +532,16 @@ class MockEmail(common.BaseCase):
         if recipients is None:
             mails = self._mails
         else:
-            all_emails = [
-                email_to.email if isinstance(email_to, self.env['res.partner'].__class__)
-                else email_to
-                for email_to in recipients
-            ]
+            all_emails = []
+            for recipient in recipients:
+                if isinstance(recipient, self.env['res.partner'].__class__):
+                    partner_mails = email_normalize_all(recipient.email)
+                    all_emails.extend(
+                        formataddr((recipient.name or "False", email or "False"))
+                        for email in partner_mails
+                    )
+                else:
+                    all_emails.append(recipient)
 
             mails = [
                 mail
