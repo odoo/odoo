@@ -921,6 +921,7 @@ class AccountTax(models.Model):
         rounding_method='round_per_line',
         product=None,
         special_mode=False,
+        round_price_include=True,
     ):
         """ Compute the tax/base amounts for the current taxes.
 
@@ -941,6 +942,15 @@ class AccountTax(models.Model):
                             will give you the same as 100 without any special_mode.
                             Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
                             as input and 'round_globally' computation. Otherwise, it's not guaranteed.
+        :param round_price_include: Indicate if we want to force the rounding in price_include whatever the tax computation method.
+                                    In case you have 2 invoice lines of 21.53 with 21% price included taxes, the code will compute
+                                    21.53 / 1.21 * 2 ~= 35.59 as untaxed amount, 7.47 as tax amount and 40.06 as total amount.
+                                    However, for now, we decided we want to put the rounding into the tax amount instead of making
+                                    an adjustment on the untaxed amount because we want the untaxed amount being the sum of the price
+                                    excluded amount of each line. Here, 2 * round(21.53 / 1.21) = 35.58. So we are forced to put the
+                                    rounding on the tax instead to have 35.58 + 7.48 = 43.06 and then, round like the round_per_line
+                                    when the tax is price included.
+        :return:                    A python dictionary.
         :return: A dict containing:
             'evaluation_context':       The evaluation_context parameter.
             'taxes_data':               A list of dictionaries, one per tax containing:
@@ -951,10 +961,12 @@ class AccountTax(models.Model):
             'total_included':           The total with tax.
         """
         def add_tax_amount_to_results(tax, tax_amount):
-            taxes_data[tax.id]['tax_amount'] = tax_amount
-            if rounding_method == 'round_per_line':
+            tax_data = taxes_data[tax.id]
+            tax_data['tax_amount'] = tax_amount
+            special_mode = evaluation_context['special_mode']
+            round_price_include = evaluation_context['round_price_include']
+            if rounding_method == 'round_per_line' or (not special_mode and tax_data['price_include'] and round_price_include):
                 taxes_data[tax.id]['tax_amount'] = float_round(taxes_data[tax.id]['tax_amount'], precision_rounding=precision_rounding)
-
             sorted_taxes._propagate_extra_taxes_base(tax, taxes_data, special_mode=special_mode)
 
         def eval_tax_amount(tax_amount_function, tax):
@@ -1006,6 +1018,7 @@ class AccountTax(models.Model):
             'quantity': quantity,
             'raw_base': raw_base,
             'special_mode': special_mode,
+            'round_price_include': round_price_include,
         }
 
         # Define the order in which the taxes must be evaluated.
@@ -1105,6 +1118,7 @@ class AccountTax(models.Model):
             1.0,
             rounding_method='round_globally',
             product=product,
+            round_price_include=False,
         )
         price_unit = taxes_computation['total_excluded']
 
@@ -1115,6 +1129,7 @@ class AccountTax(models.Model):
             rounding_method='round_globally',
             product=product,
             special_mode='total_excluded',
+            round_price_include=False,
         )
         delta = sum(x['tax_amount'] for x in taxes_computation['taxes_data'] if x['tax'].price_include)
         return price_unit + delta

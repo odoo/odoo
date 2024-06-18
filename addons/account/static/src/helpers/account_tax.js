@@ -219,13 +219,17 @@ export const accountTaxHelpers = {
             // the type of involved fields and we don't have access to this information js-side.
             product = null,
             special_mode = null,
+            round_price_include = true,
         } = {}
     ) {
         const self = this;
 
         function add_tax_amount_to_results(tax, tax_amount) {
-            taxes_data[tax.id].tax_amount = tax_amount;
-            if (rounding_method === "round_per_line") {
+            const tax_data = taxes_data[tax.id];
+            tax_data.tax_amount = tax_amount;
+            const special_mode = evaluation_context.special_mode;
+            const round_price_include = evaluation_context.round_price_include;
+            if (rounding_method === "round_per_line" || (!special_mode && tax_data.price_include && round_price_include)) {
                 taxes_data[tax.id].tax_amount = roundPrecision(
                     taxes_data[tax.id].tax_amount,
                     precision_rounding
@@ -297,6 +301,7 @@ export const accountTaxHelpers = {
             quantity: quantity,
             raw_base: raw_base,
             special_mode: special_mode,
+            round_price_include: round_price_include,
         };
 
         // Define the order in which the taxes must be evaluated.
@@ -392,6 +397,7 @@ export const accountTaxHelpers = {
         let taxes_computation = this.evaluate_taxes_computation(original_taxes, price_unit, 1.0, {
             rounding_method: "round_globally",
             product: product,
+            round_price_include: false,
         });
         price_unit = taxes_computation.total_excluded;
 
@@ -400,6 +406,7 @@ export const accountTaxHelpers = {
             rounding_method: "round_globally",
             product: product,
             special_mode: "total_excluded",
+            round_price_include: false,
         });
         let delta = 0.0;
         for (const tax_data of taxes_computation.taxes_data) {
