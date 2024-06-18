@@ -754,7 +754,10 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                 'price_unit': price_unit,
                 'quantity': quantity,
                 'product_values': product_values,
-                'evaluation_context_kwargs': evaluation_context_kwargs,
+                'evaluation_context_kwargs': {
+                    'round_price_include': False,
+                    **evaluation_context_kwargs,
+                },
                 'compute_kwargs': compute_kwargs,
                 'is_round_globally': is_round_globally,
                 'excluded_special_modes': excluded_special_modes,
