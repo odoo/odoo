@@ -61,6 +61,7 @@ class Galaxy(models.Model):
     name = fields.Char(required=True, help='The galaxy common name.')
     translated_name = fields.Char(translate=True)
     picture = fields.Image(attachment=True, groups="base.group_user")
+    stargate_ids = fields.One2many('test_http.stargate', 'galaxy_id', string="stargates")
 
     @api.model
     def render(self, galaxy_id):

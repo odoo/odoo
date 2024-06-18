@@ -65,6 +65,10 @@ class TestHttpStaticCommon(TestHttpBase):
 
 @tagged('post_install', '-at_install')
 class TestHttpStatic(TestHttpStaticCommon):
+    def setUp(self):
+        super().setUp()
+        self.authenticate('demo', 'demo')
+
     def test_static00_static(self):
         with self.subTest(x_sendfile=False):
             res = self.assertDownloadGizeh('/test_http/static/src/img/gizeh.png')
@@ -84,6 +88,8 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.headers.get('Cache-Control', ''), 'no-cache, max-age=0')
 
     def test_static02_not_found(self):
+        session = self.authenticate(None, None)
+        session.db = None
         res = self.nodb_url_open("/test_http/static/i-dont-exist")
         self.assertEqual(res.status_code, 404)
 
@@ -267,6 +273,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         )
 
     def test_static16_public_access_rights(self):
+        self.authenticate(None, None)
         default_user = self.env.ref('base.default_user')
 
         with self.subTest('model access rights'):

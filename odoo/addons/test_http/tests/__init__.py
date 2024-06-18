@@ -10,4 +10,5 @@ from . import test_security
 from . import test_session
 from . import test_static
 from . import test_web_server
+from . import test_webjson
 from . import test_xss
