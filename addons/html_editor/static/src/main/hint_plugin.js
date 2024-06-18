@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { isEmpty, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 function isMutationRecordSavable(record) {
     if (record.type === "attributes" && record.attributeName === "placeholder") {
@@ -70,7 +71,7 @@ export class HintPlugin extends Plugin {
 
     makeEmptyBlockHints(root) {
         for (const { selector, hint } of this.resources.emptyBlockHints) {
-            for (const el of this.selectElements(root, selector)) {
+            for (const el of selectElements(root, selector)) {
                 if (isEmpty(el) && !isProtected(el)) {
                     this.makeHint(el, hint);
                 }
@@ -110,25 +111,8 @@ export class HintPlugin extends Plugin {
     }
 
     clearHints(root = this.editable) {
-        for (const elem of this.selectElements(root, ".o-we-hint")) {
+        for (const elem of selectElements(root, ".o-we-hint")) {
             this.removeHint(elem);
         }
     }
-
-    /**
-     * Basically a wrapper around `root.querySelectorAll` that includes the
-     * root, unless it is the editable.
-     *
-     * @param {Element} root - The root element to search within.
-     * @param {string} selector - The CSS selector to match elements against.
-     * @returns {Generator<Element>} - elements that match the selector.
-     */
-    selectElements = function* (root, selector) {
-        if (root.matches(selector)) {
-            yield root;
-        }
-        for (const elem of root.querySelectorAll(selector)) {
-            yield elem;
-        }
-    };
 }
