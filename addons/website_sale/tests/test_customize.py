@@ -73,7 +73,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         # Ensure that no pricelist is available during the test.
         # This ensures that tours which triggers on the amounts will run properly.
         self.env['product.pricelist'].search([]).action_archive()
-        self.start_tour("/", 'a_shop_custom_attribute_value', login="admin")
+        self.start_tour("/", 'a_shop_custom_attribute_value', login='admin')
 
     def test_02_admin_shop_custom_attribute_value_tour(self):
         # Make sure pricelist rule exist
@@ -232,7 +232,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             {'name': 'Base Pricelist', 'selectable': True},
             {'name': 'Other Pricelist', 'selectable': True}
         ])
-        self.start_tour("/", 'shop_editor', login="admin")
+        self.start_tour("/", 'shop_editor', login="editor")
 
     def test_08_portal_tour_archived_variant_multiple_attributes(self):
         """The goal of this test is to make sure that an archived variant with multiple
@@ -406,4 +406,4 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
             ],
         })
 
-        self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="admin")
+        self.start_tour("/", 'tour_shop_multi_checkbox_single_value', login="editor")

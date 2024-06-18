@@ -9,10 +9,11 @@ from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import HOST
 from odoo.tools import config
+from odoo.addons.website.tests.common import HttpCaseWithUserEditor
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleImage(HttpCase):
+class TestWebsiteSaleImage(HttpCaseWithUserEditor):
 
     # registry_test_mode = False  # uncomment to save the product to test in browser
 
@@ -222,7 +223,7 @@ class TestWebsiteSaleImage(HttpCase):
         # This ensures that tours with triggers on the amounts will run properly.
         self.env['product.pricelist'].search([]).action_archive()
 
-        self.start_tour("/", 'shop_zoom', login="admin")
+        self.start_tour("/", 'shop_zoom', login="editor")
 
         # CASE: unlink move image to fallback if fallback image empty
         template.image_1920 = False

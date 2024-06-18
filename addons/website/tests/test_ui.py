@@ -10,6 +10,7 @@ import odoo.tests
 from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.web_editor.controllers.main import Web_Editor
+from odoo.addons.website.tests.common import HttpCaseWithUserEditor
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -219,7 +220,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestUi(odoo.tests.HttpCase):
+class TestUi(HttpCaseWithUserEditor):
 
     def test_01_admin_tour_homepage(self):
         self.start_tour("/web", 'homepage', login='admin')
@@ -280,8 +281,8 @@ class TestUi(odoo.tests.HttpCase):
         self.assertNotEqual(new_website_bundle_modified.get_version('js'), base_website_js_version, "js version for new website should now have been changed")
 
         url_params = url_encode({'path': '/@/'})
-        self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login='admin')
-        self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login='admin')
+        self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login='editor')
+        self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login='editor')
 
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
@@ -362,7 +363,7 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_10_website_conditional_visibility(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_1', login='admin')
-        self.start_tour('/web', 'conditional_visibility_2', login='admin')
+        self.start_tour('/web', 'conditional_visibility_2', login='editor')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
