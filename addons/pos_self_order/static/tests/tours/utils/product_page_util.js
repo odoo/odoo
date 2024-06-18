@@ -18,13 +18,21 @@ export function clickCancel() {
     ];
 }
 
-export function setupAttribute(attributes) {
-    const steps = [
-        {
+export function clickDiscard() {
+    return {
+        content: "Click on Discard button",
+        trigger: ".btn.btn-secondary .oi-chevron-left",
+    };
+}
+
+export function setupAttribute(attributes, addToCart = true) {
+    const steps = [];
+    if (addToCart) {
+        steps.push({
             content: `Click on 'Add to cart' button`,
             trigger: `.btn.btn-primary`,
-        },
-    ];
+        });
+    }
 
     for (const attr of attributes) {
         steps.unshift({
@@ -36,7 +44,7 @@ export function setupAttribute(attributes) {
     return steps;
 }
 
-export function setupCombo(products) {
+export function setupCombo(products, addToCart = true) {
     const steps = [];
 
     for (const product of products) {
@@ -47,10 +55,12 @@ export function setupCombo(products) {
         }
     }
 
-    steps.push({
-        content: `Click on 'Add to cart' button`,
-        trigger: `.btn.btn-primary`,
-    });
+    if (addToCart) {
+        steps.push({
+            content: `Click on 'Add to cart' button`,
+            trigger: `.btn.btn-primary`,
+        });
+    }
 
     return steps;
 }
