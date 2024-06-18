@@ -8,7 +8,7 @@
             <group>
                 <group name="withholdings" colspan="2" invisible="country_code != 'AR'">
                     <field name="l10n_ar_withholding_ids" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="withholding_sequence_id" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
                             <field name="currency_id" column_invisible="True"/>
@@ -17,7 +17,7 @@
                             <field name="base_amount"/>
                             <field name="amount"/>
 
-                        </tree>
+                        </list>
                     </field>
                     <group colspan="2" invisible="not can_edit_wizard or (can_group_payments and not group_payment)">
                         <label for="l10n_ar_net_amount" string="Net Amount" invisible="l10n_latam_check_id"/>

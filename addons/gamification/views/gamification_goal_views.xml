@@ -5,7 +5,7 @@
     <record id="goal_list_action" model="ir.actions.act_window">
         <field name="name">Goals</field>
         <field name="res_model">gamification.goal</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -20,7 +20,7 @@
     <record id="goals_from_challenge_act" model="ir.actions.act_window">
         <field name="res_model">gamification.goal</field>
         <field name="name">Related Goals</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
@@ -36,7 +36,7 @@
         <field name="name">Goal List</field>
         <field name="model">gamification.goal</field>
         <field name="arch" type="xml">
-            <tree string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
+            <list string="Goal List" decoration-danger="state == 'failed'" decoration-success="state == 'reached'" decoration-muted="state == 'canceled'" create="false">
                 <field name="definition_id" column_invisible="True" />
                 <field name="user_id" column_invisible="True" />
                 <field name="start_date"/>
@@ -46,7 +46,7 @@
                 <field name="completeness" widget="progressbar"/>
                 <field name="state" column_invisible="True"/>
                 <field name="line_id" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 

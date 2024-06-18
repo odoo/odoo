@@ -34,7 +34,7 @@ class MrpProduction(models.Model):
             action.update({
                 'name': _("Purchase Order generated from %s", self.name),
                 'domain': [('id', 'in', purchase_order_ids)],
-                'view_mode': 'tree,form',
+                'view_mode': 'list,form',
             })
         return action
 

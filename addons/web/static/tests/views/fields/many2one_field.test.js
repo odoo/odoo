@@ -467,9 +467,9 @@ test("show_address works in a view embedded in a view of another type", async ()
                 <field name="turtle_trululu" context="{'show_address': 1}" />
             </form>`,
         list: `
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>`,
+            </list>`,
     };
 
     onRpc("turtle", "web_read", ({ kwargs }) => {
@@ -515,9 +515,9 @@ test("many2ones in form views with search more", async () => {
                 <filter name="filter" string="Filter" domain="[[0, '=', 1]]"/>
             </search>`,
         list: `
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>`,
+            </list>`,
     };
 
     await mountView({
@@ -556,9 +556,9 @@ test("many2ones: Open the selection dialog several times using the 'Search More.
                 <field name="name" />
             </search>`,
         list: `
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>`,
+            </list>`,
     };
 
     await mountView({
@@ -604,9 +604,9 @@ test("many2ones in list views: create in dialog keeps the input", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="trululu" />
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_cell:eq(0)").click();
@@ -637,9 +637,9 @@ test("many2ones in list views: create a new record with a context", async () => 
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="user_id" context="{'default_test': 1, 'test':2 }" />
-            </tree>`,
+            </list>`,
         context: {
             default_yop: 3,
             yop: 4,
@@ -659,10 +659,10 @@ test("using a many2one widget must take into account the decorations", async () 
         type: "list",
         resModel: "partner",
         arch: `
-            <tree>
+            <list>
                 <field name="user_id" decoration-danger="int_field > 9" widget="many2one"/>
                 <field name="int_field"/>
-            </tree>`,
+            </list>`,
     });
 
     expect(".o_list_many2one a.text-danger").toHaveCount(1);
@@ -763,9 +763,9 @@ test("many2one doesn't trigger field_change when being emptied", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="trululu"/>
-            </tree>`,
+            </list>`,
     });
 
     // Select two records
@@ -818,9 +818,9 @@ test("empty a many2one field in list view", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="trululu"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_row .o_data_cell").click();
@@ -845,9 +845,9 @@ test("focus tracking on a many2one in a list", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="trululu"/>
-            </tree>`,
+            </list>`,
     });
 
     // Select two records
@@ -1313,9 +1313,9 @@ test("many2one field and list navigation", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="trululu"/>
-            </tree>`,
+            </list>`,
     });
 
     // edit first input, to trigger autocomplete
@@ -1442,9 +1442,9 @@ test("list: quick create then save directly", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="trululu" />
-            </tree>`,
+            </list>`,
     });
 
     expect(".o_data_row").toHaveCount(3);
@@ -1493,9 +1493,9 @@ test("list in form: quick create then save directly", async () => {
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="trululu" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1531,9 +1531,9 @@ test("name_create in form dialog", async () => {
             <form>
                 <group>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="bar"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="product_id"/>
                         </form>
@@ -1586,10 +1586,10 @@ test("many2one inside one2many form view, with domain", async () => {
             <form>
                 <sheet>
                     <field name="p">
-                        <tree>
+                        <list>
                             <field name="name"/>
                             <field name="trululu" domain="[]"/>
-                        </tree>
+                        </list>
                         <form>
                             <field name="trululu" domain="[['id', '>', 1]]"/>
                         </form>
@@ -1634,9 +1634,9 @@ test("list in form: quick create then add a new line directly", async () => {
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="trululu" required="1" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1686,10 +1686,10 @@ test("list in form: create with one2many with many2one", async () => {
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="name" />
                             <field name="trululu" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1721,10 +1721,10 @@ test("list in form: create with one2many with many2one (version 2)", async () =>
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="name" />
                             <field name="trululu" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1752,10 +1752,10 @@ test("item not dropped on discard with empty required field (default_get)", asyn
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="name" />
                             <field name="trululu" required="1" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1802,9 +1802,9 @@ test("list in form: read with unique ids (default_get)", async () => {
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="trululu" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1831,10 +1831,10 @@ test("list in form: show name of many2one fields in multi-page (default_get)", a
             <form>
                 <sheet>
                     <field name="p">
-                        <tree editable="bottom" limit="1">
+                        <list editable="bottom" limit="1">
                             <field name="name" />
                             <field name="trululu" />
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>`,
@@ -1873,10 +1873,10 @@ test("list in form: item not dropped on discard with empty required field (oncha
             <form>
                 <field name="product_id" />
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="trululu" required="1" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -1919,10 +1919,10 @@ test("list in form: item not dropped on discard with empty required field (oncha
             <form>
                 <field name="product_id" />
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="trululu" required="1" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -1961,10 +1961,10 @@ test('item dropped on discard with empty required field with "Add an item" (inva
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="trululu" required="1" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -1995,10 +1995,10 @@ test('item not dropped on discard with empty required field with "Add an item" (
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="trululu" required="1" />
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -2053,9 +2053,9 @@ test("list in form: default_get with x2many create", async () => {
             <form>
                 <sheet>
                     <field name="timmy">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="name" />
-                        </tree>
+                        </list>
                     </field>
                     <field name="int_field" />
                 </sheet>
@@ -2098,9 +2098,9 @@ test("list in form: default_get with x2many create and onchange", async () => {
             <form>
                 <sheet>
                     <field name="turtles">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="turtle_foo" />
-                        </tree>
+                        </list>
                     </field>
                     <field name="int_field" />
                 </sheet>
@@ -2147,9 +2147,9 @@ test("list in form: call button in sub view", async () => {
         arch: `
             <form>
                 <field name="p">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -2224,10 +2224,10 @@ test("X2Many sequence list in modal", async () => {
     };
     Partner._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="sequence" widget="handle" />
-            </tree>`,
+            </list>`,
     };
 
     onRpc("partnertype", "get_formview_id", () => {
@@ -2244,9 +2244,9 @@ test("X2Many sequence list in modal", async () => {
             <form>
                 <field name="name" />
                 <field name="turtle_ids" widget="one2many">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="type_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -2346,9 +2346,9 @@ test("empty list with sample data and many2one with option always_reload", async
         type: "list",
         resModel: "partner",
         arch: `
-            <tree sample="1">
+            <list sample="1">
                 <field name="product_id" />
-            </tree>`,
+            </list>`,
         context: { search_default_empty: true },
         searchViewArch: `
             <search>
@@ -2507,9 +2507,9 @@ test("failing quick create on a many2one inside a one2many because ValidationErr
 
     Partner._views = {
         list: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="product_id" />
-            </tree>`,
+            </list>`,
     };
     Product._views = {
         form: '<form><field name="name" /></form>',
@@ -2772,9 +2772,9 @@ test("propagate can_create onto the search popup", async () => {
     ];
     Product._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
-            </tree>`,
+            </list>`,
         search: `
             <search>
                 <field name="name"/>
@@ -2839,9 +2839,9 @@ test("pressing enter in a m2o in an editable list", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="product_id" />
-            </tree>`,
+            </list>`,
     });
 
     await contains("td.o_data_cell").click();
@@ -3046,10 +3046,10 @@ test("many2one in editable list + onchange, with enter [REQUIRE FOCUS]", async (
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="product_id" />
                 <field name="int_field" />
-            </tree>`,
+            </list>`,
     });
 
     await contains("td.o_data_cell").click();
@@ -3092,10 +3092,10 @@ test("many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]",
         type: "list",
         resModel: "partner",
         arch: `
-                <tree editable="bottom">
+                <list editable="bottom">
                     <field name="product_id" />
                     <field name="int_field" />
-                </tree>`,
+                </list>`,
     });
 
     await contains("td.o_data_cell").click();
@@ -3131,10 +3131,10 @@ test("many2one: dynamic domain set in the field's definition", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" invisible="1" />
                 <field name="trululu" />
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_cell:eq(0)").click();
@@ -3159,10 +3159,10 @@ test("many2one: domain set in view and on field", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="foo" invisible="1"/>
                 <field name="trululu" domain="[['foo', '=', 'blip']]"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_cell:eq(0)").click();
@@ -3368,10 +3368,10 @@ test("updating a many2one from a many2many", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" />
                         <field name="turtle_trululu"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -3504,9 +3504,9 @@ test("search more in many2one: group and use the pager", async () => {
 
     Partner._views = {
         list: `
-            <tree limit="7">
+            <list limit="7">
                 <field name="name" />
-            </tree>`,
+            </list>`,
         search: `
             <search><group>
                 <filter name="bar" string="Bar" context="{'group_by': 'bar'}" />
@@ -3588,9 +3588,9 @@ test("search more pager is reset when doing a new search", async () => {
     );
     Partner._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
-            </tree>`,
+            </list>`,
         search: `
             <search>
                 <field name="datetime"/>
@@ -3636,9 +3636,9 @@ test("click on many2one link in list view", async () => {
     };
     Turtle._views = {
         list: `
-            <tree readonly="1">
+            <list readonly="1">
                 <field name="product_id" widget="many2one" context="{'field': 'Yes'}"/>
-            </tree>`,
+            </list>`,
     };
     Product._views = {
         search: "<search></search>",

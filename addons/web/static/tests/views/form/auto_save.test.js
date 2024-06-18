@@ -114,7 +114,7 @@ test.tags("desktop")(`save when page changed`, async () => {
     ]);
 
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <group>
@@ -166,7 +166,7 @@ test.tags("desktop")(`save when breadcrumb clicked`, async () => {
     ]);
 
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <group>
@@ -216,7 +216,7 @@ test.tags("desktop")(`error on save when breadcrumb clicked`, async () => {
     ]);
 
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <group>
@@ -264,7 +264,7 @@ test.tags("desktop")(`save when action changed`, async () => {
     ]);
 
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <group>
@@ -485,7 +485,7 @@ test.tags("desktop")(`save on closing tab/browser (detached form)`, async () => 
         },
     ]);
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <group>

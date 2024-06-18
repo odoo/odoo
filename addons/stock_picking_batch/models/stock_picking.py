@@ -94,7 +94,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'list',
             'view': view,
-            'views': [(view.id, 'tree')],
+            'views': [(view.id, 'list')],
             'res_model': 'stock.move.line',
             'target': 'new',
             'domain': [

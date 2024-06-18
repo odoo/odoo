@@ -108,11 +108,11 @@
 </record>
 
 <record id="view_blog_post_list" model="ir.ui.view">
-    <field name="name">Blog Post Pages Tree</field>
+    <field name="name">Blog Post Pages List</field>
     <field name="model">blog.post</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
+        <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
             <field name="active" column_invisible="True"/>
             <field name="name"/>
             <field name="website_url"/>
@@ -127,16 +127,16 @@
             <field name="is_published"/>
 
             <field name="website_id" groups="website.group_multi_website"/>
-        </tree>
+        </list>
     </field>
 </record>
 
 <record id="action_blog_post" model="ir.actions.act_window">
     <field name="name">Blog Post Pages</field>
     <field name="res_model">blog.post</field>
-    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_mode">list,kanban,form</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('view_blog_post_list')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('view_blog_post_list')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('blog_post_view_kanban')}),
     ]"/>
     <field name="search_view_id" ref="view_blog_post_search"/>

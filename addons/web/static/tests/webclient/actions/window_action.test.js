@@ -100,7 +100,7 @@ class Partner extends models.Model {
                     </t>
                 </templates>
             </kanban>`,
-        "list,false": `<tree><field name="foo"/></tree>`,
+        "list,false": `<list><field name="foo"/></list>`,
         "pivot,false": `<pivot/>`,
         "search,false": `<search><field name="foo" string="Foo"/></search>`,
         "search,4": `
@@ -119,7 +119,7 @@ class Pony extends models.Model {
         { id: 9, name: "Fluttershy" },
     ];
     _views = {
-        "list,false": `<tree><field name="name"/></tree>`,
+        "list,false": `<list><field name="name"/></list>`,
         "form,false": `<form><field name="name"/></form>`,
         "search,false": `<search/>`,
     };
@@ -469,7 +469,7 @@ test.tags("desktop")("switch buttons are updated when switching between views", 
     });
 });
 test.tags("desktop")("pager is updated when switching between views", async () => {
-    Partner._views["list,false"] = `<tree limit="3"><field name="foo"/></tree>`;
+    Partner._views["list,false"] = `<list limit="3"><field name="foo"/></list>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(4);
@@ -1609,7 +1609,7 @@ test.tags("desktop")("save current search", async () => {
 });
 
 test.tags("desktop")("list with default_order and favorite filter with no orderedBy", async () => {
-    Partner._views["list,1"] = '<tree default_order="foo desc"><field name="foo"/></tree>';
+    Partner._views["list,1"] = '<list default_order="foo desc"><field name="foo"/></list>';
     defineActions([
         {
             id: 100,
@@ -2435,7 +2435,7 @@ test("load a tree", async () => {
         type: "ir.actions.act_window",
         target: "current",
         res_model: "partner",
-        views: [[false, "tree"]],
+        views: [[false, "list"]],
     });
     expect(".o_list_view").toHaveCount(1);
 });

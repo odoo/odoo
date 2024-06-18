@@ -44,7 +44,7 @@ QUnit.module("Board", (hooks) => {
     QUnit.module("BoardView");
 
     QUnit.test("can't switch views in the dashboard", async (assert) => {
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,
@@ -82,7 +82,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("Correctly soft switch to '1' layout on small screen", async function (assert) {
-        serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
+        serverData.views["partner,4,list"] = '<list string="Partner"><field name="foo"/></list>';
 
         await makeView({
             serverData,

@@ -33,47 +33,47 @@
     </field>
 </record>
 <record id="test_model_multi_website_view_list" model="ir.ui.view">
-    <field name="name">Test Multi Model Pages Tree</field>
+    <field name="name">Test Multi Model Pages List</field>
     <field name="model">test.model.multi.website</field>
     <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
+        <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1">
             <field name="name"/>
             <field name="website_url"/>
             <field name="website_id" groups="website.group_multi_website"/>
-        </tree>
+        </list>
     </field>
 </record>
 <record id="action_test_model_multi_website" model="ir.actions.act_window">
     <field name="name">Test Multi Model Pages</field>
     <field name="res_model">test.model.multi.website</field>
-    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_mode">list,kanban,form</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('test_model_multi_website_view_list')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('test_model_multi_website_view_list')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('test_model_multi_website_view_kanban')}),
     ]"/>
 </record>
 
 <!-- js_class bug records -->
 <record id="test_model_multi_website_view_list_js_class_bug" model="ir.ui.view">
-    <field name="name">Test Multi Model Pages Tree js_class bug</field>
+    <field name="name">Test Multi Model Pages list js_class bug</field>
     <field name="model">test.model.multi.website</field>
     <field name="priority">99</field>
     <!-- Omitting `website_pages_list` on purpose to test it does not crash -->
     <field name="arch" type="xml">
-        <tree type="object" action="open_website_url" multi_edit="1">
+        <list type="object" action="open_website_url" multi_edit="1">
             <field name="name"/>
             <field name="website_url"/>
             <field name="website_id" groups="website.group_multi_website"/>
-        </tree>
+        </list>
     </field>
 </record>
 <record id="action_test_model_multi_website_js_class_bug" model="ir.actions.act_window">
     <field name="name">Test Multi Model Pages js_class bug</field>
     <field name="res_model">test.model.multi.website</field>
-    <field name="view_mode">tree,kanban,form</field>
+    <field name="view_mode">list,kanban,form</field>
     <field name="view_ids" eval="[(5, 0, 0),
-        (0, 0, {'view_mode': 'tree', 'view_id': ref('test_model_multi_website_view_list_js_class_bug')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('test_model_multi_website_view_list_js_class_bug')}),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('test_model_multi_website_view_kanban')}),
     ]"/>
 </record>

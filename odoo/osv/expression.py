@@ -390,10 +390,10 @@ def _anyfy_leaves(domain, model):
 def _tree_from_domain(domain):
     """ Return the domain as a tree, with the following structure::
 
-        <tree> ::= ('?', <boolean>)
-                |  ('!', <tree>)
-                |  ('&', <tree>, <tree>, ...)
-                |  ('|', <tree>, <tree>, ...)
+        <list> ::= ('?', <boolean>)
+                |  ('!', <list>)
+                |  ('&', <list>, <list>, ...)
+                |  ('|', <list>, <list>, ...)
                 |  (<comparator>, <fname>, <value>)
 
     By construction, AND (``&``) and OR (``|``) nodes are n-ary and have at

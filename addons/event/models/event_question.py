@@ -53,13 +53,13 @@ class EventQuestion(models.Model):
     def action_view_question_answers(self):
         """ Allow analyzing the attendees answers to event questions in a convenient way:
         - A graph view showing counts of each suggestions for simple_choice questions
-          (Along with secondary pivot and tree views)
-        - A tree view showing textual answers values for text_box questions. """
+          (Along with secondary pivot and list views)
+        - A list view showing textual answers values for text_box questions. """
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("event.action_event_registration_report")
         action['domain'] = [('question_id', '=', self.id)]
         if self.question_type == 'simple_choice':
-            action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'tree')]
+            action['views'] = [(False, 'graph'), (False, 'pivot'), (False, 'list')]
         elif self.question_type == 'text_box':
-            action['views'] = [(False, 'tree')]
+            action['views'] = [(False, 'list')]
         return action

@@ -48,17 +48,17 @@
             <field name="name">Vantiv Configurations</field>
             <field name="model">pos_mercury.configuration</field>
             <field name="arch" type="xml">
-                <tree string="Card Reader">
+                <list string="Card Reader">
                     <field name="name"/>
                     <field name="merchant_id"/>
-                </tree>
+                </list>
             </field>
         </record>
 
         <record id="action_configuration_form" model="ir.actions.act_window">
             <field name="name">Vantiv Configurations</field>
             <field name="res_model">pos_mercury.configuration</field>
-            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_mode">list,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Configure your card reader

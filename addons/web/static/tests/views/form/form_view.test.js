@@ -211,10 +211,10 @@ test(`simple form rendering`, async () => {
                     <notebook>
                         <page string="Partner Yo">
                             <field name="child_ids">
-                                <tree>
+                                <list>
                                     <field name="foo"/>
                                     <field name="bar"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                     </notebook>
@@ -433,15 +433,15 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                     <form/>
                 </field>
                 <field name="child_ids" readonly="True">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                     <form/>
                 </field>
             </form>
@@ -542,7 +542,7 @@ test(`form with o2m having a many2many fields using the many2many_tags widget al
             <form>
                 <field name="display_name"/>
                 <field name="type_ids" widget="one2many">
-                    <tree string="Values">
+                    <list string="Values">
                         <field name="display_name"/>
                         <!--
                             Required to add at least one different field than the fields read
@@ -550,7 +550,7 @@ test(`form with o2m having a many2many fields using the many2many_tags widget al
                             To force to re-read the record with more fields.
                         -->
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -562,10 +562,10 @@ test(`form with o2m having a many2many fields using the many2many_tags widget al
         arch: `
                 <form edit="0">
                     <field name="partner_ids">
-                        <tree>
+                        <list>
                             <field name="name"/>
                             <field name="type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>
             `,
@@ -597,9 +597,9 @@ test(`form with o2m having a field with fieldDependencies`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="foo" widget="my_widget"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -644,9 +644,9 @@ test(`form with o2m having a selection field with fieldDependencies`, async () =
         arch: `
             <form>
                 <field name="o2m">
-                    <tree>
+                    <list>
                         <field name="display_name" widget="my_widget"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -861,13 +861,13 @@ test(`Form and subview with _view_ref contexts`, async () => {
         form: `
             <form>
                 <field name="name"/>
-                <field name="product_id" context="{'tree_view_ref': 'some_tree_view'}"/>
+                <field name="product_id" context="{'list_view_ref': 'some_tree_view'}"/>
             </form>
         `,
         search: `<search/>`,
     };
     PartnerType._views = {
-        list: `<tree><field name="color"/></tree>`,
+        list: `<list><field name="color"/></list>`,
         kanban: `
             <kanban>
                 <templates>
@@ -882,7 +882,7 @@ test(`Form and subview with _view_ref contexts`, async () => {
         form: `
             <form>
                 <field name="name"/>
-                <field name="type_ids" widget="one2many" context="{'tree_view_ref': 'some_other_tree_view'}"/>
+                <field name="type_ids" widget="one2many" context="{'list_view_ref': 'some_other_tree_view'}"/>
             </form>
         `,
         search: `<search/>`,
@@ -891,13 +891,13 @@ test(`Form and subview with _view_ref contexts`, async () => {
     onRpc("product", "get_views", ({ kwargs }) => {
         const { context } = kwargs;
         expect.step("product get_views");
-        expect(context.tree_view_ref).toBe("some_tree_view");
+        expect(context.list_view_ref).toBe("some_tree_view");
         // "The correct _view_ref should have been sent to the server, first time"
     });
     onRpc("partner.type", "get_views", ({ kwargs }) => {
         const { context } = kwargs;
         expect.step("partner.type get_views");
-        expect(context.tree_view_ref).toBe("some_other_tree_view");
+        expect(context.list_view_ref).toBe("some_other_tree_view");
         // "The correct _view_ref should have been sent to the server for the subview"
     });
     onRpc("get_formview_action", ({ model, kwargs }) => {
@@ -932,7 +932,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     PartnerType._fields.company_ids = fields.One2many({ relation: "res.company" });
     ResCompany._views = {
         search: `<search/>`,
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         kanban: `
             <kanban>
                 <templates>
@@ -946,7 +946,7 @@ test(`Form and subsubview with only _view_ref contexts`, async () => {
     };
     PartnerType._views = {
         search: `<search/>`,
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         kanban: `
             <kanban>
                 <templates>
@@ -1090,9 +1090,9 @@ test(`x2many form_view_ref with defined list`, async () => {
                     'default_partner_id': id,
                     'form_view_ref': 'foo_partner_type_form_view'
                 }">
-                    <tree>
+                    <list>
                         <field name="display_name" />
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -1652,7 +1652,7 @@ test(`reset local state when switching to another view`, async () => {
                 </sheet>
             </form>
         `,
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         search: `<search/>`,
     };
 
@@ -1734,7 +1734,7 @@ test.tags("desktop")(
             search: `<search/>`,
         };
         Product._views = {
-            list: `<tree><field name="name"/></tree>`,
+            list: `<list><field name="name"/></list>`,
             search: `<search/>`,
         };
 
@@ -2058,7 +2058,7 @@ test(`input ids for multiple occurrences of fields in sub form view (inline)`, a
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree><field name="foo"/></tree>
+                    <list><field name="foo"/></list>
                     <form>
                         <group>
                             <field name="foo"/>
@@ -2090,7 +2090,7 @@ test.tags("desktop")(
         // edit mode) as we get several inputs with the same "id" attribute, and
         // several labels the same "for" attribute.
         Partner._views = {
-            list: `<tree><field name="foo"/></tree>`,
+            list: `<list><field name="foo"/></list>`,
             form: `
                 <form>
                     <group>
@@ -2311,11 +2311,11 @@ test(`required field computed by another field in a x2m`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <field name="int_field"/>
                         <field name="name" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -2452,7 +2452,7 @@ test.tags("desktop")(`readonly attrs on lines are re-evaluated on field change 2
             <form>
                 <field name="parent_id"/>
                 <field name="product_ids" readonly="not parent_id">
-                    <tree editable="top"><field name="int_field" widget="handle"/><field name="name"/></tree>
+                    <list editable="top"><field name="int_field" widget="handle"/><field name="name"/></list>
                 </field>
             </form>
         `,
@@ -3256,7 +3256,7 @@ test(`onchange send only the present fields to the server`, async () => {
         },
     };
     PartnerType._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
     };
 
     onRpc("onchange", ({ args }) => {
@@ -3292,10 +3292,10 @@ test(`onchange send only the present fields to the server`, async () => {
             <form>
                 <field name="foo"/>
                 <field name="child_ids" widget="one2many">
-                    <tree>
+                    <list>
                         <field name="bar"/>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
                 <field name="type_ids"/>
             </form>
@@ -3330,10 +3330,10 @@ test(`onchange only send present fields value`, async () => {
                 <field name="name"/>
                 <field name="foo"/>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="float_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -3442,7 +3442,7 @@ test(`default record with a one2many and an onchange on sub field`, async () => 
         arch: `
             <form>
                 <field name="child_ids" widget="one2many">
-                    <tree><field name="foo"/></tree>
+                    <list><field name="foo"/></list>
                 </field>
             </form>
         `,
@@ -3476,9 +3476,9 @@ test(`remove default value in subviews`, async () => {
         arch: `
             <form>
                 <field name="product_ids" context="{'default_product_uom_qty': 68}">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -3524,9 +3524,9 @@ test(`form with one2many with dynamic context`, async () => {
             <form>
                 <field name="int_field"/>
                 <field name="child_ids" editable="bottom" context="{'static': 4, 'dynamic': int_field * 2}">
-                    <tree>
+                    <list>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -3552,10 +3552,10 @@ test(`reference field in one2many list`, async () => {
             <form>
                 <field name="name"/>
                 <field name="partner_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name"/>
                         <field name="reference"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -3621,10 +3621,10 @@ test(`make default record with non empty one2many`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -4261,9 +4261,9 @@ test(`many2one in a one2many`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -4283,10 +4283,10 @@ test(`circular many2many's`, async () => {
         arch: `
             <form>
                 <field name="type_ids">
-                    <tree><field name="display_name"/></tree>
+                    <list><field name="display_name"/></list>
                     <form>
                         <field name="partner_ids">
-                            <tree><field name="display_name"/></tree>
+                            <list><field name="display_name"/></list>
                             <form><field name="display_name"/></form>
                         </field>
                     </form>
@@ -4368,9 +4368,9 @@ test.tags("desktop")(`discard changes on relational data on new record`, async (
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -4777,7 +4777,7 @@ test(`restore local state when switching to another record`, async () => {
 test(`restore the open notebook page when switching to another view`, async () => {
     Partner._views = {
         search: `<search/>`,
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         form: `
             <form>
                 <notebook>
@@ -4857,7 +4857,7 @@ test.tags("desktop")(
     async () => {
         Partner._views = {
             search: `<search/>`,
-            list: `<tree><field name="foo"/></tree>`,
+            list: `<list><field name="foo"/></list>`,
             form: `
                 <form>
                     <notebook>
@@ -5294,7 +5294,7 @@ test(`properly apply onchange on one2many fields`, async () => {
             <form>
                 <group><field name="foo"/></group>
                 <field name="child_ids">
-                    <tree><field name="name"/></tree>
+                    <list><field name="name"/></list>
                 </field>
             </form>
         `,
@@ -5338,10 +5338,10 @@ test(`properly apply onchange on one2many fields direct click`, async () => {
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="display_name"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -5372,10 +5372,10 @@ test(`update many2many value in one2many after onchange`, async () => {
             <form>
                 <field name="foo"/>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name" readonly="not type_ids"/>
                         <field name="type_ids"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -5396,9 +5396,9 @@ test(`delete a line in a one2many while editing another line`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="name" required="True"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -5435,7 +5435,7 @@ test(`properly apply onchange on many2many fields`, async () => {
             <form>
                 <field name="foo"/>
                 <field name="type_ids">
-                    <tree><field name="display_name"/></tree>
+                    <list><field name="display_name"/></list>
                 </field>
             </form>
         `,
@@ -5466,9 +5466,9 @@ test(`form with domain widget: opening a many2many form and save should not cras
                     <field name="foo" widget="domain"/>
                 </group>
                 <field name="type_ids">
-                    <tree>
+                    <list>
                         <field name="display_name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                         <field name="color"/>
@@ -5546,7 +5546,7 @@ test(`display_name not sent for onchanges if not in view`, async () => {
                 <group>
                     <field name="foo"/>
                     <field name="type_ids">
-                        <tree><field name="name"/></tree>
+                        <list><field name="name"/></list>
                         <form>
                             <field name="name"/>
                             <field name="color"/>
@@ -5641,7 +5641,7 @@ test(`rpc complete after destroying parent`, async () => {
                 <button name="update_module" type="object" class="o_form_button_update"/>
             </form>
         `,
-        list: `<tree><field name="display_name"/></tree>`,
+        list: `<list><field name="display_name"/></list>`,
         search: `<search/>`,
     };
 
@@ -5774,10 +5774,10 @@ test(`unchanged relational data is not sent for onchanges`, async () => {
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="bar"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -5811,10 +5811,10 @@ test(`onchange value are not discarded on o2m edition`, async () => {
                 <field name="foo"/>
                 <field name="int_field"/>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="bar"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="foo"/>
                         <field name="product_id"/>
@@ -5850,10 +5850,10 @@ test(`args of onchanges in o2m fields are correct (inline edition)`, async () =>
             <form>
                 <field name="foo"/>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="foo"/>
                         <field name="int_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -5887,9 +5887,9 @@ test(`args of onchanges in o2m fields are correct (dialog edition)`, async () =>
             <form>
                 <field name="foo"/>
                 <field name="child_ids" string="custom label">
-                    <tree>
+                    <list>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="foo"/>
                         <field name="int_field"/>
@@ -6173,9 +6173,9 @@ test.tags("desktop")(`many2manys inside one2manys are saved correctly`, async ()
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="type_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -6207,12 +6207,12 @@ test(`one2manys (list editable) inside one2manys are saved correctly`, async () 
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree><field name="child_ids"/></tree>
+                    <list><field name="child_ids"/></list>
                     <form>
                         <field name="child_ids">
-                            <tree editable="top">
+                            <list editable="top">
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -6234,17 +6234,17 @@ test(`one2manys (list editable) inside one2manys are saved correctly`, async () 
 
 test.tags("desktop")(`*_view_ref in context are passed correctly`, async () => {
     PartnerType._views = {
-        "list,module.tree_view_ref": `<tree/>`,
+        "list,module.list_view_ref": `<list/>`,
     };
 
-    onRpc("partner.type", "get_views", ({ kwargs }) => expect.step(kwargs.context.tree_view_ref));
+    onRpc("partner.type", "get_views", ({ kwargs }) => expect.step(kwargs.context.list_view_ref));
     onRpc(({ kwargs }) => expect.step(`${kwargs.context.some_context}`));
     await mountView({
         resModel: "partner",
         type: "form",
         arch: `
             <form>
-                <field name="type_ids" widget="one2many" context="{'tree_view_ref':'module.tree_view_ref'}"/>
+                <field name="type_ids" widget="one2many" context="{'list_view_ref':'module.list_view_ref'}"/>
             </form>
         `,
         resId: 1,
@@ -6254,7 +6254,7 @@ test.tags("desktop")(`*_view_ref in context are passed correctly`, async () => {
     expect([
         "undefined", // main get_views
         "undefined", // x2many get_views
-        "module.tree_view_ref", // x2many get_views
+        "module.list_view_ref", // x2many get_views
         "354", // read
     ]).toVerifySteps();
 
@@ -6345,11 +6345,11 @@ test(`readonly sub fields fields with force_save attribute`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo" force_save="1"/>
                         <field name="int_field"/>
                         <field name="float_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -6399,7 +6399,7 @@ test(`check if id is available in evaluation context`, async () => {
         arch: `
             <form>
                 <field name="child_ids" context="{'current_id': id}">
-                    <tree><field name="parent_id"/></tree>
+                    <list><field name="parent_id"/></list>
                     <form><field name="parent_id"/></form>
                 </field>
             </form>
@@ -6531,10 +6531,10 @@ test(`open one2many form containing one2many`, async () => {
         form: `
             <form>
                 <field name="type_ids">
-                    <tree create="0">
+                    <list create="0">
                         <field name="display_name"/>
                         <field name="color"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -6547,10 +6547,10 @@ test(`open one2many form containing one2many`, async () => {
         arch: `
             <form>
                 <field name="product_ids" widget="one2many">
-                    <tree create="0">
+                    <list create="0">
                         <field name="display_name"/>
                         <field name="type_ids"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -6656,14 +6656,14 @@ test.tags("desktop")(`In READ mode, focus the first primary button of the form`,
 // should clearly be a mobile test too
 test.tags("desktop")(`check scroll on small height screens`, async () => {
     Partner._views = {
-        list: `<tree><field name="display_name"/></tree>`,
+        list: `<list><field name="display_name"/></list>`,
         form: `<form><field name="parent_id"/></form>`,
     };
     PartnerType._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
     };
     Product._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
     };
 
     onRpc("get_formview_id", () => false);
@@ -6798,10 +6798,10 @@ test(`open one2many form containing many2many_tags`, async () => {
         arch: `
             <form>
                 <field name="product_ids">
-                    <tree create="0">
+                    <list create="0">
                         <field name="display_name"/>
                         <field name="type_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <group>
                             <label for="type_ids"/>
@@ -6940,7 +6940,7 @@ test(`control panel is not present in FormViewDialogs`, async () => {
     Partner._records[0].product_id = 37;
     Product._views = {
         form: `<form><field name="display_name"/></form>`,
-        list: `<tree><field name="display_name"/></tree>`,
+        list: `<list><field name="display_name"/></list>`,
     };
 
     onRpc("get_formview_id", () => false);
@@ -6968,7 +6968,7 @@ test(`check interactions between multiple FormViewDialogs`, async () => {
                 <field name="product_ids"/>
             </form>
         `,
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
     };
 
     onRpc("get_formview_id", () => false);
@@ -7105,7 +7105,7 @@ test(`do not perform extra RPC to read invisible x2many fields`, async () => {
             <form>
                 <field name="child_ids" widget="one2many" invisible="1"/>
                 <field name="product_ids" widget="one2many" invisible="1">
-                    <tree><field name="display_name"/></tree>
+                    <list><field name="display_name"/></list>
                 </field>
                 <field name="type_ids" invisible="1" widget="many2many_tags"/>
             </form>
@@ -7125,10 +7125,10 @@ test(`default_order on x2many embedded view`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree default_order="foo desc">
+                    <list default_order="foo desc">
                         <field name="name"/>
                         <field name="foo"/>
-                    </tree>
+                    </list>
                     <form><field name="foo"/></form>,
                 </field>
             </form>
@@ -7232,11 +7232,11 @@ test(`form rendering with groups with col/colspan`, async () => {
                     </group>
                     <group>
                         <field name="child_ids">
-                            <tree>
+                            <list>
                                 <field name="display_name"/>
                                 <field name="foo"/>
                                 <field name="int_field"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
@@ -7476,7 +7476,7 @@ test(`custom open record dialog title`, async () => {
         arch: `
             <form>
                 <field name="child_ids" widget="many2many" string="custom label">
-                    <tree><field name="display_name"/></tree>
+                    <list><field name="display_name"/></list>
                     <form><field name="display_name"/></form>
                 </field>
             </form>
@@ -7862,7 +7862,7 @@ test(`form view is not broken if save failed in readonly mode on field changed`,
 test.tags("desktop")(`context is correctly passed after save & new in FormViewDialog`, async () => {
     Product._views = {
         form: `<form><field name="partner_type_id" context="{'color': parent.id}"/></form>`,
-        list: `<tree><field name="display_name"/></tree>`,
+        list: `<list><field name="display_name"/></list>`,
     };
 
     onRpc("name_search", ({ kwargs }) => {
@@ -7928,7 +7928,7 @@ test(`readonly fields are not sent when saving`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree><field name="name"/></tree>
+                    <list><field name="name"/></list>
                     <form>
                         <field name="name"/>
                         <field name="foo" readonly="name == 'readonly'"/>
@@ -8124,11 +8124,11 @@ test(`process the context for inline subview`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="bar" column_invisible="context.get('hide_bar', False)"/>
                         <field name="int_field" column_invisible="True"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -8142,10 +8142,10 @@ test.tags("desktop")(`process the context for subview not inline`, async () => {
     Partner._records[0].child_ids = [2];
     Partner._views = {
         list: `
-            <tree>
+            <list>
                 <field name="foo"/>
                 <field name="bar" column_invisible="context.get('hide_bar', False)"/>
-            </tree>
+            </list>
         `,
     };
 
@@ -8181,9 +8181,9 @@ test(`Can switch to form view on inline tree`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="top" open_form_view="1">
+                    <list editable="top" open_form_view="1">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -8202,7 +8202,7 @@ test(`can toggle column in x2many in sub form view`, async () => {
         form: `
             <form>
                 <field name="child_ids">
-                    <tree><field name="foo"/></tree>
+                    <list><field name="foo"/></list>
                 </field>
             </form>
         `,
@@ -8458,7 +8458,7 @@ test.tags("desktop")(`coming to a form view from a grouped and sorted list`, asy
     Partner._fields.foo = fields.Char({ default: "My little Foo Value", sortable: true });
     Partner._records[0].type_ids = [12, 14];
     Partner._views = {
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         search: `
             <search>
                 <filter string="bar" name="Bar" context="{'group_by': 'bar'}"/>
@@ -8472,7 +8472,7 @@ test.tags("desktop")(`coming to a form view from a grouped and sorted list`, asy
         `,
     };
     PartnerType._views = {
-        list: `<tree><field name="display_name"/></tree>`,
+        list: `<list><field name="display_name"/></list>`,
     };
 
     onRpc("partner", "web_read", ({ kwargs }) => {
@@ -8536,10 +8536,10 @@ test.tags("desktop")(`keep editing after call_button fail`, async () => {
             <form>
                 <button name="post" class="child_ids" string="Raise Error" type="object"/>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="product_id"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -8638,10 +8638,10 @@ test(`save record with onchange on one2many with required field`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="foo" required="1"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -8668,7 +8668,7 @@ test.tags("desktop")(`leave the form view while saving`, async () => {
         },
     };
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <field name="name"/>
@@ -8747,7 +8747,7 @@ test.tags("desktop")(
         ]);
 
         Partner._views = {
-            list: `<tree><field name="foo"/></tree>`,
+            list: `<list><field name="foo"/></list>`,
             search: `<search/>`,
             form: `
                 <form>
@@ -8901,7 +8901,7 @@ test(`"bare" buttons in template should not trigger button click`, async () => {
     expect(["doActionButton"]).toVerifySteps();
 });
 
-test(`form view with inline tree view with optional fields and local storage mock`, async () => {
+test(`form view with inline list view with optional fields and local storage mock`, async () => {
     patchWithCleanup(browser.localStorage, {
         getItem(key) {
             expect.step(`getItem ${key}`);
@@ -8920,10 +8920,10 @@ test(`form view with inline tree view with optional fields and local storage moc
             <form>
                 <field name="float_field"/>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="foo"/>
                         <field name="bar" optional="hide"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -8949,7 +8949,7 @@ test(`form view with inline tree view with optional fields and local storage moc
 });
 
 test.tags("desktop")(
-    `form view with tree_view_ref with optional fields and local storage mock`,
+    `form view with list_view_ref with optional fields and local storage mock`,
     async () => {
         patchWithCleanup(browser.localStorage, {
             getItem(key) {
@@ -8963,12 +8963,12 @@ test.tags("desktop")(
         });
 
         Partner._views = {
-            "list,nope_not_this_one": `<tree><field name="foo"/><field name="bar"/></tree>`,
+            "list,nope_not_this_one": `<list><field name="foo"/><field name="bar"/></list>`,
             "list,34": `
-                <tree>
+                <list>
                     <field name="foo" optional="hide"/>
                     <field name="bar"/>
-                </tree>
+                </list>
             `,
         };
 
@@ -8981,7 +8981,7 @@ test.tags("desktop")(
             arch: `
             <form>
                 <field name="float_field"/>
-                <field name="child_ids" widget="one2many" context="{'tree_view_ref': '34'}"/>
+                <field name="child_ids" widget="one2many" context="{'list_view_ref': '34'}"/>
             </form>
         `,
         });
@@ -9016,10 +9016,10 @@ test(`resequence list lines when discardable lines are present`, async () => {
 
     Partner._views = {
         list: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="int_field" widget="handle"/>
                 <field name="name" required="1"/>
-            </tree>
+            </list>
         `,
     };
 
@@ -9261,9 +9261,9 @@ test(`field "length" with value 0: readonly fields are not sent when saving`, as
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="length"/>
                         <field name="name"/>
@@ -9452,10 +9452,10 @@ test(`save a form view with an invisible required field in a x2many`, async () =
             <form>
                 <sheet>
                     <field name="child_ids">
-                        <tree editable="top">
+                        <list editable="top">
                             <field name="text" invisible="1"/>
                             <field name="int_field"/>
-                        </tree>
+                        </list>
                     </field>
                 </sheet>
             </form>
@@ -9539,7 +9539,7 @@ test.tags("desktop")(`form view does not deactivate sample data on other views`,
     ResUsers._records = [];
     Partner._records = [];
     Partner._views = {
-        list: `<tree sample="1"><field name="name"/></tree>`,
+        list: `<list sample="1"><field name="name"/></list>`,
         form: `<form><field name="name"/></form>`,
         search: `<search/>`,
     };
@@ -9567,7 +9567,7 @@ test.tags("desktop")(`empty x2manys when coming form a list with sample data`, a
     ResUsers._records = [];
     Partner._records = [];
     Partner._views = {
-        list: `<tree sample="1"><field name="name"/></tree>`,
+        list: `<list sample="1"><field name="name"/></list>`,
         form: `
             <form>
                 <field name="child_ids">
@@ -9828,7 +9828,7 @@ test(`reload form view with an empty notebook`, async () => {
                 </sheet>
             </form>
         `,
-        list: `<tree><field name="foo"/></tree>`,
+        list: `<list><field name="foo"/></list>`,
         search: `<search/>`,
     };
 
@@ -9930,10 +9930,10 @@ test(`action button in x2many should display a notification if the record is vir
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
                         <button class="oe_stat_button" name="test_action" type="object" icon="fa-check">MyButton</button>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -9957,9 +9957,9 @@ test(`open form view action in x2many should display a notification if the recor
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom" open_form_view="1">
+                    <list editable="bottom" open_form_view="1">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -9973,7 +9973,7 @@ test(`open form view action in x2many should display a notification if the recor
 test(`prevent recreating a deleted record`, async () => {
     Partner._records = [{ id: 1, name: "first record" }];
     Partner._views = {
-        list: `<tree><field name="name"/></tree>`,
+        list: `<list><field name="name"/></list>`,
         form: `
             <form>
                 <group>
@@ -10061,7 +10061,7 @@ test.tags("desktop")(
         ]);
 
         Partner._views = {
-            list: `<tree editable="bottom"><field name="foo"/></tree>`,
+            list: `<list editable="bottom"><field name="foo"/></list>`,
             form: `
                 <form>
                     <widget name="test_widget"/>
@@ -10332,9 +10332,9 @@ test(`widget update several fields including an x2m`, async () => {
                 <widget name="test"/>
                 <field name="name"/>
                 <field name="child_ids">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -10367,9 +10367,9 @@ test(`commitChanges with a field input removed during an update`, async () => {
         arch: `
             <form>
                 <field name="child_ids">
-                    <tree editable="bottom">
+                    <list editable="bottom">
                         <field name="foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -10400,10 +10400,10 @@ test(`containing a nested x2many list view should not overflow`, async () => {
                         <group/>
                         <group>
                             <field name="type_ids" widget="many2many">
-                                <tree>
+                                <list>
                                     <field name="display_name"/>
                                     <field name="color"/>
-                                </tree>
+                                </list>
                             </field>
                         </group>
                     </group>
@@ -10453,16 +10453,16 @@ test(`multiple views for m2m field after list item edit in form`, async () => {
         arch: `
             <form>
                 <field name="type_ids">
-                    <tree>
+                    <list>
                         <field name="display_name"/>
                         <field name="m2m" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                     <form>
                         <field name="name"/>
                         <field name="m2m">
-                            <tree>
+                            <list>
                                 <field name="name"/>
-                            </tree>
+                            </list>
                         </field>
                     </form>
                 </field>
@@ -10520,10 +10520,10 @@ test(`custom x2many with relatedFields and list view inline`, async () => {
         arch: `
             <form>
                 <field name="child_ids" widget="my_widget">
-                    <tree editable="bottom" >
+                    <list editable="bottom" >
                         <field name="foo"/>
                         <field name="int_field" />
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -10571,10 +10571,10 @@ test(`custom x2many with a m2o in relatedFields and column_invisible`, async () 
         arch: `
             <form>
                 <field name="child_ids" widget="my_widget">
-                    <tree editable="bottom" >
+                    <list editable="bottom" >
                         <field name="foo"/>
                         <field name="parent_id" column_invisible="True"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -10599,10 +10599,10 @@ test.tags("desktop")(`custom x2many with relatedFields and list view not inline`
 
     Partner._views = {
         list: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="foo"/>
                 <field name="int_field"/>
-            </tree>
+            </list>
         `,
     };
 
@@ -10709,9 +10709,9 @@ test(`x2many field in form dialog view is correctly saved when using a view butt
         form: `
             <form>
                 <field name="partner_ids">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <header>
                             <button type="action" name="1" string="test"/>
@@ -10769,15 +10769,15 @@ test(`nested form view doesn't parasite the main one`, async () => {
                                     <button name="someothername" type="object" />
                                 </footer>
                             </form>
-                            <tree><field name="display_name" /></tree>
+                            <list><field name="display_name" /></list>
                         </field>
                         <footer>
                             <button name="somename" type="object" />
                         </footer>
                     </form>
-                    <tree>
+                    <list>
                         <field name="display_name" />
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,

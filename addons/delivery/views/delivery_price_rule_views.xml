@@ -30,13 +30,13 @@
         </field>
     </record>
     <record id="view_delivery_price_rule_tree" model="ir.ui.view">
-        <field name="name">delivery.price.rule.tree</field>
+        <field name="name">delivery.price.rule.list</field>
         <field name="model">delivery.price.rule</field>
         <field name="arch" type="xml">
-            <tree string="Price Rules">
+            <list string="Price Rules">
                 <field name="sequence" widget="handle" />
                 <field name="name"/>
-            </tree>
+            </list>
         </field>
     </record>
 

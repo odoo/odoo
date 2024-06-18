@@ -214,7 +214,7 @@ test("PriorityField in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree editable="bottom"><field name="selection" widget="priority" /></tree>`,
+        arch: /* xml */ `<list editable="bottom"><field name="selection" widget="priority" /></list>`,
     });
 
     expect(".o_data_row:first-child .o_priority:not(.o_field_empty)").toHaveCount(1);
@@ -321,7 +321,7 @@ test.tags("desktop")("PriorityField hover in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: /* xml */ `<tree editable="bottom"><field name="selection" widget="priority" /></tree>`,
+        arch: /* xml */ `<list editable="bottom"><field name="selection" widget="priority" /></list>`,
     });
 
     expect(".o_data_row:first-child .o_priority:not(.o_field_empty)").toHaveCount(1);

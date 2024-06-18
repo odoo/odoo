@@ -33,10 +33,10 @@
     </record>
 
     <record id="sms_sms_view_tree" model="ir.ui.view">
-        <field name="name">sms.sms.view.tree</field>
+        <field name="name">sms.sms.view.list</field>
         <field name="model">sms.sms</field>
         <field name="arch" type="xml">
-            <tree string="SMS Templates">
+            <list string="SMS Templates">
                 <field name="number"/>
                 <field name="partner_id"/>
                 <field name="failure_type"/>
@@ -44,7 +44,7 @@
                 <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing'"/>
                 <button name="action_set_outgoing" string="Retry" type="object" icon="fa-repeat" invisible="state not in ('error', 'canceled')"/>
                 <button name="action_set_canceled" string="Cancel" type="object" icon="fa-times-circle" invisible="state not in ('error', 'outgoing')"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -62,7 +62,7 @@
     <record id="sms_sms_action" model="ir.actions.act_window">
         <field name="name">SMS</field>
         <field name="res_model">sms.sms</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="domain">[('to_delete', '!=', True)]</field>
     </record>
 

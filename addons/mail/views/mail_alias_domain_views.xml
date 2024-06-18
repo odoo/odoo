@@ -36,10 +36,10 @@
     </record>
 
     <record id="mail_alias_domain_view_tree" model="ir.ui.view">
-        <field name="name">mail.alias.domain.view.tree</field>
+        <field name="name">mail.alias.domain.view.list</field>
         <field name="model">mail.alias.domain</field>
         <field name="arch" type="xml">
-            <tree string="Alias Domains" duplicate="false">
+            <list string="Alias Domains" duplicate="false">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="bounce_alias"/>
@@ -48,7 +48,7 @@
                 <field name="company_ids" optional="hide"
                        widget="many2many_tags"
                        groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -73,7 +73,7 @@
     <record id="mail_alias_domain_action" model="ir.actions.act_window">
         <field name="name">Alias Domains</field>
         <field name="res_model">mail.alias.domain</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

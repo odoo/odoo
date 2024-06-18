@@ -23,14 +23,14 @@
                         </b>
                     </div>
                     <field name="mrp_consumption_warning_line_ids" nolabel="1">
-                        <tree create="0" delete="0" editable="top">
+                        <list create="0" delete="0" editable="top">
                             <field name="mrp_production_id" column_invisible="parent.mrp_production_count == 1" force_save="1"/>
                             <field name="consumption" column_invisible="True" force_save="1"/>
                             <field name="product_id" force_save="1"/>
                             <field name="product_uom_id" groups="uom.group_uom" force_save="1"/>
                             <field name="product_expected_qty_uom" force_save="1"/>
                             <field name="product_consumed_qty_uom" force_save="1"/>
-                        </tree>
+                        </list>
                     </field>
                     <footer>
                         <button name="action_confirm" string="Force" data-hotkey="q"

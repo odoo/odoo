@@ -266,7 +266,7 @@ class IrUiMenu(models.Model):
         if not menu_roots_data:
             return all_menus
 
-        # menus are loaded fully unlike a regular tree view, cause there are a
+        # menus are loaded fully unlike a regular list view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
         menus_domain = [('id', 'child_of', menu_roots.ids)]
         blacklisted_menu_ids = self._load_menus_blacklist()

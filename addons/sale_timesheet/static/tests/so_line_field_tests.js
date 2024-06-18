@@ -29,15 +29,15 @@ QUnit.module("Sale Order Line Field Tests", (hooks) => {
                 "account.analytic.line,false,form": `<form>
                         <field name="so_line" widget="so_line_field"/>
                     </form>`,
-                "account.analytic.line,false,list": `<tree editable="bottom">
+                "account.analytic.line,false,list": `<list editable="bottom">
                         <field name="so_line" widget="so_line_field"/>
-                    </tree>`,
+                    </list>`,
                 "project.task,false,form": `<form>
                     <field name="timesheet_ids">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="so_line" widget="so_line_field"/>
                             <field name="is_so_line_edited" column_invisible="True"/>
-                        </tree>
+                        </list>
                     </field>
                 </form>`,
             },
@@ -96,7 +96,7 @@ QUnit.module("Sale Order Line Field Tests", (hooks) => {
         assert.verifySteps(["web_save"]);
     });
 
-    QUnit.test("Check whether so_line_field widget works as intended in sub-tree view of timesheets linked to a task", async function (assert) {
+    QUnit.test("Check whether so_line_field widget works as intended in sub-list view of timesheets linked to a task", async function (assert) {
         assert.expect(4);
         await start({
             serverData,

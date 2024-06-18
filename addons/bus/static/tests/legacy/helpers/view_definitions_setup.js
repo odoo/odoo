@@ -12,7 +12,7 @@ const searchArchsRegistry = viewArchsRegistry.category("search");
 activityArchsRegistry.add("default", "<activity><templates></templates></activity>");
 formArchsRegistry.add("default", "<form/>");
 kanbanArchsRegistry.add("default", "<kanban><templates></templates>");
-listArchsRegistry.add("default", "<tree/>");
+listArchsRegistry.add("default", "<list/>");
 searchArchsRegistry.add("default", "<search/>");
 
 formArchsRegistry.add(

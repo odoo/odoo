@@ -25,10 +25,10 @@
         </record>
 
         <record id="slide_channel_partner_view_tree" model="ir.ui.view">
-            <field name="name">slide.channel.partner.tree</field>
+            <field name="name">slide.channel.partner.list</field>
             <field name="model">slide.channel.partner</field>
             <field name="arch" type="xml">
-                <tree string="Attendees" js_class="slide_channel_partner_enroll_tree" create="0" sample="1">
+                <list string="Attendees" js_class="slide_channel_partner_enroll_tree" create="0" sample="1">
                     <field name="channel_id" string="Course Name"/>
                     <field name="partner_id"/>
                     <field name="partner_email" string="Email"/>
@@ -56,7 +56,7 @@
                         invisible="not active"/>
                     <button name="action_unarchive" title="Unarchive" icon="fa-undo" type="object"
                         invisible="active"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -114,7 +114,7 @@
         <record id="slide_channel_partner_action" model="ir.actions.act_window">
             <field name="name">Attendees</field>
             <field name="res_model">slide.channel.partner</field>
-            <field name="view_mode">tree,kanban</field>
+            <field name="view_mode">list,kanban</field>
             <field name="search_view_id" ref="website_slides.slide_channel_partner_view_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -129,7 +129,7 @@
         <record id="slide_channel_partner_action_report" model="ir.actions.act_window">
             <field name="name">Attendees</field>
             <field name="res_model">slide.channel.partner</field>
-            <field name="view_mode">graph,pivot,tree,kanban</field>
+            <field name="view_mode">graph,pivot,list,kanban</field>
             <field name="search_view_id" ref="website_slides.slide_channel_partner_view_search"/>
             <field name="context">{'search_default_groupby_member_status': 1}</field>
             <field name="help" type="html">

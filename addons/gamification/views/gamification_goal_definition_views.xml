@@ -3,7 +3,7 @@
     <record id="goal_definition_list_action" model="ir.actions.act_window">
         <field name="name">Goal Definitions</field>
         <field name="res_model">gamification.goal.definition</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new goal definition
@@ -18,10 +18,10 @@
         <field name="name">Goal Definitions List</field>
         <field name="model">gamification.goal.definition</field>
         <field name="arch" type="xml">
-            <tree string="Goal Definitions">
+            <list string="Goal Definitions">
                 <field name="name"/>
                 <field name="computation_mode"/>
-            </tree>
+            </list>
         </field>
     </record>
 

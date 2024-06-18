@@ -1824,7 +1824,7 @@ class Task(models.Model):
             'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False, 'search_default_open_tasks': True},
             'domain': [('depend_on_ids', '=', self.id)],
             'name': _('Dependent Tasks'),
-            'view_mode': 'tree,form,kanban,calendar,pivot,graph,activity',
+            'view_mode': 'list,form,kanban,calendar,pivot,graph,activity',
         }
 
     def action_recurring_tasks(self):
@@ -1832,7 +1832,7 @@ class Task(models.Model):
             'name': _('Tasks in Recurrence'),
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
-            'view_mode': 'tree,form,kanban,calendar,pivot,graph,activity',
+            'view_mode': 'list,form,kanban,calendar,pivot,graph,activity',
             'context': {'create': False},
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }

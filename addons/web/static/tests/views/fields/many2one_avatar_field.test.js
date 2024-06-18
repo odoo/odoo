@@ -130,7 +130,7 @@ test("basic list view flow", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: '<tree><field name="user_id" widget="many2one_avatar"/></tree>',
+        arch: '<list><field name="user_id" widget="many2one_avatar"/></list>',
     });
 
     expect(queryAllTexts(".o_data_cell[name='user_id']")).toEqual([
@@ -149,7 +149,7 @@ test("basic flow in editable list view", async () => {
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: '<tree editable="top"><field name="user_id" widget="many2one_avatar"/></tree>',
+        arch: '<list editable="top"><field name="user_id" widget="many2one_avatar"/></list>',
     });
 
     expect(queryAllTexts(".o_data_cell[name='user_id']")).toEqual([
@@ -194,9 +194,9 @@ test.tags("desktop")("click on many2one_avatar in a list view (multi_edit='1')",
         type: "list",
         resModel: "partner",
         arch: `
-            <tree multi_edit="1">
+            <list multi_edit="1">
                 <field name="user_id" widget="many2one_avatar"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
@@ -218,9 +218,9 @@ test("click on many2one_avatar in an editable list view", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree>
+            <list>
                 <field name="user_id" widget="many2one_avatar"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_row .o_data_cell [name='user_id']").click();
@@ -243,9 +243,9 @@ test.tags("desktop")(
             type: "list",
             resModel: "partner",
             arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="user_id" widget="many2one_avatar"/>
-            </tree>`,
+            </list>`,
         });
 
         await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
@@ -271,7 +271,7 @@ test("readonly many2one_avatar in list view should not contain a link", async ()
     await mountView({
         type: "list",
         resModel: "partner",
-        arch: `<tree><field name="user_id" widget="many2one_avatar"/></tree>`,
+        arch: `<list><field name="user_id" widget="many2one_avatar"/></list>`,
     });
 
     expect("[name='user_id'] a").toHaveCount(0);
@@ -289,9 +289,9 @@ test.tags("desktop")("cancelling create dialog should clear value in the field",
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="user_id" widget="many2one_avatar"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_cell:eq(0)").click();
@@ -315,7 +315,7 @@ test.tags("desktop")("widget many2one_avatar in kanban view (load more dialog)",
     }
 
     Users._views = {
-        list: '<tree><field name="display_name"/></tree>',
+        list: '<list><field name="display_name"/></list>',
         search: "<search/>",
     };
     await mountView({

@@ -29,24 +29,24 @@
     </record>
 
     <record id="mail_link_preview_view_tree" model="ir.ui.view">
-        <field name="name">mail.link.preview.tree</field>
+        <field name="name">mail.link.preview.list</field>
         <field name="model">mail.link.preview</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Link Previews">
+            <list string="Link Previews">
                 <field name="id"/>
                 <field name="source_url"/>
                 <field name="og_title"/>
                 <field name="og_type"/>
                 <field name="image_mimetype"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="mail_link_preview_action" model="ir.actions.act_window">
         <field name="name">Link Previews</field>
         <field name="res_model">mail.link.preview</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

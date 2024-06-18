@@ -753,9 +753,9 @@ test("list daterange with start date and empty end date", async () => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree>
+            <list>
                 <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
-            </tree>`,
+            </list>`,
     });
 
     const arrowIcon = queryFirst(".fa-long-arrow-right");
@@ -783,9 +783,9 @@ test("list daterange with empty start date and end date", async (assert) => {
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
-            <tree>
+            <list>
                 <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
-            </tree>`,
+            </list>`,
     });
 
     const arrowIcon = queryFirst(".fa-long-arrow-right");

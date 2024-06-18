@@ -34,7 +34,7 @@
             <field name="name">website.rewrite.list</field>
             <field name="model">website.rewrite</field>
             <field name="arch" type="xml">
-                <tree string="Website rewrites">
+                <list string="Website rewrites">
                     <field name="sequence" widget="handle" />
                     <field name="redirect_type"/>
                     <field name="name"/>
@@ -46,7 +46,7 @@
                     <field name="write_date" optional="hide"/>
                     <field name="create_uid" optional="hide"/>
                     <field name="write_uid" optional="hide"/>
-                </tree>
+                </list>
             </field>
         </record>
 

@@ -139,7 +139,7 @@ class ProductAttribute(models.Model):
             'type': 'ir.actions.act_window',
             'name': _("Products"),
             'res_model': 'product.template.attribute.line',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
             'domain': [('attribute_id', '=', self.id)],
         }
 

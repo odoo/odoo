@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="project_project_stage_view_tree" model="ir.ui.view">
-        <field name="name">project.project.stage.view.tree</field>
+        <field name="name">project.project.stage.view.list</field>
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
-            <tree editable="bottom" sample="1" delete="0">
+            <list editable="bottom" sample="1" delete="0">
                 <field name="sequence" widget="handle"/>
                 <field name="name" placeholder="e.g. To Do"/>
                 <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True}"/>
                 <field name="fold" optional="show"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -98,7 +98,7 @@
     <record id="project_project_stage_configure" model="ir.actions.act_window">
         <field name="name">Project Stages</field>
         <field name="res_model">project.project.stage</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
               No stages found. Let's create one!
@@ -110,7 +110,7 @@
 
     <record id="project_project_stage_configure_view_tree" model="ir.actions.act_window.view">
         <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">list</field>
         <field name="view_id" ref="project_project_stage_view_tree"/>
         <field name="act_window_id" ref="project_project_stage_configure"/>
     </record>

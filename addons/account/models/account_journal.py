@@ -877,7 +877,7 @@ class AccountJournal(models.Model):
 
     def create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
+         :return: A action redirecting to account.move list/form view.
         """
         invoices = self._create_document_from_attachment(attachment_ids)
         action_vals = {
@@ -896,7 +896,7 @@ class AccountJournal(models.Model):
         else:
             action_vals.update({
                 'views': [[False, "list"], [False, "kanban"], [False, "form"]],
-                'view_mode': 'list, kanban, form',
+                'view_mode': 'list,kanban,form',
             })
         return action_vals
 

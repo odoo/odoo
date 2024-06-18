@@ -14,16 +14,16 @@
     </record>
 
     <record id="product_pricelist_view_tree" model="ir.ui.view">
-        <field name="name">product.pricelist.tree</field>
+        <field name="name">product.pricelist.list</field>
         <field name="model">product.pricelist</field>
         <field name="arch" type="xml">
-            <tree string="Products Price List" sample="1">
+            <list string="Products Price List" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="discount_policy"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -73,7 +73,7 @@
                     <notebook>
                         <page name="pricelist_rules" string="Price Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                                <tree groups="!product.group_sale_pricelist" string="Pricelist Rules" editable="bottom">
+                                <list groups="!product.group_sale_pricelist" string="Pricelist Rules" editable="bottom">
                                     <field name="product_tmpl_id" string="Products" required="1"/>
                                     <field name="product_id" string="Variants"
                                     groups="product.group_product_variant"
@@ -89,11 +89,11 @@
                                     <field name="base" column_invisible="True"/>
                                     <field name="applied_on" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
-                                </tree>
+                                </list>
                                 <!-- When in advanced pricelist mode : pricelist rules
                                     Should open in a form view and not be editable inline anymore.
                                 -->
-                                <tree groups="product.group_sale_pricelist" string="Pricelist Rules">
+                                <list groups="product.group_sale_pricelist" string="Pricelist Rules">
                                     <field name="product_tmpl_id" column_invisible="True"/>
                                     <field name="name" string="Applicable On"/>
                                     <field name="min_quantity"/>
@@ -104,7 +104,7 @@
                                     <field name="price_discount" column_invisible="True"/>
                                     <field name="applied_on" column_invisible="True"/>
                                     <field name="compute_price" column_invisible="True"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page name="pricelist_config" string="Configuration">
@@ -128,7 +128,7 @@
         <field name="name">Pricelists</field>
         <field name="res_model">product.pricelist</field>
         <field name="path">pricelists</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_mode">list,kanban,form</field>
         <field name="search_view_id" ref="product_pricelist_view_search" />
         <field name="context">{"default_base":'list_price'}</field>
         <field name="help" type="html">
@@ -146,7 +146,7 @@
     <record id="product_pricelist_item_action" model="ir.actions.act_window">
         <field name="name">Price Rules</field>
         <field name="res_model">product.pricelist.item</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
 </odoo>

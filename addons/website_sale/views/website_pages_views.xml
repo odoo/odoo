@@ -2,13 +2,13 @@
 <odoo>
 
     <record id="product_pages_tree_view" model="ir.ui.view">
-        <field name="name">Product Pages Tree</field>
+        <field name="name">Product Pages List</field>
         <field name="model">product.template</field>
         <field name="priority">99</field>
         <field name="mode">primary</field>
         <field name="inherit_id" ref="product_template_view_tree_website_sale"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
+            <xpath expr="//list" position="attributes">
                 <attribute name="js_class">website_pages_list</attribute>
                 <attribute name="type">object</attribute>
                 <attribute name="action">open_website_url</attribute>
@@ -29,7 +29,7 @@
             <field name="name" position="after">
                 <field name="website_url"/>
             </field>
-            <xpath expr="//tree">
+            <xpath expr="//list">
                 <field name="is_seo_optimized"/>
                 <field name="is_published"/>
 
@@ -72,10 +72,10 @@
     <record id="action_product_pages_list" model="ir.actions.act_window">
         <field name="name">Product Pages</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">tree,kanban</field>
+        <field name="view_mode">list,kanban</field>
         <field name="view_id" ref="product_pages_tree_view"/>
         <field name="view_ids" eval="[Command.clear(),
-            Command.create({'view_mode': 'tree', 'sequence': 1, 'view_id': ref('product_pages_tree_view')}),
+            Command.create({'view_mode': 'list', 'sequence': 1, 'view_id': ref('product_pages_tree_view')}),
             Command.create({'view_mode': 'kanban', 'sequence': 2, 'view_id': ref('product_pages_kanban_view')}),
         ]"/>
         <field name="context">{'create_action': 'website_sale.product_product_action_add'}</field>

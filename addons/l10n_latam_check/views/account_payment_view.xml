@@ -113,18 +113,18 @@
     </record>
 
     <record model="ir.ui.view" id="view_account_third_party_check_operations_tree">
-        <field name="name">account.check.operations.tree</field>
+        <field name="name">account.check.operations.list</field>
         <field name="model">account.payment</field>
         <field name="priority" eval="99"/>
         <field name="arch" type="xml">
-            <tree default_order="date desc, id desc, name desc">
+            <list default_order="date desc, id desc, name desc">
                 <field name="date" readonly="state in ['cancel', 'posted']"/>
                 <field name="name"/>
                 <field name="payment_type"/>
                 <field name="journal_id"/>
                 <field name="partner_id" string="Customer"/>
                 <field name="state" column_invisible="True"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -156,7 +156,7 @@
  <!-- Own Check Views and menus -->
 
     <record model="ir.ui.view" id="view_account_own_check_tree">
-        <field name="name">account.check.tree</field>
+        <field name="name">account.check.list</field>
         <field name="model">account.payment</field>
         <field name="priority">100</field>
         <field name="mode">primary</field>
@@ -174,16 +174,16 @@
             <field name="date" position="after">
                 <field name="l10n_latam_check_payment_date" optional="show" readonly="state != 'draft'"/>
             </field>
-            <tree>
+            <list>
                 <field name="is_matched"/>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_own_check">
         <field name="name">Own Checks</field>
         <field name="res_model">account.payment</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot</field>
+        <field name="view_mode">list,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_own_check_tree"/>
         <field name="search_view_id" ref="view_account_payment_search"/>
         <field name="domain">[('payment_method_code', '=', 'check_printing')]</field>
@@ -199,7 +199,7 @@
 <!-- Third party check Views and menus -->
 
     <record model="ir.ui.view" id="view_account_third_party_check_tree">
-        <field name="name">account.check.tree</field>
+        <field name="name">account.check.list</field>
         <field name="model">account.payment</field>
         <field name="priority">110</field>
         <field name="mode">primary</field>
@@ -209,21 +209,21 @@
             <field name="journal_id" position="replace">
                 <field name="l10n_latam_check_current_journal_id" string="Current Journal"/>
             </field>
-            <tree position="attributes">
+            <list position="attributes">
                 <attribute name="create">false</attribute>
-            </tree>
-            <tree position="inside">
+            </list>
+            <list position="inside">
                 <header>
                     <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer" groups="account.group_account_user"/>
                 </header>
-            </tree>
+            </list>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_third_party_check">
         <field name="name">Third Party Checks</field>
         <field name="res_model">account.payment</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot</field>
+        <field name="view_mode">list,form,calendar,graph,pivot</field>
         <field name="view_id" ref="view_account_third_party_check_tree"/>
         <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_party_checks')]</field>

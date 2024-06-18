@@ -24,7 +24,7 @@
                     invisible="mailing_mail_count == 0 or not is_mailing_campaign_activated"
                     groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_mail_ids" nolabel="1">
-                        <tree>
+                        <list>
                             <field name="calendar_date" string="Date"/>
                             <field name="subject" readonly="state in ('sending', 'done')"/>
                             <field name="mailing_model_id" string="Recipients" optional="hide"/>
@@ -40,7 +40,7 @@
                             <field name="replied_ratio" string="Replied (%)" avg="Average of Replied"/>
                             <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
                             <button name="action_duplicate" type="object" string="Duplicate"/>
-                        </tree>
+                        </list>
                     </field>
                 </page>
             </xpath>
@@ -82,7 +82,7 @@
     <record id="action_view_utm_campaigns" model="ir.actions.act_window">
         <field name="name">Campaigns</field>
         <field name="res_model">utm.campaign</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a mailing campaign

@@ -19,7 +19,7 @@ QUnit.module("todoListView Tests", (hooks) => {
         pyEnv["project.task"].create([{}]); // To simulate a todo element
         serverData = {
             views: {
-                "project.task,false,list": `<tree js_class="todo_list"></tree>`,
+                "project.task,false,list": `<list js_class="todo_list"></list>`,
             },
         };
         target = getFixture();

@@ -172,9 +172,9 @@ test.tags("desktop")("FavoriteField in editable list view without label", async 
         resModel: "partner",
         type: "list",
         arch: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="bar" widget="boolean_favorite" nolabel="1" options="{'autosave': False}"/>
-            </tree>
+            </list>
         `,
     });
     expect(`.o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star`).toHaveCount(1, {

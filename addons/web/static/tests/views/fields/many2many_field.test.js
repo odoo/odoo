@@ -221,9 +221,9 @@ test.tags("desktop")("many2many kanban: edition", async () => {
             </form>
         `,
         list: /* xml */ `
-            <tree>
+            <list>
                 <field name="name" />
-            </tree>
+            </list>
         `,
         search: /* xml */ `
             <search>
@@ -363,11 +363,11 @@ test("many2many kanban(editable): properly handle add-label node attribute", asy
 
 test("field string is used in the SelectCreateDialog", async () => {
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     Turtle._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     await mountView({
@@ -376,14 +376,14 @@ test("field string is used in the SelectCreateDialog", async () => {
         arch: `
             <form>
                 <field name="timmy">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
                 <field name="turtles" widget="many2many" string="Abcde">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -403,7 +403,7 @@ test("field string is used in the SelectCreateDialog", async () => {
 test("many2many kanban: create action disabled", async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name" string="Name"/></search>',
     };
 
@@ -439,7 +439,7 @@ test("many2many kanban: create action disabled", async () => {
 test("many2many kanban: conditional create/delete actions", async () => {
     PartnerType._views = {
         form: '<form><field name="name"/></form>',
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
     Partner._records[0].timmy = [1, 2];
@@ -496,7 +496,7 @@ test("many2many kanban: conditional create/delete actions", async () => {
 
 test("many2many list (non editable): create a new record and click on action button 1", async () => {
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     onRpc((args) => {
@@ -515,9 +515,9 @@ test("many2many list (non editable): create a new record and click on action but
         arch: `
             <form>
                 <field name="timmy">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <header>
                             <button name="myaction" string="coucou" type="object"/>
@@ -549,7 +549,7 @@ test("many2many list (non editable): create a new record and click on action but
 
 test("many2many list (non editable): create a new record and click on action button 2", async () => {
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     onRpc((args) => {
@@ -568,9 +568,9 @@ test("many2many list (non editable): create a new record and click on action but
         arch: `
             <form>
                 <field name="timmy">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                     <form>
                         <header>
                             <button name="myaction" string="coucou" type="object"/>
@@ -617,7 +617,7 @@ test("add record in a many2many non editable list with context", async () => {
     expect.assertions(1);
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     onRpc("web_search_read", (args) => {
@@ -639,9 +639,9 @@ test("add record in a many2many non editable list with context", async () => {
             <form>
                 <field name="int_field"/>
                 <field name="timmy" context="{'abc': int_field}">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
     });
@@ -656,7 +656,7 @@ test("many2many list (editable): edition", async () => {
     PartnerType._fields.float_field = fields.Float({ string: "Float" });
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     onRpc((args) => {
@@ -674,10 +674,10 @@ test("many2many list (editable): edition", async () => {
         arch: `
             <form>
                 <field name="timmy">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="name"/>
                         <field name="float_field"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -747,9 +747,9 @@ test("many2many: create & delete attributes (both true)", async () => {
         arch: `
             <form>
                 <field name="timmy">
-                    <tree create="true" delete="true">
+                    <list create="true" delete="true">
                         <field name="color"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -768,9 +768,9 @@ test("many2many: create & delete attributes (both false)", async () => {
         arch: `
             <form>
                 <field name="timmy">
-                    <tree create="false" delete="false">
+                    <list create="false" delete="false">
                         <field name="color"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -787,9 +787,9 @@ test("many2many list: create action disabled", async () => {
         arch: `
             <form>
                 <field name="timmy">
-                    <tree create="0">
+                    <list create="0">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -809,9 +809,9 @@ test("fieldmany2many list comodel not writable", async () => {
 
     PartnerType._views = {
         list: `
-            <tree create="false" delete="false" edit="false">
+            <list create="false" delete="false" edit="false">
                 <field name="name"/>
-            </tree>`,
+            </list>`,
         search: '<search><field name="name"/></search>',
     };
     onRpc((args) => {
@@ -857,7 +857,7 @@ test("many2many list: conditional create/delete actions", async () => {
     Partner._records[0].timmy = [1, 2];
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 
@@ -868,9 +868,9 @@ test("many2many list: conditional create/delete actions", async () => {
             <form>
                 <field name="color"/>
                 <field name="timmy" options="{'create': [('color', '=', 'red')], 'delete': [('color', '=', 'red')]}">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -901,7 +901,7 @@ test("many2many list: conditional create/delete actions", async () => {
 test("many2many field with link/unlink options (list)", async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 
@@ -912,9 +912,9 @@ test("many2many field with link/unlink options (list)", async () => {
             <form>
                 <field name="color"/>
                 <field name="timmy" options="{'link': [('color', '=', 'red')], 'unlink': [('color', '=', 'red')]}">
-                    <tree>
+                    <list>
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -940,7 +940,7 @@ test("many2many field with link/unlink options (list)", async () => {
 test('many2many field with link/unlink options (list, create="0")', async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 
@@ -951,9 +951,9 @@ test('many2many field with link/unlink options (list, create="0")', async () => 
             <form>
                 <field name="color"/>
                 <field name="timmy" options="{'link': [('color', '=', 'red')], 'unlink': [('color', '=', 'red')]}">
-                    <tree create="0">
+                    <list create="0">
                         <field name="name"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -980,7 +980,7 @@ test("many2many field with link option (kanban)", async () => {
     Partner._records[0].timmy = [1, 2];
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 
@@ -1021,7 +1021,7 @@ test("many2many field with link option (kanban)", async () => {
 test('many2many field with link option (kanban, create="0")', async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: "<search/>",
     };
 
@@ -1075,9 +1075,9 @@ test("many2many list: list of id as default value", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>
         `,
@@ -1098,7 +1098,7 @@ test("context and domain dependent on an x2m must contain the list of current id
         ],
     });
     Turtle._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
     };
     onRpc("web_search_read", (args) => {
@@ -1112,9 +1112,9 @@ test("context and domain dependent on an x2m must contain the list of current id
         arch: `
         <form>
             <field name="turtles" context="{'test': turtles}" domain="[('id', 'in', turtles)]">
-                <tree>
+                <list>
                     <field name="turtle_foo"/>
-                </tree>
+                </list>
             </field>
         </form>`,
     });
@@ -1131,10 +1131,10 @@ test("many2many list with x2many: add a record", async () => {
 
     PartnerType._views = {
         list: `
-            <tree>
+            <list>
                 <field name="name"/>
                 <field name="m2m" widget="many2many_tags"/>
-            </tree>`,
+            </list>`,
         search: '<search><field name="name" string="Name"/></search>',
     };
     onRpc((args) => {
@@ -1176,7 +1176,7 @@ test("many2many with a domain", async () => {
     // The domain specified on the field should not be replaced by the potential
     // domain the user writes in the dialog, they should rather be concatenated
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name" string="Name"/></search>',
     };
 
@@ -1217,9 +1217,9 @@ test("many2many list with onchange and edition of a record", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1250,7 +1250,7 @@ test("many2many concurrency edition", async () => {
     });
     Partner._records[0].turtles = [1, 2, 3, 4];
     Turtle._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name" string="Name"/></search>',
     };
 
@@ -1269,9 +1269,9 @@ test("many2many concurrency edition", async () => {
         arch: `
             <form>
                 <field name="turtles">
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1288,7 +1288,7 @@ test("many2many concurrency edition", async () => {
 
 test("many2many widget: creates a new record with a context containing the parentID", async () => {
     Turtle._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/></search>',
         form: '<form string="Turtle Power"><field name="turtle_trululu"/></form>',
     };
@@ -1318,9 +1318,9 @@ test("many2many widget: creates a new record with a context containing the paren
         arch: `
             <form>
                 <field name="turtles" widget="many2many" context="{'default_turtle_trululu': id}" >
-                    <tree>
+                    <list>
                         <field name="turtle_foo"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1436,9 +1436,9 @@ test("default_get, onchange, onchange on m2m", async () => {
             <form>
                 <sheet>
                     <field name="timmy">
-                        <tree>
+                        <list>
                             <field name="name"/>
-                        </tree>
+                        </list>
                     </field>
                     <field name="int_field"/>
                 </sheet>
@@ -1466,7 +1466,7 @@ test("many2many list add *many* records, remove, re-add", async () => {
     }
 
     PartnerType._views = {
-        list: '<tree><field name="name"/></tree>',
+        list: '<list><field name="name"/></list>',
         search: '<search><field name="name"/><field name="color"/></search>',
     };
     onRpc("get_formview_id", (args) => {
@@ -1479,10 +1479,10 @@ test("many2many list add *many* records, remove, re-add", async () => {
         arch: `
             <form>
                 <field name="timmy" widget="many2many">
-                    <tree>
+                    <list>
                         <field name="name"/>
                         <field name="product_ids" widget="many2many_tags"/>
-                    </tree>
+                    </list>
                 </field>
             </form>`,
         resId: 1,
@@ -1566,7 +1566,7 @@ test("many2many kanban: action/type attribute", async () => {
 
 test("select create with _view_ref as text", async () => {
     PartnerType._views = {
-        [["list", "my.little.string"]]: `<tree><field name="name"/></tree>`,
+        [["list", "my.little.string"]]: `<list><field name="name"/></list>`,
         search: `<search />`,
     };
     patchWithCleanup(Many2XAutocomplete.defaultProps, {
@@ -1580,7 +1580,7 @@ test("select create with _view_ref as text", async () => {
                 [false, "list"],
                 [false, "search"],
             ]);
-            expect(args.kwargs.context.tree_view_ref).toBe("my.little.string");
+            expect(args.kwargs.context.list_view_ref).toBe("my.little.string");
         }
     });
 
@@ -1590,7 +1590,7 @@ test("select create with _view_ref as text", async () => {
         resModel: "partner",
         arch: `
             <form>
-                <field name="timmy" widget="many2many_tags" context="{ 'tree_view_ref': 'my.little.string' }"/>
+                <field name="timmy" widget="many2many_tags" context="{ 'list_view_ref': 'my.little.string' }"/>
             </form>`,
     });
     await contains(".o_field_many2many_selection input").click();
@@ -1628,9 +1628,9 @@ test("many2many basic keys in field evalcontext -- in list", async () => {
         type: "list",
         resModel: "partner",
         arch: `
-            <tree editable="top">
+            <list editable="top">
                 <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': uid, 'allowed_company_ids': allowed_company_ids, 'company_id': current_company_id}"/>
-            </tree>`,
+            </list>`,
     });
 
     await contains(".o_data_cell").click();
@@ -1711,9 +1711,9 @@ test("many2many basic keys in field evalcontext -- in a x2many in form", async (
         arch: `
                 <form>
                 <field name="p">
-                    <tree editable="top">
+                    <list editable="top">
                         <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': uid, 'allowed_company_ids': allowed_company_ids, 'company_id': current_company_id}"/>
-                    </tree>
+                    </list>
                 </field>
                 </form>`,
     });

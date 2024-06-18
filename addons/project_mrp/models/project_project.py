@@ -32,14 +32,14 @@ class Project(models.Model):
         self.ensure_one()
         action = self.analytic_account_id.action_view_mrp_bom()
         if self.bom_count > 1:
-            action['view_mode'] = 'tree,form,kanban'
+            action['view_mode'] = 'list,form,kanban'
         return action
 
     def action_view_workorder(self):
         self.ensure_one()
         action = self.analytic_account_id.action_view_workorder()
         if self.workorder_count > 1:
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph'
+            action['view_mode'] = 'list,form,kanban,calendar,pivot,graph'
         return action
 
     # ----------------------------

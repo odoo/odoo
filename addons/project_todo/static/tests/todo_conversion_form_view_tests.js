@@ -22,9 +22,9 @@ QUnit.module("todoConversionFormView Tests", (hooks) => {
         serverData = {
             views: {
                 "project.task,false,list": `
-                    <tree>
+                    <list>
                         <field name="id"/>
-                    </tree>`,
+                    </list>`,
                 "project.task,1,form": `
                     <form js_class="todo_form">
                         <field name="id"/>
