@@ -272,22 +272,6 @@ class IrHttp(models.AbstractModel):
             :param lang_code: Must be the lang `code`. It could also be something
                               else, such as `'[lang]'` (used for url_return).
         '''
-        path, _, qs = (url_from or '').partition('?')
-        routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
-        if (
-            path
-            # don't try to match route if we know that no rewrite has been loaded.
-            and request.env['ir.http']._rewrite_len(routing)
-            and (
-                len(path) > 1
-                and path.startswith('/')
-                and '/static/' not in path
-                and not path.startswith('/web/')
-            )
-        ):
-            url_from, _ = request.env['ir.http'].url_rewrite(path)
-            url_from = url_from if not qs else url_from + '?%s' % qs
-
         return cls._url_lang(url_from, lang_code=lang_code)
 
     @classmethod
@@ -707,6 +691,3 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.NotFound:
             new_url = path
         return new_url or path, endpoint and endpoint[0]
-
-    def _rewrite_len(self, website_id):
-        return 0
