@@ -30,6 +30,8 @@ const ThreadPatch = {
     setup() {
         super.setup(...arguments);
         this.activeRtcSession = Record.one("RtcSession");
+        this.hadSelfSession = false;
+        this.lastSessionIds = new Set();
         this.rtcInvitingSession = Record.one("RtcSession", {
             /** @this {import("models").Thread} */
             onAdd(r) {
@@ -45,6 +47,26 @@ const ThreadPatch = {
             /** @this {import("models").Thread} */
             onDelete(r) {
                 this.store.env.services["discuss.rtc"].deleteSession(r.id);
+            },
+            /** @this {import("models").Thread} */
+            onUpdate() {
+                const hadSelfSession = this.hadSelfSession;
+                const lastSessionIds = this.lastSessionIds;
+                this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtcSessions));
+                this.lastSessionIds = new Set(this.rtcSessions.map((s) => s.id));
+                if (
+                    !hadSelfSession || // sound for self-join is played instead
+                    !this.hadSelfSession || // sound for self-leave is played instead
+                    !this.store.env.services["multi_tab"].isOnMainTab() // another tab playing sound
+                ) {
+                    return;
+                }
+                if ([...this.lastSessionIds].some((id) => !lastSessionIds.has(id))) {
+                    this.store.env.services["mail.sound_effects"].play("channel-join");
+                }
+                if ([...lastSessionIds].some((id) => !this.lastSessionIds.has(id))) {
+                    this.store.env.services["mail.sound_effects"].play("member-leave");
+                }
             },
         });
     },
