@@ -941,6 +941,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'product': product,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'round_price_include': False,
         }
         results = {'results': taxes._get_tax_details(price_unit, quantity, **kwargs)}
         if rounding_method == 'round_globally':
