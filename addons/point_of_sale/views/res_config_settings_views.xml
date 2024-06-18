@@ -50,6 +50,9 @@
                             </setting>
                         </block>
                         <block title="Payment" id="pos_payment_section">
+                            <div id="available_payment_terminal" class="o_notification_alert alert alert-warning" role="alert" invisible="not is_kiosk_mode">
+                                <span>Please note that the kiosk only works with Adyen &amp; Stripe terminals</span>
+                            </div>
                             <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available" documentation="/applications/sales/point_of_sale/payment_methods.html">
                                 <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" readonly="pos_has_active_session" required="pos_company_has_template" options="{'no_create': True}" />
                                 <div>
