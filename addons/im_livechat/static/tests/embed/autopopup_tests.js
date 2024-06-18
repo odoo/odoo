@@ -2,12 +2,12 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 
 import { contains } from "@web/../tests/utils";
-import { cookie } from "@web/core/browser/cookie";
 
 QUnit.module("autopopup");
 
@@ -25,7 +25,7 @@ QUnit.test("persisted session", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    cookie.set(
+    expirableStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );

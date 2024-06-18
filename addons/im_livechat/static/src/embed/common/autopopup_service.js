@@ -1,12 +1,12 @@
 /* @odoo-module */
 
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { SESSION_STATE } from "@im_livechat/embed/common/livechat_service";
 import { browser } from "@web/core/browser/browser";
-import { cookie } from "@web/core/browser/cookie";
 import { registry } from "@web/core/registry";
 
 export class AutopopupService {
-    static COOKIE = "im_livechat_auto_popup";
+    static STORAGE_KEY = "im_livechat_auto_popup";
 
     /**
      * @param {import("@web/env").OdooEnv} env
@@ -38,7 +38,7 @@ export class AutopopupService {
             if (this.allowAutoPopup && livechatService.state === SESSION_STATE.NONE) {
                 browser.setTimeout(async () => {
                     if (!this.storeService.ChatWindow.get({ thread: livechatService.thread })) {
-                        cookie.set(AutopopupService.COOKIE, JSON.stringify(false));
+                        expirableStorage.setItem(AutopopupService.STORAGE_KEY, false);
                         livechatService.open();
                     }
                 }, livechatService.rule.auto_popup_timer * 1000);
@@ -48,7 +48,7 @@ export class AutopopupService {
 
     get allowAutoPopup() {
         return Boolean(
-            JSON.parse(cookie.get(AutopopupService.COOKIE) ?? "true") !== false &&
+            !expirableStorage.getItem(AutopopupService.STORAGE_KEY) &&
                 !this.ui.isSmall &&
                 this.livechatService.rule?.action === "auto_popup" &&
                 (this.livechatService.available || this.chatbotService.available)
