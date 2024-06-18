@@ -11,6 +11,7 @@ from . import model
 from . import pivot
 from . import profiling
 from . import report
+from . import rest
 from . import session
 from . import vcard
 from . import view
