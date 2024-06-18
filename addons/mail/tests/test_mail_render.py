@@ -410,6 +410,102 @@ class TestMailRender(TestMailRenderCommon):
             self.assertEqual(rendered, expected)
 
 
+@tagged('mail_render', 'regex_render')
+class TestRegexRendering(common.MailCommon):
+
+    def test_qweb_regex_rendering(self):
+        record = self.env['res.partner'].create({'name': 'Alice'})
+
+        def render(template):
+            return self.env['mail.render.mixin']._render_template_qweb(template, 'res.partner', record.ids)[record.id]
+
+        static_templates = (
+            ('''<h1> Title </h1>''', '<h1> Title </h1>'),
+            ('''<p t-out="object.name"/>''', '<p>Alice</p>'),
+            ('''<p t-out="object.name"></p>''', '<p>Alice</p>'),
+            ('''<P   t-out="object.name" ></p >''', '<p>Alice</p>'),
+            ('''<t t-out="object.name"/>''', 'Alice'),
+            ('''<T t-out="object.name"/>''', 'Alice'),
+            ('''<div><T t-out="object.name"/></div>''', '<div>Alice</div>'),
+            ('''<h1 t-out="object.name"/>''', '<h1>Alice</h1>'),
+            ('''<p t-out='object.name'/>''', '<p>Alice</p>'),
+            ('''<p t-out="object.contact_name"/>''', '<p></p>'),
+            ('''<p t-out="object.name">Default</p>''', '<p>Alice</p>'),
+            ('''<p t-out='object.name'>Default</p>''', '<p>Alice</p>'),
+            ('''<p t-out="object.contact_name">Default</p>''', '<p>Default</p>'),
+            ('''<p t-out="object.name"/><p t-out="object.name">Default</p>''', '<p>Alice</p><p>Alice</p>'),
+            ('''<p t-out="object.name"/><p t-out="object.contact_name">Default</p>''', '<p>Alice</p><p>Default</p>'),
+            ('''<p
+                    t-out="object.name"
+                    />''', '<p>Alice</p>'),
+            ('''<p
+                    t-out="object.contact_name"
+                    >
+                    Default
+                    </p>''', '<p>Default</p>'),
+            ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
+            ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
+            ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
+            ('''<55 t-out="object.name"></55>''', '&lt;55 t-out="object.name"&gt;55&gt;'),
+        )
+        o_qweb_render = self.env['ir.qweb']._render
+        for template, expected in static_templates:
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                self.assertEqual(render(template), expected)
+                self.assertFalse(qweb_render.called)
+                self.assertFalse(unsafe_eval.called)
+
+        # double check that we are able to catch the eval
+        non_static_templates = (
+            ('''<p t-out=""/>''', '<p>()</p>'),
+            ('''<p t-out="1+1"/>''', '<p>2</p>'),
+            ('''<p t-out="env.context.get('test')"/>''', ''),
+            ('''<p t-out="object.name" title="Test"/>''', '<p title="Test">Alice</p>'),
+            ('''<p title="Test" t-out="object.name"/>''', '<p title="Test">Alice</p>'),
+            ('''<p t-out="object.name"><img/></p>''', '<p>Alice</p>'),
+            ('''<p t-out="object.parent_id.name"><img/></p>''', '<p><img/></p>'),
+            ('''<p t-out="'<h1>test</h1>'"/>''', '<p>&lt;h1&gt;test&lt;/h1&gt;</p>'),
+        )
+        for template, expected in non_static_templates:
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                rendered = render(template)
+                self.assertTrue(isinstance(rendered, Markup))
+                self.assertEqual(rendered, expected)
+                self.assertTrue(qweb_render.called)
+                self.assertTrue(unsafe_eval.called)
+
+    def test_inline_regex_rendering(self):
+        record = self.env['res.partner'].create({'name': 'Alice'})
+
+        def render(template):
+            return self.env['mail.render.mixin']._render_template_inline_template(template, 'res.partner', record.ids)[record.id]
+
+        static_templates = (
+            ('''{{object.name}}''', 'Alice'),
+            ('''{{object.contact_name}}''', ''),
+            ('''{{object.name ||| Default}}''', 'Alice'),
+            ('''{{object.contact_name ||| Default}}''', 'Default'),
+        )
+        for template, expected in static_templates:
+            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+                self.assertEqual(render(template), expected)
+                self.assertFalse(unsafe_eval.called)
+                self.assertFalse(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template))
+
+        non_static_templates = (
+            ('''{{''}}''', ''),
+            ('''{{1+1}}''', '2'),
+            ('''{{object.env.context.get('test')}}''', ''),
+        )
+        for template, expected in non_static_templates:
+            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+                self.assertEqual(render(template), expected)
+                self.assertTrue(unsafe_eval.called)
+                self.assertTrue(self.env['mail.render.mixin']._has_unsafe_expression_template_inline_template(template))
+
+
 @tagged('mail_render')
 class TestMailRenderSecurity(TestMailRenderCommon):
     """ Test security of rendering, based on qweb finding + restricted rendering
