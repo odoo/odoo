@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="salePdfQuoteBuilder.filesList">
+        <div class="mb-4">
+            <h5 t-out="props.name"/>
+            <t t-foreach="props.files" t-as="doc" t-key="doc.id">
+                <button
+                    t-out="doc.name"
+                    t-attf-class="btn #{doc.is_selected ? 'btn-primary' : 'btn-secondary'} mt-1 me-1"
+                    t-on-click="() => doc.is_selected = !doc.is_selected"
+                />
+            </t>
+        </div>
+    </t>
+</templates>
