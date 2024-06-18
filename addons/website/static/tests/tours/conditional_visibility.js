@@ -254,3 +254,46 @@ wTourUtils.registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
     },
 ]);
+
+wTourUtils.registerWebsitePreviewTour("conditional_visiblity_user_groups", {
+    edition: true,
+    url: "/?debug=1",
+    test: true,
+}, () => [
+    wTourUtils.goBackToBlocks(),
+    {
+        content: "Drag the Title building block and drop it at the bottom of the page.",
+        trigger: "#oe_snippets .oe_snippet[name='Title'].o_we_draggable .oe_snippet_thumbnail:not(.o_we_already_dragging)",
+        extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        run: "drag_and_drop :iframe .oe_drop_zone:last",
+    },
+    {
+        content: "Click on the Title Block",
+        trigger: ":iframe .s_title",
+    },
+    wTourUtils.changeOption("ConditionalVisibility", "we-toggler"),
+    {
+        content: "click on conditional visibility",
+        trigger: "[data-name='visibility_conditional']",
+    },
+    {
+        content: "click on User Group toggler",
+        trigger: "[data-save-attribute='visibilityValueUserGroup'] we-toggler",
+    },
+    {
+        content: "Search for User types / Portal",
+        trigger: "[data-save-attribute='visibilityValueUserGroup'] we-selection-items .o_we_m2o_search input",
+        run: "edit User types / Portal",
+    },
+    {
+        content: "click on User types / Portal",
+        trigger: "[data-save-attribute='visibilityValueUserGroup'] we-selection-items [data-add-record='User types / Portal']",
+    },
+    ...wTourUtils.clickOnSave(),
+    {
+        content: "check if the rule is applied",
+        trigger: ":iframe #wrap:has(.s_title:hidden)",
+        isCheck: true,
+    },
+]
+);

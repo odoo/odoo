@@ -47,10 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setUtmsHtmlDataset();
     const htmlEl = document.documentElement;
     const country = session.geoip_country_code;
+    const user_groups = session.user_groups;
     if (country) {
         htmlEl.dataset.country = country;
     }
     htmlEl.dataset.logged = !session.is_website_user;
+    htmlEl.dataset.groups = user_groups;
 
     unhideConditionalElements();
 });
