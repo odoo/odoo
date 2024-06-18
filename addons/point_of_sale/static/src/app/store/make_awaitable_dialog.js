@@ -24,8 +24,8 @@ export function ask(dialog, props, options, comp = ConfirmationDialog) {
             comp,
             {
                 ...props,
-                confirm: () => resolve(true),
-                cancel: () => resolve(false),
+                confirm: props.confirm ? async ()=>{return await props.confirm()} : () => resolve(true),
+                cancel: props.cancel? async()=>{return await props.cancel()} : () => resolve(false),
             },
             {
                 ...options,

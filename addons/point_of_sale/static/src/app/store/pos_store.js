@@ -1617,20 +1617,36 @@ export class PosStore extends Reactive {
         return partner.parent_name;
     }
 
+    async getQRCodePopupProps(payment, qr_content){
+        return {
+            title: payment.name,
+            line: payment,
+            order: payment.pos_order_id,
+            qrMethodCode: payment.payment_method_id.qr_code_method,
+            qrCode: qr_content?.qr_image,
+            qrId: qr_content?.qr_code_id,
+        }
+    }
+
     async showQR(payment) {
-        let qr;
+        let qr_content;
+        let qr_img;
         try {
-            qr = await this.data.call("pos.payment.method", "get_qr_code", [
+            qr_content = await this.data.call("pos.payment.method", "get_qr_content", [
                 [payment.payment_method_id.id],
                 payment.amount,
-                payment.pos_order_id.name,
+                payment?.qr_id,
                 payment.pos_order_id.name,
                 this.currency.id,
                 payment.pos_order_id.partner_id?.id,
             ]);
+            payment.qr_id = qr_content?.qr_code_id;
+            qr_img = qr_content?.qr_image;
         } catch (error) {
-            qr = payment.payment_method_id.default_qr;
-            if (!qr) {
+            qr_content = {
+                qr_image: payment.payment_method_id.default_qr,
+            }
+            if (!qr_content?.qr_image) {
                 let message;
                 if (error instanceof ConnectionLostError) {
                     message = _t(
@@ -1648,12 +1664,7 @@ export class PosStore extends Reactive {
         }
         return await ask(
             this.env.services.dialog,
-            {
-                title: payment.name,
-                line: payment,
-                order: payment.pos_order_id,
-                qrCode: qr,
-            },
+            await this.getQRCodePopupProps(payment, qr_content),
             {},
             QRPopup
         );

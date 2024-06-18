@@ -8,6 +8,8 @@ export class QRPopup extends ConfirmationDialog {
         line: Object,
         order: Object,
         qrCode: String,
+        qrMethodCode: String,
+        qrCodeContent: Object,
     };
     static defaultProps = {
         ...ConfirmationDialog.defaultProps,

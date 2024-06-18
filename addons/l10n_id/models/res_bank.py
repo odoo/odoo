@@ -76,15 +76,7 @@ class ResBank(models.Model):
                 if invoice and (now - latest_qr_date).total_seconds() < 1500:
                     return invoice.l10n_id_qris_invoice_details[-1]['qris_content']
 
-            params = {
-                "do": "create-invoice",
-                "apikey": self.l10n_id_qris_api_key,
-                "mID": self.l10n_id_qris_mid,
-                "cliTrxNumber": structured_communication,
-                "cliTrxAmount": int(amount)
-            }
-            response = _l10n_id_make_qris_request('show_qris.php', params)
-            data = response.get('data')
+            data = self._l10n_id_qris_get_qr_code(amount, structured_communication)
 
             # if the invoice is available, we will write the QR information on it to allow fetching payment information later on.
             if invoice:
@@ -109,13 +101,27 @@ class ResBank(models.Model):
         if qr_method == 'id_qr':
             if not self._context.get('is_online_qr'):
                 return {}
+
+            # if QR code is created, then do not need to make request (e.g. the case in account.invoice)
+            qr_content = self._context.get('qr_content') or self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
             return {
                 'barcode_type': 'QR',
                 'width': 120,
                 'height': 120,
-                'value': self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication),
+                'value': qr_content,
             }
         return super()._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
+
+    def _l10n_id_qris_get_qr_code(self, amount, transaction_number):
+            params = {
+                "do": "create-invoice",
+                "apikey": self.l10n_id_qris_api_key,
+                "mID": self.l10n_id_qris_mid,
+                "cliTrxNumber": transaction_number,
+                "cliTrxAmount": int(amount)
+            }
+            response = _l10n_id_make_qris_request('show_qris.php', params)
+            return response.get('data')
 
     def _l10n_id_qris_fetch_status(self, qr_data):
         """

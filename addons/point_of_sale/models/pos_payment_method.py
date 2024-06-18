@@ -68,7 +68,7 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr']
+        return ['id', 'name', 'is_cash_count', 'use_payment_terminal', 'split_transactions', 'type', 'image', 'sequence', 'payment_method_type', 'default_qr', 'qr_code_method']
 
     @api.depends('type', 'payment_method_type')
     def _compute_hide_use_payment_terminal(self):
@@ -212,3 +212,18 @@ class PosPaymentMethod(models.Model):
 
         return payment_bank.with_context(is_online_qr=True).build_qr_code_base64(
             float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False)
+
+    def get_qr_content(self, amount, free_communication, structured_communication, currency, debtor_partner):
+        """ Generates and returns a QR-code and QR-code record ID
+        """
+        self.ensure_one()
+        if self.payment_method_type != "qr_code" or not self.qr_code_method:
+            raise UserError(_("This payment method is not configured to generate QR codes."))
+        payment_bank = self.journal_id.bank_account_id
+        debtor_partner = self.env['res.partner'].browse(debtor_partner)
+        currency = self.env['res.currency'].browse(currency)
+
+        return {
+            'qr_image' : payment_bank.with_context(is_online_qr=True).build_qr_code_base64(
+                float(amount), free_communication, structured_communication, currency, debtor_partner, self.qr_code_method, silent_errors=False),
+        }
