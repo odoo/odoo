@@ -2,15 +2,11 @@
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
-import base64
 import hashlib
 import json
 import logging
-import mimetypes
 import os
 import re
-import sys
-import traceback
 import threading
 
 import werkzeug
@@ -25,7 +21,7 @@ except ImportError:
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
-from odoo.exceptions import AccessDenied, AccessError, MissingError
+from odoo.exceptions import AccessDenied
 from odoo.http import request, Response, ROUTING_KEYS, Stream
 from odoo.modules.registry import Registry
 from odoo.service import security
@@ -47,12 +43,12 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         self.model = model
         self.regex = r'([0-9]+)'
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.cr, _uid, request.context)
         return env[self.model].browse(int(value))
 
-    def to_url(self, value):
+    def to_url(self, value: models.BaseModel) -> str:
         return value.id
 
 
@@ -64,12 +60,12 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         # TODO add support for slug in the form [A-Za-z0-9-] bla-bla-89 -> id 89
         self.regex = r'([0-9,]+)'
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.cr, _uid, request.context)
         return env[self.model].browse(int(v) for v in value.split(','))
 
-    def to_url(self, value):
+    def to_url(self, value: models.BaseModel) -> str:
         return ",".join(value.ids)
 
 
@@ -123,7 +119,7 @@ class IrHttp(models.AbstractModel):
     #------------------------------------------------------
 
     @classmethod
-    def _get_converters(cls):
+    def _get_converters(cls) -> dict[str, type]:
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod

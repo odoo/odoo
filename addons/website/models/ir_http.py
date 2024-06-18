@@ -75,7 +75,7 @@ class Http(models.AbstractModel):
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
     @tools.ormcache('website_id', cache='routing')
-    def _rewrite_len(self, website_id):
+    def _rewrite_len(self, website_id: int) -> int:
         rewrites = self._get_rewrites(website_id)
         return len(rewrites)
 
@@ -115,7 +115,7 @@ class Http(models.AbstractModel):
                 yield url, endpoint
 
     @classmethod
-    def _get_converters(cls):
+    def _get_converters(cls) -> dict[str, type]:
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
@@ -433,7 +433,7 @@ class Http(models.AbstractModel):
 
 class ModelConverter(ir_http.ModelConverter):
 
-    def to_url(self, value):
+    def to_url(self, value: models.BaseModel) -> str:
         if value.env.context.get('slug_matching'):
             return value.env.context.get('_converter_value', str(value.id))
         return super().to_url(value)

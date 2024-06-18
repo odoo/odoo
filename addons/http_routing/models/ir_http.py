@@ -1,12 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
 import logging
 import os
 import re
 import traceback
-import threading
 import unicodedata
+import typing
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
@@ -25,7 +24,7 @@ from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import keep_query, QWebException
 from odoo.addons.base.models.res_lang import LangData
 from odoo.exceptions import AccessError, MissingError
-from odoo.http import request, HTTPRequest, Response
+from odoo.http import request, Response
 from odoo.osv import expression
 from odoo.tools import ustr, pycompat
 
@@ -55,10 +54,10 @@ class ModelConverter(ir_http.ModelConverter):
         self.domain = domain
         self.regex = _UNSLUG_ROUTE_PATTERN
 
-    def to_url(self, value):
+    def to_url(self, value: models.BaseModel) -> str:
         return IrHttp._slug(value)
 
-    def to_python(self, value):
+    def to_python(self, value: str) -> models.BaseModel:
         matching = _UNSLUG_RE.match(value)
         _uid = RequestUID(value=value, match=matching, converter=self)
         record_id = int(matching.group(2))
@@ -81,7 +80,7 @@ class IrHttp(models.AbstractModel):
     # ------------------------------------------------------------
 
     @classmethod
-    def _slugify_one(cls, s, max_length=0):
+    def _slugify_one(cls, value: str, max_length: int = 0) -> str:
         """ Transform a string to a slug that can be used in a url path.
             This method will first try to do the job with python-slugify if present.
             Otherwise it will process string by stripping leading and ending spaces,
@@ -91,35 +90,35 @@ class IrHttp(models.AbstractModel):
             :param max_length: int
             :rtype: str
         """
-        s = ustr(s)
+        value = ustr(value)
         if slugify_lib:
             # There are 2 different libraries only python-slugify is supported
             try:
-                return slugify_lib.slugify(s, max_length=max_length)
+                return slugify_lib.slugify(value, max_length=max_length)
             except TypeError:
                 pass
-        uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
+        uni = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
         slug_str = re.sub(r'[\W_]', ' ', uni).strip().lower()
         slug_str = re.sub(r'[-\s]+', '-', slug_str)
         return slug_str[:max_length] if max_length > 0 else slug_str
 
     @classmethod
-    def _slugify(cls, s, max_length=0, path=False):
+    def _slugify(cls, value: str, max_length: int = 0, path: bool = False) -> str:
         if not path:
-            return cls._slugify_one(s, max_length=max_length)
+            return cls._slugify_one(value, max_length=max_length)
         else:
             res = []
-            for u in s.split('/'):
+            for u in value.split('/'):
                 if cls._slugify_one(u, max_length=max_length) != '':
                     res.append(cls._slugify_one(u, max_length=max_length))
             # check if supported extension
-            path_no_ext, ext = os.path.splitext(s)
+            path_no_ext, ext = os.path.splitext(value)
             if ext and ext in _guess_mimetype():
                 res[-1] = cls._slugify_one(path_no_ext) + ext
             return '/'.join(res)
 
     @classmethod
-    def _slug(cls, value):
+    def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
         try:
             if not value.id:
                 raise ValueError("Cannot slug non-existent record %s" % value)
@@ -133,28 +132,28 @@ class IrHttp(models.AbstractModel):
         return f"{slugname}-{identifier}"
 
     @classmethod
-    def _unslug(cls, s):
+    def _unslug(cls, value: str) -> tuple[str | None, int] | tuple[None, None]:
         """ Extract slug and id from a string.
             Always return a 2-tuple (str|None, int|None)
         """
-        m = _UNSLUG_RE.match(s)
+        m = _UNSLUG_RE.match(value)
         if not m:
             return None, None
         return m.group(1), int(m.group(2))
 
     @classmethod
-    def unslug_url(cls, s):
+    def _unslug_url(cls, value: str) -> str:
         """ From /blog/my-super-blog-1" to "blog/1" """
-        parts = s.split('/')
+        parts = value.split('/')
         if parts:
             unslug_val = cls._unslug(parts[-1])
             if unslug_val[1]:
                 parts[-1] = str(unslug_val[1])
                 return '/'.join(parts)
-        return s
+        return value
 
     @classmethod
-    def _get_converters(cls):
+    def _get_converters(cls) -> dict[str, type]:
         """ Get the converters list for custom url pattern werkzeug need to
             match Rule. This override adds the website ones.
         """
@@ -168,7 +167,11 @@ class IrHttp(models.AbstractModel):
     # ------------------------------------------------------------
 
     @classmethod
-    def _url_localized(cls, url=None, lang_code=None, canonical_domain=None, prefetch_langs=False, force_default_lang=False):
+    def _url_localized(cls,
+            url: str | None = None,
+            lang_code: str | None = None,
+            canonical_domain: str | tuple[str, str, str, str, str] | None = None,
+            prefetch_langs: bool = False, force_default_lang: bool = False) -> str:
         """ Returns the given URL adapted for the given lang, meaning that:
         1. It will have the lang suffixed to it
         2. The model converter parts will be translated
@@ -222,7 +225,7 @@ class IrHttp(models.AbstractModel):
         return path + sep + qs
 
     @classmethod
-    def _url_lang(cls, path_or_uri, lang_code=None):
+    def _url_lang(cls, path_or_uri: str, lang_code: str | None = None) -> str:
         ''' Given a relative URL, make it absolute and add the required lang or
             remove useless lang.
             Nothing will be done for absolute or invalid URL.
@@ -269,7 +272,7 @@ class IrHttp(models.AbstractModel):
         return location
 
     @classmethod
-    def _url_for(cls, url_from, lang_code=None):
+    def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
         ''' Return the url with the rewriting applied.
             Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
 
@@ -296,7 +299,7 @@ class IrHttp(models.AbstractModel):
         return cls._url_lang(url_from, lang_code=lang_code)
 
     @classmethod
-    def _is_multilang_url(cls, local_url, lang_url_codes=None):
+    def _is_multilang_url(cls, local_url: str, lang_url_codes: list[str] | None = None) -> bool:
         ''' Check if the given URL content is supposed to be translated.
             To be considered as translatable, the URL should either:
             1. Match a POST (non-GET actually) controller that is `website=True` and
@@ -329,7 +332,7 @@ class IrHttp(models.AbstractModel):
                 func.routing.get('website', False)
                 and func.routing.get('multilang', func.routing['type'] == 'http')
             ))
-        except Exception as exception:
+        except Exception as exception:  # noqa: BLE001
             _logger.warning(exception)
             return False
 
@@ -341,7 +344,7 @@ class IrHttp(models.AbstractModel):
         return next(iter(request.env['res.lang']._get_active_by('code').values()))
 
     @api.model
-    def get_frontend_session_info(self):
+    def get_frontend_session_info(self) -> dict:
         session_info = super(IrHttp, self).get_frontend_session_info()
 
         IrHttpModel = request.env['ir.http'].sudo()
@@ -359,7 +362,7 @@ class IrHttp(models.AbstractModel):
         return session_info
 
     @api.model
-    def get_translation_frontend_modules(self):
+    def get_translation_frontend_modules(self) -> list[str]:
         Modules = request.env['ir.module.module'].sudo()
         extra_modules_domain = self._get_translation_frontend_modules_domain()
         extra_modules_name = self._get_translation_frontend_modules_name()
@@ -371,21 +374,21 @@ class IrHttp(models.AbstractModel):
         return extra_modules_name
 
     @classmethod
-    def _get_translation_frontend_modules_domain(cls):
+    def _get_translation_frontend_modules_domain(cls) -> list[tuple[str, str, typing.Any]]:
         """ Return a domain to list the domain adding web-translations and
             dynamic resources that may be used frontend views
         """
         return []
 
     @classmethod
-    def _get_translation_frontend_modules_name(cls):
+    def _get_translation_frontend_modules_name(cls) -> list[str]:
         """ Return a list of module name where web-translations and
             dynamic resources may be used in frontend views
         """
         return ['web']
 
     @api.model
-    def get_nearest_lang(self, lang_code):
+    def get_nearest_lang(self, lang_code: str) -> str:
         """ Try to find a similar lang. Eg: fr_BE and fr_FR
             :param lang_code: the lang `code` (en_US)
         """
