@@ -97,7 +97,7 @@ const customHtmlLegend = {
     id: 'customHtmlLegend',
     afterUpdate(chart, args, options) {
         if(chart.config.options.plugins.customHtmlLegend) {
-            const list = document.querySelector(options.containerName);
+            const list = options.containerName ? document.querySelector(options.containerName) : chart.canvas.offsetParent.nextElementSibling;
 
             // Remove old legend items
             while (list.firstChild) {
@@ -107,6 +107,7 @@ const customHtmlLegend = {
             // Reuse the built-in legendItems generator
             const items = chart.options.plugins.legend.labels.generateLabels(chart);
             options.labels = items;
+            // console.log(items)
 
             items.forEach(item => {
                 const btnWrap = document.createElement('div');
@@ -491,6 +492,7 @@ export class GraphRenderer extends Component {
         }
         if (mode === "pie") {
             legendOptions.labels = {
+                // Essayer de comprendre ce qui cloche avec les custom legends
                 generateLabels: (chart) =>
                     chart.data.labels.map((label, index) => {
                         const hidden = !chart.getDataVisibility(index);
@@ -597,6 +599,7 @@ export class GraphRenderer extends Component {
             dataset.borderColor = borderColor;
             dataset.hoverOffset = 60;
         }
+
         // make sure there is a zone associated with every origin
         const representedOriginIndexes = new Set(
             data.datasets.map((dataset) => dataset.originIndex)
@@ -800,10 +803,7 @@ export class GraphRenderer extends Component {
             plugins: {
                 legend: this.getLegendOptions(),
                 tooltip: this.getTooltipOptions(),
-                customHtmlLegend: {
-                    containerName: '.o_graph_legend_container',
-                    model: this.model,
-                },
+                customHtmlLegend,
             },
             elements: this.getElementOptions(),
             onResize: () => {

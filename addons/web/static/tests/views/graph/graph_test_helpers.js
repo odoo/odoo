@@ -138,6 +138,7 @@ export function checkLegend(view, expectedLabels) {
     const labels = chart.config.options.plugins.legend.labels
         .generateLabels(chart)
         .map((o) => o.text);
+        console.log(labels)
     const expectedLabelsList = ensureArray(expectedLabels);
     expect(labels).toEqual(expectedLabelsList, {
         message: `Legend should be matching: ${expectedLabelsList
