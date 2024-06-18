@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import werkzeug
 from collections import defaultdict, OrderedDict
 
 from odoo import api, fields, models
@@ -103,13 +104,18 @@ class IrModuleModule(models.Model):
                 (the name must be one of the keys present in ``_theme_model_names``)
             :return: recordset of theme template models (of type defined by ``model_name``)
         """
-        theme_model_name = self._theme_model_names[model_name]
-        IrModelData = self.env['ir.model.data']
-        records = self.env[theme_model_name]
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
 
-        for module in self:
+        self_sudo = self.sudo()
+
+        theme_model_name = self_sudo._theme_model_names[model_name]
+        IrModelData = self_sudo.env['ir.model.data']
+        records = self_sudo.env[theme_model_name]
+
+        for module in self_sudo:
             imd_ids = IrModelData.search([('module', '=', module.name), ('model', '=', theme_model_name)]).mapped('res_id')
-            records |= self.env[theme_model_name].with_context(active_test=False).browse(imd_ids)
+            records |= self_sudo.env[theme_model_name].with_context(active_test=False).browse(imd_ids)
         return records
 
     def _update_records(self, model_name, website):
@@ -283,14 +289,17 @@ class IrModuleModule(models.Model):
             :param website: ``website`` model for which the models have to be cleaned
 
         """
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+
         self.ensure_one()
-        model = self.env[model_name]
+        model_sudo = self.env[model_name].sudo()
 
         if model_name in ('website.page', 'website.menu'):
-            return model
+            return model_sudo
         # use active_test to also unlink archived models
         # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
-        orphans = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
+        orphans = model_sudo.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
             ('key', '=like', self.name + '.%'),
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
@@ -349,13 +358,16 @@ class IrModuleModule(models.Model):
 
     def _theme_upgrade_upstream(self):
         """ Upgrade the upstream dependencies of a theme, and install it if necessary. """
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+
         def install_or_upgrade(theme):
             if theme.state != 'installed':
                 theme.button_install()
             themes = theme + theme._theme_get_upstream()
             themes.filtered(lambda m: m.state == 'installed').button_upgrade()
 
-        self._button_immediate_function(install_or_upgrade)
+        self.sudo()._button_immediate_function(install_or_upgrade)
 
     @api.model
     def _theme_remove(self, website):
