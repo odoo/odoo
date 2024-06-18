@@ -88,7 +88,7 @@ export class ProductCard extends Component {
     async selectProduct(qty = 1) {
         const product = this.props.product;
 
-        if (!this.selfOrder.ordering || !product.self_order_available || !this.isAvailable) {
+        if (!product.self_order_available || !this.isAvailable) {
             return;
         }
 
@@ -97,6 +97,9 @@ export class ProductCard extends Component {
         } else if (product.isConfigurable()) {
             this.router.navigate("product", { id: product.id });
         } else {
+            if (!this.selfOrder.ordering) {
+                return;
+            }
             this.flyToCart();
             this.scaleUpPrice();
 
