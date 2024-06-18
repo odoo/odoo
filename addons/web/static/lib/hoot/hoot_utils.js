@@ -169,8 +169,8 @@ export async function copy(text) {
     try {
         await $writeText(text);
         $debug(`Copied to clipboard: "${text}"`);
-    } catch (err) {
-        console.warn("Could not copy to clipboard:", err);
+    } catch (error) {
+        console.warn("Could not copy to clipboard:", error);
     }
 }
 
@@ -872,8 +872,8 @@ export function normalize(string) {
 export async function paste() {
     try {
         await $readText();
-    } catch (err) {
-        console.warn("Could not paste from clipboard:", err);
+    } catch (error) {
+        console.warn("Could not paste from clipboard:", error);
     }
 }
 
@@ -955,26 +955,12 @@ export class Callbacks {
     }
 
     /**
+     * @template T
      * @param {string} type
-     * @param {...any} args
+     * @param {T} detail
+     * @param {(error: Error) => any} [onError]
      */
-    async call(type, ...args) {
-        const fns = this._callbacks.get(type);
-        if (!fns?.length) {
-            return;
-        }
-
-        const afterCallback = this._getAfterCallback(type);
-        for (const fn of fns) {
-            await Promise.resolve(fn(...args)).then(afterCallback, console.error);
-        }
-    }
-
-    /**
-     * @param {string} type
-     * @param {...any} args
-     */
-    callSync(type, ...args) {
+    async call(type, detail, onError) {
         const fns = this._callbacks.get(type);
         if (!fns?.length) {
             return;
@@ -983,10 +969,41 @@ export class Callbacks {
         const afterCallback = this._getAfterCallback(type);
         for (const fn of fns) {
             try {
-                const result = fn(...args);
+                const result = await fn(detail);
                 afterCallback(result);
-            } catch (err) {
-                console.error(err);
+            } catch (error) {
+                if (typeof onError === "function") {
+                    onError(error);
+                } else {
+                    throw error;
+                }
+            }
+        }
+    }
+
+    /**
+     * @template T
+     * @param {string} type
+     * @param {T} detail
+     * @param {(error: Error) => any} [onError]
+     */
+    callSync(type, detail, onError) {
+        const fns = this._callbacks.get(type);
+        if (!fns?.length) {
+            return;
+        }
+
+        const afterCallback = this._getAfterCallback(type);
+        for (const fn of fns) {
+            try {
+                const result = fn(detail);
+                afterCallback(result);
+            } catch (error) {
+                if (typeof onError === "function") {
+                    onError(error);
+                } else {
+                    throw error;
+                }
             }
         }
     }
