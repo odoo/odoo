@@ -37,7 +37,7 @@
                     product="product"/>
             </div>
 
-            <div t-if="showQtyButtons" class="p-3 text-end">
+            <div t-if="showQtyButtons and selfOrder.ordering" class="p-3 text-end">
                 <div class="o_self_order_incr_button btn-group " role="group" aria-label="Quantity select">
                     <button type="button"
                         t-on-click = "() => this.changeQuantity(false)"
@@ -50,7 +50,7 @@
             </div>
 
             <div t-if="showQtyButtons and !props.onValidate" class="page-buttons d-flex justify-content-end p-3 gap-3 bg-view border-top">
-                <button t-if="showQtyButtons and !props.onValidate" class="btn btn-primary btn-lg" t-att-class="{ 'disabled': this.isEveryValueSelected() }" t-on-click="addToCart">Add to cart</button>
+                <button t-if="showQtyButtons and !props.onValidate and selfOrder.ordering" class="btn btn-primary btn-lg" t-att-class="{ 'disabled': this.isEveryValueSelected() }" t-on-click="addToCart">Add to cart</button>
             </div>
         </div>
     </t>
