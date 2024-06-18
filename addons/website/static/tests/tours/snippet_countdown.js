@@ -8,10 +8,10 @@ wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
     edition: true,
 }, () => [
     ...wTourUtils.dragNDrop({id: "s_countdown", name: "Countdown", groupName: "Content"}),
-    ...wTourUtils.clickOnSnippet({id: 's_countdown', name: 'Countdown'}),
-    wTourUtils.changeOption('countdown', 'we-select:has([data-end-action]) we-toggler', 'end action'),
-    wTourUtils.changeOption('countdown', 'we-button[data-end-action="message"]', 'end action'),
-    wTourUtils.changeOption('countdown', 'we-button.toggle-edit-message', 'message preview'),
+    ...wTourUtils.clickOnSnippet({id: 's_countdown', name: "Countdown"}),
+    wTourUtils.changeOption("Countdown", 'we-select:has([data-end-action]) we-toggler', 'end action'),
+    wTourUtils.changeOption("Countdown", 'we-button[data-end-action="message"]', 'end action'),
+    wTourUtils.changeOption("Countdown", 'we-button[data-toggle-end-message]', 'message preview'),
     // The next two steps check that the end message does not disappear when a
     // widgets_start_request is triggered.
     {
@@ -41,8 +41,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_countdown', {
     },
     // Next, we change the end action to message and no countdown while the edit
     // message toggle is still activated. It should hide the countdown
-    wTourUtils.changeOption('countdown', 'we-select:has([data-end-action]) we-toggler', 'end action'),
-    wTourUtils.changeOption('countdown', 'we-button[data-end-action="message_no_countdown"]', 'end action'),
+    wTourUtils.changeOption("Countdown", 'we-select:has([data-end-action]) we-toggler', 'end action'),
+    wTourUtils.changeOption("Countdown", 'we-button[data-end-action="message_no_countdown"]', 'end action'),
     {
         content: "Check that the countdown is not displayed",
         trigger: ':iframe .s_countdown:has(.s_countdown_canvas_wrapper:not(:visible))',

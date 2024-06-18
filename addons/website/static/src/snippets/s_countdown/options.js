@@ -1,22 +1,23 @@
 /** @odoo-module **/
 
 import { renderToElement } from "@web/core/utils/render";
-import options from "@web_editor/js/editor/snippets.options.legacy";
+import {
+    SnippetOption,
+} from "@web_editor/js/editor/snippets.options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
-options.registry.countdown = options.Class.extend({
-    events: Object.assign({}, options.Class.prototype.events || {}, {
-        'click .toggle-edit-message': '_onToggleEndMessageClick',
-    }),
-
+class Countdown extends SnippetOption {
     /**
      * Remove any preview classes, if present.
      *
      * @override
      */
-    cleanForSave: async function () {
+    async cleanForSave() {
         this.$target.find('.s_countdown_canvas_wrapper').removeClass("s_countdown_none");
         this.$target.find('.s_countdown_end_message').removeClass("s_countdown_enable_preview");
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Options
@@ -27,7 +28,7 @@ options.registry.countdown = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    endAction: function (previewMode, widgetValue, params) {
+    endAction(previewMode, widgetValue, params) {
         this.$target[0].dataset.endAction = widgetValue;
         if (widgetValue === 'message' || widgetValue === 'message_no_countdown') {
             if (!this.$target.find('.s_countdown_end_message').length) {
@@ -44,13 +45,13 @@ options.registry.countdown = options.Class.extend({
                 this.endMessage = $message[0].outerHTML;
             }
         }
-    },
+    }
     /**
     * Changes the countdown style.
     *
     * @see this.selectClass for parameters
     */
-    layout: function (previewMode, widgetValue, params) {
+    layout(previewMode, widgetValue, params) {
         switch (widgetValue) {
             case 'circle':
                 this.$target[0].dataset.progressBarStyle = 'disappear';
@@ -71,7 +72,7 @@ options.registry.countdown = options.Class.extend({
                 break;
         }
         this.$target[0].dataset.layout = widgetValue;
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Public
@@ -80,26 +81,20 @@ options.registry.countdown = options.Class.extend({
     /**
      * @override
      */
-    updateUIVisibility: async function () {
-        await this._super(...arguments);
-        const dataset = this.$target[0].dataset;
-
-        // End Action UI
-        this.$el.find('.toggle-edit-message')
-            .toggleClass('d-none', dataset.endAction === 'nothing' || dataset.endAction === 'redirect');
-
+    async updateUIVisibility() {
+        await super.updateUIVisibility(...arguments);
         // End Message UI
         this.updateUIEndMessage();
-    },
+    }
     /**
      * @see this.updateUI
      */
-    updateUIEndMessage: function () {
+    updateUIEndMessage() {
         this.$target.find('.s_countdown_canvas_wrapper')
             .toggleClass("s_countdown_none", this.showEndMessage === true && this.$target.hasClass("hide-countdown"));
         this.$target.find('.s_countdown_end_message')
             .toggleClass("s_countdown_enable_preview", this.showEndMessage === true);
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -108,7 +103,7 @@ options.registry.countdown = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
+    _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'endAction':
             case 'layout':
@@ -121,8 +116,18 @@ options.registry.countdown = options.Class.extend({
                 break;
             }
         }
-        return this._super(...arguments);
-    },
+        return super._computeWidgetState(...arguments);
+    }
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'show_message_opt') {
+            const dataset = this.$target[0].dataset;
+            return !['nothing', 'redirect'].includes(dataset.endAction);
+        }
+        return super._computeWidgetVisibility(...arguments);
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -131,11 +136,24 @@ options.registry.countdown = options.Class.extend({
     /**
      * @private
      */
-    _onToggleEndMessageClick: function () {
+    toggleEndMessage() {
         this.showEndMessage = !this.showEndMessage;
-        this.$el.find(".toggle-edit-message")
-            .toggleClass('text-primary', this.showEndMessage);
         this.updateUIEndMessage();
-        this.trigger_up('cover_update');
-    },
+        this.callbacks.coverUpdate();
+        this.renderContext.showEndMessage = this.showEndMessage;
+    }
+    /**
+     * @override
+     */
+    async _getRenderContext() {
+        return {
+            showEndMessage: this.showEndMessage,
+        };
+    }
+}
+
+registerWebsiteOption("Countdown", {
+    Class: Countdown,
+    template: "website.s_countdown_option",
+    selector: ".s_countdown",
 });

@@ -21,4 +21,66 @@
     </div>
 </t>
 
+<t t-name="website.s_countdown_option">
+    <WeDatetime title.translate="Due Date" selectDataAttribute="'0'" attributeName="'endTime'"/>
+    <WeRow title.translate="At The End">
+        <WeSelect noPreview="'true'">
+            <WeButton endAction="'nothing'" name="'no_end_action_opt'">Nothing</WeButton>
+            <WeButton endAction="'redirect'" name="'redirect_end_action_opt'">Redirect</WeButton>
+            <WeButton endAction="'message_no_countdown'">Show Message and hide countdown</WeButton>
+            <WeButton endAction="'message'">Show Message and keep countdown</WeButton>
+        </WeSelect>
+        <WeButton class="'align-self-end' + (renderContext.showEndMessage ? ' text-primary' : '')"
+            tooltip.translate="The message will be visible once the countdown ends"
+            toggleEndMessage="''" noPreview="'true'"
+            name="'show_message_opt'"
+        >
+            <i class="fa fa-fw fa-eye"/>
+        </WeButton>
+    </WeRow>
+    <WeRow title.translate="URL">
+        <WeUrlPicker dependencies="'redirect_end_action_opt'"
+            placeholder.translate="e.g. /my-awesome-page"
+            selectDataAttribute="''"
+            attributeName="'redirectUrl'"
+        />
+    </WeRow>
+    <WeSelect title.translate="Size" attributeName="'size'">
+        <WeButton selectDataAttribute="'80'">Small</WeButton>
+        <WeButton selectDataAttribute="'120'">Medium</WeButton>
+        <WeButton selectDataAttribute="'175'">Large</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Display" attributeName="'display'">
+        <WeButton selectDataAttribute="'d'">D</WeButton>
+        <WeButton selectDataAttribute="'dhm'">D - H - M</WeButton>
+        <WeButton selectDataAttribute="'dhms'">D - H - M - S</WeButton>
+    </WeSelect>
+    <WeColorpicker title.translate="Text Color" attributeName="'textColor'" selectDataAttribute="''"/>
+    <WeSelect title.translate="Layout">
+        <WeButton layout="'circle'" name="'circle_layout_opt'">Circle</WeButton>
+        <WeButton layout="'boxes'" name="'boxes_layout_opt'">Boxes</WeButton>
+        <WeButton layout="'clean'">Clean</WeButton>
+        <WeButton layout="'text'">Text Inline</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Layout Background" attributeName="'layoutBackground'"
+              dependencies="'circle_layout_opt, boxes_layout_opt'">
+        <WeButton selectDataAttribute="'inner'">Inner</WeButton>
+        <WeButton selectDataAttribute="'plain'">Plain</WeButton>
+        <WeButton selectDataAttribute="'none'" name="'no_background_layout_opt'">None</WeButton>
+    </WeSelect>
+    <WeColorpicker title.translate="Layout Background Color" dependencies="'!no_background_layout_opt'" attributeName="'layoutBackgroundColor'" selectDataAttribute="''"/>
+    <WeSelect title.translate="Progress Bar Style" attributeName="'progressBarStyle'"
+              dependencies="'circle_layout_opt, boxes_layout_opt'">
+        <WeButton selectDataAttribute="'surrounded'">Surrounded</WeButton>
+        <WeButton selectDataAttribute="'disappear'">Disappearing</WeButton>
+        <WeButton selectDataAttribute="'none'" name="'no_progressbar_style_opt'">None</WeButton>
+    </WeSelect>
+    <WeSelect title.translate="Progress Bar Weight" attributeName="'progressBarWeight'"
+              dependencies="'!no_progressbar_style_opt'">
+        <WeButton selectDataAttribute="'thin'">Thin</WeButton>
+        <WeButton selectDataAttribute="'thick'">Thick</WeButton>
+    </WeSelect>
+    <WeColorpicker title.translate="Progress Bar Color" dependencies="'!no_progressbar_style_opt'" attributeName="'progressBarColor'" selectDataAttribute="''"/>
+</t>
+
 </templates>
