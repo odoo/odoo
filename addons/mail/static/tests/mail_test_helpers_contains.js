@@ -504,6 +504,7 @@ function log(ok, message) {
 }
 
 let hasUsedContainsPositively = false;
+afterEach(() => (hasUsedContainsPositively = false));
 /**
  * @typedef {[string, ContainsOptions]} ContainsTuple tuple representing params of the contains
  *  function, where the first element is the selector, and the second element is the options param.
@@ -593,7 +594,6 @@ class Contains {
         if (this.options.contains && !Array.isArray(this.options.contains[0])) {
             this.options.contains = [this.options.contains];
         }
-        after(() => (hasUsedContainsPositively = false));
         if (this.options.count) {
             hasUsedContainsPositively = true;
         } else if (!hasUsedContainsPositively) {
