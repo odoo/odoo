@@ -3,7 +3,10 @@
 
     <t t-name="point_of_sale.DebugWidget">
         <Transition visible="props.state.showWidget" name="'o-fade'" leaveDuration="200" t-slot-scope="transition">
-            <div class="debug-widget bg-100 p-2 shadow-lg" t-att-class="transition.className" t-ref="root" t-att-style="style">
+            <div class="debug-widget bg-100 p-2 position-absolute shadow-lg" t-att-class="transition.className" t-ref="root" t-att-style="`
+                top: ${this.position.top}px;
+                left: ${this.position.left}px;
+            `">
                 <header class="drag-handle">
                     <h2>Debug Window</h2>
                 </header>

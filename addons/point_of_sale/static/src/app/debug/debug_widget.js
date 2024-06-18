@@ -1,14 +1,33 @@
 import { _t } from "@web/core/l10n/translation";
 import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
-import { constrain, getLimits, useMovable } from "@point_of_sale/app/utils/movable_hook";
 import { useBus, useService } from "@web/core/utils/hooks";
 
-import { useEffect, useRef, useState, Component } from "@odoo/owl";
+import { useRef, useState, Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
+import { pick } from "@web/core/utils/objects";
 const { DateTime } = luxon;
+
+const useDialogDraggable = makeDraggableHook({
+    name: "useDialogDraggable",
+    onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
+        ctx.current.container = document.createElement("div");
+        const { height } = getRect(ctx.current.element);
+        addStyle(ctx.current.container, {
+            position: "fixed",
+            top: "0",
+            bottom: `${height}px`,
+            left: "0",
+            right: "0",
+        });
+        ctx.current.element.after(ctx.current.container);
+        addCleanup(() => ctx.current.container.remove());
+    },
+    onDrop: ({ ctx, getRect }) => pick(getRect(ctx.current.element), "left", "top"),
+});
 
 export class DebugWidget extends Component {
     static components = { Transition };
@@ -30,23 +49,12 @@ export class DebugWidget extends Component {
         });
         this.root = useRef("root");
         this.position = useState({ left: null, top: null });
-        useEffect(
-            (root) => {
-                this.position.left = root?.offsetLeft;
-                this.position.top = root?.offsetTop;
-            },
-            () => [this.root.el]
-        );
-        let posBeforeMove;
-        useMovable({
+        useDialogDraggable({
             ref: this.root,
-            onMoveStart: () => {
-                posBeforeMove = { ...this.position };
-            },
-            onMove: ({ dx, dy }) => {
-                const { minX, minY, maxX, maxY } = getLimits(this.root.el, document.body);
-                this.position.left = constrain(posBeforeMove.left + dx, minX, maxX);
-                this.position.top = constrain(posBeforeMove.top + dy, minY, maxY);
+            elements: ".debug-widget",
+            onDrop: ({ left, top }) => {
+                this.position.left = left;
+                this.position.top = top;
             },
         });
 
