@@ -19,7 +19,7 @@ test("no default rtc after joining a chat conversation", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -39,7 +39,7 @@ test("no default rtc after joining a group conversation", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");
     await click(".o-discuss-ChannelSelector-suggestion", { text: "Mario" });

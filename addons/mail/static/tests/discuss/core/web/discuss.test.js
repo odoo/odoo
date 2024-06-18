@@ -59,7 +59,7 @@ test("can create a new channel [REQUIRE FOCUS]", async () => {
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
-    await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
+    await click(".o-mail-DiscussSidebar [title='Add or join a channel']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "abc");
     await assertSteps([
@@ -115,7 +115,7 @@ test("do not close channel selector when creating chat conversation after select
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await click("i[title='Start a conversation']");
+    await click("[title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "mario");
     await click(".o-discuss-ChannelSelector-suggestion");
     await contains(".o-discuss-ChannelSelector span[title='Mario']");
@@ -167,7 +167,7 @@ test("can join a chat conversation", async () => {
         })}`,
         '/mail/inbox/messages - {"limit":30}',
     ]);
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "mario");
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -207,7 +207,7 @@ test("can create a group chat conversation", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "Mario");
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -226,7 +226,7 @@ test("should create DM chat when adding self and another user", async () => {
     pyEnv["res.users"].create({ partner_id });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
     await insertText(".o-discuss-ChannelSelector input", "Mi"); // Mitchell Admin
     await click(".o-discuss-ChannelSelector-suggestion");
@@ -241,7 +241,7 @@ test("should create DM chat when adding self and another user", async () => {
 test("chat search should display no result when no matches found", async () => {
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "Rainbow Panda");
     await contains(".o-discuss-ChannelSelector-suggestion", { text: "No results found" });
 });
@@ -252,7 +252,7 @@ test("chat search should not be visible when clicking outside of the field", asy
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
+    await click(".o-mail-DiscussSidebar [title='Start a conversation']");
     await insertText(".o-discuss-ChannelSelector input", "Panda");
     await contains(".o-discuss-ChannelSelector-suggestion");
     await click(".o-mail-DiscussSidebar");

@@ -679,7 +679,13 @@ test("Clear need action counter when opening a channel", async () => {
     ]);
     await start();
     await openDiscuss();
-    await contains("button", { text: "General", contains: [".badge", { text: "2" }] });
+    await contains(".o-mail-DiscussSidebar-item", {
+        text: "General",
+        contains: [".badge", { text: "2" }],
+    });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains("button", { text: "General", contains: [".badge", { count: 0 }] });
+    await contains(".o-mail-DiscussSidebar-item", {
+        text: "General",
+        contains: [".badge", { count: 0 }],
+    });
 });
