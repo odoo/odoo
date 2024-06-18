@@ -95,8 +95,8 @@
                 <field name="categ_id"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
-                    <t t-name="kanban-card" class="row g-0">
-                        <main class="col-10 pe-2">
+                    <t t-name="kanban-card" class="flex-row">
+                        <main class="pe-2">
                             <div class="mb-1">
                                 <div class="d-flex mb-0 h5">
                                     <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
@@ -114,8 +114,8 @@
                             </span>
                             <field name="product_properties" widget="properties"/>
                         </main>
-                        <aside class="col-2 p-0">
-                            <field name="image_128" widget="image" alt="Product"/>
+                        <aside>
+                            <field name="image_128" widget="image" alt="Product" options="{'img_class': 'w-100 object-fit-contain'}"/>
                         </aside>
                     </t>
                 </templates>

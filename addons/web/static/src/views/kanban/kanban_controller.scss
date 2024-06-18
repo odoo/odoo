@@ -85,13 +85,23 @@
             border: $border-width solid $border-color;
             background-color: $o-view-background-color;
         }
-        &:not(.row) {
+
+        &:where(:not(.row)) {
             flex-flow: column;
+
+            main {
+                flex-grow: 1;
+            }
+
+            aside {
+                flex: 0 0 var(--KanbanRecord__image-width);
+            }
         }
 
         > main {
             display: flex;
             flex-flow: column;
+            min-width: 0;
         }
 
         > footer, > main > footer {
@@ -103,13 +113,28 @@
             font-size: var(--Card-Footer-font-size, 1rem);
         }
 
-        aside.o_kanban_aside_full > * {
-            height: 100%;
-            @include media-breakpoint-up(md) {
-                height: calc(100% + var(--KanbanRecord-padding-v)* 2);
-                margin-top: calc(var(--KanbanRecord-padding-v)* -1);
-                margin-bottom: calc(var(--KanbanRecord-padding-v)* -1);
-                margin-left: calc(var(--KanbanRecord-padding-h)* -1);
+        aside {
+            img {
+                height: var(--KanbanRecord__image-height, var(--KanbanRecord__image-width));
+            }
+
+            &.o_kanban_aside_full {
+                --KanbanRecord__image-height: 100%;
+                --KanbanRecord__image-width: var(--KanbanRecord__image--fill-width);
+
+                .o_kanban_image_fill {
+                    min-height: var(--KanbanRecord__image-fill-width);
+                    max-height: var(--KanbanRecord__image-max-height, $o-kanban-image-fill-width * 1.5);
+                }
+
+                > * {
+                    @include media-breakpoint-up(md) {
+                        height: calc(100% + var(--KanbanRecord-padding-v)* 2);
+                        margin-top: calc(var(--KanbanRecord-padding-v)* -1);
+                        margin-bottom: calc(var(--KanbanRecord-padding-v)* -1);
+                        margin-left: calc(var(--KanbanRecord-padding-h)* -1);
+                    }
+                }
             }
         }
 
