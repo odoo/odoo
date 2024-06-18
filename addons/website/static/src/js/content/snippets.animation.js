@@ -255,14 +255,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
                 }).bind(this)
             );
             var pauseTimer = null;
-            const [eventType, effectType] = this.startEvents.split('.');
-            const validEvents = {
-                "scroll": "_animationEffect1",
-                "resize": "_animationEffect2"
-            };
-            if (validEvents[eventType] === effectType) {
-                this.startTarget.addEventListener(eventType, this.throttleOnStartEvents);
-            }
+            this.startTarget.on(this.startEvents, this.throttleOnStartEvents);
         }
     },
     /**
@@ -813,16 +806,9 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         this.el.innerHTML = '';
 
         // Add extra content for size / edition
-        let div1 = document.createElement("div");
-        div1.className = "css_editable_mode_display";
-        div1.innerHTML = "&nbsp;";
-
-        let div2 = document.createElement("div");
-        div2.className = "media_iframe_video_size";
-        div2.innerHTML = "&nbsp;";
-
-        this.el.appendChild(div1);
-        this.el.appendChild(div2);
+        this.el.innerHTML += 
+            '<div class="css_editable_mode_display">&nbsp;</div>' +
+            '<div class="media_iframe_video_size">&nbsp;</div>';
 
         // Rebuild the iframe. Depending on version / compatibility / instance,
         // the src is saved in the 'data-src' attribute or the

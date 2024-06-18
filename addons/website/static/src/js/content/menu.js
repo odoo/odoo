@@ -53,27 +53,27 @@ const BaseAnimatedHeader = animations.Animation.extend({
             document.body.classList.remove("overflow-hidden");
         };
         this.navbarOffcanvasEls = this.el.querySelectorAll(".offcanvas");
-        this.navbarOffcanvasEls.forEach((offcanvasEl) => {
-            offcanvasEl.addEventListener("show.bs.offcanvas.BaseAnimatedHeader", disableScroll);
-            offcanvasEl.addEventListener("hide.bs.offcanvas.BaseAnimatedHeader", enableScroll);
+        this.navbarOffcanvasEls.forEach((el) => {
+            el.on("show.bs.offcanvas.BaseAnimatedHeader", disableScroll);
+            el.on("hide.bs.offcanvas.BaseAnimatedHeader", enableScroll);
         });
 
         // Compatibility: can probably be removed, there is no such elements in
         // default navbars... although it could be used by custo.
         this.navbarCollapseEls = this.el.querySelectorAll(".navbar-collapse");
-        this.navbarCollapseEls.forEach((navCollapseEl) => {
-            navCollapseEl.addEventListener("show.bs.collapse.BaseAnimatedHeader", disableScroll);
-            navCollapseEl.addEventListener("hide.bs.collapse.BaseAnimatedHeader", enableScroll);
+        this.navbarCollapseEls.forEach((el) => {
+            el.on("show.bs.collapse.BaseAnimatedHeader", disableScroll)
+            el.on("hide.bs.collapse.BaseAnimatedHeader", enableScroll);    
         });
 
         // We can rely on transitionend which is well supported but not on
         // transitionstart, so we listen to a custom odoo event.
         this._transitionCount = 0;
-        this.el.addEventListener("odoo-transitionstart.BaseAnimatedHeader", () => {
+        this.el.on("odoo-transitionstart.BaseAnimatedHeader", () => {
             this.el.classList.add("o_transitioning");
             this._adaptToHeaderChangeLoop(1);
         });
-        this.el.addEventListener("transitionend.BaseAnimatedHeader", () =>
+        this.el.on("transitionend.BaseAnimatedHeader", () =>
             this._adaptToHeaderChangeLoop(-1)
         );
 
@@ -84,30 +84,19 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     destroy: function () {
         this._toggleFixedHeader(false);
-        [
+        this.el.classList.remove(
             "o_header_affixed",
             "o_header_is_scrolled",
             "o_header_no_transition",
             "o_transitioning",
-        ].forEach((className) => {
-            if (this.el.classList.contains(className)) {
-                this.el.classList.remove(className);
-            }
-        });
-        this.navbarOffcanvasEls.forEach((el) => {
-            el.removeEventListener("show.bs.offcanvas", this.disableScroll);
-            el.removeEventListener("hide.bs.offcanvas", this.enableScroll);
-        });
-        this.navbarCollapseEls.forEach((navCollapseEl) => {
-            navCollapseEl.removeEventListener("show.bs.collapse", this.disableScroll);
-            navCollapseEl.removeEventListener("hide.bs.collapse", this.enableScroll);
-        });
-        this.el.removeEventListener("odoo-transitionstart.BaseAnimatedHeader", () => {
-            this._adaptToHeaderChangeLoop(1);
-        });
-        this.el.removeEventListener("transitionend.BaseAnimatedHeader", () =>
-            this._adaptToHeaderChangeLoop(-1)
         );
+        this.navbarOffcanvasEls.forEach((el) => {
+            el.off(".BaseAnimatedHeader");
+        });
+        this.navbarCollapseEls.forEach((el) => {
+            el.off(".BaseAnimatedHeader");
+        });
+        this.el.off(".BaseAnimatedHeader");
         this._super(...arguments);
     },
 

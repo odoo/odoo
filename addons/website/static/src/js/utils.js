@@ -25,15 +25,12 @@ function loadAnchors(url, body) {
             resolve();
         }
     }).then(function (response) {
-            if (typeof(response) === "string") {
-                const parser = new DOMParser();
-                response = parser.parseFromString(response, "text/html").body;
-            }
-            const anchors = [
-                ...response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']"),
-            ].map((el) => {
-                return "#" + el.id;
-            });
+        if (typeof response === "string") {
+            const parser = new DOMParser();
+            response = parser.parseFromString(response, "text/html").body;
+        }
+        const elements = response.querySelectorAll("[id][data-anchor=true], .modal[id][data-display='onClick']");
+        const anchors = Array.from(elements).map((el) => `#${el.id}`);
         // Always suggest the top and the bottom of the page as internal link
         // anchor even if the header and the footer are not in the DOM. Indeed,
         // the "scrollTo" function handles the scroll towards those elements
@@ -86,8 +83,14 @@ function autocompleteWithPages(input, options= {}) {
  */
 function onceAllImagesLoaded(element, excluded) {
     element = element instanceof jQuery ? element[0] : element;
-    const defs = Array.from(element).concat(element.matches("img") ? [element] : []).map((img) => {
-        if (img.complete || excluded && (excluded === img || excluded.contains(img).length)) {
+    excluded = excluded instanceof jQuery ? excluded[0] : excluded;
+    const imgs = Array.from(element.querySelectorAll("img"));
+    if (element.matches("img")) {
+        imgs.push(element);
+    }
+    const defs = imgs.map((img) => {
+        const isExcluded = excluded && (excluded.contains(img) || Array.from(excluded.querySelectorAll('*')).includes(img));
+        if (img.complete || isExcluded) {
             return; // Already loaded
         }
         const def = new Promise(function (resolve, reject) {
