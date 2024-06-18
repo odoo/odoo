@@ -90,10 +90,8 @@ QUnit.module("Widgets", (hooks) => {
         serverData.views["partner,false,kanban"] = `
             <kanban js_class="account_documents_kanban">
                 <templates>
-                    <t t-name="kanban-box">
-                        <div>
-                            <field name="display_name"/>
-                        </div>
+                    <t t-name="kanban-card">
+                        <field name="display_name"/>
                     </t>
                 </templates>
             </kanban>`;

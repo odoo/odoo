@@ -192,16 +192,12 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <strong><field name="name"/></strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="float-end"><field name="type"/></span>
-                                    </div>
-                                </div>
+                        <t t-name="kanban-card" class="row g-0">
+                            <div class="col-6">
+                                <field class="fw-bolder" name="name"/>
+                            </div>
+                            <div class="col-6 ">
+                                <field class="float-end" name="type"/>
                             </div>
                         </t>
                     </templates>

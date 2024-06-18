@@ -71,28 +71,18 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="type_tax_use"/>
-                    <field name="tax_scope"/>
-                    <field name="description"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <div class="col-6">
-                                        <strong><span><t t-out="record.name.value"/></span></strong>
-                                    </div>
-                                    <div class="col-6 text-end">
-                                        <span class="badge rounded-pill"><t t-out="record.type_tax_use.value"/></span>
-                                        <span class="badge rounded-pill"><t t-out="record.tax_scope.value"/></span>
-                                    </div>
+                        <t t-name="kanban-card">
+                            <div class="row mb4">
+                                <div class="col-6">
+                                    <field class="fw-bolder" name="name"/>
                                 </div>
-                                <div class="row mb4">
-                                    <div class="col-12">
-                                        <span class="text-muted" t-out="record.description.value"/>
-                                    </div>
+                                <div class="col-6 text-end">
+                                    <field class="badge rounded-pill" name="type_tax_use"/>
+                                    <field class="badge rounded-pill" name="tax_scope"/>
                                 </div>
                             </div>
+                            <field class="text-muted" name="description"/>
                         </t>
                     </templates>
                 </kanban>
