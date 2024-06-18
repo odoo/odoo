@@ -6,7 +6,7 @@
                 <Message message="props.thread.livechatWelcomeMessage" hasActions="false" thread="props.thread" className="'px-3'"/>
             </div>
         </xpath>
-        <xpath expr="//*[@name='content']" position="after">
+        <xpath expr="(//div[hasclass('o-mail-Thread')])" position="inside">
             <Message t-if="props.thread.chatbot?.typingMessage" message="props.thread.chatbot.typingMessage" hasActions="false" isInChatWindow="env.inChatWindow" isTypingMessage="true"  thread="props.thread"/>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-Thread-empty')]" position="replace">
