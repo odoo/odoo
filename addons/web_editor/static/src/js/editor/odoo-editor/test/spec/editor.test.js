@@ -159,6 +159,14 @@ describe('Editor', () => {
                 });
             });
         });
+        describe('sanitize should modify p within a', () => {
+            it('should unwrap p element inside editable a inside non editable div', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<div contenteditable="false"><a href="" contenteditable="true"><p>abc</p></a></div>',
+                    contentAfter: '<div contenteditable="false"><a href="" contenteditable="true">abc</a></div>',
+                });
+            });
+        });
     });
     describe('deleteForward', () => {
         describe('Selection collapsed', () => {
