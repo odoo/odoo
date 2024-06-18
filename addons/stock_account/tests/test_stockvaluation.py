@@ -1959,6 +1959,31 @@ class TestStockValuation(TestStockValuationBase):
         self._make_in_move(product, 1, unit_cost=77)
         self.assertEqual(product.standard_price, 77)
 
+    def test_create_done_move(self):
+        """Stock Move created directly in Done state must impact de valuation."""
+        self.product1.categ_id.property_cost_method = 'average'
+        self.env['stock.move'].create({
+            'name': '',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 8.0,
+            'price_unit': 1,
+            'state': 'done',
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_id': self.uom_unit.id,
+                'quantity': 8.0,
+                'state': 'done',
+            })]
+        })
+        self.assertEqual(self.product1.qty_available, 8.0)
+        self.assertEqual(self.product1.quantity_svl, 8.0)
+        self.assertEqual(self.product1.value_svl, 8.0)
+
     def test_average_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/avco-method
         self.product1.categ_id.property_cost_method = 'average'
