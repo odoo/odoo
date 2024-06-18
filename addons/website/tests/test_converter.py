@@ -7,7 +7,7 @@ from odoo.tests.common import BaseCase
 from odoo.modules.registry import Registry
 
 
-class TestUnslug(BaseCase):
+class TestSlugUnslug(BaseCase):
 
     def test_unslug(self):
         tests = {
@@ -35,6 +35,19 @@ class TestUnslug(BaseCase):
 
         for slug, expected in tests.items():
             self.assertEqual(unslug(slug), expected, "%r case failed" % slug)
+
+    def test_slug(self):
+        tests = {
+            'foo-1': (1, 'foo'),
+            'foo-bar-1': (1, 'foo-bar'),
+            'foo--1': (-1, 'foo'),
+            '1-2': (2, '1'),
+        }
+
+        slug = Registry(threading.current_thread().dbname)['ir.http']._slug
+
+        for expected, value in tests.items():
+            self.assertEqual(slug(value), expected, "%r case failed" % (value,))
 
 class TestTitleToSlug(BaseCase):
     """

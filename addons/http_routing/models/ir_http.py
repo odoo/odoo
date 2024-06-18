@@ -120,12 +120,12 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
         try:
-            if not value.id:
-                raise ValueError("Cannot slug non-existent record %s" % value)
-            identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
+            identifier, name = value.id, value.display_name
         except AttributeError:
             # assume name_search result tuple
             identifier, name = value
+        if not identifier:
+            raise ValueError("Cannot slug non-existent record %s" % value)
         slugname = cls._slugify(name or '').strip().strip('-')
         if not slugname:
             return str(identifier)

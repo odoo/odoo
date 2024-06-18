@@ -67,6 +67,15 @@ class Http(models.AbstractModel):
         return super().routing_map(key=key)
 
     @classmethod
+    def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
+        try:
+            if value.id and value.seo_name:
+                return super()._slug((value.id, value.seo_name))
+        except AttributeError:
+            pass
+        return super()._slug(value)
+
+    @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):

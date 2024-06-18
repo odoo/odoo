@@ -114,6 +114,19 @@ class IrHttp(models.AbstractModel):
     _name = 'ir.http'
     _description = "HTTP Routing"
 
+    @classmethod
+    def _slug(cls, value: models.BaseModel | tuple[int, str]) -> str:
+        if isinstance(value, tuple):
+            return str(value[0])
+        return str(value.id)
+
+    @classmethod
+    def _unslug(cls, value: str) -> tuple[str | None, int] | tuple[None, None]:
+        try:
+            return None, int(value)
+        except ValueError:
+            return None, None
+
     #------------------------------------------------------
     # Routing map
     #------------------------------------------------------
