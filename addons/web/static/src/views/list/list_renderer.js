@@ -435,7 +435,7 @@ export class ListRenderer extends Component {
                     canKeepShrinking = true;
                 }
                 console.log(th.getAttribute("data-name"));
-                th.style.maxWidth = `${Math.floor(maxWidth)}px`; // useful?
+                // th.style.maxWidth = `${Math.floor(maxWidth)}px`; // useful?
                 columnWidths[index] = maxWidth;
             }
             console.log(columnWidths);
@@ -448,7 +448,7 @@ export class ListRenderer extends Component {
         console.log("sorted ths")
         console.log(sortedThs.map((th) => th.getAttribute("data-name")));
         let totalWidth = getTotalWidth();
-        const allowedWidth = table.clientWidth;
+        const allowedWidth = table.parentNode.clientWidth;
         if (totalWidth > allowedWidth) {
             for (let index = 1; totalWidth > allowedWidth; index++) {
                 // Find the largest columns

@@ -4784,7 +4784,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_list_record_selector").offsetWidth,
-                41
+                42
             );
             const widthPage1 = target.querySelector(`th[data-name=foo]`).offsetWidth;
 
@@ -4792,7 +4792,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.strictEqual(
                 target.querySelector("thead .o_list_record_selector").offsetWidth,
-                41
+                42
             );
             const widthPage2 = target.querySelector(`th[data-name=foo]`).offsetWidth;
             assert.ok(
@@ -4802,7 +4802,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.debug("column widths with data, too much available space", async function (assert) {
+    QUnit.test("column widths with data, too much available space", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
@@ -4831,9 +4831,9 @@ QUnit.module("Views", (hooks) => {
             "Value 1",
         ]);
         // fixed width columns don't expand
-        assert.strictEqual(target.querySelector("thead .o_list_record_selector").offsetWidth, 41);
+        assert.strictEqual(target.querySelector("thead .o_list_record_selector").offsetWidth, 42);
         assert.strictEqual(target.querySelector("thead th[data-name=bar]").offsetWidth, 70);
-        assert.strictEqual(target.querySelector("thead th[data-name=qux]").offsetWidth, 92);
+        assert.strictEqual(target.querySelector("thead th[data-name=qux]").offsetWidth, 120);
         // relative width columns expand
         assert.ok(target.querySelector("thead th[data-name=foo]").offsetWidth > 200);
         assert.ok(target.querySelector("thead th[data-name=m2o]").offsetWidth > 200);
@@ -4844,11 +4844,11 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             const assertions = [
                 { field: "bar", expected: 70, type: "Boolean" },
-                { field: "int_field", expected: 74, type: "Integer" },
-                { field: "qux", expected: 92, type: "Float" },
+                { field: "int_field", expected: 102, type: "Integer" },
+                { field: "qux", expected: 120, type: "Float" },
                 { field: "date", expected: 92, type: "Date" },
                 { field: "datetime", expected: 146, type: "Datetime" },
-                { field: "amount", expected: 104, type: "Monetary" },
+                { field: "amount", expected: 132, type: "Monetary" },
             ];
             assert.expect(9);
 
@@ -5008,11 +5008,11 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             const assertions = [
                 { field: "bar", expected: 70, type: "Boolean" },
-                { field: "int_field", expected: 74, type: "Integer" },
-                { field: "qux", expected: 92, type: "Float" },
+                { field: "int_field", expected: 102, type: "Integer" },
+                { field: "qux", expected: 120, type: "Float" },
                 { field: "date", expected: 92, type: "Date" },
                 { field: "datetime", expected: 146, type: "Datetime" },
-                { field: "amount", expected: 104, type: "Monetary" },
+                { field: "amount", expected: 132, type: "Monetary" },
             ];
             assert.expect(12);
 
@@ -5467,11 +5467,11 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             const assertions = [
                 { field: "bar", expected: 70, type: "Boolean" },
-                { field: "int_field", expected: 74, type: "Integer" },
-                { field: "qux", expected: 92, type: "Float" },
+                { field: "int_field", expected: 102, type: "Integer" },
+                { field: "qux", expected: 120, type: "Float" },
                 { field: "date", expected: 92, type: "Date" },
                 { field: "datetime", expected: 146, type: "Datetime" },
-                { field: "amount", expected: 104, type: "Monetary" },
+                { field: "amount", expected: 132, type: "Monetary" },
             ];
             assert.expect(9);
 
@@ -5754,14 +5754,14 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
 
         assert.strictEqual(
-            window.getComputedStyle(target.querySelectorAll("th")[1]).maxWidth,
+            window.getComputedStyle(target.querySelectorAll("th")[1]).width,
             "92px",
-            "max-width should be set on column foo to the minimum column width (92px)"
+            "width should be set on column foo to the minimum column width (92px)"
         );
         assert.strictEqual(
-            window.getComputedStyle(target.querySelectorAll("th")[2]).maxWidth,
-            "none",
-            "no max-width should be harcoded on the buttons column"
+            window.getComputedStyle(target.querySelectorAll("th")[2]).width,
+            "351px",
+            "width should be large enough on the buttons column"
         );
     });
 
