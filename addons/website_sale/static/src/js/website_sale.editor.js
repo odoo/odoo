@@ -354,6 +354,8 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
 
         $ribbons.addClass(this.ribbonPositionClasses[ribbon.position]);
         $ribbons.attr('style', `background-color: ${ribbon.bg_color || ''} !important`);
+        $ribbons.attr('style',
+            `background-color: ${ribbon.bg_color ? `${ribbon.bg_color} !important` : 'inherit'}`);
         $ribbons.css('color', ribbon.text_color || '');
 
         if (!this.ribbons[ribbonId]) {
