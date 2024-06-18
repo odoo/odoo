@@ -5,8 +5,6 @@ import { Domain } from "@web/core/domain";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
 
 export class PivotOdooCorePlugin extends OdooCorePlugin {
-    static getters = ["getOdooPivotIds"];
-
     handle(cmd) {
         switch (cmd.type) {
             // this command is deprecated. use UPDATE_PIVOT instead
@@ -20,13 +18,6 @@ export class PivotOdooCorePlugin extends OdooCorePlugin {
                 });
                 break;
         }
-    }
-
-    getOdooPivotIds() {
-        return this.getters.getPivotIds().filter((id) => {
-            const pivot = this.getters.getPivotCoreDefinition(id);
-            return pivot.type === "ODOO";
-        });
     }
 
     /**
