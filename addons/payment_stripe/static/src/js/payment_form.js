@@ -38,7 +38,9 @@ odoo.define('payment_stripe.payment_form', require => {
          * @return {object}
          */
         _prepareStripeOptions: function (processingValues) {
-            return {};
+            return {
+                'apiVersion': '2019-05-16',  // The API version of Stripe implemented in this module
+            };
         },
     };
 
