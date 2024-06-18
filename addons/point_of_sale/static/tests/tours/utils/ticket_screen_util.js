@@ -194,3 +194,12 @@ export function back() {
         run: "click",
     };
 }
+
+export function nthColumnContains(nRow, nCol, string) {
+    return [
+        {
+            trigger: `.ticket-screen .order-row:nth-last-child(${nRow}) > .col:nth-child(${nCol}):contains("${string}")`,
+            run: () => {},
+        },
+    ];
+}
