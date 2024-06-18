@@ -4,8 +4,11 @@ import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
 
 patch(AttachmentUploadService.prototype, {
-    get uploadURL() {
-        return url("/im_livechat/cors/attachment/upload");
+    getUploadURL(thread) {
+        if (thread.channel_type === "livechat") {
+            return url("/im_livechat/cors/attachment/upload");
+        }
+        return super.getUploadURL(...arguments);
     },
 
     _buildFormData() {
