@@ -13,11 +13,24 @@ patch(PosStore.prototype, {
 });
 
 patch(Order.prototype, {
+    setup() {
+        super.setup(...arguments);
+        if (this.name.startsWith("Self-Order")) {
+            this.trackingNumber = "S" + this.trackingNumber;
+        }
+    },
+
     defaultTableNeeded(options) {
         return (
             super.defaultTableNeeded(...arguments) &&
             !this.name.includes("Kiosk") &&
             !this.name.includes("Self-Order")
         );
+    },
+
+    updateSequenceNumber(json) {
+        if (!json.name.startsWith("Self-Order")) {
+            super.updateSequenceNumber(json);
+        }
     },
 });

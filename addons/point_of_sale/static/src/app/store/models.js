@@ -1159,10 +1159,7 @@ export class Order extends PosModel {
             this.sequence_number = this.pos.session.sequence_number++;
         } else {
             this.sequence_number = json.sequence_number;
-            this.pos.session.sequence_number = Math.max(
-                this.sequence_number + 1,
-                this.pos.session.sequence_number
-            );
+            this.updateSequenceNumber(json);
         }
         this.session_id = this.pos.session.id;
         this.uid = json.uid;
@@ -1250,6 +1247,12 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+    }
+    updateSequenceNumber(json) {
+        this.pos.session.sequence_number = Math.max(
+            this.sequence_number + 1,
+            this.pos.session.sequence_number
+        );
     }
     export_as_JSON() {
         var orderLines, paymentLines;
