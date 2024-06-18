@@ -3102,6 +3102,8 @@ class AccountMove(models.Model):
                    - new: whether the invoice is newly created
                    returns True if was able to process the invoice
         """
+        if file_data['type'] in ('pdf', 'binary'):
+            return lambda *args: False
         return
 
     def _extend_with_attachments(self, attachments, new=False):
