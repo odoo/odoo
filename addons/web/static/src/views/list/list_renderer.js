@@ -202,6 +202,7 @@ export class ListRenderer extends Component {
         );
         useEffect(
             () => {
+                this.columnWidths = null;
                 this.freezeColumnWidths();
             },
             () => [this.state.columns, this.isEmpty, this.props.list.offset, this.props.list.limit]
@@ -341,7 +342,6 @@ export class ListRenderer extends Component {
             // no column widths to restore
 
             table.style.tableLayout = "fixed";
-            const allowedWidth = table.parentNode.getBoundingClientRect().width;
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = "auto";
@@ -354,7 +354,7 @@ export class ListRenderer extends Component {
 
             // Squeeze the table by applying a max-width on largest columns to
             // ensure that it doesn't overflow
-            this.columnWidths = this.computeColumnWidthsFromContent(allowedWidth);
+            this.columnWidths = this.computeColumnWidthsFromContent();
             table.style.tableLayout = "fixed";
         }
         headers.forEach((th, index) => {
@@ -383,15 +383,8 @@ export class ListRenderer extends Component {
         });
     }
 
-    computeColumnWidthsFromContent(allowedWidth) {
+    computeColumnWidthsFromContent() {
         const table = this.tableRef.el;
-
-        // BUG:
-        // sale order, new (with columns)
-        // add a line, then untick optional columns
-
-        // BUG2:
-        // vertical scrollbar produces horizontal one
 
         // Toggle a className used to remove style that could interfere with the ideal width
         // computation algorithm (e.g. prevent text fields from being wrapped during the
@@ -455,6 +448,7 @@ export class ListRenderer extends Component {
         console.log("sorted ths")
         console.log(sortedThs.map((th) => th.getAttribute("data-name")));
         let totalWidth = getTotalWidth();
+        const allowedWidth = table.clientWidth;
         if (totalWidth > allowedWidth) {
             for (let index = 1; totalWidth > allowedWidth; index++) {
                 // Find the largest columns
