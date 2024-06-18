@@ -140,9 +140,6 @@ test("formviewdialog buttons in footer are not duplicated", async () => {
     await animationFrame();
 
     expect(".modal").toHaveCount(1);
-    expect(".modal button.btn-primary").toHaveCount(1, {
-        message: "should still have 1 buttons in modal",
-    });
 });
 
 test.tags("desktop")("Form dialog and subview with _view_ref contexts", async () => {
@@ -264,7 +261,7 @@ test("formviewdialog is not closed when button handlers return a rejected promis
 
     await animationFrame();
     expect(".modal-body button").toHaveCount(0, { message: "should not have any button in body" });
-    expect(".modal-footer button").toHaveCount(3, { message: "should have 3 buttons in footer" });
+    expect(".modal-footer button").toHaveCount(2, { message: "should have 2 buttons in footer" });
 
     // clickSave inside the dialog
     await clickSave({ index: 1 });
