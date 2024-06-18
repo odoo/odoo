@@ -144,31 +144,21 @@ export class TicketScreen extends Component {
                 this.state.selectedOrder = null;
             }
         }
+
         order.uiState.displayed = false;
-        if (order && (await this._onBeforeDeleteOrder(order))) {
-            if (Object.keys(order.last_order_preparation_change).length > 0) {
-                await this.pos.sendOrderInPreparationUpdateLastChange(order, true);
-            }
-            if (order === this.pos.get_order()) {
-                this._selectNextOrder(order);
-            }
-            const cancelled = this.pos.removeOrder(order, true);
+        if (order.id === this.pos.get_order()?.id) {
+            this._selectNextOrder(order);
+        }
 
-            const idToCancel = [...this.pos.pendingOrder.delete];
-
-            if (idToCancel.length > 0) {
-                this.pos.pendingOrder.delete.clear();
-                await this.pos.data.call("pos.order", "action_pos_order_cancel", idToCancel);
-            }
-
-            if (!cancelled) {
-                order.uiState.displayed = true;
-            }
-
+        const result = await this.pos.deleteOrders([order]);
+        if (!result) {
+            order.uiState.displayed = true;
+        } else {
             if (this.pos.get_open_orders().length > 0) {
                 this.state.selectedOrder = this.pos.get_open_orders()[0];
             }
         }
+
         return true;
     }
     async onNextPage() {
@@ -675,15 +665,6 @@ export class TicketScreen extends Component {
             PaymentScreen: "PAYMENT",
             ReceiptScreen: "RECEIPT",
         };
-    }
-    /**
-     * Override to do something before deleting the order.
-     * Make sure to return true to proceed on deleting the order.
-     * @param {*} order
-     * @returns {boolean}
-     */
-    async _onBeforeDeleteOrder(order) {
-        return true;
     }
     _getOrderStates() {
         // We need the items to be ordered, therefore, Map is used instead of normal object.

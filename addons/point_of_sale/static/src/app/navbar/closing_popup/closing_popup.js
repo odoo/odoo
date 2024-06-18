@@ -230,15 +230,26 @@ export class ClosePosPopup extends Component {
         }
     }
     async handleClosingError(response) {
-        this.dialog.add(AlertDialog, {
+        this.dialog.add(ConfirmationDialog, {
             title: response.title || "Error",
             body: response.message,
             confirmLabel: _t("Review Orders"),
+            cancelLabel: _t("Cancel Orders"),
             confirm: () => {
-                this.props.close();
-                this.pos.onTicketButtonClick();
+                if (!response.redirect) {
+                    this.props.close();
+                    this.pos.onTicketButtonClick();
+                }
+            },
+            cancel: async () => {
+                if (!response.redirect) {
+                    const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
+                    await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
+                    this.closeSession();
+                }
             },
         });
+
         if (response.redirect) {
             this.pos.redirectToBackend();
         }
