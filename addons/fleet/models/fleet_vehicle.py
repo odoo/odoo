@@ -196,7 +196,7 @@ class FleetVehicle(models.Model):
         delay_alert_contract = int(params.get_param('hr_fleet.delay_alert_contract', default=30))
         current_date = fields.Date.context_today(self)
         data = self.env['fleet.vehicle.log.contract']._read_group(
-            domain=[('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')],
+            domain=[('expiration_date', '!=', False), ('vehicle_id', 'in', self.ids), ('state', '!=', 'closed')],
             groupby=['vehicle_id', 'state'],
             aggregates=['expiration_date:max'])
 
