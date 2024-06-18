@@ -1,11 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import copy
-import hashlib
-import io
+import collections
 import logging
-import re
-from collections import OrderedDict, defaultdict
 
 import babel.messages.pofile
 import werkzeug
@@ -13,7 +9,6 @@ import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
-from lxml import etree
 from werkzeug.urls import iri_to_uri
 
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
@@ -179,6 +174,94 @@ def generate_views(action):
         action['views'] = [(False, mode) for mode in view_modes]
         return
     action['views'] = [(view_id, view_modes[0])]
+
+
+def get_action(env, path_part):
+    """
+    Get a ir.actions.actions() given an action typically found in a
+    "/odoo"-like url.
+
+    The action can take one of the following forms:
+    * "action-" followed by a record id
+    * "action-" followed by a xmlid
+    * "m-" followed by a model name (act_window's res_model)
+    * a dotted model name (act_window's res_model)
+    * a path (ir.action's path)
+    """
+    Actions = env['ir.actions.actions']
+
+    if path_part.startswith('action-'):
+        someid = path_part.removeprefix('action-')
+        if someid.isdigit():  # record id
+            action = Actions.sudo().browse(int(someid)).exists()
+        elif '.' in someid:   # xml id
+            action = env.ref(someid, False)
+            if not action or not action._name.startswith('ir.actions'):
+                action = Actions
+        else:
+            action = Actions
+    elif path_part.startswith('m-') or '.' in path_part:
+        model = path_part.removeprefix('m-')
+        if model in env and not env[model]._abstract:
+            action = env['ir.actions.act_window'].sudo().search([
+                ('res_model', '=', model)], limit=1)
+            if not action:
+                action = env['ir.actions.act_window'].new(
+                    env[model].get_formview_action()
+                )
+        else:
+            action = Actions
+    else:
+        action = Actions.sudo().search([('path', '=', path_part)])
+
+    if action and action._name == 'ir.actions.actions':
+        action_type = action.read(['type'])[0]['type']
+        action = env[action_type].browse(action.id)
+
+    return action
+
+
+def get_action_triples(env, path, *, start_pos=0):
+    """
+    Extract the triples (active_id, action, record_id) from a "/odoo"-like path.
+
+    >>> env = ...
+    >>> list(get_action_triples(env, "/all-tasks/5/project.project/1/tasks"))
+    [
+        # active_id, action,                     record_id
+        ( None,      ir.actions.act_window(...), 5         ), # all-tasks
+        ( 5,         ir.actions.act_window(...), 1         ), # project.project
+        ( 1,         ir.actions.act_window(...), None      ), # tasks
+    ]
+    """
+    parts = collections.deque(path.strip('/').split('/'))
+    active_id = None
+    record_id = None
+
+    while parts:
+        if not parts:
+            e = "expected action at word {} but found nothing"
+            raise ValueError(e.format(path.count('/') + start_pos))
+        action_name = parts.popleft()
+        action = get_action(env, action_name)
+        if not action:
+            e = f"expected action at word {{}} but found “{action_name}”"
+            raise ValueError(e.format(path.count('/') - len(parts) + start_pos))
+
+        record_id = None
+        if parts:
+            if parts[0] == 'new':
+                parts.popleft()
+                record_id = None
+            elif parts[0].isdigit():
+                record_id = int(parts.popleft())
+
+        yield (active_id, action, record_id)
+
+        if len(parts) > 1 and parts[0].isdigit():  # new active id
+            active_id = int(parts.popleft())
+        elif record_id:
+            active_id = record_id
 
 
 def _get_login_redirect_url(uid, redirect=None):
