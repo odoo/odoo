@@ -90,8 +90,7 @@ class IrHttp(models.AbstractModel):
             except TypeError:
                 pass
         uni = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-        slug_str = re.sub(r'[\W_]', ' ', uni).strip().lower()
-        slug_str = re.sub(r'[-\s]+', '-', slug_str)
+        slug_str = re.sub(r'[\W_]+', '-', uni).strip('-').lower()
         return slug_str[:max_length] if max_length > 0 else slug_str
 
     @classmethod
@@ -118,7 +117,7 @@ class IrHttp(models.AbstractModel):
             identifier, name = value
         if not identifier:
             raise ValueError("Cannot slug non-existent record %s" % value)
-        slugname = cls._slugify(name or '').strip().strip('-')
+        slugname = cls._slugify(name or '')
         if not slugname:
             return str(identifier)
         return f"{slugname}-{identifier}"
