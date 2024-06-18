@@ -109,23 +109,19 @@
             <field name="model">account.account</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="account_type"/>
                     <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-8">
-                                        <strong><field name="name"/></strong>
-                                    </div>
-                                    <div class="col-4 text-end">
-                                        <span class="badge rounded-pill"><t t-out="record.code.value"/></span>
-                                    </div>
+                        <t t-name="kanban-card">
+                            <div class="row">
+                                <div class="col-8">
+                                    <field class="fw-bolder" name="name"/>
                                 </div>
-                                <div>
-                                    <strong>Type: </strong><t t-out="record.account_type.value"/>
+                                <div class="col-4 text-end">
+                                    <field class="badge rounded-pill" name="code"/>
                                 </div>
+                            </div>
+                            <div>
+                                <strong>Type: </strong>
+                                <field name="account_type"/>
                             </div>
                         </t>
                     </templates>
