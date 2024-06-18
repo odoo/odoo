@@ -121,7 +121,7 @@ class ProductProduct(models.Model):
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         domain = [
-            *self.env['stock.valuation.layer']._check_company_domain(company_id),
+            *self._check_company_domain(company_id),
             ('product_id', 'in', self.ids),
         ]
         if self.env.context.get('to_date'):
