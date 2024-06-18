@@ -960,7 +960,8 @@ export class PosStore extends Reactive {
                 message = messageFp;
             }
         }
-        await this._getMissingProducts(ordersJson);
+        await this._loadMissingProducts(ordersJson);
+        await this._loadMissingPartners(ordersJson);
         const allOrders = [...this.get_order_list()];
         this._replaceOrders(allOrders, ordersJson);
         this.sortOrders();
@@ -1000,18 +1001,6 @@ export class PosStore extends Reactive {
             [odoo.pos_session_id],
             pricelistsToGet,
         ]);
-    }
-    async _getMissingProducts(ordersJson) {
-        const productIds = [];
-        for (const order of ordersJson) {
-            for (const orderline of order.lines) {
-                if (!this.models["product.product"].get(orderline[2].product_id)) {
-                    productIds.push(orderline[2].product_id);
-                }
-            }
-        }
-
-        await this.loadProducts(productIds);
     }
     async _addFiscalPositions(ordersJson) {
         const fiscalPositionToGet = [];
