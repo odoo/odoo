@@ -234,3 +234,17 @@ registry.category("web_tour.tours").add("self_order_mobile_each_cancel", {
         Utils.checkBtn("Pay"),
     ],
 });
+
+registry.category("web_tour.tours").add("SelfOrderOrderNumberTour", {
+    test: true,
+    steps: () => [
+        Utils.checkIsNoBtn("My Order"),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickProduct("Coca-Cola"),
+        Utils.clickBtn("Order"),
+        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Confirm"),
+        Utils.clickBtn("Ok"),
+        Utils.checkIsNoBtn("Ok"),
+    ],
+});
