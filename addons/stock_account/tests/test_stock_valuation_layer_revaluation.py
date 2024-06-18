@@ -237,3 +237,87 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
 
         credit_lines = [l for l in new_layer.account_move_id.line_ids if l.credit > 0]
         self.assertEqual(len(credit_lines), 1)
+
+    def test_stock_valuation_layer_revaluation_partial(self):
+        """ Only adjust the valuation on some of the layers for a product """
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        product2 = self.env['product.product'].create({
+            'name': 'product2',
+            'is_storable': True,
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        self._make_in_move(self.product1, 5, unit_cost=4)
+        self._make_in_move(self.product1, 10, unit_cost=4)
+        self._make_in_move(self.product1, 5, unit_cost=8)
+        self._make_in_move(product2, 10, unit_cost=4)
+
+        self.assertEqual(self.product1.standard_price, 5)
+        self.assertEqual(self.product1.quantity_svl, 20)
+
+        old_layers = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc")
+
+        self.assertEqual(len(old_layers), 3)
+        self.assertEqual(old_layers.mapped("remaining_value"), [40, 40, 20])
+
+        # Adjusting layers for multiple products at once: raise
+        with self.assertRaises(UserError):
+            Form(self.env['stock.valuation.layer.revaluation'].with_context({
+                'active_ids': self.env['stock.valuation.layer'].search([]).mapped("id"),
+                'active_model': 'stock.valuation.layer'
+            })).save()
+
+        revaluation_wizard = Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            'active_ids': old_layers[0:2].ids,
+            'active_model': 'stock.valuation.layer'
+        }))
+        revaluation_wizard.added_value = 30
+        revaluation_wizard.account_id = self.stock_valuation_account
+        revaluation_wizard.save().action_validate_revaluation()
+
+        # Check standard price change
+        self.assertEqual(self.product1.standard_price, 6.5)
+        self.assertEqual(self.product1.quantity_svl, 20)
+
+        # Check the creation of stock.valuation.layer
+        new_layer = self.env['stock.valuation.layer'].search([('product_id', '=', self.product1.id)], order="create_date desc, id desc", limit=1)
+        self.assertEqual(new_layer.value, 30)
+
+        # Check the remaing value of current layers: only the adjusted layers should have changed
+        # the added value should be impacted proportionally to the qty of each layer (+10 and +20)
+        self.assertEqual(old_layers.mapped("remaining_value"), [50, 60, 20])
+
+        # Check account move
+        self.assertTrue(bool(new_layer.account_move_id))
+        self.assertEqual(len(new_layer.account_move_id.line_ids), 2)
+
+        self.assertEqual(sum(new_layer.account_move_id.line_ids.mapped("debit")), 30)
+        self.assertEqual(sum(new_layer.account_move_id.line_ids.mapped("credit")), 30)
+
+        credit_lines = [l for l in new_layer.account_move_id.line_ids if l.credit > 0]
+        self.assertEqual(len(credit_lines), 1)
+        self.assertEqual(credit_lines[0].account_id.id, self.stock_valuation_account.id)
+
+        self.assertIn(
+            f"Affected valuation layers: {old_layers[1].reference} (id: {old_layers[1].id}) and {old_layers[0].reference} (id: {old_layers[0].id})",
+            new_layer.account_move_id.line_ids[0].name
+        )
+
+        # Adjusting an adjustment layer: raise
+        with self.assertRaises(UserError):
+            Form(self.env['stock.valuation.layer.revaluation'].with_context({
+                'active_ids': [new_layer.id],
+                'active_model': 'stock.valuation.layer'
+            })).save()
+
+        # remove all products from the oldest layer
+        self._make_out_move(self.product1, 5)
+        self.assertEqual(old_layers[2].remaining_qty, 0)
+
+        # Adjusting a layer with no remaining quantity: raise
+        with self.assertRaises(UserError):
+            Form(self.env['stock.valuation.layer.revaluation'].with_context({
+                'active_ids': [old_layers[2].id],
+                'active_model': 'stock.valuation.layer'
+            })).save()
