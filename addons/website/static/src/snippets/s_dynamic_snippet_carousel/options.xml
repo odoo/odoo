@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website.dynamic_snippet_carousel_options_template" t-inherit="website.s_dynamic_snippet_option" t-inherit-mode="primary">
+    <xpath expr="//WeRow[.//WeSelect[@name=&quot;'number_of_records_opt'&quot;]]" position="after">
+        <WeRow title.translate="Slider Speed">
+            <WeInput
+                  selectDataAttribute="'1s'" name="'speed_opt'" attributeName="'carouselInterval'" noPreview="'true'"
+                  unit="'s'" saveUnit="'ms'" step="'0.1'"/>
+        </WeRow>
+        <t t-slot="default"/>
+    </xpath>
+</t>
+
+<t t-name="website.s_dynamic_snippet_carousel_option" t-inherit="website.dynamic_snippet_carousel_options_template" t-inherit-mode="primary">
+</t>
+
+</templates>

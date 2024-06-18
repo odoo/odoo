@@ -1,20 +1,21 @@
 /** @odoo-module **/
 
-import options from "@web_editor/js/editor/snippets.options.legacy";
-import dynamicSnippetOptions from "@website/snippets/s_dynamic_snippet/options";
+import { DynamicSnippetOptions } from "@website/snippets/s_dynamic_snippet/options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
-import wUtils from "@website/js/utils";
 
-const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
+export class DynamicSnippetBlogPostsOptions extends DynamicSnippetOptions {
     /**
-     *
      * @override
      */
-    init: function () {
-        this._super.apply(this, arguments);
+    async willStart() {
+        this.blogs = await this._fetchBlogs();
         this.modelNameFilter = 'blog.post';
-        this.blogs = {};
-    },
+        await super.willStart(...arguments);
+        this.renderContext.blogs = this.blogs;
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -25,56 +26,44 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
      * @override
      * @private
      */
-    _computeWidgetVisibility: function (widgetName, params) {
+    _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'hover_effect_opt') {
             return this.$target.get(0).dataset.templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture';
         }
-        return this._super.apply(this, arguments);
-    },
+        return super._computeWidgetVisibility(...arguments);
+    }
     /**
      * Fetches blogs.
      * @private
      * @returns {Promise}
      */
-    _fetchBlogs: function () {
-        return this.orm.searchRead("blog.blog", wUtils.websiteDomain(this), ["id", "name"]);
-    },
+    _fetchBlogs() {
+        const websiteId = this.env.services.website.currentWebsite.id;
+        const websiteDomain = ["|", ["website_id", "=", false], ["website_id", "=", websiteId]];
+        return this.env.services.orm.searchRead("blog.blog", websiteDomain, ["id", "name"]);
+    }
     /**
-     *
      * @override
      * @private
      */
-    _renderCustomXML: async function (uiFragment) {
-        await this._super.apply(this, arguments);
-        await this._renderBlogSelector(uiFragment);
-    },
-    /**
-     * Renders the blog option selector content into the provided uiFragment.
-     * @private
-     * @param {HTMLElement} uiFragment
-     */
-    _renderBlogSelector: async function (uiFragment) {
-        if (!Object.keys(this.blogs).length) {
-            const blogsList = await this._fetchBlogs();
-            this.blogs = {};
-            for (let index in blogsList) {
-                this.blogs[blogsList[index].id] = blogsList[index];
-            }
-        }
-        const blogSelectorEl = uiFragment.querySelector('[data-name="blog_opt"]');
-        return this._renderSelectUserValueWidgetButtons(blogSelectorEl, this.blogs);
-    },
+    async _getRenderContext() {
+        const renderContext = super._getRenderContext();
+        renderContext.blogs = this.blogs;
+        return renderContext;
+    }
     /**
      * Sets default options values.
      * @override
      * @private
      */
-    _setOptionsDefaultValues: function () {
+    _setOptionsDefaultValues() {
         this._setOptionValue('filterByBlogId', -1);
-        this._super.apply(this, arguments);
-    },
+        super._setOptionsDefaultValues(...arguments);
+    }
+}
+
+registerWebsiteOption("DynamicSnippetBlogPostsOptions", {
+    Class: DynamicSnippetBlogPostsOptions,
+    template: "website_blog.s_blog_posts_option",
+    selector: ".s_dynamic_snippet_blog_posts, .s_blog_posts",
 });
-
-options.registry.dynamic_snippet_blog_posts = dynamicSnippetBlogPostsOptions;
-
-export default dynamicSnippetBlogPostsOptions;

@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
-import options from "@web_editor/js/editor/snippets.options.legacy";
-import s_dynamic_snippet_options from "@website/snippets/s_dynamic_snippet/options";
+import { DynamicSnippetOptions } from "@website/snippets/s_dynamic_snippet/options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
-const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
+export class DynamicSnippetCarouselOptions extends DynamicSnippetOptions {
 
     //--------------------------------------------------------------------------
     // Options
@@ -14,10 +16,10 @@ const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
      * @override
      * @private
      */
-    _setOptionsDefaultValues: function () {
-        this._super.apply(this, arguments);
+    _setOptionsDefaultValues() {
+        super._setOptionsDefaultValues(this, arguments);
         this._setOptionValue('carouselInterval', '5000');
-    },
+    }
     /**
      * Take the new template selection into account
      *
@@ -26,7 +28,7 @@ const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
      * @override
      */
     _templateUpdated(newTemplate, oldTemplate) {
-        this._super(...arguments);
+        super._templateUpdated(...arguments);
         const template = this.dynamicFilterTemplates[newTemplate];
         if (template.rowPerSlide) {
             this.$target[0].dataset.rowPerSlide = template.rowPerSlide;
@@ -38,10 +40,12 @@ const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
         } else {
             delete this.$target[0].dataset.arrowPosition;
         }
-    },
+    }
 
+}
+
+registerWebsiteOption("DynamicSnippetCarouselOptions", {
+    Class: DynamicSnippetCarouselOptions,
+    template: "website.s_dynamic_snippet_carousel_option",
+    selector: "[data-snippet='s_dynamic_snippet_carousel']",
 });
-
-options.registry.dynamic_snippet_carousel = dynamicSnippetCarouselOptions;
-
-export default dynamicSnippetCarouselOptions;

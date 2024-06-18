@@ -1,22 +1,28 @@
 /** @odoo-module **/
 
-import options from '@web_editor/js/editor/snippets.options.legacy';
-import dynamicSnippetOptions from '@website/snippets/s_dynamic_snippet/options';
+import { DynamicSnippetOptions } from "@website/snippets/s_dynamic_snippet/options";
+import {
+    registerWebsiteOption,
+} from "@website/js/editor/snippets.registry";
 
-const dynamicSnippetEventOptions = dynamicSnippetOptions.extend({
+export class DynamicSnippetEventOptions extends DynamicSnippetOptions {
     /**
      * @override
      */
-    init() {
-        this._super.apply(this, arguments);
+    constructor() {
+        super(...arguments);
         this.modelNameFilter = 'event.event';
-    },
+    }
 
     _setOptionsDefaultValues() {
         this._setOptionValue('numberOfRecords', 4);
-        this._super.apply(this, arguments);
-    },
+        super._setOptionsDefaultValues(...arguments);
+    }
 
+}
+
+registerWebsiteOption("DynamicSnippetEventOptions", {
+    Class: DynamicSnippetEventOptions,
+    template: "website_event.s_dynamic_snippet_option",
+    selector: "[data-snippet='s_events']",
 });
-
-options.registry.event_upcoming_snippet = dynamicSnippetEventOptions;

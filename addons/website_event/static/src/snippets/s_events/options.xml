@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_event.s_dynamic_snippet_option" t-inherit="website.s_dynamic_snippet_option" t-inherit-mode="primary">
+    <xpath expr="//WeRow[.//WeSelect[@name=&quot;'filter_opt'&quot;]]" position="after">
+        <WeRow>
+            <t t-set-slot="title">Event Tags</t>
+            <WeMany2many
+                name="'event_tag_opt'"
+                model="'event.tag'"
+                fakem2m="'true'"
+                domain="'[[&quot;category_id.website_published&quot;, &quot;=&quot;, true], [&quot;color&quot;, &quot;not in&quot;, [&quot;0&quot;, false]]]'"
+                limit="'10'"
+                attributeName="'filterByTagIds'"
+                fields="'[&quot;category_id&quot;]'"
+                selectDataAttribute="''"
+                noPreview="'true'"
+            />
+        </WeRow>
+    </xpath>
+</t>
+
+</templates>

@@ -142,6 +142,7 @@
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
+            'website_sale/static/src/snippets/s_dynamic_snippet_products/options.xml',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.xml',
             'website_sale/static/src/js/website_sale.editor.js',
