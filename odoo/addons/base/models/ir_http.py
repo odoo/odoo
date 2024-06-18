@@ -43,13 +43,17 @@ class ModelConverter(werkzeug.routing.BaseConverter):
         self.model = model
         self.regex = r'([0-9]+)'
 
+        IrHttp = Registry(threading.current_thread().dbname)['ir.http']
+        self.slug = IrHttp._slug
+        self.unslug = IrHttp._unslug
+
     def to_python(self, value: str) -> models.BaseModel:
         _uid = RequestUID(value=value, converter=self)
         env = api.Environment(request.cr, _uid, request.context)
-        return env[self.model].browse(int(value))
+        return env[self.model].browse(self.unslug(value)[1])
 
     def to_url(self, value: models.BaseModel) -> str:
-        return value.id
+        return self.slug(value)
 
 
 class ModelsConverter(werkzeug.routing.BaseConverter):

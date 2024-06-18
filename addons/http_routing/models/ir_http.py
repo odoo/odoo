@@ -54,20 +54,12 @@ class ModelConverter(ir_http.ModelConverter):
         self.domain = domain
         self.regex = _UNSLUG_ROUTE_PATTERN
 
-    def to_url(self, value: models.BaseModel) -> str:
-        return IrHttp._slug(value)
-
-    def to_python(self, value: str) -> models.BaseModel:
-        matching = _UNSLUG_RE.match(value)
-        _uid = RequestUID(value=value, match=matching, converter=self)
-        record_id = int(matching.group(2))
-        env = api.Environment(request.cr, _uid, request.context)
-
-        if record_id < 0:
+    def to_python(self, value) -> models.BaseModel:
+        record = super().to_python(value)
+        if record.id < 0 and not record.browse(record.id).exists():
             # limited support for negative IDs due to our slug pattern, assume abs() if not found
-            if not env[self.model].browse(record_id).exists():
-                record_id = abs(record_id)
-        return env[self.model].with_context(_converter_value=value).browse(record_id)
+            record = record.browse(abs(record.id))
+        return record.with_context(_converter_value=value)
 
 
 class IrHttp(models.AbstractModel):
