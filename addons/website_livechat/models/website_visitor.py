@@ -81,6 +81,8 @@ class WebsiteVisitor(models.Model):
                 'livechat_active': True,
             })
         discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
+        if not discuss_channels:
+            return
         for channel in discuss_channels:
             if not channel.livechat_visitor_id.partner_id:
                 # sudo: mail.guest - creating a guest in a dedicated channel created from livechat
