@@ -1033,7 +1033,10 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return ['description_picking', 'price_unit']
+        excluded_fields = ['description_picking', 'price_unit']
+        if self.env['ir.config_parameter'].sudo().get_param('stock.merge_different_procurement'):
+            excluded_fields += ['procure_method']
+        return excluded_fields
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
