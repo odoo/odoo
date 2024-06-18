@@ -202,3 +202,50 @@ test("should not zwnbsp-pad link with image", async () => {
         contentBeforeEdit: '<p>a<a href="#/">[]<img style="display: inline;"></a>b</p>',
     });
 });
+
+test("should remove zwnbsp from middle of the link", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#/">content</a></p>',
+        contentBeforeEdit: '<p>\ufeff<a href="#/">\ufeffcontent\ufeff</a>\ufeff</p>',
+        stepFunction: async (editor) => {
+            // Cursor before the FEFF text node
+            setSelection({ anchorNode: editor.editable.querySelector("a"), anchorOffset: 0 });
+            insertText(editor, "more ");
+        },
+        contentAfterEdit:
+            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffmore []content\ufeff</a>\ufeff</p>',
+        contentAfter: '<p><a href="#/">more []content</a></p>',
+    });
+});
+
+test("should remove zwnbsp from middle of the link (2)", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#/">content</a></p>',
+        contentBeforeEdit: '<p>\ufeff<a href="#/">\ufeffcontent\ufeff</a>\ufeff</p>',
+        stepFunction: async (editor) => {
+            // Cursor inside the FEFF text node
+            setSelection({
+                anchorNode: editor.editable.querySelector("a").firstChild,
+                anchorOffset: 0,
+            });
+            insertText(editor, "more ");
+        },
+        contentAfterEdit:
+            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffmore []content\ufeff</a>\ufeff</p>',
+        contentAfter: '<p><a href="#/">more []content</a></p>',
+    });
+});
+
+test("should zwnbps-pad links with .btn class", async () => {
+    await testEditor({
+        contentBefore: '<p><a class="btn">content</a></p>',
+        contentBeforeEdit: '<p>\ufeff<a class="btn">\ufeffcontent\ufeff</a>\ufeff</p>',
+    });
+});
+
+test("should not add visual indication to a button", async () => {
+    await testEditor({
+        contentBefore: '<p><a class="btn">[]content</a></p>',
+        contentBeforeEdit: '<p>\ufeff<a class="btn">\ufeff[]content\ufeff</a>\ufeff</p>',
+    });
+});
