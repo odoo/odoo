@@ -106,7 +106,7 @@
                 <t id="mass_mailing_newsletter_block_hook"/>
                 <t id="mass_mailing_newsletter_popup_hook"/>
                 <t t-snippet="website.s_popup" string="Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/s_popup.svg"/>
-                <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
+                <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg" t-width-grid="5"/>
                 <t t-snippet="website.s_instagram_page" string="Instagram Page" t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_page.svg">
                     <keywords>social media, ig, feed</keywords>
                 </t>
@@ -126,30 +126,30 @@
                 <t t-snippet="website.s_image" string="Image" t-thumbnail="/website/static/src/img/snippets_thumbs/s_image.svg">
                     <keywords>image, picture, photo</keywords>
                 </t>
-                <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg">
+                <t t-snippet="website.s_video" string="Video" t-thumbnail="/website/static/src/img/snippets_thumbs/s_video.svg" t-height-grid="8">
                     <keywords>video, youtube, vimeo, dailymotion, youku</keywords>
                 </t>
                 <t t-snippet="website.s_hr" string="Separator" t-thumbnail="/website/static/src/img/snippets_thumbs/s_hr.svg">
                     <keywords>separator, divider</keywords>
                 </t>
                 <t t-snippet="website.s_alert" string="Alert" t-thumbnail="/website/static/src/img/snippets_thumbs/s_alert.svg"/>
-                <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg">
+                <t t-snippet="website.s_rating" string="Rating" t-thumbnail="/website/static/src/img/snippets_thumbs/s_rating.svg" t-width-grid="2">
                     <keywords>valuation, rank</keywords>
                 </t>
                 <t t-snippet="website.s_card" string="Card" t-thumbnail="/website/static/src/img/snippets_thumbs/s_card.svg"/>
-                <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
-                <t t-snippet="website.s_social_media" string="Social Media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_social_media.svg"/>
+                <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg" t-width-grid="4"/>
+                <t t-snippet="website.s_social_media" string="Social Media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_social_media.svg" t-width-grid="4"/>
                 <t t-snippet="website.s_searchbar_input" string="Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg" t-forbid-sanitize="form"/>
                 <t id="mass_mailing_newsletter_hook"/>
                 <t t-snippet="website.s_text_highlight" string="Text Highlight" t-thumbnail="/website/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
-                <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg">
+                <t t-snippet="website.s_chart" string="Chart" t-thumbnail="/website/static/src/img/snippets_thumbs/s_chart.svg" t-height-grid="9" t-width-grid="7">
                     <keywords>chart, table, diagram, pie</keywords>
                 </t>
                 <t t-snippet="website.s_progress_bar" string="Progress Bar" t-thumbnail="/website/static/src/img/snippets_thumbs/s_progress_bar.svg">
                     <keywords>evolution, growth</keywords>
                 </t>
                 <t t-snippet="website.s_badge" string="Badge" t-thumbnail="/website/static/src/img/snippets_thumbs/s_badge.svg"/>
-                <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg">
+                <t t-snippet="website.s_blockquote" string="Blockquote" t-thumbnail="/website/static/src/img/snippets_thumbs/s_blockquote.svg" t-height-grid="4">
                     <keywords>cite</keywords>
                 </t>
                 <t id="event_speaker_bio_hook"/>
@@ -705,7 +705,7 @@
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, div:not(.o_grid_item_image) > img, .btn, #{so_content_addition_selector}"
-        data-drop-in="nav"/>
+        data-drop-in="nav, .row.o_grid_mode"/>
 
     <div data-js="SnippetSave"
         data-selector="[data-snippet], a.btn"
