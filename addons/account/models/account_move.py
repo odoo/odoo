@@ -2018,7 +2018,7 @@ class AccountMove(models.Model):
     def _sync_dynamic_line(self, existing_key_fname, needed_vals_fname, needed_dirty_fname, line_type, container):
         def existing():
             return {
-                line[existing_key_fname]: line
+                line: line[existing_key_fname]
                 for line in container['records'].line_ids
                 if line[existing_key_fname]
             }
@@ -2062,7 +2062,7 @@ class AccountMove(models.Model):
             dirty_recs = eligible_recs.filtered(dirty_fname)
             return dirty_recs, dirty_fname
 
-        existing_before = existing()
+        inv_existing_before = existing()
         needed_before = needed()
         dirty_recs_before, dirty_fname = dirty()
         dirty_recs_before[dirty_fname] = False
@@ -2070,7 +2070,7 @@ class AccountMove(models.Model):
         dirty_recs_after, dirty_fname = dirty()
         if dirty_recs_before and not dirty_recs_after:  # TODO improve filter
             return
-        existing_after = existing()
+        inv_existing_after = existing()
         needed_after = needed()
 
         # Filter out deleted lines from `needed_before` to not recompute lines if not necessary or wanted
@@ -2078,8 +2078,6 @@ class AccountMove(models.Model):
         needed_before = {k: v for k, v in needed_before.items() if 'id' not in k or k['id'] in line_ids}
 
         # old key to new key for the same line
-        inv_existing_before = {v: k for k, v in existing_before.items()}
-        inv_existing_after = {v: k for k, v in existing_after.items()}
         before2after = {
             before: inv_existing_after[bline]
             for bline, before in inv_existing_before.items()
@@ -2089,16 +2087,19 @@ class AccountMove(models.Model):
         if needed_after == needed_before:
             return
 
+        existing_after = defaultdict(list)
+        for k, v in inv_existing_after.items():
+            existing_after[v].append(k)
         to_delete = [
             line.id
-            for key, line in existing_before.items()
+            for line, key in inv_existing_before.items()
             if key not in needed_after
             and key in existing_after
             and before2after[key] not in needed_after
         ]
         to_delete_set = set(to_delete)
         to_delete.extend(line.id
-            for key, line in existing_after.items()
+            for line, key in inv_existing_after.items()
             if key not in needed_after and line.id not in to_delete_set
         )
         to_create = {
@@ -2107,11 +2108,11 @@ class AccountMove(models.Model):
             if key not in existing_after
         }
         to_write = {
-            existing_after[key]: values
+            line: values
             for key, values in needed_after.items()
-            if key in existing_after
-            and any(
-                self.env['account.move.line']._fields[fname].convert_to_write(existing_after[key][fname], self)
+            for line in existing_after[key]
+            if any(
+                self.env['account.move.line']._fields[fname].convert_to_write(line[fname], self)
                 != values[fname]
                 for fname in values
             )
