@@ -197,6 +197,48 @@ export class PosStore extends Reactive {
         this.computeProductPricelistCache();
     }
 
+    async deleteOrders(orders, serverIds = []) {
+        const ids = new Set();
+        for (const order of orders) {
+            if (order && (await this._onBeforeDeleteOrder(order))) {
+                if (Object.keys(order.last_order_preparation_change).length > 0) {
+                    await this.sendOrderInPreparationUpdateLastChange(order, true);
+                }
+
+                const cancelled = this.removeOrder(order, true);
+                if (!cancelled) {
+                    return false;
+                } else if (typeof order.id === "number") {
+                    ids.add(order.id);
+                }
+            }
+        }
+
+        if (serverIds.length > 0) {
+            for (const id of serverIds) {
+                if (typeof id !== "number") {
+                    continue;
+                }
+                ids.add(id);
+            }
+        }
+
+        if (ids.size > 0) {
+            this.pendingOrder.delete.clear();
+            await this.data.call("pos.order", "action_pos_order_cancel", [Array.from(ids)]);
+        }
+
+        return true;
+    }
+    /**
+     * Override to do something before deleting the order.
+     * Make sure to return true to proceed on deleting the order.
+     * @param {*} order
+     * @returns {boolean}
+     */
+    async _onBeforeDeleteOrder(order) {
+        return true;
+    }
     computeProductPricelistCache(data) {
         // This function is called via the addEventListener callback initiated in the
         // processServerData function when new products or pricelists are loaded into the PoS.
