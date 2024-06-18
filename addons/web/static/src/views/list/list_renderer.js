@@ -386,6 +386,13 @@ export class ListRenderer extends Component {
     computeColumnWidthsFromContent(allowedWidth) {
         const table = this.tableRef.el;
 
+        // BUG:
+        // sale order, new (with columns)
+        // add a line, then untick optional columns
+
+        // BUG2:
+        // vertical scrollbar produces horizontal one
+
         // Toggle a className used to remove style that could interfere with the ideal width
         // computation algorithm (e.g. prevent text fields from being wrapped during the
         // computation, to prevent them from being completely crushed)
