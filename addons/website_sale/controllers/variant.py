@@ -25,6 +25,15 @@ class WebsiteSaleVariantController(VariantController):
                 'website': request.env['website'].get_current_website(),
             })
             combination['carousel'] = carousel_view
+
+        combination['extra_fields'] = request.env['ir.ui.view']._render_template(
+            'website_sale.ecom_show_extra_fields',
+            values={
+                'product': request.env['product.template'].browse(combination['product_template_id']),
+                'product_variant': request.env['product.product'].browse(combination['product_id']),
+                'website': request.env['website'].get_current_website(),
+            },
+        )
         return combination
 
     @http.route(auth="public")

@@ -57,6 +57,13 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
         contactUsButton.removeClass('d-flex').addClass('d-none');
         product_unavailable.removeClass('d-flex').addClass('d-none')
     }
+
+    // Dynamically render extra fields
+    let $extras = $('#extra-fields');
+    if (combination.extra_fields && $extras.length) {
+        $extras.html(combination.extra_fields)
+    }
+
     originalOnChangeCombination.apply(this, [ev, $parent, combination]);
 };
 
