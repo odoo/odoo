@@ -21,9 +21,6 @@
                                 <br/>
                                 <t t-set="certif_style" t-value="''"/>
                                 <t t-set="certified_name" t-value="user_input.partner_id.name or user_input.email or ''"/>
-                                <t t-if="certified_name.isupper()">
-                                    <t t-set="certif_style" t-value="certif_style + 'font-family: certification-serif;'"/>
-                                </t>
                                 <t t-if="len(certified_name) > 35 and layout_template == 'classic'">
                                     <t t-set="certif_style" t-value="certif_style + 'font-size: 20px; line-height: 4; font-family: certification-serif; '"/>
                                 </t>
