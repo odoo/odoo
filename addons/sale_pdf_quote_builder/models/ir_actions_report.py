@@ -10,72 +10,58 @@ from PyPDF2.generic import NameObject, createStringObject
 from odoo import _, api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
 
-from odoo.addons.sale_pdf_quote_builder.const import DEFAULT_FORM_FIELD_PATH_MAPPING
-
 
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
-        """ Override to add and fill header, footer and product documents to the sale quotation."""
+        """Override to add and fill headers, footers and product documents to the sale quotation."""
         result = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
         if self._get_report(report_ref).report_name != 'sale.report_saleorder':
             return result
 
         orders = self.env['sale.order'].browse(res_ids)
 
-        IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        param_field_map = json.loads(IrConfigParameter.get_param(
-            'sale_pdf_quote_builder.form_field_path_mapping', DEFAULT_FORM_FIELD_PATH_MAPPING
-        ))
-
         for order in orders:
             initial_stream = result[order.id]['stream']
             if initial_stream:
-                order_template = order.sale_order_template_id
-                header_record = order_template if order_template.sale_header else order.company_id
-                footer_record = order_template if order_template.sale_footer else order.company_id
-                has_header = bool(header_record.sale_header)
-                has_footer = bool(footer_record.sale_footer)
-                included_product_docs = self.env['product.document']
-                doc_line_id_mapping = {}
-                for line in order.order_line:
-                    product_product_docs = line.product_id.product_document_ids
-                    product_template_docs = line.product_template_id.product_document_ids
-                    doc_to_include = (
-                        product_product_docs.filtered(lambda d: d.attached_on_sale == 'inside')
-                        or product_template_docs.filtered(lambda d: d.attached_on_sale == 'inside')
-                    )
-                    included_product_docs = included_product_docs | doc_to_include
-                    doc_line_id_mapping.update({doc.id: line.id for doc in doc_to_include})
+                quotation_documents = order.quotation_document_ids
+                headers = quotation_documents.filtered(lambda doc: doc.document_type == 'header')
+                footers = quotation_documents - headers
+                has_product_document = any(line.product_document_ids for line in order.order_line)
 
-                if (not has_header and not included_product_docs and not has_footer):
+                if not headers and not has_product_document and not footers:
                     continue
 
-                all_form_fields = set()
+                form_fields_values_mapping = {}
                 writer = PdfFileWriter()
 
-                if has_header:
-                    decoded_header = base64.b64decode(header_record.sale_header)
-                    self._add_pages_to_writer(writer, decoded_header, all_form_fields)
-                if included_product_docs:
-                    for doc in included_product_docs:
-                        decoded_doc = base64.b64decode(doc.datas)
-                        sol_id = doc_line_id_mapping[doc.id]
-                        self._add_pages_to_writer(
-                            writer, decoded_doc, all_form_fields, sol_id=sol_id
-                        )
-                self._add_pages_to_writer(writer, initial_stream.getvalue())
-                if has_footer:
-                    decoded_footer = base64.b64decode(footer_record.sale_footer)
-                    self._add_pages_to_writer(writer, decoded_footer, all_form_fields)
-
-                form_fields_values_mapping = self.with_context(
-                    use_babel=True,
-                    lang=order._get_lang() or self.env.user.lang,
-                )._get_form_fields_values_mapping(
-                    order, all_form_fields, param_field_map
+                self_with_order_context = self.with_context(
+                    use_babel=True, lang=order._get_lang() or self.env.user.lang
                 )
+
+                if headers:
+                    for header in headers:
+                        prefix = f'quotation_document_id_{header.id}__'
+                        self_with_order_context._update_mapping_and_add_pages_to_writer(
+                            writer, header, form_fields_values_mapping, prefix, order
+                        )
+                if has_product_document:
+                    for line in order.order_line:
+                        for doc in line.product_document_ids:
+                            # Use both the id of the line and the doc as variants could use the same
+                            # document.
+                            prefix = f'sol_id_{line.id}_product_document_id_{doc.id}__'
+                            self_with_order_context._update_mapping_and_add_pages_to_writer(
+                                writer, doc, form_fields_values_mapping, prefix, order, line
+                            )
+                self._add_pages_to_writer(writer, initial_stream.getvalue())
+                if footers:
+                    for footer in footers:
+                        prefix = f'quotation_document_id_{footer.id}__'
+                        self_with_order_context._update_mapping_and_add_pages_to_writer(
+                            writer, footer, form_fields_values_mapping, prefix, order
+                        )
                 pdf.fill_form_fields_pdf(writer, form_fields=form_fields_values_mapping)
                 with io.BytesIO() as _buffer:
                     writer.write(_buffer)
@@ -85,88 +71,76 @@ class IrActionsReport(models.Model):
         return result
 
     @api.model
-    def _add_pages_to_writer(self, writer, document, all_form_fields=None, sol_id=None):
-        """Add a PDF doc to the writer and fill the form fields present in the pages if needed.
+    def _update_mapping_and_add_pages_to_writer(
+        self, writer, document, form_fields_values_mapping, prefix, order, order_line=None
+    ):
+        """ Update the mapping with the field-value of the document, and add the doc to the writer.
+
+        Note: document.ensure_one(), order.ensure_one(), order_line and order_line.ensure_one()
 
         :param PdfFileWriter writer: the writer to which pages needs to be added
-        :param bytes document: the document to add in the final pdf
-        :param set all_form_fields: the set of form fields present in the already added pages. It'll
-                                    be updated with the new form fields if any when passed. Optional
-        :param int sol_id: the sale order line id, to ensure the product document are filled with
-                           the correct line information. Only for product documents.
-        :return: None
+        :param recordset document: the document that needs to be added to the writer and get its
+                                   form fields mapped. Either a quotation.document or a
+                                   product.document.
+        :param dict form_fields_values_mapping: the existing prefixed form field names - values that
+                                                will be updated to add those of the current document
+        :param str prefix: the prefix needed to update existing form field name, to be able to add
+                           the correct values in fields with the same name but on different
+                           documents, either customizable fields or dynamic fields of different sale
+                           order lines.
+        :param recordset order: the sale order from where to take the values
+        :param recordset order_line: the sale order line from where to take the values (optional)
+        return: None
         """
-        prefix = f'sol_id_{sol_id}__' if sol_id else ''
-        reader = PdfFileReader(io.BytesIO(document), strict=False)
-
-        field_names = set()
-        if all_form_fields is not None:
-            field_names = reader.getFields()
-            if field_names:
-                all_form_fields.update([prefix + field_name for field_name in field_names])
-
-        for page_id in range(reader.getNumPages()):
-            page = reader.getPage(page_id)
-            if all_form_fields and field_names and page.get('/Annots'):
-                # Prefix all form fields in the product document with the sale order line id.
-                # This is necessary to know the line from which the value needs to be taken when
-                # filling the forms.
-                for j in range(len(page['/Annots'])):
-                    reader_annot = page['/Annots'][j].getObject()
-                    if reader_annot.get('/T') in field_names:
-                        form_key = reader_annot.get('/T')
-                        new_key = prefix + form_key
-                        reader_annot.update({NameObject("/T"): createStringObject(new_key)})
-            writer.addPage(page)
-
-    @api.model
-    def _get_form_fields_values_mapping(self, order, all_form_fields, param_field_map):
-        """Map specific pdf fields name to Odoo fields data values for a sale order.
-
-        Note: order.ensure_one()
-
-        :param recordset order: sale.order record from which to take the values
-        :param set(str) all_form_fields: all the form field names present in the PDFs
-        :param dict param_field_map: the map stored in the config parameter to assign the expected
-                                     paths to the form fields. A form field not in that map will be
-                                     ignored.
-        :return: mapping of fields name to Odoo fields data
-        :rtype: dict
-        """
+        document.ensure_one()
         order.ensure_one()
-        tz = order.partner_id.tz or self.env.user.tz or 'UTC'
-        return {
-            field: self._get_formatted_field(field, order, tz, param_field_map)
-            for field in all_form_fields
-        }
+        order_line and order_line.ensure_one()
+
+        for form_field in document.form_field_ids:
+            if form_field.path:  # Dynamic field
+                field_value = self._get_value_from_path(form_field, order, order_line)
+            else:  # Customizable field
+                field_value = self._get_custom_value_from_order(
+                    document, form_field.name, order, order_line
+                )
+            form_fields_values_mapping[prefix + form_field.name] = field_value
+
+        # Avoid useless update of the pdf when no form field and just add the pdf
+        prefix = prefix if document.form_field_ids else None
+        decoded_document = base64.b64decode(document.datas)
+        self._add_pages_to_writer(writer, decoded_document, prefix)
 
     @api.model
-    def _get_formatted_field(self, form_field_name, order, tz, param_field_map):
-        """Format a field value from the extracted PDF string.
+    def _get_value_from_path(self, form_field, order, order_line=None):
+        """ Get the string value by following the path indicated in the record form_field.
 
-        Note: order.ensure_one()
-
-        :param string form_field_name: field path
-        :param recordset order: sale.order record from which to take the value, following the path
-        :param dict translated_env: self.env, with the correct translation context to format amount,
-                                    date and datetime
-        :param str tz: the timezone used for rendering datetime
-        :param dict param_field_map: the map stored in the config parameter to assign the expected
-                                     paths to the form fields. A form field not in that map will be
-                                     ignored.
-        :return: formatted field value
-        :rtype: string
+        :param recordset form_field: sale.pdf.form.field that has a valid path.
+        :param recordset order: sale.order from where the values and timezone need to be taken
+        :param recordset order_line: sale.order.line from where the values need to be taken
+                                     (optional, only for product.document)
+        :return: value that need to be shown in the final pdf. Multiple values are joined by ', '
+        :rtype: str
         """
-        def _get_formatted_value(self, field_name):
+        tz = order.partner_id.tz or order.env.user.tz or 'UTC'
+        base_record = order_line or order
+        path = form_field.path
+
+        # If path = 'order_id.order_line.product_id.name'
+        path = path.split('.')  # ['order_id', 'order_line', 'product_id', 'name']
+        # Sudo to be able to follow the path set by the admin
+        records = base_record.sudo().mapped('.'.join(path[:-1]))  # product.product(id1, id2, ...)
+        field_name = path[-1]  # 'name'
+
+        def _get_formatted_value(self):
             # self must be named so to be considered in the translation logic
             field_ = records._fields[field_name]
             field_type_ = field_.type
-            for record in records:
-                value_ = record[field_name]
+            for record_ in records:
+                value_ = record_[field_name]
                 if field_type_ == 'boolean':
                     formatted_value_ = _("Yes") if value_ else _("No")
                 elif field_type_ == 'monetary':
-                    currency_id_ = record[field_.get_currency_field(record)]
+                    currency_id_ = record_[field_.get_currency_field(record_)]
                     formatted_value_ = format_amount(
                         self.env, value_, currency_id_ or order.currency_id
                     )
@@ -185,26 +159,58 @@ class IrActionsReport(models.Model):
 
                 yield formatted_value_
 
-        order.ensure_one()
-        is_sol = form_field_name.startswith('sol_id_')
+        return ', '.join(_get_formatted_value(self))
 
-        if not is_sol:  # Header or footer
-            record = order
-            path = param_field_map.get('header_footer', {}).get(form_field_name)
-        else:  # Product document
-            prefix = form_field_name.split('__')[0]
-            line_id = int(prefix[7:])
-            record = order.order_line.browse(line_id)
-            form_field_name = form_field_name.removeprefix(prefix + '__')
-            path = param_field_map.get('product_document', {}).get(form_field_name)
+    @api.model
+    def _get_custom_value_from_order(self, document, form_field_name, order, order_line):
+        """ Get the custom value of a form field directly from the order.
 
-        if not path:
-            return ''
+        :param recordset document: the document that needs to be added to the writer and get its
+                                   form fields mapped. Either a quotation.document or a
+                                   product.document.
+        :param str form_field_name: the name of the form field as present in the PDF.
+        :param recordset order: the sale order from where to take the existing mapping.
+        :param recordset order_line: the sale order line linked to the document (optional)
+        :return: value that need to be shown in the final pdf.
+        :rtype: str
+        """
+        existing_mapping = json.loads(order.customizable_pdf_form_fields)
+        if order_line:
+            base_values = existing_mapping.get('line', {}).get(str(order_line.id), {})
+        elif document.document_type == 'header':
+            base_values = existing_mapping.get('header', {})
+        else:
+            base_values = existing_mapping.get('footer', {})
+        custom_form_fields = base_values.get(str(document.id), {}).get('custom_form_fields')
+        return custom_form_fields.get(form_field_name, "")
 
-        # If path = 'order_id.order_line.product_id.name'
-        path = path.split('.')  # ['order_id', 'order_line', 'product_id', 'name']
-        # sudo to be able to follow the path set by the admin
-        records = record.sudo().mapped('.'.join(path[:-1]))  # product.product(id1, id2, ...)
-        field_name = path[-1]  # 'name'
+    @api.model
+    def _add_pages_to_writer(self, writer, document, prefix=None):
+        """Add a PDF doc to the writer and fill the form fields present in the pages if needed.
 
-        return ', '.join(_get_formatted_value(self, field_name))
+        :param PdfFileWriter writer: the writer to which pages needs to be added
+        :param bytes document: the document to add in the final pdf
+        :param str prefix: the prefix needed to update existing form field name, if any, to be able
+                           to add the correct values in fields with the same name but on different
+                           documents, either customizable fields or dynamic fields of different sale
+                           order lines. (optional)
+        :return: None
+        """
+        reader = PdfFileReader(io.BytesIO(document), strict=False)
+
+        field_names = set()
+        if prefix:
+            field_names = reader.getFields()
+
+        for page_id in range(reader.getNumPages()):
+            page = reader.getPage(page_id)
+            if prefix and page.get('/Annots'):
+                # Prefix all form fields in the document with the document identifier.
+                # This is necessary to know which value needs to be taken when filling the forms.
+                for j in range(len(page['/Annots'])):
+                    reader_annot = page['/Annots'][j].getObject()
+                    if reader_annot.get('/T') in field_names:
+                        form_key = reader_annot.get('/T')
+                        new_key = prefix + form_key
+                        reader_annot.update({NameObject("/T"): createStringObject(new_key)})
+            writer.addPage(page)

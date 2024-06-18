@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="salePdfQuoteBuilder.updateIncludedPdfDialog">
+        <Dialog title="title">
+            <t t-if="state.headers.files">
+                <FilesList t-props="state.headers"/>
+            </t>
+            <t t-foreach="state.lines" t-as="line" t-key="line.id">
+                <FilesList t-props="line"/>
+            </t>
+            <t t-if="state.footers.files">
+                <FilesList t-props="state.footers"/>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onConfirm">
+                    Save
+                </button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
