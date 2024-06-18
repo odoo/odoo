@@ -25,6 +25,7 @@ export class TestsSharedJsPython extends Component {
                 product: params.product,
                 precision_rounding: params.precision_rounding,
                 rounding_method: params.rounding_method,
+                round_price_include: false,
             };
             const results = {
                 results: accountTaxHelpers.evaluate_taxes_computation(
