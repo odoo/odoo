@@ -1793,28 +1793,6 @@ export class Rtc extends Record {
             return allowUpload ? "sendonly" : "inactive";
         }
     }
-
-    updateRtcSessions(channelId, sessionsData) {
-        const channel = this.store.Thread.get({ model: "discuss.channel", id: channelId });
-        if (!channel) {
-            return;
-        }
-        const oldCount = channel.rtcSessions.length;
-        const hadSelfSession = Boolean(this.selfSession?.in(channel.rtcSessions));
-        channel.rtcSessions = sessionsData;
-        if (
-            !hadSelfSession ||
-            hadSelfSession !== Boolean(this.selfSession?.in(channel.rtcSessions)) ||
-            !this.store.env.services["multi_tab"].isOnMainTab()
-        ) {
-            return;
-        }
-        if (channel.rtcSessions.length > oldCount) {
-            this.soundEffectsService.play("channel-join");
-        } else if (channel.rtcSessions.length < oldCount) {
-            this.soundEffectsService.play("member-leave");
-        }
-    }
 }
 
 Rtc.register();
@@ -1868,12 +1846,13 @@ export const rtcService = {
         services["bus_service"].subscribe(
             "discuss.channel/rtc_sessions_update",
             ({ id, rtcSessions }) => {
-                rtc.updateRtcSessions(id, rtcSessions);
+                env.services["mail.store"].Thread.insert({
+                    model: "discuss.channel",
+                    id,
+                    rtcSessions,
+                });
             }
         );
-        services["bus_service"].subscribe("discuss.channel/joined", ({ channel }) => {
-            rtc.updateRtcSessions(channel.id, channel.rtcSessions);
-        });
         services["bus_service"].subscribe("res.users.settings.volumes", (payload) => {
             if (payload) {
                 rtc.store.Volume.insert(payload);
