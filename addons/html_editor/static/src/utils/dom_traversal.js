@@ -293,3 +293,20 @@ export function getCommonAncestor(nodes, root = undefined) {
     }
     return commonAncestor;
 }
+
+/**
+ * Basically a wrapper around `root.querySelectorAll` that includes the
+ * root.
+ *
+ * @param {Element} root
+ * @param {string} selector
+ * @returns {Generator<Element>}
+ */
+export const selectElements = function* (root, selector) {
+    if (root.matches(selector)) {
+        yield root;
+    }
+    for (const elem of root.querySelectorAll(selector)) {
+        yield elem;
+    }
+};
