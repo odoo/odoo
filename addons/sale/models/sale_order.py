@@ -412,7 +412,7 @@ class SaleOrder(models.Model):
                 from_currency=order.company_id.currency_id,
                 to_currency=order.currency_id,
                 company=order.company_id,
-                date=order.date_order.date(),
+                date=(order.date_order or fields.Datetime.now()).date(),
             )
 
     @api.depends('company_id')
