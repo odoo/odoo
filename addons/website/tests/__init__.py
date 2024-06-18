@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from . import common
 from . import test_assets
 from . import test_attachment
 from . import test_auth_signup_uninvited
