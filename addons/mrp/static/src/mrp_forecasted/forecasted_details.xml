@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template">
-    <t name="mrp.ForecastedDetails" owl="1" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
+    <t t-name="mrp.ForecastedDetails" owl="1" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension">
         <xpath expr="//tr[@name='draft_picking_in']" position="after">
             <tr t-if="props.docs.draft_production_qty.in" name="draft_mo_in">
                 <td colspan="2">Production of Draft MO</td>
