@@ -74,6 +74,11 @@ export function getCellContent(model, xc, sheetId = model.getters.getActiveSheet
     return model.getters.getCellText({ sheetId, col, row }, true);
 }
 
+export function getCorrespondingCellFormula(model, xc, sheetId = model.getters.getActiveSheetId()) {
+    const cell = model.getters.getCorrespondingFormulaCell({ sheetId, ...toCartesian(xc) });
+    return cell && cell.isFormula ? cell.content : "";
+}
+
 /**
  * Get the list of the merges (["A1:A2"]) of the sheet
  */
