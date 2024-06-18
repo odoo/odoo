@@ -9,7 +9,6 @@ import {
     onWillStart,
     onMounted,
     onWillUpdateProps,
-    onWillDestroy,
     useState,
     useRef,
 } from "@odoo/owl";
@@ -94,9 +93,6 @@ export class Link extends Component {
             this.state.url = newProps.link.getAttribute('href') || '';
             this._setUrl({ shouldFocus: newProps.shouldFocusUrl });
         });
-        onWillDestroy(() => {
-            this.destroy();
-        });
     }
     /**
      * @override
@@ -108,14 +104,6 @@ export class Link extends Component {
 
         this.$el[0].querySelector('#o_link_dialog_label_input').value = this.state.originalText;
         this._setUrl({ shouldFocus: this.props.shouldFocusUrl });
-    }
-    /**
-     * @override
-     */
-    destroy () {
-        if (this._savedURLInputOnDestroy) {
-            this._adaptPreview();
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -205,7 +193,6 @@ export class Link extends Component {
             const protocolLessUrl = this.state.url.replace(/^(https?|mailto|tel):(\/\/)?/i, '');
             this.$el.find('input[name="url"]').val(protocolLessUrl);
             this._onURLInput();
-            this._savedURLInputOnDestroy = false;
         }
         if (shouldFocus) {
             this.focusUrl();
@@ -473,10 +460,10 @@ export class Link extends Component {
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this.props.needLabel && (linkInfos.content !== this.state.originalText || linkInfos.url !== this.state.url))) {
             if (linkInfos.content === this.state.originalText) {
-                $link.html(this.state.originalHTML);
+                $link.html(this.state.originalHTML.replaceAll('\u200B', '').replaceAll('\uFEFF', ''));
             } else if (linkInfos.content && linkInfos.content.length) {
                 let contentWrapperEl = $link[0];
-                const text = $link[0].innerText.replaceAll("\u200B", "").trim();
+                const text = $link[0].innerText.replaceAll("\u200B", "").replaceAll("\uFEFF", "").trim();
                 // Update the first not ZWS child element that has the same inner text
                 // as the link with the new content while preserving child
                 // elements within the link. (e.g. the link is bold and italic)
@@ -486,7 +473,7 @@ export class Link extends Component {
                     child = [...contentWrapperEl.children].find(
                         (element) => !element.hasAttribute("data-o-link-zws")
                     );
-                } while (child?.innerText.replaceAll('\u200B', '').trim() === text);
+                } while (child?.innerText.replaceAll('\u200B', '').replaceAll('\uFEFF', '').trim() === text);
                 contentWrapperEl.innerText = linkInfos.content;
             } else {
                 $link.text(linkInfos.url);
@@ -642,7 +629,6 @@ export class Link extends Component {
      * @private
      */
     _onURLInput() {
-        this._savedURLInputOnDestroy = true;
         var $linkUrlInput = this.$el.find('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
         let isLink = !EMAIL_REGEX.test(value) && !PHONE_REGEX.test(value);
@@ -654,7 +640,6 @@ export class Link extends Component {
      */
     _onURLInputChange() {
         this._adaptPreview();
-        this._savedURLInputOnDestroy = false;
     }
 }
 

@@ -29,6 +29,7 @@ import {
     isWhitespace,
     isVisibleTextNode,
     getOffsetAndCharSize,
+    ZERO_WIDTH_CHARS,
 } from '../utils/utils.js';
 
 /**
@@ -49,7 +50,7 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
     // Do remove the character, then restore the state of the surrounding parts.
     const restore = prepareUpdate(parentElement, firstSplitOffset, parentElement, secondSplitOffset);
     const isSpace = isWhitespace(middleNode) && !isInPre(middleNode);
-    const isZWS = middleNode.nodeValue === '\u200B';
+    const isZWS = ZERO_WIDTH_CHARS.includes(middleNode.nodeValue);
     middleNode.remove();
     restore();
 
@@ -70,7 +71,7 @@ export function deleteText(charSize, offset, direction, alreadyMoved) {
                 parentElement.oDeleteForward(firstSplitOffset, alreadyMoved);
             }
         }
-        if (isZWS) {
+        if (isZWS && parentElement.isConnected) {
             fillEmpty(parentElement);
         }
         return;
@@ -112,6 +113,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         this.parentElement.remove();
         restore();
         HTMLElement.prototype.oDeleteForward.call(grandparent, parentIndex);
+        return;
+    } else if (
+        firstLeafNode &&
+        firstLeafNode.nodeType === Node.TEXT_NODE &&
+        firstLeafNode.textContent === '\ufeff'
+    ) {
+        firstLeafNode.oDeleteForward(1);
         return;
     }
     if (

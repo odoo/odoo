@@ -46,12 +46,15 @@
         trigger: "#oe_snippets.o_loaded #snippet_structure .oe_snippet:eq(2) .oe_snippet_thumbnail",
         content: _t("Drag this block and drop it in your page."),
         position: "bottom",
-        run: `drag_and_drop(:iframe #wrapwrap > main)`, 
+        run: `drag_and_drop(:iframe #wrapwrap > main)`,
+    }, {
+        // Wait until the drag and drop is resolved (causing a history step)
+        // before clicking save.
+        trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",
     }, {
         trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
-        extra_trigger: ":iframe .o_dirty",
         run: "click",
     }, {
         trigger: ".o_menu_systray_item.o_website_publish_container a",
