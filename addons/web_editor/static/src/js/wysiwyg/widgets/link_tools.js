@@ -7,6 +7,7 @@ import {
     onWillUpdateProps,
     onMounted,
     onWillUnmount,
+    onWillDestroy,
     useState,
 } from "@odoo/owl";
 import { normalizeCSSColor } from '@web/core/utils/colors';
@@ -79,6 +80,13 @@ export class LinkTools extends Link {
         onWillUnmount(() => {
             this._observer.disconnect();
         });
+        onWillDestroy(() => {
+            const $contents = this.$link.contents();
+            if (shouldUnlink(this.$link[0], this.colorCombinationClass)) {
+                $contents.unwrap();
+            }
+            this.props.onDestroy();
+        });
     }
     /**
      * @override
@@ -113,17 +121,6 @@ export class LinkTools extends Link {
         }
 
         return ret;
-    }
-    destroy() {
-        if (!this.$el?.[0]) {
-            return super.destroy(...arguments);
-        }
-        const $contents = this.$link.contents();
-        if (shouldUnlink(this.$link[0], this.colorCombinationClass)) {
-            $contents.unwrap();
-        }
-        super.destroy(...arguments);
-        this.props.onDestroy();
     }
     applyLinkToDom() {
         this._observer.disconnect();
