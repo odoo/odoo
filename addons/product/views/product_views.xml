@@ -499,8 +499,8 @@
                     <field name="color"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
-                        <t t-name="kanban-card">
-                            <main class="pe-2">
+                        <t t-name="kanban-card" class="row g-0">
+                            <main class="col-10 pe-2">
                                 <div class="d-flex mb-1 h5">
                                     <field class="me-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                     <field name="name"/>
@@ -513,7 +513,7 @@
                                     Price: <field name="lst_price"></field>
                                 </span>
                             </main>
-                            <aside>
+                            <aside class="col-2">
                                 <field name="image_128" widget="image" options="{'img_class': 'o_image_64_contain mw-100'}" alt="Product"/>
                             </aside>
                         </t>
