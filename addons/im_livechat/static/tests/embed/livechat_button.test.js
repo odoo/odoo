@@ -4,7 +4,7 @@ import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import {
     assertSteps,
     click,
@@ -23,13 +23,15 @@ defineLivechatModels();
 test("open/close temporary channel", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    await start({ authenticateAs: false });
+    const env = await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await contains(".o-livechat-LivechatButton", { count: 0 });
+    expect(Boolean(env.services["im_livechat.livechat"].thread)).toBe(true);
     await click("[title='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
+    expect(Boolean(env.services["im_livechat.livechat"].thread)).toBe(false);
     await contains(".o-livechat-LivechatButton", { count: 1 });
 });
 
