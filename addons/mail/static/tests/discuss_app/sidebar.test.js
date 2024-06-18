@@ -99,7 +99,7 @@ test("Opening a category sends the updated user setting to the server.", async (
 test("channel - command: should have view command when category is unfolded", async () => {
     await start();
     await openDiscuss();
-    await contains("i[title='View or join channels']");
+    await contains("[title='View or join channels']");
 });
 
 test("channel - command: should have view command when category is folded", async () => {
@@ -111,13 +111,13 @@ test("channel - command: should have view command when category is folded", asyn
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarCategory-channel .btn", { text: "Channels" });
-    await contains("i[title='View or join channels']");
+    await contains("[title='View or join channels']");
 });
 
 test("channel - command: should have add command when category is unfolded", async () => {
     await start();
     await openDiscuss();
-    await contains("i[title='Add or join a channel']");
+    await contains("[title='Add or join a channel']");
 });
 
 test("channel - command: should not have add command when category is folded", async () => {
@@ -129,7 +129,7 @@ test("channel - command: should not have add command when category is folded", a
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory", { text: "Channels" });
-    await contains("i[title='Add or join a channel']", { count: 0 });
+    await contains("[title='Add or join a channel']", { count: 0 });
 });
 
 test("channel - states: close manually by clicking the title", async () => {
@@ -273,7 +273,7 @@ test("sidebar: basic chat rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
     await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands div[title='Unpin Conversation']"
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']"
     );
     await contains(".o-mail-DiscussSidebarChannel .badge", { count: 0 });
 });
@@ -316,7 +316,7 @@ test("sidebar: open channel and leave it", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await assertSteps([]);
-    await click(".btn[title='Leave this channel']", {
+    await click("[title='Leave this channel']", {
         parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
     });
     await click("button", { text: "Leave Conversation" });
@@ -650,7 +650,7 @@ test("chat - command: should have add command when category is unfolded", async 
         contains: [
             ["i.oi.oi-chevron-down"],
             ["span", { text: "Direct messages" }],
-            ["i[title='Start a conversation']"],
+            ["[title='Start a conversation']"],
         ],
     });
 });
@@ -668,7 +668,7 @@ test("chat - command: should not have add command when category is folded", asyn
         contains: [
             ["i.oi.oi-chevron-right"],
             ["span", { text: "Direct messages" }],
-            ["i[title='Start a conversation']", { count: 0 }],
+            ["[title='Start a conversation']", { count: 0 }],
         ],
     });
 });
@@ -891,7 +891,7 @@ test("channel - states: the active category item should be visible even if the c
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "channel1" });
-    await contains("button.o-active", { text: "channel1" });
+    await contains("div.o-active", { text: "channel1" });
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Channels" });
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
     await contains("button", { text: "channel1" });
@@ -1046,7 +1046,7 @@ test("chat - states: the active category item should be visible even if the cate
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-down");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });
-    await contains("button.o-active", { text: "Mitchell Admin" });
+    await contains("div.o-active", { text: "Mitchell Admin" });
     await click(".o-mail-DiscussSidebarCategory-chat .btn", { text: "Direct messages" });
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
     await contains(".o-mail-DiscussSidebar button", { text: "Mitchell Admin" });

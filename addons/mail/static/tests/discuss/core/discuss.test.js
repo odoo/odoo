@@ -46,7 +46,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
     await assertSteps(["subscribe - []"]);
     await openDiscuss();
     await assertSteps([]);
-    await click(".o-mail-DiscussSidebar i[title='Add or join a channel']");
+    await click(".o-mail-DiscussSidebar [title='Add or join a channel']");
     await insertText(".o-discuss-ChannelSelector input", "new channel");
     await click(".o-discuss-ChannelSelector-suggestion");
     await assertSteps(["subscribe - []"]);

@@ -533,10 +533,10 @@ test("sidebar: basic channel rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel img[data-alt='Thread Image']");
     await contains(".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands.d-none");
     await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands i[title='Channel settings']"
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Channel settings']"
     );
     await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands div[title='Leave this channel']"
+        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Leave this channel']"
     );
 });
 
@@ -1761,7 +1761,7 @@ test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned
     await start();
     await openDiscuss();
     await contains("button", { text: "General" });
-    await contains("div[title='Leave this channel']", { count: 0 });
+    await contains("[title='Leave this channel']", { count: 0 });
 });
 
 test("restore thread scroll position", async () => {
@@ -1928,7 +1928,7 @@ test("Escape key should close the channel selector and focus the composer [REQUI
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await click("i[title='Add or join a channel']");
+    await click("[title='Add or join a channel']");
     await contains(".o-discuss-ChannelSelector");
     await triggerHotkey("escape");
     await contains(".o-discuss-ChannelSelector", { count: 0 });
@@ -2094,7 +2094,10 @@ test("Read of unread chat where new message is deleted should mark as read [REQU
     });
     await start();
     await openDiscuss();
-    await contains("button", { text: "Marc Demo", contains: [".badge", { text: "1" }] });
+    await contains(".o-mail-DiscussSidebar-item", {
+        text: "Marc Demo",
+        contains: [".badge", { text: "1" }],
+    });
     // simulate deleted message
     rpc("/mail/message/update_content", {
         message_id: messageId,
@@ -2102,5 +2105,8 @@ test("Read of unread chat where new message is deleted should mark as read [REQU
         attachment_ids: [],
     });
     await click("button", { text: "Marc Demo" });
-    await contains("button", { text: "Marc Demo", contains: [".badge", { count: 0 }] });
+    await contains(".o-mail-DiscussSidebar-item", {
+        text: "Marc Demo",
+        contains: [".badge", { count: 0 }],
+    });
 });
