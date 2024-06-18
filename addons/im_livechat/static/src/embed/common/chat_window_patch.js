@@ -27,6 +27,9 @@ patch(ChatWindow.prototype, {
             this.props.chatWindow.show({ notifyState: this.thread?.state !== "open" });
         } else {
             await super.close();
+            if (this.thread.isTransient) {
+                this.thread.delete();
+            }
         }
         this.livechatService.leave();
         this.chatbotService.stop();
