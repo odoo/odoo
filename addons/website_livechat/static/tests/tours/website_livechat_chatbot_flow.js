@@ -181,9 +181,19 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             trigger: messagesContain("Ok bye!"),
         },
         {
-            // wait for chatbot script to finish.
             trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
-            run() {},
+            run: "click",
+        },
+        {
+            trigger: "li:contains(I want to speak with an operator)",
+            run: "click",
+        },
+        {
+            trigger: messagesContain("I will transfer you to a human."),
+        },
+        {
+            trigger: ".o-mail-Composer-input:enabled",
+            isCheck: true,
         },
     ],
 });
