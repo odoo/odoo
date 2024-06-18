@@ -89,6 +89,7 @@ export class PaymentScreen extends Component {
             // When the buffer is updated, trigger this event.
             // Note that the component listens to it.
             triggerAtInput: () => this.updateSelectedPaymentline(),
+            useWithBarcode: true,
         };
 
         return config;
