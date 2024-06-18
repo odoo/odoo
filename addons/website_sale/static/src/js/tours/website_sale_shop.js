@@ -58,6 +58,10 @@
         position: "bottom",
         run: "drag_and_drop :iframe #wrapwrap > main",
     }, {
+        // Wait until the drag and drop is resolved (causing a history step)
+        // before clicking save.
+        trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",
+    }, {
         trigger: "button[data-action=save]",
         content: markup(_t("Once you click on <b>Save</b>, your product is updated.")),
         position: "bottom",
