@@ -5,12 +5,7 @@
     <Dialog size="props.size" title="props.title" withBodyPadding="false" modalRef="modalRef">
       <View t-props="viewProps"/>
       <t t-set-slot="footer">
-        <t t-if="props.preventEdit and props.preventCreate">
-          <button class="btn btn-primary" t-on-click="() => props.close()">Close</button>
-        </t>
-        <t t-else="">
-          <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Ok</button>
-        </t>
+        <button class="btn btn-primary o-default-button" t-on-click="() => props.close()">Close</button>
       </t>
     </Dialog>
   </t>

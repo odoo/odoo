@@ -84,7 +84,7 @@ export class FormViewDialog extends Component {
         }
 
         onMounted(() => {
-            if (this.modalRef.el.querySelector(".modal-footer").childElementCount > 1) {
+            if (this.modalRef.el.querySelectorAll(".modal-footer button").length > 1) {
                 const defaultButton = this.modalRef.el.querySelector(
                     ".modal-footer button.o-default-button"
                 );
