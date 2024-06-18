@@ -573,3 +573,19 @@ class WebsiteSaleExtraField(models.Model):
     )
     label = fields.Char(related='field_id.field_description')
     name = fields.Char(related='field_id.name')
+
+    def _value_for_product(self, template=None, variant=None):
+        variant_field_name = self._corresponding_variant_field_name()
+        if variant and variant_field_name:
+            return variant[variant_field_name]
+        elif template:
+            return template[self.name]
+        else:
+            return False
+
+    def _corresponding_variant_field_name(self):
+        # assumption: variant fields must have ttype=char
+        variant_fields = {
+            'default_code': 'default_code',
+        }
+        return variant_fields.get(self.name, False)

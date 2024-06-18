@@ -57,6 +57,28 @@ VariantMixin._onChangeCombination = function (ev, $parent, combination) {
         contactUsButton.removeClass('d-flex').addClass('d-none');
         product_unavailable.removeClass('d-flex').addClass('d-none')
     }
+
+    // Dynamically render extra fields
+    $('[data-variant-field]').remove();
+    if (combination.variant_extra_fields) {
+        const variantExtras = combination.variant_extra_fields.map((item) => {
+            const [label, val] = item;
+            return `<b data-variant-field>${label}: </b><span data-variant-field>${val}</span>`;
+        }).join('</br data-variant-field>');
+
+        // either append to existing extra fields or create a <p> when none
+        if (combination.any_template_extra_field) {
+            $('div#product_details > p').last().append(variantExtras);
+        } else {
+            $('div#product_details').append([
+                '<hr data-variant-field/>',
+                '<p data-variant-field class="text-muted">',
+                variantExtras,
+                '</p>',
+            ].join(''));
+        }
+    }
+
     originalOnChangeCombination.apply(this, [ev, $parent, combination]);
 };
 

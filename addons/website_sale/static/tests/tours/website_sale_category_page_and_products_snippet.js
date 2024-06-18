@@ -57,3 +57,23 @@ tour.register('category_page_and_products_snippet_use', {
         },
     },
 ]);
+
+tour.register('variant_extra_fields_tour', {
+    test: true,
+}, [
+    {
+        content: "Check that the reference of the default variant is shown on the page",
+        isCheck: true,
+        trigger: '[data-variant-field]:contains(LED01)',
+    },
+    {
+        content: "Change variant (red -> green)",
+        trigger: '[title=green]',
+        run: 'click',
+    },
+    {
+        content: "Check that the internal reference has changed accordingly",
+        isCheck: true,
+        trigger: '[data-variant-field]:contains(LED02)',
+    },
+]);

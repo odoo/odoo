@@ -18,13 +18,29 @@ class WebsiteSaleVariantController(VariantController):
         if request.website.google_analytics_key:
             combination['product_tracking_info'] = request.env['product.template'].get_google_analytics_data(combination)
 
+        product = request.env['product.template'].browse(combination['product_template_id'])
+        product_variant = request.env['product.product'].browse(combination['product_id'])
+        website = request.env['website'].get_current_website()
+
         if request.website.product_page_image_width != 'none' and not request.env.context.get('website_sale_no_images', False):
             carousel_view = request.env['ir.ui.view']._render_template('website_sale.shop_product_images', values={
-                'product': request.env['product.template'].browse(combination['product_template_id']),
-                'product_variant': request.env['product.product'].browse(combination['product_id']),
-                'website': request.env['website'].get_current_website(),
+                'product': product,
+                'product_variant': product_variant,
+                'website': website,
             })
             combination['carousel'] = carousel_view
+
+        # Send variant-specific extra fields we want rendered js-side so they can be rendered dynamically based
+        # on the currently selected product variant.
+        combination['variant_extra_fields'] = [
+            [field.label, field._value_for_product(variant=product_variant)]
+            for field in website.shop_extra_field_ids
+            if
+                field._value_for_product(variant=product_variant)
+                and not field._value_for_product(template=product)
+        ]
+        combination['any_template_extra_field'] = any(f._value_for_product(product) for f in website.shop_extra_field_ids)
+
         return combination
 
     @http.route(auth="public")
