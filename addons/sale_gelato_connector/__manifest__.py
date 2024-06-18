@@ -8,10 +8,12 @@
     """,
     'category': 'Website/Website',
     'version': '1.0',
-    'depends': ['sale'],
+    'depends': ['sale', 'delivery'],
     'auto_install': True,
     'license': 'LGPL-3',
     'data': [
-        'views/product_views.xml'
+        'data/data.xml',
+        'views/product_views.xml',
+        'views/res_config_settings_views.xml'
     ]
 }

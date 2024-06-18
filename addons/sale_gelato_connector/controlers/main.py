@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pprint
 import logging
-from odoo.http import request
-from odoo import http, _
-from odoo.addons.sale_gelato_connector.const import HANDLED_GELATO_EVENTS
+import pprint
 from werkzeug.exceptions import Forbidden
+
+from odoo import http, _
+from odoo.http import request
+
+from odoo.addons.sale_gelato_connector.const import HANDLED_GELATO_EVENTS
+
 
 _logger = logging.getLogger(__name__)
 
@@ -18,13 +21,14 @@ class GelatoController(http.Controller):
         event = request.get_json_data()
         _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(event))
         gelato_webhook_signature = request.httprequest.headers.get('signature', '')
-        self.verify_gelato_notification(gelato_webhook_signature)
+        sale_order_id = event.get('orderReferenceId')
+        self.verify_gelato_notification(gelato_webhook_signature, sale_order_id)
 
         if event['event'] in HANDLED_GELATO_EVENTS:
-            sale_order_id = event.get(
-                'orderReferenceId')  # maybe throw an error if no sale_order_id
-            sale_order = request.env['sale.order'].sudo().search([('id', '=', sale_order_id)],
-                                                                 limit=1)
+            sale_order = request.env['sale.order'].sudo().search(
+                [('id', '=', sale_order_id)],
+                        limit=1
+                )
             if event['event'] == 'order_status_updated':
                 if event.get('fulfillmentStatus') == 'canceled':
                     sale_order.message_post(
@@ -35,25 +39,17 @@ class GelatoController(http.Controller):
                         partner_ids=[sale_order.partner_id.id, ],
                     )
 
-                elif event.get(
-                        'fulfillmentStatus') == 'failed':  # note: if items have different fullfilmnet centers, two notifications will be send
-                    # should we send infi about failure to client or should it be only for backend user?
-                    sale_order.message_post(
-                        body=event['comment'],
-                    )
+                elif event.get('fulfillmentStatus') == 'failed':
+                    sale_order.message_post(body=event['comment'],)
 
-                elif event.get(
-                        'fulfillmentStatus') == 'shipped':  # note: if items have different fullfilmnet centers, two notifications will be send
-                    sale_order.message_post(
-                        body=_("The order has been passed to carrier."),
-                    )
-                elif event.get(
-                        'fulfillmentStatus') == 'in_transit':  # note: if items have different fullfilmnet centers, two notifications will be send
+                elif event.get('fulfillmentStatus') == 'shipped':  # note: if items have different fullfilmnet centers, two notifications will be send
+                    sale_order.message_post(body=_("The order has been passed to carrier."),)
+
+                elif event.get('fulfillmentStatus') == 'in_transit':  # note: if items have different fullfilmnet centers, two notifications will be send
                     sale_order.message_post(
                         body=_("Carrier is handling the order delivery."),
                     )
-                elif event.get(
-                        'fulfillmentStatus') == 'delivered':  # note: if items have different fullfilmnet centers, two notifications will be send
+                elif event.get('fulfillmentStatus') == 'delivered':  # note: if items have different fullfilmnet centers, two notifications will be send
                     sale_order.message_post(
                         body=_("The order has been delivered by carrier."),
                     )
@@ -69,7 +65,8 @@ class GelatoController(http.Controller):
         return body
 
     @staticmethod
-    def verify_gelato_notification(webhook_secret):
-        if webhook_secret != 'fkNiXwzGcPE8IYJsfIGkTYXZ2hhCJSEdNJAbfQXfYHM1A6dlTy':
+    def verify_gelato_notification(webhook_secret, sale_order):
+        if webhook_secret != sale_order.company_id.gelato_webhook_secret:
+
             _logger.warning("received notification with invalid signature")
             raise Forbidden()

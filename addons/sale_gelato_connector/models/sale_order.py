@@ -1,6 +1,7 @@
-from odoo import models
-import requests
 import json
+import requests
+
+from odoo import models
 
 
 class SaleOrder(models.Model):
@@ -12,8 +13,8 @@ class SaleOrder(models.Model):
             'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
         }
 
-        orderUrl = "https://order.gelatoapis.com/v4/orders"
-        orderJson = json.dumps({
+        order_url = "https://order.gelatoapis.com/v4/orders"
+        order_json = json.dumps({
             "orderType": "order",
             "orderReferenceId": self.id,
             "customerReferenceId": self.partner_id.id,
@@ -28,8 +29,8 @@ class SaleOrder(models.Model):
             'Content-Type': 'application/json',
             'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
         }
-        request = requests.request("POST", orderUrl, data=orderJson, headers=headers)
-        print(request)
+
+        requests.request("POST", order_url, data=order_json, headers=headers)
 
     def action_confirm(self):
         super().action_confirm()
@@ -54,7 +55,8 @@ class SaleOrder(models.Model):
     def get_gelato_items(self):
 
         gelato_items = []
-        for sale_order_line in self.order_line:  # maybe here check if line is a gelato line
+        gelato_lines = self.order_line.filtered(lambda s: s.product_id.gelato_reference)
+        for sale_order_line in gelato_lines:  # maybe here check if line is a gelato line
             gelato_item = {
                 "itemReferenceId": sale_order_line.product_id.id,
                 "productUid": str(sale_order_line.product_id.gelato_reference),
@@ -69,25 +71,3 @@ class SaleOrder(models.Model):
             gelato_items.append(gelato_item)
 
         return gelato_items
-
-    def quote(self):
-
-        url = 'https://order.gelatoapis.com/v4/orders:quote'
-
-        orderJson = json.dumps({
-            "orderReferenceId": self.id,
-            "customerReferenceId": self.partner_id.id,
-            "currency": self.currency_id.name,
-            "allowMultipleQuotes": 'true',
-
-            "recipient": self.get_gelato_shipping_address(),
-            "products": self.get_gelato_items(),
-        }
-        )
-
-        headers = {
-            'Content-Type': 'application/json',
-            'X-API-KEY': 'db055505-93f4-452e-9084-c2b821391010-76bf5a2e-0f03-4079-87c0-0bf46a7dfedb:eb8d6639-126c-44af-8452-157dc3497196'
-        }
-
-        requests.request("POST", url=url, data=orderJson, headers=headers)  # this gets shipping methods and their price
