@@ -56,13 +56,3 @@ class StockMove(models.Model):
         elif svl_id and self.stock_valuation_layer_ids.ids and svl_id not in self.stock_valuation_layer_ids.ids:
             rslt['credit_line_vals']['account_id'] = self.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id
         return rslt
-
-    def _get_dest_account(self, account_data):
-        if self.raw_material_production_id.subcontractor_id:
-            return account_data['production'].id
-        return super()._get_dest_account(account_data)
-
-    def _get_src_account(self, account_data):
-        if self.production_id.subcontractor_id:
-            return account_data['production'].id
-        return super()._get_src_account(account_data)
