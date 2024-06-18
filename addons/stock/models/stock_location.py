@@ -325,8 +325,8 @@ class Location(models.Model):
 
                     qty_by_location.update({location.id: quantity_sum for location, quantity_sum in quant_data})
                     for location_dest, quantity_list, uoms in move_line_data:
-                        quantity = sum(ml_uom._compute_quantity(float(qty), product.uom_id) for qty, ml_uom in zip(quantity_list, uoms))
-                        qty_by_location[location_dest.id] += quantity
+                        current_qty = sum(ml_uom._compute_quantity(float(qty), product.uom_id) for qty, ml_uom in zip(quantity_list, uoms))
+                        qty_by_location[location_dest.id] += current_qty
 
             if additional_qty:
                 for location_id, qty in additional_qty.items():
