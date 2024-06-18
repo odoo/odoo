@@ -52,13 +52,6 @@ class LivechatController(http.Controller):
     def odoo_ui_icons(self, **kwargs):
         return http.Stream.from_path('web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2').get_response()
 
-    @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
-    def get_emoji_bundle(self):
-        bundle = 'web.assets_emoji'
-        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
-        stream = request.env['ir.binary']._get_stream_from(asset.js())
-        return stream.get_response()
-
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
