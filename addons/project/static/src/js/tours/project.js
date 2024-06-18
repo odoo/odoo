@@ -162,25 +162,33 @@ registry.category("web_tour.tours").add('project_tour', {
     tooltipPosition: "bottom",
     run: "click",
 },
-
 {
     trigger: ".o_form_project_tasks",
     isActive: ["auto"],
 },
 {
+    isActive: ["auto"],
     trigger: ".o_field_widget[name='user_ids'] input",
     content: _t("Assign a responsible to your task"),
     tooltipPosition: "right",
-    run: "edit Mitch",
+    run: "edit Admin",
 },
 {
-    isActive: ["auto", "desktop"],
-    trigger: ".o_field_widget[name='user_ids'] .o-autocomplete--dropdown-menu li:contains(Mitchell Admin)",
+    isActive: ["manual"],
+    trigger: ".o_field_widget[name='user_ids']",
+    content: _t("Assign a responsible to your task"),
+    tooltipPosition: "right",
+    run: "click",
+},
+{
+    isActive: ["desktop", "auto"],
+    trigger: "a.dropdown-item[id*='user_ids'] span",
+    content: _t("Select an assignee from the menu"),
     run: "click",
 },
 {
     isActive: ["mobile"],
-    trigger: "div[role='article']",
+    trigger: "div.o_kanban_renderer > article.o_kanban_record",
     run: "click",
 }, {
     isActive: ["auto"],
