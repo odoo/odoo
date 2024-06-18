@@ -6,6 +6,7 @@ from . import test_image
 from . import test_ir_model
 from . import test_js
 from . import test_menu
+from . import test_router
 from . import test_click_everywhere
 from . import test_base_document_layout
 from . import test_load_menus
