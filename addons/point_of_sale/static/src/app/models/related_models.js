@@ -160,7 +160,7 @@ export class Base {
         this.model.update(this, vals);
     }
     delete() {
-        this.model.delete(this);
+        return this.model.delete(this);
     }
     /**
      * @param {object} options
@@ -561,6 +561,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, indexes = {}) 
             }
         }
         models[model].triggerEvents("delete", id);
+        return id;
     }
 
     function createCRUD(model, fields) {
