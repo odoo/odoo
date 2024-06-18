@@ -991,3 +991,56 @@ class TestSaleOrderDownPayment(TestSaleCommon):
         ]
 
         self._assert_invoice_lines_values(final_invoice.line_ids, expected)
+
+    def test_downpayment_description(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                })
+            ]
+        })
+        sale_order.action_confirm()
+        invoicing_wizard = self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': sale_order.amount_total / 2.0,
+            'sale_order_ids': [Command.link(sale_order.id)],
+        })
+
+        # Down payment invoice
+        action = invoicing_wizard.create_invoices()
+        so_dp_line = sale_order.order_line.filtered(
+            lambda sol: sol.is_downpayment and not sol.display_type)
+        self.assertTrue(so_dp_line)
+        self.assertIn('Draft', so_dp_line.name)
+        dp_invoice = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(dp_invoice.move_type, 'out_invoice')
+        dp_invoice.action_post()
+        self.assertIn('ref', so_dp_line.name)
+
+        # Full Invoice
+        invoicing_wizard = self.env['sale.advance.payment.inv'].create({
+            'sale_order_ids': [Command.link(sale_order.id)],
+            'advance_payment_method': 'delivered',
+        })
+        self.assertEqual(sale_order.invoice_status, 'to invoice')
+        action = invoicing_wizard.create_invoices()
+        full_invoice = self.env['account.move'].browse(action['res_id'])
+        self.assertEqual(full_invoice.move_type, 'out_invoice')
+        full_invoice.action_post()
+        self.assertIn('ref', so_dp_line.name)
+
+        # Credit Note
+        action = dp_invoice.action_reverse()
+        reversal_wizard = self.env[action['res_model']].with_context(
+            active_ids=dp_invoice.ids,
+            active_model='account.move',
+        ).create({
+            'journal_id': dp_invoice.journal_id.id,  # Field is not precompute but required
+        })
+        action = reversal_wizard.reverse_moves()
+        reversal_move = self.env['account.move'].browse(action['res_id'])
+        reversal_move.action_post()
+        self.assertEqual(reversal_move.move_type, 'out_refund')
+        self.assertIn('ref', so_dp_line.name)
