@@ -166,11 +166,11 @@ class AliasDomain(models.Model):
     @api.model
     def _sanitize_configuration(self, config_values):
         """ Tool sanitizing configuration values for domains """
-        if config_values.get('bounce_alias'):
+        if 'bounce_alias' in config_values:
             config_values['bounce_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['bounce_alias'])
-        if config_values.get('catchall_alias'):
+        if 'catchall_alias' in config_values:
             config_values['catchall_alias'] = self.env['mail.alias']._sanitize_alias_name(config_values['catchall_alias'])
-        if config_values.get('default_from'):
+        if 'default_from' in config_values:
             config_values['default_from'] = self.env['mail.alias']._sanitize_alias_name(
                 config_values['default_from'], is_email=True
             )

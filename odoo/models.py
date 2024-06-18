@@ -3019,7 +3019,7 @@ class BaseModel(metaclass=MetaModel):
                     params = [it for it in (True, False) if it in value]
                     check_null = False in value
                 else:
-                    params = [it for it in value if it is not False and it is not None]
+                    params = [it for it in value if it]
                     check_null = len(params) < len(value)
 
                 if params:
@@ -3046,10 +3046,10 @@ class BaseModel(metaclass=MetaModel):
             else:
                 return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
 
-        if operator == '=' and (value is False or value is None):
+        if operator == '=' and not value:
             return SQL("%s IS NULL", sql_field)
 
-        if operator == '!=' and (value is False or value is None):
+        if operator == '!=' and not value:
             return SQL("%s IS NOT NULL", sql_field)
 
         # general case
@@ -4671,8 +4671,8 @@ class BaseModel(metaclass=MetaModel):
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
                 if field.company_dependent:
                     irprop_def = self.env['ir.property']._get(key, self._name)
-                    cached_def = field.convert_to_cache(irprop_def, self)
-                    cached_val = field.convert_to_cache(val, self)
+                    cached_def = field.convert_to_cache(irprop_def, self, validate=False)
+                    cached_val = field.convert_to_cache(val, self, validate=False)
                     if cached_val == cached_def:
                         # val is the same as the default value defined in
                         # 'ir.property'; by design, 'ir.property' will not

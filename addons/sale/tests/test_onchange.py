@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests import TransactionCase, tagged, Form, mute_logger
 
 
 @tagged('post_install', '-at_install')
@@ -9,37 +9,35 @@ class TestSaleOnchanges(TransactionCase):
 
     def test_sale_warnings(self):
         """Test warnings & SO/SOL updates when partner/products with sale warnings are used."""
+        self.env.user.groups_id += self.env.ref('account.group_delivery_invoice_address')
         partner_with_warning = self.env['res.partner'].create({
             'name': 'Test', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'})
         partner_with_block_warning = self.env['res.partner'].create({
             'name': 'Test2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'})
 
         sale_order = self.env['sale.order'].create({'partner_id': partner_with_warning.id})
-        warning = sale_order._onchange_partner_id_warning()
-        self.assertDictEqual(warning, {
-            'warning': {
-                'title': "Warning for Test",
-                'message': partner_with_warning.sale_warn_msg,
-            },
-        })
+        with Form(sale_order) as sale_order_form:
+            with self.assertLogs('odoo.tests.form.onchange', 'WARNING') as log_output:
+                sale_order_form.partner_id = partner_with_warning
+            self.assertRegex(log_output.output[0], f"Warning for Test.*{partner_with_warning.sale_warn_msg}")
 
-        sale_order.partner_id = partner_with_block_warning
-        warning = sale_order._onchange_partner_id_warning()
-        self.assertDictEqual(warning, {
-            'warning': {
-                'title': "Warning for Test2",
-                'message': partner_with_block_warning.sale_warn_msg,
-            },
-        })
+            # Verify partner-related fields have not been reset
+            self.assertEqual(sale_order_form.partner_id, partner_with_warning)
 
-        # Verify partner-related fields have been correctly reset
-        self.assertFalse(sale_order.partner_id.id)
-        self.assertFalse(sale_order.partner_invoice_id.id)
-        self.assertFalse(sale_order.partner_shipping_id.id)
-        self.assertFalse(sale_order.pricelist_id.id)
+            with self.assertLogs('odoo.tests.form.onchange', 'WARNING') as log_output:
+                sale_order_form.partner_id = partner_with_block_warning
+            self.assertRegex(log_output.output[0], f"Warning for Test2.*{partner_with_block_warning.sale_warn_msg}")
 
-        # Reuse non blocking partner for product warning tests
-        sale_order.partner_id = partner_with_warning
+            # Verify partner-related fields have been correctly reset
+            self.assertFalse(sale_order_form.partner_id.id)
+            self.assertFalse(sale_order_form.partner_invoice_id.id)
+            self.assertFalse(sale_order_form.partner_shipping_id.id)
+            self.assertFalse(sale_order_form.pricelist_id.id)
+
+            # Reuse non blocking partner for product warning tests
+            with mute_logger('odoo.tests.form.onchange'):
+                sale_order_form.partner_id = partner_with_warning
+
         product_with_warning = self.env['product.product'].create({
             'name': 'Test Product', 'sale_line_warn': 'warning', 'sale_line_warn_msg': 'Highly corrosive'})
         product_with_block_warning = self.env['product.product'].create({

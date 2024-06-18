@@ -14,6 +14,7 @@ import random
 from odoo import fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
+from odoo.exceptions import ValidationError
 from odoo.tests import Form, HttpCase, users
 from odoo.tools import mute_logger
 
@@ -275,7 +276,7 @@ class TestActivityFlow(TestActivityCommon):
             'res_id': test_record.id,
             'res_model_id': self.env['ir.model']._get_id(test_record._name),
         })
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(ValidationError):
             activity.write({'res_model_id': False})
             self.env.flush_all()
         with self.assertRaises(IntegrityError):
