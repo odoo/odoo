@@ -6539,3 +6539,64 @@ class StockMove(TransactionCase):
             ml.quant_id = quant
         move = move_form.save()
         self.assertEqual(quant.reserved_quantity, 12)
+
+    def test_storage_category_restriction(self):
+        stock = self.env.ref('stock.stock_location_stock')
+        product = self.product
+
+        storage_category = self.env['stock.storage.category'].create({
+            'name': 'test_storage_category_restriction storage categ',
+            'product_capacity_ids': [Command.create({
+                'product_id': product.id,
+                'quantity': 5,
+            })],
+        })
+        internal_location = self.env['stock.location'].create({
+            'name': 'test_storage_category_restriction location',
+            'location_id': stock.id,
+            'storage_category_id': storage_category.id,
+        })
+        self.env['stock.putaway.rule'].create({
+            'product_id': product.id,
+            'location_in_id': stock.id,
+            'location_out_id': internal_location.id,
+            'storage_category_id': storage_category.id,
+        })
+
+        receipt1 = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': stock.id,
+            'move_ids': [Command.create({
+                'name': 'test_storage_category_restriction move 1',
+                'product_id': product.id,
+                'product_uom_qty': 2.0,
+                'product_uom': product.uom_id.id,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': stock.id,
+            })],
+        })
+        receipt1.action_confirm()
+
+        receipt2 = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': stock.id,
+            'move_ids': [Command.create({
+                'name': 'test_storage_category_restriction move 1',
+                'product_id': product.id,
+                'product_uom_qty': 200.0,
+                'product_uom': product.uom_id.id,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': stock.id,
+            })],
+        })
+        receipt2.action_confirm()
+        receipt2.move_line_ids.quantity = 200.0
+        receipt2.button_validate()
+
+        total_qty = sum(internal_location.quant_ids.mapped('quantity'))
+        self.assertTrue(
+            total_qty <= storage_category.product_capacity_ids.quantity,
+            f'On-hand quantity = {total_qty}'
+        )
