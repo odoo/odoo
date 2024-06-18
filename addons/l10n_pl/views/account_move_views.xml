@@ -18,6 +18,9 @@
                     </group>
                 </page>
             </notebook>
+            <xpath expr="//group[@name='accounting_info_group']" position='inside'>
+                <field name="delivery_date" readonly="state != 'draft'" invisible="move_type not in ('in_invoice', 'in_refund') or country_code != 'PL'"/>
+            </xpath>
         </field>
     </record>
 </odoo>
