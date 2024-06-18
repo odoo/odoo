@@ -30,5 +30,5 @@ class AccountMove(models.Model):
         }
 
     def action_debit_note(self):
-        action = self.env.ref('account_debit_note.action_view_account_move_debit').read()[0]
+        action = self.env.ref('account_debit_note.action_view_account_move_debit')._get_action_dict()
         return action
