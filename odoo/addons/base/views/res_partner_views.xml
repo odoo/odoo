@@ -218,11 +218,11 @@
                                     <field name="color"/>
                                     <field name="type"/>
                                     <templates>
-                                        <t t-name="kanban-card" class="row g-0">
-                                            <aside class="col-3 col-sm-2 col-md-3 o_kanban_aside_full">
-                                                <field name="avatar_128" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image"/>
+                                        <t t-name="kanban-card" class="flex-row">
+                                            <aside class="o_kanban_aside_full">
+                                                <field name="avatar_128" class="o_kanban_image_fill w-100" widget="image" options="{'img_class': 'object-fit-cover'}" alt="Contact image"/>
                                             </aside>
-                                            <main class="col-9 col-sm-10 col-md-9 ps-2">
+                                            <main class="ps-2 ps-md-0">
                                                 <field name="name" class="fw-bold"/>
                                                 <field name="function"/>
                                                 <field name="email" widget="email"/>
@@ -398,12 +398,12 @@
                     <field name="is_company"/>
                     <field name="active"/>
                     <templates>
-                        <t t-name="kanban-card" class="row g-0">
+                        <t t-name="kanban-card" class="flex-row">
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                            <aside class="col-3 col-sm-2 col-md-4 o_kanban_aside_full">
+                            <aside class="o_kanban_aside_full">
                                 <t t-if="!record.is_company.raw_value">
-                                    <div class="position-relative w-100">
-                                        <field name="avatar_128" alt="Contact image" class="position-md-absolute top-0 start-0 h-100 w-100" widget="image" options="{'img_class': 'object-fit-cover w-100 h-100'}"/>
+                                    <div class="o_kanban_image_fill position-relative w-100">
+                                        <field name="avatar_128" alt="Contact image" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
                                         <field t-if="record.parent_id.raw_value" name="parent_id" class="position-absolute bottom-0 end-0 w-25 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
                                     </div>
                                 </t>
@@ -411,7 +411,7 @@
                                     <field name="avatar_128" class="w-100" widget="image" options="{'img_class': 'object-fit-contain w-100 h-100'}"/>
                                 </t>
                             </aside>
-                            <main class="col-9 col-sm-10 col-md-8  ps-2">
+                            <main class="ps-2 ps-md-0">
                                 <div class="mb-1">
                                     <field name="display_name" class="mb-0 h5"/>
                                     <field t-if="record.parent_id.raw_value and !record.function.raw_value" class="text-muted" name="parent_id"/>
