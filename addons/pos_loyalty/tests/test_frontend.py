@@ -1643,3 +1643,275 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertTrue(loyalty_card)
         self.assertFalse(loyalty_card.points)
+
+    def test_points_awarded_global_discount_code_no_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a global discount applied and the
+        loyalty program applies on all product (no domain).
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        self.auto_promo_program_next.applies_on = 'current'
+        self.auto_promo_program_next.active = True
+
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPointsGlobalDiscountProgramNoDomain",
+            login="accountman",
+        )
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_points_awarded_discount_code_no_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on all product (no domain).
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        self.product_b.write({
+            'list_price': 50,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        loyalty_program.pos_config_ids = [Command.link(self.main_pos_config.id)]
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        self.code_promo_program.active = True
+        self.code_promo_program.reward_ids.write(
+            {
+                'description': '10% on your order',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'discount_product_ids': None
+            })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPointsDiscountNoDomainProgramNoDomain",
+            login="accountman",
+        )
+        self.assertEqual(loyalty_card.points, 135)
+
+    def test_points_awarded_general_discount_code_specific_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on a sepcific domain. The discount code has no domain. The product
+        related to that discount is not in the domain of the loyalty program.
+        Expected behavior: The discount is not included in the computation of points
+        """
+        product_category_base = self.env.ref('product.product_category_1')
+        product_category_food = self.env['product.category'].create({
+            'name': 'Food',
+            'parent_id': product_category_base.id
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'categ_id': product_category_food.id,
+        })
+        self.product_b.write({
+            'list_price': 50,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        loyalty_program.rule_ids.product_category_id = product_category_food.id
+        loyalty_program.pos_config_ids = [Command.link(self.main_pos_config.id)]
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        self.code_promo_program.active = True
+        self.code_promo_program.reward_ids.write(
+            {
+                'description': '10% on your order',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'discount_product_ids': None
+            })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPointsDiscountNoDomainProgramDomain",
+            login="accountman",
+        )
+        self.assertEqual(loyalty_card.points, 100)
+
+    def test_points_awarded_specific_discount_code_specific_domain_program(self):
+        """
+        Check the calculation for points awarded when there is a discount coupon applied and the
+        loyalty program applies on a sepcific domain. The discount code has the same domain as the
+        loyalty program. The product related to that discount code is set up to be included in the
+        domain of the loyalty program.
+        """
+        product_category_base = self.env.ref('product.product_category_1')
+        product_category_food = self.env['product.category'].create({
+            'name': 'Food',
+            'parent_id': product_category_base.id
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'categ_id': product_category_food.id,
+        })
+        self.product_b.write({
+            'list_price': 50,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        loyalty_program.rule_ids.product_category_id = product_category_food.id
+        loyalty_program.pos_config_ids = [Command.link(self.main_pos_config.id)]
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        self.code_promo_program.active = True
+        self.code_promo_program.reward_ids.write(
+            {
+                'description': '10% on your order',
+                'discount': 10,
+                'discount_product_ids': None,
+                'discount_product_category_id': product_category_food.id,
+            })
+
+        discount_product = self.env['product.product'].search([('id', '=', self.code_promo_program.reward_ids.discount_line_product_id.id)])
+        discount_product.categ_id = product_category_food.id
+        discount_product.name = "10% on food"
+        discount_product.available_in_pos = True
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPointsDiscountWithDomainProgramDomain",
+            login="accountman",
+        )
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_points_awarded_ewallet(self):
+        """
+        Check the calculation for point awarded when using ewallet
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        loyalty_program.pos_config_ids = [Command.link(self.main_pos_config.id)]
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        ewallet_program = self.env['loyalty.program'].create({
+            'name': 'eWallet Program',
+            'program_type': 'ewallet',
+            'trigger': 'auto',
+            'applies_on': 'future',
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 1,
+            })],
+            'rule_ids': [Command.create({
+                'reward_point_amount': '1',
+                'reward_point_mode': 'money',
+                'product_ids': self.env.ref('loyalty.ewallet_product_50'),
+            })],
+            'trigger_product_ids': self.env.ref('loyalty.ewallet_product_50'),
+        })
+
+        self.env['loyalty.card'].create({
+            'program_id': ewallet_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 10,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPointsEwallet",
+            login="accountman",
+        )
+        self.assertEqual(loyalty_card.points, 100)
+
+    def test_points_awarded_giftcard(self):
+        """
+        Check the calculation for point awarded when using a gift card
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        # Change the gift card program settings
+        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
+        # Generate 50$ gift card.
+        self.env["loyalty.generate.wizard"].with_context(
+            {"active_id": gift_card_program.id}
+        ).create({"coupon_qty": 1, 'points_granted': 50}).generate_coupons()
+        # Change the code of the gift card.
+        gift_card_program.coupon_ids.code = '044123456'
+
+        self.product_a.write({
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        loyalty_program.pos_config_ids = [Command.link(self.main_pos_config.id)]
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyPointsGiftcard",
+            login="accountman",
+        )
+        self.assertEqual(loyalty_card.points, 100)

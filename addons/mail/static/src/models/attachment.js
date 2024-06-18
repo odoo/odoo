@@ -4,8 +4,6 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
 
-import { session } from '@web/session';
-
 registerModel({
     name: 'Attachment',
     modelMethods: {
@@ -200,10 +198,7 @@ registerModel({
                 if (!this.messaging) {
                     return false;
                 }
-                if (session.is_admin) {
-                    return true;
-                }
-                if (this.messages.length) {
+                if (this.messages.length && this.originThread && this.originThread.model === 'mail.channel') {
                     return this.messages.some(message => (
                         message.canBeDeleted ||
                         (message.author && message.author === this.messaging.currentPartner) ||

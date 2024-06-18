@@ -905,10 +905,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     if (((!line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.get_product().id))) ||
                         (line.reward_product_id && (rule.any_product || rule.valid_product_ids.has(line.reward_product_id)))) &&
                         !line.ignoreLoyaltyPoints({ program })){
-                        // We only count reward products from the same program to avoid unwanted feedback loops
-                        if (line.reward_product_id) {
+                        if (line.is_reward_line) {
                             const reward = this.pos.reward_by_id[line.reward_id];
-                            if (program.id !== reward.program_id) {
+                            if ((program.id === reward.program_id.id) || ['gift_card', 'ewallet'].includes(reward.program_id.program_type)) {
                                 continue;
                             }
                         }
@@ -918,8 +917,8 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                         } else {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] = lineQty;
                         }
+                        orderedProductPaid += line.get_price_with_tax();
                         if(!line.is_reward_line){
-                            orderedProductPaid += line.get_price_with_tax();
                             totalProductQty += lineQty;
                         }
                     }
