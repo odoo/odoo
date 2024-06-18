@@ -23,7 +23,6 @@ class IrQweb(models.AbstractModel):
     )
 
     allowed_directives = (
-        "esc",
         "out",
         "inner-content",
         "att",
@@ -44,15 +43,22 @@ class IrQweb(models.AbstractModel):
 
     def _compile_directive_att(self, el, compile_context, level):
         if compile_context.get("raise_on_forbidden_code"):
-            if set(el.attrib) - {"t-esc", "t-out", "t-tag-open", "t-tag-close"}:
+            if set(el.attrib) - {"t-out", "t-tag-open", "t-tag-close", "t-inner-content"}:
                 raise PermissionError("This directive is not allowed for this rendering mode.")
-
         return super()._compile_directive_att(el, compile_context, level)
 
     def _compile_expr(self, expr, raise_on_missing=False):
         if self.env.context.get("raise_on_forbidden_code") and not self._is_expression_allowed(expr):
             raise PermissionError("This directive is not allowed for this rendering mode.")
         return super()._compile_expr(expr, raise_on_missing)
+
+    def _compile_directive_out(self, el, compile_context, level):
+        if compile_context.get("raise_on_forbidden_code"):
+            if len(el) != 0:
+                raise PermissionError("No child allowed for t-out.")
+            if set(el.attrib) - {'t-out', 't-tag-open', 't-tag-close'}:
+                raise PermissionError("No other attribute allowed for t-out.")
+        return super()._compile_directive_out(el, compile_context, level)
 
     def _is_expression_allowed(self, expression):
         return expression.strip() in self.allowed_qweb_expressions

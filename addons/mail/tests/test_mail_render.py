@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from unittest.mock import patch
 
 from odoo.addons.mail.tests import common
 from odoo.exceptions import AccessError
@@ -384,6 +385,93 @@ class TestMailRender(TestMailRenderCommon):
         for source, expected in zip(local_links_template_bits, rendered_local_links):
             rendered = self.env['mail.render.mixin']._replace_local_links(source)
             self.assertEqual(rendered, expected)
+
+    def test_qweb_static_rendering(self):
+        record = self.env['res.partner'].create({'name': 'Alice'})
+
+        def render(template):
+            return self.env['mail.render.mixin']._render_template_qweb(template, 'res.partner', record.ids)[record.id]
+
+        static_templates = (
+            ('''<h1> Title </h1>''', '<h1> Title </h1>'),
+            ('''<p t-out="object.name"/>''', '<p>Alice</p>'),
+            ('''<p t-out="object.name"></p>''', '<p>Alice</p>'),
+            ('''<P   t-out="object.name" ></p >''', '<p>Alice</p>'),
+            ('''<t t-out="object.name"/>''', 'Alice'),
+            ('''<T t-out="object.name"/>''', 'Alice'),
+            ('''<div><T t-out="object.name"/></div>''', '<div>Alice</div>'),
+            ('''<h1 t-out="object.name"/>''', '<h1>Alice</h1>'),
+            ('''<p t-out='object.name'/>''', '<p>Alice</p>'),
+            ('''<p t-out="object.contact_name"/>''', '<p></p>'),
+            ('''<p t-out="object.name">Default</p>''', '<p>Alice</p>'),
+            ('''<p t-out='object.name'>Default</p>''', '<p>Alice</p>'),
+            ('''<p t-out="object.contact_name">Default</p>''', '<p>Default</p>'),
+            ('''<p t-out="object.name"/><p t-out="object.name">Default</p>''', '<p>Alice</p><p>Alice</p>'),
+            ('''<p t-out="object.name"/><p t-out="object.contact_name">Default</p>''', '<p>Alice</p><p>Default</p>'),
+            ('''<p
+                    t-out="object.name"
+                    />''', '<p>Alice</p>'),
+            ('''<p
+                    t-out="object.contact_name"
+                    >
+                    Default
+                    </p>''', '<p>Default</p>'),
+            ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
+        )
+        o_qweb_render = self.env['ir.qweb']._render
+        for template, expected in static_templates:
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                self.assertEqual(render(template), expected)
+                self.assertFalse(qweb_render.called)
+                self.assertFalse(unsafe_eval.called)
+
+        # double check that we are able to catch the eval
+        non_static_templates = (
+            ('''<p t-out=""/>''', '<p>()</p>'),
+            ('''<p t-out="1+1"/>''', '<p>2</p>'),
+            ('''<p t-out="object.name" title="Test"/>''', '<p title="Test">Alice</p>'),
+            ('''<p title="Test" t-out="object.name"/>''', '<p title="Test">Alice</p>'),
+            ('''<p t-out="object.name"><img/></p>''', '<p>Alice</p>'),
+            ('''<p t-out="object.parent_id.name"><img/></p>''', '<p><img/></p>'),
+            ('''<p t-out="'<h1>test</h1>'"/>''', '<p>&lt;h1&gt;test&lt;/h1&gt;</p>'),
+        )
+        for template, expected in non_static_templates:
+            with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+                rendered = render(template)
+                self.assertTrue(isinstance(rendered, Markup))
+                self.assertEqual(rendered, expected)
+                self.assertTrue(qweb_render.called)
+                self.assertTrue(unsafe_eval.called)
+
+    def test_inline_static_rendering(self):
+        record = self.env['res.partner'].create({'name': 'Alice'})
+
+        def render(template):
+            return self.env['mail.render.mixin']._render_template_inline_template(template, 'res.partner', record.ids)[record.id]
+
+        static_templates = (
+            ('''{{object.name}}''', 'Alice'),
+            ('''{{object.contact_name}}''', ''),
+            ('''{{object.name ||| Default}}''', 'Alice'),
+            ('''{{object.contact_name ||| Default}}''', 'Default'),
+        )
+        for template, expected in static_templates:
+            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+                self.assertEqual(render(template), expected)
+                self.assertFalse(unsafe_eval.called)
+                self.assertFalse(self.env['mail.render.mixin']._has_complex_expression_template_inline_template(template))
+
+        non_static_templates = (
+            ('''{{''}}''', ''),
+            ('''{{1+1}}''', '2'),
+        )
+        for template, expected in non_static_templates:
+            with patch('odoo.tools.safe_eval.unsafe_eval', side_effect=eval) as unsafe_eval:
+                self.assertEqual(render(template), expected)
+                self.assertTrue(unsafe_eval.called)
+                self.assertTrue(self.env['mail.render.mixin']._has_complex_expression_template_inline_template(template))
 
 
 @tagged('mail_render')
