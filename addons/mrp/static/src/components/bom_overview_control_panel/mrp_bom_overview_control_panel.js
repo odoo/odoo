@@ -68,17 +68,11 @@ export class BomOverviewControlPanel extends Component {
     }
 
     async manufactureFromBoM() {
-        const action = {
-            res_model: "mrp.production",
-            name: "Manufacture Orders",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-            target: "current",
-            context: {
-                default_bom_id: this.props.data.bom_id,
+        return this.action.doAction("mrp.manufacture_from_bom", {
+            additionalContext: {
+                default_bom_id: this.props.data.bom_id
             },
-        };
-        return this.action.doAction(action);
+        });
     }
 
     get precision() {

@@ -311,5 +311,12 @@
             <field name="res_model">mrp.bom</field>
             <field name="domain">[]</field> <!-- Force empty -->
         </record>
+
+        <record id="manufacture_from_bom" model="ir.actions.act_window">
+            <field name="name">Manufacture Orders</field>
+            <field name="res_model">mrp.production</field>
+            <field name="domain"></field>
+            <field name="view_mode">form</field>
+        </record>
     </data>
 </odoo>
