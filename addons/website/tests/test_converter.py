@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import threading
 
 from odoo.tests.common import BaseCase
@@ -48,6 +47,7 @@ class TestSlugUnslug(BaseCase):
 
         for expected, value in tests.items():
             self.assertEqual(slug(value), expected, "%r case failed" % (value,))
+
 
 class TestTitleToSlug(BaseCase):
     """
