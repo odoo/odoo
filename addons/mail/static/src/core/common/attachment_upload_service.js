@@ -110,7 +110,7 @@ export class AttachmentUploadService {
         this.store.Attachment.get(tmpId).remove();
     }
 
-    get uploadURL() {
+    getUploadURL(thread) {
         return "/mail/attachment/upload";
     }
 
@@ -136,7 +136,7 @@ export class AttachmentUploadService {
         this.targetsByTmpId.set(tmpId, { composer, thread });
         this.uploadingAttachmentIds.add(tmpId);
         await this.fileUploadService
-            .upload(this.uploadURL, [file], {
+            .upload(this.getUploadURL(thread), [file], {
                 buildFormData: (formData) => {
                     this._buildFormData(formData, tmpURL, thread, composer, tmpId, options);
                 },
