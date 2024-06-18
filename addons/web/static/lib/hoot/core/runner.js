@@ -747,6 +747,9 @@ export class Runner {
 
         this.state.status = "running";
 
+        /** @type {Runner["_handleError"]} */
+        const handlError = this._handleError.bind(this);
+
         /**
          * @param {Job} [job]
          */
@@ -783,16 +786,16 @@ export class Runner {
                         // before suite code
                         this.suiteStack.push(suite);
 
-                        await this._callbacks.call("before-suite", suite);
-                        await suite.callbacks.call("before-suite", suite);
+                        await this._callbacks.call("before-suite", suite, handlError);
+                        await suite.callbacks.call("before-suite", suite, handlError);
                     }
                     if (suite.visited >= suite.currentJobs.length) {
                         // after suite code
                         this.suiteStack.pop();
 
                         await this._execAfterCallback(async () => {
-                            await suite.callbacks.call("after-suite", suite);
-                            await this._callbacks.call("after-suite", suite);
+                            await suite.callbacks.call("after-suite", suite, handlError);
+                            await this._callbacks.call("after-suite", suite, handlError);
                         });
 
                         suite.parent?.reporting.add({ suites: +1 });
@@ -828,11 +831,10 @@ export class Runner {
 
             // Before test
             this.state.currentTest = test;
-            for (const callbackRegistry of [...callbackChain].reverse()) {
-                await callbackRegistry.call("before-test", test);
-            }
-
             this.expectHooks.before(test);
+            for (const callbackRegistry of [...callbackChain].reverse()) {
+                await callbackRegistry.call("before-test", test, handlError);
+            }
 
             let timeoutId = 0;
 
@@ -878,7 +880,7 @@ export class Runner {
             const { lastResults } = test;
             await this._execAfterCallback(async () => {
                 for (const callbackRegistry of callbackChain) {
-                    await callbackRegistry.call("after-test", test);
+                    await callbackRegistry.call("after-test", test, handlError);
                 }
             });
 
@@ -902,7 +904,7 @@ export class Runner {
                 logger.error(`Test "${test.fullName}" failed:\n${failReason}`);
             }
 
-            await this._callbacks.call("after-post-test", test);
+            await this._callbacks.call("after-post-test", test, handlError);
 
             if (this.config.bail) {
                 if (!test.config.skip && !lastResults.pass) {
@@ -953,7 +955,7 @@ export class Runner {
             await this._missedCallbacks.shift()();
         }
 
-        await this._callbacks.call("after-all");
+        await this._callbacks.call("after-all", logger.error);
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
@@ -1169,9 +1171,6 @@ export class Runner {
     async _execAfterCallback(callback) {
         if (this.debug) {
             this._missedCallbacks.push(callback);
-            if (this.state.currentTest) {
-                await this._callbacks.call("after-debug-test", this.state.currentTest);
-            }
         } else {
             await callback();
         }
@@ -1376,7 +1375,7 @@ export class Runner {
     /**
      * @param {Error | ErrorEvent | PromiseRejectionEvent} ev
      */
-    async _handleError(ev) {
+    _handleError(ev) {
         const error = ensureError(ev);
         if (!(ev instanceof Event)) {
             ev = new ErrorEvent("error", { error });
@@ -1384,7 +1383,7 @@ export class Runner {
 
         if (this.state.currentTest) {
             for (const callbackRegistry of this._getCallbackChain(this.state.currentTest)) {
-                callbackRegistry.callSync("error", ev);
+                callbackRegistry.callSync("error", ev, logger.error);
                 if (ev.defaultPrevented) {
                     return;
                 }
@@ -1472,6 +1471,6 @@ export class Runner {
         enableEventLogs(this.debug);
         setFrameRate(this.config.fps);
 
-        await this._callbacks.call("before-all");
+        await this._callbacks.call("before-all", logger.error);
     }
 }
