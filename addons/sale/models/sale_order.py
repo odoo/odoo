@@ -554,6 +554,13 @@ class SaleOrder(models.Model):
             vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist.id)
         result = super(SaleOrder, self).create(vals)
+        if self.env.uid == self.env.ref('base.user_root').id:
+            for field_name in vals.keys():
+                field = self._fields[field_name]
+                value = field.convert_to_write(result[field_name], result)
+                condition = "%s=%s" % (field_name, value)
+                defaults = self.env['ir.default'].get_model_defaults(self._name, condition)
+                result.update(defaults)
         return result
 
     def _compute_field_value(self, field):

@@ -255,6 +255,13 @@ class PurchaseOrder(models.Model):
             vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
         vals, partner_vals = self._write_partner_values(vals)
         res = super(PurchaseOrder, self_comp).create(vals)
+        if self.env.uid == self.env.ref('base.user_root').id:
+            for field_name in vals.keys():
+                field = self._fields[field_name]
+                value = field.convert_to_write(res[field_name], res)
+                condition = "%s=%s" % (field_name, value)
+                defaults = self.env['ir.default'].get_model_defaults(self._name, condition)
+                res.update(defaults)
         if partner_vals:
             res.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
         return res

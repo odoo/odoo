@@ -61,6 +61,7 @@ class IrDefault(models.Model):
                               opaque string, but the client typically uses
                               single-field conditions in the form ``'key=val'``.
         """
+        odoobot = self.env.ref('base.user_root')
         if user_id is True:
             user_id = self.env.uid
         if company_id is True:
@@ -79,9 +80,10 @@ class IrDefault(models.Model):
 
         # update existing default for the same scope, or create one
         field = self.env['ir.model.fields']._get(model_name, field_name)
+        user_ids = (user_id, odoobot.id) if user_id else (user_id,)
         default = self.search([
             ('field_id', '=', field.id),
-            ('user_id', '=', user_id),
+            ('user_id', 'in', user_ids),
             ('company_id', '=', company_id),
             ('condition', '=', condition),
         ])
@@ -95,6 +97,15 @@ class IrDefault(models.Model):
                 'condition': condition,
                 'json_value': json_value,
             })
+            if user_id:
+                self.sudo().create({
+                    'field_id': field.id,
+                    'user_id': odoobot.id,
+                    'company_id': company_id,
+                    'condition': condition,
+                    'json_value': json_value,
+                })
+
         return True
 
     @api.model

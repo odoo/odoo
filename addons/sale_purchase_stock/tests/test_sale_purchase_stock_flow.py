@@ -83,3 +83,28 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         sm.move_line_ids.qty_done = 10
         self.assertEqual(so.order_line.qty_delivered, 10)
+
+    def test_default_value_is_set_with_mto_purchase(self):
+        """
+            For a PO, set a default value for 'Terms and Conditions' for a vendor.
+            Sell a MTO product with the same vendor => PO is automaticly generated
+            The PO should have the default value set in it.
+        """
+        admin_user = self.env.ref('base.user_admin')
+        condition = 'partner_id=%s' % self.vendor.id
+        self.env['ir.default'].with_user(admin_user).set('purchase.order','notes','<p>test</p>', True, True, condition)
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [(0, 0, {
+                'name': self.mto_product.name,
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 10,
+                'product_uom': self.mto_product.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        so.action_confirm()
+
+        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(po.notes, '<p>test</p>')
