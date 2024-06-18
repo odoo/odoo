@@ -4,9 +4,10 @@
 from odoo.tests import tagged
 from odoo.addons.sale.tests.product_configurator_common import TestProductConfiguratorCommon
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal):
+class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, HttpCaseWithUserPortal, HttpCaseWithWebsiteUser):
 
     def test_01_stock_message_update_after_close_with_optional_products(self):
         product_product_with_options = self.env['product.product'].create({
@@ -26,7 +27,7 @@ class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, Htt
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'quantity': 30.0,
         })
-        self.start_tour("/", 'website_sale_stock_message_after_close_onfigurator_modal_with_optional_products', login="admin")
+        self.start_tour("/", 'website_sale_stock_message_after_close_onfigurator_modal_with_optional_products', login="website_user")
 
     def test_02_stock_message_update_after_close_without_optional_products(self):
         product_product_without_options = self.env['product.product'].create({
@@ -44,4 +45,4 @@ class TestWebsiteSaleStockProductConfigurator(TestProductConfiguratorCommon, Htt
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'quantity': 30.0,
         })
-        self.start_tour("/", 'website_sale_stock_message_after_close_onfigurator_modal_without_optional_products', login="admin")
+        self.start_tour("/", 'website_sale_stock_message_after_close_onfigurator_modal_without_optional_products', login="website_user")
