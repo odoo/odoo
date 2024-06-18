@@ -5,6 +5,11 @@
         <field name="model">sale.pdf.quote.builder.dynamic.fields.wizard</field>
         <field name="arch" type="xml">
             <form string="Configure Dynamic Fields">
+                <div id="alert_quote_builder_empty_path"
+                     role="alert"
+                     class="alert alert-warning">
+                    Leave the path empty in order to be able to configure a customized message directly in the sale order.
+                </div>
                 <sheet>
                     <field name="current_form_fields" invisible="1"/>
                     <field name="dynamic_fields_wizard_line_ids">

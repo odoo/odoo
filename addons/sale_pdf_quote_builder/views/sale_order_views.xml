@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_inherit_sale_pdf_quote_builder" model="ir.ui.view">
+        <field name="name">sale.order.form.pdf.quote.builder</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+<!--            TODO edm; ensure working with quote not in draft/sent-->
+            <page name="optional_products" position="after">
+                <page name="pdf_quote_builder" string="Descriptions">
+                    <button
+                        name="action_toggle_is_pdf_quote_builder_active"
+                        invisible="is_pdf_quote_builder_active"
+                        class="btn-primary"
+                        type="object"
+                        icon="fa-globe"
+                    >
+                            <span> Activate</span>
+                    </button>
+                    <button
+                        name="action_update_included_pdf"
+                        invisible="not is_pdf_quote_builder_active"
+                        class="btn-secondary"
+                        type="object"
+                        icon="fa-file-pdf-o"
+                    >
+                            <span> Update Sections</span>
+                    </button>
+                    <button
+                        name="action_toggle_is_pdf_quote_builder_active"
+                        invisible="not is_pdf_quote_builder_active"
+                        class="btn-secondary mx-1"
+                        type="object"
+                        icon="fa-eye-slash"
+                    >
+                            <span> Deactivate</span>
+                    </button>
+                    <div invisible="is_pdf_quote_builder_active">
+                        <p class="text-muted"> <br/>
+                            Make your quote attractive: <br/>
+                            <ul>
+                                <li>Add headers, product descriptions and footers PDF to your quote.</li>
+                                <li>Put fields in your PDF templates to define content areas.</li>
+                                <li>Customize their content to add specifications, project's
+                                    clarifications, details of the offer, etc. </li>
+                            </ul>
+                            Data of the quotation (customer name, quotation reference, ... ) and
+                            your customized contents are injected in<br/>
+                            documents using pdf form fields. (See the
+                            <widget
+                                name="documentation_link"
+                                path="/applications/sales/sales/send_quotations/pdf_quote_builder.html"
+                                label="documentation"
+                            />for detailed explanations)
+                            <div>
+                                <br/>
+                                <widget
+                                    name="documentation_link"
+                                    path="/_downloads/56a93429515b36105d952e1d2b802f9e/sample_quotation.pdf"
+                                    label=" Preview Sample Quote"
+                                    icon="fa-arrow-right"
+                                />
+                            </div>
+                        </p>
+                    </div>
+                    <div invisible="not is_pdf_quote_builder_active">
+                        <group string="Customized fields"/>
+                            <field
+                                name="customizable_pdf_form_fields"
+                                widget="custom_content_kanban_like"
+                            />
+                    </div>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

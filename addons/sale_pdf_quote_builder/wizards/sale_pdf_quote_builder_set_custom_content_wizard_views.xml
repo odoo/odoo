@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pdf_quote_builder_custom_content_wizard" model="ir.ui.view">
+        <field name="name">sale.pdf.quote.builder.set.custom.content.wizard.view.form</field>
+        <field name="model">sale.pdf.quote.builder.set.custom.content.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Configure Custom Content">
+                <sheet>
+                    <field name="sale_order_id" invisible="1"/>
+                    <field name="custom_content_wizard_line_ids">
+                        <tree create="0" delete="1" editable="bottom">
+                            <field name="document_type" force_save="1"/>
+                            <field name="form_field" force_save="1"/>
+                            <field name="content"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="validate_custom_content_configuration" string="Validate" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

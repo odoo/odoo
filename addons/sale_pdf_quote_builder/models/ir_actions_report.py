@@ -32,43 +32,32 @@ class IrActionsReport(models.Model):
         for order in orders:
             initial_stream = result[order.id]['stream']
             if initial_stream:
-                order_template = order.sale_order_template_id
-                header_record = order_template if order_template.sale_header else order.company_id
-                footer_record = order_template if order_template.sale_footer else order.company_id
-                has_header = bool(header_record.sale_header)
-                has_footer = bool(footer_record.sale_footer)
-                included_product_docs = self.env['product.document']
-                doc_line_id_mapping = {}
-                for line in order.order_line:
-                    product_product_docs = line.product_id.product_document_ids
-                    product_template_docs = line.product_template_id.product_document_ids
-                    doc_to_include = (
-                        product_product_docs.filtered(lambda d: d.attached_on_sale == 'inside')
-                        or product_template_docs.filtered(lambda d: d.attached_on_sale == 'inside')
-                    )
-                    included_product_docs = included_product_docs | doc_to_include
-                    doc_line_id_mapping.update({doc.id: line.id for doc in doc_to_include})
+                has_headers = bool(order.sale_header_ids)
+                has_footers = bool(order.sale_footer_ids)
+                has_product_document = any(line.product_document_ids for line in order.order_line)
 
-                if (not has_header and not included_product_docs and not has_footer):
+                if (not has_headers and not has_product_document and not has_footers):
                     continue
 
                 all_form_fields = set()
                 writer = PdfFileWriter()
 
-                if has_header:
-                    decoded_header = base64.b64decode(header_record.sale_header)
-                    self._add_pages_to_writer(writer, decoded_header, all_form_fields)
-                if included_product_docs:
-                    for doc in included_product_docs:
-                        decoded_doc = base64.b64decode(doc.datas)
-                        sol_id = doc_line_id_mapping[doc.id]
-                        self._add_pages_to_writer(
-                            writer, decoded_doc, all_form_fields, sol_id=sol_id
-                        )
+                if has_headers:
+                    for header in order.sale_header_ids:
+                        decoded_document = base64.b64decode(header.datas)
+                        self._add_pages_to_writer(writer, decoded_document, all_form_fields)
+                if has_product_document:
+                    for line in order.order_line:
+                        for doc in line.product_document_ids:
+                            decoded_document = base64.b64decode(doc.datas)
+                            self._add_pages_to_writer(
+                                writer, decoded_document, all_form_fields, sol_id=line.id
+                            )
                 self._add_pages_to_writer(writer, initial_stream.getvalue())
-                if has_footer:
-                    decoded_footer = base64.b64decode(header_record.sale_footer)
-                    self._add_pages_to_writer(writer, decoded_footer, all_form_fields)
+                if has_footers:
+                    for footer in order.sale_footer_ids:
+                        decoded_document = base64.b64decode(footer.datas)
+                        self._add_pages_to_writer(writer, decoded_document, all_form_fields)
 
                 form_fields_values_mapping = self._get_form_fields_values_mapping(
                     order, all_form_fields, param_field_map
@@ -131,14 +120,18 @@ class IrActionsReport(models.Model):
         order.ensure_one()
         env = self.with_context(use_babel=True).env
         tz = order.partner_id.tz or self.env.user.tz or 'UTC'
+        custom_content = json.loads(order.customizable_pdf_form_fields) \
+                         if order.customizable_pdf_form_fields else {}
         form_fields_mapping = {
-            field: self._get_formatted_field(field, order, env, tz, param_field_map)
+            field: self._get_formatted_field(field, order, env, tz, param_field_map, custom_content)
             for field in all_form_fields
         }
 
         return form_fields_mapping
 
-    def _get_formatted_field(self, form_field_name, order, translated_env, tz, param_field_map):
+    def _get_formatted_field(
+        self, form_field_name, order, translated_env, tz, param_field_map, custom_content
+    ):
         """ Format a field value from the extracted PDF string.
 
         :param string form_field_name: field path
@@ -149,6 +142,8 @@ class IrActionsReport(models.Model):
         :param dict param_field_map: the map stored in the config parameter to assign the expected
                                      paths to the form fields. A form field not in that map will be
                                      ignored.
+        :param dict custom_content: the map stored in the sale order to fill form fields with custom
+                                    messages.
         :rtype: string
         :return: formatted field value
 
@@ -188,8 +183,13 @@ class IrActionsReport(models.Model):
             form_field_name = form_field_name.removeprefix(prefix + '__')
             path = param_field_map.get('product_document', {}).get(form_field_name)
 
-        if not path:
-            return ''
+        if path is None:  # Not allowed field.
+            return ""
+
+        if not path:  # Field is allowed and could have a custom message
+            document_type = 'header_footer' if not is_sol else 'product_document'
+            custom_message = custom_content.get(document_type, {}).get(form_field_name, "")
+            return custom_message
 
         path = path.split('.')
         records = record.mapped('.'.join(path[:-1]))
@@ -199,7 +199,7 @@ class IrActionsReport(models.Model):
 
         lang = order._get_lang() or self.env.user.lang
         context = {'lang': lang}
-        formatted_values = ', '.join([_get_formatted_value(value[field_name]) for value in records])
+        formatted_values = ", ".join([_get_formatted_value(value[field_name]) for value in records])
         del context
 
         return formatted_values
