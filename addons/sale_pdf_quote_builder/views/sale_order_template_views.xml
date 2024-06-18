@@ -7,64 +7,29 @@
         <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page name="pdf_quote" string="PDF Quote Builder">
+                <page name="pdf_quote" string="Quote Builder">
                     <group>
                         <group>
-                            <field name="sale_header_name" invisible="1"/>
                             <field
-                                name="sale_header"
-                                filename="sale_header_name"
-                                options="{'accepted_file_extensions': '.pdf'}"
-                            />
-                            <field name="sale_footer_name" invisible="1"/>
-                            <field
-                                name="sale_footer"
-                                filename="sale_footer_name"
-                                options="{'accepted_file_extensions': '.pdf'}"
+                                name="sale_header_ids"
+                                options="{'no_quick_create': True}"
+                                widget="many2many_tags"
                             />
                         </group>
                         <group>
-                        <button
-                            name="action_open_dynamic_fields_wizard"
-                            type="object"
-                            string="Configure dynamic fields"
-                            help="Configure the path to fill the form fields."
-                            class="btn-link"
-                            icon="fa-pencil"
-                            colspan="2"
-                            groups="base.group_system"
-                        />
+                            <field
+                                name="sale_footer_ids"
+                                options="{'no_quick_create': True}"
+                                widget="many2many_tags"
+                            />
                         </group>
                         <p class="text-muted">
-                            The quotation is made by assembling header pages, product descriptions,<br/>
-                            and footer pages. <br/>
-                            To add product sheets:<br/>
-                            1. from a product form, use the "product documents" button<br/>
-                            2. upload a PDF of the product<br/>
-                            3. set the visibility to "Inside Quotes"<br/>
-                            Data of the quotation (customer name, quotation reference, ... ) are injected in<br/>
-                            documents using pdf form fields. (see
-                            <widget
-                                name="documentation_link"
-                                path="/applications/sales/sales/send_quotations/pdf_quote_builder.html"
-                                label="documentation"
-                            />
-                            for detailed explanations)
-                            <div>
-                                <a
-                                    href="https://www.youtube.com/embed/N4zw-2t6spk?autoplay=1"
-                                    target="_new"
-                                >
-                                    <i class="fa fa-arrow-right"/> Watch Video
-                                </a>
-                                <br/>
-                                <widget
-                                    name="documentation_link"
-                                    path="/_downloads/56a93429515b36105d952e1d2b802f9e/sample_quotation.pdf"
-                                    label=" Preview Sample Quote"
-                                    icon="fa-arrow-right"
-                                />
-                            </div>
+                            Provide header pages and footer pages to compose an attractive quotation with more information
+                            about your company, your products and you services. <br/>
+                            The pdf of your quotes will be built by putting together header pages, product descriptions,
+                            details of the quote and then the footer pages. <br/>
+                            If empty, it will use those define in the company settings. <br/>
+                            <widget name="documentation_link" path="/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip" label=" Download examples" icon="fa-arrow-right"/>
                         </p>
                     </group>
                 </page>

@@ -6,49 +6,15 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="sale_management.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="sale_pdf_quote_builder" position="replace">
-                <setting
-                    id="sale_pdf_quote_builder"
-                    string="PDF Quote builder"
-                    help="Make your quote attractive by adding header, product descriptions and footer to your quote."
-                    documentation="/applications/sales/sales/send_quotations/pdf_quote_builder.html"
-                    company_dependent="1"
-                >
-                    <div class="mt16">
-                        <field name="sale_header_name" invisible="1"/>
-                        <label for="sale_header" class="me-2"/>
-                        <field
-                            name="sale_header"
-                            filename="sale_header_name"
-                            options="{'accepted_file_extensions': '.pdf'}"
-                        />
-                    </div>
-                    <div>
-                        <field name="sale_footer_name" invisible="1"/>
-                        <label for="sale_footer" class="pe-1 me-2"/>
-                        <field
-                            name="sale_footer"
-                            filename="sale_footer_name"
-                            options="{'accepted_file_extensions': '.pdf'}"
-                        />
-                    </div>
-                    <widget
-                        name="documentation_link"
-                        path="/_downloads/5f0840ed187116c425fdac2ab4b592e1/pdfquotebuilderexamples.zip"
-                        label=" Download examples"
-                        icon="fa-arrow-right"
-                    />
-                    <button
-                        name="action_open_dynamic_fields_wizard"
-                        type="object"
-                        string="Configure dynamic fields"
-                        help="Configure the path to fill the form fields."
-                        class="btn-link"
-                        icon="fa-pencil"
-                    />
-                    <br/>
-                </setting>
-            </setting>
+            <div name="sale_pdf_module_settings" position="inside">
+                <button
+                    name="%(sale_pdf_quote_builder.quotation_document_action)d"
+                    icon="oi-arrow-right"
+                    type="action"
+                    string="Headers/Footers"
+                    class="btn-link"
+                />
+            </div>
         </field>
     </record>
 

@@ -1,44 +1,43 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-
-from odoo import _, api, fields, models
-
-from odoo.addons.sale_pdf_quote_builder import utils
+from odoo import fields, models
 
 
 class SaleOrderTemplate(models.Model):
     _inherit = 'sale.order.template'
 
-    sale_header = fields.Binary(
-        string="Header pages", default=lambda self: self.env.company.sale_header)
-    sale_header_name = fields.Char(default=lambda self: self.env.company.sale_header_name)
-    sale_footer = fields.Binary(
-        string="Footer pages", default=lambda self: self.env.company.sale_footer)
-    sale_footer_name = fields.Char(default=lambda self: self.env.company.sale_footer_name)
+    quotation_document_ids = fields.Many2many(
+        string="Headers and footers",
+        comodel_name='quotation.document',
+        relation='header_footer_quotation_template_rel',
+    )
+    sale_header_ids = fields.Many2many(
+        string="Headers",
+        comodel_name='quotation.document',
+        domain=[('document_type', '=', 'header')],
+        compute='_compute_sale_header_and_sale_footer_ids',
+        inverse='_inverse_sale_header_and_sale_footer_ids',
+    )
+    sale_footer_ids = fields.Many2many(
+        string="Footers",
+        comodel_name='quotation.document',
+        domain=[('document_type', '=', 'footer')],
+        compute='_compute_sale_header_and_sale_footer_ids',
+        inverse='_inverse_sale_header_and_sale_footer_ids',
+    )
 
-    # === CONSTRAINT METHODS ===#
+    # === COMPUTE METHODS === #
 
-    @api.constrains('sale_header')
-    def _ensure_header_encryption(self):
+    def _compute_sale_header_and_sale_footer_ids(self):
         for template in self:
-            if template.sale_header:
-                utils._ensure_document_not_encrypted(base64.b64decode(template.sale_header))
+            template.sale_header_ids = template.quotation_document_ids.filtered(
+                lambda doc: doc.document_type == 'header'
+            ).ids
+            template.sale_footer_ids = template.quotation_document_ids.filtered(
+                lambda doc: doc.document_type == 'footer'
+            ).ids
 
-    @api.constrains('sale_footer')
-    def _ensure_footer_encryption(self):
+    def _inverse_sale_header_and_sale_footer_ids(self):
         for template in self:
-            if template.sale_footer:
-                utils._ensure_document_not_encrypted(base64.b64decode(template.sale_footer))
-
-    # === ACTION METHODS ===#
-
-    def action_open_dynamic_fields_wizard(self):
-        self.ensure_one()
-        return {
-            'name': _("Configure Dynamic Fields"),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'sale.pdf.quote.builder.dynamic.fields.wizard',
-            'target': 'new',
-        }
+            quotation_documents = template.sale_header_ids + template.sale_footer_ids
+            template.quotation_document_ids = quotation_documents.ids
