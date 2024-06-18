@@ -607,37 +607,54 @@ font[class*='bg-'] {
 }
 
 // Badges
+.badge {
+    // Similarly to list-group-item-x and alert-* classes, override text-bg-*
+    // classes behavior when used on badges.
+    @each $-color, $-value in $theme-colors {
+        &.text-bg-#{$-color} {
+            --bg-light: #{tint-color($-value, 90%)};
+            --color-light: #{increase-contrast($-value, tint-color($-value, 90%))};
+            --bg-solid: #{$-value};
+            --color-solid: #{color-contrast($-value, $min-contrast-ratio: 3)};
+        }
+    }
+
+    background: var(--background-color, var(--bg-light)) !important;
+    color: var(--color, var(--color-light)) !important;
+    border: $border-width solid var(--bg-solid) !important;
+
+    @at-root a#{&}:hover, a:hover > & {
+        --background-color: var(--bg-solid);
+        --color: var(--color-solid);
+        text-decoration: none;
+    }
+}
 
 @for $-size from 1 through length($o-colors) {
     .o_color_#{$-size - 1} {
-        $-color: nth($o-colors, $-size);
+       // Compute background-color and text-color values for different uses
+       $dark: #999999;
+       $-color: if($-size == 1, $dark, nth($o-colors, $-size));
 
-        // Split la couleur en HSL
-        --hue: #{hue($-color)};
-        --lightness: #{lightness($-color)};
-        --saturation: #{saturation($-color)};
-        --dark-lightnessed: 40%;
+        $-is-website-palette-dark: color-contrast($body-color) == $color-contrast-dark;
+        $-bg-lightness-adjusted: if($-is-website-palette-dark, -40%, 0%);
+        $-bg-solid: $-color;
+        $-bg-light: if($-is-website-palette-dark, adjust-color($-color, $lightness: $-bg-lightness-adjusted, $saturation: 5%), tint-color($-bg-solid, 90%));
 
-        //Modificateur de lightness
-        --lightness-coeff: 90%;
+        $-color-solid: color-contrast($-bg-solid, $min-contrast-ratio: 3);
 
-        // Génère 3 varuants de la couleur : Light, normal, dark
-        --bg-color: #{hsl(var(--hue), var(--saturation), var(--lightness-coeff))};
-        --bg-color-2: #{hsl(var(--hue), var(--saturation), var(--lightness))};
-        --dark-lightness: #{hsl(var(--hue), var(--saturation), var(--dark-lightnessed))};
+        $-color-light: increase-contrast($-bg-solid, $-bg-light);
 
-        $bg-color: #{var(--bg-color-2)};
-        --hover-value: -40%;
+        $-color-light-contrast: color-contrast($-bg-light, $min-contrast-ratio: 3);
 
-        background: var(--bg-color);
-        border: 1px solid var(--bg-color-2);
-        color: var(--dark-lightness);
+        // Print CSS variables.
+        --bg-solid: #{$-bg-solid};
+        --color-solid: #{$-color-solid};
 
-        &:hover {
-            --bg-color: var(--bg-color-2);
-            --dark-lightness: var(--bg-color-2);
-            color:  color-contrast($bg-color, $min-contrast-ratio: 3);
-        }
+        --bg-light: #{$-bg-light};
+        --color-light: #{$-color-light};
+
+        --color-light-contrast: #{$-color-light-contrast};
     }
 }
 
