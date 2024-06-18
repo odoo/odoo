@@ -55,6 +55,28 @@ class ProductPublicCategory(models.Model):
         translate=html_translate,
     )
 
+    website_wide_header = fields.Html(
+        string="Category Wide Header",
+        sanitize_attributes=False,  # required for the `data-editor-message` attribute.
+        sanitize_form=False,
+        translate=html_translate,
+    )
+
+
+    website_footer = fields.Html(
+        string="Category Footer",
+        sanitize_attributes=False,  # required for the `data-editor-message` attribute.
+        sanitize_form=False,
+        translate=html_translate,
+    )
+
+    website_wide_footer = fields.Html(
+        string="Category Wide Footer",
+        sanitize_attributes=False,  # required for the `data-editor-message` attribute.
+        sanitize_form=False,
+        translate=html_translate,
+    )
+
     #=== COMPUTE METHODS ===#
 
     def _compute_parents_and_self(self):
