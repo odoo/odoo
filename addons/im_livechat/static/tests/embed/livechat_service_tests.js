@@ -2,11 +2,11 @@
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
+import { expirableStorage } from "@im_livechat/embed/common/expirable_storage";
 import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 
-import { cookie } from "@web/core/browser/cookie";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -27,7 +27,7 @@ QUnit.test("persisted session history", async () => {
         livechat_channel_id: livechatChannelId,
         livechat_operator_id: pyEnv.adminPartnerId,
     });
-    cookie.set(
+    expirableStorage.setItem(
         "im_livechat.saved_state",
         JSON.stringify({ threadData: { id: channelId, model: "discuss.channel" }, persisted: true })
     );
@@ -51,7 +51,7 @@ QUnit.test("previous operator prioritized", async () => {
         user_ids: [userId],
     });
     pyEnv["im_livechat.channel"].write([livechatChannelId], { user_ids: [Command.link(userId)] });
-    cookie.set("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
+    expirableStorage.setItem("im_livechat_previous_operator", JSON.stringify(previousOperatorId));
     start();
     click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message-author", { text: "John Doe" });
