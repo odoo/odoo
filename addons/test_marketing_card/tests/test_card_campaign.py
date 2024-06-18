@@ -73,7 +73,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         with self.mock_image_renderer(), self.mock_mail_gateway(), self.assertQueryCount(243):
             mailing = self.env['mailing.mailing'].create({
                 'name': 'Test Marketing Card Mailing',
-                'body_html': f'<a href="/cards/{self.campaign.id}/preview"><img src="/web/image/card.campaign/{self.campaign.id}/image_preview"/></a>',
+                'body_html': f'<a href="/cards/{self.campaign.id}/preview"><img src="/web/image/card.campaign/{self.campaign.id}/image_preview"></a>',
                 'mailing_domain': repr([('partner_id.email', 'like', 'partn')]),
                 'mailing_model_id': self.env['ir.model']._get_id(performances._name),
                 'subject': 'The show is about to start!',
@@ -87,7 +87,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
             record_id = int(sent_mail['object_id'].split('-')[0])
             preview_url = f"{self.campaign.get_base_url()}/cards/{self.campaign.id}/{record_id}/{self.campaign._generate_card_hash_token(record_id)}/preview"
             image_url = f"{self.campaign.get_base_url()}/cards/{self.campaign.id}/{record_id}/{self.campaign._generate_card_hash_token(record_id)}/card.jpg"
-            self.assertIn(f'<a href="{preview_url}"><img src="{image_url}"/></a>', sent_mail['body'])
+            self.assertIn(f'<a href="{preview_url}"><img src="{image_url}"></a>', sent_mail['body'])
 
 
 class TestMarketingCardRender(MarketingCardCommon):
