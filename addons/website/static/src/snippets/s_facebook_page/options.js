@@ -2,11 +2,13 @@
 
 import { pick } from "@web/core/utils/objects";
 import options from "@web_editor/js/editor/snippets.options";
+import { _t } from "@web/core/l10n/translation";
 
 options.registry.facebookPage = options.Class.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
+        this.notification = this.bindService("notification");
     },
 
     /**
@@ -139,6 +141,15 @@ options.registry.facebookPage = options.Class.extend({
         }
         return this._super(...arguments);
     },
+    _parseIdentifier(url) {
+        // The logic here is to extract the page id from the URL.
+        // IF url contains 'profile.php?id=' THEN return the id that follows
+        // ELSE IF last part of url isn't a valid number THEN return the last part of a new split based on '-'
+        // ELSE return the last part of the url
+        const lastPart = url.split('/').pop();
+        return url.split('profile.php?id=')[1] ||
+            (isNaN(parseInt(lastPart)) ? lastPart.split('-').pop() : lastPart);
+    },
     /**
      * @private
      */
@@ -159,7 +170,7 @@ options.registry.facebookPage = options.Class.extend({
         const match = this.fbData.href.match(/^(https?:\/\/)?((www\.)?(fb|facebook)|(m\.)?facebook)\.com\/(((profile\.php\?id=|people\/[^/?#]+\/|(p\/)?[^/?#]+-)(?<id>[0-9]{15,16}))|(?<nameid>[\w.]+))($|[/?# ])/);
         if (match) {
             // Check if the page exists on Facebook or not
-            const pageId = match.groups.nameid || match.groups.id;
+            const pageId = this._parseIdentifier(this.fbData.href);
             return fetch(`https://graph.facebook.com/${pageId}/picture`)
             .then((res) => {
                 if (res.ok) {
@@ -167,11 +178,17 @@ options.registry.facebookPage = options.Class.extend({
                 } else {
                     this.fbData.id = "";
                     this.fbData.href = defaultURL;
+                    this.notification.add(_t("Couldn't find the Facebook page"), {
+                        type: "warning",
+                    });
                 }
             });
         }
         this.fbData.id = "";
         this.fbData.href = defaultURL;
+        this.notification.add(_t("You didn't provide a Facebook link"), {
+            type: "warning",
+        });
         return Promise.resolve();
     },
 });
