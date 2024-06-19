@@ -107,9 +107,11 @@ class IrConfigParameter(models.Model):
         self.flush_model(['key', 'value'])
         self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", [key])
         result = self.env.cr.fetchone()
+        if result is not None:
+            result = result[0]
         if result is None:
             return False
-        return result[0]
+        return result
 
     @api.model
     def set_param(self, key, value):
