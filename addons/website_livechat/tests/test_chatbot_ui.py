@@ -60,7 +60,7 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
             ("Restarting conversation...", operator, False),
             ("Hello! I'm a bot!", operator, False),
             ("I help lost visitors find their way.", operator, False),
-            ("How can I help you?", operator, self.step_dispatch_pricing),
+            ("How can I help you?", operator, False),
             ("Pricing Question", False, False),
             ("For any pricing question, feel free ton contact us at pricing@mycompany.com", operator, False),
             ("We will reach back to you as soon as we can!", operator, False),
@@ -69,6 +69,13 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
             ("Great, do you want to leave any feedback for us to improve?", operator, False),
             ("no, nothing so say", False, False),
             ("Ok bye!", operator, False),
+            ("Restarting conversation...", operator, False),
+            ("Hello! I'm a bot!", operator, False),
+            ("I help lost visitors find their way.", operator, False),
+            ("How can I help you?", operator, self.step_dispatch_operator),
+            ("I want to speak with an operator", False, False),
+            ("I will transfer you to a human", operator, False),
+            (f"{self.operator.livechat_username} has joined", operator, False),
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))

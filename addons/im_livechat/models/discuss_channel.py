@@ -195,8 +195,9 @@ class DiscussChannel(models.Model):
 
         :param record chatbot_script
         :param string body: message HTML body """
-
-        return self.with_context(mail_create_nosubscribe=True).message_post(
+        # sudo: mail.message - chat bot is allowed to post a message which
+        # requires reading its partner among other things.
+        return self.with_context(mail_create_nosubscribe=True).sudo().message_post(
             author_id=chatbot_script.sudo().operator_partner_id.id,
             body=body,
             message_type='comment',
@@ -241,8 +242,7 @@ class DiscussChannel(models.Model):
         self.sudo().chatbot_current_step_id = False
         # sudo: chatbot.message - visitor can clear chatbot messages to restart the script
         self.sudo().chatbot_message_ids.unlink()
-        # sudo: mail.message - chat bot can send the restart message
-        return self.sudo()._chatbot_post_message(
+        return self._chatbot_post_message(
             chatbot_script,
             Markup('<div class="o_mail_notification">%s</div>') % _('Restarting conversation...'),
         )
