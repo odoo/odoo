@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -6,7 +5,7 @@ from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
 
-from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
+from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
 from odoo.addons.rating.models import rating_data
 from odoo.addons.web_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
@@ -16,7 +15,6 @@ from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
 PROJECT_TASK_READABLE_FIELDS = {
-    'id',
     'active',
     'priority',
     'project_id',
@@ -89,6 +87,7 @@ class Task(models.Model):
         'rating.mixin',
         'mail.tracking.duration.mixin',
         'html.field.history.mixin',
+        'project.sharing.mixin',
     ]
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
@@ -310,11 +309,11 @@ class Task(models.Model):
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return PROJECT_TASK_READABLE_FIELDS | self.SELF_WRITABLE_FIELDS
+        return super().SELF_READABLE_FIELDS | PROJECT_TASK_READABLE_FIELDS
 
     @property
     def SELF_WRITABLE_FIELDS(self):
-        return PROJECT_TASK_WRITABLE_FIELDS
+        return super().SELF_WRITABLE_FIELDS | PROJECT_TASK_WRITABLE_FIELDS
 
     @api.depends('project_id.analytic_account_id')
     def _compute_analytic_account_id(self):
@@ -857,29 +856,6 @@ class Task(models.Model):
     # CRUD overrides
     # ------------------------------------------------
     @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        fields = super().fields_get(allfields=allfields, attributes=attributes)
-        if not self.env.user._is_portal():
-            return fields
-        readable_fields = self.SELF_READABLE_FIELDS
-        public_fields = {field_name: description for field_name, description in fields.items() if field_name in readable_fields}
-
-        writable_fields = self.SELF_WRITABLE_FIELDS
-        for field_name, description in public_fields.items():
-            if field_name not in writable_fields and not description.get('readonly', False):
-                # If the field is not in Writable fields and it is not readonly then we force the readonly to True
-                description['readonly'] = True
-
-        return public_fields
-
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of fields_get making fields readonly for portal users
-        makes the view cache dependent on the fact the user has the group portal or not"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.user._is_portal(),)
-
-    @api.model
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
 
@@ -909,72 +885,23 @@ class Task(models.Model):
 
         return vals
 
-    def _ensure_fields_are_accessible(self, fields, operation='read', check_group_user=True):
-        """" ensure all fields are accessible by the current user
-
-            This method checks if the portal user can access to all fields given in parameter.
-            By default, it checks if the current user is a portal user and then checks if all fields are accessible for this user.
-
-            :param fields: list of fields to check if the current user can access.
-            :param operation: contains either 'read' to check readable fields or 'write' to check writable fields.
-            :param check_group_user: contains boolean value.
-                - True, if the method has to check if the current user is a portal one.
-                - False if we are sure the user is a portal user,
-        """
-        assert operation in ('read', 'write'), 'Invalid operation'
-        if fields and (not check_group_user or self.env.user._is_portal()) and not self.env.su:
-            unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
-            if unauthorized_fields:
-                unauthorized_field_list = format_list(self.env, list(unauthorized_fields))
-                if operation == 'read':
-                    error_message = _('You cannot read the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
-                else:
-                    error_message = _('You cannot write on the following fields on tasks: %(field_list)s', field_list=unauthorized_field_list)
-                raise AccessError(error_message)
-
     def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
         if not self.env.su and self.env.user._is_portal():
             valid_names = self.SELF_READABLE_FIELDS
             field_names = [fname for fname in field_names if fname in valid_names]
         return super()._determine_fields_to_fetch(field_names, ignore_when_in_cache)
 
-    def _get_portal_sudo_vals(self, vals, defaults=False):
-        """ returns the values which must be written without and with sudo when a portal user creates / writes a task.
-            :param vals: dict of {field: value}, the values to create/write
-            :return: a tuple with 2 dicts:
-                - the first with the values to write without sudo
-                - the second with the values to write with sudo
-        """
-        vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
-        if defaults:
-            vals_no_sudo.update({
-                key[8:]: value
-                for key, value in self.env.context.items()
-                if key.startswith('default_') and key[8:] in self.SELF_WRITABLE_FIELDS and self._fields[key[8:]].type in ('one2many', 'many2many')
-            })
-        vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
-        return vals_no_sudo, vals_sudo
-
-    @api.model
-    def _get_portal_sudo_context(self):
-        return {
-            key: value for key, value in self.env.context.items()
-            if key == 'default_project_id'
-            or key == 'default_user_ids' and value is False
-            or not key.startswith('default_')
-            or key[8:] in (field for field in self.SELF_WRITABLE_FIELDS if self._fields[field].type not in ('one2many', 'many2many'))
-        }
-
     @api.model
     def check_field_access_rights(self, operation, field_names):
-        if field_names and operation in ('read', 'write'):
-            self._ensure_fields_are_accessible(field_names, operation)
-        elif not field_names and not self.env.su and self.env.user._is_portal():
-            valid_names = self.SELF_READABLE_FIELDS
-            return [
-                fname for fname in super().check_field_access_rights(operation, field_names)
-                if fname in valid_names
-            ]
+        if not self.env.su and operation in ('read', 'write') and self.env.user._is_portal():
+            if field_names:
+                self._ensure_fields_are_accessible(field_names, operation == 'write')
+            else:
+                valid_names = self.SELF_READABLE_FIELDS
+                return [
+                    fname for fname in super().check_field_access_rights(operation, field_names)
+                    if fname in valid_names
+                ]
         return super().check_field_access_rights(operation, field_names)
 
     def _set_stage_on_project_from_task(self):
@@ -1005,9 +932,6 @@ class Task(models.Model):
         default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
         self = self.with_context(new_context)
 
-        is_portal_user = self.env.user._is_portal()
-        if is_portal_user:
-            self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
             project_id = vals.get('project_id')
@@ -1022,8 +946,6 @@ class Task(models.Model):
                 vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
-            if is_portal_user:
-                self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
             if project_id:
                 # set the project => "I want to display the task in the project"
@@ -1072,25 +994,10 @@ class Task(models.Model):
                 rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
-        # The sudo is required for a portal user as the record creation
-        # requires the read access on other models, as mail.template
-        # in order to compute the field tracking
-        was_in_sudo = self.env.su
-        if is_portal_user:
-            vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
-            self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        if is_portal_user:
-            for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
-                task.write(vals)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
-        # in case we were already in sudo, we don't check the rights.
-        if is_portal_user and not was_in_sudo:
-            # since we use sudo to create tasks, we need to check
-            # if the portal user could really create the tasks based on the ir rule.
-            tasks.with_user(self.env.user).check_access_rule('create')
         current_partner = self.env.user.partner_id
 
         all_partner_emails = []
@@ -1126,15 +1033,12 @@ class Task(models.Model):
     def write(self, vals):
         if len(self) == 1:
             handle_history_divergence(self, 'description', vals)
-        portal_can_write = False
+
+        if not self.env.su and self.env.user._is_portal():
+            self._ensure_fields_are_accessible(vals.keys(), True)
+
         project_link_per_task_id = {}
         partner_ids = []
-        if self.env.user._is_portal() and not self.env.su:
-            # Check if all fields in vals are in SELF_WRITABLE_FIELDS
-            self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
-            self.check_access_rights('write')
-            self.check_access_rule('write')
-            portal_can_write = True
 
         if 'project_id' in vals:
             project_id = vals['project_id']
@@ -1246,13 +1150,6 @@ class Task(models.Model):
             self.recurrence_id.unlink()
             tasks_in_recurrence.write({'recurring_task': False})
 
-        # The sudo is required for a portal user as the record update
-        # requires the write access on others models, as rating.rating
-        # in order to keep the same name than the task.
-        if portal_can_write:
-            self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
-            vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
-
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self.sudo()}
 
@@ -1274,8 +1171,6 @@ class Task(models.Model):
                             project_link = link_per_project_id[task.project_id.id] = task.project_id._get_html_link(title=task.project_id.display_name)
                         project_link_per_task_id[task.id] = project_link
         result = super().write(vals)
-        if portal_can_write:
-            super(Task, self_no_sudo).write(vals_no_sudo)
 
         if 'user_ids' in vals:
             self._populate_missing_personal_stages()
@@ -1749,7 +1644,7 @@ class Task(models.Model):
             'context': self._context
         }
 
-    def action_project_sharing_view_parent_task(self):
+    def project_sharing_action_view_parent_task(self):
         if self.parent_id.project_id != self.project_id and self.env.user._is_portal():
             project = self.parent_id.project_id._filter_access_rules_python('read')
             if project:
@@ -1785,12 +1680,12 @@ class Task(models.Model):
             'context': self._context
         }
 
-    def action_project_sharing_open_task(self):
+    def project_sharing_action_open_task(self):
         action = self.action_open_task()
         action['views'] = [[self.env.ref('project.project_sharing_project_task_view_form').id, 'form']]
         return action
 
-    def action_project_sharing_open_subtasks(self):
+    def project_sharing_action_open_subtasks(self):
         self.ensure_one()
         subtasks = self.env['project.task'].search([('id', 'child_of', self.id), ('id', '!=', self.id)])
         if subtasks.project_id == self.project_id:
@@ -1806,7 +1701,7 @@ class Task(models.Model):
             'url': f'/my/projects/{self.project_id.id}/task/{self.id}/subtasks' if len(subtasks) > 1 else subtasks.get_portal_url(query_string='project_sharing=1'),
         }
 
-    def action_project_sharing_open_blocking(self):
+    def project_sharing_action_open_blocking(self):
         self.ensure_one()
         blockings = self.dependent_ids
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action_blocking_tasks')
@@ -1837,7 +1732,7 @@ class Task(models.Model):
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }
 
-    def action_project_sharing_recurring_tasks(self):
+    def project_sharing_action_recurring_tasks(self):
         self.ensure_one()
         recurrent_tasks = self.env['project.task'].search([('recurrence_id', 'in', self.recurrence_id.ids)])
         # If all the recurrent tasks are in the same project, open the list view in sharing mode.
@@ -1959,7 +1854,7 @@ class Task(models.Model):
             datetime.combine(fields.Date.from_string(date_to), time.max).replace(tzinfo=UTC)
         )
 
-    def action_redirect_to_project_task_form(self):
+    def project_sharing_action_redirect_to_backend(self):
         return {
             'type': 'ir.actions.act_url',
             'url': '/web#model=project.task&id=%s&active_id=1&menu_id=%s&action=%s&view_type=form' % (
@@ -1997,3 +1892,164 @@ class Task(models.Model):
         else:
             self.sudo().message_subscribe(self.env.user.partner_id.ids)
         return not is_follower
+
+    def _retrieve_data_from_x2many_commands(self, vals):
+        create_vals_list_per_field_name = {}
+        write_vals_per_ids_per_field_name = {}
+        new_vals = {}
+        for field_name, field_vals in vals.items():
+            field = self._fields[field_name]
+            if field.type in ('one2many', 'many2many'):
+                record_ids_to_check_read_access = set()
+                if isinstance(field_vals, (tuple, list)):
+                    new_command_list = []
+                    for value in field_vals:
+                        if isinstance(value, (tuple, list)):
+                            command, record_id = value[:2]
+                            if command == Command.CREATE:
+                                record_vals = value[2]
+                                if field_name not in create_vals_list_per_field_name:
+                                    co_model = self.env[field.comodel_name]
+                                    co_model.check_access_rights('create')
+                                    create_vals_list_per_field_name[field_name] = []
+                                create_vals_list_per_field_name[field_name].append(record_vals)
+                            elif command == Command.UPDATE:
+                                record_vals = value[2]
+                                if field_name not in write_vals_per_ids_per_field_name:
+                                    co_model = self.env[field.comodel_name]
+                                    co_model.check_access_rights('write')
+                                    write_vals_per_ids_per_field_name[field_name] = []
+                                write_vals_per_ids_per_field_name[field_name].append((record_id, record_vals))
+                            elif command == Command.LINK:
+                                record_ids_to_check_read_access.add(record_id)
+                                new_command_list.append(value)
+                            elif command == Command.UNLINK:
+                                record_ids_to_check_read_access.add(record_id)
+                                new_command_list.append(value)
+                            elif command == Command.DELETE:
+                                co_model = self.env[field.comodel_name]
+                                co_model.check_access_rights('unlink')
+                                raise AccessError(_('Invalid command %s', command))
+                            elif command in [Command.SET, Command.CLEAR]:
+                                if command == Command.SET:
+                                    record_ids_to_check_read_access = set(value[2])
+                                else:
+                                    record_ids_to_check_read_access = set()
+                                if field_name in create_vals_list_per_field_name:
+                                    create_vals_list_per_field_name[field_name] = []
+                                if field_name in write_vals_per_ids_per_field_name:
+                                    write_vals_per_ids_per_field_name[field_name] = []
+                                new_command_list.append(value)
+                            else:
+                                raise AccessError(_('Invalid command %s', command))
+                        else:
+                            record_ids_to_check_read_access.add(value)
+                            new_command_list.append(value)
+                    new_vals[field_name] = new_command_list
+                elif field_vals:
+                    record_ids_to_check_read_access = field_vals.ids if isinstance(field_vals, models.BaseModel) else field_vals
+                    new_vals[field_name] = record_ids_to_check_read_access
+                if record_ids_to_check_read_access:
+                    co_model = self.env[field.comodel_name]
+                    co_model.check_access_rights('read')
+                    co_model.browse(list(record_ids_to_check_read_access)).check_access_rule('read')
+            else:
+                new_vals[field_name] = field_vals
+        return new_vals, create_vals_list_per_field_name, write_vals_per_ids_per_field_name
+
+    def with_project_sharing_context(self):
+        default_vals = {
+            key[8:]: value
+            for key, value in self._context.items()
+            if key.startswith('default_')
+        }
+        if default_vals:
+            self._ensure_fields_are_accessible({f_name for f_name in default_vals if f_name != "project_id"}, True)
+            new_default_vals, default_create_vals_list_per_field_name, default_update_vals_per_field_name = self._retrieve_data_from_x2many_commands(default_vals)
+            if default_create_vals_list_per_field_name or default_update_vals_per_field_name:
+                raise AccessError(_('Invalid default values'))
+            self = self.with_context({f"default_{field_name}": value for field_name, value in new_default_vals.items()})
+        return self
+
+    @api.model_create_multi
+    def project_sharing_create(self, vals_list: list):
+        self._ensure_fields_are_accessible({field_name for vals in vals_list for field_name in vals}, True)
+        self.check_access_rights('create')
+        project_shared_id = self.env.context.get('default_project_id')
+        project_shared = self.env['project.project'].browse(project_shared_id)
+        project_shared._check_project_sharing_access()
+        project_ids_to_check = set()
+        additional_actions_todo = []
+        new_vals_list = []
+        for vals in vals_list:
+            new_vals, create_vals_list_per_field_name, write_vals_per_ids_per_field_name = self._retrieve_data_from_x2many_commands(vals)
+            project = self.env['project.project'].browse(new_vals.get('project_id', False))
+            new_vals['user_ids'] = []
+            if project:  # FIXME: should be always falsy since the portal user cannot write on the project_id field
+                if project != project_shared:
+                    project_ids_to_check.add(project.id)
+            else:
+                if new_vals.get('parent_id'):
+                    parent_task = self.browse(new_vals['parent_id'])
+                    project = parent_task.project_id
+                    project_ids_to_check.add(project.id)
+                    new_vals['project_id'] = project.id
+                    new_vals['user_ids'] = parent_task.sudo().user_ids.ids
+                    if not new_vals.get('stage_id'):
+                        new_vals['stage_id'] = project.sudo().type_ids[:1].id
+                else:
+                    new_vals['project_id'] = project_shared_id
+            new_vals_list.append(new_vals)
+            additional_actions_todo.append([create_vals_list_per_field_name, write_vals_per_ids_per_field_name])
+
+        if project_ids_to_check:
+            self.env['project.project'].browse(list(project_ids_to_check))._check_project_sharing_access()
+
+        tasks = self.with_project_sharing_context().sudo().create(new_vals_list)
+        # since we use sudo to create tasks, we need to check
+        # if the portal user could really create the tasks based on the ir rule.
+        tasks.check_access_rule('create')
+
+        if additional_actions_todo:
+            for task, create_vals_list_per_field_name, write_vals_per_ids_per_field_name in zip(tasks, *zip(*additional_actions_todo)):
+                if create_vals_list_per_field_name:
+                    for field_name, create_vals_list in create_vals_list_per_field_name.items():
+                        field = task._fields[field_name]
+                        co_model = self.env[field.comodel_name]
+                        co_model.project_sharing_create([{**vals, field.inverse_name: task.id} for vals in create_vals_list])
+                if write_vals_per_ids_per_field_name:  # FIXME: normally, it should be always falsy in the common use cases (return an error?)
+                    for field_name, vals_per_record_id in write_vals_per_ids_per_field_name.items():
+                        co_model = self.env[self._fields[field_name].comodel_name]
+                        for record_id, record_vals in vals_per_record_id:
+                            co_model.browse(record_id).project_sharing_write(record_vals)
+
+        return tasks
+
+    def project_sharing_write(self, vals: dict) -> bool:
+        self._ensure_fields_are_accessible(vals.keys(), True)
+        self.check_access_rights('write')
+        self.check_access_rule('write')
+
+        new_vals, create_vals_list_per_field_name, write_vals_per_ids_per_field_name = self._retrieve_data_from_x2many_commands(vals)
+
+        # The sudo is required for a portal user as the record update
+        # requires the write access on others models, as rating.rating
+        # in order to keep the same name than the task.
+        # self_no_sudo, self = self, self.sudo().with_context(self._get_portal_sudo_context())
+        # vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
+
+        result = self.with_project_sharing_context().sudo().write(new_vals)
+        # result &= super(Task, self_no_sudo).write(vals_no_sudo)
+
+        if create_vals_list_per_field_name:
+            for field_name, vals_list in create_vals_list_per_field_name.items():
+                field = self._fields[field_name]
+                co_model = self.env[field.comodel_name]
+                for vals in vals_list:
+                    co_model.project_sharing_create({**vals, field.inverse_name: self.id})
+        if write_vals_per_ids_per_field_name:
+            for field_name, vals_per_record_id in write_vals_per_ids_per_field_name.items():
+                co_model = self.env[self._fields[field_name].comodel_name]
+                for record_id, record_vals in vals_per_record_id:
+                    co_model.browse(record_id).project_sharing_write(record_vals)
+        return result

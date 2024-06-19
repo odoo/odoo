@@ -41,7 +41,7 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
             The sms template should be sent and the stage should be changed on the task.
         """
         with self.mockSMSGateway():
-            self.task_portal.with_user(self.user_portal).write({
+            self.task_portal.with_user(self.user_portal).project_sharing_write({
                 'stage_id': self.task_stage_with_sms.id,
             })
         self.assertEqual(self.task_portal.stage_id, self.task_stage_with_sms)
@@ -52,7 +52,7 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
             'stage_id': self.project_portal.type_ids[0].id,
         })
         with self.mockSMSGateway():
-            self.task_portal.with_user(self.user_portal).write({
+            self.task_portal.with_user(self.user_portal).project_sharing_write({
                 'stage_id': self.task_stage_with_sms.id,
             })
         self.assertEqual(self.task_portal.stage_id, self.task_stage_with_sms)

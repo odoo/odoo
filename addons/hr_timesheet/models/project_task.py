@@ -268,3 +268,10 @@ class Task(models.Model):
         uom_hour = self.env.ref('uom.product_uom_hour')
         uom_day = self.env.ref('uom.product_uom_day')
         return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
+
+    # ------------------------------------------------------------
+    # Project Sharing
+    # ------------------------------------------------------------
+
+    def project_sharing_action_view_subtask_timesheet(self):
+        return self.action_view_subtask_timesheet()

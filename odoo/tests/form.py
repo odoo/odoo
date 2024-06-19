@@ -121,7 +121,7 @@ class Form:
         else:
             view_id = view or False
 
-        views = record.get_views([(view_id, 'form')])
+        views = self._get_views(record, [(view_id, 'form')])
         object.__setattr__(self, '_models_info', views['models'])
         # self._models_info = {model_name: {fields: {field_name: field_info}}}
         tree = etree.fromstring(views['views']['form']['arch'])
@@ -243,6 +243,9 @@ class Form:
             'onchange': model._onchange_spec({'arch': etree.tostring(tree)}),
         }
 
+    def _get_views(self, model, views, options=None):
+        return model.get_views(views, options)
+
     def _get_one2many_edition_view(self, field_info, node, level):
         """ Return a suitable view for editing records into a one2many field. """
         submodel = self._env[field_info['relation']]
@@ -259,7 +262,7 @@ class Form:
                 views[view_type] = etree.Element(view_type)
                 continue
             refs = self._env['ir.ui.view']._get_view_refs(node)
-            subviews = submodel.with_context(**refs).get_views([(None, view_type)])
+            subviews = self._get_views(submodel.with_context(**refs), [(None, view_type)])
             subnode = etree.fromstring(subviews['views'][view_type]['arch'])
             views[view_type] = subnode
             node.append(subnode)
@@ -282,12 +285,15 @@ class Form:
     def __str__(self):
         return f"<{type(self).__name__} {self._record}>"
 
+    def _record_web_read(self, fields):
+        return self._record.web_read(fields)
+
     def _init_from_record(self):
         """ Initialize the form for an existing record. """
         assert self._record.id, "editing unstored records is not supported"
         self._values.clear()
 
-        [record_values] = self._record.web_read(self._view['fields_spec'])
+        [record_values] = self._record_web_read(self._view['fields_spec'])
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
@@ -401,6 +407,9 @@ class Form:
         if not exc_type:
             self.save()
 
+    def _record_save(self, values, specification):
+        return self._record.web_save(values, specification)
+
     def save(self):
         """ Save the form (if necessary) and return the current record:
 
@@ -416,7 +425,7 @@ class Form:
         values = self._get_save_values()
         if not self._record or values:
             # save and reload
-            [record_values] = self._record.web_save(values, self._view['fields_spec'])
+            [record_values] = self._record_save(values, self._view['fields_spec'])
             self._env.flush_all()
             self._env.clear()  # discard cache and pending recomputations
 
@@ -518,6 +527,19 @@ class Form:
 
         return result
 
+    def _get_record_with_field_context(self, field_name=None):
+        # if the onchange is triggered by a field, add the context of that field
+        if field_name:
+            context = self._get_context(field_name)
+            if context:
+                return self._record.with_context(**context)
+        return self._record
+
+    def _record_onchange(self, values, field_names, fields_spec):
+        field_name = field_names[0] if field_names else None
+        record = self._get_record_with_field_context(field_name)
+        return record.onchange(values, field_names, fields_spec)
+
     def _perform_onchange(self, field_name=None):
         assert field_name is None or isinstance(field_name, str)
 
@@ -532,16 +554,8 @@ class Form:
         if field_name and not self._view['onchange'][field_name]:
             return
 
-        record = self._record
-
-        # if the onchange is triggered by a field, add the context of that field
-        if field_name:
-            context = self._get_context(field_name)
-            if context:
-                record = record.with_context(**context)
-
         values = self._get_onchange_values()
-        result = record.onchange(values, field_names, self._view['fields_spec'])
+        result = self._record_onchange(values, field_names, self._view['fields_spec'])
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 

@@ -9,7 +9,8 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.osv import expression
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _name = 'account.analytic.line'
+    _inherit = ['account.analytic.line', 'project.sharing.mixin']
 
     def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id
@@ -68,6 +69,10 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
     readonly_timesheet = fields.Boolean(compute="_compute_readonly_timesheet", compute_sudo=True, export_string_translation=False)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
+
+    @property
+    def SELF_READABLE_FIELDS(self) -> set[str]:
+        return super().SELF_READABLE_FIELDS | {'employee_id', 'name', 'unit_amount', 'date'}
 
     @api.depends('project_id', 'task_id')
     def _compute_display_name(self):

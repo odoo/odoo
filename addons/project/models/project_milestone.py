@@ -11,7 +11,7 @@ from .project_task import CLOSED_STATES
 class ProjectMilestone(models.Model):
     _name = 'project.milestone'
     _description = "Project Milestone"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'project.sharing.mixin']
     _order = 'deadline, is_reached desc, name'
 
     def _get_default_project_id(self):
@@ -30,6 +30,13 @@ class ProjectMilestone(models.Model):
     task_count = fields.Integer('# of Tasks', compute='_compute_task_count', groups='project.group_project_milestone, export_string_translation=False')
     done_task_count = fields.Integer('# of Done Tasks', compute='_compute_task_count', groups='project.group_project_milestone', export_string_translation=False)
     can_be_marked_as_done = fields.Boolean(compute='_compute_can_be_marked_as_done', export_string_translation=False)
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | {
+            'name',
+            'project_id',
+        }
 
     @api.depends('is_reached')
     def _compute_reached_date(self):

@@ -943,12 +943,13 @@ class Project(models.Model):
     # Project sharing
     # ---------------------------------------------------
     def _check_project_sharing_access(self):
-        self.ensure_one()
-        if self.privacy_visibility != 'portal':
-            return False
-        if self.env.user._is_portal():
-            return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
-        return self.env.user._is_internal()
+        assert len(self) >= 1, _('A project is required to check project sharing access')
+        if all(project.privacy_visibility == 'portal' for project in self):
+            if self.env.user._is_portal():
+                return self.env['project.collaborator'].search_count([('project_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]) == len(self)
+            else:
+                return self.env.user._is_internal()
+        return False
 
     def _add_collaborators(self, partners, limited_access=False):
         self.ensure_one()

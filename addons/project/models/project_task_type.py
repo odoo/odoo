@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class ProjectTaskType(models.Model):
     _name = 'project.task.type'
+    _inherit = 'project.sharing.mixin'
     _description = 'Task Stage'
     _order = 'sequence, id'
 
@@ -18,6 +19,16 @@ class ProjectTaskType(models.Model):
 
     def _default_user_id(self):
         return 'default_project_id' not in self.env.context and self.env.uid
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | {
+            'name',
+            'sequence',
+            'fold',
+            'display_name',
+            'project_ids',
+        }
 
     active = fields.Boolean('Active', default=True, export_string_translation=False)
     name = fields.Char(string='Name', required=True, translate=True)

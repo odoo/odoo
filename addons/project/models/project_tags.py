@@ -10,6 +10,7 @@ from odoo.osv import expression
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
     _name = "project.tags"
+    _inherit = 'project.sharing.mixin'
     _description = "Project Tags"
     _order = "name"
 
@@ -25,6 +26,13 @@ class ProjectTags(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "A tag with the same name already exists."),
     ]
+
+    @property
+    def SELF_READABLE_FIELDS(self):
+        return super().SELF_READABLE_FIELDS | {
+            'name',
+            'color',
+        }
 
     def _get_project_tags_domain(self, domain, project_id):
         # TODO: Remove in master
