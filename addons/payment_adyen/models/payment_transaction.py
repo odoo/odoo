@@ -95,21 +95,16 @@ class PaymentTransaction(models.Model):
             data.update(captureDelayHours=0)
 
         # Make the payment request to Adyen
-        try:
-            response_content = self.provider_id._adyen_make_request(
-                endpoint='/payments',
-                payload=data,
-                method='POST',
-                idempotency_key=payment_utils.generate_idempotency_key(
-                    self, scope='payment_request_token'
-                )
+        response_content = self.provider_id._adyen_make_request(
+            endpoint='/payments',
+            payload=data,
+            method='POST',
+            idempotency_key=payment_utils.generate_idempotency_key(
+                self, scope='payment_request_token'
             )
-        except ValidationError as e:
-            if self.operation == 'offline':
-                self._set_error(str(e))  # Log the error message on linked documents' chatter.
-                return  # There is nothing to process.
-            else:
-                raise e
+        )
+        if self._is_response_error(response_content):
+            return  # There is nothing to process.
 
         # Handle the payment request response
         _logger.info(
@@ -151,6 +146,9 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST'
         )
+        if refund_tx._is_response_error(response_content):
+            return refund_tx
+
         _logger.info(
             "refund request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(response_content)
@@ -190,6 +188,9 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST',
         )
+        if capture_child_tx._is_response_error(response_content):
+            return capture_child_tx
+
         _logger.info("capture request response:\n%s", pprint.pformat(response_content))
 
         # Handle the capture request response
@@ -225,6 +226,10 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST',
         )
+
+        if child_void_tx._is_response_error(response_content):
+            return child_void_tx
+
         _logger.info("void request response:\n%s", pprint.pformat(response_content))
 
         # Handle the void request response

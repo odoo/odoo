@@ -233,3 +233,11 @@ def generate_idempotency_key(tx, scope=None):
     """
     database_uuid = tx.env['ir.config_parameter'].sudo().get_param('database.uuid')
     return sha1(f'{database_uuid}{tx.reference}{scope or ""}'.encode()).hexdigest()
+
+
+def get_request_error(response_content):
+    return response_content.get('error')
+
+
+def format_error_response(error_message):
+    return {'error': error_message}
