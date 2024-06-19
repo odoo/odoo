@@ -71,6 +71,7 @@ export class AutoComplete extends Component {
         }
     }
 
+<<<<<<< HEAD
     get targetDropdown() {
         return this.inputRef.el;
     }
@@ -79,6 +80,16 @@ export class AutoComplete extends Component {
         return {
             position: "bottom-start",
         };
+||||||| parent of 1b0979b7b704 (temp)
+=======
+    get activeSourceOptionId() {
+        if (!this.isOpened || !this.state.activeSourceOption) {
+            return undefined;
+        }
+        const [sourceIndex, optionIndex] = this.state.activeSourceOption;
+        const source = this.sources[sourceIndex];
+        return `${this.props.id || "autocomplete"}_${sourceIndex}_${source.isLoading ? "loading" : optionIndex}`;
+>>>>>>> 1b0979b7b704 (temp)
     }
 
     get isOpened() {
