@@ -441,18 +441,12 @@ class HrAttendance(models.Model):
         }
 
     @api.model
-    def hasDemoData(self):
+    def has_demo_data(self):
         if not self.env.user.has_group("hr_attendance.group_hr_attendance_manager"):
             return True
         # This record only exists if the scenario has been already launched
         demo_tag = self.env.ref('hr_attendance.employee_category_demo', raise_if_not_found=False)
-        if demo_tag:
-            return True
-        return self.env['ir.module.module'].search_count([
-            '&',
-                ('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
-                ('demo', '=', True)
-        ])
+        return bool(demo_tag)
 
     def _load_demo_data(self):
         # Load employees, schedules, departments and partners
@@ -590,4 +584,8 @@ class HrAttendance(models.Model):
         if not user_domain:
             return self.env['hr.employee'].search([('company_id', 'in', self.env.context.get('allowed_company_ids', []))])
         else:
-            return resources
+            employee_name_domain = []
+            for leaf in user_domain:
+                if len(leaf) == 3 and leaf[0] == 'employee_id':
+                    employee_name_domain.append([('name', leaf[1], leaf[2])])
+            return resources | self.env['hr.employee'].search(OR(employee_name_domain))
