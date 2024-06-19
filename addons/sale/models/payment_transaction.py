@@ -146,6 +146,15 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
+
+            # Remove current user partner from invoice follower if user has different invoice address then main
+            # to avoid sending mail to both emails.
+            if not self.env.user._is_internal():
+                current_user_partner = self.env.user.partner_id
+                invoice_to_unfollow = invoice_to_send.filtered(
+                    lambda invoice: invoice.partner_id.parent_id == current_user_partner
+                )
+                invoice_to_unfollow.message_unsubscribe(partner_ids=current_user_partner.ids)
             invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template)
 
     def _cron_send_invoice(self):
