@@ -18,7 +18,7 @@
                         <field name="calendar_mismatch" invisible="1"/>
                         <label for="resource_calendar_id"/>
                         <div class="d-flex align-items-center">
-                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
+                            <field name="resource_calendar_id" help="The default working hours are set in configuration." placeholder="Fully Flexible"/>
                             <widget name="contract_warning_tooltip"
                                 invisible="not calendar_mismatch"/>
                         </div>
@@ -41,7 +41,11 @@
                             icon="fa-book"
                             type="object"
                             groups="hr_contract.group_hr_contract_manager"
-                            context="{'default_employee_id': id}"
+                            context="{
+                                'default_employee_id': id,
+                                'default_resource_calendar_id': resource_calendar_id.id or False,
+                                'from_action_open_contract': True,
+                            }"
                             invisible="employee_type not in ['employee', 'student', 'trainee']">
                             <div invisible="not first_contract_date" class="o_stat_info">
                                 <span class="o_stat_text text-success" invisible="contract_warning" title="In Contract Since"> In Contract Since</span>
@@ -203,11 +207,11 @@
                                 <div id="resource_calendar_warning" class="d-flex align-items-center">
                                         <field name="resource_calendar_id"
                                             groups="!hr_contract.group_hr_contract_manager"
-                                            required="1"
+                                            placeholder="Fully Flexible"
                                             options="{'no_open': True, 'no_create': True}"/>
                                         <field name="resource_calendar_id"
                                             groups="hr_contract.group_hr_contract_manager"
-                                            required="1"/>
+                                            placeholder="Fully Flexible"/>
                                         <widget
                                             name="contract_warning_tooltip"
                                             invisible="not calendar_mismatch or state != 'open'"/>

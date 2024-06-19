@@ -45,7 +45,8 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time',
         default=lambda self: self.env.company.resource_calendar_id,
-        domain="[('company_id', '=', company_id)]")
+        domain="[('company_id', '=', company_id)]",
+        help="Define the working schedule of the resource. If not set, the resource will have a fully flexible working hours.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
@@ -178,6 +179,8 @@ class ResourceResource(models.Model):
 
             This methods handle the eventuality of a resource having multiple resource calendars, see _get_calendars_validity_within_period method
             for further explanation.
+
+            For flexible calendars and fully flexible resources: -> return the whole interval
         """
         assert start.tzinfo and end.tzinfo
         resource_calendar_validity_intervals = {}
@@ -193,6 +196,11 @@ class ResourceResource(models.Model):
         for calendar in (calendars or []):
             calendar_resources[calendar] |= self.env['resource.resource']
         for calendar, resources in calendar_resources.items():
+            # If the calendar is flexible or resource has no calendar (fully flexible)
+            if not calendar:
+                for resource in resources:
+                    resource_work_intervals[resource.id] |= Intervals([(start, end, self.env['resource.calendar.attendance'])])
+                continue
             # For each calendar used by the resources, retrieve the work intervals for every resources using it
             work_intervals_batch = calendar._work_intervals_batch(start, end, resources=resources, compute_leaves=compute_leaves)
             for resource in resources:
@@ -201,3 +209,15 @@ class ResourceResource(models.Model):
             calendar_work_intervals[calendar.id] = work_intervals_batch[False]
 
         return resource_work_intervals, calendar_work_intervals
+
+    def _is_fully_flexible(self):
+        """ employee has a fully flexible schedule has no working calendar set """
+        self.ensure_one()
+        return not self.calendar_id
+
+    def _is_flexible(self):
+        """ An employee is considered flexible if the field flexible_hours is True on the calendar
+            or the employee is not assigned any calendar, in which case is considered as Fully flexible.
+        """
+        self.ensure_one()
+        return self._is_fully_flexible() or (self.calendar_id and self.calendar_id.flexible_hours)

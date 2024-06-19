@@ -25,11 +25,27 @@ class TestContractCalendars(TestContractCommon):
             'state': 'close',
         })
 
+        cls.contract_fully_flexible = cls.env['hr.contract'].create({
+            'date_end': Date.to_date('2015-11-15'),
+            'date_start': Date.to_date('2015-01-01'),
+            'name': 'Fully Flexible Contract for Richard',
+            'resource_calendar_id': False,
+            'wage': 5000.0,
+            'state': 'close',
+        })
+
     def test_contract_state_incoming_to_open(self):
         # Employee's calendar should change
         self.assertEqual(self.employee.resource_calendar_id, self.calendar_richard)
         self.contract_cdd.state = 'open'
         self.assertEqual(self.employee.resource_calendar_id, self.contract_cdd.resource_calendar_id, "The employee should have the calendar of its contract.")
+
+    def test_set_fully_flexible_contract_should_change_resource_calendar(self):
+        # Setting a running contract with fully flexible calendar should set the employee's calendar to False (fully flexible)
+        self.assertEqual(self.employee.resource_calendar_id, self.calendar_richard)
+        self.employee.contract_id = self.contract_fully_flexible
+        self.contract_fully_flexible.state = 'open'
+        self.assertFalse(self.employee.resource_calendar_id, "The employee should have a fully flexible calendar.")
 
     def test_contract_transfer_leaves(self):
 

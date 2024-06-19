@@ -174,8 +174,8 @@ class HrContract(models.Model):
             employee = contract.employee_id
             calendar = contract.resource_calendar_id
             resource = employee.resource_id
-            tz = pytz.timezone(calendar.tz)
-
+            # if the contract is fully flexible, we refer to the employee's timezone
+            tz = pytz.timezone(resource.tz) if contract._is_fully_flexible() else pytz.timezone(calendar.tz)
             attendances = attendances_by_resource[resource.id]
 
             # Other calendars: In case the employee has declared time off in another calendar

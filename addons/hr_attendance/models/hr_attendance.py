@@ -193,14 +193,19 @@ class HrAttendance(models.Model):
 
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
+        """ Computes the worked hours of the attendance record.
+            The worked hours of resource with flexible calendar is computed as the difference
+            between check_in and check_out, without taking into account the lunch_interval"""
         for attendance in self:
             if attendance.check_out and attendance.check_in and attendance.employee_id:
                 calendar = attendance._get_employee_calendar()
                 resource = attendance.employee_id.resource_id
-                tz = timezone(calendar.tz)
+                tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
                 check_in_tz = attendance.check_in.astimezone(tz)
                 check_out_tz = attendance.check_out.astimezone(tz)
-                lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
+                lunch_intervals = []
+                if not resource._is_flexible():
+                    lunch_intervals = attendance.employee_id._employee_attendance_intervals(check_in_tz, check_out_tz, lunch=True)
                 attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals
                 delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
                 attendance.worked_hours = delta / 3600.0
