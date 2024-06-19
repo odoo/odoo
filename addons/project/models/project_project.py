@@ -724,6 +724,16 @@ class Project(models.Model):
             }
         }
 
+    def action_view_project(self):
+        self.ensure_one()
+        return {
+            'name': _('Project'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'project.project',
+            'view_mode': 'form',
+            'res_id': self.id,
+        }
+
     # ---------------------------------------------
     #  PROJECT UPDATES
     # ---------------------------------------------
