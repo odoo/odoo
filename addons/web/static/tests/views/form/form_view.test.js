@@ -17,6 +17,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     useEffect,
+    useRef,
     useState,
     xml,
 } from "@odoo/owl";
@@ -48,13 +49,14 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { session } from "@web/session";
 import { CharField } from "@web/views/fields/char/char_field";
 import { DateTimeField } from "@web/views/fields/datetime/datetime_field";
 import { Field } from "@web/views/fields/field";
 import { IntegerField } from "@web/views/fields/integer/integer_field";
 import { useSpecialData } from "@web/views/fields/relational_utils";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
 import { WebClient } from "@web/webclient/webclient";
@@ -4435,6 +4437,62 @@ test(`discard changes on a new (dirty) form view`, async () => {
     await contains(`.o_form_button_cancel`).click();
     expect(`.o_field_widget[name=foo] input`).toHaveValue("ABC");
     expect(["history-back"]).toVerifySteps();
+});
+
+test(`discard has to wait for changes in each field`, async () => {
+    const def = new Deferred();
+    class CustomField extends Component {
+        static template = xml`<input t-ref="input" t-att-value="value" t-on-blur="onBlur" t-on-input="onInput" />`;
+        static props = {
+            ...standardFieldProps,
+        };
+
+        setup() {
+            this.input = useRef("input");
+            useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
+                detail.proms.push(this.updateValue())
+            );
+        }
+
+        get value() {
+            return this.props.record.data[this.props.name];
+        }
+
+        async updateValue() {
+            const value = this.input.el.value;
+            await def;
+            await this.props.record.update({ [this.props.name]: `update value: ${value}` });
+        }
+
+        onBlur() {
+            return this.updateValue();
+        }
+
+        onInput() {
+            this.props.record.model.bus.trigger("FIELD_IS_DIRTY", true);
+        }
+    }
+    fieldsRegistry.add("custom", { component: CustomField });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo" widget="custom"/></form>`,
+        resId: 2,
+    });
+
+    expect(`[name="foo"] input`).toHaveValue("blip");
+
+    await contains(`[name="foo"] input`).edit("test");
+    expect(`[name="foo"] input`).toHaveValue("test");
+
+    // should never display 'update value'
+    await contains(`.o_form_button_cancel`).click();
+    expect(`[name="foo"] input`).toHaveValue("test");
+
+    def.resolve();
+    await animationFrame();
+    expect(`[name="foo"] input`).toHaveValue("blip");
 });
 
 test(`save a new dirty record`, async () => {
