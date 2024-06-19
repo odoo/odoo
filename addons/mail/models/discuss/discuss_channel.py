@@ -869,7 +869,7 @@ class Channel(models.Model):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-        rtc_sessions_by_channel = self.sudo().rtc_session_ids._mail_rtc_session_format_by_channel(extra=True)
+        store.add("RtcSession", self.sudo().rtc_session_ids._mail_rtc_session_format(extra=True))
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.env['discuss.channel'].flush_model()
         self.env['discuss.channel.member'].flush_model()
@@ -927,9 +927,6 @@ class Channel(models.Model):
                     info['is_pinned'] = member.is_pinned
                     if member.rtc_inviting_session_id:
                         info["rtcInvitingSession"] = {"id": member.rtc_inviting_session_id.id}
-                        store.add(
-                            "RtcSession", member.rtc_inviting_session_id._mail_rtc_session_format()
-                        )
             # add members info
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
@@ -957,7 +954,10 @@ class Channel(models.Model):
             members_data = list(invited_members._discuss_channel_member_format(m_fields).values())
             store.add("ChannelMember", members_data)
             info["invitedMembers"] = [("ADD", [{"id": member.id} for member in invited_members])]
-            info["rtcSessions"] = [("ADD", rtc_sessions_by_channel.get(channel, []))]
+            info["rtcSessions"] = [
+                # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
+                ("ADD", [{"id": session.id} for session in channel.sudo().rtc_session_ids])
+            ]
             store.add("Thread", info)
 
     def _channel_fetch_message(self, last_id=False, limit=20):

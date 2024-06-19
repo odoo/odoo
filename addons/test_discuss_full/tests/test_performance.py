@@ -463,34 +463,8 @@ class TestDiscussFullPerformance(HttpCase):
                 "name": "group restricted channel 1",
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtcInvitingSession": {"id": member_2.sudo().rtc_session_ids.id},
-                "rtcSessions": [
-                    [
-                        "ADD",
-                        [
-                            {
-                                "channelMember": {
-                                    "id": member_2.id,
-                                    "persona": {
-                                        "id": member_2.partner_id.id,
-                                        "im_status": "offline",
-                                        "name": "test2",
-                                        "type": "partner",
-                                    },
-                                    "thread": {
-                                        "id": channel.id,
-                                        "model": "discuss.channel",
-                                    },
-                                },
-                                # sudo: discuss.channel.rtc.session - reading a session in a test file
-                                "id": member_2.sudo().rtc_session_ids.id,
-                                "isCameraOn": False,
-                                "isDeaf": False,
-                                "isScreenSharingOn": False,
-                                "isSelfMuted": False,
-                            }
-                        ],
-                    ]
-                ],
+                # sudo: discuss.channel.rtc.session - reading a session in a test file
+                "rtcSessions": [["ADD", [{"id": member_2.sudo().rtc_session_ids.id}]]],
                 "custom_notifications": False,
                 "mute_until_dt": False,
                 "state": "closed",
@@ -1565,5 +1539,9 @@ class TestDiscussFullPerformance(HttpCase):
                     },
                     "thread": {"id": channel.id, "model": "discuss.channel"},
                 },
+                "isCameraOn": False,
+                "isDeaf": False,
+                "isScreenSharingOn": False,
+                "isSelfMuted": False,
             }
         return {}
