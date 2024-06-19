@@ -143,6 +143,11 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_aml_ir_filters'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
 
+    filter_budgets = fields.Boolean(
+        string="Budgets",
+        compute=lambda x: x._compute_report_option_filter('filter_budgets'), readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
+    )
+
     def _compute_report_option_filter(self, field_name, default_value=False):
         # We don't depend on the different filter fields on the root report, as we don't want a manual change on it to be reflected on all the reports
         # using it as their root (would create confusion). The root report filters are only used as some kind of default values.
