@@ -144,6 +144,9 @@ class AccountAnalyticPlan(models.Model):
     @api.depends('account_ids', 'children_ids')
     def _compute_all_analytic_account_count(self):
         # Get all children_ids from each plan
+        if not self.ids:
+            self.all_account_count = 0
+            return
         self.env.cr.execute("""
             SELECT parent.id,
                    array_agg(child.id) as children_ids

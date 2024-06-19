@@ -449,5 +449,17 @@
             </field>
         </record>
 
+        <record id="view_form_onchange_partial" model="ir.ui.view">
+            <field name="name">Onchange Partial Missing company_id</field>
+            <field name="model">test_new_api.onchange.partial</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

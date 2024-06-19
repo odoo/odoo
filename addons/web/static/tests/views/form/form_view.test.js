@@ -2740,33 +2740,6 @@ test(`form views in dialogs do not have a control panel`, async () => {
     expect(`.o_dialog .o_form_view .o_control_panel`).toHaveCount(0);
 });
 
-test(`form views in dialogs do not add display_name field`, async () => {
-    Partner._views = {
-        form: `<form><field name="foo"/></form>`,
-    };
-
-    defineActions([
-        {
-            id: 1,
-            name: "Partner",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "form"]],
-            target: "new",
-        },
-    ]);
-
-    onRpc("onchange", ({ args }) => {
-        expect.step("onchange");
-        expect(args[3]).toEqual({ foo: {} });
-    });
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1);
-    expect(`.o_dialog .o_form_view`).toHaveCount(1);
-    expect(`.o_dialog .o_form_view .o_control_panel`).toHaveCount(0);
-    expect(["onchange"]).toVerifySteps();
-});
-
 test(`form views in dialogs closes on save`, async () => {
     Partner._fields.foo = fields.Char();
     Partner._records[0].foo = undefined;

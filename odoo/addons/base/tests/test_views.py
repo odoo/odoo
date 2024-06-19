@@ -1530,6 +1530,14 @@ class TestTemplating(ViewCase):
 
 class TestViews(ViewCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.display_name_E = E.field(
+            name="display_name", invisible="True", readonly="True"
+        )
+        cls.display_name_E.set('data-used-by', "")
+
     def test_nonexistent_attribute_removal(self):
         self.View.create({
             'name': 'Test View',
@@ -1696,6 +1704,7 @@ class TestViews(ViewCase):
                     E.button(name="action_archive", type="object", string="New button"),
                     thing="bob lolo bibi and co", otherthing="lolo"
                 ),
+                self.display_name_E,
                 string="Replacement title"))
 
     def test_view_inheritance_text_inside(self):
@@ -1714,7 +1723,7 @@ class TestViews(ViewCase):
         view = self.View.with_context(check_view_ids=view2.ids).get_view(view1.id)
         self.assertEqual(
             view['arch'],
-            '<form string="F">(<div>a<p/>b<p/>c</div>)</form>',
+            '<form string="F">(<div>a<p/>b<p/>c</div>)<field name="display_name" invisible="True" readonly="True" data-used-by=""/>\n</form>',
         )
 
     def test_view_inheritance_text_after(self):
@@ -1733,7 +1742,7 @@ class TestViews(ViewCase):
         view = self.View.with_context(check_view_ids=view2.ids).get_view(view1.id)
         self.assertEqual(
             view['arch'],
-            '<form string="F">(<div/>a<p/>b<p/>c)</form>',
+            '<form string="F">(<div/>a<p/>b<p/>c)<field name="display_name" invisible="True" readonly="True" data-used-by=""/>\n</form>',
         )
 
     def test_view_inheritance_text_before(self):
@@ -1752,7 +1761,7 @@ class TestViews(ViewCase):
         view = self.View.with_context(check_view_ids=view2.ids).get_view(view1.id)
         self.assertEqual(
             view['arch'],
-            '<form string="F">(a<p/>b<p/>c<div/>)</form>',
+            '<form string="F">(a<p/>b<p/>c<div/>)<field name="display_name" invisible="True" readonly="True" data-used-by=""/>\n</form>',
         )
 
     def test_view_inheritance_divergent_models(self):
@@ -1812,6 +1821,7 @@ class TestViews(ViewCase):
                 E.p("Replacement data"),
                 E.footer(
                     E.button(name="action_unarchive", type="object", string="New button")),
+                self.display_name_E,
                 string="Replacement title"
             ))
 

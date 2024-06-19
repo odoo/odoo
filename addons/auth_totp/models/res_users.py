@@ -176,6 +176,9 @@ class Users(models.Model):
 
     def _compute_totp_secret(self):
         for user in self:
+            if not user.id:
+                user.totp_secret = False
+                continue
             self.env.cr.execute('SELECT totp_secret FROM res_users WHERE id=%s', (user.id,))
             user.totp_secret = self.env.cr.fetchone()[0]
 

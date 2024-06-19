@@ -153,6 +153,9 @@ class AccountAnalyticAccount(models.Model):
             domain.append(('date', '<=', self._context['to_date']))
 
         for plan, accounts in self.grouped('plan_id').items():
+            if not plan:
+                accounts.debit = accounts.credit = accounts.balance = 0
+                continue
             credit_groups = self.env['account.analytic.line']._read_group(
                 domain=domain + [(plan._column_name(), 'in', self.ids), ('amount', '>=', 0.0)],
                 groupby=[plan._column_name(), 'currency_id'],
