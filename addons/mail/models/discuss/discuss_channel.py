@@ -926,7 +926,7 @@ class Channel(models.Model):
                     info['custom_channel_name'] = member.custom_channel_name
                     info['is_pinned'] = member.is_pinned
                     if member.rtc_inviting_session_id:
-                        info['rtcInvitingSession'] = member.rtc_inviting_session_id._mail_rtc_session_format()
+                        info['rtcInvitingSession'] = member.rtc_inviting_session_id._mail_rtc_session_format()[0]
             # add members info
             if channel.channel_type != 'channel':
                 # avoid sending potentially a lot of members for big channels
