@@ -167,7 +167,8 @@ class Employee(models.Model):
         ], groupby=['employee_id'], aggregates=['id:recordset'])
         for employee, contracts in contracts_by_employee:
             for contract in contracts:
-                calendar_tz = timezone(contract.resource_calendar_id.tz)
+                # if employee is under fully flexible contract, use timezone of the employee
+                calendar_tz = timezone(contract.resource_calendar_id.tz) if contract.resource_calendar_id else timezone(employee.resource_id.tz)
                 utc = timezone('UTC')
                 date_start = datetime.combine(
                     contract.date_start,
@@ -284,8 +285,7 @@ class Employee(models.Model):
         if vals.get('contract_id'):
             for employee in self:
                 employee.resource_calendar_id.transfer_leaves_to(employee.contract_id.resource_calendar_id, employee.resource_id)
-                if employee.resource_calendar_id:
-                    employee.resource_calendar_id = employee.contract_id.resource_calendar_id
+                employee.resource_calendar_id = employee.contract_id.resource_calendar_id
         return res
 
     @api.ondelete(at_uninstall=False)
@@ -300,6 +300,9 @@ class Employee(models.Model):
         if not self.contract_ids:
             action['context'] = {
                 'default_employee_id': self.id,
+                # display current resource_calendar_id as the default one if it exists (if False, fully flexible calendar)
+                'default_resource_calendar_id': self.resource_calendar_id.id or False,
+                'from_action_open_contract': True,
             }
             action['target'] = 'current'
             return action

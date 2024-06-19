@@ -20,7 +20,7 @@
             <form string="Working Time">
                 <field name="two_weeks_calendar" invisible="1"/>
                 <header>
-                    <button name="switch_calendar_type" invisible="two_weeks_calendar" string="Switch to 2 weeks calendar" type="object"
+                    <button name="switch_calendar_type" invisible="two_weeks_calendar or flexible_hours" string="Switch to 2 weeks calendar" type="object"
                         confirm="Are you sure you want to switch to a 2-week calendar? All work entries will be lost."
                         confirm-label="Switch"/>
                     <button name="switch_calendar_type" invisible="not two_weeks_calendar" string="Switch to 1 week calendar" type="object"
@@ -50,17 +50,20 @@
                     <div class="oe_title">
                         <h1><field name="name"/></h1>
                     </div>
-                    <group name="resource_details">
-                        <group>
+                    <group name="resource_details" col="2">
+                        <group name="resource_working_hours">
+                            <field name="flexible_hours"/>
+                            <field name="hours_per_day" widget="float_time" readonly="not flexible_hours"/>
+                        </group>
+                        <group name="resource_company">
                             <field name="active" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="hours_per_day" widget="float_time"/>
                             <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset', 'mismatch_title': 'Timezone Mismatch : This timezone is different from that of your browser.\nPlease, be mindful of this when setting the working hours or the time off.'}" />
                             <field name="tz_offset" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Working Hours" name="working_hours">
+                        <page string="Working Hours" name="working_hours" invisible="flexible_hours">
                             <field name="two_weeks_explanation" invisible="not two_weeks_calendar"/>
                             <field name="attendance_ids" widget="section_one2many"/>
                         </page>

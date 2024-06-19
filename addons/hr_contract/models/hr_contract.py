@@ -118,6 +118,10 @@ class Contract(models.Model):
     def _onchange_structure_type_id(self):
         default_calendar = self.structure_type_id.default_resource_calendar_id
         if default_calendar and default_calendar.company_id == self.company_id:
+            # If the form was opened from the action_open_contract action,
+            # suggest current employee's calendar for the new contract instead of the default_calendar.
+            if self.env.context.get('from_action_open_contract'):
+                return
             self.resource_calendar_id = default_calendar
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
@@ -290,6 +294,11 @@ class Contract(models.Model):
         self.ensure_one()
         return 'wage'
 
+    def _is_fully_flexible(self):
+        """ return True if contract has a fully flexible working calendar """
+        self.ensure_one()
+        return not self.resource_calendar_id
+
     def write(self, vals):
         old_state = {c.id: c.state for c in self}
         res = super(Contract, self).write(vals)
@@ -316,13 +325,11 @@ class Contract(models.Model):
             for contract in self.filtered(lambda c: c.state == 'open'):
                 contract.state = 'close'
 
-        calendar = vals.get('resource_calendar_id')
-        if calendar:
+        if 'resource_calendar_id' in vals:
+            calendar = vals['resource_calendar_id']  # when False (fully flexible), sync the employee's calendar as well to False
             self.filtered(
                 lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
-            ).mapped('employee_id').filtered(
-                lambda e: e.resource_calendar_id
-            ).write({'resource_calendar_id': calendar})
+            ).employee_id.resource_calendar_id = calendar
 
         if 'state' in vals and 'kanban_state' not in vals:
             self.write({'kanban_state': 'normal'})
@@ -337,7 +344,7 @@ class Contract(models.Model):
             lambda c: c.state == 'open' or (c.state == 'draft' and c.kanban_state == 'done' and c.employee_id.contracts_count == 1)
         )
         # sync contract calendar -> calendar employee
-        for contract in open_contracts.filtered(lambda c: c.employee_id and c.resource_calendar_id):
+        for contract in open_contracts.filtered(lambda c: c.employee_id):
             contract.employee_id.resource_calendar_id = contract.resource_calendar_id
         return contracts
 

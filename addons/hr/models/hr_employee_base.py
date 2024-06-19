@@ -46,6 +46,8 @@ class HrEmployeeBase(models.AbstractModel):
     share = fields.Boolean(related='user_id.share')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
+    is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
+    is_fully_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
     parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     coach_id = fields.Many2one(
@@ -262,6 +264,12 @@ class HrEmployeeBase(models.AbstractModel):
         for employee in self:
             employee.hr_icon_display = 'presence_' + employee.hr_presence_state
             employee.show_hr_icon_display = bool(employee.user_id)
+
+    @api.depends('resource_calendar_id')
+    def _compute_is_flexible(self):
+        for employee in self:
+            employee.is_fully_flexible = not employee.resource_calendar_id
+            employee.is_flexible = employee.is_fully_flexible or employee.resource_calendar_id.flexible_hours
 
     @api.model
     def _get_employee_working_now(self):
