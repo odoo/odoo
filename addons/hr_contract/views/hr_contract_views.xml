@@ -203,11 +203,9 @@
                                 <div id="resource_calendar_warning" class="d-flex align-items-center">
                                         <field name="resource_calendar_id"
                                             groups="!hr_contract.group_hr_contract_manager"
-                                            required="1"
                                             options="{'no_open': True, 'no_create': True}"/>
                                         <field name="resource_calendar_id"
-                                            groups="hr_contract.group_hr_contract_manager"
-                                            required="1"/>
+                                            groups="hr_contract.group_hr_contract_manager"/>
                                         <widget
                                             name="contract_warning_tooltip"
                                             invisible="not calendar_mismatch or state != 'open'"/>
