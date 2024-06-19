@@ -11,7 +11,15 @@
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard o_hr_recruitment_kanban" on_create="hr_recruitment.create_job_simple" sample="1" limit="40" action="%(action_hr_job_applications)d" type="action">
+            <kanban
+                class="o_kanban_dashboard o_hr_recruitment_kanban"
+                on_create="hr_recruitment.create_job_simple"
+                sample="1"
+                limit="40"
+                action="%(action_hr_job_applications)d"
+                type="action"
+                js_class="recruitment_kanban_view"
+                >
                 <field name="active"/>
                 <field name="name"/>
                 <field name="alias_email"/>
@@ -65,7 +73,7 @@
                                 </div>
                                 <div class="col-6" role="menuitem">
                                     <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
-                                    <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active" type="object">Archive</a>
+                                    <a class="dropdown-item" t-if="record.active.raw_value" type="archive" >Archive</a>
                                     <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
                                 </div>
                             </div>
@@ -154,7 +162,7 @@
                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
                         </div>
-                        <div class="text-muted">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
+                        <div class="text-muted">Incoming emails create applications automatically. Use it for direct applications or when posting job offers on LinkedIn, Monster, etc.</div>
                     </div>
                 </group>
                 <footer>
@@ -179,6 +187,9 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
+           <xpath expr="//form" position="attributes">
+                <attribute name="js_class">recruitment_form_view</attribute>
+            </xpath>
             <page name="recruitment_page" position="attributes">
                 <attribute name="invisible">0</attribute>
             </page>
@@ -201,7 +212,7 @@
                 <div name="alias_def">
                     <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                     <div class="oe_edit_only" name="edit_alias">
-                        <field name="alias_name" class="oe_inline"/>@
+                        <field name="alias_name" class="oe_inline" placeholder="e.g. jobs"/>@
                         <field name="alias_domain_id" class="oe_inline" placeholder="e.g. domain.com"
                                options="{'no_create': True, 'no_open': True}"/>
                     </div>
@@ -215,6 +226,9 @@
                     string="Mission Dates"
                     options="{'end_date_field': 'date_to'}"/>
                 <field name="date_to" invisible="1" />
+            </xpath>
+            <xpath expr="//group" position="after">
+                <field name="job_properties" columns="2"/>
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
@@ -300,13 +314,23 @@
                 <field name="alias_id" invisible="not alias_name" optional="hide"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
             </field>
+            <list position="attributes">
+                <attribute name="js_class">recruitment_list_view</attribute>
+            </list>
         </field>
     </record>
 
     <!-- hr related job position menu action -->
+    <record id="action_load_demo_data" model="ir.actions.server">
+        <field name="name">Load demo data</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_job"/>
+        <field name="state">code</field>
+        <field name="code">action = model._action_load_recruitment_scenario()</field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_hr_job">
         <field name="name">Job Positions</field>
-        <field name="path">recruitement</field>
+        <field name="path">recruitment</field>
         <field name="res_model">hr.job</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="view_id" ref="hr_recruitment.view_hr_job_kanban"/>
@@ -315,13 +339,6 @@
             (0, 0, {'view_mode': 'list', 'view_id': ref('hr_recruitment.hr_job_view_tree_inherit')}),
             (0, 0, {'view_mode': 'form', 'view_id': ref('hr.view_hr_job_form')})]"/>
         <field name="context">{}</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-              Ready to recruit more efficiently?
-          </p><p>
-              Let's create a job position.
-          </p>
-        </field>
     </record>
 
     <!-- Job Positions filtered for interviewers -->

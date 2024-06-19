@@ -1,28 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <record id="hr_recruitment_source_kanban" model="ir.ui.view">
-            <field name="name">hr.recruitment.source.kanban</field>
-            <field name="model">hr.recruitment.source</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" create="0" sample="1">
-                    <field name="has_domain"/>
-                    <templates>
-                        <t t-name="kanban-card">
-                            <div class="row mb-3">
-                                <field name="source_id" class="col-5 fw-bold fs-5"/>
-                                <field name="job_id" class="col-7 text-end"/>
-                            </div>
-                            <div>
-                                <field name="email" invisible="not has_domain" widget="email"/>
-                                <button name="create_alias" class="btn btn-primary mb-2 float-end" type="object" invisible="not has_domain or email">Generate Email</button>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="hr_recruitment_source_tree">
             <field name="name">hr.recruitment.source.list</field>
             <field name="model">hr.recruitment.source</field>
@@ -32,7 +10,7 @@
                     <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" readonly="id"/>
                     <field name="medium_id" optional="hidden"/>
                     <field name="job_id" readonly="id"/>
-                    <field name="email" widget="email"
+                    <field name="email" widget="CopyClipboardChar"
                            invisible="not email or not has_domain"/>
                     <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" invisible="not has_domain or email"/>
                 </list>
@@ -51,9 +29,9 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_hr_job_sources">
-            <field name="name">Jobs Sources</field>
+            <field name="name">Trackers</field>
             <field name="res_model">hr.recruitment.source</field>
-            <field name="view_mode">list,kanban</field>
+            <field name="view_mode">list</field>
             <field name="search_view_id" ref="hr_recruitment_source_view_search"/>
             <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
             <field name="help" type="html">

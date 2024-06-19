@@ -20,9 +20,7 @@
             <xpath expr="//div[@name='kanban_boxes']" position="inside">
                 <field name="website_url" invisible="1"/>
                 <div class="col-6">
-                    <field name="is_published" widget="boolean_toggle" class="me-1"/>
-                    <t t-if="record.is_published.raw_value">Published</t>
-                    <t t-else="">Not published</t>
+                    <field name="is_published" widget="boolean_toggle_labeled" options="{'false_label': 'Not Published', 'true_label': 'Published'}"/>
                 </div>
                 <div class="col-6" name="bottom_right"></div>
             </xpath>
@@ -34,10 +32,12 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <page name="recruitment_page" position="inside">
-                <separator string="Process Details"/>
-                <field name="job_details" nolabel="1"/>
-            </page>
+            <xpath expr="//page[@name='job_description_page']" position="after">
+                <page string="Application Info" name="recruitment_page">
+                    <separator string="Process Details"/>
+                    <field name="job_details" nolabel="1"/>
+                </page>
+            </xpath>
         </field>
     </record>
 

@@ -27,6 +27,7 @@
         <field name="res_model">hr.job</field>
         <field name="default" eval="False"/>
         <field name="hidden" eval="True"/>
+        <field name="description">Job Position created</field>
     </record>
     <record id="mt_job_applicant_stage_changed" model="mail.message.subtype">
         <field name="name">Applicant Stage Changed</field>
@@ -55,7 +56,6 @@
         <field name="name">Job Position Created</field>
         <field name="res_model">hr.department</field>
         <field name="sequence" eval="1"/>
-        <field name="parent_id" ref="mt_job_new"/>
         <field name="relation_field">department_id</field>
         <field name="default">False</field>
     </record>

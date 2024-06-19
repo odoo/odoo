@@ -14,7 +14,7 @@ class RecruitmentStage(models.Model):
         "Sequence", default=10)
     job_ids = fields.Many2many(
         'hr.job', string='Job Specific',
-        help='Specific jobs that uses this stage. Other jobs will not use this stage.')
+        help='Specific jobs that use this stage. Other jobs will not use this stage.')
     requirements = fields.Text("Requirements")
     template_id = fields.Many2one(
         'mail.template', "Email Template",

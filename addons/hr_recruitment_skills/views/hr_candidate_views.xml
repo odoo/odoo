@@ -57,13 +57,10 @@
             <field name="priority" position="attributes">
                 <attribute name="optional">hide</attribute>
             </field>
-            <field name="partner_mobile" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
             <field name="company_id" position="after">
                 <field name="matching_score"/>
-                <field name="matching_skill_ids" widget="many2many_tags"/>
-                <field name="missing_skill_ids" widget="many2many_tags"/>
+                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </field>
         </field>
     </record>

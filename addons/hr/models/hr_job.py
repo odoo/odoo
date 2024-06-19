@@ -21,8 +21,7 @@ class Job(models.Model):
     no_of_recruitment = fields.Integer(string='Target', copy=False,
         help='Number of new employees you expect to recruit.', default=1)
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
-    description = fields.Html(string='Job Description', sanitize_attributes=False,
-                              default="Perform assigned responsibilities, collaborate with team members, and adhere to company policies. Strong communication, problem-solving, and work ethic required. Adaptability, initiative, and willingness to learn are valued.")
+    description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements')
     department_id = fields.Many2one('hr.department', string='Department', check_company=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
