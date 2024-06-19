@@ -64,8 +64,8 @@
                             disabled="1"
                             invisible="context.get('from_my_profile', False) or hr_presence_state == 'absent'">
                             <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" invisible="hr_presence_state != 'present'" aria-label="Available" title="Available"/>
-                            <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" invisible="hr_presence_state != 'to_define'" aria-label="Away" title="Away"/>
-                            <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon" invisible="hr_presence_state != 'absent'" aria-label="Not available" title="Not available"/>
+                            <div role="img" class="fa fa-fw fa-circle text-muted o_button_icon" invisible="hr_presence_state != 'out_of_working_hour'" aria-label="Away" title="Away"/>
+                            <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" invisible="hr_presence_state != 'absent'" aria-label="Not available" title="Not available"/>
 
                             <div class="o_stat_info" invisible="hr_presence_state == 'present'">
                                 <span class="o_stat_text">

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
@@ -17,34 +16,33 @@ class Employee(models.AbstractModel):
     email_sent = fields.Boolean(default=False)
     ip_connected = fields.Boolean(default=False)
     manually_set_present = fields.Boolean(default=False)
+    manually_set_presence = fields.Boolean(default=False)
 
     # Stored field used in the presence kanban reporting view
     # to allow group by state.
     hr_presence_state_display = fields.Selection([
-        ('to_define', 'To Define'),
+        ('out_of_working_hour', 'Out of Working Hours'),
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ])
+        ], default='out_of_working_hour')
 
     @api.model
     def _check_presence(self):
         company = self.env.company
-        if not company.hr_presence_last_compute_date or \
-                company.hr_presence_last_compute_date.day != Datetime.now().day:
-            self.env['hr.employee'].search([
-                ('company_id', '=', company.id)
-            ]).write({
-                'email_sent': False,
-                'ip_connected': False,
-                'manually_set_present': False
-            })
-
         employees = self.env['hr.employee'].search([('company_id', '=', company.id)])
+
+        employees.write({
+            'email_sent': False,
+            'ip_connected': False,
+            'manually_set_present': False,
+            'manually_set_presence': False,
+        })
+
         all_employees = employees
 
 
         # Check on IP
-        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_ip', 'False')):
+        if company.hr_presence_control_ip:
             ip_list = company.hr_presence_control_ip_list
             ip_list = ip_list.split(',') if ip_list else []
             ip_employees = self.env['hr.employee']
@@ -60,7 +58,7 @@ class Employee(models.AbstractModel):
             employees = employees - ip_employees
 
         # Check on sent emails
-        if literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr_presence.hr_presence_control_email', 'False')):
+        if company.hr_presence_control_email:
             email_employees = self.env['hr.employee']
             threshold = company.hr_presence_control_email_amount
             for employee in employees:
@@ -78,32 +76,21 @@ class Employee(models.AbstractModel):
         for employee in all_employees:
             employee.hr_presence_state_display = employee.hr_presence_state
 
-    @api.model
-    def _action_open_presence_view(self):
-        # Compute the presence/absence for the employees on the same
-        # company than the HR/manager. Then opens the kanban view
-        # of the employees with an undefined presence/absence
-
-        _logger.info("Employees presence checked by: %s" % self.env.user.name)
-
-        self._check_presence()
-
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "hr.employee",
-            "views": [[self.env.ref('hr_presence.hr_employee_view_kanban').id, "kanban"], [False, "tree"], [False, "form"]],
-            'view_mode': 'kanban,tree,form',
-            "domain": [],
-            "name": _("Employee's Presence to Define"),
-            "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],
-            "context": {'search_default_group_hr_presence_state': 1,
-                        'searchpanel_default_hr_presence_state_display': 'to_define'},
-        }
+    def get_server_action_records(self, action_ids):
+        server_actions = self.env['ir.actions.server'].sudo().search([('value', '!=', False)])
+        return [{
+            'id': action.id,
+            'value': action.value,
+        } for action in server_actions]
 
     def _action_set_manual_presence(self, state):
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        self.write({'manually_set_present': state})
+        self.write({
+            'manually_set_present': state,
+            'manually_set_presence': True,
+            "hr_presence_state_display": 'present' if state else 'absent',
+        })
 
     def action_set_present(self):
         self._action_set_manual_presence(True)
@@ -117,34 +104,29 @@ class Employee(models.AbstractModel):
         return super().write(vals)
 
     def action_open_leave_request(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "hr.leave",
-            "views": [[False, "form"]],
-            "view_mode": 'form',
-            "context": {'default_employee_id': self.id},
-        }
+        leave_type = self.env['hr.leave.type'].search([('requires_allocation', '=', 'no')], limit=1)
+        vals = [{
+            'employee_id': employee.id,
+            'name': _("Request manually created with the Presence Control wizard"),
+            'holiday_status_id': leave_type.id,
+            'state': 'confirm',
+        } for employee in self]
+        self.env['hr.leave'].create(vals)
 
     # --------------------------------------------------
     # Messaging
     # --------------------------------------------------
 
     def action_send_sms(self):
-        self.ensure_one()
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        if not self.mobile_phone:
-            raise UserError(_("There is no professional mobile for this employee."))
 
         context = dict(self.env.context)
-        context.update(default_res_model='hr.employee', default_res_id=self.id, default_composition_mode='comment', default_number_field_name='mobile_phone')
+        context.update(default_res_model='hr.employee', default_res_ids=self.ids, default_composition_mode='mass', default_number_field_name='mobile_phone', default_mass_keep_log=True)
 
         template = self.env.ref('hr_presence.sms_template_presence', False)
         if not template:
-            context['default_body'] = _("""Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.
-Please, take appropriate measures in order to carry out this work absence.
-Do not hesitate to contact your manager or the human resource department.""")
+            context['default_body'] = _("Hello, you're {{ 'out of working hours' if object.hr_presence_state_display == 'out_of_working_hour' else object.hr_presence_state_display }} in the system. Can you please confirm it's normal or correct the situation. Thanks")
         else:
             context['default_template_id'] = template.id
 
@@ -157,29 +139,12 @@ Do not hesitate to contact your manager or the human resource department.""")
             "target": "new",
         }
 
-    def action_send_mail(self):
-        self.ensure_one()
+    def action_send_log(self):
         if not self.env.user.has_group('hr.group_hr_manager'):
             raise UserError(_("You don't have the right to do this. Please contact an Administrator."))
-        if not self.work_email:
-            raise UserError(_("There is no professional email address for this employee."))
-        template = self.env.ref('hr_presence.mail_template_presence', False)
-        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
-        ctx = dict(
-            default_model="hr.employee",
-            default_res_ids=self.ids,
-            default_template_id=template.id,
-            default_composition_mode='comment',
-            default_email_layout_xmlid='mail.mail_notification_light',
-            default_subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-        )
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
-            'target': 'new',
-            'context': ctx,
-        }
+
+        for employee in self:
+            employee.message_post(body=_(
+                "%(name)s has been noted as %(state)s today",
+                name=employee.name,
+                state=employee.hr_presence_state_display))
