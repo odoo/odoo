@@ -543,10 +543,10 @@ class account_journal(models.Model):
             )
             query += " GROUP BY company_id, journal_id, late"
             self.env.cr.execute(query, params)
-            query_results_to_pay = group_by_journal(self.env.cr.dictfetchall())
+            query_result = group_by_journal(self.env.cr.dictfetchall())
             for journal in journals:
-                query_results_to_pay[journal.id] = query_results_to_pay[journal.id]
-                late_query_results[journal.id] = [r for r in query_results_to_pay[journal.id] if r['late']]
+                query_results_to_pay[journal.id] = query_result[journal.id]
+                late_query_results[journal.id] = [r for r in query_result[journal.id] if r['late']]
 
         to_check_vals = {
             journal.id: (amount_total_signed_sum, count)
