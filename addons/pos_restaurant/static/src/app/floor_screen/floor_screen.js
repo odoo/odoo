@@ -36,9 +36,6 @@ export class FloorScreen extends Component {
         });
         this.floorMapRef = useRef("floor-map-ref");
         this.floorScrollBox = useRef("floor-map-scroll");
-        const ui = useState(useService("ui"));
-        const mode = localStorage.getItem("floorPlanStyle");
-        this.pos.floorPlanStyle = ui.isSmall || mode == "kanban" ? "kanban" : "default";
         this.map = useRef("map");
         onMounted(() => {
             this.pos.openCashControl();
