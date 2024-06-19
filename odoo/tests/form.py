@@ -251,7 +251,7 @@ class Form:
         views = {
             view.tag: view for view in node.xpath('./*[descendant::field]')
         }
-        for view_type in ['tree', 'form']:
+        for view_type in ['list', 'form']:
             if view_type in views:
                 continue
             if field_info['invisible'] == 'True':
@@ -271,9 +271,9 @@ class Form:
 
         # pick the first editable subview
         view_type = next(
-            vtype for vtype in node.get('mode', 'tree').split(',') if vtype != 'form'
+            vtype for vtype in node.get('mode', 'list').split(',') if vtype != 'form'
         )
-        if not (view_type == 'tree' and views['tree'].get('editable')):
+        if not (view_type == 'list' and views['list'].get('editable')):
             view_type = 'form'
 
         # don't recursively process o2ms in o2ms

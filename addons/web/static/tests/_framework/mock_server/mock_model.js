@@ -391,7 +391,7 @@ const getRelation = (field, record = {}) => {
  */
 const getTag = (node) => {
     if (typeof node === "string") {
-        return node === "tree" ? "list" : node;
+        return node;
     } else if (node) {
         return getTag(node.nodeName.toLowerCase());
     } else {
@@ -408,7 +408,7 @@ const getView = (model, args, kwargs) => {
     // find the arch
     let [requestViewId, viewType] = args;
     if (!requestViewId) {
-        const contextKey = (viewType === "list" ? "tree" : viewType) + "_view_ref";
+        const contextKey = viewType + "_view_ref";
         if (contextKey in kwargs.context) {
             requestViewId = kwargs.context[contextKey];
         }
