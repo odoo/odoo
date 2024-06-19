@@ -57,7 +57,7 @@ export class Chatbot extends Record {
             await this._simulateTyping();
         }
         await this._goToNextStep();
-        if (!this.currentStep || this.currentStep.completed) {
+        if (!this.currentStep || this.currentStep.completed || !this.thread) {
             return;
         }
         this.currentStep.message = this._store.Message.insert(
