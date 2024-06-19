@@ -172,10 +172,8 @@ test("should display invitations", async () => {
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     // send after init_messaging because bus subscription is done after init_messaging
     pyEnv["bus.bus"]._sendone(partner, "mail.record/insert", {
-        Thread: {
-            id: channelId,
-            model: "discuss.channel",
-            rtcInvitingSession: {
+        RtcSession: [
+            {
                 id: sessionId,
                 channelMember: {
                     id: memberId,
@@ -186,6 +184,11 @@ test("should display invitations", async () => {
                     },
                 },
             },
+        ],
+        Thread: {
+            id: channelId,
+            model: "discuss.channel",
+            rtcInvitingSession: { id: sessionId },
         },
     });
     await contains(".o-discuss-CallInvitation");
