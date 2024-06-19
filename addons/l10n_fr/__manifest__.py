@@ -39,6 +39,7 @@ configuration of their taxes and fiscal positions manually.
         'views/l10n_fr_view.xml',
         'data/tax_report_data.xml',
         'data/res_country_data.xml',
+        'data/res.bank.csv',
     ],
     'demo': [
         'demo/demo_company.xml',
