@@ -9,6 +9,11 @@ import { createWebClient, doAction, getActionManagerServerData } from "./../help
 
 import { Component, xml } from "@odoo/owl";
 import { redirect } from "@web/core/utils/urls";
+import {
+    editSearch,
+    toggleSearchBarMenu,
+    validateSearch,
+} from "@web/../tests/legacy/search/helpers";
 
 let serverData;
 let target;
@@ -433,4 +438,88 @@ QUnit.module("ActionManager", (hooks) => {
             });
         }
     );
+    QUnit.test("properly push globalState", async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        assert.strictEqual(browser.location.href, "http://example.com/odoo");
+        assert.strictEqual(browser.history.length, 1);
+        await doAction(webClient, 4);
+        await nextTick();
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
+        assert.strictEqual(browser.history.length, 2);
+        assert.deepEqual(router.current, {
+            action: 4,
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+            ],
+        });
+        // add element on the search Model
+        await toggleSearchBarMenu(target);
+        await editSearch(target, "blip");
+        await validateSearch(target);
+        assert.strictEqual(target.querySelector(".o_searchview .o_facet_values").innerText, "blip");
+        // open record
+        await click(target.querySelector(".o_kanban_record"));
+        // Add the globalState on the state before leaving the kanban
+        assert.deepEqual(router.current, {
+            action: 4,
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+            ],
+            globalState: {
+                resIds: [2],
+                searchModel:
+                    '{"nextGroupId":2,"nextGroupNumber":1,"nextId":2,"query":[{"searchItemId":1,"autocompleteValue":{"label":"blip","operator":"ilike","value":"blip"}}],"searchItems":{"1":{"type":"field","fieldName":"foo","fieldType":"char","description":"Foo","groupId":1,"id":1}},"searchPanelInfo":{"className":"","viewTypes":["kanban","list"],"loaded":false,"shouldReload":true},"sections":[]}',
+            },
+        });
+        await nextTick();
+        assert.containsOnce(target, ".o_form_view");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4/2");
+        assert.deepEqual(router.current, {
+            action: 4,
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+                {
+                    action: 4,
+                    displayName: "Second record",
+                    resId: 2,
+                    view_type: "form",
+                },
+            ],
+            resId: 2,
+        });
+        // came back using the browser
+        browser.history.back(); // Click on back button
+        await nextTick();
+        // The search Model should be restored
+        assert.strictEqual(target.querySelector(".o_searchview .o_facet_values").innerText, "blip");
+        assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
+        // The global state is restored on the state
+        assert.deepEqual(router.current, {
+            action: 4,
+            actionStack: [
+                {
+                    action: 4,
+                    displayName: "Partners Action 4",
+                    view_type: "kanban",
+                },
+            ],
+            globalState: {
+                resIds: [2],
+                searchModel:
+                    '{"nextGroupId":2,"nextGroupNumber":1,"nextId":2,"query":[{"searchItemId":1,"autocompleteValue":{"label":"blip","operator":"ilike","value":"blip"}}],"searchItems":{"1":{"type":"field","fieldName":"foo","fieldType":"char","description":"Foo","groupId":1,"id":1}},"searchPanelInfo":{"className":"","viewTypes":["kanban","list"],"loaded":false,"shouldReload":true},"sections":[]}',
+            },
+        });
+    });
 });

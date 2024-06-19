@@ -45,7 +45,15 @@ const logHistoryInteractions = (assert) => {
             return super.pushState(state, _, url);
         },
         replaceState(state, _, url) {
-            assert.step(`replaceState ${url}`);
+            if (browser.location.href === url) {
+                assert.step(
+                    `Update the state without updating URL, nextState: ${Object.keys(
+                        state?.nextState
+                    )}`
+                );
+            } else {
+                assert.step(`replaceState ${url}`);
+            }
             return super.pushState(state, _, url);
         },
     });
@@ -75,7 +83,9 @@ QUnit.module("ActionManager", (hooks) => {
             "http://example.com/odoo/action-1001",
             "url did not change"
         );
-        assert.verifySteps(["replaceState http://example.com/odoo/action-1001"]);
+        assert.verifySteps([
+            "Update the state without updating URL, nextState: actionStack,action",
+        ]);
     });
 
     QUnit.test("menu loading", async (assert) => {
@@ -227,7 +237,9 @@ QUnit.module("ActionManager", (hooks) => {
             "http://example.com/odoo/4/action-1001?active_ids=4%2C8",
             "url did not change"
         );
-        assert.verifySteps(["replaceState http://example.com/odoo/4/action-1001?active_ids=4%2C8"]);
+        assert.verifySteps([
+            "Update the state without updating URL, nextState: actionStack,action,active_id,active_ids",
+        ]);
     });
 
     QUnit.test("supports action as xmlId", async (assert) => {
@@ -304,7 +316,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
         assert.verifySteps([
             "/web/webclient/load_menus",
-            "replaceState http://example.com/odoo/HelloWorldTest",
+            "Update the state without updating URL, nextState: actionStack,action",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -374,7 +386,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "resId:12",
-            "replaceState http://example.com/odoo/HelloWorldTest/12",
+            "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
         // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
         assert.deepEqual(getBreadCrumbTexts(target), ["Client Action DisplayName"]);
@@ -485,7 +497,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/web/webclient/load_menus",
             "resId:12",
-            "replaceState http://example.com/odoo/my_client/12",
+            "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
         // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
         assert.deepEqual(getBreadCrumbTexts(target), ["Client Action DisplayName"]);
@@ -516,7 +528,7 @@ QUnit.module("ActionManager", (hooks) => {
             );
             assert.verifySteps([
                 "/web/webclient/load_menus",
-                "replaceState http://example.com/odoo/my_client",
+                "Update the state without updating URL, nextState: actionStack,action",
             ]);
             // Breadcrumb should have only one item, the client action don't have a LazyController (a multi-record view)
             assert.deepEqual(getBreadCrumbTexts(target), ["translatable displayname"]);
@@ -538,7 +550,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "replaceState http://example.com/odoo/action-1",
+            "Update the state without updating URL, nextState: actionStack,action",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -560,7 +572,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "get_views",
             "web_read",
-            "replaceState http://example.com/odoo/m-partner/2",
+            "Update the state without updating URL, nextState: actionStack,resId,model",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -590,7 +602,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "get_views",
             "web_read",
-            "replaceState http://example.com/odoo/m-partner/2",
+            "Update the state without updating URL, nextState: actionStack,resId,model",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -612,7 +624,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "onchange",
-            "replaceState http://example.com/odoo/action-3/new",
+            "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -635,7 +647,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "replaceState http://example.com/odoo/action-3?view_type=kanban",
+            "Update the state without updating URL, nextState: actionStack,action,view_type",
         ]);
         assert.strictEqual(
             browser.location.href,
@@ -670,13 +682,16 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/action/load",
                 "get_views",
                 "web_read",
-                "replaceState http://example.com/odoo/action-3/2",
+                "Update the state without updating URL, nextState: actionStack,resId,action",
             ]);
             // go back to List
             await click(target.querySelector(".o_control_panel .breadcrumb a"));
             assert.containsOnce(target, ".o_list_view");
             assert.containsNone(target, ".o_form_view");
-            assert.verifySteps(["web_search_read"]);
+            assert.verifySteps([
+                "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
+                "web_search_read",
+            ]);
             await nextTick(); // pushState is debounced
             assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
             assert.verifySteps(["pushState http://example.com/odoo/action-3"]);
@@ -699,7 +714,10 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick(); // pushState is debounced
         assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4/action-3/2");
         assert.verifySteps(
-            ["pushState http://example.com/odoo/action-4/action-3/2"],
+            [
+                "Update the state without updating URL, nextState: actionStack,action,globalState",
+                "pushState http://example.com/odoo/action-4/action-3/2",
+            ],
             "pushState was called only once"
         );
         // go back to previous action
@@ -707,7 +725,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         await nextTick(); // pushState is debounced
         assert.strictEqual(browser.location.href, "http://example.com/odoo/action-4");
-        assert.verifySteps(["pushState http://example.com/odoo/action-4"]);
+        assert.verifySteps([
+            "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
+            "pushState http://example.com/odoo/action-4",
+        ]);
     });
 
     QUnit.test(
@@ -733,7 +754,10 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(target, ".o_kanban_view");
             await nextTick(); // pushState is debounced
             assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3/action-1");
-            assert.verifySteps(["pushState http://example.com/odoo/action-3/action-1"]);
+            assert.verifySteps([
+                "Update the state without updating URL, nextState: actionStack,action,globalState",
+                "pushState http://example.com/odoo/action-3/action-1",
+            ]);
         }
     );
 
@@ -753,7 +777,9 @@ QUnit.module("ActionManager", (hooks) => {
             ],
         });
         assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
-        assert.verifySteps(["replaceState http://example.com/odoo/action-3"]);
+        assert.verifySteps([
+            "Update the state without updating URL, nextState: actionStack,action",
+        ]);
         await click(target.querySelector("tr .o_data_cell"));
         await nextTick(); // pushState is debounced
         assert.deepEqual(router.current, {
@@ -775,7 +801,10 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3/1");
         assert.verifySteps(
-            ["pushState http://example.com/odoo/action-3/1"],
+            [
+                "Update the state without updating URL, nextState: actionStack,action,globalState",
+                "pushState http://example.com/odoo/action-3/1",
+            ],
             "should push the state if it changes afterwards"
         );
     });
@@ -830,7 +859,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
             "/web/dataset/call_kw/partner/onchange",
-            "replaceState http://example.com/odoo/action-999/new",
+            "Update the state without updating URL, nextState: actionStack,resId,action",
         ]);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.strictEqual(browser.location.href, "http://example.com/odoo/action-999/new");
@@ -921,7 +950,9 @@ QUnit.module("ActionManager", (hooks) => {
                 "http://example.com/odoo/action-3/new",
                 "url did not change"
             );
-            assert.verifySteps(["replaceState http://example.com/odoo/action-3/new"]);
+            assert.verifySteps([
+                "Update the state without updating URL, nextState: actionStack,resId,action",
+            ]);
 
             await click(target.querySelector(".o_control_panel .breadcrumb-item"));
 
@@ -933,7 +964,10 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsN(target, ".o_list_view .o_data_row", 1);
             await nextTick(); // pushState is debounced
             assert.strictEqual(browser.location.href, "http://example.com/odoo/action-3");
-            assert.verifySteps(["pushState http://example.com/odoo/action-3"]);
+            assert.verifySteps([
+                "Update the state without updating URL, nextState: actionStack,resId,action,globalState",
+                "pushState http://example.com/odoo/action-3",
+            ]);
         }
     );
 
@@ -1013,7 +1047,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/action/load",
                 "/web/dataset/call_kw/partner/get_views",
                 "/web/dataset/call_kw/partner/web_read",
-                "replaceState http://example.com/odoo/partners/2/action-28/1",
+                "Update the state without updating URL, nextState: actionStack,resId,action,active_id",
             ]);
             await click(target, ".breadcrumb .dropdown-toggle");
             const breadcrumbs = [
