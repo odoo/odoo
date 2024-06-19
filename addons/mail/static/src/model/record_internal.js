@@ -6,6 +6,7 @@ import { IS_DELETED_SYM, IS_DELETING_SYM, IS_RECORD_SYM, isRelation } from "./mi
 import { RecordList } from "./record_list";
 import { reactive, toRaw } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
+import { loadIdbKeyval, LocalStorage } from "./local_storage";
 
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
@@ -229,6 +230,39 @@ export class RecordInternal {
             }
         }
         this.fieldsSorting.delete(fieldName);
+    }
+    async syncLocalStorages(record, fieldName, { operation = "read" }) {
+        const Model = record.Model;
+        if (!Model._.fieldsLocalStorage.get(fieldName)) {
+            return;
+        }
+        await loadIdbKeyval();
+        const localStorage = new LocalStorage();
+        // const localRecord = localStorage.get(record._.localId);
+        const localRecord = 1;
+        console.log(localRecord);
+        switch (operation) {
+            case "write": {
+                // localStorage.set(record._.localId, {
+                //     fieldName: record[fieldName],
+                // });
+                if (localRecord === record[fieldName]) {
+                    return;
+                }
+                break;
+            }
+            case "read": {
+                if (!localRecord) {
+                    return;
+                }
+                record[fieldName] = localRecord[fieldName];
+                break;
+            }
+            case "delete":
+                break;
+            default:
+                return;
+        }
     }
     onUpdate(record, fieldName) {
         const Model = record.Model;
