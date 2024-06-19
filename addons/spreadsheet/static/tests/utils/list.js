@@ -4,8 +4,6 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { generateListDefinition } from "./data";
 import { createModelWithDataSource } from "./model";
 
-/** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
-
 /**
  * Insert a list in a spreadsheet model.
  *
