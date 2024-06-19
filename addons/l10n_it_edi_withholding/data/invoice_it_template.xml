@@ -35,11 +35,18 @@
             </t>
         </xpath>
         <xpath expr="//DettaglioLinee" position="inside">
-            <t t-if="enasarco_values and enasarco_values[line.id]">
+            <t t-if="enasarco_values and enasarco_values.get(line.id)">
                 <AltriDatiGestionali>
                     <TipoDato>CASSA-PREV</TipoDato>
                     <RiferimentoTesto t-esc="format_alphanumeric('TC07 - ENASARCO (' + format_numbers(abs(enasarco_values[line.id]['amount'])).rstrip('.0') + '%)')"/>
                     <RiferimentoNumero t-esc="format_monetary(enasarco_values[line.id]['tax_amount'], currency)"/>
+                </AltriDatiGestionali>
+            </t>
+            <t t-elif="pension_fund_by_line_id and pension_fund_by_line_id.get(line.id)">
+                <t t-set="pension_fund_tax" t-value="pension_fund_by_line_id[line.id]" />
+                <AltriDatiGestionali>
+                    <TipoDato>AswCassPre</TipoDato>
+                    <RiferimentoTesto t-esc="format_alphanumeric(pension_fund_tax.l10n_it_pension_fund_type + ' (' + format_numbers(abs(pension_fund_tax.amount)).rstrip('.0') + '%)')"/>
                 </AltriDatiGestionali>
             </t>
         </xpath>
