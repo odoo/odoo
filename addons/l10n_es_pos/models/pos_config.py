@@ -35,8 +35,20 @@ class PosConfig(models.Model):
             pos.is_spanish = pos.company_id.country_code == "ES"
 
     def _compute_simplified_partner_id(self):
+        simplified_partner = self.env.ref("l10n_es.partner_simplified", raise_if_not_found=False)
+        if not simplified_partner:
+            simplified_partner = self.env['res.partner'].sudo().create({
+                'name': 'Simplified Invoice Partner (ES)',
+            })
+            self.env['ir.model.data'].sudo().create({
+                'name': 'partner_simplified',
+                'module': 'l10n_es',
+                'model': 'res.partner',
+                'res_id': simplified_partner.id
+            })
+
         for config in self:
-            config.simplified_partner_id = self.env.ref("l10n_es.partner_simplified").id
+            config.simplified_partner_id = simplified_partner.id
 
     def get_limited_partners_loading(self):
         # this function normally returns 100 partners, but we have to make sure that
