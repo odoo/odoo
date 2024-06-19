@@ -869,7 +869,7 @@ class Channel(models.Model):
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         # sudo: discuss.channel.rtc.session - reading sessions of accessible channel is acceptable
-        store.add("RtcSession", self.sudo().rtc_session_ids._mail_rtc_session_format(extra=True))
+        store.add(self.sudo().rtc_session_ids, extra=True)
         current_partner, current_guest = self.env["res.partner"]._get_current_persona()
         self.env['discuss.channel'].flush_model()
         self.env['discuss.channel.member'].flush_model()

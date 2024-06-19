@@ -307,7 +307,7 @@ class ChannelMember(models.Model):
                     ],
                 },
             )
-            store.add("RtcSession", current_rtc_sessions._mail_rtc_session_format())
+            store.add(current_rtc_sessions)
             store.add(
                 "Rtc",
                 {
@@ -427,7 +427,7 @@ class ChannelMember(models.Model):
                 "rtcInvitingSession": {"id": member.rtc_inviting_session_id.id},
             }
             store = Store("Thread", channel_data)
-            store.add("RtcSession", member.rtc_inviting_session_id._mail_rtc_session_format())
+            store.add(member.rtc_inviting_session_id)
             invitation_notifications.append((target, "mail.record/insert", store.get_result()))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
