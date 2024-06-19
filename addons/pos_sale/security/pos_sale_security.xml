@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
-    <record id="pos_sale_rule_pos_channel_pos_manager" model="ir.rule">
-        <field name="name">POS Sales Team</field>
-        <field name="model_id" ref="sales_team.model_crm_team"/>
-        <field name="domain_force">[(1,'=',1)]</field>
-        <field name="groups" eval="[(4, ref('point_of_sale.group_pos_manager'))]"/>
-    </record>
-</odoo>
