@@ -42,3 +42,14 @@ export function orderBtnIsPresent() {
         },
     ];
 }
+export function OrderButtonNotContain(data) {
+    const steps = [
+        {
+            isActive: ["desktop"],
+            content: "check order button not contain data",
+            trigger: `.product-screen .submit-order:not(:contains("${data}"))`,
+            run: function () {}, // it's a check
+        },
+    ];
+    return steps;
+}
