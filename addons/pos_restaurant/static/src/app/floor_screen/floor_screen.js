@@ -43,6 +43,7 @@ export class FloorScreen extends Component {
             floorBackground: floor ? floor.background_color : null,
             floorMapScrollTop: 0,
             isColorPicker: false,
+            isCreatingTable: false,
         });
         const ui = useState(useService("ui"));
         const mode = localStorage.getItem("floorPlanStyle");
@@ -413,13 +414,17 @@ export class FloorScreen extends Component {
         this.pos.isEditMode = true;
     }
     async createTable() {
-        const newTable = await this._createTableHelper();
-        newTable.skip_changes = 0;
-        newTable.changes_count = 0;
-        newTable.order_count = 0;
-        if (newTable) {
-            this.state.selectedTableIds = [];
-            this.state.selectedTableIds.push(newTable.id);
+        if (!this.state.isCreatingTable) {
+            this.state.isCreatingTable = true;
+            const newTable = await this._createTableHelper();
+            newTable.skip_changes = 0;
+            newTable.changes_count = 0;
+            newTable.order_count = 0;
+            if (newTable) {
+                this.state.selectedTableIds = [];
+                this.state.selectedTableIds.push(newTable.id);
+            }
+            this.state.isCreatingTable = false;
         }
     }
     async duplicateTableOrFloor() {
