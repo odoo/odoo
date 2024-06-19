@@ -48,7 +48,7 @@ test.tags("iframe")("in iframe: should open the Powerbox on type `/`", async () 
 test("should correctly hint in iframes", async () => {
     const { el } = await setupEditor("<p>[]<br></p>", { props: { iframe: true } });
     expect(getContent(el)).toBe(
-        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
 });
 
@@ -56,7 +56,7 @@ test("should open the Powerbox on type `/`, but in an empty paragraph", async ()
     const { el, editor } = await setupEditor("<p>[]<br></p>");
     expect(".o-we-powerbox").toHaveCount(0);
     expect(getContent(el)).toBe(
-        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     press("/");
     insertText(editor, "/");
@@ -283,7 +283,7 @@ describe("search", () => {
             await animationFrame();
             expect(".o-we-powerbox").toHaveCount(0);
             expect(getContent(el)).toBe(
-                `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+                `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
             );
 
             insertText(editor, "a");
@@ -343,7 +343,7 @@ test.todo("should close the powerbox if keyup event is called on other block", a
 
 test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>");
-    expect(getContent(el)).toBe(`<p placeholder="Type "/" for commands" class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(`<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`);
 
     insertText(editor, "/table");
     await waitFor(".o-we-powerbox ");
@@ -354,7 +354,7 @@ test.tags("desktop")("should insert a 3x3 table on type `/table`", async () => {
     press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
     );
 });
 
@@ -365,7 +365,7 @@ test.tags("mobile")("should insert a 3x3 table on type `/table` in mobile view",
     press("Enter");
     await tick();
     expect(getContent(el)).toBe(
-        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
+        `<table class="table table-bordered o_table"><tbody><tr><td><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`
     );
 });
 
@@ -425,7 +425,7 @@ test("should restore state before /command insertion when command is executed (2
         config: { Plugins: [...MAIN_PLUGINS, NoOpPlugin] },
     });
     expect(getContent(el)).toBe(
-        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     insertText(editor, "/");
     // @todo @phoenix: remove this once we manage inputs.
@@ -438,14 +438,14 @@ test("should restore state before /command insertion when command is executed (2
     expect(commandNames(el)).toEqual(["No-op"]);
     press("Enter");
     expect(getContent(el)).toBe(
-        '<p class="o-we-hint" placeholder="Type "/" for commands">[]<br></p>'
+        `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );
 });
 
 test("should discard /command insertion from history when command is executed", async () => {
     const { el, editor } = await setupEditor("<p>[]<br></p>");
     expect(getContent(el)).toBe(
-        `<p placeholder="Type "/" for commands" class="o-we-hint">[]<br></p>`
+        `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
     // @todo @phoenix: remove this once we manage inputs.
     // Simulate <br> removal by contenteditable when something is inserted
@@ -469,7 +469,7 @@ test("should discard /command insertion from history when command is executed", 
     expect(getContent(el)).toBe("<p>a[]</p>");
     editor.dispatch("HISTORY_UNDO");
     expect(getContent(el)).toBe(
-        `<p class="o-we-hint" placeholder="Type "/" for commands">[]<br></p>`
+        `<p class="o-we-hint" placeholder='Type "/" for commands'>[]<br></p>`
     );
 });
 
