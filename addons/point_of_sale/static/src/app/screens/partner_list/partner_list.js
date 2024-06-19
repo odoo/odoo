@@ -52,7 +52,7 @@ export class PartnerList extends Component {
     goToOrders(partner) {
         this.props.close();
         const partnerHasActiveOrders = this.pos
-            .get_order_list()
+            .get_open_orders()
             .some((order) => order.partner?.id === partner.id);
         const stateOverride = {
             search: {
