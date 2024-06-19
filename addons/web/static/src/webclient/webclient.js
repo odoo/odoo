@@ -51,6 +51,12 @@ export class WebClient extends Component {
     }
 
     mounted() {
+        // Hack: added fullscreen mode to prevent flickering in the web client
+        // when navigating to the theme install kanban view.
+        const path = document.location.hash;
+        if(path.includes("theme_install_kanban_action")) {
+            this.el.classList.add("o_fullscreen");
+        }
         // the chat window and dialog services listen to 'web_client_ready' event in
         // order to initialize themselves:
         this.env.bus.trigger("WEB_CLIENT_READY");
