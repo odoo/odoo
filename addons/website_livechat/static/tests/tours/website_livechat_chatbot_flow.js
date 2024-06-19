@@ -182,9 +182,19 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: "click",
         },
         {
-            // wait for chatbot script to finish.
             trigger:
                 ".o-livechat-root:shadow .o-mail-ChatWindow-command[title='Restart Conversation']",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow li:contains(I want to speak with an operator)",
+            run: "click",
+        },
+        {
+            trigger: messagesContain("I will transfer you to a human."),
+        },
+        {
+            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
         },
     ],
 });
