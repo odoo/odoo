@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="oe_structure"></div>
-                    <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table">
+                    <table class="table table-borderless" t-if="o.state!='done'" name="stock_move_table">
                         <thead>
                             <tr>
                                 <th name="th_sm_product">Product</th>
@@ -92,7 +92,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-sm mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
+                    <table class="table table-borderless mt48" t-elif="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
                         <t t-set="has_serial_number" t-value="False"/>
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_lot_on_delivery_slip"/>
                         <thead>
@@ -164,7 +164,7 @@
                         <p class="mt-5">
                             <span>Remaining quantities not yet delivered:</span>
                         </p>
-                        <table class="table table-sm" name="stock_backorder_table" style="table-layout: fixed;">
+                        <table class="table table-borderless" name="stock_backorder_table">
                             <thead>
                                 <tr>
                                     <th name="th_sb_product"><strong>Product</strong></th>

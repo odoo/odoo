@@ -104,7 +104,7 @@
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
                         <div class="oe_structure"></div>
-                        <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
+                        <table class="table o_main_table table-borderless" name="invoice_line_table">
                             <thead>
                                 <tr>
                                     <th name="th_description" class="text-start"><span>Description</span></th>
@@ -183,7 +183,7 @@
                             <div id="right-elements" t-attf-class="#{'col-5' if report_type != 'html' else 'col-12 col-md-5'} ms-5 d-inline-block float-end">
                                 <div id="total" class="clearfix row mt-n3">
                                     <div class="ms-auto">
-                                        <table class="table table-sm table-borderless avoid-page-break-inside">
+                                        <table class="table table-borderless avoid-page-break-inside">
 
                                             <!--Tax totals-->
                                             <t t-set="tax_totals" t-value="o.tax_totals"/>
@@ -384,7 +384,7 @@
             <div t-if="not show_company_taxes" class="oe_structure"></div>
             <div class="mb-2 mt-3 border p-2 avoid-page-break-inside totals_taxes_company_currency"
                  t-else="">
-                <table class="table table-sm table-borderless mb-0">
+                <table class="table table-borderless mb-0">
                     <p class="tax_computation_company_currency">
                         Taxes <span t-field="o.company_currency_id"/>
                     </p>

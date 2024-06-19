@@ -40,7 +40,7 @@
                 <div class="mb32"/>
                 <div class="row">
                     <div class="col-6">
-                        <table class="table table-bordered">
+                        <table class="table table-borderless">
                             <tbody>
                                 <tr>
                                     <td>Transportation Reason</td>
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <div class="col-5 offset-1">
-                        <table class="table table-bordered">
+                        <table class="table table-borderless">
                             <tbody>
                                 <tr>
                                     <td>Order</td>
@@ -99,7 +99,7 @@
                 <div class="mt64"/>
                 <div class="mt64"/>
 
-                <table class="table table-sm" name="document_details">
+                <table class="table table-borderless" name="document_details">
                     <t t-set="display_discount" t-value="any(m.sale_line_id.discount for m in o.move_ids)"/>
                     <thead>
                         <tr>
@@ -155,7 +155,7 @@
                 </table>
                 <div class="mt64"/>
                 <div class="mt64"/>
-                <table class="table table-sm">
+                <table class="table table-borderless">
                     <thead>
                         <tr>
                             <th><span class="fa fa-pencil mt4"/><div class="ml4 d-inline-block"/><strong>Company Signature</strong></th>

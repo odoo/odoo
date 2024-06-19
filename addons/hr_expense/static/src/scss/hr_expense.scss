@@ -116,54 +116,6 @@
             }
         }
     }
-    .o_table {
-        width: 100%;
-        thead, tbody, tfoot, tr, td, th {
-            border-style: none;
-        }
-
-        /*****************
-            Header of the main table
-        *****************/
-        thead > tr > th {
-            padding: 10px 5px 10px 5px;
-            font-weight: bold;
-            font-size: 1rem;
-            border-bottom: 1px solid black;
-            white-space: nowrap;
-        }
-
-        tbody > tr {
-            white-space: nowrap;
-            td:not(:last-child) {
-                padding: 5px;
-            }
-            td:last-child {
-                padding: 5px 5px 20px 5px;
-            }
-        }
-    }
-    .o_total {
-        page-break-inside: avoid;
-        position:relative;
-        .o_subtable {
-            width: 100%;
-            page-break-inside: avoid;
-            position:relative;
-            tbody, tr, td{
-                border-style: none;
-                padding: 10px 0 10px 0;
-            }
-
-            tr:first-child {
-                border-top: 1px solid black;
-            }
-
-            tr:last-child {
-                border-top:1px solid black;
-            }
-        }
-    }
 }
 
 .o_end_page {

@@ -86,7 +86,7 @@
                                     <div t-field="o.scheduled_date">2023-09-24</div>
                                 </div>
                             </div>
-                            <table class="table table-sm mt16" t-if="o.move_line_ids and o.move_ids_without_package">
+                            <table class="table table-borderless mt16" t-if="o.move_line_ids and o.move_ids_without_package">
                                 <t t-set="has_barcode" t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
                                 <t t-set="has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
                                 <thead>
@@ -167,7 +167,7 @@
                                   </tbody>
                             </table>
                             <div t-if="not (o.package_level_ids and o.picking_type_entire_packs and o.state in ['assigned', 'done'])" class="oe_structure"></div>
-                            <table t-else="" class="table table-sm">
+                            <table t-else="" class="table table-borderless">
                                 <thead>
                                     <tr>
                                         <th name="th_package">Package</th>
