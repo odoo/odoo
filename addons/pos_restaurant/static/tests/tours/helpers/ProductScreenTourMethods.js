@@ -52,3 +52,14 @@ export function tableNameShown(table_name) {
         },
     ];
 }
+export function OrderButtonNotContain(data) {
+    const steps = [
+        {
+            content: "check order button not contain data",
+            trigger: `.product-screen .submit-order:not(:contains("${data}"))`,
+            run: function () {}, // it's a check
+            mobile: false,
+        },
+    ];
+    return steps;
+}
