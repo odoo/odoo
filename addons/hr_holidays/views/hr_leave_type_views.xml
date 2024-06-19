@@ -63,6 +63,26 @@
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="active" invisible="1"/>
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
+<<<<<<< HEAD
+||||||| parent of ae1322c82f50 (temp)
+                            <field name="responsible_id" domain="[('share', '=', False)]"
+                                attrs="{
+                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')],
+                                'required': ['|',('leave_validation_type', 'in', ['both', 'hr']), ('requires_allocation', '=', 'yes'), ('allocation_validation_type', '=', 'officer')]}"/>
+                            <field name="request_unit" widget="radio-inline"/>
+                            <field name="support_document" string="Allow To Join Supporting Document" />
+                            <field name="time_type" required="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+=======
+                            <field name="responsible_id"
+                                attrs="{
+                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')],
+                                'required': ['|',('leave_validation_type', 'in', ['both', 'hr']), ('requires_allocation', '=', 'yes'), ('allocation_validation_type', '=', 'officer')]}"/>
+                            <field name="request_unit" widget="radio-inline"/>
+                            <field name="support_document" string="Allow To Join Supporting Document" />
+                            <field name="time_type" required="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+>>>>>>> ae1322c82f50 (temp)
                         </group>
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>

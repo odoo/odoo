@@ -51,6 +51,7 @@ class HolidaysType(models.Model):
     group_days_leave = fields.Float(
         compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+<<<<<<< HEAD
     responsible_ids = fields.Many2many(
         'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
@@ -58,6 +59,18 @@ class HolidaysType(models.Model):
                              ('company_ids', 'in', self.env.company.id)],
                              auto_join=True,
         help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified")
+||||||| parent of ae1322c82f50 (temp)
+    responsible_id = fields.Many2one(
+        'res.users', 'Responsible Time Off Officer',
+        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
+        help="Choose the Time Off Officer who will be notified to approve allocation or Time Off request")
+=======
+    responsible_id = fields.Many2one(
+        'res.users', 'Responsible Time Off Officer',
+        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
+                             ('share', '=', False)],
+        help="Choose the Time Off Officer who will be notified to approve allocation or Time Off request")
+>>>>>>> ae1322c82f50 (temp)
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
