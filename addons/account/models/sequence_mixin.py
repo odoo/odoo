@@ -4,7 +4,7 @@ from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, date_utils
+from odoo.tools import frozendict, date_utils, ormcache
 
 import re
 from collections import defaultdict
@@ -126,6 +126,13 @@ class SequenceMixin(models.AbstractModel):
             record.sequence_number = int(matching.group(1) or 0)
 
     @api.model
+    @ormcache(
+        "name",
+        "self._sequence_fixed_regex",
+        "self._sequence_monthly_regex",
+        "self._sequence_year_range_regex",
+        "self._sequence_yearly_regex",
+    )
     def _deduce_sequence_number_reset(self, name):
         """Detect if the used sequence resets yearly, montly or never.
 
@@ -217,11 +224,20 @@ class SequenceMixin(models.AbstractModel):
             param['with_prefix'] = with_prefix
 
         query = f"""
-                SELECT {{field}} FROM {self._table}
+            WITH filtered_recs AS (
+                SELECT id AS _id, {{field}}, sequence_prefix, sequence_number
+                FROM {self._table}
                 {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
-                ORDER BY sequence_number DESC
+            )
+            SELECT {{field}} FROM filtered_recs
+            WHERE sequence_prefix = (
+                SELECT sequence_prefix
+                FROM filtered_recs
+                ORDER BY _id DESC
                 LIMIT 1
+            )
+            ORDER BY sequence_number DESC
+            LIMIT 1
         """
         if lock:
             query = f"""
