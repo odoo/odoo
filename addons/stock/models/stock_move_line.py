@@ -118,13 +118,14 @@ class StockMoveLine(models.Model):
             if line.picking_id:
                 line.picking_type_id = line.picking_id.picking_type_id
 
-    @api.depends('move_id', 'move_id.location_id', 'move_id.location_dest_id')
+    @api.depends(
+        'move_id.location_id', 'move_id.location_dest_id',
+        'picking_id.location_id', 'picking_id.location_dest_id',
+    )
     def _compute_location_id(self):
         for line in self:
-            if not line.location_id:
-                line.location_id = line.move_id.location_id or line.picking_id.location_id
-            if not line.location_dest_id:
-                line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
+            line.location_id = line.move_id.location_id or line.picking_id.location_id
+            line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
 
     @api.depends('move_id.product_packaging_id', 'product_uom_id', 'quantity')
     def _compute_product_packaging_qty(self):
