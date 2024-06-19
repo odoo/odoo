@@ -77,9 +77,10 @@ class Manager(Thread):
                 )
                 if iot_client:
                     iot_client.iot_channel = json.loads(resp.data).get('result', '')
-            except Exception as e:
-                _logger.error('Could not reach configured server')
-                _logger.error('A error encountered : %s ' % e)
+            except json.decoder.JSONDecodeError:
+                _logger.exception('Could not load JSON data: Received data is not in valid JSON format\ncontent:\n%s', resp.data)
+            except Exception:
+                _logger.exception('Could not reach configured server')
         else:
             _logger.warning('Odoo server not set')
 
