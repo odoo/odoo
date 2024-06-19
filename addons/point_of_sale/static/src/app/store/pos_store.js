@@ -1087,7 +1087,7 @@ export class PosStore extends Reactive {
     }
 
     // return the list of unpaid orders
-    get_order_list() {
+    get_open_orders() {
         return this.models["pos.order"].filter((o) => !o.finalized);
     }
 

@@ -165,8 +165,8 @@ export class TicketScreen extends Component {
                 order.uiState.displayed = true;
             }
 
-            if (this.pos.get_order_list().length > 0) {
-                this.state.selectedOrder = this.pos.get_order_list()[0];
+            if (this.pos.get_open_orders().length > 0) {
+                this.state.selectedOrder = this.pos.get_open_orders()[0];
             }
         }
         return true;
@@ -453,7 +453,7 @@ export class TicketScreen extends Component {
         const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
         return (
             order.get_orderlines().length === 0 &&
-            this.pos.get_order_list().length === 1 &&
+            this.pos.get_open_orders().length === 1 &&
             status === productScreenStatus &&
             order.payment_ids.length === 0
         );

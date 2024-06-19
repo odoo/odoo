@@ -78,7 +78,7 @@ export class Navbar extends Component {
     }
 
     get orderCount() {
-        return this.pos.get_order_list().length;
+        return this.pos.get_open_orders().length;
     }
 
     async closeSession() {

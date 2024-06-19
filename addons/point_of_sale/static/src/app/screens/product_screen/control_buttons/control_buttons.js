@@ -132,7 +132,7 @@ export class ControlButtons extends Component {
         this.notification.add(_t("Order saved for later"));
     }
     _selectEmptyOrder() {
-        const orders = this.pos.get_order_list();
+        const orders = this.pos.get_open_orders();
         const emptyOrders = orders.filter((order) => order.is_empty());
         if (emptyOrders.length > 0) {
             this.pos.syncAllOrders();
