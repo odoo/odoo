@@ -21,11 +21,15 @@ export class DateFilterValue extends Component {
         onTimeRangeChanged: Function,
         yearOffset: { type: Number, optional: true },
         period: { type: String, optional: true },
+        disabledPeriods: { type: Array, optional: true },
     };
     setup() {
         this._setStateFromProps(this.props);
-        onWillUpdateProps(this._setStateFromProps);
-        this.dateOptions = this.getDateOptions();
+        this.dateOptions = this.getDateOptions(this.props);
+        onWillUpdateProps((nextProps) => {
+            this._setStateFromProps(nextProps);
+            this.dateOptions = this.getDateOptions(nextProps);
+        });
     }
     _setStateFromProps(props) {
         this.period = props.period;
@@ -45,10 +49,18 @@ export class DateFilterValue extends Component {
      *
      * @returns {Array<Object>}
      */
-    getDateOptions() {
-        /** @type {Record<string, DateOption>} */
-        const quarterOptions = QUARTER_OPTIONS;
-        return Object.values(quarterOptions).concat(monthsOptions);
+    getDateOptions(props) {
+        const quarterOptions = Object.values(QUARTER_OPTIONS);
+        const disabledPeriods = props.disabledPeriods || [];
+
+        const dateOptions = [];
+        if (!disabledPeriods.includes("quarter")) {
+            dateOptions.push(...quarterOptions);
+        }
+        if (!disabledPeriods.includes("month")) {
+            dateOptions.push(...monthsOptions);
+        }
+        return dateOptions;
     }
 
     isSelected(periodId) {
